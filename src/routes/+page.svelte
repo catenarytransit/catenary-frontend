@@ -1,6 +1,7 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
 	import { onMount } from 'svelte';
+	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 
 	onMount(() => {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
@@ -25,6 +26,27 @@
 				source: 'terrain'
 			});
 
+			map.addSource('vehicles2', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: []
+				}
+			});
+
+			map.addLayer({
+				id: 'vehicles2',
+				type: 'circle',
+				source: 'vehicles2',
+				paint: {
+					'circle-radius': 4,
+					'circle-color': ['get', 'color'],
+					'circle-stroke-color': '#fff',
+					'circle-stroke-width': 0.8,
+					'circle-opacity': 0.5
+				}
+			});
+
 			map.addSource('vehicles', {
 				type: 'geojson',
 				data: {
@@ -39,7 +61,10 @@
 				source: 'vehicles',
 				paint: {
 					'circle-radius': 6,
-					'circle-color': ['get', 'color']
+					'circle-color': ['get', 'color'],
+					'circle-stroke-color': '#fff',
+					'circle-stroke-width': 1,
+					'circle-opacity': 0.8
 				}
 			});
 
@@ -53,6 +78,21 @@
 				return '#000000';
 			};
 
+			let agencies = [
+				/*
+				{
+					feed_id: 'f-octa~rt',
+					agency_name: 'Orange County Transportation Authority',
+					color: '#00AFF2'
+				},
+				*/
+				{
+					feed_id: 'f-metro~losangeles~bus~rt',
+					agency_name: 'Los Angeles Metro',
+					color: '#E16710'
+				}
+			];
+
 			setInterval(() => {
 				fetch(
 					'https://kactusapi.kylerchin.com/gtfsrtasjson/?feed=f-metro~losangeles~rail~rt&category=vehicles'
@@ -64,30 +104,36 @@
 
 						//console.log(data.entity);
 
-						const features = data.entity.map((entity: any) => {
-							const { id, vehicle } = entity;
+						const features = data.entity
+							.map((entity: any) => {
+								if (entity.vehicle) {
+									const { id, vehicle } = entity;
 
-							//console.log('entity', entity);
+									//console.log('entity', entity);
 
-							//console.log('has trip', vehicle.trip);
+									//console.log('has trip', vehicle.trip);
 
-							return {
-								type: 'Feature',
-								id,
-								properties: {
-									...vehicle,
-									color: convertRouteIdToColor(
-										vehicle.trip ? vehicle.trip.routeId || 'none' : 'none'
-									)
-								},
-								geometry: {
-									type: 'Point',
-									coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+									return {
+										type: 'Feature',
+										id,
+										properties: {
+											...vehicle,
+											color: convertRouteIdToColor(
+												vehicle.trip ? vehicle.trip.routeId || 'none' : 'none'
+											)
+										},
+										geometry: {
+											type: 'Point',
+											coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+										}
+									};
+								} else {
+									return undefined;
 								}
-							};
-						});
+							})
+							.filter((x) => x != undefined);
 
-						console.log(features);
+						//console.log(features);
 
 						const getthesource = map.getSource('vehicles');
 
@@ -99,6 +145,59 @@
 						}
 					});
 			}, 1000);
+
+			setInterval(() => {
+				agencies.forEach((agency_obj: any) => {
+					fetch(
+						`https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles`
+					)
+						.then(async (response) => {
+							return await response.arrayBuffer();
+						})
+						.then((buffer) => {
+							const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+								new Uint8Array(buffer)
+							);
+
+							//console.log('feed', feed);
+
+							const features = feed.entity.map((entity: any) => {
+								const { id, vehicle } = entity;
+
+								//console.log('entity', entity);
+
+								//console.log('has trip', vehicle.trip);
+
+								return {
+									type: 'Feature',
+									id,
+									properties: {
+										...vehicle,
+										color: '#E16710'
+									},
+									geometry: {
+										type: 'Point',
+										coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+									}
+								};
+							});
+
+							//console.log('features', features);
+
+							const getthesource = map.getSource('vehicles2');
+
+							if (getthesource != 'undefined' && typeof getthesource != 'undefined') {
+								getthesource.setData({
+									type: 'FeatureCollection',
+									features
+								});
+							}
+						})
+						.catch((e) => {
+							console.error(e);
+						});
+				});
+			}, 2000);
 		});
 
 		const successCallback = (position: any) => {
