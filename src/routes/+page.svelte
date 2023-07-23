@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 
+	let geolocation: GeolocationPosition;
+
 	onMount(() => {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
@@ -146,6 +148,18 @@
 					});
 			}, 1000);
 
+			
+
+			setInterval(() => {
+				navigator.geolocation.getCurrentPosition((location) => {
+					if (location) {
+						geolocation = location;
+
+						console.log(geolocation);
+					}
+				});
+			})
+
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
 					fetch(
@@ -213,6 +227,13 @@
 </script>
 
 <div id="map" style="width: 100%; height: 100%;" />
+
+	{#if typeof geolocation === "object"} 
+	{#if typeof geolocation.coords.speed === "number"} 
+
+	<div class="absolute bottom-0 left-0 px-1 py-1 bg-white text-black text-sm">{geolocation.coords.speed} m/s {geolocation.coords.speed} km/h</div>
+	{/if}
+	{/if}
 
 <style>
 	#map {
