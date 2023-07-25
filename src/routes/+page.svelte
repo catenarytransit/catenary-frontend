@@ -80,6 +80,23 @@
 				return '#000000';
 			};
 
+			/*
+			map.addLayer({
+				id: "nobearing_position",	
+				type: "symbol",
+				paint: {
+					"": ""
+				}		
+			});
+
+			map.addLayer({
+				id: "hasbearing_position",
+				type: "symbol",
+				paint: {
+					"": ""
+				}			
+			})*/
+
 			let agencies = [
 				/*
 				{
@@ -200,7 +217,7 @@
 
 							const getthesource = map.getSource('vehicles2');
 
-							if (getthesource != 'undefined' && typeof getthesource != 'undefined') {
+							if (typeof getthesource != 'undefined') {
 								getthesource.setData({
 									type: 'FeatureCollection',
 									features
