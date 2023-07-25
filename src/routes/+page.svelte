@@ -333,7 +333,9 @@ map.addLayer({
 			console.log(error);
 		};
 
-		navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+		navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+			enableHighAccuracy: true
+		});
 	});
 </script>
 
