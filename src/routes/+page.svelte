@@ -111,7 +111,8 @@ map.addImage('geocircle', image);
 'source': 'geolocation', // reference the data source
 'layout': {
 'icon-image': 'geocircle', // reference the image
-'icon-size': 0.05
+'icon-size': 0.1,
+'visibility': 'none'
 },
 'paint': {
 	
@@ -120,6 +121,35 @@ map.addImage('geocircle', image);
 			});
 
 		});
+
+
+		map.loadImage(
+'https://transitmap.kylerchin.com/geo-nav.png',
+(error, image) => {
+if (error) throw error;
+		// Add the image to the map style.
+map.addImage('geonav', image);
+
+map.addLayer({
+
+	id: "bearing_position",	
+	'type': 'symbol',
+'source': 'geolocation', // reference the data source
+'layout': {
+'icon-image': 'geonav', // reference the image
+'icon-size': 0.13,
+'icon-rotate': ['get', 'bearing'],
+'visibility': 'none'
+},
+'paint': {
+
+"icon-opacity": 0.8
+}
+});
+
+});
+		
+
 
 		/*
 			map.addLayer({
@@ -218,14 +248,28 @@ map.addImage('geocircle', image);
 							'geometry': {
 							'type': 'Point',
 							'coordinates': [location.coords.longitude, location.coords.latitude]
+							},
+							'properties': {
+								'accuracy': location.coords.accuracy,
+								'heading': location.coords.heading
 							}
 							}
 							]
 							})
 						}
+
+						if (typeof location.coords.heading === "number") {
+							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
+							
+							map.setLayoutProperty("bearing_position", 'visibility', 'visible');
+						} else {
+							map.setLayoutProperty("nobearing_position", 'visibility', 'visible');
+							
+							map.setLayoutProperty("bearing_position", 'visibility', 'none');
+						}
 					}
 				});
-			}, 1000)
+			}, 150)
 
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
