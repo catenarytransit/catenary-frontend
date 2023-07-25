@@ -111,19 +111,24 @@ map.addImage('geocircle', image);
 'source': 'geolocation', // reference the data source
 'layout': {
 'icon-image': 'geocircle', // reference the image
-'icon-size': 1
+'icon-size': 0.05
+},
+'paint': {
+	
+"icon-opacity": 0.8
 }
 			});
 
 		});
 
+		/*
 			map.addLayer({
 				id: "hasbearing_position",
 				type: "symbol",
 				paint: {
 					"": ""
 				}			
-			})
+			})*/
 
 			let agencies = [
 				/*
