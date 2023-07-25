@@ -228,49 +228,6 @@ map.addLayer({
 					});
 			}, 1000);
 
-			
-
-			setInterval(() => {
-				navigator.geolocation.getCurrentPosition((location) => {
-					if (location) {
-						geolocation = location;
-
-						console.log(geolocation);
-
-						let geolocationdata = map.getSource('geolocation');
-
-						if (geolocationdata) {
-							geolocationdata.setData({
-							'type': 'FeatureCollection',
-							'features': [
-							{
-							'type': 'Feature',
-							'geometry': {
-							'type': 'Point',
-							'coordinates': [location.coords.longitude, location.coords.latitude]
-							},
-							'properties': {
-								'accuracy': location.coords.accuracy,
-								'heading': location.coords.heading
-							}
-							}
-							]
-							})
-						}
-
-						if (typeof location.coords.heading === "number") {
-							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
-							
-							map.setLayoutProperty("bearing_position", 'visibility', 'visible');
-						} else {
-							map.setLayoutProperty("nobearing_position", 'visibility', 'visible');
-							
-							map.setLayoutProperty("bearing_position", 'visibility', 'none');
-						}
-					}
-				});
-			}, 150)
-
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
 					fetch(
@@ -326,7 +283,47 @@ map.addLayer({
 		});
 
 		const successCallback = (position: any) => {
-			console.log(position);
+			//console.log(position);
+
+			let location = position;
+
+
+					if (location) {
+						geolocation = location;
+
+						console.log(geolocation);
+
+						let geolocationdata = map.getSource('geolocation');
+
+						if (geolocationdata) {
+							geolocationdata.setData({
+							'type': 'FeatureCollection',
+							'features': [
+							{
+							'type': 'Feature',
+							'geometry': {
+							'type': 'Point',
+							'coordinates': [location.coords.longitude, location.coords.latitude]
+							},
+							'properties': {
+								'accuracy': location.coords.accuracy,
+								'heading': location.coords.heading
+							}
+							}
+							]
+							})
+						}
+
+						if (typeof location.coords.heading === "number") {
+							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
+							
+							map.setLayoutProperty("bearing_position", 'visibility', 'visible');
+						} else {
+							map.setLayoutProperty("nobearing_position", 'visibility', 'visible');
+							
+							map.setLayoutProperty("bearing_position", 'visibility', 'none');
+						}
+					}
 		};
 
 		const errorCallback = (error: any) => {
@@ -336,6 +333,11 @@ map.addLayer({
 		navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
 			enableHighAccuracy: true
 		});
+
+		const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+			enableHighAccuracy: true
+		});
+
 	});
 </script>
 
