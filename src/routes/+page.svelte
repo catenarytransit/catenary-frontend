@@ -80,14 +80,42 @@
 				return '#000000';
 			};
 
-			/*
+			map.addSource('geolocation', {
+'type': 'geojson',
+'data': {
+'type': 'FeatureCollection',
+'features': [
+{
+'type': 'Feature',
+'geometry': {
+'type': 'Point',
+'coordinates': [0,0]
+}
+}
+]
+}
+});
+			
+			map.loadImage(
+'https://transitmap.kylerchin.com/geo-circle.png',
+(error, image) => {
+if (error) throw error;
+ 
+// Add the image to the map style.
+map.addImage('geocircle', image);
+
 			map.addLayer({
+
 				id: "nobearing_position",	
-				type: "symbol",
-				paint: {
-					"": ""
-				}		
+				'type': 'symbol',
+'source': 'geolocation', // reference the data source
+'layout': {
+'icon-image': 'geocircle', // reference the image
+'icon-size': 1
+}
 			});
+
+		});
 
 			map.addLayer({
 				id: "hasbearing_position",
@@ -95,7 +123,7 @@
 				paint: {
 					"": ""
 				}			
-			})*/
+			})
 
 			let agencies = [
 				/*
@@ -173,9 +201,26 @@
 						geolocation = location;
 
 						console.log(geolocation);
+
+						let geolocationdata = map.getSource('geolocation');
+
+						if (geolocationdata) {
+							geolocationdata.setData({
+							'type': 'FeatureCollection',
+							'features': [
+							{
+							'type': 'Feature',
+							'geometry': {
+							'type': 'Point',
+							'coordinates': [location.coords.longitude, location.coords.latitude]
+							}
+							}
+							]
+							})
+						}
 					}
 				});
-			})
+			}, 1000)
 
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
@@ -244,13 +289,15 @@
 </script>
 
 <div id="map" style="width: 100%; height: 100%;" />
-
-	{#if typeof geolocation === "object"} 
+	{#if typeof geolocation === "object"}
 	{#if typeof geolocation.coords.speed === "number"} 
 
-	<div class="absolute bottom-0 left-0 px-1 py-1 bg-white text-black text-sm">{geolocation.coords.speed} m/s {geolocation.coords.speed} km/h</div>
+	
+<div class="absolute top-1 left-0 px-1 py-1 bg-white text-black text-sm">{geolocation.coords.speed} m/s {geolocation.coords.speed} km/h</div>
 	{/if}
+
 	{/if}
+	
 
 <style>
 	#map {
