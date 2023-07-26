@@ -41,7 +41,15 @@
 				type: 'circle',
 				source: 'vehicles2',
 				paint: {
-					'circle-radius': 4,
+					'circle-radius': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+                 10,
+                 4,
+                 16,
+                 6,
+              ],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 0.8,
@@ -62,7 +70,15 @@
 				type: 'circle',
 				source: 'vehicles',
 				paint: {
-					'circle-radius': 6,
+					'circle-radius': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+                 10,
+                 6,
+                 16,
+                 10,
+              ],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 1,
@@ -315,9 +331,10 @@ map.addLayer({
 						}
 
 						if (typeof location.coords.heading === "number") {
+							console.log('bearing is', location.coords.heading)
 							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
 							
-							map.setLayoutProperty("bearing_position", 'visibility', 'visible');
+							map.setLayoutProperty("bearing_position", 'visibility', 'visible');							
 						} else {
 							map.setLayoutProperty("nobearing_position", 'visibility', 'visible');
 							
