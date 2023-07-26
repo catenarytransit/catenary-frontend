@@ -8,6 +8,8 @@
 	onMount(() => {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
+		let rtFeedsTimestampsVehicles: any = new Object();
+
 		const map = new maplibregl.Map({
 			container: 'map',
 			style:
@@ -45,7 +47,7 @@
                  "interpolate",
                  ["linear"],
                  ["zoom"],
-                 10,
+		                 10,
                  4,
                  16,
                  6,
@@ -246,16 +248,34 @@ map.addLayer({
 
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
+
+					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles`;
+
+					if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
+						url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
+					}
+
 					fetch(
-						`https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles`
+						url
 					)
 						.then(async (response) => {
+
+							if (response.status === 200) {
+								
+
 							return await response.arrayBuffer();
+							} else {
+								return null;
+							}
 						})
 						.then((buffer) => {
-							const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+
+							if (buffer != null) {
+								const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
 								new Uint8Array(buffer)
 							);
+
+							rtFeedsTimestampsVehicles[`${agency_obj.feed_id}`] = feed.header.timestamp;
 
 							//console.log('feed', feed);
 
@@ -290,11 +310,14 @@ map.addLayer({
 									features
 								});
 							}
-						})
+						}})
 						.catch((e) => {
 							console.error(e);
 						});
-				});
+							}
+
+						
+		)});
 			}, 2000);
 		});
 
@@ -347,15 +370,19 @@ map.addLayer({
 			console.log(error);
 		};
 
-		navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+		if (typeof window !== 'undefined') {
+	// client-only code here
+	navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
 			enableHighAccuracy: true
 		});
 
 		const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 			enableHighAccuracy: true
 		});
+}
+		
 
-	});
+	
 </script>
 
 <div id="map" style="width: 100%; height: 100%;" />
