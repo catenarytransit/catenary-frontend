@@ -3,6 +3,12 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 
+	function flatten(arr:any) {
+  return arr.reduce(function (flat:any, toFlatten:any) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
+
 	let geolocation: GeolocationPosition;
 
 	onMount(() => {
@@ -198,6 +204,8 @@ map.addLayer({
 				}
 			];
 
+			let geometryObj:any = new Object();
+
 			setInterval(() => {
 				fetch(
 					'https://kactusapi.kylerchin.com/gtfsrtasjson/?feed=f-metro~losangeles~rail~rt&category=vehicles'
@@ -280,7 +288,7 @@ map.addLayer({
 								new Uint8Array(buffer)
 							);
 
-							rtFeedsTimestampsVehicles[`${agency_obj.feed_id}`] = feed.header.timestamp;
+							rtFeedsTimestampsVehicles[agency_obj.feed_id] = feed.header.timestamp;
 
 							//console.log('feed', feed);
 
@@ -296,7 +304,7 @@ map.addLayer({
 									id,
 									properties: {
 										...vehicle,
-										color: '#E16710'
+										color: agency_obj.color
 									},
 									geometry: {
 										type: 'Point',
@@ -309,10 +317,16 @@ map.addLayer({
 
 							const getthesource = map.getSource('vehicles2');
 
+							geometryObj[agency_obj.feed_id] = features;
+
+							let flattenedarray = flatten(Object.values(geometryObj));
+
+							console.log(flattenedarray);
+
 							if (typeof getthesource != 'undefined') {
 								getthesource.setData({
 									type: 'FeatureCollection',
-									features
+									features: flattenedarray
 								});
 							}
 						}})
