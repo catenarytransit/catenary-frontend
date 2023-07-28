@@ -3,8 +3,12 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 
+	let geolocation: GeolocationPosition;
+
 	onMount(() => {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
+
+		let rtFeedsTimestampsVehicles: any = new Object();
 
 		const map = new maplibregl.Map({
 			container: 'map',
@@ -39,7 +43,15 @@
 				type: 'circle',
 				source: 'vehicles2',
 				paint: {
-					'circle-radius': 4,
+					'circle-radius': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+		                 10,
+                 4,
+                 16,
+                 6,
+              ],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 0.8,
@@ -60,7 +72,15 @@
 				type: 'circle',
 				source: 'vehicles',
 				paint: {
-					'circle-radius': 6,
+					'circle-radius': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+                 10,
+                 6,
+                 16,
+                 10,
+              ],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 1,
@@ -78,6 +98,86 @@
 				return '#000000';
 			};
 
+			map.addSource('geolocation', {
+'type': 'geojson',
+'data': {
+'type': 'FeatureCollection',
+'features': [
+{
+'type': 'Feature',
+'geometry': {
+'type': 'Point',
+'coordinates': [0,0]
+}
+}
+]
+}
+});
+			
+			map.loadImage(
+'https://transitmap.kylerchin.com/geo-circle.png',
+(error, image) => {
+if (error) throw error;
+ 
+// Add the image to the map style.
+map.addImage('geocircle', image);
+
+			map.addLayer({
+
+				id: "nobearing_position",	
+				'type': 'symbol',
+'source': 'geolocation', // reference the data source
+'layout': {
+'icon-image': 'geocircle', // reference the image
+'icon-size': 0.1,
+'visibility': 'none'
+},
+'paint': {
+	
+"icon-opacity": 0.8
+}
+			});
+
+		});
+
+
+		map.loadImage(
+'https://transitmap.kylerchin.com/geo-nav.png',
+(error, image) => {
+if (error) throw error;
+		// Add the image to the map style.
+map.addImage('geonav', image);
+
+map.addLayer({
+
+	id: "bearing_position",	
+	'type': 'symbol',
+'source': 'geolocation', // reference the data source
+'layout': {
+'icon-image': 'geonav', // reference the image
+'icon-size': 0.13,
+'icon-rotate': ['get', 'bearing'],
+'visibility': 'none'
+},
+'paint': {
+
+"icon-opacity": 0.8
+}
+});
+
+});
+		
+
+
+		/*
+			map.addLayer({
+				id: "hasbearing_position",
+				type: "symbol",
+				paint: {
+					"": ""
+				}			
+			})*/
+
 			let agencies = [
 				/*
 				{
@@ -90,6 +190,11 @@
 					feed_id: 'f-metro~losangeles~bus~rt',
 					agency_name: 'Los Angeles Metro',
 					color: '#E16710'
+				},
+				{
+					feed_id: 'f-octa~rt',
+					agency_name: 'Orange County',
+					color: '#2868B7'
 				}
 			];
 
@@ -148,16 +253,34 @@
 
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
+
+					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles`;
+
+					if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
+						url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
+					}
+
 					fetch(
-						`https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles`
+						url
 					)
 						.then(async (response) => {
+
+							if (response.status === 200) {
+								
+
 							return await response.arrayBuffer();
+							} else {
+								return null;
+							}
 						})
 						.then((buffer) => {
-							const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+
+							if (buffer != null) {
+								const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
 								new Uint8Array(buffer)
 							);
+
+							rtFeedsTimestampsVehicles[`${agency_obj.feed_id}`] = feed.header.timestamp;
 
 							//console.log('feed', feed);
 
@@ -186,33 +309,98 @@
 
 							const getthesource = map.getSource('vehicles2');
 
-							if (getthesource != 'undefined' && typeof getthesource != 'undefined') {
+							if (typeof getthesource != 'undefined') {
 								getthesource.setData({
 									type: 'FeatureCollection',
 									features
 								});
 							}
-						})
+						}})
 						.catch((e) => {
 							console.error(e);
 						});
-				});
+							}
+
+				)
+		
 			}, 2000);
 		});
 
 		const successCallback = (position: any) => {
-			console.log(position);
+			//console.log(position);
+
+			let location = position;
+
+
+					if (location) {
+						geolocation = location;
+
+						console.log(geolocation);
+
+						let geolocationdata = map.getSource('geolocation');
+
+						if (geolocationdata) {
+							geolocationdata.setData({
+							'type': 'FeatureCollection',
+							'features': [
+							{
+							'type': 'Feature',
+							'geometry': {
+							'type': 'Point',
+							'coordinates': [location.coords.longitude, location.coords.latitude]
+							},
+							'properties': {
+								'accuracy': location.coords.accuracy,
+								'heading': location.coords.heading
+							}
+							}
+							]
+							})
+						}
+
+						if (typeof location.coords.heading === "number") {
+							console.log('bearing is', location.coords.heading)
+							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
+							
+							map.setLayoutProperty("bearing_position", 'visibility', 'visible');							
+						} else {
+							map.setLayoutProperty("nobearing_position", 'visibility', 'visible');
+							
+							map.setLayoutProperty("bearing_position", 'visibility', 'none');
+						}
+					}
 		};
 
 		const errorCallback = (error: any) => {
 			console.log(error);
 		};
 
-		navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+		if (typeof window !== 'undefined') {
+	// client-only code here
+	navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+			enableHighAccuracy: true
+		});
+
+		const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+			enableHighAccuracy: true
+		});
+}
+		
 	});
+
+	
 </script>
 
 <div id="map" style="width: 100%; height: 100%;" />
+	{#if typeof geolocation === "object"}
+	{#if typeof geolocation.coords.speed === "number"} 
+
+	
+<div class="absolute top-1 left-0 px-1 py-1 bg-white text-black text-sm">{geolocation.coords.speed} m/s {geolocation.coords.speed} km/h</div>
+	{/if}
+
+	{/if}
+	
 
 <style>
 	#map {
