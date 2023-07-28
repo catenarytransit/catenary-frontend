@@ -262,7 +262,7 @@ map.addLayer({
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
 
-					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles`;
+					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
 
 					if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
 						url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
