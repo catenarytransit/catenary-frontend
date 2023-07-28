@@ -5,7 +5,7 @@
     fetch(
 						`https://api.octa.net/GTFSRealTime/protoBuf/VehiclePositions.aspx`,
                         {
-                            mode: 'cors',
+                           
   headers: {
     'Access-Control-Allow-Origin':'*'
   }
@@ -39,7 +39,7 @@
 						`https://api.octa.net/GTFSRealTime/protoBuf/servicealerts.aspx`,
                         
                         {
-                            mode: 'cors',
+                          
   headers: {
     'Access-Control-Allow-Origin':'*'
   }
@@ -69,7 +69,7 @@
                         fetch(
 						`https://api.octa.net/GTFSRealTime/protoBuf/tripupdates.aspx`,
                         {
-                            mode: 'cors',
+                          
   headers: {
     'Access-Control-Allow-Origin':'*'
   }
