@@ -65,6 +65,25 @@
 				}
 			});
 
+			map.addLayer({
+				id: "labelbuses",
+				type: "symbol",
+				source: 'vehicles2',
+				layout: {
+					'text-field': ['get', 'routeId'],
+					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                'text-radial-offset': 0.2,
+				'text-size': 14,
+				'text-ignore-placement': true
+				},
+				paint: {
+					'text-color': ['get', 'color'],
+					'text-halo-color': "#eaeaea",
+					'text-halo-width': 2,
+					'text-halo-blur': 100
+				}
+			})
+
 			map.addSource('vehicles', {
 				type: 'geojson',
 				data: {
@@ -304,7 +323,9 @@ map.addLayer({
 									id,
 									properties: {
 										...vehicle,
-										color: agency_obj.color
+										color: agency_obj.color,
+										label: vehicle?.vehicle?.label,
+										routeId: vehicle?.trip?.routeId.replace("-13168", "")
 									},
 									geometry: {
 										type: 'Point',
