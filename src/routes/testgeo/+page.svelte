@@ -34,8 +34,8 @@ const id = navigator.geolocation.watchPosition(success, error, options);
     
     <h1>Realtime Location</h1>
     
-    <p>Latitude: <b>{{ lat }}</b></p>
-    <p>Longitude: <b>{{ lng }}</b></p>
-    <p>Speed: <b>{{ speed }}</b></p>
-    <p>Heading: <b>{{ heading }}</b></p>
-    <p>Accuracy: <b>{{accuracy}}</b></p>
+    <p>Latitude: <b>{ lat }</b></p>
+    <p>Longitude: <b>{ lng }</b></p>
+    <p>Speed: <b>{ speed }</b></p>
+    <p>Heading: <b>{ heading }</b></p>
+    <p>Accuracy: <b>{accuracy}</b></p>
