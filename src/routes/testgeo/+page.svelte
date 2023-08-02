@@ -9,6 +9,8 @@
     
     onMount(() => {
         function success(pos) {
+            console.log(pos);
+
   lat = pos.coords.latitude;
   lng = pos.coords.longitude;
   speed = pos.coords.speed;
