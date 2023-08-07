@@ -243,6 +243,11 @@ map.addLayer({
 					feed_id: 'f-octa~rt',
 					agency_name: 'Orange County',
 					color: '#2868B7'
+				},
+				{
+					color: "#801f3b",
+					feed_id: "f-longbeachtransit~rt",
+					agency_name: "Long Beach Transit"
 				}
 			];
 
