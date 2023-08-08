@@ -53,6 +53,8 @@
                  "interpolate",
                  ["linear"],
                  ["zoom"],
+				 8,
+				 3,
 		                 10,
                  4,
                  16,
@@ -73,15 +75,36 @@
 					'text-field': ['get', 'routeId'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
                 'text-radial-offset': 0.2,
-				'text-size': 14,
+				'text-size': [
+					"interpolate",
+					["linear"],
+					["zoom"],
+					8,
+					8,
+					9,
+					10,
+					13,
+					14
+				],
 				'text-ignore-placement': true
 				},
 				paint: {
 					'text-color': ['get', 'color'],
 					'text-halo-color': "#eaeaea",
 					'text-halo-width': 2,
-					'text-halo-blur': 100
-				}
+					'text-halo-blur': 100,
+					'text-opacity': [
+					"interpolate",
+					["linear"],
+					["zoom"],
+					7,
+					0,
+					9,
+					0.8,
+					10,
+					1
+				],
+				},
 			})
 
 			map.addSource('vehicles', {
@@ -220,6 +243,11 @@ map.addLayer({
 					feed_id: 'f-octa~rt',
 					agency_name: 'Orange County',
 					color: '#2868B7'
+				},
+				{
+					color: "#801f3b",
+					feed_id: "f-longbeachtransit~rt",
+					agency_name: "Long Beach Transit"
 				},
 				{
 					feed_id: 'f-foothilltransit~rt',
