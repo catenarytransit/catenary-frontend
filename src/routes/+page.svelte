@@ -220,6 +220,11 @@ map.addLayer({
 					feed_id: 'f-octa~rt',
 					agency_name: 'Orange County',
 					color: '#2868B7'
+				},
+				{
+					feed_id: 'f-foothilltransit~rt',
+					color: '#2c6a4f',
+					agency_name: 'Foothill Transit'
 				}
 			];
 
