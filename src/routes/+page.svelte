@@ -310,6 +310,11 @@ map.addLayer({
 					color: "#801f3b",
 					feed_id: "f-longbeachtransit~rt",
 					agency_name: "Long Beach Transit"
+				},
+				{
+					feed_id: 'f-foothilltransit~rt',
+					color: '#2c6a4f',
+					agency_name: 'Foothill Transit'
 				}
 			];
 
