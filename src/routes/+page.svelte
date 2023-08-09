@@ -16,10 +16,27 @@
 
 		let rtFeedsTimestampsVehicles: any = new Object();
 
+			
+		let dark = "https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539";
+
+		let light = "https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779";
+
+		let style = ""
+
+	//	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    
+	if (false) {
+		// dark mode
+	style=dark;
+
+} else {
+	style=light;
+}
+
 		const map = new maplibregl.Map({
 			container: 'map',
 			style:
-				'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779/style.json?key=' +
+				style + '/style.json?key=' +
 				API_KEY, // stylesheet location
 			center: [-118, 33.9], // starting position [lng, lat]
 			zoom: 8 // starting zoom
@@ -53,6 +70,8 @@
                  "interpolate",
                  ["linear"],
                  ["zoom"],
+				 7,
+				 2,
 				 8,
 				 3,
 		                 10,
@@ -62,6 +81,15 @@
               ],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
+					'circle-stroke-opacity': [
+						"interpolate",
+						["linear"],
+						["zoom"],
+						8,
+						0.1,
+						9,
+						0.9
+					],
 					'circle-stroke-width': 0.8,
 					'circle-opacity': 0.5
 				}
@@ -75,6 +103,33 @@
 					'text-field': ['get', 'routeId'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
                 'text-radial-offset': 0.2,
+				'text-font': [
+  "step",
+  ["zoom"],
+  [
+    "literal",
+    [
+      "Open Sans Regular",
+      "Arial Unicode MS Regular"
+    ]
+  ],
+  10,
+  [
+    "literal",
+    [
+      "Open Sans Medium",
+      "Arial Unicode MS Medium"
+    ]
+  ],
+  14,
+  [
+    "literal",
+    [
+      "Open Sans Bold",
+      "Arial Unicode MS Bold"
+    ]
+  ]
+],
 				'text-size': [
 					"interpolate",
 					["linear"],
@@ -86,20 +141,27 @@
 					13,
 					14
 				],
-				'text-ignore-placement': true
+				'text-ignore-placement': [
+					'step',
+					["zoom"],
+					false,
+					9.5,
+					true
+				]
 				},
 				paint: {
 					'text-color': ['get', 'color'],
 					'text-halo-color': "#eaeaea",
+					//'text-halo-color': "#1d1d1d",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': [
 					"interpolate",
 					["linear"],
 					["zoom"],
-					7,
+					6,
 					0,
-					9,
+					7,
 					0.8,
 					10,
 					1
