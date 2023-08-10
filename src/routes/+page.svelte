@@ -15,6 +15,7 @@
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
 		let rtFeedsTimestampsVehicles: any = new Object();
+		let rtFeedsHashVehicles:any = new Object();
 
 			
 		let dark = "https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539";
@@ -382,13 +383,24 @@ map.addLayer({
 						url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
 					}
 
+					if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
+						url = url + "&bodyhash=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
+					}
+
 					fetch(
 						url
 					)
 						.then(async (response) => {
 
+							
+
 							if (response.status === 200) {
+
+								console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
+
+							console.log(response.headers)
 								
+								rtFeedsHashVehicles[agency_obj.feed_id] = response.headers.get('hash');
 
 							return await response.arrayBuffer();
 							} else {
@@ -403,7 +415,7 @@ map.addLayer({
 							);
 
 							rtFeedsTimestampsVehicles[agency_obj.feed_id] = feed.header.timestamp;
-
+								
 							//console.log('feed', feed);
 
 							const features = feed.entity.map((entity: any) => {
