@@ -384,7 +384,7 @@ map.addLayer({
 					}
 
 					if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
-						url = url + "&bodyhash=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
+						url = url + "&bodyhash=" + rtFeedsHashVehicles[agency_obj.feed_id];
 					}
 
 					fetch(
