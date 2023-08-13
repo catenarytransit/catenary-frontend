@@ -11,6 +11,8 @@
 
 	let geolocation: GeolocationPosition;
 
+	let lastknownheading: number;
+
 	onMount(() => {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
@@ -493,7 +495,7 @@ map.addLayer({
 							},
 							'properties': {
 								'accuracy': location.coords.accuracy,
-								'heading': location.coords.heading
+								'heading': location.coords.heading || lastknownheading
 							}
 							}
 							]
@@ -502,6 +504,11 @@ map.addLayer({
 
 						if (true) {
 							console.log('bearing is', location.coords.heading)
+
+							if (location.coords.heading === null) {
+								console.log('missing, using', lastknownheading)
+							}
+
 							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
 							
 							map.setLayoutProperty("bearing_position", 'visibility', 'visible');							
@@ -519,10 +526,6 @@ map.addLayer({
 
 		if (typeof window !== 'undefined') {
 	// client-only code here
-	navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
-			enableHighAccuracy: true
-		});
-
 		const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
 			enableHighAccuracy: true
 		});
