@@ -2,6 +2,59 @@
 	import maplibregl from 'maplibre-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
+	
+	let lasttimezoomran = 0;
+
+	function calculateNewCoordinates(latitude:number, longitude:number, bearing:number, distance:number) {
+  // taken from: https://stackoverflow.com/a/46410871/13549 
+      // distance in KM, bearing in degrees
+    
+      const R = 6378.1; // Radius of the Earth
+      const brng = bearing * Math.PI / 180; // Convert bearing to radian
+      let lat = latitude * Math.PI / 180; // Current coords to radians
+      let lon = longitude * Math.PI / 180;
+    
+      // Do the math magic
+      lat = Math.asin(Math.sin(lat) * Math.cos(distance / R) + Math.cos(lat) * Math.sin(distance / R) * Math.cos(brng));
+      lon += Math.atan2(Math.sin(brng) * Math.sin(distance / R) * Math.cos(lat), Math.cos(distance / R) - Math.sin(lat) * Math.sin(lat));
+    
+      // Coords back to degrees and return
+      return {latitude: (lat * 180 / Math.PI), longitude: (lon * 180 / Math.PI)};
+}
+
+
+function numberForBearingLengthBus(zoom:number) {
+	if (zoom < 11) {
+		return 1000;
+	}
+
+	if (zoom < 12) {
+		return 500;
+	}
+
+	if (zoom < 12.5) {
+		return 300;
+	}
+
+	if (zoom < 13) {
+		return 180;
+	}
+
+	if (zoom < 14) {
+		return 120;
+	}
+
+	if (zoom < 15) {
+		return 80;
+	}
+
+	if (zoom < 17) {
+		return 50;
+	}
+
+
+	return 20;
+}
 
 	function flatten(arr:any) {
   return arr.reduce(function (flat:any, toFlatten:any) {
@@ -63,6 +116,55 @@
 					features: []
 				}
 			});
+
+							map.addSource('busbearings', {
+				'type': 'geojson',
+				'data': {
+				'type': 'Feature',
+				'properties': {},
+				'geometry': {
+				'type': 'LineString',
+				'coordinates': [
+				]
+				}
+				}
+				});
+
+				
+
+				map.addLayer({
+				'id': 'busbearings2',
+				'type': 'line',
+				'source': 'busbearings',
+				'layout': {
+				//'line-join': 'round',
+				//'line-cap': 'round'
+				},
+				'paint': {
+				'line-color': ['get', 'color'],
+				'line-width': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+				 9,
+				 1,
+				 10,
+				 1.2,
+				 13,
+				2
+              ],
+				'line-opacity': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+				 6,
+				 0,
+				 7,
+				 0.9
+              ],
+				
+				}
+				});
 
 			map.addLayer({
 				id: 'vehicles2',
@@ -318,10 +420,58 @@ map.addLayer({
 					feed_id: 'f-foothilltransit~rt',
 					color: '#2c6a4f',
 					agency_name: 'Foothill Transit'
+				},
+				{
+					feed_id: "f-bigbluebus~rt",
+					color: '#0039A6',
+					agency_name: 'Big Blue Bus'
 				}
 			];
 
 			let geometryObj:any = new Object();
+
+			map.on('idle', () => {
+
+				if (lasttimezoomran < Date.now() - 800) {
+
+					lasttimezoomran = Date.now();
+
+					let flattenedarray = flatten(Object.values(geometryObj));
+
+					console.log(flattenedarray);
+
+					let newbearingdata = {
+									type: 'FeatureCollection',
+									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
+									.filter((x: any) => x.properties.bearing != 0)
+									.map((x: any) => {
+
+										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, mapzoomnumber / 1000)
+
+										return {
+											type: 'Feature',
+											geometry: {
+												type: 'LineString',
+												coordinates: [
+													[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+													[newcoords.longitude, newcoords.latitude]
+												]
+											},
+											properties: {
+												bearing: x.properties.bearing,
+												color: x.properties.color
+											}
+										}
+									})
+								};
+
+								console.log('newbearingdata', newbearingdata)
+
+								map.getSource("busbearings").setData(newbearingdata)
+				}
+
+				
+			})
 
 			setInterval(() => {
 				fetch(
@@ -375,6 +525,8 @@ map.addLayer({
 						}
 					});
 			}, 1000);
+
+			
 
 			setInterval(() => {
 				agencies.forEach((agency_obj: any) => {
@@ -434,7 +586,8 @@ map.addLayer({
 										...vehicle,
 										color: agency_obj.color,
 										label: vehicle?.vehicle?.label,
-										routeId: vehicle?.trip?.routeId.replace("-13168", "")
+										routeId: vehicle?.trip?.routeId.replace("-13168", ""),
+										bearing: vehicle?.position?.bearing
 									},
 									geometry: {
 										type: 'Point',
@@ -458,6 +611,39 @@ map.addLayer({
 									type: 'FeatureCollection',
 									features: flattenedarray
 								});
+
+								console.log('set data of bearings');
+
+								let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+								
+								let newbearingdata = {
+									type: 'FeatureCollection',
+									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
+									.filter((x: any) => x.properties.bearing != 0)
+									.map((x: any) => {
+
+										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, mapzoomnumber / 1000)
+
+										return {
+											type: 'Feature',
+											geometry: {
+												type: 'LineString',
+												coordinates: [
+													[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+													[newcoords.longitude, newcoords.latitude]
+												]
+											},
+											properties: {
+												bearing: x.properties.bearing,
+												color: x.properties.color
+											}
+										}
+									})
+								};
+
+								console.log('newbearingdata', newbearingdata)
+
+								map.getSource("busbearings").setData(newbearingdata)
 							}
 						}})
 						.catch((e) => {
