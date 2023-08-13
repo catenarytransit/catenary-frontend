@@ -57,12 +57,129 @@
 		})
 
 		
-			function updateOctaData() {
-        fetch("https://api.octa.net/GTFSRealTime/protoBuf/VehiclePositions.aspx", {
-			mode: 'cors',
-			headers: {
-				'Access-Control-Allow-Origin':'*'
-			}
+		
+	map.on('load', () => {
+		console.log('loaded');
+
+		map.addSource('vehicles', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: []
+				}
+			});
+
+			map.addLayer({
+				id: 'vehicles2',
+				type: 'circle',
+				source: 'vehicles',
+				paint: {
+					'circle-radius': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+				 7,
+				 2,
+				 8,
+				 3,
+		                 10,
+                 4,
+                 16,
+                 6,
+              ],
+					'circle-color': ['get', 'color'],
+					'circle-stroke-color': '#fff',
+					'circle-stroke-opacity': [
+						"interpolate",
+						["linear"],
+						["zoom"],
+						8,
+						0.1,
+						9,
+						0.9
+					],
+					'circle-stroke-width': 0.8,
+					'circle-opacity': 0.9
+				}
+			});
+
+			map.addLayer({
+				id: "labelbuses",
+				type: "symbol",
+				source: 'vehicles',
+				layout: {
+					'text-field': ['get', 'routeId'],
+					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                'text-radial-offset': 0.2,
+				'text-font': [
+  "step",
+  ["zoom"],
+  [
+    "literal",
+    [
+      "Open Sans Regular",
+      "Arial Unicode MS Regular"
+    ]
+  ],
+  10,
+  [
+    "literal",
+    [
+      "Open Sans Medium",
+      "Arial Unicode MS Medium"
+    ]
+  ],
+  14,
+  [
+    "literal",
+    [
+      "Open Sans Bold",
+      "Arial Unicode MS Bold"
+    ]
+  ]
+],
+				'text-size': [
+					"interpolate",
+					["linear"],
+					["zoom"],
+					8,
+					8,
+					9,
+					10,
+					13,
+					14
+				],
+				'text-ignore-placement': [
+					'step',
+					["zoom"],
+					false,
+					9.5,
+					true
+				]
+				},
+				paint: {
+					'text-color': ['get', 'color'],
+					'text-halo-color': "#1a1a1a",
+					//'text-halo-color': "#1d1d1d",
+					'text-halo-width': 2,
+					'text-halo-blur': 100,
+					'text-opacity': [
+					"interpolate",
+					["linear"],
+					["zoom"],
+					6,
+					0,
+					7,
+					0.8,
+					10,
+					1
+				],
+				},
+			})
+
+		function updateOctaData() {
+        fetch("https://kactusapi.kylerchin.com/gtfsrt/?feed=f-octa~rt&category=vehicles&suicidebutton=true", {
+			
 		})
         .then((response) => response.arrayBuffer())
         .then((buffer) => {
@@ -85,7 +202,7 @@ if (buffer != null) {
 									type: 'Feature',
 									id,
 									properties: {
-										...vehicle,
+										
 										color: findColor(vehicle?.trip?.routeId),
 										label: vehicle?.vehicle?.label,
 										routeId: vehicle?.trip?.routeId
@@ -98,6 +215,13 @@ if (buffer != null) {
 							});
 
                             console.log('features', features);
+
+							map.getSource("vehicles").setData({
+									type: "FeatureCollection",
+									features
+								}
+		);
+							
 }})
     
 	}
@@ -108,6 +232,7 @@ if (buffer != null) {
 	setInterval(() => {
 			updateOctaData();
     }, 1000);
+	})
 		
 
 		onDestroy(() => {
