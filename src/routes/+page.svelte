@@ -500,7 +500,7 @@ map.addLayer({
 							})
 						}
 
-						if (typeof location.coords.heading === "number") {
+						if (true) {
 							console.log('bearing is', location.coords.heading)
 							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
 							
@@ -532,19 +532,26 @@ map.addLayer({
 
 	
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{#if typeof geolocation === "object"}
+{#if typeof geolocation.coords.speed === "number"} 
+
+
+<div class="inter absolute top-1 left-0 px-1 py-1 bg-white text-black text-sm z-10">{geolocation.coords.speed.toFixed(2)} m/s {geolocation.coords.speed.toFixed(2)} km/h</div>
+{/if}
+
+{/if}
 
 <div id="map" style="width: 100%; height: 100%;" />
-	{#if typeof geolocation === "object"}
-	{#if typeof geolocation.coords.speed === "number"} 
 
-	
-<div class="absolute top-1 left-0 px-1 py-1 bg-white text-black text-sm">{geolocation.coords.speed} m/s {geolocation.coords.speed} km/h</div>
-	{/if}
-
-	{/if}
-	
 
 <style>
+	.inter {
+		font-family: 'Inter', sans-serif;
+	}
+
 	#map {
 		width: 100%;
 		height: 100%;
