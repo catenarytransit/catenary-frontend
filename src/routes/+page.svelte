@@ -542,7 +542,7 @@ map.addLayer({
 {#if typeof geolocation.coords.speed === "number"} 
 
 
-<div class="inter fixed z-50 w-auto rounded-sm px-2 py-2 bg-white w-content ml-2 mt-1 text-black text-sm z-10"><div>
+<div class="inter fixed z-50 w-auto rounded-sm px-2 py-1 bg-white w-content ml-2 mt-1 text-black text-sm z-10"><div>
 	{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
 </div></div>
 {/if}
