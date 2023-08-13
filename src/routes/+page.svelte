@@ -483,6 +483,8 @@ map.addLayer({
 
 						let geolocationdata = map.getSource('geolocation');
 
+						
+
 						if (geolocationdata) {
 							geolocationdata.setData({
 							'type': 'FeatureCollection',
@@ -495,19 +497,17 @@ map.addLayer({
 							},
 							'properties': {
 								'accuracy': location.coords.accuracy,
-								'heading': location.coords.heading || lastknownheading
+								'heading': location.coords.heading
 							}
 							}
 							]
 							})
 						}
 
-						if (true) {
+						if (false) {
 							console.log('bearing is', location.coords.heading)
 
-							if (location.coords.heading === null) {
-								console.log('missing, using', lastknownheading)
-							}
+							
 
 							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
 							
