@@ -166,6 +166,55 @@ function numberForBearingLengthBus(zoom:number) {
 				}
 				});
 
+				map.addSource('railbearings', {
+				'type': 'geojson',
+				'data': {
+				'type': 'Feature',
+				'properties': {},
+				'geometry': {
+				'type': 'LineString',
+				'coordinates': [
+				]
+				}
+				}
+				});
+
+				
+
+				map.addLayer({
+				'id': 'railbearings2',
+				'type': 'line',
+				'source': 'railbearings',
+				'layout': {
+				//'line-join': 'round',
+				//'line-cap': 'round'
+				},
+				'paint': {
+				'line-color': ['get', 'color'],
+				'line-width': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+				 9,
+				 1.2,
+				 10,
+				 2,
+				 13,
+				3
+              ],
+				'line-opacity': [
+                 "interpolate",
+                 ["linear"],
+                 ["zoom"],
+				 6,
+				 0,
+				 7,
+				 0.9
+              ],
+				
+				}
+				});
+
 			map.addLayer({
 				id: 'vehicles2',
 				type: 'circle',
@@ -475,16 +524,38 @@ map.addLayer({
 
 			setInterval(() => {
 				fetch(
-					'https://kactusapi.kylerchin.com/gtfsrtasjson/?feed=f-metro~losangeles~rail~rt&category=vehicles'
+					'https://kactusapi.kylerchin.com/gtfsrt/?feed=f-metro~losangeles~rail~rt&category=vehicles'
 				)
-					.then((response) => response.json())
-					.then((data) => {
-						//map.getSource('vehicles').setData(data);
+				.then(async (response) => {
+
+							
+
+if (response.status === 200) {
+
+	//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
+
+console.log(response.headers)
+	
+	rtFeedsHashVehicles["f-metro~losangeles~rail~rt"] = response.headers.get('hash');
+
+return await response.arrayBuffer();
+} else {
+	return null;
+}
+})
+.then((buffer) => {
+
+if (buffer != null) {
+	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+	new Uint8Array(buffer)
+);
+
+//map.getSource('vehicles').setData(data);
 						//console.log(data);
 
 						//console.log(data.entity);
 
-						const features = data.entity
+						const features = feed.entity
 							.map((entity: any) => {
 								if (entity.vehicle) {
 									const { id, vehicle } = entity;
@@ -500,7 +571,8 @@ map.addLayer({
 											...vehicle,
 											color: convertRouteIdToColor(
 												vehicle.trip ? vehicle.trip.routeId || 'none' : 'none'
-											)
+											),
+											bearing: vehicle?.position?.bearing
 										},
 										geometry: {
 											type: 'Point',
@@ -517,12 +589,52 @@ map.addLayer({
 
 						const getthesource = map.getSource('vehicles');
 
-						if (getthesource != 'undefined' && typeof getthesource != 'undefined') {
+						let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+
+						if ( typeof getthesource != 'undefined') {
 							getthesource.setData({
 								type: 'FeatureCollection',
 								features
 							});
+
+							
+							let railbearingdata = {
+									type: 'FeatureCollection',
+									features: features
+									.filter((x:any) => {
+										return x.properties.bearing != undefined && x.properties.bearing != 0
+									})
+									.map((x: any) => {
+
+										
+
+										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, mapzoomnumber / 1000)
+
+										//console.log(x.geometry.coordinates,'new rail coords', newcoords)
+
+										return {
+											type: 'Feature',
+											geometry: {
+												type: 'LineString',
+												coordinates: [
+													[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+													[newcoords.longitude, newcoords.latitude]
+												]
+											},
+											properties: {
+												bearing: x.properties.bearing,
+												color: x.properties.color
+											}
+										}
+									})
+								};
+
+								console.log('railbearingdata', railbearingdata)
+
+								map.getSource("railbearings").setData(railbearingdata)
 						}
+}
+						
 					});
 			}, 1000);
 
