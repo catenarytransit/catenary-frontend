@@ -56,6 +56,43 @@ function numberForBearingLengthBus(zoom:number) {
 	return 20;
 }
 
+function numberForBearingLengthRail(zoom:number) {
+	if (zoom < 10) {
+		return 1700;
+	}
+	
+	if (zoom < 11) {
+		return 1000;
+	}
+
+	if (zoom < 12) {
+		return 500;
+	}
+
+	if (zoom < 12.5) {
+		return 300;
+	}
+
+	if (zoom < 13) {
+		return 180;
+	}
+
+	if (zoom < 14) {
+		return 120;
+	}
+
+	if (zoom < 15) {
+		return 80;
+	}
+
+	if (zoom < 17) {
+		return 50;
+	}
+
+
+	return 20;
+}
+
 	function flatten(arr:any) {
   return arr.reduce(function (flat:any, toFlatten:any) {
     return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
@@ -196,7 +233,7 @@ function numberForBearingLengthBus(zoom:number) {
                  ["linear"],
                  ["zoom"],
 				 9,
-				 1.2,
+				 2,
 				 10,
 				 2,
 				 13,
@@ -474,6 +511,11 @@ map.addLayer({
 					feed_id: "f-bigbluebus~rt",
 					color: '#0039A6',
 					agency_name: 'Big Blue Bus'
+				},
+				{
+					feed_id: "f-calgarytransit~rt",
+					color: "#c9072a",
+					agency_name: "Calgary Transit"
 				}
 			];
 
@@ -589,7 +631,7 @@ if (buffer != null) {
 
 						const getthesource = map.getSource('vehicles');
 
-						let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+						let mapzoomnumber = numberForBearingLengthRail(map.getZoom());
 
 						if ( typeof getthesource != 'undefined') {
 							getthesource.setData({
@@ -608,7 +650,7 @@ if (buffer != null) {
 
 										
 
-										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, mapzoomnumber / 1000)
+										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, ( 1.63 * mapzoomnumber) / 1000)
 
 										//console.log(x.geometry.coordinates,'new rail coords', newcoords)
 
@@ -734,7 +776,7 @@ if (buffer != null) {
 									.filter((x: any) => x.properties.bearing != 0)
 									.map((x: any) => {
 
-										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, mapzoomnumber / 1000)
+										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
 
 										return {
 											type: 'Feature',
