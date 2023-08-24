@@ -129,7 +129,7 @@ function numberForBearingLengthRail(zoom:number) {
 
 		const map = new mapboxgl.Map({
 			container: 'map',
-			style: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8/draft', // stylesheet location
+			style: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken: 'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
 			center: [-118, 33.9], // starting position [lng, lat]
 			zoom: 8 // starting zoom
