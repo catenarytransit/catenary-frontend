@@ -137,10 +137,7 @@ function numberForBearingLengthRail(zoom:number) {
 
 		map.on('load', () => {
 			// Add new sources and layers
-			map.addSource('terrain', {
-				type: 'raster-dem',
-				url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${API_KEY}`
-			});
+			
 
 			map.setTerrain({
 				source: 'terrain'
