@@ -680,6 +680,13 @@ if (buffer != null) {
 			
 
 			setInterval(() => {
+
+				let bottomright = document.getElementsByClassName("mapboxgl-ctrl-bottom-right");
+
+				if (bottomright) {
+					bottomright[0].remove();
+				}
+
 				agencies.forEach((agency_obj: any) => {
 
 					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
