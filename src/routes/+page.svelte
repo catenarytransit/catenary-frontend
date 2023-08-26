@@ -391,7 +391,7 @@ function numberForBearingLengthRail(zoom:number) {
 				type: "symbol",
 				source: 'buses',
 				layout: {
-					'text-field': ['get', 'routeId'],
+					'text-field': ['get', 'maptag'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
                 'text-radial-offset': 0.2,
 				'text-font': [
@@ -803,9 +803,12 @@ agencies.forEach((agency_obj: any) => {
 						let short_name = route_info_lookup[agency_obj.static_feed_id][routeId].short_name;
 
 						if (short_name) {
-							if (short_name.length < routeId.length) {
+							if (short_name.length > 0) {
+								if (short_name.length < routeId.length) {
 								maptag = short_name;
 							}
+							}
+							
 						}
 					} else {	
 						maptag = routeId;
