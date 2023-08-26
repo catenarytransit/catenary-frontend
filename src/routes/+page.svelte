@@ -15,8 +15,145 @@
   return hex.length == 1 ? "0" + hex : hex;
 }
 
+function getColourOfVehicle(routeId:any, agency_obj:any) {
+ let color = agency_obj.color;
+
+ if (route_info_lookup[agency_obj.static_feed_id]) {
+					if (routeId) {
+
+						if (agency_obj.static_feed_id == "f-9q5-metro~losangeles") {
+							if (routeId.includes("720") ||routeId.includes("754") || routeId.includes("761")) {
+								color = "#d11242"
+							} else {
+								if (routeId.includes("901")) {
+									color = "#fc4c02"
+								} else if (routeId.includes("950") || routeId.includes("910")) {
+									color = "#adb8bf"
+								}
+								else {
+									color = "#e16710"
+								}
+							}
+						} else {
+							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+							let colorvalue = route_info_lookup[agency_obj.static_feed_id][routeId].color;
+						if (colorvalue) {
+							let splitInts = colorvalue.replace("rgb(","").replace(")", "").split(",");
+
+							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
+
+							if (color === "#ffffff") {
+								color = agency_obj.color;
+							}
+						}
+						}
+						}
+
+						
+					}
+				}
+
+				return color;
+}
+
 function rgbToHex(r:number, g:number, b:number) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function getRouteId(vehicle:any, agency_obj:any) {
+	let routeId = vehicle?.trip?.routeId;
+
+		let runtripfetch = false;
+
+	if (vehicle.trip) {
+
+
+					if (vehicle.trip.tripId) {
+						if (routeId === null || routeId === undefined || routeId === "") {
+							//console.log(vehicle.trip)
+					if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
+						runtripfetch = true;
+					} else {
+						if (typeof trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] === "undefined") {
+							runtripfetch = true;
+						} else {
+							routeId = trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId].route_id;
+						}
+					}
+
+					if (runtripfetch === true) {
+								
+								fetch(`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`)
+								.then((x) => x.json())
+								.then((data) => {
+									if (data.length > 0) {
+	
+										if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
+											trips_per_agency[agency_obj.static_feed_id] = {}
+										}
+	
+										trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
+										if (rerenders_requested.includes(agency_obj.static_feed_id)){
+											rerenders_requested.push(agency_obj.static_feed_id);
+										}
+									}
+								})
+								
+					}
+				}
+					}
+					}
+
+					return routeId;
+}
+
+function getMaptag(routeId:any,static_feed_id:any, feed_id: any) {
+	//label the vehicles
+				//if a better short name is avaliable, use it!
+				var maptag:String = "";
+
+				
+					if (routeId) {
+						if (route_info_lookup[static_feed_id][routeId]) {
+						let short_name = route_info_lookup[static_feed_id][routeId].short_name;
+
+						if (short_name) {
+							if (short_name.trim().length > 0) {
+								if (short_name.length < routeId.length) {
+								maptag = short_name;
+							}
+							}
+							
+						}
+					}
+					}
+
+					if (maptag === "") {
+						if (routeId) {
+							maptag = routeId;
+						}
+					}
+				
+
+				maptag = maptag.replace(/ Line/, "");
+
+				if (feed_id === "f-metro~losangeles~rail~rt") {
+
+					let railletters:any = {
+						"801": "A",
+						"802": "B",
+						"803": "C",
+						"804": "E",
+						"805": "D",
+						"807": "K"
+					}
+
+					if (Object.keys(railletters).includes(routeId)) {
+						maptag = railletters[routeId];
+					}
+				}
+
+				return maptag;
 }
 	
 	let lasttimezoomran = 0;
@@ -109,6 +246,11 @@ let agencies = [
 				{
 					"feed_id": "f-montebello~bus~rt",
 					static_feed_id: "f-montebello~bus",
+					color: "#dddddd"
+				},
+				{
+					"feed_id": "f-torrancetransit~rt",
+					static_feed_id: "f-9q5b-torrancetransit",
 					color: "#dddddd"
 				}
 				/*
@@ -658,13 +800,13 @@ if (bottomright) {
 	}
 }
 
+console.log('requested rerender of ', rerenders_requested)
+
 agencies.forEach((agency_obj: any) => {
 
 	let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
 
-	if (rerenders_requested.includes(agency_obj.feed_id)) {
-
-	} else {
+	
 		if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
 		url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
 	}
@@ -672,12 +814,13 @@ agencies.forEach((agency_obj: any) => {
 	if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
 		url = url + "&bodyhash=" + rtFeedsHashVehicles[agency_obj.feed_id];
 	}
-	}
 
 	fetch(
 		url
 	)
 		.then(async (response) => {
+
+			rerenders_requested = rerenders_requested.filter((x) => x != agency_obj.feed_id);
 			
 			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
 			
@@ -713,52 +856,11 @@ agencies.forEach((agency_obj: any) => {
 
 				//console.log('has trip', vehicle.trip);
 
-				let color = agency_obj.color;
+				
 
 				let routeType = 3;
 
-				let routeId = vehicle?.trip?.routeId;
-
-				let runtripfetch = false;
-
-				if (vehicle.trip) {
-
-
-					if (vehicle.trip.tripId) {
-						if (routeId === null || routeId === undefined || routeId === "") {
-							//console.log(vehicle.trip)
-					if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
-						runtripfetch = true;
-					} else {
-						if (typeof trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] === "undefined") {
-							runtripfetch = true;
-						} else {
-							routeId = trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId].route_id;
-						}
-					}
-
-					if (runtripfetch === true) {
-								
-								fetch(`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`)
-								.then((x) => x.json())
-								.then((data) => {
-									if (data.length > 0) {
-	
-										if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
-											trips_per_agency[agency_obj.static_feed_id] = {}
-										}
-	
-										trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
-										rerenders_requested.push(agency_obj.static_feed_id);
-									}
-								})
-								
-					}
-				}
-					}
-					}
-				
-
+				let routeId = getRouteId(vehicle, agency_obj);
 			
 				if (route_info_lookup[agency_obj.static_feed_id]) {
 					if (routeId) {
@@ -767,85 +869,9 @@ agencies.forEach((agency_obj: any) => {
 					}
 				}
 
-				if (route_info_lookup[agency_obj.static_feed_id]) {
-					if (routeId) {
+				let color = getColourOfVehicle(routeId, agency_obj);
 
-						if (agency_obj.static_feed_id == "f-9q5-metro~losangeles") {
-							if (routeId.includes("720") ||routeId.includes("754") || routeId.includes("761")) {
-								color = "#d11242"
-							} else {
-								if (routeId.includes("901")) {
-									color = "#fc4c02"
-								} else if (routeId.includes("950") || routeId.includes("910")) {
-									color = "#adb8bf"
-								}
-								else {
-									color = "#e16710"
-								}
-							}
-						} else {
-							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
-							let colorvalue = route_info_lookup[agency_obj.static_feed_id][routeId].color;
-						if (colorvalue) {
-							let splitInts = colorvalue.replace("rgb(","").replace(")", "").split(",");
-
-							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
-
-							if (color === "#ffffff") {
-								color = agency_obj.color;
-							}
-						}
-						}
-						}
-
-						
-					}
-				}
-
-				//label the vehicles
-				//if a better short name is avaliable, use it!
-				var maptag:String = "";
-
-				
-					if (routeId) {
-						if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
-						let short_name = route_info_lookup[agency_obj.static_feed_id][routeId].short_name;
-
-						if (short_name) {
-							if (short_name.trim().length > 0) {
-								if (short_name.length < routeId.length) {
-								maptag = short_name;
-							}
-							}
-							
-						}
-					}
-					}
-
-					if (maptag === "") {
-						if (routeId) {
-							maptag = routeId;
-						}
-					}
-				
-
-				maptag = maptag.replace(/ Line/, "");
-
-				if (agency_obj.feed_id === "f-metro~losangeles~rail~rt") {
-
-					let railletters:any = {
-						"801": "A",
-						"802": "B",
-						"803": "C",
-						"804": "E",
-						"805": "D",
-						"807": "K"
-					}
-
-					if (Object.keys(railletters).includes(routeId)) {
-						maptag = railletters[vehicle.trip.routeId];
-					}
-				}
+				let maptag = getMaptag(routeId,agency_obj.static_feed_id,agency_obj.feed_id);
  
 				return {
 					type: 'Feature',
@@ -854,7 +880,7 @@ agencies.forEach((agency_obj: any) => {
 						...vehicle,
 						color: color,
 						label: vehicle?.vehicle?.label,
-						maptag: maptag,
+						maptag: maptag?.replace("-13168", ""),
 						routeType,
 						routeId: routeId?.replace("-13168", ""),
 						bearing: vehicle?.position?.bearing,
@@ -932,6 +958,12 @@ agencies.forEach((agency_obj: any) => {
 			}
 
 )
+
+if (rerenders_requested.length > 0) {
+	rerenders_requested.forEach(x => {
+
+	})
+}
 
 }, 2000);
 });
