@@ -816,10 +816,6 @@ agencies.forEach((agency_obj: any) => {
 					}
 				}
 
-				if (routeId) {
-					maptag = maptag.replace("-13168", "");
-				}
-
 				maptag = maptag.replace(/ Line/, "");
 
 				if (agency_obj.feed_id === "f-metro~losangeles~rail~rt") {
