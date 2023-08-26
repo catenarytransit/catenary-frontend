@@ -802,6 +802,8 @@ agencies.forEach((agency_obj: any) => {
 					maptag = routeId.replace("-13168", "");
 				}
 
+				maptag = maptag.replace(/ Line/, "");
+
 				if (agency_obj.feed_id === "f-metro~losangeles~rail~rt") {
 
 					let railletters:any = {
