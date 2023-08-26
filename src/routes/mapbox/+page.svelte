@@ -3,6 +3,17 @@
 	import mapboxgl from 'mapbox-gl'
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
+
+	let route_info_lookup:any = {};
+
+	function componentToHex(c:number) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r:number, g:number, b:number) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
 	
 	let lasttimezoomran = 0;
 
@@ -23,6 +34,70 @@
       return {latitude: (lat * 180 / Math.PI), longitude: (lon * 180 / Math.PI)};
 }
 
+const convertArrayToObject = (array:any[], key:string) => {
+  const initialValue = {};
+  return array.reduce((obj, item) => {
+    return {
+      ...obj,
+      [item[key]]: item,
+    };
+  }, initialValue);
+};
+
+
+let agencies = [
+				/*
+				{
+					feed_id: 'f-octa~rt',
+					agency_name: 'Orange County Transportation Authority',
+					color: '#00AFF2'
+				},
+				*/
+				{
+					feed_id: 'f-metro~losangeles~bus~rt',
+					agency_name: 'Los Angeles Metro',
+					color: '#E16710',
+					static_feed_id: "f-9q5-metro~losangeles"
+				},
+				{
+					feed_id: 'f-metro~losangeles~rail~rt',
+					agency_name: 'Los Angeles Metro',
+					color: '#E16710',
+					static_feed_id: "f-9q5-metro~losangeles~rail"
+				},
+				{
+					color: "#801f3b",
+					feed_id: "f-longbeachtransit~rt",
+					agency_name: "Long Beach Transit",
+					static_feed_id: "f-9q5b-longbeachtransit"
+				},
+				{
+					feed_id: 'f-foothilltransit~rt',
+					color: '#2c6a4f',
+					agency_name: 'Foothill Transit',
+					static_feed_id: "f-9qh1-foothilltransit"
+				},
+				{
+					static_feed_id: "o-9qh-metrolinktrains",
+					feed_id: "f-metrolinktrains~rt",
+					agency_name: "Metrolink Trains",
+					color: "#006066"
+				},
+				{
+					feed_id: "f-bigbluebus~rt",
+					color: '#0039A6',
+					agency_name: 'Big Blue Bus',
+					static_feed_id: "f-9q5c-bigbluebus"
+				},
+				/*
+				
+				{
+					feed_id: "f-calgarytransit~rt",
+					color: "#c9072a",
+					agency_name: "Calgary Transit"
+				}
+				*/
+			];
 
 function numberForBearingLengthBus(zoom:number) {
 	if (zoom < 11) {
@@ -127,6 +202,17 @@ function numberForBearingLengthRail(zoom:number) {
 	style=light;
 }
 
+		agencies.forEach((agency) => {
+			fetch("https://transitbackend.kylerchin.com/getroutesperagency?feed_id=" + agency.static_feed_id)
+			.then((x) => x.json())
+			.then((x) => {
+				route_info_lookup[agency.static_feed_id] = convertArrayToObject(x, "route_id");
+			})
+			.catch((e) => {
+				console.error(e);
+			})
+		})
+
 		const map = new mapboxgl.Map({
 			container: 'map',
 			style: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
@@ -139,11 +225,7 @@ function numberForBearingLengthRail(zoom:number) {
 			// Add new sources and layers
 			
 
-			map.setTerrain({
-				source: 'terrain'
-			});
-
-			map.addSource('vehicles2', {
+			map.addSource('buses', {
 				type: 'geojson',
 				data: {
 					type: 'FeatureCollection',
@@ -167,7 +249,7 @@ function numberForBearingLengthRail(zoom:number) {
 				
 
 				map.addLayer({
-				'id': 'busbearings2',
+				'id': 'busbearingslayer',
 				'type': 'line',
 				'source': 'busbearings',
 				'layout': {
@@ -216,7 +298,7 @@ function numberForBearingLengthRail(zoom:number) {
 				
 
 				map.addLayer({
-				'id': 'railbearings2',
+				'id': 'railbearingslayer',
 				'type': 'line',
 				'source': 'railbearings',
 				'layout': {
@@ -249,10 +331,10 @@ function numberForBearingLengthRail(zoom:number) {
 				}
 				});
 
-			map.addLayer({
-				id: 'vehicles2',
+				map.addLayer({
+				id: 'buses',
 				type: 'circle',
-				source: 'vehicles2',
+				source: 'buses',
 				paint: {
 					'circle-radius': [
                  "interpolate",
@@ -282,11 +364,12 @@ function numberForBearingLengthRail(zoom:number) {
 					'circle-opacity': 0.5
 				}
 			});
+		
 
 			map.addLayer({
 				id: "labelbuses",
 				type: "symbol",
-				source: 'vehicles2',
+				source: 'buses',
 				layout: {
 					'text-field': ['get', 'routeId'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
@@ -357,7 +440,7 @@ function numberForBearingLengthRail(zoom:number) {
 				},
 			})
 
-			map.addSource('vehicles', {
+			map.addSource('rail', {
 				type: 'geojson',
 				data: {
 					type: 'FeatureCollection',
@@ -366,9 +449,9 @@ function numberForBearingLengthRail(zoom:number) {
 			});
 
 			map.addLayer({
-				id: 'vehicles',
+				id: 'raillayer',
 				type: 'circle',
-				source: 'vehicles',
+				source: 'rail',
 				paint: {
 					'circle-radius': [
                  "interpolate",
@@ -386,15 +469,7 @@ function numberForBearingLengthRail(zoom:number) {
 				}
 			});
 
-			const convertRouteIdToColor = (id: string) => {
-				if (id === '801') return '#0072BC';
-				if (id === '802') return '#EB131B';
-				if (id === '803') return '#58A738';
-				if (id === '804') return '#FDB913';
-				if (id === '805') return '#A05DA5';
-				if (id === '807') return '#E56DB1';
-				return '#000000';
-			};
+			
 
 			map.addSource('geolocation', {
 'type': 'geojson',
@@ -476,45 +551,183 @@ map.addLayer({
 				}			
 			})*/
 
-			let agencies = [
-				/*
-				{
-					feed_id: 'f-octa~rt',
-					agency_name: 'Orange County Transportation Authority',
-					color: '#00AFF2'
-				},
-				*/
-				{
-					feed_id: 'f-metro~losangeles~bus~rt',
-					agency_name: 'Los Angeles Metro',
-					color: '#E16710'
-				},
-				{
-					feed_id: 'f-octa~rt',
-					agency_name: 'Orange County',
-					color: '#2868B7'
-				},
-				{
-					color: "#801f3b",
-					feed_id: "f-longbeachtransit~rt",
-					agency_name: "Long Beach Transit"
-				},
-				{
-					feed_id: 'f-foothilltransit~rt',
-					color: '#2c6a4f',
-					agency_name: 'Foothill Transit'
-				},
-				{
-					feed_id: "f-bigbluebus~rt",
-					color: '#0039A6',
-					agency_name: 'Big Blue Bus'
-				},
-				{
-					feed_id: "f-calgarytransit~rt",
-					color: "#c9072a",
-					agency_name: "Calgary Transit"
+		
+
+			setInterval(() => {
+
+let bottomright = document.getElementsByClassName("mapboxgl-ctrl-bottom-right");
+
+if (bottomright) {
+	if (bottomright[0] != undefined) {
+		
+	bottomright[0].remove();
+	}
+}
+
+agencies.forEach((agency_obj: any) => {
+
+	let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
+
+	if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
+		url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
+	}
+
+	if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
+		url = url + "&bodyhash=" + rtFeedsHashVehicles[agency_obj.feed_id];
+	}
+
+	fetch(
+		url
+	)
+		.then(async (response) => {
+			
+			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+			
+
+			if (response.status === 200) {
+
+				console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
+
+			console.log(response.headers)
+				
+				rtFeedsHashVehicles[agency_obj.feed_id] = response.headers.get('hash');
+
+			return await response.arrayBuffer();
+			} else {
+				return null;
+			}
+		})
+		.then((buffer) => {
+
+			if (buffer != null) {
+				const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+				new Uint8Array(buffer)
+			);
+
+			rtFeedsTimestampsVehicles[agency_obj.feed_id] = feed.header.timestamp;
+				
+			//console.log('feed', feed);
+
+			const features = feed.entity.filter((entity) => entity.vehicle?.position !== null).map((entity: any) => {
+				const { id, vehicle } = entity;
+
+				//console.log('entity', entity);
+
+				//console.log('has trip', vehicle.trip);
+
+				let color = agency_obj.color;
+
+				if (route_info_lookup[agency_obj.static_feed_id]) {
+					if (vehicle?.trip?.routeId) {
+
+						if (agency_obj.static_feed_id == "f-9q5-metro~losangeles") {
+							if (vehicle.trip.routeId.includes("720") ||vehicle.trip.routeId.includes("754") || vehicle.trip.routeId.includes("761")) {
+								color = "#d11242"
+							} else {
+								if (vehicle.trip.routeId.includes("901")) {
+									color = "#fc4c02"
+								} else if (vehicle.trip.routeId.includes("950") || vehicle.trip.routeId.includes("910")) {
+									color = "#adb8bf"
+								}
+								else {
+									color = "#e16710"
+								}
+							}
+						} else {
+							if (route_info_lookup[agency_obj.static_feed_id][vehicle.trip.routeId]) {
+							let colorvalue = route_info_lookup[agency_obj.static_feed_id][vehicle.trip.routeId].color;
+
+						if (colorvalue) {
+							
+
+							let splitInts = colorvalue.replace("rgb(","").replace(")", "").split(",");
+
+							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
+						}
+						}
+						}
+
+						
+					}
 				}
-			];
+
+				return {
+					type: 'Feature',
+					id,
+					properties: {
+						...vehicle,
+						color: color,
+						label: vehicle?.vehicle?.label,
+						routeId: vehicle?.trip?.routeId.replace("-13168", ""),
+						bearing: vehicle?.position?.bearing
+					},
+					geometry: {
+						type: 'Point',
+						coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+					}
+				};
+			});
+
+			//console.log('features', features);
+
+			const getthesource = map.getSource('buses');
+
+			geometryObj[agency_obj.feed_id] = features;
+
+			let flattenedarray = flatten(Object.values(geometryObj));
+
+			console.log(flattenedarray);
+
+			if (typeof getthesource != 'undefined') {
+				getthesource.setData({
+					type: 'FeatureCollection',
+					features: flattenedarray
+				});
+
+				console.log('set data of bearings');
+
+				
+						
+			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+				
+				let newbearingdata = {
+					type: 'FeatureCollection',
+					features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
+					.filter((x: any) => x.properties.bearing != 0)
+					.map((x: any) => {
+						let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
+
+						return {
+							type: 'Feature',
+							geometry: {
+								type: 'LineString',
+								coordinates: [
+									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+									[newcoords.longitude, newcoords.latitude]
+								]
+							},
+							properties: {
+								bearing: x.properties.bearing,
+								color: x.properties.color
+							}
+						}
+					})
+				};
+
+				console.log('newbearingdata', newbearingdata)
+
+				map.getSource("busbearings").setData(newbearingdata)
+			}
+		}})
+		.catch((e) => {
+			console.error(e);
+		});
+			}
+
+)
+
+}, 2000);
+});
 
 			let geometryObj:any = new Object();
 
@@ -528,6 +741,7 @@ map.addLayer({
 
 					console.log(flattenedarray);
 
+					let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
 					let newbearingdata = {
 									type: 'FeatureCollection',
 									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
@@ -561,258 +775,7 @@ map.addLayer({
 				
 			})
 
-			setInterval(() => {
-				fetch(
-					'https://kactusapi.kylerchin.com/gtfsrt/?feed=f-metro~losangeles~rail~rt&category=vehicles'
-				)
-				.then(async (response) => {
-
-							
-
-if (response.status === 200) {
-
-	//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
-
-console.log(response.headers)
-	
-	rtFeedsHashVehicles["f-metro~losangeles~rail~rt"] = response.headers.get('hash');
-
-return await response.arrayBuffer();
-} else {
-	return null;
-}
-})
-.then((buffer) => {
-
-if (buffer != null) {
-	const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-	new Uint8Array(buffer)
-);
-
-//map.getSource('vehicles').setData(data);
-						//console.log(data);
-
-						//console.log(data.entity);
-
-						const features = feed.entity
-							.map((entity: any) => {
-								if (entity.vehicle) {
-									const { id, vehicle } = entity;
-
-									//console.log('entity', entity);
-
-									//console.log('has trip', vehicle.trip);
-
-									return {
-										type: 'Feature',
-										id,
-										properties: {
-											...vehicle,
-											color: convertRouteIdToColor(
-												vehicle.trip ? vehicle.trip.routeId || 'none' : 'none'
-											),
-											bearing: vehicle?.position?.bearing
-										},
-										geometry: {
-											type: 'Point',
-											coordinates: [vehicle.position.longitude, vehicle.position.latitude]
-										}
-									};
-								} else {
-									return undefined;
-								}
-							})
-							.filter((x) => x != undefined);
-
-						//console.log(features);
-
-						const getthesource = map.getSource('vehicles');
-
-						let mapzoomnumber = numberForBearingLengthRail(map.getZoom());
-
-						if ( typeof getthesource != 'undefined') {
-							getthesource.setData({
-								type: 'FeatureCollection',
-								features
-							});
-
-							
-							let railbearingdata = {
-									type: 'FeatureCollection',
-									features: features
-									.filter((x:any) => {
-										return x.properties.bearing != undefined && x.properties.bearing != 0
-									})
-									.map((x: any) => {
-
-										
-
-										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, ( 1.63 * mapzoomnumber) / 1000)
-
-										//console.log(x.geometry.coordinates,'new rail coords', newcoords)
-
-										return {
-											type: 'Feature',
-											geometry: {
-												type: 'LineString',
-												coordinates: [
-													[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-													[newcoords.longitude, newcoords.latitude]
-												]
-											},
-											properties: {
-												bearing: x.properties.bearing,
-												color: x.properties.color
-											}
-										}
-									})
-								};
-
-								console.log('railbearingdata', railbearingdata)
-
-								map.getSource("railbearings").setData(railbearingdata)
-						}
-}
-						
-					});
-			}, 1000);
-
 			
-
-			setInterval(() => {
-
-				let bottomright = document.getElementsByClassName("mapboxgl-ctrl-bottom-right");
-
-				if (bottomright) {
-					bottomright[0].remove();
-				}
-
-				agencies.forEach((agency_obj: any) => {
-
-					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
-
-					if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
-						url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
-					}
-
-					if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
-						url = url + "&bodyhash=" + rtFeedsHashVehicles[agency_obj.feed_id];
-					}
-
-					fetch(
-						url
-					)
-						.then(async (response) => {
-
-							
-
-							if (response.status === 200) {
-
-								console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
-
-							console.log(response.headers)
-								
-								rtFeedsHashVehicles[agency_obj.feed_id] = response.headers.get('hash');
-
-							return await response.arrayBuffer();
-							} else {
-								return null;
-							}
-						})
-						.then((buffer) => {
-
-							if (buffer != null) {
-								const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-								new Uint8Array(buffer)
-							);
-
-							rtFeedsTimestampsVehicles[agency_obj.feed_id] = feed.header.timestamp;
-								
-							//console.log('feed', feed);
-
-							const features = feed.entity.map((entity: any) => {
-								const { id, vehicle } = entity;
-
-								//console.log('entity', entity);
-
-								//console.log('has trip', vehicle.trip);
-
-								return {
-									type: 'Feature',
-									id,
-									properties: {
-										...vehicle,
-										color: agency_obj.color,
-										label: vehicle?.vehicle?.label,
-										routeId: vehicle?.trip?.routeId.replace("-13168", ""),
-										bearing: vehicle?.position?.bearing
-									},
-									geometry: {
-										type: 'Point',
-										coordinates: [vehicle.position.longitude, vehicle.position.latitude]
-									}
-								};
-							});
-
-							//console.log('features', features);
-
-							const getthesource = map.getSource('vehicles2');
-
-							geometryObj[agency_obj.feed_id] = features;
-
-							let flattenedarray = flatten(Object.values(geometryObj));
-
-							console.log(flattenedarray);
-
-							if (typeof getthesource != 'undefined') {
-								getthesource.setData({
-									type: 'FeatureCollection',
-									features: flattenedarray
-								});
-
-								console.log('set data of bearings');
-
-								let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-								
-								let newbearingdata = {
-									type: 'FeatureCollection',
-									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
-									.filter((x: any) => x.properties.bearing != 0)
-									.map((x: any) => {
-
-										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
-
-										return {
-											type: 'Feature',
-											geometry: {
-												type: 'LineString',
-												coordinates: [
-													[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-													[newcoords.longitude, newcoords.latitude]
-												]
-											},
-											properties: {
-												bearing: x.properties.bearing,
-												color: x.properties.color
-											}
-										}
-									})
-								};
-
-								console.log('newbearingdata', newbearingdata)
-
-								map.getSource("busbearings").setData(newbearingdata)
-							}
-						}})
-						.catch((e) => {
-							console.error(e);
-						});
-							}
-
-				)
-		
-			}, 2000);
-		});
 
 		const successCallback = (position: any) => {
 			//console.log(position);
