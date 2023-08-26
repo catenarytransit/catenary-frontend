@@ -252,6 +252,11 @@ let agencies = [
 					"feed_id": "f-torrancetransit~rt",
 					static_feed_id: "f-9q5b-torrancetransit",
 					color: "#dddddd"
+				},
+				{
+					"static_feed_id": "f-c28-nstranslinkca",
+					"feed_id": "f-translink~rt",
+					color: "#dddddd"
 				}
 				/*
 				
