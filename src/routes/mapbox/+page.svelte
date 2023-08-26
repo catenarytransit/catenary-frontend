@@ -78,7 +78,7 @@ let agencies = [
 					static_feed_id: "f-9qh1-foothilltransit"
 				},
 				{
-					static_feed_id: "o-9qh-metrolinktrains",
+					static_feed_id: "f-9qh-metrolinktrains",
 					feed_id: "f-metrolinktrains~rt",
 					agency_name: "Metrolink Trains",
 					color: "#006066"
@@ -469,7 +469,79 @@ function numberForBearingLengthRail(zoom:number) {
 				}
 			});
 
-			
+			map.addLayer({
+				id: "labelrail",
+				type: "symbol",
+				source: 'rail',
+				layout: {
+					'text-field': ['get', 'routeId'],
+					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                'text-radial-offset': 0.2,
+				'text-font': [
+  "step",
+  ["zoom"],
+  [
+    "literal",
+    [
+      "Open Sans Regular",
+      "Arial Unicode MS Regular"
+    ]
+  ],
+  11,
+  [
+    "literal",
+    [
+      "Open Sans Medium",
+      "Arial Unicode MS Medium"
+    ]
+  ],
+  13,
+  [
+    "literal",
+    [
+      "Open Sans Bold",
+      "Arial Unicode MS Bold"
+    ]
+  ]
+],
+				'text-size': [
+					"interpolate",
+					["linear"],
+					["zoom"],
+					8,
+					10,
+					9,
+					11,
+					13,
+					15
+				],
+				'text-ignore-placement': [
+					'step',
+					["zoom"],
+					false,
+					9.5,
+					true
+				]
+				},
+				paint: {
+					'text-color': ['get', 'color'],
+					'text-halo-color': "#eaeaea",
+					//'text-halo-color': "#1d1d1d",
+					'text-halo-width': 2,
+					'text-halo-blur': 100,
+					'text-opacity': [
+					"interpolate",
+					["linear"],
+					["zoom"],
+					6,
+					0,
+					7,
+					0.8,
+					10,
+					1
+				],
+				},
+			})
 
 			map.addSource('geolocation', {
 'type': 'geojson',
@@ -617,6 +689,15 @@ agencies.forEach((agency_obj: any) => {
 
 				let color = agency_obj.color;
 
+				let routeType = 3;
+
+				if (route_info_lookup[agency_obj.static_feed_id]) {
+					if (vehicle?.trip?.routeId) {
+						
+					routeType = route_info_lookup[agency_obj.static_feed_id][vehicle.trip.routeId].route_type;
+					}
+				}
+
 				if (route_info_lookup[agency_obj.static_feed_id]) {
 					if (vehicle?.trip?.routeId) {
 
@@ -643,6 +724,10 @@ agencies.forEach((agency_obj: any) => {
 							let splitInts = colorvalue.replace("rgb(","").replace(")", "").split(",");
 
 							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
+
+							if (color === "#ffffff") {
+								color = agency_obj.color;
+							}
 						}
 						}
 						}
@@ -658,6 +743,7 @@ agencies.forEach((agency_obj: any) => {
 						...vehicle,
 						color: color,
 						label: vehicle?.vehicle?.label,
+						routeType,
 						routeId: vehicle?.trip?.routeId.replace("-13168", ""),
 						bearing: vehicle?.position?.bearing
 					},
@@ -670,7 +756,8 @@ agencies.forEach((agency_obj: any) => {
 
 			//console.log('features', features);
 
-			const getthesource = map.getSource('buses');
+			const getbussource = map.getSource('buses');
+			const getrailsource = map.getSource('rail');
 
 			geometryObj[agency_obj.feed_id] = features;
 
@@ -678,11 +765,18 @@ agencies.forEach((agency_obj: any) => {
 
 			console.log(flattenedarray);
 
-			if (typeof getthesource != 'undefined') {
-				getthesource.setData({
+			if (typeof getbussource != 'undefined') {
+				getbussource.setData({
 					type: 'FeatureCollection',
-					features: flattenedarray
+					features: flattenedarray.filter((x:any) => x.properties.routeType === 3)
 				});
+
+				if (typeof getrailsource != 'undefined') {
+					getrailsource.setData({
+						type: "FeatureCollection",
+					features: flattenedarray.filter((x:any) => x.properties.routeType != 3)
+					})
+				}
 
 				console.log('set data of bearings');
 
