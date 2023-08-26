@@ -795,9 +795,11 @@ agencies.forEach((agency_obj: any) => {
 					}
 				}
 
-				let maptag = '';
+				//label the vehicles
+				//if a better short name is avaliable, use it!
+				let maptag = "";
 
-				if (maptag) {
+				
 					if (routeId) {
 						if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
 						let short_name = route_info_lookup[agency_obj.static_feed_id][routeId].short_name;
@@ -814,7 +816,7 @@ agencies.forEach((agency_obj: any) => {
 						maptag = routeId;
 					}
 					}
-				}
+				
 
 				maptag = maptag.replace(/ Line/, "");
 
