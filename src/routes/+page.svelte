@@ -797,7 +797,7 @@ agencies.forEach((agency_obj: any) => {
 
 				//label the vehicles
 				//if a better short name is avaliable, use it!
-				let maptag = "";
+				let maptag = routeId;
 
 				
 					if (routeId) {
