@@ -8,6 +8,8 @@
 	let route_info_lookup:any = {};
 	let trips_per_agency:any = {};
 
+	let rerenders_requested: String[] = [];
+
 	function componentToHex(c:number) {
   var hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
@@ -660,12 +662,16 @@ agencies.forEach((agency_obj: any) => {
 
 	let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
 
-	if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
+	if (rerenders_requested.includes(agency_obj.feed_id)) {
+
+	} else {
+		if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
 		url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
 	}
 
 	if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
 		url = url + "&bodyhash=" + rtFeedsHashVehicles[agency_obj.feed_id];
+	}
 	}
 
 	fetch(
@@ -743,6 +749,7 @@ agencies.forEach((agency_obj: any) => {
 										}
 	
 										trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
+										rerenders_requested.push(agency_obj.static_feed_id);
 									}
 								})
 								
@@ -797,7 +804,7 @@ agencies.forEach((agency_obj: any) => {
 
 				//label the vehicles
 				//if a better short name is avaliable, use it!
-				let maptag = routeId;
+				var maptag:String = "";
 
 				
 					if (routeId) {
@@ -812,9 +819,13 @@ agencies.forEach((agency_obj: any) => {
 							}
 							
 						}
-					} else {	
-						maptag = routeId;
 					}
+					}
+
+					if (maptag === "") {
+						if (routeId) {
+							maptag = routeId;
+						}
 					}
 				
 
@@ -910,7 +921,7 @@ agencies.forEach((agency_obj: any) => {
 					})
 				};
 
-				console.log('newbearingdata', newbearingdata)
+				//console.log('newbearingdata', newbearingdata)
 
 				map.getSource("busbearings").setData(newbearingdata)
 			}
