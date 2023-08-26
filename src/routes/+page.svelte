@@ -201,6 +201,12 @@ let agencies = [
 					static_feed_id: "f-9q5-metro~losangeles"
 				},
 				{
+					feed_id: "f-sf~bay~area~rg",
+					agency_name: 'Bay Area Rapid Transit',
+					color: '#000000',
+					static_feed_id: "f-sf~bay~area~rg"
+				},
+				{
 					feed_id: 'f-metro~losangeles~rail~rt',
 					agency_name: 'Los Angeles Metro',
 					color: '#E16710',
