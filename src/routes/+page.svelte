@@ -678,9 +678,9 @@ agencies.forEach((agency_obj: any) => {
 
 			if (response.status === 200) {
 
-				console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
+				//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
 
-			console.log(response.headers)
+			//console.log(response.headers)
 				
 				rtFeedsHashVehicles[agency_obj.feed_id] = response.headers.get('hash');
 
@@ -716,20 +716,22 @@ agencies.forEach((agency_obj: any) => {
 				let runtripfetch = false;
 
 				if (vehicle.trip) {
-					
+
+
 					if (vehicle.trip.tripId) {
-						if (routeId === null || routeId === undefined) {
-					if (typeof trips_per_agency[agency_obj.static_feed_id] != "undefined") {
+						if (routeId === null || routeId === undefined || routeId === "") {
+							//console.log(vehicle.trip)
+					if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
 						runtripfetch = true;
-						
 					} else {
 						if (typeof trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] === "undefined") {
 							runtripfetch = true;
-						} 
+						} else {
+							routeId = trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId].route_id;
+						}
 					}
 
 					if (runtripfetch === true) {
-						if (vehicle?.trip?.tripId) {
 								
 								fetch(`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`)
 								.then((x) => x.json())
@@ -743,7 +745,7 @@ agencies.forEach((agency_obj: any) => {
 										trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
 									}
 								})
-								}
+								
 					}
 				}
 					}
@@ -754,20 +756,20 @@ agencies.forEach((agency_obj: any) => {
 				if (route_info_lookup[agency_obj.static_feed_id]) {
 					if (routeId) {
 						
-					routeType = route_info_lookup[agency_obj.static_feed_id][vehicle?.trip?.routeId].route_type;
+					routeType = route_info_lookup[agency_obj.static_feed_id][routeId].route_type;
 					}
 				}
 
 				if (route_info_lookup[agency_obj.static_feed_id]) {
-					if (vehicle?.trip?.routeId) {
+					if (routeId) {
 
 						if (agency_obj.static_feed_id == "f-9q5-metro~losangeles") {
-							if (vehicle.trip.routeId.includes("720") ||vehicle.trip.routeId.includes("754") || vehicle.trip.routeId.includes("761")) {
+							if (routeId.includes("720") ||routeId.includes("754") || routeId.includes("761")) {
 								color = "#d11242"
 							} else {
-								if (vehicle.trip.routeId.includes("901")) {
+								if (routeId.includes("901")) {
 									color = "#fc4c02"
-								} else if (vehicle.trip.routeId.includes("950") || vehicle.trip.routeId.includes("910")) {
+								} else if (routeId.includes("950") || routeId.includes("910")) {
 									color = "#adb8bf"
 								}
 								else {
@@ -777,10 +779,7 @@ agencies.forEach((agency_obj: any) => {
 						} else {
 							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
 							let colorvalue = route_info_lookup[agency_obj.static_feed_id][routeId].color;
-
 						if (colorvalue) {
-							
-
 							let splitInts = colorvalue.replace("rgb(","").replace(")", "").split(",");
 
 							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
@@ -798,8 +797,24 @@ agencies.forEach((agency_obj: any) => {
 
 				let maptag = '';
 
+				if (maptag) {
+					if (routeId) {
+						if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+						let short_name = route_info_lookup[agency_obj.static_feed_id][routeId].short_name;
+
+						if (short_name) {
+							if (short_name.length < routeId.length) {
+								maptag = short_name;
+							}
+						}
+					} else {	
+						maptag = routeId;
+					}
+					}
+				}
+
 				if (routeId) {
-					maptag = routeId.replace("-13168", "");
+					maptag = maptag.replace("-13168", "");
 				}
 
 				maptag = maptag.replace(/ Line/, "");
@@ -849,7 +864,7 @@ agencies.forEach((agency_obj: any) => {
 
 			let flattenedarray = flatten(Object.values(geometryObj));
 
-			console.log(flattenedarray);
+			//console.log(flattenedarray);
 
 			if (typeof getbussource != 'undefined') {
 				getbussource.setData({
@@ -864,7 +879,7 @@ agencies.forEach((agency_obj: any) => {
 					})
 				}
 
-				console.log('set data of bearings');
+				//console.log('set data of bearings');
 
 				
 						
