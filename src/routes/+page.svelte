@@ -805,7 +805,7 @@ agencies.forEach((agency_obj: any) => {
 						let short_name = route_info_lookup[agency_obj.static_feed_id][routeId].short_name;
 
 						if (short_name) {
-							if (short_name.length > 0) {
+							if (short_name.trim().length > 0) {
 								if (short_name.length < routeId.length) {
 								maptag = short_name;
 							}
