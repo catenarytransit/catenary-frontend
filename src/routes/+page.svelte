@@ -232,7 +232,7 @@ let agencies = [
 				},
 				{
 					"feed_id": "f-northcountrytransitdistrict~rt",
-					color: "004cab",
+					color: "#004cab",
 					agency_name: "North County Transit District",
 					static_feed_id: "f-9mu-northcountytransitdistrict"
 				},
@@ -240,28 +240,28 @@ let agencies = [
 					"feed_id": "f-mts~rt~onebusaway",
 					agency_name: "San diego MTS",
 					//f-9mu-mts
-					color: "#999999",
+					color: "#555555",
 					static_feed_id: "f-9mu-mts"
 				},
 				{
 					"feed_id": "f-montebello~bus~rt",
 					static_feed_id: "f-montebello~bus",
-					color: "#dddddd"
+					color: "#555555"
 				},
 				{
 					"feed_id": "f-torrancetransit~rt",
 					static_feed_id: "f-9q5b-torrancetransit",
-					color: "#dddddd"
+					color: "#555555"
 				},
 				{
 					"static_feed_id": "f-c28-nstranslinkca",
 					"feed_id": "f-translink~rt",
-					color: "#dddddd"
+					color: "#005daa"
 				},
 				{
 					"static_feed_id": "f-c23-soundtransit",
 					feed_id: "f-soundtransit~rt",
-					color: "#dddddd"
+					color: "#555555"
 				}
 				/*
 				
