@@ -107,19 +107,19 @@ function getRouteId(vehicle:any, agency_obj:any) {
 					return routeId;
 }
 
-function getMaptag(routeId:any,static_feed_id:any, feed_id: any) {
+function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_name: boolean | undefined) {
 	//label the vehicles
 				//if a better short name is avaliable, use it!
 				var maptag:String = "";
 
-				
+
 					if (routeId) {
 						if (route_info_lookup[static_feed_id][routeId]) {
 						let short_name = route_info_lookup[static_feed_id][routeId].short_name;
 
 						if (short_name) {
-							if (short_name.trim().length > 0) {
-								if (short_name.length < routeId.length) {
+							if (short_name.trim().length > 0 || prefer_short_name === true) {
+								if (short_name.length < routeId.length  || prefer_short_name === true) {
 								maptag = short_name;
 							}
 							}
@@ -240,14 +240,16 @@ let agencies = [
 					"feed_id": "f-northcountrytransitdistrict~rt",
 					color: "#004cab",
 					agency_name: "North County Transit District",
-					static_feed_id: "f-9mu-northcountytransitdistrict"
+					static_feed_id: "f-9mu-northcountytransitdistrict",
+					prefer_short_name: true
 				},
 				{
 					"feed_id": "f-mts~rt~onebusaway",
 					agency_name: "San diego MTS",
 					//f-9mu-mts
 					color: "#555555",
-					static_feed_id: "f-9mu-mts"
+					static_feed_id: "f-9mu-mts",
+					prefer_short_name: true
 				},
 				{
 					"feed_id": "f-montebello~bus~rt",
@@ -893,7 +895,7 @@ agencies.forEach((agency_obj: any) => {
 
 				let color = getColourOfVehicle(routeId, agency_obj);
 
-				let maptag = getMaptag(routeId,agency_obj.static_feed_id,agency_obj.feed_id);
+				let maptag = getMaptag(routeId,agency_obj.static_feed_id,agency_obj.feed_id, agency_obj.prefer_short_name);
  
 				return {
 					type: 'Feature',
