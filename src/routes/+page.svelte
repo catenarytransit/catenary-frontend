@@ -42,7 +42,7 @@ function getColourOfVehicle(routeId:any, agency_obj:any) {
 
 							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
 
-							if (color === "#ffffff") {
+							if (color === "#ffffff" || color === "#000000") {
 								color = agency_obj.color;
 							}
 						}
@@ -201,16 +201,16 @@ let agencies = [
 					static_feed_id: "f-9q5-metro~losangeles"
 				},
 				{
-					feed_id: "f-sf~bay~area~rg",
-					agency_name: 'Bay Area Rapid Transit',
-					color: '#000000',
-					static_feed_id: "f-sf~bay~area~rg"
-				},
-				{
 					feed_id: 'f-metro~losangeles~rail~rt',
 					agency_name: 'Los Angeles Metro',
 					color: '#E16710',
 					static_feed_id: "f-9q5-metro~losangeles~rail"
+				},
+				{
+					feed_id: 'f-rta~rt',
+					color: '#de1e36',
+					agency_name: "Riverside",
+					static_feed_id: "f-9qh-riversidetransitagency"
 				},
 				{
 					color: "#801f3b",
@@ -880,8 +880,14 @@ agencies.forEach((agency_obj: any) => {
 			
 				if (route_info_lookup[agency_obj.static_feed_id]) {
 					if (routeId) {
-						
+
+						if (route_info_lookup[agency_obj.static_feed_id]) {
+							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+								
 					routeType = route_info_lookup[agency_obj.static_feed_id][routeId].route_type;
+							}
+						}
+						
 					}
 				}
 
