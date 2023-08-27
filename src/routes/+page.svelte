@@ -1105,9 +1105,29 @@ if (rerenders_requested.length > 0) {
 
 	
 </script>
+
+<svelte:head>
+	  <!-- Primary Meta Tags -->
+<title>Kyler's Transit Map</title>
+<meta name="title" content="Kyler's Transit Map" />
+<meta name="description" content="Realtime bus and train location tracking, stop prediction times, analysis, and routing algorithm calculations." />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Kyler's Transit Map" />
+<meta property="og:description" content="Realtime bus and train location tracking, stop prediction times, analysis, and routing algorithm calculations." />
+<meta property="og:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Kyler's Transit Map" />
+<meta property="twitter:description" content="Realtime bus and train location tracking, stop prediction times, analysis, and routing algorithm calculations." />
+<meta property="twitter:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true}>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</svelte:head>
 {#if typeof geolocation === "object"}
 {#if typeof geolocation.coords.speed === "number"} 
 
