@@ -189,13 +189,14 @@ const convertArrayToObject = (array:any[], key:string) => {
 
 
 let agencies = [
-				/*
+				
 				{
 					feed_id: 'f-octa~rt',
 					agency_name: 'Orange County Transportation Authority',
-					color: '#00AFF2'
+					color: '#00AFF2',
+					static_feed_id: "f-9mu-orangecountytransportationauthority"
 				},
-				*/
+				
 				{
 					feed_id: 'f-metro~losangeles~bus~rt',
 					agency_name: 'Los Angeles Metro',
