@@ -42,7 +42,7 @@ function getColourOfVehicle(routeId:any, agency_obj:any) {
 
 							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
 
-							if (color === "#ffffff") {
+							if (color === "#ffffff" || color === "#000000") {
 								color = agency_obj.color;
 							}
 						}
@@ -107,19 +107,19 @@ function getRouteId(vehicle:any, agency_obj:any) {
 					return routeId;
 }
 
-function getMaptag(routeId:any,static_feed_id:any, feed_id: any) {
+function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_name: boolean | undefined) {
 	//label the vehicles
 				//if a better short name is avaliable, use it!
 				var maptag:String = "";
 
-				
+
 					if (routeId) {
 						if (route_info_lookup[static_feed_id][routeId]) {
 						let short_name = route_info_lookup[static_feed_id][routeId].short_name;
 
 						if (short_name) {
-							if (short_name.trim().length > 0) {
-								if (short_name.length < routeId.length) {
+							if (short_name.trim().length > 0 || prefer_short_name === true) {
+								if (short_name.length < routeId.length  || prefer_short_name === true) {
 								maptag = short_name;
 							}
 							}
@@ -201,16 +201,16 @@ let agencies = [
 					static_feed_id: "f-9q5-metro~losangeles"
 				},
 				{
-					feed_id: "f-sf~bay~area~rg",
-					agency_name: 'Bay Area Rapid Transit',
-					color: '#000000',
-					static_feed_id: "f-sf~bay~area~rg"
-				},
-				{
 					feed_id: 'f-metro~losangeles~rail~rt',
 					agency_name: 'Los Angeles Metro',
 					color: '#E16710',
 					static_feed_id: "f-9q5-metro~losangeles~rail"
+				},
+				{
+					feed_id: 'f-rta~rt',
+					color: '#de1e36',
+					agency_name: "Riverside",
+					static_feed_id: "f-9qh-riversidetransitagency"
 				},
 				{
 					color: "#801f3b",
@@ -240,14 +240,16 @@ let agencies = [
 					"feed_id": "f-northcountrytransitdistrict~rt",
 					color: "#004cab",
 					agency_name: "North County Transit District",
-					static_feed_id: "f-9mu-northcountytransitdistrict"
+					static_feed_id: "f-9mu-northcountytransitdistrict",
+					prefer_short_name: true
 				},
 				{
 					"feed_id": "f-mts~rt~onebusaway",
 					agency_name: "San diego MTS",
 					//f-9mu-mts
 					color: "#555555",
-					static_feed_id: "f-9mu-mts"
+					static_feed_id: "f-9mu-mts",
+					prefer_short_name: true
 				},
 				{
 					"feed_id": "f-montebello~bus~rt",
@@ -887,14 +889,20 @@ agencies.forEach((agency_obj: any) => {
 			
 				if (route_info_lookup[agency_obj.static_feed_id]) {
 					if (routeId) {
-						
+
+						if (route_info_lookup[agency_obj.static_feed_id]) {
+							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+								
 					routeType = route_info_lookup[agency_obj.static_feed_id][routeId].route_type;
+							}
+						}
+						
 					}
 				}
 
 				let color = getColourOfVehicle(routeId, agency_obj);
 
-				let maptag = getMaptag(routeId,agency_obj.static_feed_id,agency_obj.feed_id);
+				let maptag = getMaptag(routeId,agency_obj.static_feed_id,agency_obj.feed_id, agency_obj.prefer_short_name);
  
 				return {
 					type: 'Feature',
@@ -1104,9 +1112,29 @@ if (rerenders_requested.length > 0) {
 
 	
 </script>
+
+<svelte:head>
+	  <!-- Primary Meta Tags -->
+<title>Kyler's Transit Map</title>
+<meta name="title" content="Kyler's Transit Map" />
+<meta name="description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Kyler's Transit Map" />
+<meta property="og:description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
+<meta property="og:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Kyler's Transit Map" />
+<meta property="twitter:description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
+<meta property="twitter:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true}>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</svelte:head>
 {#if typeof geolocation === "object"}
 {#if typeof geolocation.coords.speed === "number"} 
 
