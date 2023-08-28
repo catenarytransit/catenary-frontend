@@ -153,6 +153,8 @@ function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_na
 					}
 				}
 
+				maptag = maptag.replace(/counterclockwise/i, "↺").replace(/clockwise/i,"↻")
+
 				return maptag;
 }
 	
@@ -270,7 +272,8 @@ let agencies = [
 				{
 					static_feed_id: "f-9q5-ladot",
 					color: "#5050a0",
-					feed_id: "f-ladot~rt"
+					feed_id: "f-ladot~rt",
+					prefer_short_name: true
 				}
 				/*
 				{
