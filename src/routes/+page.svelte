@@ -259,16 +259,23 @@ let agencies = [
 					static_feed_id: "f-9q5b-torrancetransit",
 					color: "#555555"
 				},
+				
 				{
 					"static_feed_id": "f-c28-nstranslinkca",
 					"feed_id": "f-translink~rt",
 					color: "#005daa"
 				},
 				{
+					static_feed_id: "f-9q5-ladot",
+					color: "#5050a0",
+					feed_id: "f-ladot~rt"
+				}
+				/*
+				{
 					"static_feed_id": "f-c23-soundtransit",
 					feed_id: "f-soundtransit~rt",
 					color: "#555555"
-				}
+				}/*
 				/*
 				
 				{
