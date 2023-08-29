@@ -1350,32 +1350,34 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 </div>
 <div>
 	<p class="font-semibold">Labels</p>
-	<div class='flex flex-row'>
-		<input  on:click={(x) => {
-			layersettings.rail.label.route = x.target.checked;
-			runSettingsAdapt()
-			}}
-			checked={layersettings.rail.label.route} id="rail-route" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-	<label for="rail-route" class="ml-2 ">Route</label>
-	</div>
-	<div class='flex flex-row'>
-		<input   on:click={(x) => {
-			layersettings.rail.label.trip = x.target.checked;
-			runSettingsAdapt()
-			}} checked={layersettings.rail.label.trip} id="rail-trip" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-	<label for="rail-trip" class="ml-2 ">Trip</label>
-	</div>
-	<div class='flex flex-row'>
-		<input    on:click={(x) => {
-			layersettings.rail.label.vehicle = x.target.checked;
-			runSettingsAdapt()
-			}} checked={layersettings.rail.label.vehicle} id="rail-vehicle" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-	<label for="rail-vehicle" class="ml-2 ">Vehicle</label>
+	<div class="flex flex-row md:flex-col">
+		<div class='flex flex-row  gap-x-3'>
+			<input  on:click={(x) => {
+				layersettings.rail.label.route = x.target.checked;
+				runSettingsAdapt()
+				}}
+				checked={layersettings.rail.label.route} id="rail-route" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+		<label for="rail-route" class="ml-2 ">Route</label>
+		</div>
+		<div class='flex flex-row'>
+			<input   on:click={(x) => {
+				layersettings.rail.label.trip = x.target.checked;
+				runSettingsAdapt()
+				}} checked={layersettings.rail.label.trip} id="rail-trip" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+		<label for="rail-trip" class="ml-2 ">Trip</label>
+		</div>
+		<div class='flex flex-row'>
+			<input    on:click={(x) => {
+				layersettings.rail.label.vehicle = x.target.checked;
+				runSettingsAdapt()
+				}} checked={layersettings.rail.label.vehicle} id="rail-vehicle" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+		<label for="rail-vehicle" class="ml-2 ">Vehicle</label>
+		</div>
 	</div>
 </div>
 <div class='h-[1px] bg-black'></div>
 <h3  class="font-bold">Buses</h3>
-<div class='flex flex-row '>
+<div class='flex flex-row gap-x-2'>
 	<input  on:click={(x) => {
 		layersettings.bus.visible = x.target.checked;
 		runSettingsAdapt()
@@ -1384,6 +1386,7 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 </div>
 <div>
 	<p class="font-semibold">Labels</p>
+	<div class="flex flex-row md:flex-col">
 	<div class='flex flex-row'>
 		<input  on:click={(x) => {
 			layersettings.bus.label.route = x.target.checked;
@@ -1404,7 +1407,7 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 			runSettingsAdapt()
 			}}  checked={layersettings.bus.label.vehicle} id="buses-vehicles" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 	<label for="buses-vehicles" class="ml-2 ">Vehicle</label>
-	</div>
+	</div></div>
 </div>
 </div>
 
