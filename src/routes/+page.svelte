@@ -1350,8 +1350,8 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 </div>
 <div>
 	<p class="font-semibold">Labels</p>
-	<div class="flex flex-row md:flex-col">
-		<div class='flex flex-row  gap-x-3'>
+	<div class="flex flex-row md:flex-col gap-x-3">
+		<div class='flex flex-row  '>
 			<input  on:click={(x) => {
 				layersettings.rail.label.route = x.target.checked;
 				runSettingsAdapt()
@@ -1377,7 +1377,7 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 </div>
 <div class='h-[1px] bg-black'></div>
 <h3  class="font-bold">Buses</h3>
-<div class='flex flex-row gap-x-2'>
+<div class='flex flex-row '>
 	<input  on:click={(x) => {
 		layersettings.bus.visible = x.target.checked;
 		runSettingsAdapt()
@@ -1386,8 +1386,8 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 </div>
 <div>
 	<p class="font-semibold">Labels</p>
-	<div class="flex flex-row md:flex-col">
-	<div class='flex flex-row'>
+	<div class="flex flex-row md:flex-col gap-x-3">
+	<div class='flex flex-row '>
 		<input  on:click={(x) => {
 			layersettings.bus.label.route = x.target.checked;
 			runSettingsAdapt()
