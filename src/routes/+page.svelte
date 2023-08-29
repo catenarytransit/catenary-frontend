@@ -172,6 +172,8 @@ function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_na
 					}
 				}
 
+				maptag = maptag.replace(/counterclockwise/i, "↺").replace(/clockwise/i,"↻")
+
 				return maptag;
 }
 	
@@ -206,13 +208,14 @@ const convertArrayToObject = (array:any[], key:string) => {
 
 
 let agencies = [
-				/*
+				
 				{
 					feed_id: 'f-octa~rt',
 					agency_name: 'Orange County Transportation Authority',
-					color: '#00AFF2'
+					color: '#00AFF2',
+					static_feed_id: "f-9mu-orangecountytransportationauthority"
 				},
-				*/
+				
 				{
 					feed_id: 'f-metro~losangeles~bus~rt',
 					agency_name: 'Los Angeles Metro',
@@ -280,16 +283,24 @@ let agencies = [
 					static_feed_id: "f-9q5b-torrancetransit",
 					color: "#555555"
 				},
+				
 				{
 					"static_feed_id": "f-c28-nstranslinkca",
 					"feed_id": "f-translink~rt",
 					color: "#005daa"
 				},
 				{
+					static_feed_id: "f-9q5-ladot",
+					color: "#5050a0",
+					feed_id: "f-ladot~rt",
+					prefer_short_name: true
+				}
+				/*
+				{
 					"static_feed_id": "f-c23-soundtransit",
 					feed_id: "f-soundtransit~rt",
 					color: "#555555"
-				}
+				}/*
 				/*
 				
 				{
