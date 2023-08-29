@@ -3,13 +3,100 @@
 	import mapboxgl from 'mapbox-gl'
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
-	import { run } from 'svelte/internal';
+	import { construct_svelte_component, run } from 'svelte/internal';
 
+	let maplat:number,maplng:number,mapzoom:number;
 	let route_info_lookup:any = {};
 	let trips_per_agency:any = {};
+	let layersettingsBox = false;
+
+	let mapglobal:any;
+
+	maplng = 0;
+	maplat = 0;
+	 mapzoom = 0;
 
 	let rerenders_requested: String[] = [];
 
+	let layersettings = {
+		'bus': {
+			"visible": true,
+			"label": {
+				"route": true,
+				"trip": false,
+				"vehicle": false
+			}
+		},
+		'rail': {
+			"visible": true,
+			"label": {
+				"route": true,
+				"trip": false,
+				"vehicle": false
+			}
+		}
+	}
+
+	const interleave = (arr:any, thing:any) => [].concat(...arr.map((n:any) => [n, thing])).slice(0, -1)
+
+       function interpretLabelsToCode(label:any) {
+		let arrayofinfo = [];
+
+		if (label.route) {
+			arrayofinfo.push(["get", "maptag"])
+		}
+
+		if (label.trip) {
+			arrayofinfo.push(["get", "tripId"])
+		}
+
+		if (label.vehicle) {
+			arrayofinfo.push(["get", "vehicleId"])
+		}
+
+		return ["concat",...interleave(arrayofinfo, '|')]
+	   }
+	
+
+		function runSettingsAdapt() {
+			console.log('run settings adapt', layersettings)
+			if (mapglobal) {
+				let buscirclelayer = mapglobal.getLayer("buses");
+			let buslabel = mapglobal.getLayer("labelbuses");
+
+			if (buscirclelayer && buslabel) {
+                  if (layersettings.bus.visible) {
+					mapglobal.setLayoutProperty("buses", "visibility", "visible");
+					mapglobal.setLayoutProperty("labelbuses", "visibility", "visible");
+					mapglobal.setLayoutProperty("labelbuses", "text-field", interpretLabelsToCode(layersettings.bus.label))
+				  } else {
+					mapglobal.setLayoutProperty("buses", "visibility", "none");
+					mapglobal.setLayoutProperty("labelbuses", "visibility", "none");
+				  }
+
+				 
+			}
+
+			let railcirclelayer = mapglobal.getLayer("raillayer");
+			let raillabel = mapglobal.getLayer("labelrail");
+
+			if (railcirclelayer && raillabel) {
+				if (layersettings.rail.visible) {
+					mapglobal.setLayoutProperty("raillayer", "visibility", "visible");
+					mapglobal.setLayoutProperty("labelrail", "visibility", "visible");
+					
+					mapglobal.setLayoutProperty("labelrail", "text-field", interpretLabelsToCode(layersettings.rail.label))
+				  } else {
+					mapglobal.setLayoutProperty("raillayer", "visibility", "none");
+					mapglobal.setLayoutProperty("labelrail", "visibility", "none");
+				  }
+
+			}
+
+			}
+			true;
+		}
+	
 	function componentToHex(c:number) {
   var hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
@@ -299,19 +386,19 @@ let agencies = [
 
 function numberForBearingLengthBus(zoom:number) {
 	if (zoom < 11) {
-		return 1000;
+		return 800;
 	}
 
 	if (zoom < 12) {
-		return 500;
+		return 400;
 	}
 
 	if (zoom < 12.5) {
-		return 300;
+		return 250;
 	}
 
 	if (zoom < 13) {
-		return 180;
+		return 160;
 	}
 
 	if (zoom < 14) {
@@ -356,15 +443,15 @@ function numberForBearingLengthRail(zoom:number) {
 	}
 
 	if (zoom < 15) {
-		return 80;
+		return 90;
 	}
 
 	if (zoom < 17) {
-		return 50;
+		return 60;
 	}
 
 
-	return 20;
+	return 30;
 }
 
 	function flatten(arr:any) {
@@ -419,9 +506,97 @@ function numberForBearingLengthRail(zoom:number) {
 			zoom: 8 // starting zoom
 		});
 
+		mapglobal = map;
+		 
+
+	function updateData() {
+        mapzoom = map.getZoom();
+    	maplng = map.getCenter().lng;
+    	 maplat = map.getCenter().lat;
+    }
+
+
+		
+		function renderNewBearings() {
+
+			//console.log('render new bearings');
+			
+			const features = map.queryRenderedFeatures({layers: ['buses']});
+			
+				
+			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+						
+						var start = performance.now();
+			let newbearingdata = {
+				type: 'FeatureCollection',
+				features: features.filter((x: any) => x.properties.bearing != undefined)
+				.filter((x: any) => x.properties.bearing != 0)
+				.map((x: any) => {
+					let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
+			
+					return {
+						type: 'Feature',
+						geometry: {
+							type: 'LineString',
+							coordinates: [
+								[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+								[newcoords.longitude, newcoords.latitude]
+							]
+						},
+						properties: {
+							bearing: x.properties.bearing,
+							color: x.properties.color
+						}
+					}
+				})
+			};
+
+			//console.log("took ", performance.now() - start, "ms")
+			
+			//console.log('newbearingdata', newbearingdata)
+			
+			map.getSource("busbearings").setData(newbearingdata)
+
+			const railfeatures = map.queryRenderedFeatures({layers: ['raillayer']});
+			
+				
+			let railmapzoomnumber = numberForBearingLengthRail(map.getZoom())
+						
+							
+			let newrailbearingdata = {
+				type: 'FeatureCollection',
+				features: railfeatures.filter((x: any) => x.properties.bearing != undefined)
+				.filter((x: any) => x.properties.bearing != 0)
+				.map((x: any) => {
+					let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (railmapzoomnumber) / 1000)
+			
+					return {
+						type: 'Feature',
+						geometry: {
+							type: 'LineString',
+							coordinates: [
+								[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+								[newcoords.longitude, newcoords.latitude]
+							]
+						},
+						properties: {
+							bearing: x.properties.bearing,
+							color: x.properties.color
+						}
+					}
+				})
+			};
+			
+			//console.log('newbearingdata', newbearingdata)
+			
+			map.getSource("railbearings").setData(newrailbearingdata)
+					}
+			
+
 		map.on('load', () => {
 			// Add new sources and layers
 			
+			updateData();
 
 			map.addSource('buses', {
 				type: 'geojson',
@@ -461,11 +636,11 @@ function numberForBearingLengthRail(zoom:number) {
                  ["linear"],
                  ["zoom"],
 				 9,
-				 1,
+				 3,
 				 10,
-				 1.2,
+				 1.6,
 				 13,
-				2
+				3
               ],
 				'line-opacity': [
                  "interpolate",
@@ -673,6 +848,12 @@ function numberForBearingLengthRail(zoom:number) {
 				source: 'rail',
 				layout: {
 					'text-field': ['get', 'maptag'],
+					/*'text-field': [
+						"concat",
+						['get', 'maptag'],
+						" | ",
+						['get', 'vehicleId']
+					],*/
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
                 'text-radial-offset': 0.2,
 				'text-font': [
@@ -834,7 +1015,7 @@ if (bottomright) {
 	}
 }
 
-console.log('requested rerender of ', rerenders_requested)
+//console.log('requested rerender of ', rerenders_requested)
 
 agencies.forEach((agency_obj: any) => {
 
@@ -855,9 +1036,7 @@ agencies.forEach((agency_obj: any) => {
 		.then(async (response) => {
 
 			rerenders_requested = rerenders_requested.filter((x) => x != agency_obj.feed_id);
-			
-			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-			
+		
 
 			if (response.status === 200) {
 
@@ -917,7 +1096,7 @@ agencies.forEach((agency_obj: any) => {
 					type: 'Feature',
 					id,
 					properties: {
-						...vehicle,
+						vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
 						color: color,
 						label: vehicle?.vehicle?.label,
 						maptag: maptag?.replace("-13168", ""),
@@ -962,34 +1141,9 @@ agencies.forEach((agency_obj: any) => {
 				
 						
 			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-				
-				let newbearingdata = {
-					type: 'FeatureCollection',
-					features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
-					.filter((x: any) => x.properties.bearing != 0)
-					.map((x: any) => {
-						let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
 
-						return {
-							type: 'Feature',
-							geometry: {
-								type: 'LineString',
-								coordinates: [
-									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-									[newcoords.longitude, newcoords.latitude]
-								]
-							},
-							properties: {
-								bearing: x.properties.bearing,
-								color: x.properties.color
-							}
-						}
-					})
-				};
-
-				//console.log('newbearingdata', newbearingdata)
-
-				map.getSource("busbearings").setData(newbearingdata)
+			// Query all rendered features from a single layer
+			renderNewBearings();
 			}
 		}})
 		.catch((e) => {
@@ -1010,6 +1164,10 @@ if (rerenders_requested.length > 0) {
 
 			let geometryObj:any = new Object();
 
+			map.on('move', () => {
+			updateData();
+		})
+
 			map.on('idle', () => {
 
 				if (lasttimezoomran < Date.now() - 800) {
@@ -1021,6 +1179,7 @@ if (rerenders_requested.length > 0) {
 					console.log(flattenedarray);
 
 					let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+					/*
 					let newbearingdata = {
 									type: 'FeatureCollection',
 									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
@@ -1048,11 +1207,16 @@ if (rerenders_requested.length > 0) {
 
 								console.log('newbearingdata', newbearingdata)
 
-								map.getSource("busbearings").setData(newbearingdata)
+								map.getSource("busbearings").setData(newbearingdata)*/
+
+
+								renderNewBearings();
 				}
 
 				
 			})
+
+		
 
 			
 
@@ -1119,12 +1283,21 @@ if (rerenders_requested.length > 0) {
 		
 	});
 
+
+	function togglelayerfeature() {
+		layersettingsBox = !layersettingsBox;
+	}
+
+	if (typeof window === 'object') {
+document.getElementsByTagName("body")[0].classList.add("overflow-none")
+	}
 	
 </script>
 
 <svelte:head>
 	  <!-- Primary Meta Tags -->
 <title>Kyler's Transit Map</title>
+<link rel="icon" href="/favicon.png" />
 <meta name="title" content="Kyler's Transit Map" />
 <meta name="description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
 
@@ -1143,12 +1316,13 @@ if (rerenders_requested.length > 0) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true}>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </svelte:head>
 {#if typeof geolocation === "object"}
 {#if typeof geolocation.coords.speed === "number"} 
 
 
-<div class="inter fixed bottom-1 z-50 w-auto rounded-sm px-2 py-1 bg-white w-content ml-2  text-black text-sm z-10"><div>
+<div class="inter fixed bottom-1 z-50  rounded-sm px-2 py-1 bg-white w-content ml-2  text-black text-sm z-10"><div>
 	{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
 </div></div>
 {/if}
@@ -1157,6 +1331,90 @@ if (rerenders_requested.length > 0) {
 
 <div id="map" style="width: 100%; height: 100%;" />
 
+<div class="sidebar">
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(
+		2)}
+</div>
+
+<div on:click={togglelayerfeature} class="fixed top-4 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
+	layers
+	</span></div>
+
+	<div
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2  {layersettingsBox ? "": "hidden"}"
+  >
+
+  <h3  class="font-bold">Rail / Other</h3>
+<div class='flex flex-row '>
+	<input on:click={(x) => {
+		console.log("x is ",x);
+	layersettings.rail.visible = x.target.checked;
+	runSettingsAdapt()
+	}} checked={layersettings.rail.visible} id="rail" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+<label for="rail" class="ml-2 ">Realtime Locations</label>
+</div>
+<div>
+	<p class="font-semibold">Labels</p>
+	<div class="flex flex-row md:flex-col gap-x-3">
+		<div class='flex flex-row  '>
+			<input  on:click={(x) => {
+				layersettings.rail.label.route = x.target.checked;
+				runSettingsAdapt()
+				}}
+				checked={layersettings.rail.label.route} id="rail-route" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+		<label for="rail-route" class="ml-2 ">Route</label>
+		</div>
+		<div class='flex flex-row'>
+			<input   on:click={(x) => {
+				layersettings.rail.label.trip = x.target.checked;
+				runSettingsAdapt()
+				}} checked={layersettings.rail.label.trip} id="rail-trip" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+		<label for="rail-trip" class="ml-2 ">Trip</label>
+		</div>
+		<div class='flex flex-row'>
+			<input    on:click={(x) => {
+				layersettings.rail.label.vehicle = x.target.checked;
+				runSettingsAdapt()
+				}} checked={layersettings.rail.label.vehicle} id="rail-vehicle" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+		<label for="rail-vehicle" class="ml-2 ">Vehicle</label>
+		</div>
+	</div>
+</div>
+<div class='h-[1px] bg-black'></div>
+<h3  class="font-bold">Buses</h3>
+<div class='flex flex-row '>
+	<input  on:click={(x) => {
+		layersettings.bus.visible = x.target.checked;
+		runSettingsAdapt()
+		}} checked={layersettings.bus.visible} id="buses" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+<label for="buses" class="ml-2 ">Realtime Locations</label>
+</div>
+<div>
+	<p class="font-semibold">Labels</p>
+	<div class="flex flex-row md:flex-col gap-x-3">
+	<div class='flex flex-row '>
+		<input  on:click={(x) => {
+			layersettings.bus.label.route = x.target.checked;
+			runSettingsAdapt()
+			}} checked={layersettings.bus.label.route} id="buses-route" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+	<label for="buses-route" class="ml-2 ">Route</label>
+	</div>
+	<div class='flex flex-row'>
+		<input   on:click={(x) => {
+			layersettings.bus.label.trip = x.target.checked;
+			runSettingsAdapt()
+			}} checked={layersettings.bus.label.trip} id="buses-trips" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+	<label for="buses-trips" class="ml-2 ">Trip</label>
+	</div>
+	<div class='flex flex-row'>
+		<input    on:click={(x) => {
+			layersettings.bus.label.vehicle = x.target.checked;
+			runSettingsAdapt()
+			}}  checked={layersettings.bus.label.vehicle} id="buses-vehicles" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+	<label for="buses-vehicles" class="ml-2 ">Vehicle</label>
+	</div></div>
+</div>
+</div>
 
 <style>
 	.inter {
@@ -1166,5 +1424,19 @@ if (rerenders_requested.length > 0) {
 	#map {
 		width: 100%;
 		height: 100%;
+	}
+
+	.sidebar {
+		background-color: rgba(35, 55, 75, 0.9);
+		color: #fff;
+		padding: 6px 12px;
+		font-family: monospace;
+		z-index: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin: 12px;
+		border-radius: 4px;
+		font-size: 10px;
 	}
 </style>
