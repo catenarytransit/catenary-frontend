@@ -133,11 +133,8 @@ function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_na
 							maptag = routeId;
 						}
 					}
-				
 
-				maptag = maptag.replace(/ Line/, "");
-
-				if (feed_id === "f-metro~losangeles~rail~rt") {
+				if (feed_id === "f-metro~losangeles~rail~rt" || feed_id === "f-metrolinktrains~rt") {
 
 					let railletters:any = {
 						"801": "A",
@@ -145,13 +142,21 @@ function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_na
 						"803": "C",
 						"804": "E",
 						"805": "D",
-						"807": "K"
+						"807": "K",
+						"Orange County Line": "OC",
+						"San Bernardino Line": "SB",
+						"Antelope Valley Line": "AV",
+						"Inland Emp.-Orange Co. Line": "IEOC"
 					}
+
+		
 
 					if (Object.keys(railletters).includes(routeId)) {
 						maptag = railletters[routeId];
 					}
 				}
+
+				maptag = maptag.replace(/( )?Line/, "");
 
 				maptag = maptag.replace(/counterclockwise/i, "↺").replace(/clockwise/i,"↻")
 
