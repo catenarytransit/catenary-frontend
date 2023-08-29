@@ -5,8 +5,13 @@
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { run } from 'svelte/internal';
 
+	let maplat:number,maplng:number,mapzoom:number;
 	let route_info_lookup:any = {};
 	let trips_per_agency:any = {};
+
+	maplng = 0;
+	maplat = 0;
+	 mapzoom = 0;
 
 	let rerenders_requested: String[] = [];
 
@@ -29,6 +34,7 @@
 		}
 	}
 
+	
 	function componentToHex(c:number) {
   var hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
@@ -313,19 +319,19 @@ let agencies = [
 
 function numberForBearingLengthBus(zoom:number) {
 	if (zoom < 11) {
-		return 1000;
+		return 800;
 	}
 
 	if (zoom < 12) {
-		return 500;
+		return 400;
 	}
 
 	if (zoom < 12.5) {
-		return 300;
+		return 250;
 	}
 
 	if (zoom < 13) {
-		return 180;
+		return 160;
 	}
 
 	if (zoom < 14) {
@@ -370,15 +376,15 @@ function numberForBearingLengthRail(zoom:number) {
 	}
 
 	if (zoom < 15) {
-		return 80;
+		return 90;
 	}
 
 	if (zoom < 17) {
-		return 50;
+		return 60;
 	}
 
 
-	return 20;
+	return 30;
 }
 
 	function flatten(arr:any) {
@@ -433,9 +439,96 @@ function numberForBearingLengthRail(zoom:number) {
 			zoom: 8 // starting zoom
 		});
 
+		 
+
+	function updateData() {
+        mapzoom = map.getZoom();
+    	maplng = map.getCenter().lng;
+    	 maplat = map.getCenter().lat;
+    }
+
+
+		
+		function renderNewBearings() {
+
+			console.log('render new bearings');
+			
+			const features = map.queryRenderedFeatures({layers: ['buses']});
+			
+				
+			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+						
+						var start = performance.now();
+			let newbearingdata = {
+				type: 'FeatureCollection',
+				features: features.filter((x: any) => x.properties.bearing != undefined)
+				.filter((x: any) => x.properties.bearing != 0)
+				.map((x: any) => {
+					let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
+			
+					return {
+						type: 'Feature',
+						geometry: {
+							type: 'LineString',
+							coordinates: [
+								[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+								[newcoords.longitude, newcoords.latitude]
+							]
+						},
+						properties: {
+							bearing: x.properties.bearing,
+							color: x.properties.color
+						}
+					}
+				})
+			};
+
+			console.log("took ", performance.now() - start, "ms")
+			
+			//console.log('newbearingdata', newbearingdata)
+			
+			map.getSource("busbearings").setData(newbearingdata)
+
+			const railfeatures = map.queryRenderedFeatures({layers: ['raillayer']});
+			
+				
+			let railmapzoomnumber = numberForBearingLengthRail(map.getZoom())
+						
+							
+			let newrailbearingdata = {
+				type: 'FeatureCollection',
+				features: railfeatures.filter((x: any) => x.properties.bearing != undefined)
+				.filter((x: any) => x.properties.bearing != 0)
+				.map((x: any) => {
+					let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (railmapzoomnumber) / 1000)
+			
+					return {
+						type: 'Feature',
+						geometry: {
+							type: 'LineString',
+							coordinates: [
+								[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+								[newcoords.longitude, newcoords.latitude]
+							]
+						},
+						properties: {
+							bearing: x.properties.bearing,
+							color: x.properties.color
+						}
+					}
+				})
+			};
+			
+			//console.log('newbearingdata', newbearingdata)
+			
+			map.getSource("railbearings").setData(newrailbearingdata)
+					}
+			
+
 		map.on('load', () => {
 			// Add new sources and layers
 			
+			updateData();
 
 			map.addSource('buses', {
 				type: 'geojson',
@@ -475,11 +568,11 @@ function numberForBearingLengthRail(zoom:number) {
                  ["linear"],
                  ["zoom"],
 				 9,
-				 1,
+				 3,
 				 10,
-				 1.2,
+				 1.6,
 				 13,
-				2
+				3
               ],
 				'line-opacity': [
                  "interpolate",
@@ -875,9 +968,7 @@ agencies.forEach((agency_obj: any) => {
 		.then(async (response) => {
 
 			rerenders_requested = rerenders_requested.filter((x) => x != agency_obj.feed_id);
-			
-			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-			
+		
 
 			if (response.status === 200) {
 
@@ -982,34 +1073,9 @@ agencies.forEach((agency_obj: any) => {
 				
 						
 			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-				
-				let newbearingdata = {
-					type: 'FeatureCollection',
-					features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
-					.filter((x: any) => x.properties.bearing != 0)
-					.map((x: any) => {
-						let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
 
-						return {
-							type: 'Feature',
-							geometry: {
-								type: 'LineString',
-								coordinates: [
-									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-									[newcoords.longitude, newcoords.latitude]
-								]
-							},
-							properties: {
-								bearing: x.properties.bearing,
-								color: x.properties.color
-							}
-						}
-					})
-				};
-
-				//console.log('newbearingdata', newbearingdata)
-
-				map.getSource("busbearings").setData(newbearingdata)
+			// Query all rendered features from a single layer
+			renderNewBearings();
 			}
 		}})
 		.catch((e) => {
@@ -1030,6 +1096,10 @@ if (rerenders_requested.length > 0) {
 
 			let geometryObj:any = new Object();
 
+			map.on('move', () => {
+			updateData();
+		})
+
 			map.on('idle', () => {
 
 				if (lasttimezoomran < Date.now() - 800) {
@@ -1041,6 +1111,7 @@ if (rerenders_requested.length > 0) {
 					console.log(flattenedarray);
 
 					let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
+					/*
 					let newbearingdata = {
 									type: 'FeatureCollection',
 									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
@@ -1068,11 +1139,16 @@ if (rerenders_requested.length > 0) {
 
 								console.log('newbearingdata', newbearingdata)
 
-								map.getSource("busbearings").setData(newbearingdata)
+								map.getSource("busbearings").setData(newbearingdata)*/
+
+
+								renderNewBearings();
 				}
 
 				
 			})
+
+		
 
 			
 
@@ -1178,6 +1254,11 @@ if (rerenders_requested.length > 0) {
 
 <div id="map" style="width: 100%; height: 100%;" />
 
+<div class="sidebar">
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(
+		2)}
+</div>
+
 <div class="fixed top-4 right-4 bg-white z-50 px-1 py-0.5 rounded-full"><span class="material-symbols-outlined">
 	layers
 	</span></div>
@@ -1191,5 +1272,19 @@ if (rerenders_requested.length > 0) {
 	#map {
 		width: 100%;
 		height: 100%;
+	}
+
+	.sidebar {
+		background-color: rgba(35, 55, 75, 0.9);
+		color: #fff;
+		padding: 6px 12px;
+		font-family: monospace;
+		z-index: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin: 12px;
+		border-radius: 4px;
+		font-size: 10px;
 	}
 </style>
