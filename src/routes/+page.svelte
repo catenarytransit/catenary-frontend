@@ -10,6 +10,25 @@
 
 	let rerenders_requested: String[] = [];
 
+	let layerSettings = {
+		'bus': {
+			"visible": true,
+			"label": {
+				"route": true,
+				"trip": false,
+				"vehicle": false
+			}
+		},
+		'rail': {
+			"visible": true,
+			"label": {
+				"route": true,
+				"trip": false,
+				"vehicle": false
+			}
+		}
+	}
+
 	function componentToHex(c:number) {
   var hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
@@ -657,6 +676,12 @@ function numberForBearingLengthRail(zoom:number) {
 				source: 'rail',
 				layout: {
 					'text-field': ['get', 'maptag'],
+					/*'text-field': [
+						"concat",
+						['get', 'maptag'],
+						" | ",
+						['get', 'vehicleId']
+					],*/
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
                 'text-radial-offset': 0.2,
 				'text-font': [
@@ -901,7 +926,7 @@ agencies.forEach((agency_obj: any) => {
 					type: 'Feature',
 					id,
 					properties: {
-						...vehicle,
+						vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
 						color: color,
 						label: vehicle?.vehicle?.label,
 						maptag: maptag?.replace("-13168", ""),
@@ -1127,6 +1152,7 @@ if (rerenders_requested.length > 0) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true}>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </svelte:head>
 {#if typeof geolocation === "object"}
 {#if typeof geolocation.coords.speed === "number"} 
@@ -1140,6 +1166,10 @@ if (rerenders_requested.length > 0) {
 {/if}
 
 <div id="map" style="width: 100%; height: 100%;" />
+
+<div class="fixed top-4 right-4 bg-white z-50 px-1 py-0.5 rounded-full"><span class="material-symbols-outlined">
+	layers
+	</span></div>
 
 
 <style>
