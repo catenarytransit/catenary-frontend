@@ -385,11 +385,6 @@ let agencies = [
 					static_feed_id: "f-ucla~bruinbus"
 				},
 				{
-					feed_id: "f-ucla~bruinbus~rt",
-					prefer_short_name: true,
-					static_feed_id: "f-ucla~bruinbus"
-				},
-				{
 					feed_id: "f-9qd-mercedthebus~ca~us~rt",
 					static_feed_id: "f-9qd-mercedthebus~ca~us"
 				},
