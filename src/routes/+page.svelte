@@ -288,7 +288,12 @@ let agencies = [
 					color: '#00AFF2',
 					static_feed_id: "f-9mu-orangecountytransportationauthority"
 				},
-				
+				{
+					feed_id: 'f-sf~bay~area~rg~rt',
+					agency_name: 'San Francisco Bay Area Rapid Transit',
+					color: '#000000',
+					static_feed_id: "f-sf~bay~area~rg"
+				},
 				{
 					feed_id: 'f-metro~losangeles~bus~rt',
 					agency_name: 'Los Angeles Metro',
@@ -373,21 +378,40 @@ let agencies = [
 					color: "#cecd71",
 					feed_id: "f-culvercitybus~rt",
 					prefer_short_name: true
-				}
+				},
+				{
+					feed_id: "f-ucla~bruinbus~rt",
+					prefer_short_name: true,
+					static_feed_id: "f-ucla~bruinbus"
+				},
+				{
+					feed_id: "f-ucla~bruinbus~rt",
+					prefer_short_name: true,
+					static_feed_id: "f-ucla~bruinbus"
+				},
+				{
+					feed_id: "f-9qd-mercedthebus~ca~us~rt",
+					static_feed_id: "f-9qd-mercedthebus~ca~us"
+				},
+				{
+					feed_id: "f-9q4g~santabarbaramtd~rt",
+					static_feed_id: "f-9q4g-santabarbaramtd"
+				},
 				/*
 				{
 					"static_feed_id": "f-c23-soundtransit",
 					feed_id: "f-soundtransit~rt",
 					color: "#555555"
-				}/*
-				/*
+				}
 				
+				*/
 				{
 					feed_id: "f-calgarytransit~rt",
 					color: "#c9072a",
-					agency_name: "Calgary Transit"
+					agency_name: "Calgary Transit",
+					static_feed_id: "f-c3nf-calgarytransit"
 				}
-				*/
+				
 			];
 
 function numberForBearingLengthBus(zoom:number) {
