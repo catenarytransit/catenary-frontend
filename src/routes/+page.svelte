@@ -233,7 +233,7 @@ function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_na
 						"Orange County Line": "OC",
 						"San Bernardino Line": "SB",
 						"Antelope Valley Line": "AV",
-						"Inland Emp.-Orange Co. Line": "IEOC"
+						"Inland Emp.-Orange Co. Line": "IEOC",
 					}
 
 		
@@ -366,6 +366,12 @@ let agencies = [
 					static_feed_id: "f-9q5-ladot",
 					color: "#5050a0",
 					feed_id: "f-ladot~rt",
+					prefer_short_name: true
+				},
+				{
+					static_feed_id: "f-9q5c-culvercitybus",
+					color: "#cecd71",
+					feed_id: "f-culvercitybus~rt",
 					prefer_short_name: true
 				}
 				/*
