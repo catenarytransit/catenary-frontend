@@ -194,7 +194,12 @@ function getRouteId(vehicle:any, agency_obj:any) {
 					return routeId;
 }
 
-function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_name: boolean | undefined) {
+function getMaptag(routeId:any,agency_obj:any) {
+
+	let static_feed_id: any = agency_obj.static_feed_id;
+				let feed_id: String = agency_obj.feed_id;
+				let prefer_short_name: boolean | undefined = agency_obj.prefer_short_name;
+				let use_long_name: boolean | undefined = agency_obj.use_long_name;
 	//label the vehicles
 				//if a better short name is avaliable, use it!
 				var maptag:String = "";
@@ -209,8 +214,17 @@ function getMaptag(routeId:any,static_feed_id:any, feed_id: any, prefer_short_na
 								if (short_name.length < routeId.length  || prefer_short_name === true) {
 								maptag = short_name;
 							}
+
+							
 							}
 							
+						}
+
+						let long_name = route_info_lookup[static_feed_id][routeId].long_name;
+						if (long_name) {
+							if (use_long_name === true) {
+								maptag = route_info_lookup[static_feed_id][routeId].long_name;
+							}
 						}
 					}
 					}
@@ -382,6 +396,7 @@ let agencies = [
 				{
 					feed_id: "f-ucla~bruinbus~rt",
 					prefer_short_name: true,
+					use_long_name: true,
 					static_feed_id: "f-ucla~bruinbus"
 				},
 				{
@@ -1115,7 +1130,7 @@ agencies.forEach((agency_obj: any) => {
 
 				let color = getColourOfVehicle(routeId, agency_obj);
 
-				let maptag = getMaptag(routeId,agency_obj.static_feed_id,agency_obj.feed_id, agency_obj.prefer_short_name);
+				let maptag = getMaptag(routeId,agency_obj);
  
 				return {
 					type: 'Feature',
