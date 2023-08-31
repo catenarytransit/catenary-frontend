@@ -1350,7 +1350,7 @@ essential: true // this animation is considered essential with respect to prefer
 					target.zoom = 10
 				}
 
-				mapglobal.flyTo();
+				mapglobal.flyTo(target);
 			}
 		}
 	}
