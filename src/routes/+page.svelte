@@ -11,6 +11,7 @@
 	let layersettingsBox = false;
 
 	let mapglobal:any;
+	let firstmove = false;
 
 	maplng = 0;
 	maplat = 0;
@@ -623,6 +624,8 @@ function numberForBearingLengthRail(zoom:number) {
 			
 			updateData();
 
+			
+
 			map.addSource('buses', {
 				type: 'geojson',
 				data: {
@@ -1191,6 +1194,7 @@ if (rerenders_requested.length > 0) {
 
 			map.on('move', () => {
 			updateData();
+			firstmove = true;
 		})
 
 			map.on('idle', () => {
@@ -1316,7 +1320,25 @@ if (rerenders_requested.length > 0) {
 	if (typeof window === 'object') {
 document.getElementsByTagName("body")[0].classList.add("overflow-none")
 	}
-	
+
+
+	function gpsbutton() {
+		if (geolocation) {
+			if (mapglobal) {
+
+				let target:any = {
+center: [geolocation.coords.longitude, geolocation.coords.latitude],
+essential: true // this animation is considered essential with respect to prefers-reduced-motion
+}
+
+				if (firstmove === false) {
+					target.zoom = 10
+				}
+
+				mapglobal.flyTo();
+			}
+		}
+	}
 </script>
 
 <svelte:head>
@@ -1364,6 +1386,12 @@ document.getElementsByTagName("body")[0].classList.add("overflow-none")
 <div on:click={togglelayerfeature} class="fixed top-4 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
 	layers
 	</span></div>
+
+	<div on:click={gpsbutton} class="fixed top-14 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
+		
+			location_searching
+		
+		</span></div>
 
 	<div
 	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2  {layersettingsBox ? "": "hidden"}"
