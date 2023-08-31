@@ -13,6 +13,8 @@
 	let mapglobal:any;
 	let firstmove = false;
 
+	let lockongps = false;
+
 	maplng = 0;
 	maplat = 0;
 	 mapzoom = 0;
@@ -1346,9 +1348,11 @@ center: [geolocation.coords.longitude, geolocation.coords.latitude],
 essential: true // this animation is considered essential with respect to prefers-reduced-motion
 }
 
-				if (firstmove === false) {
-					target.zoom = 12.2
+				if (firstmove === false || lockongps === true) {
+					target.zoom = 13.5
 				}
+
+				lockongps = true
 
 				mapglobal.flyTo(target);
 			}
