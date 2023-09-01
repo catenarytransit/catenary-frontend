@@ -12,6 +12,7 @@
 
 	let mapglobal:any;
 	let firstmove = false;
+	let secondrequestlockgps = false;
 
 	let lockongps = false;
 
@@ -1212,6 +1213,8 @@ if (rerenders_requested.length > 0) {
 			map.on('move', () => {
 			updateData();
 			firstmove = true;
+			
+	        secondrequestlockgps = false;
 		})
 
 			map.on('idle', () => {
@@ -1352,6 +1355,7 @@ essential: true // this animation is considered essential with respect to prefer
 
 				if (firstmove === false || lockongps === true) {
 					target.zoom = 14
+					secondrequestlockgps = true;
 				}
 
 				lockongps = true
@@ -1368,6 +1372,10 @@ function gpsupdate() {
 				let target:any = {
 center: [geolocation.coords.longitude, geolocation.coords.latitude],
 essential: true // this animation is considered essential with respect to prefers-reduced-motion
+}
+
+if (secondrequestlockgps === true) {
+	target.zoom = 14
 }
 
 				mapglobal.flyTo(target);
