@@ -10,6 +10,8 @@
 	let trips_per_agency:any = {};
 	let layersettingsBox = false;
 
+	const lockonconst = 14.5
+
 	let mapglobal:any;
 	let firstmove = false;
 	let secondrequestlockgps = false;
@@ -1214,6 +1216,12 @@ if (rerenders_requested.length > 0) {
 			updateData();
 		});
 
+		map.on("mousemove", () => {
+			firstmove = true;
+			lockongps = false;
+	        secondrequestlockgps = false;
+		})
+
 			map.on('touchmove', () => {
 				
 			firstmove = true;
@@ -1356,7 +1364,7 @@ essential: true // this animation is considered essential with respect to prefer
 }
 
 				if (firstmove === false || lockongps === true) {
-					target.zoom = 14.5
+					target.zoom = lockonconst
 					secondrequestlockgps = true;
 				}
 
@@ -1377,7 +1385,7 @@ essential: true // this animation is considered essential with respect to prefer
 }
 
 if (secondrequestlockgps === true || firstmove === false) {
-	target.zoom = 14
+	target.zoom = lockonconst
 }
 
 				mapglobal.flyTo(target);
