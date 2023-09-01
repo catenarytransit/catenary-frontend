@@ -1370,13 +1370,13 @@ essential: true // this animation is considered essential with respect to prefer
 function gpsupdate() {
 	if (geolocation) {
 		if (mapglobal) {
-			if (lockongps === true) {
+			if (lockongps === true || firstmove === true) {
 				let target:any = {
 center: [geolocation.coords.longitude, geolocation.coords.latitude],
 essential: true // this animation is considered essential with respect to prefers-reduced-motion
 }
 
-if (secondrequestlockgps === true) {
+if (secondrequestlockgps === true || firstmove === true) {
 	target.zoom = 14
 }
 
