@@ -1212,11 +1212,11 @@ if (rerenders_requested.length > 0) {
 
 			map.on('move', () => {
 			updateData();
-			firstmove = true;
 		});
 
 			map.on('touchmove', () => {
 				
+			firstmove = true;
 			lockongps = false;
 	        secondrequestlockgps = false;
 			})
@@ -1370,13 +1370,13 @@ essential: true // this animation is considered essential with respect to prefer
 function gpsupdate() {
 	if (geolocation) {
 		if (mapglobal) {
-			if (lockongps === true || firstmove === true) {
+			if (lockongps === true || firstmove === false) {
 				let target:any = {
 center: [geolocation.coords.longitude, geolocation.coords.latitude],
 essential: true // this animation is considered essential with respect to prefers-reduced-motion
 }
 
-if (secondrequestlockgps === true || firstmove === true) {
+if (secondrequestlockgps === true || firstmove === false) {
 	target.zoom = 14
 }
 
