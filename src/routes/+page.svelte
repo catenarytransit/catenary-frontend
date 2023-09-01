@@ -1356,7 +1356,7 @@ essential: true // this animation is considered essential with respect to prefer
 }
 
 				if (firstmove === false || lockongps === true) {
-					target.zoom = 14
+					target.zoom = 14.5
 					secondrequestlockgps = true;
 				}
 
