@@ -1213,7 +1213,7 @@ if (rerenders_requested.length > 0) {
 			map.on('move', () => {
 			updateData();
 			firstmove = true;
-			
+			lockongps = false;
 	        secondrequestlockgps = false;
 		})
 
@@ -1303,7 +1303,7 @@ if (rerenders_requested.length > 0) {
 							})
 						}
 
-						if (location.coords.heading != null && location.coords.heading != 0) {
+						if (false) {
 							console.log('bearing is', location.coords.heading)
 
 							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
