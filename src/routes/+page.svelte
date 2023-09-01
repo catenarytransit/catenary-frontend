@@ -1026,7 +1026,7 @@ map.addLayer({
 'layout': {
 'icon-image': 'geonav', // reference the image
 'icon-size': 0.13,
-'icon-rotate': ['get', 'bearing'],
+'icon-rotate': ['get', 'heading'],
 'visibility': 'none'
 },
 'paint': {
@@ -1303,10 +1303,8 @@ if (rerenders_requested.length > 0) {
 							})
 						}
 
-						if (false) {
+						if (location.coords.heading != null && location.coords.heading != 0) {
 							console.log('bearing is', location.coords.heading)
-
-							
 
 							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
 							
