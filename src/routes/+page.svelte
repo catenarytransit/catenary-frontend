@@ -1389,6 +1389,7 @@ if (secondrequestlockgps === true) {
 <link rel="icon" href="/favicon.png" />
 <meta name="title" content="Kyler's Transit Map" />
 <meta name="description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
+<meta name="viewport" content="width=device-width, user-scalable=no">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
