@@ -1213,9 +1213,13 @@ if (rerenders_requested.length > 0) {
 			map.on('move', () => {
 			updateData();
 			firstmove = true;
+		});
+
+			map.on('touchmove', () => {
+				
 			lockongps = false;
 	        secondrequestlockgps = false;
-		})
+			})
 
 			map.on('idle', () => {
 
