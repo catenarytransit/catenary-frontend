@@ -1366,7 +1366,7 @@ function gpsupdate() {
 		if (mapglobal) {
 			let target:any = {
 center: [geolocation.coords.longitude, geolocation.coords.latitude],
-essential: false // this animation is considered essential with respect to prefers-reduced-motion
+essential: true // this animation is considered essential with respect to prefers-reduced-motion
 }
 
 				mapglobal.flyTo(target);
