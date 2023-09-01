@@ -1313,6 +1313,8 @@ if (rerenders_requested.length > 0) {
 							
 							map.setLayoutProperty("bearing_position", 'visibility', 'none');
 						}
+
+						gpsupdate();
 					}
 		};
 
@@ -1349,7 +1351,7 @@ essential: true // this animation is considered essential with respect to prefer
 }
 
 				if (firstmove === false || lockongps === true) {
-					target.zoom = 13.5
+					target.zoom = 14
 				}
 
 				lockongps = true
@@ -1358,6 +1360,19 @@ essential: true // this animation is considered essential with respect to prefer
 			}
 		}
 	}
+
+function gpsupdate() {
+	if (geolocation) {
+		if (mapglobal) {
+			let target:any = {
+center: [geolocation.coords.longitude, geolocation.coords.latitude],
+essential: false // this animation is considered essential with respect to prefers-reduced-motion
+}
+
+				mapglobal.flyTo(target);
+		}
+	}
+}
 </script>
 
 <svelte:head>
@@ -1406,7 +1421,7 @@ essential: true // this animation is considered essential with respect to prefer
 	layers
 	</span></div>
 
-	<div on:click={gpsbutton} class="fixed top-14 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
+	<div on:click={gpsbutton} class="${ lockongps ? " text-blue-500 " : ""} fixed top-14 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
 		
 			location_searching
 		
