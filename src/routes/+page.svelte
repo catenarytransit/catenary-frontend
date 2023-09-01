@@ -1364,12 +1364,14 @@ essential: true // this animation is considered essential with respect to prefer
 function gpsupdate() {
 	if (geolocation) {
 		if (mapglobal) {
-			let target:any = {
+			if (lockongps === true) {
+				let target:any = {
 center: [geolocation.coords.longitude, geolocation.coords.latitude],
 essential: true // this animation is considered essential with respect to prefers-reduced-motion
 }
 
 				mapglobal.flyTo(target);
+			}
 		}
 	}
 }
