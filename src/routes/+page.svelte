@@ -43,6 +43,44 @@
 		}
 	}
 
+	function  createGeoJSONCircle(center:number[], radiusInKm:number, points:number) {
+
+    var coords = {
+        latitude: center[1],
+        longitude: center[0]
+    };
+
+    var km = radiusInKm;
+
+    var ret = [];
+    var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
+    var distanceY = km/110.574;
+
+    var theta, x, y;
+    for(var i=0; i<points; i++) {
+        theta = (i/points)*(2*Math.PI);
+        x = distanceX*Math.cos(theta);
+        y = distanceY*Math.sin(theta);
+
+        ret.push([coords.longitude+x, coords.latitude+y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+        "type": "geojson",
+        "data": {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [ret]
+                }
+            }]
+        }
+    };
+};
+
 	const interleave = (arr:any, thing:any) => [].concat(...arr.map((n:any) => [n, thing])).slice(0, -1)
 
        function interpretLabelsToCode(label:any) {
@@ -830,6 +868,8 @@ function numberForBearingLengthRail(zoom:number) {
 					8,
 					9,
 					10,
+					10,
+					10,
 					13,
 					14
 				],
@@ -984,6 +1024,19 @@ function numberForBearingLengthRail(zoom:number) {
 }
 ]
 }
+});
+
+map.addLayer({
+    "id": "userpositionacc",
+    "type": "fill",
+    "source": "userpositionacc",
+    "layout": {
+        "visibility": "none"
+    },
+    "paint": {
+		"fill-color": "#22d3ee",
+        "fill-opacity": 0.4
+    }
 });
 			
 			map.loadImage(
