@@ -866,8 +866,6 @@ function numberForBearingLengthRail(zoom:number) {
 					8,
 					9,
 					10,
-					10,
-					10,
 					13,
 					14
 				],
