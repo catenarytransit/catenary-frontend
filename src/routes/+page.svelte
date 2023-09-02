@@ -1,209 +1,171 @@
 <script lang="ts">
-
-	import mapboxgl from 'mapbox-gl'
+	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
 
-	let maplat:number,maplng:number,mapzoom:number;
-	let route_info_lookup:any = {};
-	let trips_per_agency:any = {};
+	let maplat: number, maplng: number, mapzoom: number;
+	let route_info_lookup: any = {};
+	let trips_per_agency: any = {};
 	let layersettingsBox = false;
 
-	const lockonconst = 14.5
+	const lockonconst = 14.5;
 
-	let mapglobal:any;
+	let mapglobal: any;
 	let firstmove = false;
 	let secondrequestlockgps = false;
+
+	let binaryDataOfGtfsRt: any = new Object();
 
 	let lockongps = false;
 
 	maplng = 0;
 	maplat = 0;
-	 mapzoom = 0;
+	mapzoom = 0;
 
 	let rerenders_requested: String[] = [];
 
 	let layersettings = {
-		'bus': {
-			"visible": true,
-			"label": {
-				"route": true,
-				"trip": false,
-				"vehicle": false
+		bus: {
+			visible: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false
 			}
 		},
-		'rail': {
-			"visible": true,
-			"label": {
-				"route": true,
-				"trip": false,
-				"vehicle": false
+		rail: {
+			visible: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false
 			}
 		}
-	}
+	};
 
-	function  createGeoJSONCircle(center:number[], radiusInKm:number, points:number) {
+	const interleave = (arr: any, thing: any) =>
+		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
 
-    var coords = {
-        latitude: center[1],
-        longitude: center[0]
-    };
-
-    var km = radiusInKm;
-
-    var ret = [];
-    var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
-    var distanceY = km/110.574;
-
-    var theta, x, y;
-    for(var i=0; i<points; i++) {
-        theta = (i/points)*(2*Math.PI);
-        x = distanceX*Math.cos(theta);
-        y = distanceY*Math.sin(theta);
-
-        ret.push([coords.longitude+x, coords.latitude+y]);
-    }
-    ret.push(ret[0]);
-
-    return {
-            "type": "FeatureCollection",
-            "features": [{
-                "type": "Feature",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [ret]
-                }
-            }]
-        
-    };
-};
-
-	const interleave = (arr:any, thing:any) => [].concat(...arr.map((n:any) => [n, thing])).slice(0, -1)
-
-       function interpretLabelsToCode(label:any) {
+	function interpretLabelsToCode(label: any) {
 		let arrayofinfo = [];
 
 		if (label.route) {
-			arrayofinfo.push(["get", "maptag"])
+			arrayofinfo.push(['get', 'maptag']);
 		}
 
 		if (label.trip) {
-			arrayofinfo.push(["get", "tripId"])
+			arrayofinfo.push(['get', 'tripId']);
 		}
 
 		if (label.vehicle) {
-			arrayofinfo.push(["get", "vehicleId"])
+			arrayofinfo.push(['get', 'vehicleId']);
 		}
 
-		return ["concat",...interleave(arrayofinfo, '|')]
-	   }
-	
+		return ['concat', ...interleave(arrayofinfo, '|')];
+	}
 
-		function runSettingsAdapt() {
-			console.log('run settings adapt', layersettings)
-			if (mapglobal) {
-				let buscirclelayer = mapglobal.getLayer("buses");
-			let buslabel = mapglobal.getLayer("labelbuses");
+	function runSettingsAdapt() {
+		console.log('run settings adapt', layersettings);
+		if (mapglobal) {
+			let buscirclelayer = mapglobal.getLayer('buses');
+			let buslabel = mapglobal.getLayer('labelbuses');
 
 			if (buscirclelayer && buslabel) {
-                  if (layersettings.bus.visible) {
-					mapglobal.setLayoutProperty("buses", "visibility", "visible");
-					mapglobal.setLayoutProperty("labelbuses", "visibility", "visible");
-					mapglobal.setLayoutProperty("labelbuses", "text-field", interpretLabelsToCode(layersettings.bus.label))
-				  } else {
-					mapglobal.setLayoutProperty("buses", "visibility", "none");
-					mapglobal.setLayoutProperty("labelbuses", "visibility", "none");
-				  }
-
-				 
+				if (layersettings.bus.visible) {
+					mapglobal.setLayoutProperty('buses', 'visibility', 'visible');
+					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'visible');
+					mapglobal.setLayoutProperty(
+						'labelbuses',
+						'text-field',
+						interpretLabelsToCode(layersettings.bus.label)
+					);
+				} else {
+					mapglobal.setLayoutProperty('buses', 'visibility', 'none');
+					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'none');
+				}
 			}
 
-			let railcirclelayer = mapglobal.getLayer("raillayer");
-			let raillabel = mapglobal.getLayer("labelrail");
+			let railcirclelayer = mapglobal.getLayer('raillayer');
+			let raillabel = mapglobal.getLayer('labelrail');
 
 			if (railcirclelayer && raillabel) {
 				if (layersettings.rail.visible) {
-					mapglobal.setLayoutProperty("raillayer", "visibility", "visible");
-					mapglobal.setLayoutProperty("labelrail", "visibility", "visible");
-					
-					mapglobal.setLayoutProperty("labelrail", "text-field", interpretLabelsToCode(layersettings.rail.label))
-				  } else {
-					mapglobal.setLayoutProperty("raillayer", "visibility", "none");
-					mapglobal.setLayoutProperty("labelrail", "visibility", "none");
-				  }
+					mapglobal.setLayoutProperty('raillayer', 'visibility', 'visible');
+					mapglobal.setLayoutProperty('labelrail', 'visibility', 'visible');
 
+					mapglobal.setLayoutProperty(
+						'labelrail',
+						'text-field',
+						interpretLabelsToCode(layersettings.rail.label)
+					);
+				} else {
+					mapglobal.setLayoutProperty('raillayer', 'visibility', 'none');
+					mapglobal.setLayoutProperty('labelrail', 'visibility', 'none');
+				}
 			}
-
-			}
-			true;
 		}
-	
-	function componentToHex(c:number) {
-  var hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
-}
+		true;
+	}
 
-function getColourOfVehicle(routeId:any, agency_obj:any) {
- let color = agency_obj.color;
+	function getColourOfVehicle(routeId: any, agency_obj: any) {
+		let color = agency_obj.color;
 
- if (route_info_lookup[agency_obj.static_feed_id]) {
-					if (routeId) {
-
-						if (agency_obj.static_feed_id == "f-9q5-metro~losangeles") {
-							if (routeId.includes("720") ||routeId.includes("754") || routeId.includes("761")) {
-								color = "#d11242"
-							} else {
-								if (routeId.includes("901")) {
-									color = "#fc4c02"
-								} else if (routeId.includes("950") || routeId.includes("910")) {
-									color = "#adb8bf"
-								}
-								else {
-									color = "#e16710"
-								}
-							}
+		if (route_info_lookup[agency_obj.static_feed_id]) {
+			if (routeId) {
+				if (agency_obj.static_feed_id == 'f-9q5-metro~losangeles') {
+					if (routeId.includes('720') || routeId.includes('754') || routeId.includes('761')) {
+						color = '#d11242';
+					} else {
+						if (routeId.includes('901')) {
+							color = '#fc4c02';
+						} else if (routeId.includes('950') || routeId.includes('910')) {
+							color = '#adb8bf';
 						} else {
-							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
-							let colorvalue = route_info_lookup[agency_obj.static_feed_id][routeId].color;
+							color = '#e16710';
+						}
+					}
+				} else {
+					if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+						let colorvalue = route_info_lookup[agency_obj.static_feed_id][routeId].color;
 						if (colorvalue) {
-							let splitInts = colorvalue.replace("rgb(","").replace(")", "").split(",");
+							let splitInts = colorvalue.replace('rgb(', '').replace(')', '').split(',');
 
-							color = rgbToHex(Number(splitInts[0]),Number(splitInts[1]), Number(splitInts[2]));
+							color = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
 
-							if (color === "#ffffff" || color === "#000000") {
+							if (color === '#ffffff' || color === '#000000') {
 								color = agency_obj.color;
 							}
 						}
-						}
-						}
-
-						
 					}
 				}
+			}
+		}
 
-				return color;
-}
+		return color;
+	}
 
-function rgbToHex(r:number, g:number, b:number) {
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
+	function rgbToHex(r: number, g: number, b: number) {
+		return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+	}
 
-function getRouteId(vehicle:any, agency_obj:any) {
-	let routeId = vehicle?.trip?.routeId;
+	function getRouteId(vehicle: any, agency_obj: any) {
+		let routeId = vehicle?.trip?.routeId;
 
 		let runtripfetch = false;
 
-	if (vehicle.trip) {
-
-
-					if (vehicle.trip.tripId) {
-						if (routeId === null || routeId === undefined || routeId === "") {
-							//console.log(vehicle.trip)
-					if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
+		if (vehicle.trip) {
+			if (vehicle.trip.tripId) {
+				if (routeId === null || routeId === undefined || routeId === '') {
+					//console.log(vehicle.trip)
+					if (typeof trips_per_agency[agency_obj.static_feed_id] === 'undefined') {
 						runtripfetch = true;
 					} else {
-						if (typeof trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] === "undefined") {
+						if (
+							typeof trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] ===
+							'undefined'
+						) {
 							runtripfetch = true;
 						} else {
 							routeId = trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId].route_id;
@@ -211,245 +173,217 @@ function getRouteId(vehicle:any, agency_obj:any) {
 					}
 
 					if (runtripfetch === true) {
-								
-								fetch(`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`)
-								.then((x) => x.json())
-								.then((data) => {
-									if (data.length > 0) {
-	
-										if (typeof trips_per_agency[agency_obj.static_feed_id] === "undefined") {
-											trips_per_agency[agency_obj.static_feed_id] = {}
-										}
-	
-										trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
-										if (rerenders_requested.includes(agency_obj.static_feed_id)){
-											rerenders_requested.push(agency_obj.static_feed_id);
-										}
+						fetch(
+							`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`
+						)
+							.then((x) => x.json())
+							.then((data) => {
+								if (data.length > 0) {
+									if (typeof trips_per_agency[agency_obj.static_feed_id] === 'undefined') {
+										trips_per_agency[agency_obj.static_feed_id] = {};
 									}
-								})
-								
+
+									trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
+									if (rerenders_requested.includes(agency_obj.static_feed_id)) {
+										rerenders_requested.push(agency_obj.static_feed_id);
+									}
+								}
+							});
 					}
 				}
-					}
-					}
+			}
+		}
 
-					return routeId;
-}
+		return routeId;
+	}
 
-function getMaptag(routeId:any,agency_obj:any) {
+	function getMaptag(routeId: any, agency_obj: any) {
+		let static_feed_id: any = agency_obj.static_feed_id;
+		let feed_id: String = agency_obj.feed_id;
+		let prefer_short_name: boolean | undefined = agency_obj.prefer_short_name;
+		let use_long_name: boolean | undefined = agency_obj.use_long_name;
+		//label the vehicles
+		//if a better short name is avaliable, use it!
+		var maptag: String = '';
 
-	let static_feed_id: any = agency_obj.static_feed_id;
-				let feed_id: String = agency_obj.feed_id;
-				let prefer_short_name: boolean | undefined = agency_obj.prefer_short_name;
-				let use_long_name: boolean | undefined = agency_obj.use_long_name;
-	//label the vehicles
-				//if a better short name is avaliable, use it!
-				var maptag:String = "";
+		if (routeId) {
+			if (route_info_lookup[static_feed_id][routeId]) {
+				let short_name = route_info_lookup[static_feed_id][routeId].short_name;
 
-
-					if (routeId) {
-						if (route_info_lookup[static_feed_id][routeId]) {
-						let short_name = route_info_lookup[static_feed_id][routeId].short_name;
-
-						if (short_name) {
-							if (short_name.trim().length > 0 || prefer_short_name === true) {
-								if (short_name.length < routeId.length  || prefer_short_name === true) {
-								maptag = short_name;
-							}
-
-							
-							}
-							
+				if (short_name) {
+					if (short_name.trim().length > 0 || prefer_short_name === true) {
+						if (short_name.length < routeId.length || prefer_short_name === true) {
+							maptag = short_name;
 						}
-
-						let long_name = route_info_lookup[static_feed_id][routeId].long_name;
-						if (long_name) {
-							if (use_long_name === true) {
-								maptag = route_info_lookup[static_feed_id][routeId].long_name;
-							}
-						}
-					}
-					}
-
-					if (maptag === "") {
-						if (routeId) {
-							maptag = routeId;
-						}
-					}
-
-				if (feed_id === "f-metro~losangeles~rail~rt" || feed_id === "f-metrolinktrains~rt") {
-
-					let railletters:any = {
-						"801": "A",
-						"802": "B",
-						"803": "C",
-						"804": "E",
-						"805": "D",
-						"807": "K",
-						"Orange County Line": "OC",
-						"San Bernardino Line": "SB",
-						"Antelope Valley Line": "AV",
-						"Inland Emp.-Orange Co. Line": "IEOC",
-					}
-
-		
-
-					if (Object.keys(railletters).includes(routeId)) {
-						maptag = railletters[routeId];
 					}
 				}
 
-				maptag = maptag.replace(/( )?Line/, "");
+				let long_name = route_info_lookup[static_feed_id][routeId].long_name;
+				if (long_name) {
+					if (use_long_name === true) {
+						maptag = route_info_lookup[static_feed_id][routeId].long_name;
+					}
+				}
+			}
+		}
 
-				maptag = maptag.replace(/counterclockwise/i, "↺").replace(/clockwise/i,"↻")
+		if (maptag === '') {
+			if (routeId) {
+				maptag = routeId;
+			}
+		}
 
-				return maptag;
-}
-	
+		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metrolinktrains~rt') {
+			let railletters: any = {
+				'801': 'A',
+				'802': 'B',
+				'803': 'C',
+				'804': 'E',
+				'805': 'D',
+				'807': 'K',
+				'Orange County Line': 'OC',
+				'San Bernardino Line': 'SB',
+				'Antelope Valley Line': 'AV',
+				'Inland Emp.-Orange Co. Line': 'IEOC'
+			};
+
+			if (Object.keys(railletters).includes(routeId)) {
+				maptag = railletters[routeId];
+			}
+		}
+
+		maptag = maptag.replace(/( )?Line/, '');
+
+		maptag = maptag.replace(/counterclockwise/i, '↺').replace(/clockwise/i, '↻');
+
+		return maptag;
+	}
+
 	let lasttimezoomran = 0;
 
-	function calculateNewCoordinates(latitude:number, longitude:number, bearing:number, distance:number) {
-  // taken from: https://stackoverflow.com/a/46410871/13549 
-      // distance in KM, bearing in degrees
-    
-      const R = 6378.1; // Radius of the Earth
-      const brng = bearing * Math.PI / 180; // Convert bearing to radian
-      let lat = latitude * Math.PI / 180; // Current coords to radians
-      let lon = longitude * Math.PI / 180;
-    
-      // Do the math magic
-      lat = Math.asin(Math.sin(lat) * Math.cos(distance / R) + Math.cos(lat) * Math.sin(distance / R) * Math.cos(brng));
-      lon += Math.atan2(Math.sin(brng) * Math.sin(distance / R) * Math.cos(lat), Math.cos(distance / R) - Math.sin(lat) * Math.sin(lat));
-    
-      // Coords back to degrees and return
-      return {latitude: (lat * 180 / Math.PI), longitude: (lon * 180 / Math.PI)};
-}
+	const convertArrayToObject = (array: any[], key: string) => {
+		const initialValue = {};
+		return array.reduce((obj, item) => {
+			return {
+				...obj,
+				[item[key]]: item
+			};
+		}, initialValue);
+	};
 
-const convertArrayToObject = (array:any[], key:string) => {
-  const initialValue = {};
-  return array.reduce((obj, item) => {
-    return {
-      ...obj,
-      [item[key]]: item,
-    };
-  }, initialValue);
-};
+	let agencies = [
+		{
+			feed_id: 'f-octa~rt',
+			agency_name: 'Orange County Transportation Authority',
+			color: '#00AFF2',
+			static_feed_id: 'f-9mu-orangecountytransportationauthority'
+		},
+		{
+			feed_id: 'f-sf~bay~area~rg~rt',
+			agency_name: 'San Francisco Bay Area Rapid Transit',
+			color: '#000000',
+			static_feed_id: 'f-sf~bay~area~rg'
+		},
+		{
+			feed_id: 'f-metro~losangeles~bus~rt',
+			agency_name: 'Los Angeles Metro',
+			color: '#E16710',
+			static_feed_id: 'f-9q5-metro~losangeles'
+		},
+		{
+			feed_id: 'f-metro~losangeles~rail~rt',
+			agency_name: 'Los Angeles Metro',
+			color: '#E16710',
+			static_feed_id: 'f-9q5-metro~losangeles~rail'
+		},
+		{
+			feed_id: 'f-rta~rt',
+			color: '#de1e36',
+			agency_name: 'Riverside',
+			static_feed_id: 'f-9qh-riversidetransitagency'
+		},
+		{
+			color: '#801f3b',
+			feed_id: 'f-longbeachtransit~rt',
+			agency_name: 'Long Beach Transit',
+			static_feed_id: 'f-9q5b-longbeachtransit'
+		},
+		{
+			feed_id: 'f-foothilltransit~rt',
+			color: '#2c6a4f',
+			agency_name: 'Foothill Transit',
+			static_feed_id: 'f-9qh1-foothilltransit'
+		},
+		{
+			static_feed_id: 'f-9qh-metrolinktrains',
+			feed_id: 'f-metrolinktrains~rt',
+			agency_name: 'Metrolink Trains',
+			color: '#006066'
+		},
+		{
+			feed_id: 'f-bigbluebus~rt',
+			color: '#0039A6',
+			agency_name: 'Big Blue Bus',
+			static_feed_id: 'f-9q5c-bigbluebus'
+		},
+		{
+			feed_id: 'f-northcountrytransitdistrict~rt',
+			color: '#004cab',
+			agency_name: 'North County Transit District',
+			static_feed_id: 'f-9mu-northcountytransitdistrict',
+			prefer_short_name: true
+		},
+		{
+			feed_id: 'f-mts~rt~onebusaway',
+			agency_name: 'San diego MTS',
+			//f-9mu-mts
+			color: '#555555',
+			static_feed_id: 'f-9mu-mts',
+			prefer_short_name: true
+		},
+		{
+			feed_id: 'f-montebello~bus~rt',
+			static_feed_id: 'f-montebello~bus',
+			color: '#555555'
+		},
+		{
+			feed_id: 'f-torrancetransit~rt',
+			static_feed_id: 'f-9q5b-torrancetransit',
+			color: '#555555'
+		},
 
-
-let agencies = [
-				
-				{
-					feed_id: 'f-octa~rt',
-					agency_name: 'Orange County Transportation Authority',
-					color: '#00AFF2',
-					static_feed_id: "f-9mu-orangecountytransportationauthority"
-				},
-				{
-					feed_id: 'f-sf~bay~area~rg~rt',
-					agency_name: 'San Francisco Bay Area Rapid Transit',
-					color: '#000000',
-					static_feed_id: "f-sf~bay~area~rg"
-				},
-				{
-					feed_id: 'f-metro~losangeles~bus~rt',
-					agency_name: 'Los Angeles Metro',
-					color: '#E16710',
-					static_feed_id: "f-9q5-metro~losangeles"
-				},
-				{
-					feed_id: 'f-metro~losangeles~rail~rt',
-					agency_name: 'Los Angeles Metro',
-					color: '#E16710',
-					static_feed_id: "f-9q5-metro~losangeles~rail"
-				},
-				{
-					feed_id: 'f-rta~rt',
-					color: '#de1e36',
-					agency_name: "Riverside",
-					static_feed_id: "f-9qh-riversidetransitagency"
-				},
-				{
-					color: "#801f3b",
-					feed_id: "f-longbeachtransit~rt",
-					agency_name: "Long Beach Transit",
-					static_feed_id: "f-9q5b-longbeachtransit"
-				},
-				{
-					feed_id: 'f-foothilltransit~rt',
-					color: '#2c6a4f',
-					agency_name: 'Foothill Transit',
-					static_feed_id: "f-9qh1-foothilltransit"
-				},
-				{
-					static_feed_id: "f-9qh-metrolinktrains",
-					feed_id: "f-metrolinktrains~rt",
-					agency_name: "Metrolink Trains",
-					color: "#006066"
-				},
-				{
-					feed_id: "f-bigbluebus~rt",
-					color: '#0039A6',
-					agency_name: 'Big Blue Bus',
-					static_feed_id: "f-9q5c-bigbluebus"
-				},
-				{
-					"feed_id": "f-northcountrytransitdistrict~rt",
-					color: "#004cab",
-					agency_name: "North County Transit District",
-					static_feed_id: "f-9mu-northcountytransitdistrict",
-					prefer_short_name: true
-				},
-				{
-					"feed_id": "f-mts~rt~onebusaway",
-					agency_name: "San diego MTS",
-					//f-9mu-mts
-					color: "#555555",
-					static_feed_id: "f-9mu-mts",
-					prefer_short_name: true
-				},
-				{
-					"feed_id": "f-montebello~bus~rt",
-					static_feed_id: "f-montebello~bus",
-					color: "#555555"
-				},
-				{
-					"feed_id": "f-torrancetransit~rt",
-					static_feed_id: "f-9q5b-torrancetransit",
-					color: "#555555"
-				},
-				
-				{
-					"static_feed_id": "f-c28-nstranslinkca",
-					"feed_id": "f-translink~rt",
-					color: "#005daa"
-				},
-				{
-					static_feed_id: "f-9q5-ladot",
-					color: "#5050a0",
-					feed_id: "f-ladot~rt",
-					prefer_short_name: true
-				},
-				{
-					static_feed_id: "f-9q5c-culvercitybus",
-					color: "#cecd71",
-					feed_id: "f-culvercitybus~rt",
-					prefer_short_name: true
-				},
-				{
-					feed_id: "f-ucla~bruinbus~rt",
-					prefer_short_name: true,
-					use_long_name: true,
-					static_feed_id: "f-ucla~bruinbus"
-				},
-				{
-					feed_id: "f-9qd-mercedthebus~ca~us~rt",
-					static_feed_id: "f-9qd-mercedthebus~ca~us"
-				},
-				{
-					feed_id: "f-9q4g~santabarbaramtd~rt",
-					static_feed_id: "f-9q4g-santabarbaramtd"
-				},
-				/*
+		{
+			static_feed_id: 'f-c28-nstranslinkca',
+			feed_id: 'f-translink~rt',
+			color: '#005daa'
+		},
+		{
+			static_feed_id: 'f-9q5-ladot',
+			color: '#5050a0',
+			feed_id: 'f-ladot~rt',
+			prefer_short_name: true
+		},
+		{
+			static_feed_id: 'f-9q5c-culvercitybus',
+			color: '#cecd71',
+			feed_id: 'f-culvercitybus~rt',
+			prefer_short_name: true
+		},
+		{
+			feed_id: 'f-ucla~bruinbus~rt',
+			prefer_short_name: true,
+			use_long_name: true,
+			static_feed_id: 'f-ucla~bruinbus'
+		},
+		{
+			feed_id: 'f-9qd-mercedthebus~ca~us~rt',
+			static_feed_id: 'f-9qd-mercedthebus~ca~us'
+		},
+		{
+			feed_id: 'f-9q4g~santabarbaramtd~rt',
+			static_feed_id: 'f-9q4g-santabarbaramtd'
+		},
+		/*
 				{
 					"static_feed_id": "f-c23-soundtransit",
 					feed_id: "f-soundtransit~rt",
@@ -457,90 +391,87 @@ let agencies = [
 				}
 				
 				*/
-				{
-					feed_id: "f-calgarytransit~rt",
-					color: "#c9072a",
-					agency_name: "Calgary Transit",
-					static_feed_id: "f-c3nf-calgarytransit"
-				}
-				
-			];
+		{
+			feed_id: 'f-calgarytransit~rt',
+			color: '#c9072a',
+			agency_name: 'Calgary Transit',
+			static_feed_id: 'f-c3nf-calgarytransit'
+		}
+	];
 
-function numberForBearingLengthBus(zoom:number) {
-	if (zoom < 11) {
-		return 800;
+	function numberForBearingLengthBus(zoom: number) {
+		if (zoom < 11) {
+			return 800;
+		}
+
+		if (zoom < 12) {
+			return 400;
+		}
+
+		if (zoom < 12.5) {
+			return 250;
+		}
+
+		if (zoom < 13) {
+			return 160;
+		}
+
+		if (zoom < 14) {
+			return 120;
+		}
+
+		if (zoom < 15) {
+			return 80;
+		}
+
+		if (zoom < 17) {
+			return 50;
+		}
+
+		return 20;
 	}
 
-	if (zoom < 12) {
-		return 400;
+	function numberForBearingLengthRail(zoom: number) {
+		if (zoom < 10) {
+			return 1700;
+		}
+
+		if (zoom < 11) {
+			return 1000;
+		}
+
+		if (zoom < 12) {
+			return 500;
+		}
+
+		if (zoom < 12.5) {
+			return 300;
+		}
+
+		if (zoom < 13) {
+			return 180;
+		}
+
+		if (zoom < 14) {
+			return 120;
+		}
+
+		if (zoom < 15) {
+			return 90;
+		}
+
+		if (zoom < 17) {
+			return 60;
+		}
+
+		return 30;
 	}
 
-	if (zoom < 12.5) {
-		return 250;
+	function flatten(arr: any) {
+		return arr.reduce(function (flat: any, toFlatten: any) {
+			return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+		}, []);
 	}
-
-	if (zoom < 13) {
-		return 160;
-	}
-
-	if (zoom < 14) {
-		return 120;
-	}
-
-	if (zoom < 15) {
-		return 80;
-	}
-
-	if (zoom < 17) {
-		return 50;
-	}
-
-
-	return 20;
-}
-
-function numberForBearingLengthRail(zoom:number) {
-	if (zoom < 10) {
-		return 1700;
-	}
-	
-	if (zoom < 11) {
-		return 1000;
-	}
-
-	if (zoom < 12) {
-		return 500;
-	}
-
-	if (zoom < 12.5) {
-		return 300;
-	}
-
-	if (zoom < 13) {
-		return 180;
-	}
-
-	if (zoom < 14) {
-		return 120;
-	}
-
-	if (zoom < 15) {
-		return 90;
-	}
-
-	if (zoom < 17) {
-		return 60;
-	}
-
-
-	return 30;
-}
-
-	function flatten(arr:any) {
-  return arr.reduce(function (flat:any, toFlatten:any) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
-}
 
 	let geolocation: GeolocationPosition;
 
@@ -550,137 +481,140 @@ function numberForBearingLengthRail(zoom:number) {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
 		let rtFeedsTimestampsVehicles: any = new Object();
-		let rtFeedsHashVehicles:any = new Object();
+		let rtFeedsHashVehicles: any = new Object();
 
-			
-		let dark = "https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539";
+		let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
 
-		let light = "https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779";
+		let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
 
-		let style = ""
+		let style = '';
 
-	//	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    
-	if (false) {
-		// dark mode
-	style=dark;
+		//	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 
-} else {
-	style=light;
-}
+		if (false) {
+			// dark mode
+			style = dark;
+		} else {
+			style = light;
+		}
 
 		agencies.forEach((agency) => {
-			fetch("https://transitbackend.kylerchin.com/getroutesperagency?feed_id=" + agency.static_feed_id)
-			.then((x) => x.json())
-			.then((x) => {
-				route_info_lookup[agency.static_feed_id] = convertArrayToObject(x, "route_id");
-			})
-			.catch((e) => {
-				console.error(e);
-			})
-		})
+			fetch(
+				'https://transitbackend.kylerchin.com/getroutesperagency?feed_id=' + agency.static_feed_id
+			)
+				.then((x) => x.json())
+				.then((x) => {
+					route_info_lookup[agency.static_feed_id] = convertArrayToObject(x, 'route_id');
+				})
+				.catch((e) => {
+					console.error(e);
+				});
+		});
 
 		const map = new mapboxgl.Map({
 			container: 'map',
 			style: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
-			accessToken: 'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
+			accessToken:
+				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
 			center: [-118, 33.9], // starting position [lng, lat]
 			zoom: 8 // starting zoom
 		});
 
 		mapglobal = map;
-		 
 
-	function updateData() {
-        mapzoom = map.getZoom();
-    	maplng = map.getCenter().lng;
-    	 maplat = map.getCenter().lat;
-    }
+		function updateData() {
+			mapzoom = map.getZoom();
+			maplng = map.getCenter().lng;
+			maplat = map.getCenter().lat;
+		}
 
-
-		
 		function renderNewBearings() {
-
 			//console.log('render new bearings');
-			
-			const features = map.queryRenderedFeatures({layers: ['buses']});
-			
-				
-			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-						
-						var start = performance.now();
+
+			const features = map.queryRenderedFeatures({ layers: ['buses'] });
+
+			let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+
+			var start = performance.now();
 			let newbearingdata = {
 				type: 'FeatureCollection',
-				features: features.filter((x: any) => x.properties.bearing != undefined)
-				.filter((x: any) => x.properties.bearing != 0)
-				.map((x: any) => {
-					let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (mapzoomnumber) / 1000)
-			
-					return {
-						type: 'Feature',
-						geometry: {
-							type: 'LineString',
-							coordinates: [
-								[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-								[newcoords.longitude, newcoords.latitude]
-							]
-						},
-						properties: {
-							bearing: x.properties.bearing,
-							color: x.properties.color
-						}
-					}
-				})
+				features: features
+					.filter((x: any) => x.properties.bearing != undefined)
+					.filter((x: any) => x.properties.bearing != 0)
+					.map((x: any) => {
+						let newcoords = calculateNewCoordinates(
+							x.geometry.coordinates[1],
+							x.geometry.coordinates[0],
+							x.properties.bearing,
+							mapzoomnumber / 1000
+						);
+
+						return {
+							type: 'Feature',
+							geometry: {
+								type: 'LineString',
+								coordinates: [
+									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+									[newcoords.longitude, newcoords.latitude]
+								]
+							},
+							properties: {
+								bearing: x.properties.bearing,
+								color: x.properties.color
+							}
+						};
+					})
 			};
 
 			//console.log("took ", performance.now() - start, "ms")
-			
-			//console.log('newbearingdata', newbearingdata)
-			
-			map.getSource("busbearings").setData(newbearingdata)
 
-			const railfeatures = map.queryRenderedFeatures({layers: ['raillayer']});
-			
-				
-			let railmapzoomnumber = numberForBearingLengthRail(map.getZoom())
-						
-							
+			//console.log('newbearingdata', newbearingdata)
+
+			map.getSource('busbearings').setData(newbearingdata);
+
+			const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
+
+			let railmapzoomnumber = numberForBearingLengthRail(map.getZoom());
+
 			let newrailbearingdata = {
 				type: 'FeatureCollection',
-				features: railfeatures.filter((x: any) => x.properties.bearing != undefined)
-				.filter((x: any) => x.properties.bearing != 0)
-				.map((x: any) => {
-					let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, (railmapzoomnumber) / 1000)
-			
-					return {
-						type: 'Feature',
-						geometry: {
-							type: 'LineString',
-							coordinates: [
-								[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-								[newcoords.longitude, newcoords.latitude]
-							]
-						},
-						properties: {
-							bearing: x.properties.bearing,
-							color: x.properties.color
-						}
-					}
-				})
+				features: railfeatures
+					.filter((x: any) => x.properties.bearing != undefined)
+					.filter((x: any) => x.properties.bearing != 0)
+					.map((x: any) => {
+						let newcoords = calculateNewCoordinates(
+							x.geometry.coordinates[1],
+							x.geometry.coordinates[0],
+							x.properties.bearing,
+							railmapzoomnumber / 1000
+						);
+
+						return {
+							type: 'Feature',
+							geometry: {
+								type: 'LineString',
+								coordinates: [
+									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+									[newcoords.longitude, newcoords.latitude]
+								]
+							},
+							properties: {
+								bearing: x.properties.bearing,
+								color: x.properties.color
+							}
+						};
+					})
 			};
-			
+
 			//console.log('newbearingdata', newbearingdata)
-			
-			map.getSource("railbearings").setData(newrailbearingdata)
-					}
-			
+
+			map.getSource('railbearings').setData(newrailbearingdata);
+		}
 
 		map.on('load', () => {
 			// Add new sources and layers
-			
-			updateData();
 
-			
+			updateData();
 
 			map.addSource('buses', {
 				type: 'geojson',
@@ -690,212 +624,103 @@ function numberForBearingLengthRail(zoom:number) {
 				}
 			});
 
-							map.addSource('busbearings', {
-				'type': 'geojson',
-				'data': {
-				'type': 'Feature',
-				'properties': {},
-				'geometry': {
-				'type': 'LineString',
-				'coordinates': [
-				]
+			map.addSource('busbearings', {
+				type: 'geojson',
+				data: {
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'LineString',
+						coordinates: []
+					}
 				}
-				}
-				});
+			});
 
-				
-
-				map.addLayer({
-				'id': 'busbearingslayer',
-				'type': 'line',
-				'source': 'busbearings',
-				'layout': {
-				//'line-join': 'round',
-				//'line-cap': 'round'
+			map.addLayer({
+				id: 'busbearingslayer',
+				type: 'line',
+				source: 'busbearings',
+				layout: {
+					//'line-join': 'round',
+					//'line-cap': 'round'
 				},
-				'paint': {
-				'line-color': ['get', 'color'],
-				'line-width': [
-                 "interpolate",
-                 ["linear"],
-                 ["zoom"],
-				 9,
-				 3,
-				 10,
-				 1.6,
-				 13,
-				3
-              ],
-				'line-opacity': [
-                 "interpolate",
-                 ["linear"],
-                 ["zoom"],
-				 6,
-				 0,
-				 7,
-				 0.9
-              ],
-				
+				paint: {
+					'line-color': ['get', 'color'],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.6, 13, 3],
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
-				});
+			});
 
-				map.addSource('railbearings', {
-				'type': 'geojson',
-				'data': {
-				'type': 'Feature',
-				'properties': {},
-				'geometry': {
-				'type': 'LineString',
-				'coordinates': [
-				]
+			map.addSource('railbearings', {
+				type: 'geojson',
+				data: {
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'LineString',
+						coordinates: []
+					}
 				}
-				}
-				});
+			});
 
-				
-
-				map.addLayer({
-				'id': 'railbearingslayer',
-				'type': 'line',
-				'source': 'railbearings',
-				'layout': {
-				//'line-join': 'round',
-				//'line-cap': 'round'
+			map.addLayer({
+				id: 'railbearingslayer',
+				type: 'line',
+				source: 'railbearings',
+				layout: {
+					//'line-join': 'round',
+					//'line-cap': 'round'
 				},
-				'paint': {
-				'line-color': ['get', 'color'],
-				'line-width': [
-                 "interpolate",
-                 ["linear"],
-                 ["zoom"],
-				 9,
-				 2,
-				 10,
-				 2,
-				 13,
-				3
-              ],
-				'line-opacity': [
-                 "interpolate",
-                 ["linear"],
-                 ["zoom"],
-				 6,
-				 0,
-				 7,
-				 0.9
-              ],
-				
+				paint: {
+					'line-color': ['get', 'color'],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 2, 10, 2, 13, 3],
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
-				});
+			});
 
-				map.addLayer({
+			map.addLayer({
 				id: 'buses',
 				type: 'circle',
 				source: 'buses',
 				paint: {
-					'circle-radius': [
-                 "interpolate",
-                 ["linear"],
-                 ["zoom"],
-				 7,
-				 2,
-				 8,
-				 3,
-		                 10,
-                 4,
-                 16,
-                 6,
-              ],
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 10, 4, 16, 6],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
-					'circle-stroke-opacity': [
-						"interpolate",
-						["linear"],
-						["zoom"],
-						8,
-						0.1,
-						9,
-						0.9
-					],
+					'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
 					'circle-stroke-width': 0.8,
 					'circle-opacity': 0.5
 				}
 			});
-		
 
 			map.addLayer({
-				id: "labelbuses",
-				type: "symbol",
+				id: 'labelbuses',
+				type: 'symbol',
 				source: 'buses',
 				layout: {
 					'text-field': ['get', 'maptag'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-                'text-radial-offset': 0.2,
-				'text-font': [
-  "step",
-  ["zoom"],
-  [
-    "literal",
-    [
-      "Open Sans Regular",
-      "Arial Unicode MS Regular"
-    ]
-  ],
-  10,
-  [
-    "literal",
-    [
-      "Open Sans Medium",
-      "Arial Unicode MS Medium"
-    ]
-  ],
-  14,
-  [
-    "literal",
-    [
-      "Open Sans Bold",
-      "Arial Unicode MS Bold"
-    ]
-  ]
-],
-				'text-size': [
-					"interpolate",
-					["linear"],
-					["zoom"],
-					8,
-					8,
-					9,
-					10,
-					13,
-					14
-				],
-				'text-ignore-placement': [
-					'step',
-					["zoom"],
-					false,
-					9.5,
-					true
-				]
+					'text-radial-offset': 0.2,
+					'text-font': [
+						'step',
+						['zoom'],
+						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
+						10,
+						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
+						14,
+						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
+					],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
+					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
 				paint: {
 					'text-color': ['get', 'color'],
-					'text-halo-color': "#eaeaea",
+					'text-halo-color': '#eaeaea',
 					//'text-halo-color': "#1d1d1d",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
-					'text-opacity': [
-					"interpolate",
-					["linear"],
-					["zoom"],
-					6,
-					0,
-					7,
-					0.8,
-					10,
-					1
-				],
-				},
-			})
+					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+				}
+			});
 
 			map.addSource('rail', {
 				type: 'geojson',
@@ -910,15 +735,7 @@ function numberForBearingLengthRail(zoom:number) {
 				type: 'circle',
 				source: 'rail',
 				paint: {
-					'circle-radius': [
-                 "interpolate",
-                 ["linear"],
-                 ["zoom"],
-                 10,
-                 6,
-                 16,
-                 10,
-              ],
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 6, 16, 10],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 1,
@@ -927,8 +744,8 @@ function numberForBearingLengthRail(zoom:number) {
 			});
 
 			map.addLayer({
-				id: "labelrail",
-				type: "symbol",
+				id: 'labelrail',
+				type: 'symbol',
 				source: 'rail',
 				layout: {
 					'text-field': ['get', 'maptag'],
@@ -939,163 +756,107 @@ function numberForBearingLengthRail(zoom:number) {
 						['get', 'vehicleId']
 					],*/
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-                'text-radial-offset': 0.2,
-				'text-font': [
-  "step",
-  ["zoom"],
-  [
-    "literal",
-    [
-      "Open Sans Regular",
-      "Arial Unicode MS Regular"
-    ]
-  ],
-  11,
-  [
-    "literal",
-    [
-      "Open Sans Medium",
-      "Arial Unicode MS Medium"
-    ]
-  ],
-  13,
-  [
-    "literal",
-    [
-      "Open Sans Bold",
-      "Arial Unicode MS Bold"
-    ]
-  ]
-],
-				'text-size': [
-					"interpolate",
-					["linear"],
-					["zoom"],
-					8,
-					10,
-					9,
-					11,
-					13,
-					15
-				],
-				'text-ignore-placement': [
-					'step',
-					["zoom"],
-					false,
-					9.5,
-					true
-				]
+					'text-radial-offset': 0.2,
+					'text-font': [
+						'step',
+						['zoom'],
+						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
+						11,
+						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
+						13,
+						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
+					],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
 				paint: {
 					'text-color': ['get', 'color'],
-					'text-halo-color': "#eaeaea",
+					'text-halo-color': '#eaeaea',
 					//'text-halo-color': "#1d1d1d",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
-					'text-opacity': [
-					"interpolate",
-					["linear"],
-					["zoom"],
-					6,
-					0,
-					7,
-					0.8,
-					10,
-					1
-				],
-				},
-			})
-
-			map.addSource('geolocation', {
-'type': 'geojson',
-'data': {
-'type': 'FeatureCollection',
-'features': [
-{
-'type': 'Feature',
-'geometry': {
-'type': 'Point',
-'coordinates': [0,0]
-}
-}
-]
-}
-});
-
-map.addSource("userpositionacc", {
-"type": "geojson",
-"data": {
-"type": "FeatureCollection",
-"features": []
-}
-})
-
-map.addLayer({
-    "id": "userpositionacclayer",
-    "type": "fill",
-    "source": "userpositionacc",
-    "paint": {
-		"fill-color": "#38bdf8",
-        "fill-opacity": 0.2
-    }
-});
-			
-			map.loadImage(
-'https://transitmap.kylerchin.com/geo-circle.png',
-(error, image) => {
-if (error) throw error;
- 
-// Add the image to the map style.
-map.addImage('geocircle', image);
-
-			map.addLayer({
-
-				id: "nobearing_position",	
-				'type': 'symbol',
-'source': 'geolocation', // reference the data source
-'layout': {
-'icon-image': 'geocircle', // reference the image
-'icon-size': 0.1,
-'visibility': 'none'
-},
-'paint': {
-	
-"icon-opacity": 0.8
-}
+					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+				}
 			});
 
-		});
+			map.addSource('geolocation', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: [
+						{
+							type: 'Feature',
+							geometry: {
+								type: 'Point',
+								coordinates: [0, 0]
+							},
+							properties: {}
+						}
+					]
+				}
+			});
 
+			map.addSource('userpositionacc', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: []
+				}
+			});
 
-		map.loadImage(
-'https://transitmap.kylerchin.com/geo-nav.png',
-(error, image) => {
-if (error) throw error;
-		// Add the image to the map style.
-map.addImage('geonav', image);
+			map.addLayer({
+				id: 'userpositionacclayer',
+				type: 'fill',
+				source: 'userpositionacc',
+				paint: {
+					'fill-color': '#38bdf8',
+					'fill-opacity': 0.2
+				}
+			});
 
-map.addLayer({
+			map.loadImage('https://transitmap.kylerchin.com/geo-circle.png', (error, image) => {
+				if (error) throw error;
 
-	id: "bearing_position",	
-	'type': 'symbol',
-'source': 'geolocation', // reference the data source
-'layout': {
-'icon-image': 'geonav', // reference the image
-'icon-size': 0.13,
-'icon-rotate': ['get', 'heading'],
-'visibility': 'none'
-},
-'paint': {
+				// Add the image to the map style.
+				map.addImage('geocircle', image);
 
-"icon-opacity": 0.8
-}
-});
+				map.addLayer({
+					id: 'nobearing_position',
+					type: 'symbol',
+					source: 'geolocation', // reference the data source
+					layout: {
+						'icon-image': 'geocircle', // reference the image
+						'icon-size': 0.1,
+						visibility: 'none'
+					},
+					paint: {
+						'icon-opacity': 0.8
+					}
+				});
+			});
 
-});
-		
+			map.loadImage('https://transitmap.kylerchin.com/geo-nav.png', (error, image) => {
+				if (error) throw error;
+				// Add the image to the map style.
+				map.addImage('geonav', image);
 
+				map.addLayer({
+					id: 'bearing_position',
+					type: 'symbol',
+					source: 'geolocation', // reference the data source
+					layout: {
+						'icon-image': 'geonav', // reference the image
+						'icon-size': 0.13,
+						'icon-rotate': ['get', 'heading'],
+						visibility: 'none'
+					},
+					paint: {
+						'icon-opacity': 0.8
+					}
+				});
+			});
 
-		/*
+			/*
 			map.addLayer({
 				id: "hasbearing_position",
 				type: "symbol",
@@ -1104,197 +865,174 @@ map.addLayer({
 				}			
 			})*/
 
-		
-
 			setInterval(() => {
+				let bottomright = document.getElementsByClassName('mapboxgl-ctrl-bottom-right');
 
-let bottomright = document.getElementsByClassName("mapboxgl-ctrl-bottom-right");
-
-if (bottomright) {
-	if (bottomright[0] != undefined) {
-		
-	bottomright[0].remove();
-	}
-}
-
-//console.log('requested rerender of ', rerenders_requested)
-
-agencies.forEach((agency_obj: any) => {
-
-	let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
-
-	
-		if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
-		url = url + "&timeofcache=" + rtFeedsTimestampsVehicles[agency_obj.feed_id];
-	}
-
-	if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
-		url = url + "&bodyhash=" + rtFeedsHashVehicles[agency_obj.feed_id];
-	}
-
-	fetch(
-		url
-	)
-		.then(async (response) => {
-
-			rerenders_requested = rerenders_requested.filter((x) => x != agency_obj.feed_id);
-		
-
-			if (response.status === 200) {
-
-				//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
-
-			//console.log(response.headers)
-				
-				rtFeedsHashVehicles[agency_obj.feed_id] = response.headers.get('hash');
-
-			return await response.arrayBuffer();
-			} else {
-				return null;
-			}
-		})
-		.then((buffer) => {
-
-			if (buffer != null) {
-				const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-				new Uint8Array(buffer)
-			);
-
-			rtFeedsTimestampsVehicles[agency_obj.feed_id] = feed.header.timestamp;
-				
-			//console.log('feed', feed);
-
-			const features = feed.entity.filter((entity) => entity.vehicle?.position !== null).map((entity: any) => {
-				const { id, vehicle } = entity;
-
-				//console.log('entity', entity);
-
-				//console.log('has trip', vehicle.trip);
-
-				
-
-				let routeType = 3;
-
-				let routeId = getRouteId(vehicle, agency_obj);
-			
-				if (route_info_lookup[agency_obj.static_feed_id]) {
-					if (routeId) {
-
-						if (route_info_lookup[agency_obj.static_feed_id]) {
-							if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
-								
-					routeType = route_info_lookup[agency_obj.static_feed_id][routeId].route_type;
-							}
-						}
-						
+				if (bottomright) {
+					if (bottomright[0] != undefined) {
+						bottomright[0].remove();
 					}
 				}
 
-				let color = getColourOfVehicle(routeId, agency_obj);
+				//console.log('requested rerender of ', rerenders_requested)
 
-				let maptag = getMaptag(routeId,agency_obj);
- 
-				return {
-					type: 'Feature',
-					id,
-					properties: {
-						vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
-						color: color,
-						label: vehicle?.vehicle?.label,
-						maptag: maptag?.replace("-13168", ""),
-						routeType,
-						routeId: routeId?.replace("-13168", ""),
-						bearing: vehicle?.position?.bearing,
-						tripId: vehicle?.trip?.tripId
-					},
-					geometry: {
-						type: 'Point',
-						coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+				agencies.forEach((agency_obj: any) => {
+					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${agency_obj.feed_id}&category=vehicles&skipfailure=true`;
+
+					if (rtFeedsTimestampsVehicles[agency_obj.feed_id] != undefined) {
+						url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[agency_obj.feed_id];
 					}
-				};
-			});
 
-			//console.log('features', features);
+					if (rtFeedsHashVehicles[agency_obj.feed_id] != undefined) {
+						url = url + '&bodyhash=' + rtFeedsHashVehicles[agency_obj.feed_id];
+					}
 
-			const getbussource = map.getSource('buses');
-			const getrailsource = map.getSource('rail');
+					fetch(url)
+						.then(async (response) => {
+							rerenders_requested = rerenders_requested.filter((x) => x != agency_obj.feed_id);
 
-			geometryObj[agency_obj.feed_id] = features;
+							if (response.status === 200) {
+								//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
 
-			let flattenedarray = flatten(Object.values(geometryObj));
+								//console.log(response.headers)
 
-			//console.log(flattenedarray);
+								rtFeedsHashVehicles[agency_obj.feed_id] = response.headers.get('hash');
 
-			if (typeof getbussource != 'undefined') {
-				getbussource.setData({
-					type: 'FeatureCollection',
-					features: flattenedarray.filter((x:any) => x.properties.routeType === 3)
+								return await response.arrayBuffer();
+							} else {
+								return null;
+							}
+						})
+						.then((buffer) => {
+							if (buffer != null) {
+								const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+									new Uint8Array(buffer)
+								);
+
+								rtFeedsTimestampsVehicles[agency_obj.feed_id] = feed.header.timestamp;
+
+								//console.log('feed', feed);
+
+								const features = feed.entity
+									.filter((entity) => entity.vehicle?.position !== null)
+									.map((entity: any) => {
+										const { id, vehicle } = entity;
+
+										//console.log('entity', entity);
+
+										//console.log('has trip', vehicle.trip);
+
+										let routeType = 3;
+
+										let routeId = getRouteId(vehicle, agency_obj);
+
+										if (route_info_lookup[agency_obj.static_feed_id]) {
+											if (routeId) {
+												if (route_info_lookup[agency_obj.static_feed_id]) {
+													if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+														routeType =
+															route_info_lookup[agency_obj.static_feed_id][routeId].route_type;
+													}
+												}
+											}
+										}
+
+										let color = getColourOfVehicle(routeId, agency_obj);
+
+										let maptag = getMaptag(routeId, agency_obj);
+
+										return {
+											type: 'Feature',
+											id,
+											properties: {
+												vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+												color: color,
+												label: vehicle?.vehicle?.label,
+												maptag: maptag?.replace('-13168', ''),
+												routeType,
+												routeId: routeId?.replace('-13168', ''),
+												bearing: vehicle?.position?.bearing,
+												tripId: vehicle?.trip?.tripId
+											},
+											geometry: {
+												type: 'Point',
+												coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+											}
+										};
+									});
+
+								//console.log('features', features);
+
+								const getbussource = map.getSource('buses');
+								const getrailsource = map.getSource('rail');
+
+								geometryObj[agency_obj.feed_id] = features;
+
+								let flattenedarray = flatten(Object.values(geometryObj));
+
+								//console.log(flattenedarray);
+
+								if (typeof getbussource != 'undefined') {
+									getbussource.setData({
+										type: 'FeatureCollection',
+										features: flattenedarray.filter((x: any) => x.properties.routeType === 3)
+									});
+
+									if (typeof getrailsource != 'undefined') {
+										getrailsource.setData({
+											type: 'FeatureCollection',
+											features: flattenedarray.filter((x: any) => x.properties.routeType != 3)
+										});
+									}
+
+									//console.log('set data of bearings');
+
+									let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+
+									// Query all rendered features from a single layer
+									renderNewBearings();
+								}
+							}
+						})
+						.catch((e) => {
+							console.error(e);
+						});
 				});
 
-				if (typeof getrailsource != 'undefined') {
-					getrailsource.setData({
-						type: "FeatureCollection",
-					features: flattenedarray.filter((x:any) => x.properties.routeType != 3)
-					})
+				if (rerenders_requested.length > 0) {
+					rerenders_requested.forEach((x) => {});
 				}
-
-				//console.log('set data of bearings');
-
-				
-						
-			let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-
-			// Query all rendered features from a single layer
-			renderNewBearings();
-			}
-		}})
-		.catch((e) => {
-			console.error(e);
+			}, 2000);
 		});
-			}
 
-)
+		let geometryObj: any = new Object();
 
-if (rerenders_requested.length > 0) {
-	rerenders_requested.forEach(x => {
-
-	})
-}
-
-}, 2000);
-});
-
-			let geometryObj:any = new Object();
-
-			map.on('move', () => {
+		map.on('move', () => {
 			updateData();
 		});
 
-		map.on("mousemove", () => {
+		map.on('mousemove', () => {
 			firstmove = true;
 			lockongps = false;
-	        secondrequestlockgps = false;
-		})
+			secondrequestlockgps = false;
+		});
 
-			map.on('touchmove', () => {
-				
+		map.on('touchmove', () => {
 			firstmove = true;
 			lockongps = false;
-	        secondrequestlockgps = false;
-			})
+			secondrequestlockgps = false;
+		});
 
-			map.on('idle', () => {
+		map.on('idle', () => {
+			if (lasttimezoomran < Date.now() - 800) {
+				lasttimezoomran = Date.now();
 
-				if (lasttimezoomran < Date.now() - 800) {
+				let flattenedarray = flatten(Object.values(geometryObj));
 
-					lasttimezoomran = Date.now();
+				console.log(flattenedarray);
 
-					let flattenedarray = flatten(Object.values(geometryObj));
-
-					console.log(flattenedarray);
-
-					let mapzoomnumber = numberForBearingLengthBus(map.getZoom())
-					/*
+				let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+				/*
 					let newbearingdata = {
 									type: 'FeatureCollection',
 									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
@@ -1324,87 +1062,73 @@ if (rerenders_requested.length > 0) {
 
 								map.getSource("busbearings").setData(newbearingdata)*/
 
-
-								renderNewBearings();
-				}
-
-				
-			})
-
-		
-
-			
+				renderNewBearings();
+			}
+		});
 
 		const successCallback = (position: any) => {
 			//console.log(position);
 
 			let location = position;
 
+			if (location) {
+				geolocation = location;
 
-					if (location) {
-						geolocation = location;
+				console.log(geolocation);
 
-						console.log(geolocation);
+				let geolocationdata = map.getSource('geolocation');
 
-						let geolocationdata = map.getSource('geolocation');
-
-						
-
-						if (geolocationdata) {
-							geolocationdata.setData({
-							'type': 'FeatureCollection',
-							'features': [
+				if (geolocationdata) {
+					geolocationdata.setData({
+						type: 'FeatureCollection',
+						features: [
 							{
-							'type': 'Feature',
-							'geometry': {
-							'type': 'Point',
-							'coordinates': [location.coords.longitude, location.coords.latitude]
-							},
-							'properties': {
-								'accuracy': location.coords.accuracy,
-								'heading': location.coords.heading
+								type: 'Feature',
+								geometry: {
+									type: 'Point',
+									coordinates: [location.coords.longitude, location.coords.latitude]
+								},
+								properties: {
+									accuracy: location.coords.accuracy,
+									heading: location.coords.heading
+								}
 							}
-							}
-							]
-							});
+						]
+					});
 
-							if (location.coords.accuracy) {
-								let accuracyLayer = map.getSource("userpositionacc");
+					if (location.coords.accuracy) {
+						let accuracyLayer = map.getSource('userpositionacc');
 
-								if (accuracyLayer) {
+						if (accuracyLayer) {
+							let numberofpoints: number = 64;
 
-									let numberofpoints:number = 64;
-
-let geojsondata = createGeoJSONCircle([
-									location.coords.longitude, location.coords.latitude
-								],
+							let geojsondata = createGeoJSONCircle(
+								[location.coords.longitude, location.coords.latitude],
 								location.coords.accuracy / 1000,
 								numberofpoints
-								);
+							);
 
-								console.log('acc circle', geojsondata)
+							console.log('acc circle', geojsondata);
 
-accuracyLayer.setData(geojsondata)
-								}
-								
-								
-							}
+							accuracyLayer.setData(geojsondata);
 						}
-
-						if (false) {
-							console.log('bearing is', location.coords.heading)
-
-							map.setLayoutProperty("nobearing_position", 'visibility', 'none');
-							
-							map.setLayoutProperty("bearing_position", 'visibility', 'visible');							
-						} else {
-							map.setLayoutProperty("nobearing_position", 'visibility', 'visible');
-							
-							map.setLayoutProperty("bearing_position", 'visibility', 'none');
-						}
-
-						gpsupdate();
 					}
+				}
+
+				if (false) {
+					console.log('bearing is', location.coords.heading);
+
+					map.setLayoutProperty('nobearing_position', 'visibility', 'none');
+
+					map.setLayoutProperty('bearing_position', 'visibility', 'visible');
+				} else {
+					map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+
+					map.setLayoutProperty('bearing_position', 'visibility', 'none');
+				}
+
+				gpsupdate();
+			}
 		};
 
 		const errorCallback = (error: any) => {
@@ -1412,192 +1136,260 @@ accuracyLayer.setData(geojsondata)
 		};
 
 		if (typeof window !== 'undefined') {
-	// client-only code here
-		const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
-			enableHighAccuracy: true
-		});
-}
-		
+			// client-only code here
+			const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+				enableHighAccuracy: true
+			});
+		}
 	});
-
 
 	function togglelayerfeature() {
 		layersettingsBox = !layersettingsBox;
 	}
 
 	if (typeof window === 'object') {
-document.getElementsByTagName("body")[0].classList.add("overflow-none")
+		document.getElementsByTagName('body')[0].classList.add('overflow-none');
 	}
-
 
 	function gpsbutton() {
 		if (geolocation) {
 			if (mapglobal) {
-
-				let target:any = {
-center: [geolocation.coords.longitude, geolocation.coords.latitude],
-essential: true // this animation is considered essential with respect to prefers-reduced-motion
-}
+				let target: any = {
+					center: [geolocation.coords.longitude, geolocation.coords.latitude],
+					essential: true // this animation is considered essential with respect to prefers-reduced-motion
+				};
 
 				if (firstmove === false || lockongps === true) {
-					target.zoom = lockonconst
+					target.zoom = lockonconst;
 					secondrequestlockgps = true;
 				}
 
-				lockongps = true
+				lockongps = true;
 
 				mapglobal.flyTo(target);
 			}
 		}
 	}
 
-function gpsupdate() {
-	if (geolocation) {
-		if (mapglobal) {
-			if (lockongps === true || firstmove === false) {
-				let target:any = {
-center: [geolocation.coords.longitude, geolocation.coords.latitude],
-essential: true // this animation is considered essential with respect to prefers-reduced-motion
-}
+	function gpsupdate() {
+		if (geolocation) {
+			if (mapglobal) {
+				if (lockongps === true || firstmove === false) {
+					let target: any = {
+						center: [geolocation.coords.longitude, geolocation.coords.latitude],
+						essential: true // this animation is considered essential with respect to prefers-reduced-motion
+					};
 
-if (secondrequestlockgps === true || firstmove === false) {
-	target.zoom = lockonconst
-}
+					if (secondrequestlockgps === true || firstmove === false) {
+						target.zoom = lockonconst;
+					}
 
-				mapglobal.flyTo(target);
+					mapglobal.flyTo(target);
+				}
 			}
 		}
 	}
-}
 </script>
 
 <svelte:head>
-	  <!-- Primary Meta Tags -->
-<title>Kyler's Transit Map</title>
-<link rel="icon" href="/favicon.png" />
-<meta name="title" content="Kyler's Transit Map" />
-<meta name="description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
-<meta name="viewport" content="width=device-width, user-scalable=no">
+	<!-- Primary Meta Tags -->
+	<title>Kyler's Transit Map</title>
+	<link rel="icon" href="/favicon.png" />
+	<meta name="title" content="Kyler's Transit Map" />
+	<meta
+		name="description"
+		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
+	/>
+	<meta name="viewport" content="width=device-width, user-scalable=no" />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Kyler's Transit Map" />
-<meta property="og:description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
-<meta property="og:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Kyler's Transit Map" />
+	<meta
+		property="og:description"
+		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
+	/>
+	<meta property="og:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="Kyler's Transit Map" />
-<meta property="twitter:description" content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations." />
-<meta property="twitter:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image" />
+	<meta property="twitter:title" content="Kyler's Transit Map" />
+	<meta
+		property="twitter:description"
+		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
+	/>
+	<meta property="twitter:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true}>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true} />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+		rel="stylesheet"
+	/>
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+	/>
 </svelte:head>
-{#if typeof geolocation === "object"}
-{#if typeof geolocation.coords.speed === "number"} 
-
-
-<div class="inter fixed bottom-1 z-50  rounded-sm px-2 py-1 bg-white w-content ml-2  text-black text-sm z-10"><div>
-	{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
-</div></div>
-{/if}
-
+{#if typeof geolocation === 'object'}
+	{#if typeof geolocation.coords.speed === 'number'}
+		<div
+			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
+		>
+			<div>
+				{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
+			</div>
+		</div>
+	{/if}
 {/if}
 
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(
-		2)}
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 </div>
 
-<div on:click={togglelayerfeature} class="fixed top-4 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
-	layers
-	</span></div>
-
-	<div on:click={gpsbutton} class="${ lockongps ? " text-blue-500 " : ""} fixed top-14 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"><span class="material-symbols-outlined align-middle">
-		
-			location_searching
-		
-		</span></div>
-
-	<div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2  {layersettingsBox ? "": "hidden"}"
-  >
-
-  <h3  class="font-bold">Rail / Other</h3>
-<div class='flex flex-row '>
-	<input on:click={(x) => {
-		console.log("x is ",x);
-	layersettings.rail.visible = x.target.checked;
-	runSettingsAdapt()
-	}} checked={layersettings.rail.visible} id="rail" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-<label for="rail" class="ml-2 ">Realtime Locations</label>
+<div
+	on:click={togglelayerfeature}
+	on:keypress={togglelayerfeature}
+	class="fixed top-4 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"
+>
+	<span class="material-symbols-outlined align-middle"> layers </span>
 </div>
-<div>
-	<p class="font-semibold">Labels</p>
-	<div class="flex flex-row md:flex-col gap-x-3">
-		<div class='flex flex-row  '>
-			<input  on:click={(x) => {
-				layersettings.rail.label.route = x.target.checked;
-				runSettingsAdapt()
-				}}
-				checked={layersettings.rail.label.route} id="rail-route" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-		<label for="rail-route" class="ml-2 ">Route</label>
-		</div>
-		<div class='flex flex-row'>
-			<input   on:click={(x) => {
-				layersettings.rail.label.trip = x.target.checked;
-				runSettingsAdapt()
-				}} checked={layersettings.rail.label.trip} id="rail-trip" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-		<label for="rail-trip" class="ml-2 ">Trip</label>
-		</div>
-		<div class='flex flex-row'>
-			<input    on:click={(x) => {
-				layersettings.rail.label.vehicle = x.target.checked;
-				runSettingsAdapt()
-				}} checked={layersettings.rail.label.vehicle} id="rail-vehicle" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-		<label for="rail-vehicle" class="ml-2 ">Vehicle</label>
+
+<div
+	on:click={gpsbutton}
+	on:keydown={gpsbutton}
+	class="${lockongps
+		? ' text-blue-500 '
+		: ''} fixed top-14 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"
+>
+	<span class="material-symbols-outlined align-middle"> location_searching </span>
+</div>
+
+<div
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+		? ''
+		: 'hidden'}"
+>
+	<h3 class="font-bold">Rail / Other</h3>
+	<div class="flex flex-row">
+		<input
+			on:click={(x) => {
+				console.log('x is ', x);
+				layersettings.rail.visible = x.target.checked;
+				runSettingsAdapt();
+			}}
+			checked={layersettings.rail.visible}
+			id="rail"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="rail" class="ml-2">Realtime Locations</label>
+	</div>
+	<div>
+		<p class="font-semibold">Labels</p>
+		<div class="flex flex-row md:flex-col gap-x-3">
+			<div class="flex flex-row">
+				<input
+					on:click={(x) => {
+						layersettings.rail.label.route = x.target.checked;
+						runSettingsAdapt();
+					}}
+					checked={layersettings.rail.label.route}
+					id="rail-route"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="rail-route" class="ml-2">Route</label>
+			</div>
+			<div class="flex flex-row">
+				<input
+					on:click={(x) => {
+						layersettings.rail.label.trip = x.target.checked;
+						runSettingsAdapt();
+					}}
+					checked={layersettings.rail.label.trip}
+					id="rail-trip"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="rail-trip" class="ml-2">Trip</label>
+			</div>
+			<div class="flex flex-row">
+				<input
+					on:click={(x) => {
+						layersettings.rail.label.vehicle = x.target.checked;
+						runSettingsAdapt();
+					}}
+					checked={layersettings.rail.label.vehicle}
+					id="rail-vehicle"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="rail-vehicle" class="ml-2">Vehicle</label>
+			</div>
 		</div>
 	</div>
-</div>
-<div class='h-[1px] bg-black'></div>
-<h3  class="font-bold">Buses</h3>
-<div class='flex flex-row '>
-	<input  on:click={(x) => {
-		layersettings.bus.visible = x.target.checked;
-		runSettingsAdapt()
-		}} checked={layersettings.bus.visible} id="buses" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-<label for="buses" class="ml-2 ">Realtime Locations</label>
-</div>
-<div>
-	<p class="font-semibold">Labels</p>
-	<div class="flex flex-row md:flex-col gap-x-3">
-	<div class='flex flex-row '>
-		<input  on:click={(x) => {
-			layersettings.bus.label.route = x.target.checked;
-			runSettingsAdapt()
-			}} checked={layersettings.bus.label.route} id="buses-route" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-	<label for="buses-route" class="ml-2 ">Route</label>
+	<div class="h-[1px] bg-black" />
+	<h3 class="font-bold">Buses</h3>
+	<div class="flex flex-row">
+		<input
+			on:click={(x) => {
+				layersettings.bus.visible = x.target.checked;
+				runSettingsAdapt();
+			}}
+			checked={layersettings.bus.visible}
+			id="buses"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="buses" class="ml-2">Realtime Locations</label>
 	</div>
-	<div class='flex flex-row'>
-		<input   on:click={(x) => {
-			layersettings.bus.label.trip = x.target.checked;
-			runSettingsAdapt()
-			}} checked={layersettings.bus.label.trip} id="buses-trips" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-	<label for="buses-trips" class="ml-2 ">Trip</label>
+	<div>
+		<p class="font-semibold">Labels</p>
+		<div class="flex flex-row md:flex-col gap-x-3">
+			<div class="flex flex-row">
+				<input
+					on:click={(x) => {
+						layersettings.bus.label.route = x.target.checked;
+						runSettingsAdapt();
+					}}
+					checked={layersettings.bus.label.route}
+					id="buses-route"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="buses-route" class="ml-2">Route</label>
+			</div>
+			<div class="flex flex-row">
+				<input
+					on:click={(x) => {
+						layersettings.bus.label.trip = x.target.checked;
+						runSettingsAdapt();
+					}}
+					checked={layersettings.bus.label.trip}
+					id="buses-trips"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="buses-trips" class="ml-2">Trip</label>
+			</div>
+			<div class="flex flex-row">
+				<input
+					on:click={(x) => {
+						layersettings.bus.label.vehicle = x.target.checked;
+						runSettingsAdapt();
+					}}
+					checked={layersettings.bus.label.vehicle}
+					id="buses-vehicles"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="buses-vehicles" class="ml-2">Vehicle</label>
+			</div>
+		</div>
 	</div>
-	<div class='flex flex-row'>
-		<input    on:click={(x) => {
-			layersettings.bus.label.vehicle = x.target.checked;
-			runSettingsAdapt()
-			}}  checked={layersettings.bus.label.vehicle} id="buses-vehicles" type="checkbox"  class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-	<label for="buses-vehicles" class="ml-2 ">Vehicle</label>
-	</div></div>
-</div>
 </div>
 
 <style>
