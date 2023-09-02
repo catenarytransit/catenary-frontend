@@ -1373,11 +1373,13 @@ if (rerenders_requested.length > 0) {
 
 								if (accuracyLayer) {
 
+									let numberofpoints:number = 64;
+
 let geojsondata = createGeoJSONCircle([
 									location.coords.longitude, location.coords.latitude
 								],
 								location.coords.accuracy / 1000,
-								32
+								numberofpoints
 								);
 
 								console.log('acc circle', geojsondata)
