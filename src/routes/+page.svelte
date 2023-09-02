@@ -67,8 +67,6 @@
     ret.push(ret[0]);
 
     return {
-        "type": "geojson",
-        "data": {
             "type": "FeatureCollection",
             "features": [{
                 "type": "Feature",
@@ -77,7 +75,7 @@
                     "coordinates": [ret]
                 }
             }]
-        }
+        
     };
 };
 
@@ -1026,16 +1024,21 @@ function numberForBearingLengthRail(zoom:number) {
 }
 });
 
+map.addSource("userpositionacc", {
+"type": "geojson",
+"data": {
+"type": "FeatureCollection",
+"features": []
+}
+})
+
 map.addLayer({
-    "id": "userpositionacc",
+    "id": "userpositionacclayer",
     "type": "fill",
     "source": "userpositionacc",
-    "layout": {
-        "visibility": "none"
-    },
     "paint": {
-		"fill-color": "#22d3ee",
-        "fill-opacity": 0.4
+		"fill-color": "#38bdf8",
+        "fill-opacity": 0.2
     }
 });
 			
@@ -1365,7 +1368,27 @@ if (rerenders_requested.length > 0) {
 							}
 							}
 							]
-							})
+							});
+
+							if (location.coords.accuracy) {
+								let accuracyLayer = map.getSource("userpositionacc");
+
+								if (accuracyLayer) {
+
+let geojsondata = createGeoJSONCircle([
+									location.coords.longitude, location.coords.latitude
+								],
+								location.coords.accuracy / 1000,
+								32
+								);
+
+								console.log('acc circle', geojsondata)
+
+accuracyLayer.setData(geojsondata)
+								}
+								
+								
+							}
 						}
 
 						if (false) {
