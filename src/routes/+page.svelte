@@ -5,6 +5,78 @@
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
 
+	import { browser } from '$app/environment';
+
+let darkMode = true;
+
+function hexToRgb(hex:string) {
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function textColorOfMapLabels() {
+	return ['get', darkMode === true ? 'contrastdarkmode' : 'color']
+}
+
+function rgbToHsl(r:number, g:number, b:number) {
+	r /= 255;
+  g /= 255;
+  b /= 255;
+  const l = Math.max(r, g, b);
+  const s = l - Math.min(r, g, b);
+  const h = s
+    ? l === r
+      ? (g - b) / s
+      : l === g
+      ? 2 + (b - r) / s
+      : 4 + (r - g) / s
+    : 0;
+  return {
+   h: 60 * h < 0 ? 60 * h + 360 : 60 * h,
+   s: 100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+   l: (100 * (2 * l - s)) / 2,
+  };
+}
+
+function hslToRgb(h:number, s:number, l:number) {
+	s /= 100;
+  l /= 100;
+  const k = (n:any) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n:any) =>
+    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return {r:255 * f(0), g:255 * f(8), b:255 * f(4)};
+}
+
+
+
+function handleSwitchDarkMode() {
+	darkMode = !darkMode;
+
+	localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+
+	darkMode
+		? document.documentElement.classList.add('dark')
+		: document.documentElement.classList.remove('dark');
+}
+
+if (browser) {
+	if (
+		localStorage.theme === 'dark' ||
+		(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+	) {
+		document.documentElement.classList.add('dark');
+		darkMode = true;
+	} else {
+		document.documentElement.classList.remove('dark');
+		darkMode = false;
+	}
+}
+
 	let maplat: number, maplng: number, mapzoom: number;
 	let route_info_lookup: any = {};
 	let trips_per_agency: any = {};
@@ -44,6 +116,12 @@
 			}
 		}
 	};
+
+	function refreshDarkMode() {
+		if (mapglobal) {
+			//mapglobal.setStyle(darkMode === true ? "mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5" :  'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8');
+		}
+	}
 
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
@@ -489,9 +567,9 @@
 
 		let style = '';
 
-		//	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
 
-		if (false) {
+		//if (false) {
 			// dark mode
 			style = dark;
 		} else {
@@ -513,7 +591,7 @@
 
 		const map = new mapboxgl.Map({
 			container: 'map',
-			style: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
+			style: style === dark ? "mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5" :  'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
 			center: [-118, 33.9], // starting position [lng, lat]
@@ -560,7 +638,8 @@
 							},
 							properties: {
 								bearing: x.properties.bearing,
-								color: x.properties.color
+								color: x.properties.color,
+								contrastdarkmodebearing: x.properties.contrastdarkmodebearing
 							}
 						};
 					})
@@ -600,7 +679,8 @@
 							},
 							properties: {
 								bearing: x.properties.bearing,
-								color: x.properties.color
+								color: x.properties.color,
+								contrastdarkmodebearing: x.properties.contrastdarkmodebearing
 							}
 						};
 					})
@@ -645,7 +725,7 @@
 					//'line-cap': 'round'
 				},
 				paint: {
-					'line-color': ['get', 'color'],
+					'line-color': ['get', darkMode === true ? "contrastdarkmodebearing" : 'color'],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.6, 13, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
@@ -688,7 +768,7 @@
 					'circle-stroke-color': '#fff',
 					'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
 					'circle-stroke-width': 0.8,
-					'circle-opacity': 0.5
+					'circle-opacity': darkMode == true ? 0.7: 0.5,
 				}
 			});
 
@@ -713,9 +793,10 @@
 					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
 				paint: {
-					'text-color': ['get', 'color'],
-					'text-halo-color': '#eaeaea',
-					//'text-halo-color': "#1d1d1d",
+					'text-color': textColorOfMapLabels(),
+					//'text-color': ['get', 'color'],
+					//'text-halo-color': '#eaeaea',
+					'text-halo-color': darkMode == true ? "#1d1d1d": "eaeaea",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -770,9 +851,9 @@
 					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
 				paint: {
-					'text-color': ['get', 'color'],
-					'text-halo-color': '#eaeaea',
-					//'text-halo-color': "#1d1d1d",
+					'text-color': textColorOfMapLabels(),
+					//'text-halo-color': '#eaeaea',
+					'text-halo-color': darkMode == true ? "#1d1d1d": "eaeaea",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -939,6 +1020,46 @@
 
 										let color = getColourOfVehicle(routeId, agency_obj);
 
+										let contrastdarkmode = color;
+										let contrastdarkmodebearing = color;
+
+										if (color && darkMode === true) {
+                                            //convert hex colour to array of 3 numbers
+
+                                          let rgb = hexToRgb(color);
+
+										 // console.log('rgb', rgb)
+
+										  if (rgb != null) {
+
+										  let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+										 // console.log('hsl', hsl)
+
+										  let newdarkhsl = hsl;
+
+										  if (hsl.l < 50) {
+                                            newdarkhsl.l = hsl.l + 10 + (25 * ((100-hsl.s)/100));
+
+											if (hsl.l > 100) {
+												hsl.l = 100;
+											}
+										  }
+
+										 //console.log('newdarkhsl',newdarkhsl)
+
+										  let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
+                                         //console.log('newdarkrgb',newdarkrgb)
+
+										 let newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, (newdarkhsl.l + hsl.l) / 2);
+
+										  contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
+                                          contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
+                                          //  console.log('rgbtohex',contrastdarkmode)
+										
+										}
+										}
+
 										let maptag = getMaptag(routeId, agency_obj);
 
 										return {
@@ -947,6 +1068,8 @@
 											properties: {
 												vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
 												color: color,
+												contrastdarkmode: contrastdarkmode,
+												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
 												routeType,
@@ -1027,41 +1150,6 @@
 			if (lasttimezoomran < Date.now() - 800) {
 				lasttimezoomran = Date.now();
 
-				let flattenedarray = flatten(Object.values(geometryObj));
-
-				console.log(flattenedarray);
-
-				let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
-				/*
-					let newbearingdata = {
-									type: 'FeatureCollection',
-									features: flattenedarray.filter((x: any) => x.properties.bearing != undefined)
-									.filter((x: any) => x.properties.bearing != 0)
-									.map((x: any) => {
-
-										let newcoords = calculateNewCoordinates(x.geometry.coordinates[1], x.geometry.coordinates[0], x.properties.bearing, mapzoomnumber / 1000)
-
-										return {
-											type: 'Feature',
-											geometry: {
-												type: 'LineString',
-												coordinates: [
-													[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-													[newcoords.longitude, newcoords.latitude]
-												]
-											},
-											properties: {
-												bearing: x.properties.bearing,
-												color: x.properties.color
-											}
-										}
-									})
-								};
-
-								console.log('newbearingdata', newbearingdata)
-
-								map.getSource("busbearings").setData(newbearingdata)*/
-
 				renderNewBearings();
 			}
 		});
@@ -1073,8 +1161,6 @@
 
 			if (location) {
 				geolocation = location;
-
-				console.log(geolocation);
 
 				let geolocationdata = map.getSource('geolocation');
 
@@ -1107,8 +1193,6 @@
 								location.coords.accuracy / 1000,
 								numberofpoints
 							);
-
-							console.log('acc circle', geojsondata);
 
 							accuracyLayer.setData(geojsondata);
 						}
@@ -1143,12 +1227,21 @@
 		}
 	});
 
+	let settingsBox:boolean = false;
+
 	function togglelayerfeature() {
+		settingsBox = false;
 		layersettingsBox = !layersettingsBox;
 	}
 
 	if (typeof window === 'object') {
 		document.getElementsByTagName('body')[0].classList.add('overflow-none');
+	}
+
+	function togglesettingfeature() {
+		settingsBox = !settingsBox;
+
+	    layersettingsBox = false;
 	}
 
 	function gpsbutton() {
@@ -1182,6 +1275,11 @@
 
 					if (secondrequestlockgps === true || firstmove === false) {
 						target.zoom = lockonconst;
+					}
+
+					if (firstmove === false) {
+						lockongps = true;
+			secondrequestlockgps = true;
 					}
 
 					mapglobal.flyTo(target);
@@ -1249,10 +1347,21 @@
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 </div>
 
+<div class='fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none'
+>
+
 <div
+	on:click={togglesettingfeature}
+	on:keypress={togglesettingfeature}
+	class="bg-white z-50 px-1 py-[0.1rem] rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto"
+>
+	<span class="material-symbols-outlined align-middle"> settings </span>
+</div>
+
+	<div
 	on:click={togglelayerfeature}
 	on:keypress={togglelayerfeature}
-	class="fixed top-4 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"
+	class="bg-white z-50 px-1 py-[0.1rem] rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto"
 >
 	<span class="material-symbols-outlined align-middle"> layers </span>
 </div>
@@ -1261,14 +1370,23 @@
 	on:click={gpsbutton}
 	on:keydown={gpsbutton}
 	class="${lockongps
-		? ' text-blue-500 '
-		: ''} fixed top-14 right-4 bg-white z-50 px-1 py-[0.1rem] rounded-full"
+		? ' text-blue-500 dark:text-blue-300'
+		: ' text-black dark:text-gray-50'}  bg-white dark:bg-gray-900  z-50 px-1 py-[0.1rem] rounded-full pointer-events-auto"
 >
 	<span class="material-symbols-outlined align-middle"> location_searching </span>
 </div>
+</div>
 
 <div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {settingsBox
+		? ''
+		: 'hidden'}"
+>
+    <p>No Settings Options have been added yet, check back later!</p>
+	</div>
+
+<div
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
 		: 'hidden'}"
 >
@@ -1276,6 +1394,11 @@
 	<div class="flex flex-row">
 		<input
 			on:click={(x) => {
+				console.log('x is ', x);
+				layersettings.rail.visible = x.target.checked;
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
 				console.log('x is ', x);
 				layersettings.rail.visible = x.target.checked;
 				runSettingsAdapt();
@@ -1296,6 +1419,7 @@
 						layersettings.rail.label.route = x.target.checked;
 						runSettingsAdapt();
 					}}
+
 					checked={layersettings.rail.label.route}
 					id="rail-route"
 					type="checkbox"
