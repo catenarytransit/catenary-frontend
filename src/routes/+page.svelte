@@ -1360,7 +1360,7 @@ if (browser) {
 <div
 	on:click={togglesettingfeature}
 	on:keypress={togglesettingfeature}
-	class="bg-white z-50 px-1 py-[0.1rem] rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto"
+	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 >
 	<span class="material-symbols-outlined align-middle"> settings </span>
 
@@ -1370,19 +1370,23 @@ if (browser) {
 	<div
 	on:click={togglelayerfeature}
 	on:keypress={togglelayerfeature}
-	class="bg-white z-50 px-1 py-[0.1rem] rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto"
+	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center "
 >
-	<span class="material-symbols-outlined align-middle"> layers </span>
+	<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
 </div>
 
-<div
+
+</div>
+
+<div class='fixed'>
+	<div
 	on:click={gpsbutton}
 	on:keydown={gpsbutton}
 	class="${lockongps
 		? ' text-blue-500 dark:text-blue-300'
-		: ' text-black dark:text-gray-50'}  bg-white dark:bg-gray-900  z-50 px-1 py-[0.1rem] rounded-full pointer-events-auto"
+		: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900  z-50  rounded-full pointer-events-auto flex justify-center items-center"
 >
-	<span class="material-symbols-outlined align-middle"> location_searching </span>
+	<span class="material-symbols-outlined align-middle text-lg"> {#if lockongps == true}my_location{:else}location_searching{/if} </span>
 </div>
 </div>
 
