@@ -155,7 +155,7 @@ if (browser) {
 		}
 
 		if (label.trip) {
-			arrayofinfo.push(['get', 'tripId']);
+			arrayofinfo.push(['get', 'tripIdLabel']);
 		}
 
 		if (label.vehicle) {
@@ -1112,6 +1112,25 @@ if (browser) {
 											return "";
 										}
 
+										const tripIdLabel = () => {
+											let tripid = vehicle?.trip?.tripId;
+
+											if (tripid) {
+												//lookup trip_short_name
+												if (trips_per_agency[agency_obj.static_feed_id]) {
+													if (trips_per_agency[agency_obj.static_feed_id][tripid]) {
+														let trip = trips_per_agency[agency_obj.static_feed_id][tripid];
+
+														if (trip.trip_short_name) {
+															tripid = trip.trip_short_name;
+														}
+													}
+												}
+											}
+
+											return tripid
+										}
+
 										return {
 											type: 'Feature',
 											id,
@@ -1126,7 +1145,8 @@ if (browser) {
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
 												bearing: vehicle?.position?.bearing,
-												tripId: vehicle?.trip?.tripId
+												tripId: vehicle?.trip?.tripId,
+												tripIdLabel: tripIdLabel()
 											},
 											geometry: {
 												type: 'Point',
@@ -1455,7 +1475,7 @@ id="us-units"
 type="checkbox"
 class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 />
-<label for="us-units" class="ml-2">Use US Units (cringe mode)</label>
+<label for="us-units" class="ml-2">Use US Units</label>
 	</div>
 
 <div
@@ -1463,6 +1483,8 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 		? ''
 		: 'hidden'}"
 >
+
+<p class='text-xs'>Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.</p>
 	<h3 class="font-bold">Rail / Other</h3>
 	<div class="flex flex-row">
 		<input
@@ -1513,7 +1535,7 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 				/>
 				<label for="rail-trip" class="ml-2">Trip Name/ID</label>
 			</div>
-			<div class="flex flex-row">
+			<!--<div class="flex flex-row">
 				<input
 					on:click={(x) => {
 						layersettings.rail.label.headsign = x.target.checked;
@@ -1525,7 +1547,7 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
 				<label for="rail-headsign" class="ml-2">Headsign</label>
-			</div>
+			</div>-->
 			<div class="flex flex-row">
 				<input
 					on:click={(x) => {
@@ -1571,7 +1593,6 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 	</div>
 	<div>
 		<p class="font-semibold">Labels</p>
-		<p class='text-xs'>Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.</p>
 		<div class="flex flex-row md:flex-col gap-x-3">
 			<div class="flex flex-row">
 				<input
@@ -1599,7 +1620,7 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 				/>
 				<label for="buses-trips" class="ml-2">Trip Name/ID</label>
 			</div>
-			<div class="flex flex-row">
+			<!--<div class="flex flex-row">
 				<input
 					on:click={(x) => {
 						layersettings.bus.label.headsign = x.target.checked;
@@ -1611,7 +1632,7 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
 				<label for="buses-headsign" class="ml-2">Headsign</label>
-			</div>
+			</div>-->
 			<div class="flex flex-row">
 				<input
 					on:click={(x) => {
