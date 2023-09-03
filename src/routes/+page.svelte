@@ -280,8 +280,8 @@ if (browser) {
 
 				//get route type
 				if (route_info_lookup[agency_obj.static_feed_id]) {
-						if (route_info_lookup[agency_obj.static_feed_id[routeId]]) {
-							if ([2,4].includes(route_info_lookup[agency_obj.static_feed_id[routeId]].route_type)) {
+						if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+							if ([2,4].includes(route_info_lookup[agency_obj.static_feed_id][routeId].route_type)) {
 								runtripfetch = true;
 							}
 						}
