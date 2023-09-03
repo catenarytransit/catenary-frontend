@@ -1364,17 +1364,7 @@ if (browser) {
 >
 	<span class="material-symbols-outlined align-middle"> settings </span>
 
-	<input
-					on:click={(x) => {
-						usunits = !usunits;
-					}}
-
-					checked={usunits}
-					id="us-units"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="us-units" class="ml-2">Use US Units (cringe mode)</label>
+	
 </div>
 
 	<div
@@ -1401,7 +1391,17 @@ if (browser) {
 		? ''
 		: 'hidden'}"
 >
-    <p>No Settings Options have been added yet, check back later!</p>
+<input
+on:click={(x) => {
+	usunits = !usunits;
+}}
+
+checked={usunits}
+id="us-units"
+type="checkbox"
+class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+/>
+<label for="us-units" class="ml-2">Use US Units (cringe mode)</label>
 	</div>
 
 <div
