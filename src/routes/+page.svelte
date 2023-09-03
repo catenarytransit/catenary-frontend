@@ -299,8 +299,8 @@ if (browser) {
 									}
 
 									trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
-									if (rerenders_requested.includes(agency_obj.static_feed_id)) {
-										rerenders_requested.push(agency_obj.static_feed_id);
+									if (rerenders_requested.includes(agency_obj.feed_id)) {
+										rerenders_requested.push(agency_obj.feed_id);
 									}
 								} else {
 									trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = null;
@@ -360,7 +360,8 @@ if (browser) {
 				'Orange County Line': 'OC',
 				'San Bernardino Line': 'SB',
 				'Antelope Valley Line': 'AV',
-				'Inland Emp.-Orange Co. Line': 'IEOC'
+				'Inland Emp.-Orange Co. Line': 'IEOC',
+				"Ventura County Line": "VC"
 			};
 
 			if (Object.keys(railletters).includes(routeId)) {
