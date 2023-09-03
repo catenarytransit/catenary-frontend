@@ -1335,7 +1335,7 @@ if (browser) {
 		<div
 			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
 		>
-			{#if usunits == true}
+			{#if usunits == false}
 			<div>
 				{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
 			</div>
