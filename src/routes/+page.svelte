@@ -797,7 +797,7 @@ if (browser) {
 					'text-color': textColorOfMapLabels(),
 					//'text-color': ['get', 'color'],
 					//'text-halo-color': '#eaeaea',
-					'text-halo-color': darkMode == true ? "#1d1d1d": "eaeaea",
+					'text-halo-color': darkMode == true ? "#1d1d1d": "#eaeaea",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -854,7 +854,7 @@ if (browser) {
 				paint: {
 					'text-color': textColorOfMapLabels(),
 					//'text-halo-color': '#eaeaea',
-					'text-halo-color': darkMode == true ? "#1d1d1d": "eaeaea",
+					'text-halo-color': darkMode == true ? "#1d1d1d": "#eaeaea",
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
