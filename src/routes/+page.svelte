@@ -8,6 +8,7 @@
 	import { browser } from '$app/environment';
 
 let darkMode = true;
+let usunits = false;
 
 function hexToRgb(hex:string) {
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -1334,10 +1335,16 @@ if (browser) {
 		<div
 			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
 		>
+			{#if usunits == true}
 			<div>
 				{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
 			</div>
+			{:else}
+			<div>
+				{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
 		</div>
+		{/if}
+	</div>
 	{/if}
 {/if}
 
@@ -1356,6 +1363,18 @@ if (browser) {
 	class="bg-white z-50 px-1 py-[0.1rem] rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto"
 >
 	<span class="material-symbols-outlined align-middle"> settings </span>
+
+	<input
+					on:click={(x) => {
+						usunits = !usunits;
+					}}
+
+					checked={usunits}
+					id="us-units"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="us-units" class="ml-2">Use US Units (cringe mode)</label>
 </div>
 
 	<div
