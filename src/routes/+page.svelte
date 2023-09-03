@@ -1074,13 +1074,28 @@ if (browser) {
 
 										  let newdarkhsl = hsl;
 
-										  if (hsl.l < 60) {
-                                            newdarkhsl.l = hsl.l + 10 + (25 * ((100-hsl.s)/100));
+										  let blueoffset = 0;
 
-											if (hsl.l > 60) {
-												hsl.l = 60;
-											}
+										  if (rgb.b > 40) {
+											blueoffset = 30 * ((rgb.b)/255);
 										  }
+
+										  if (hsl.l < 60) {
+                                            newdarkhsl.l = hsl.l + 10 + (25 * ((100-hsl.s)/100) + blueoffset);
+
+											if (hsl.l > 60 ) {
+
+												if ( blueoffset === 0) {
+													
+												hsl.l = 60;
+												} else {
+													hsl.l = 60 + blueoffset;
+												}
+
+											} 
+										  }
+
+										  hsl.l = Math.min(100, hsl.l);
 
 										 //console.log('newdarkhsl',newdarkhsl)
 
