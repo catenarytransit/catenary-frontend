@@ -371,7 +371,7 @@ if (browser) {
 
 		maptag = maptag.replace(/( )?Line/, '');
 
-		maptag = maptag.replace(/counterclockwise/i, '↺').replace(/clockwise/i, '↻');
+		maptag = maptag.replace(/counterclockwise/i, '-ACW').replace(/clockwise/i, '-CW');
 
 		return maptag;
 	}
