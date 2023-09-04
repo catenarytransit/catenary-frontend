@@ -1,0 +1,32 @@
+{
+    "short_name": "Transit Map",
+    "name": "Kyler's Transit Map",
+    "id": "transitmap.kylerchin.com",
+    "display": "standalone",
+    "scope": "/",
+    "categories": [
+        "utilities",
+        "travel",
+        "navigation"
+    ],
+    "icons": [
+        {
+            "src": "/favicon.png",
+            "type": "image/png",
+            "sizes": "1024x1024",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshot1.png",
+            "sizes": "1942x1197",
+            "type": "image/png",
+            "platform": "wide"
+        }
+    ],
+    "start_url": "/?source=pwa",
+    "background_color": "#191919",
+    "theme_color": "#191919",
+    "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
+}
