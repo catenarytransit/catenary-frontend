@@ -349,7 +349,7 @@ if (browser) {
 			}
 		}
 
-		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metrolinktrains~rt') {
+		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metrolinktrains~rt' || feed_id === 'f-northcountrytransitdistrict~rt' || feed_id === 'f-mts~rt~onebusaway') {
 			let railletters: any = {
 				'801': 'A',
 				'802': 'B',
@@ -357,6 +357,11 @@ if (browser) {
 				'804': 'E',
 				'805': 'D',
 				'807': 'K',
+				'398': 'COASTER',
+				'399': 'SPRINTER',
+				'510': 'BLU',
+				'520': 'ORG',
+				'530': 'GRN',
 				'Orange County Line': 'OC',
 				'San Bernardino Line': 'SB',
 				'Antelope Valley Line': 'AV',
@@ -452,7 +457,7 @@ if (browser) {
 		},
 		{
 			feed_id: 'f-mts~rt~onebusaway',
-			agency_name: 'San diego MTS',
+			agency_name: 'San Diego MTS',
 			//f-9mu-mts
 			color: '#555555',
 			static_feed_id: 'f-9mu-mts',
@@ -1448,7 +1453,7 @@ if (browser) {
 <div
 	on:click={togglesettingfeature}
 	on:keypress={togglesettingfeature}
-	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
 	<span class="material-symbols-outlined align-middle"> settings </span>
 
@@ -1458,7 +1463,7 @@ if (browser) {
 	<div
 	on:click={togglelayerfeature}
 	on:keypress={togglelayerfeature}
-	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center "
+	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
 	<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
 </div>
@@ -1471,8 +1476,8 @@ if (browser) {
 	on:click={gpsbutton}
 	on:keydown={gpsbutton}
 	class="${lockongps
-		? ' text-blue-500 dark:text-blue-300'
-		: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900  z-50  rounded-full pointer-events-auto flex justify-center items-center"
+		? ' text-blue-500 dark:text-blue-300 clickable'
+		: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900  z-50  rounded-full pointer-events-auto flex justify-center items-center clickable"
 >
 	<span class="material-symbols-outlined align-middle text-lg"> {#if lockongps == true}my_location{:else}location_searching{/if} </span>
 </div>
@@ -1703,5 +1708,9 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 		margin: 12px;
 		border-radius: 4px;
 		font-size: 10px;
+	}
+
+	.clickable {
+		cursor: pointer;
 	}
 </style>
