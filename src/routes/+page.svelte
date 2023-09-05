@@ -1,96 +1,90 @@
 <script lang="ts">
 	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
-	import mapboxgl from 'mapbox-gl';
+	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
 
 	import { browser } from '$app/environment';
+	import { LngLat } from 'maplibre-gl';
 
-let darkMode = true;
-let usunits = false;
+	let darkMode = true;
+	let usunits = false;
 
-function handleUsUnitsSwitch() {
-	usunits = !usunits;
+	function handleUsUnitsSwitch() {
+		usunits = !usunits;
 
-	localStorage.setItem('units', usunits ? 'us' : 'metric');
-}
-
-if (browser) {
-	if (localStorage.getItem('units') === "us") {
-		usunits = true;
-	} else {
-		usunits = false;
+		localStorage.setItem('units', usunits ? 'us' : 'metric');
 	}
-}
 
-function hexToRgb(hex:string) {
-	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
-
-function textColorOfMapLabels() {
-	return ['get', darkMode === true ? 'contrastdarkmode' : 'color']
-}
-
-function rgbToHsl(r:number, g:number, b:number) {
-	r /= 255;
-  g /= 255;
-  b /= 255;
-  const l = Math.max(r, g, b);
-  const s = l - Math.min(r, g, b);
-  const h = s
-    ? l === r
-      ? (g - b) / s
-      : l === g
-      ? 2 + (b - r) / s
-      : 4 + (r - g) / s
-    : 0;
-  return {
-   h: 60 * h < 0 ? 60 * h + 360 : 60 * h,
-   s: 100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
-   l: (100 * (2 * l - s)) / 2,
-  };
-}
-
-function hslToRgb(h:number, s:number, l:number) {
-	s /= 100;
-  l /= 100;
-  const k = (n:any) => (n + h / 30) % 12;
-  const a = s * Math.min(l, 1 - l);
-  const f = (n:any) =>
-    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-  return {r:255 * f(0), g:255 * f(8), b:255 * f(4)};
-}
-
-
-
-function handleSwitchDarkMode() {
-	darkMode = !darkMode;
-
-	localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-
-	darkMode
-		? document.documentElement.classList.add('dark')
-		: document.documentElement.classList.remove('dark');
-}
-
-if (browser) {
-	if (
-		localStorage.theme === 'dark' ||
-		(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-	) {
-		document.documentElement.classList.add('dark');
-		darkMode = true;
-	} else {
-		document.documentElement.classList.remove('dark');
-		darkMode = false;
+	if (browser) {
+		if (localStorage.getItem('units') === 'us') {
+			usunits = true;
+		} else {
+			usunits = false;
+		}
 	}
-}
+
+	function hexToRgb(hex: string) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result
+			? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16)
+			  }
+			: null;
+	}
+
+	function textColorOfMapLabels() {
+		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
+	}
+
+	function rgbToHsl(r: number, g: number, b: number) {
+		r /= 255;
+		g /= 255;
+		b /= 255;
+		const l = Math.max(r, g, b);
+		const s = l - Math.min(r, g, b);
+		const h = s ? (l === r ? (g - b) / s : l === g ? 2 + (b - r) / s : 4 + (r - g) / s) : 0;
+		return {
+			h: 60 * h < 0 ? 60 * h + 360 : 60 * h,
+			s: 100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+			l: (100 * (2 * l - s)) / 2
+		};
+	}
+
+	function hslToRgb(h: number, s: number, l: number) {
+		s /= 100;
+		l /= 100;
+		const k = (n: any) => (n + h / 30) % 12;
+		const a = s * Math.min(l, 1 - l);
+		const f = (n: any) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+		return { r: 255 * f(0), g: 255 * f(8), b: 255 * f(4) };
+	}
+
+	function handleSwitchDarkMode() {
+		darkMode = !darkMode;
+
+		localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+
+		darkMode
+			? document.documentElement.classList.add('dark')
+			: document.documentElement.classList.remove('dark');
+	}
+
+	if (browser) {
+		if (
+			localStorage.theme === 'dark' ||
+			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+		) {
+			document.documentElement.classList.add('dark');
+			darkMode = true;
+		} else {
+			document.documentElement.classList.remove('dark');
+			darkMode = false;
+		}
+	}
 
 	let maplat: number, maplng: number, mapzoom: number;
 	let route_info_lookup: any = {};
@@ -274,39 +268,37 @@ if (browser) {
 							routeId = trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId].route_id;
 						}
 					}
-
-					
 				}
 
 				//get route type
 				if (route_info_lookup[agency_obj.static_feed_id]) {
-						if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
-							if ([2,4].includes(route_info_lookup[agency_obj.static_feed_id][routeId].route_type)) {
-								runtripfetch = true;
-							}
+					if (route_info_lookup[agency_obj.static_feed_id][routeId]) {
+						if ([2, 4].includes(route_info_lookup[agency_obj.static_feed_id][routeId].route_type)) {
+							runtripfetch = true;
 						}
 					}
+				}
 
-					if (runtripfetch === true) {
-						fetch(
-							`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`
-						)
-							.then((x) => x.json())
-							.then((data) => {
-								if (data.length > 0) {
-									if (typeof trips_per_agency[agency_obj.static_feed_id] === 'undefined') {
-										trips_per_agency[agency_obj.static_feed_id] = {};
-									}
-
-									trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
-									if (rerenders_requested.includes(agency_obj.feed_id)) {
-										rerenders_requested.push(agency_obj.feed_id);
-									}
-								} else {
-									trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = null;
+				if (runtripfetch === true) {
+					fetch(
+						`https://transitbackend.kylerchin.com/gettrip?feed_id=${agency_obj.static_feed_id}&trip_id=${vehicle.trip.tripId}`
+					)
+						.then((x) => x.json())
+						.then((data) => {
+							if (data.length > 0) {
+								if (typeof trips_per_agency[agency_obj.static_feed_id] === 'undefined') {
+									trips_per_agency[agency_obj.static_feed_id] = {};
 								}
-							});
-					}
+
+								trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = data[0];
+								if (rerenders_requested.includes(agency_obj.feed_id)) {
+									rerenders_requested.push(agency_obj.feed_id);
+								}
+							} else {
+								trips_per_agency[agency_obj.static_feed_id][vehicle?.trip?.tripId] = null;
+							}
+						});
+				}
 			}
 		}
 
@@ -349,7 +341,12 @@ if (browser) {
 			}
 		}
 
-		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metrolinktrains~rt' || feed_id === 'f-northcountrytransitdistrict~rt' || feed_id === 'f-mts~rt~onebusaway') {
+		if (
+			feed_id === 'f-metro~losangeles~rail~rt' ||
+			feed_id === 'f-metrolinktrains~rt' ||
+			feed_id === 'f-northcountrytransitdistrict~rt' ||
+			feed_id === 'f-mts~rt~onebusaway'
+		) {
 			let railletters: any = {
 				'801': 'A',
 				'802': 'B',
@@ -366,7 +363,7 @@ if (browser) {
 				'San Bernardino Line': 'SB',
 				'Antelope Valley Line': 'AV',
 				'Inland Emp.-Orange Co. Line': 'IEOC',
-				"Ventura County Line": "VC"
+				'Ventura County Line': 'VC'
 			};
 
 			if (Object.keys(railletters).includes(routeId)) {
@@ -396,32 +393,32 @@ if (browser) {
 	let agencies = [
 		{
 			feed_id: 'f-octa~rt',
-			agency_name: 'Orange County Transportation Authority',
+			agency_name: 'OCTA',
 			color: '#00AFF2',
 			static_feed_id: 'f-9mu-orangecountytransportationauthority'
 		},
 		{
 			feed_id: 'f-sf~bay~area~rg~rt',
-			agency_name: 'San Francisco Bay Area Rapid Transit',
+			agency_name: 'BART',
 			color: '#000000',
 			static_feed_id: 'f-sf~bay~area~rg'
 		},
 		{
 			feed_id: 'f-metro~losangeles~bus~rt',
-			agency_name: 'Los Angeles Metro',
+			agency_name: 'LA Metro',
 			color: '#E16710',
 			static_feed_id: 'f-9q5-metro~losangeles'
 		},
 		{
 			feed_id: 'f-metro~losangeles~rail~rt',
-			agency_name: 'Los Angeles Metro',
+			agency_name: 'LA Metro Rail',
 			color: '#E16710',
 			static_feed_id: 'f-9q5-metro~losangeles~rail'
 		},
 		{
 			feed_id: 'f-rta~rt',
 			color: '#de1e36',
-			agency_name: 'Riverside',
+			agency_name: 'Riverside RTA',
 			static_feed_id: 'f-9qh-riversidetransitagency'
 		},
 		{
@@ -439,7 +436,7 @@ if (browser) {
 		{
 			static_feed_id: 'f-9qh-metrolinktrains',
 			feed_id: 'f-metrolinktrains~rt',
-			agency_name: 'Metrolink Trains',
+			agency_name: 'Metrolink',
 			color: '#006066'
 		},
 		{
@@ -451,7 +448,7 @@ if (browser) {
 		{
 			feed_id: 'f-northcountrytransitdistrict~rt',
 			color: '#004cab',
-			agency_name: 'North County Transit District',
+			agency_name: 'NCTD',
 			static_feed_id: 'f-9mu-northcountytransitdistrict',
 			prefer_short_name: true
 		},
@@ -465,44 +462,52 @@ if (browser) {
 		},
 		{
 			feed_id: 'f-montebello~bus~rt',
+			agency_name: 'Montebello',
 			static_feed_id: 'f-montebello~bus',
 			color: '#555555'
 		},
 		{
 			feed_id: 'f-torrancetransit~rt',
+			agency_name: 'Torrance',
 			static_feed_id: 'f-9q5b-torrancetransit',
 			color: '#555555'
 		},
 
 		{
 			static_feed_id: 'f-c28-nstranslinkca',
+			agency_name: 'Translink',
 			feed_id: 'f-translink~rt',
 			color: '#005daa'
 		},
 		{
 			static_feed_id: 'f-9q5-ladot',
+			agency_name: 'LADOT',
 			color: '#5050a0',
 			feed_id: 'f-ladot~rt',
 			prefer_short_name: true
 		},
 		{
 			static_feed_id: 'f-9q5c-culvercitybus',
+			agency_name: 'Culver City',
 			color: '#cecd71',
 			feed_id: 'f-culvercitybus~rt',
 			prefer_short_name: true
 		},
 		{
 			feed_id: 'f-ucla~bruinbus~rt',
+			agency_name: 'UCLA',
 			prefer_short_name: true,
 			use_long_name: true,
 			static_feed_id: 'f-ucla~bruinbus'
 		},
 		{
 			feed_id: 'f-9qd-mercedthebus~ca~us~rt',
+			agency_name: 'Merced',
 			static_feed_id: 'f-9qd-mercedthebus~ca~us'
 		},
 		{
 			feed_id: 'f-9q4g~santabarbaramtd~rt',
+			agency_name: 'Santa Barbara MTD',
 			static_feed_id: 'f-9q4g-santabarbaramtd'
 		},
 		/*
@@ -611,9 +616,8 @@ if (browser) {
 
 		let style = '';
 
-			if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-
-		//if (false) {
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			//if (false) {
 			// dark mode
 			style = dark;
 		} else {
@@ -635,7 +639,10 @@ if (browser) {
 
 		const map = new mapboxgl.Map({
 			container: 'map',
-			style: style === dark ? "mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5" :  'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
+			style:
+				style === dark
+					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
 			center: [-118, 33.9], // starting position [lng, lat]
@@ -769,7 +776,7 @@ if (browser) {
 					//'line-cap': 'round'
 				},
 				paint: {
-					'line-color': ['get', darkMode === true ? "contrastdarkmodebearing" : 'color'],
+					'line-color': ['get', darkMode === true ? 'contrastdarkmodebearing' : 'color'],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.6, 13, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
@@ -812,7 +819,7 @@ if (browser) {
 					'circle-stroke-color': '#fff',
 					'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
 					'circle-stroke-width': 0.8,
-					'circle-opacity': darkMode == true ? 0.7: 0.5,
+					'circle-opacity': darkMode == true ? 0.7 : 0.5
 				}
 			});
 
@@ -840,7 +847,7 @@ if (browser) {
 					'text-color': textColorOfMapLabels(),
 					//'text-color': ['get', 'color'],
 					//'text-halo-color': '#eaeaea',
-					'text-halo-color': darkMode == true ? "#1d1d1d": "#eaeaea",
+					'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -897,7 +904,7 @@ if (browser) {
 				paint: {
 					'text-color': textColorOfMapLabels(),
 					//'text-halo-color': '#eaeaea',
-					'text-halo-color': darkMode == true ? "#1d1d1d": "#eaeaea",
+					'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -1068,55 +1075,60 @@ if (browser) {
 										let contrastdarkmodebearing = color;
 
 										if (color && darkMode === true) {
-                                            //convert hex colour to array of 3 numbers
+											//convert hex colour to array of 3 numbers
 
-                                          let rgb = hexToRgb(color);
+											let rgb = hexToRgb(color);
 
-										 // console.log('rgb', rgb)
+											// console.log('rgb', rgb)
 
-										  if (rgb != null) {
+											if (rgb != null) {
+												let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
-										  let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+												// console.log('hsl', hsl)
 
-										 // console.log('hsl', hsl)
+												let newdarkhsl = hsl;
 
-										  let newdarkhsl = hsl;
+												let blueoffset = 0;
 
-										  let blueoffset = 0;
-
-										  if (rgb.b > 40) {
-											blueoffset = 30 * ((rgb.b)/255);
-										  }
-
-										  if (hsl.l < 60) {
-                                            newdarkhsl.l = hsl.l + 10 + (25 * ((100-hsl.s)/100) + blueoffset);
-
-											if (hsl.l > 60 ) {
-
-												if ( blueoffset === 0) {
-													
-												hsl.l = 60;
-												} else {
-													hsl.l = 60 + blueoffset;
+												if (rgb.b > 40) {
+													blueoffset = 30 * (rgb.b / 255);
 												}
 
-											} 
-										  }
+												if (hsl.l < 60) {
+													newdarkhsl.l = hsl.l + 10 + (25 * ((100 - hsl.s) / 100) + blueoffset);
 
-										  hsl.l = Math.min(100, hsl.l);
+													if (hsl.l > 60) {
+														if (blueoffset === 0) {
+															hsl.l = 60;
+														} else {
+															hsl.l = 60 + blueoffset;
+														}
+													}
+												}
 
-										 //console.log('newdarkhsl',newdarkhsl)
+												hsl.l = Math.min(100, hsl.l);
 
-										  let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
-                                         //console.log('newdarkrgb',newdarkrgb)
+												//console.log('newdarkhsl',newdarkhsl)
 
-										 let newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, (newdarkhsl.l + hsl.l) / 2);
+												let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
+												//console.log('newdarkrgb',newdarkrgb)
 
-										  contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
-                                          contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
-                                          //  console.log('rgbtohex',contrastdarkmode)
-										
-										}
+												let newdarkbearingline = hslToRgb(
+													newdarkhsl.h,
+													newdarkhsl.s,
+													(newdarkhsl.l + hsl.l) / 2
+												);
+
+												contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(
+													newdarkrgb.g
+												)}${componentToHex(newdarkrgb.b)}`;
+												contrastdarkmodebearing = `#${componentToHex(
+													newdarkbearingline.r
+												)}${componentToHex(newdarkbearingline.g)}${componentToHex(
+													newdarkbearingline.b
+												)}`;
+												//  console.log('rgbtohex',contrastdarkmode)
+											}
 										}
 
 										let maptag = getMaptag(routeId, agency_obj);
@@ -1132,8 +1144,8 @@ if (browser) {
 												}
 											}
 
-											return "";
-										}
+											return '';
+										};
 
 										const tripIdLabel = () => {
 											let tripid = vehicle?.trip?.tripId;
@@ -1151,25 +1163,65 @@ if (browser) {
 												}
 											}
 
-											return tripid
+											return tripid;
+										};
+
+										function fixMaptag(maptag: string, agency: string) {
+											let newtag = maptag;
+											if (agency === 'f-9mu-mts') {
+												if (maptag.includes('GRN')) {
+													newtag = maptag.replace('GRN', 'Trolley Green Line');
+												}
+												if (newtag.includes('BLU')) {
+													newtag = maptag.replace('BLU', 'Trolley Blue Line');
+												}
+												if (newtag.includes('ORG')) {
+													newtag = maptag.replace('ORG', 'Trolley Orange Line');
+												}
+
+												if (maptag === '201' || maptag === '202' || maptag === '204') {
+													newtag = 'SuperLoop ' + maptag;
+												}
+
+												if (
+													maptag === '215' ||
+													maptag === '225' ||
+													maptag === '227' ||
+													maptag === '235' ||
+													maptag === '237'
+												) {
+													newtag = 'Rapid ' + maptag;
+												}
+
+												if (maptag === '280' || maptag === '290') {
+													newtag = 'Rapid Express ' + maptag;
+												}
+											}
+
+											return newtag;
 										}
 
 										return {
 											type: 'Feature',
 											id,
 											properties: {
-												vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+												vehicleId:
+													vehicle?.vehicle?.label.replace('SPR ', '').replace('CSTR ', '') ||
+													vehicle?.vehicle?.id,
 												speed: fixSpeed(),
 												color: color,
 												contrastdarkmode: contrastdarkmode,
 												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
+												maptagFull: fixMaptag(maptag as string, agency_obj.static_feed_id),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
 												bearing: vehicle?.position?.bearing,
 												tripId: vehicle?.trip?.tripId,
-												tripIdLabel: tripIdLabel()
+												tripIdLabel: tripIdLabel(),
+												agency: agency_obj.agency_name,
+												coordinates: [vehicle.position.longitude, vehicle.position.latitude]
 											},
 											geometry: {
 												type: 'Point',
@@ -1248,6 +1300,43 @@ if (browser) {
 			}
 		});
 
+		function createPopup(e: any) {
+			const features = e.features as MapboxGeoJSONFeature[];
+			const coordinates = features[0]?.properties?.coordinates
+				.replace('[', '')
+				.replace(']', '')
+				.split(',');
+
+			const popupcontent =
+				features[0]?.properties?.agency +
+				` <span style="color:${features[0].properties?.color || 'black'}">` +
+				(features[0]?.properties?.maptagFull || 'Out of Service') +
+				'</span><br />Vehicle #' +
+				features[0]?.properties?.vehicleId +
+				(features[0]?.properties?.tripId ? '<br />Trip: ' + features[0]?.properties?.tripId : '') +
+				'<br />Lat: ' +
+				coordinates[0] +
+				'<br />Long: ' +
+				coordinates[1] +
+				(features[0]?.properties?.speed
+					? '<br /> Speed: ' + features[0]?.properties?.speed + (usunits ? 'mph' : ' km/h')
+					: '');
+
+			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+			}
+
+			new mapboxgl.Popup().setLngLat(coordinates).setHTML(popupcontent).addTo(map);
+		}
+
+		map.on('click', 'buses', (e) => createPopup(e));
+		map.on('click', 'raillayer', (e) => createPopup(e));
+
+		map.on('mouseenter', 'buses', () => (map.getCanvas().style.cursor = 'pointer'));
+		map.on('mouseleave', 'buses', () => (map.getCanvas().style.cursor = ''));
+		map.on('mouseenter', 'raillayer', () => (map.getCanvas().style.cursor = 'pointer'));
+		map.on('mouseleave', 'raillayer', () => (map.getCanvas().style.cursor = ''));
+
 		const successCallback = (position: any) => {
 			//console.log(position);
 
@@ -1321,7 +1410,7 @@ if (browser) {
 		}
 	});
 
-	let settingsBox:boolean = false;
+	let settingsBox: boolean = false;
 
 	function togglelayerfeature() {
 		settingsBox = false;
@@ -1335,7 +1424,7 @@ if (browser) {
 	function togglesettingfeature() {
 		settingsBox = !settingsBox;
 
-	    layersettingsBox = false;
+		layersettingsBox = false;
 	}
 
 	function gpsbutton() {
@@ -1373,7 +1462,7 @@ if (browser) {
 
 					if (firstmove === false) {
 						lockongps = true;
-			secondrequestlockgps = true;
+						secondrequestlockgps = true;
 					}
 
 					mapglobal.flyTo(target);
@@ -1429,15 +1518,15 @@ if (browser) {
 			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
 		>
 			{#if usunits == false}
-			<div>
-				{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
-			</div>
+				<div>
+					{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
+				</div>
 			{:else}
-			<div>
-				{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+				<div>
+					{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+				</div>
+			{/if}
 		</div>
-		{/if}
-	</div>
 	{/if}
 {/if}
 
@@ -1447,40 +1536,36 @@ if (browser) {
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 </div>
 
-<div class='fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none'
->
-
-<div
-	on:click={togglesettingfeature}
-	on:keypress={togglesettingfeature}
-	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
->
-	<span class="material-symbols-outlined align-middle"> settings </span>
-
-	
-</div>
+<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
+	<div
+		on:click={togglesettingfeature}
+		on:keypress={togglesettingfeature}
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined align-middle"> settings </span>
+	</div>
 
 	<div
-	on:click={togglelayerfeature}
-	on:keypress={togglelayerfeature}
-	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
->
-	<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
+		on:click={togglelayerfeature}
+		on:keypress={togglelayerfeature}
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
+	</div>
 </div>
 
-
-</div>
-
-<div class='fixed'>
+<div class="fixed">
 	<div
-	on:click={gpsbutton}
-	on:keydown={gpsbutton}
-	class="${lockongps
-		? ' text-blue-500 dark:text-blue-300 clickable'
-		: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900  z-50  rounded-full pointer-events-auto flex justify-center items-center clickable"
->
-	<span class="material-symbols-outlined align-middle text-lg"> {#if lockongps == true}my_location{:else}location_searching{/if} </span>
-</div>
+		on:click={gpsbutton}
+		on:keydown={gpsbutton}
+		class="${lockongps
+			? ' text-blue-500 dark:text-blue-300 clickable'
+			: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900 z-50 rounded-full pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined align-middle text-lg">
+			{#if lockongps == true}my_location{:else}location_searching{/if}
+		</span>
+	</div>
 </div>
 
 <div
@@ -1488,26 +1573,26 @@ if (browser) {
 		? ''
 		: 'hidden'}"
 >
-<input
-on:click={(x) => {
-	handleUsUnitsSwitch()
-}}
-
-checked={usunits}
-id="us-units"
-type="checkbox"
-class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-/>
-<label for="us-units" class="ml-2">Use US Units</label>
-	</div>
+	<input
+		on:click={(x) => {
+			handleUsUnitsSwitch();
+		}}
+		checked={usunits}
+		id="us-units"
+		type="checkbox"
+		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+	/>
+	<label for="us-units" class="ml-2">Use US Units</label>
+</div>
 
 <div
 	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
 		: 'hidden'}"
 >
-
-<p class='text-xs'>Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.</p>
+	<p class="text-xs">
+		Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.
+	</p>
 	<h3 class="font-bold">Rail / Other</h3>
 	<div class="flex flex-row">
 		<input
@@ -1537,7 +1622,6 @@ class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 ro
 						layersettings.rail.label.route = x.target.checked;
 						runSettingsAdapt();
 					}}
-
 					checked={layersettings.rail.label.route}
 					id="rail-route"
 					type="checkbox"
