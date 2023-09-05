@@ -341,34 +341,46 @@
 			}
 		}
 
-		if (
-			feed_id === 'f-metro~losangeles~rail~rt' ||
-			feed_id === 'f-metrolinktrains~rt' ||
-			feed_id === 'f-northcountrytransitdistrict~rt' ||
-			feed_id === 'f-mts~rt~onebusaway'
-		) {
-			let railletters: any = {
+		let railletters = {};
+
+		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metro~losangeles~bus~rt') {
+			railletters = {
 				'801': 'A',
 				'802': 'B',
 				'803': 'C',
 				'804': 'E',
 				'805': 'D',
 				'807': 'K',
-				'398': 'COASTER',
-				'399': 'SPRINTER',
-				'510': 'BLU',
-				'520': 'ORG',
-				'530': 'GRN',
+				'910-13168': 'J',
+				'950-13168': 'J',
+				'901-13168': 'G',
+			};
+		}
+
+		if (
+			feed_id === 'f-metrolinktrains~rt'
+		) {
+			railletters = {
 				'Orange County Line': 'OC',
 				'San Bernardino Line': 'SB',
 				'Antelope Valley Line': 'AV',
 				'Inland Emp.-Orange Co. Line': 'IEOC',
 				'Ventura County Line': 'VC'
 			};
+		}
 
-			if (Object.keys(railletters).includes(routeId)) {
-				maptag = railletters[routeId];
-			}
+		if (feed_id === 'f-northcountrytransitdistrict~rt' || feed_id === 'f-mts~rt~onebusaway') {
+			railletters = {
+				'398': 'COASTER',
+				'399': 'SPRINTER',
+				'510': 'BLU',
+				'520': 'ORG',
+				'530': 'GRN',
+			};
+		}
+
+		if (Object.keys(railletters).includes(routeId)) {
+			maptag = railletters[routeId];
 		}
 
 		maptag = maptag.replace(/( )?Line/, '');
@@ -1317,10 +1329,7 @@
 				'<br />Lat: ' +
 				coordinates[0] +
 				'<br />Long: ' +
-				coordinates[1] +
-				(features[0]?.properties?.speed
-					? '<br /> Speed: ' + features[0]?.properties?.speed + (usunits ? 'mph' : ' km/h')
-					: '');
+				coordinates[1];
 
 			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
 				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
