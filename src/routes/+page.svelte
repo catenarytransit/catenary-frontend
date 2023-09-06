@@ -123,7 +123,8 @@ if (browser) {
 				headsign: false,
 				direction: false,
 				speed: false
-			}
+			},
+			shapes: true
 		},
 		rail: {
 			visible: true,
@@ -134,7 +135,8 @@ if (browser) {
 				headsign: false,
 				direction: false,
 				speed: false
-			}
+			},
+			shapes: true
 		}
 	};
 
@@ -734,6 +736,23 @@ if (browser) {
 			// Add new sources and layers
 
 			updateData();
+
+			map.addSource("shapes", {
+				type: 'vector',
+				url: "https://martin.kylerchin.com/shapes"
+			})
+
+			map.addLayer({
+				"id": "gtfsshapes",
+				"type": "line",
+				"source": "shapes",
+				"source-layer": "shapes",
+				paint: {
+					'line-color': ['concat', "#", ['get', 'color']]
+				},
+				minzoom: 3
+			})
+
 
 			map.addSource('buses', {
 				type: 'geojson',
