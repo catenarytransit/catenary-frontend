@@ -657,8 +657,8 @@
 					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
-			center: [-118, 33.9], // starting position [lng, lat]
-			zoom: 8 // starting zoom
+			center: [-117, 33], // starting position [lng, lat]
+			zoom: 6.8 // starting zoom
 		});
 
 		mapglobal = map;
@@ -1620,10 +1620,9 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="rail" class="ml-2">Realtime Locations</label>
+		<label for="rail" class="ml-2">Show on map</label>
 	</div>
 	<div>
-		<p class="font-semibold">Labels</p>
 		<div class="flex flex-row md:flex-col gap-x-3">
 			<div class="flex flex-row">
 				<input
@@ -1649,7 +1648,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="rail-trip" class="ml-2">Trip Name/ID</label>
+				<label for="rail-trip" class="ml-2">Trip ID</label>
 			</div>
 			<!--<div class="flex flex-row">
 				<input
@@ -1675,7 +1674,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="rail-vehicle" class="ml-2">Vehicle</label>
+				<label for="rail-vehicle" class="ml-2">Vehicle #</label>
 			</div>
 			<div class="flex flex-row">
 				<input
@@ -1705,10 +1704,9 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="buses" class="ml-2">Realtime Locations</label>
+		<label for="buses" class="ml-2">Show on map</label>
 	</div>
 	<div>
-		<p class="font-semibold">Labels</p>
 		<div class="flex flex-row md:flex-col gap-x-3">
 			<div class="flex flex-row">
 				<input
@@ -1734,7 +1732,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="buses-trips" class="ml-2">Trip Name/ID</label>
+				<label for="buses-trips" class="ml-2">Trip ID</label>
 			</div>
 			<!--<div class="flex flex-row">
 				<input
@@ -1760,7 +1758,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="buses-vehicles" class="ml-2">Vehicle</label>
+				<label for="buses-vehicles" class="ml-2">Vehicle #</label>
 			</div>
 			<div class="flex flex-row">
 				<input
