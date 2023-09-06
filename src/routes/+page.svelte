@@ -771,6 +771,10 @@
 			console.log('hoverfea', events.features);
 		});
 
+		map.on('mousemove', 'railshapes', (events) => {
+			console.log('hoverfea-rail', events.features);
+		});
+
 		map.on('load', () => {
 			// Add new sources and layers
 
@@ -790,6 +794,23 @@
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
+					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
+					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+				},
+				minzoom: 3
+			});
+
+			map.addLayer({
+				id: 'ferryshapes',
+				type: 'line',
+				source: 'shapes',
+				'source-layer': 'shapes',
+				filter: ['==', 4, ['get', 'route_type']],
+				paint: {
+					'line-color': ['concat', '#', ['get', 'color']],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
+					'line-dasharray': [2, 1],
 					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
@@ -836,10 +857,10 @@
 				type: 'line',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: ['all', ['!=', 3, ['get', 'route_type']]],
+				filter: ['all', ['!=', 4, ['get', 'route_type']], ['!=', 3, ['get', 'route_type']]],
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3, 14, 5],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 					
 				},
