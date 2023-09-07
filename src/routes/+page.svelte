@@ -11,6 +11,8 @@
 	let darkMode = true;
 	let usunits = false;
 
+	let activeRun: any = {};
+
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
 
@@ -454,7 +456,7 @@
 		},
 		{
 			feed_id: 'f-sf~bay~area~rg~rt',
-			agency_name: 'BART',
+			agency_name: 'Bay Area',
 			color: '#000000',
 			static_feed_id: 'f-sf~bay~area~rg'
 		},
@@ -1355,17 +1357,17 @@
 											return tripid;
 										};
 
-										function fixMaptag(maptag: string, agency: string) {
+										function expandMaptag(maptag: string, agency: string) {
 											let newtag = maptag;
 											if (agency === 'f-9mu-mts') {
 												if (maptag.includes('GRN')) {
-													newtag = maptag.replace('GRN', 'Trolley Green Line');
+													newtag = maptag.replace('GRN', 'Green Line');
 												}
 												if (newtag.includes('BLU')) {
-													newtag = maptag.replace('BLU', 'Trolley Blue Line');
+													newtag = maptag.replace('BLU', 'Blue Line');
 												}
 												if (newtag.includes('ORG')) {
-													newtag = maptag.replace('ORG', 'Trolley Orange Line');
+													newtag = maptag.replace('ORG', 'Orange Line');
 												}
 
 												if (maptag === '201' || maptag === '202' || maptag === '204') {
@@ -1387,6 +1389,44 @@
 												}
 											}
 
+											if (agency == 'f-9q5-metro~losangeles~rail') {
+												switch (maptag) {
+													case 'A':
+														newtag = 'A Line';
+														break;
+													case 'B':
+														newtag = 'B Line';
+														break;
+													case 'C':
+														newtag = 'C Line';
+														break;
+													case 'D':
+														newtag = 'D Line';
+														break;
+													case 'E':
+														newtag = 'E Line';
+														break;
+													case 'K':
+														newtag = 'K Line';
+														break;
+													default:
+														break;
+												}
+											}
+
+											if (agency == 'f-9q5-metro~losangeles') {
+												switch (maptag) {
+													case 'G':
+														newtag = 'G Line';
+														break;
+													case 'J':
+														newtag = 'J Line';
+														break;
+													default:
+														break;
+												}
+											}
+
 											return newtag;
 										}
 
@@ -1403,9 +1443,10 @@
 												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
-												maptagFull: fixMaptag(maptag as string, agency_obj.static_feed_id),
+												maptagFull: expandMaptag(maptag as string, agency_obj.static_feed_id),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
+												routeDesc: route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
 												bearing: vehicle?.position?.bearing,
 												tripId: vehicle?.trip?.tripId,
 												tripIdLabel: tripIdLabel(),
@@ -1489,34 +1530,18 @@
 			}
 		});
 
-		function createPopup(e: any) {
+		function setActiveRun(e: any) {
 			const features = e.features as MapboxGeoJSONFeature[];
 			const coordinates = features[0]?.properties?.coordinates
 				.replace('[', '')
 				.replace(']', '')
 				.split(',');
 
-			const popupcontent =
-				features[0]?.properties?.agency +
-				` <span style="color:${features[0].properties?.color || 'black'}">` +
-				(features[0]?.properties?.maptagFull || 'Out of Service') +
-				'</span><br />Vehicle #' +
-				features[0]?.properties?.vehicleId +
-				(features[0]?.properties?.tripId ? '<br />Trip: ' + features[0]?.properties?.tripId : '') +
-				'<br />Lat: ' +
-				coordinates[0] +
-				'<br />Long: ' +
-				coordinates[1];
-
-			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-			}
-
-			new mapboxgl.Popup().setLngLat(coordinates).setHTML(popupcontent).addTo(map);
+			activeRun = { features, coordinates }
 		}
 
-		map.on('click', 'buses', (e) => createPopup(e));
-		map.on('click', 'raillayer', (e) => createPopup(e));
+		map.on('click', 'buses', (e) => setActiveRun(e));
+		map.on('click', 'raillayer', (e) => setActiveRun(e));
 
 		map.on('mouseenter', 'buses', () => (map.getCanvas().style.cursor = 'pointer'));
 		map.on('mouseleave', 'buses', () => (map.getCanvas().style.cursor = ''));
@@ -1698,28 +1723,41 @@
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 	/>
 </svelte:head>
-{#if typeof geolocation === 'object'}
-	{#if typeof geolocation.coords.speed === 'number'}
-		<div
-			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
-		>
-			{#if usunits == false}
-				<div>
-					{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
-				</div>
-			{:else}
-				<div>
-					{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
-				</div>
-			{/if}
-		</div>
-	{/if}
-{/if}
 
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
+	{#if (typeof geolocation === 'object' && typeof geolocation.coords.speed === 'number')}
+		<br />
+		{#if usunits == false}
+			Speed: {geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
+		{:else}
+			<div>
+				Speed: {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+			</div>
+		{/if}
+	{/if}
+</div>
+
+<div class="runSidebar">
+	{#if activeRun.features}
+		<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
+			{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
+		</span>
+		{#if activeRun.features[0]?.properties?.routeDesc}
+			<br /><br />
+			<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
+		{/if}
+		<br />Vehicle # {activeRun.features[0]?.properties?.vehicleId}
+		<br />Agency: {activeRun.features[0]?.properties?.agency}
+		<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
+		<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
+		<br />Long: {parseFloat(activeRun.coordinates[1]).toFixed(5)}
+	{/if}
+	{#if !activeRun.features}
+		Select a vehicle to view more information.
+	{/if}
 </div>
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
@@ -2029,9 +2067,6 @@
 </div>
 
 <style>
-	.inter {
-		font-family: 'Inter', sans-serif;
-	}
 
 	#map {
 		width: 100%;
@@ -2045,11 +2080,33 @@
 		font-family: monospace;
 		z-index: 1;
 		position: absolute;
-		top: 0;
 		left: 0;
+		top: 0;
 		margin: 12px;
 		border-radius: 4px;
 		font-size: 10px;
+	}
+
+	.runSidebar {
+		background-color: rgba(35, 55, 75, 0.9);
+		color: #fff;
+		padding: 6px 12px;
+		font-family: 'Open Sans', sans-serif;
+		z-index: 1;
+		position: absolute;
+		left: 0;
+		bottom: 30px;
+		margin: 12px;
+		border-radius: 4px;
+		font-size: 14px;
+		padding: 10px;
+	}
+
+	.lineNumber {
+		font-size: 1.2rem;
+		font-weight: 600;
+		padding: 5px;
+		border-radius: 4px;
 	}
 
 	.clickable {
