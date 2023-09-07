@@ -1360,6 +1360,8 @@
 										function getLogo(maptag: string, agency: string) {
 											let logo = null;
 											let showBothLogoAndName = false;
+											let logoHeight = 70;
+
 											if (agency === 'f-9mu-mts') {
 												if (maptag.includes('GRN')) {
 													logo = '/lines/mts-green.svg';
@@ -1372,6 +1374,17 @@
 												if (maptag.includes('ORG')) {
 													logo = '/lines/mts-orange.svg';
 													showBothLogoAndName = true;
+												}
+											}
+
+											if (agency === 'f-9mu-northcountytransitdistrict') {
+												if (maptag.includes('COASTER')) {
+													logo = '/lines/nctd-coaster.svg';
+													logoHeight = 30;
+												}
+												if (maptag.includes('SPRINTER')) {
+													logo = '/lines/nctd-sprinter.svg';
+													logoHeight = 30;
 												}
 											}
 
@@ -1400,7 +1413,7 @@
 												}
 											}
 
-											return {logo, showBothLogoAndName};
+											return {logo, showBothLogoAndName, logoHeight};
 										}
 
 										function expandMaptag(maptag: string, agency: string) {
@@ -1790,16 +1803,17 @@
 <div class="runSidebar">
 	{#if activeRun.features}
 		{#if activeRun.features[0]?.properties?.logo}
-			<img src="{activeRun.features[0]?.properties?.logo}" alt="" class="lineLogo" />
+			<img src="{activeRun.features[0]?.properties?.logo}" style:height="{activeRun.features[0]?.properties?.logoHeight}px" alt="" class="lineLogo" />
 		{/if}
 		{#if (activeRun.features[0]?.properties?.showBothLogoAndName || !activeRun.features[0]?.properties?.logo)}
-		<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
-			{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
-		</span>
-		<br /><br />
+			<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
+				{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
+			</span>
+			<br />
 		{/if}
 		{#if (activeRun.features[0]?.properties?.routeDesc && activeRun.features[0]?.properties?.routeDesc != activeRun.features[0]?.properties?.maptagFull)}
-			<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
+		<br />	
+		<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
 		{/if}
 		<br />Vehicle #{activeRun.features[0]?.properties?.vehicleId}
 		<br />Agency: {activeRun.features[0]?.properties?.agency}
@@ -2162,7 +2176,6 @@
 	}
 
 	.lineLogo {
-		height: 70px;
 		margin-bottom: 15px;
 	}
 
