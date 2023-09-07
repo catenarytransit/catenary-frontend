@@ -1511,7 +1511,7 @@
 												maptagFull: expandMaptag(maptag?.replace('-13168', '') as string, agency_obj.static_feed_id),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
-												routeDesc: route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
+												routeDesc: route_info_lookup[agency_obj.static_feed_id][routeId]?.desc != '' ? route_info_lookup[agency_obj.static_feed_id][routeId]?.desc : route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
 												bearing: vehicle?.position?.bearing,
 												tripId: vehicle?.trip?.tripId,
 												tripIdLabel: tripIdLabel(),
@@ -1820,7 +1820,7 @@
 		<br />	
 		<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
 		{/if}
-		<br />Vehicle #{activeRun.features[0]?.properties?.vehicleId}
+		<br />Vehicle ID: {activeRun.features[0]?.properties?.vehicleId}
 		<br />Agency: {activeRun.features[0]?.properties?.agency}
 		<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
 		<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
@@ -2166,8 +2166,7 @@
 		z-index: 1;
 		position: absolute;
 		left: 0;
-		bottom: 30px;
-		margin: 12px;
+		bottom: 40px;
 		border-radius: 4px;
 		font-size: 14px;
 		padding: 10px;
