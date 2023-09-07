@@ -3,16 +3,30 @@
 
 <head>
 	<meta charset="utf-8" />
-	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+	<link rel="icon" href="%sveltekit.assets%/logo.svg" />
+	<meta name="theme-color" content="#191919" />
+
+	<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
 	<meta name="viewport" content="width=device-width" />
 
-	<link href='https://unpkg.com/maplibre-gl@3.0.0/dist/maplibre-gl.css' rel='stylesheet' />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Transit Map">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+
 
 	%sveltekit.head%
 </head>
 
 <body data-sveltekit-preload-data="hover" style="margin: 0px;">
 	<div style="width:100vw;height:100vh;">%sveltekit.body%</div>
+	<script>
+		if (typeof navigator.serviceWorker !== 'undefined') {
+			navigator.serviceWorker.register('sw.js')
+		}
+	</script>
+
 </body>
 
 </html>

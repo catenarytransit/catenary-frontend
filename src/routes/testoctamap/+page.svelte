@@ -2,7 +2,6 @@
     import octaroutes from '../../octa_routes.json'
 	import { onMount, onDestroy } from "svelte";
 	import { Map } from "mapbox-gl";
-	import "mapbox-gl/dist/mapbox-gl.css"
     import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 
 
