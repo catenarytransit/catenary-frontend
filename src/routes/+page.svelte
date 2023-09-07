@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
-	import mapboxgl from 'mapbox-gl';
+	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
 
 	import { browser } from '$app/environment';
+	import { LngLat } from 'maplibre-gl';
 
 	let darkMode = true;
 	let usunits = false;
@@ -61,7 +62,7 @@
 		const f = (n: any) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 		return { r: 255 * f(0), g: 255 * f(8), b: 255 * f(4) };
 	}
-
+  
 	function handleSwitchDarkMode() {
 		darkMode = !darkMode;
 
@@ -383,24 +384,46 @@
 			}
 		}
 
-		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metrolinktrains~rt') {
-			let railletters: any = {
+		let railletters = {};
+
+		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metro~losangeles~bus~rt') {
+			railletters = {
 				'801': 'A',
 				'802': 'B',
 				'803': 'C',
 				'804': 'E',
 				'805': 'D',
 				'807': 'K',
+				'910-13168': 'J',
+				'950-13168': 'J',
+				'901-13168': 'G',
+			};
+		}
+
+		if (
+			feed_id === 'f-metrolinktrains~rt'
+		) {
+			railletters = {
 				'Orange County Line': 'OC',
 				'San Bernardino Line': 'SB',
 				'Antelope Valley Line': 'AV',
 				'Inland Emp.-Orange Co. Line': 'IEOC',
 				'Ventura County Line': 'VC'
 			};
+		}
 
-			if (Object.keys(railletters).includes(routeId)) {
-				maptag = railletters[routeId];
-			}
+		if (feed_id === 'f-northcountrytransitdistrict~rt' || feed_id === 'f-mts~rt~onebusaway') {
+			railletters = {
+				'398': 'COASTER',
+				'399': 'SPRINTER',
+				'510': 'BLU',
+				'520': 'ORG',
+				'530': 'GRN',
+			};
+		}
+
+		if (Object.keys(railletters).includes(routeId)) {
+			maptag = railletters[routeId];
 		}
 
 		maptag = maptag.replace(/( )?Line/, '');
@@ -425,32 +448,32 @@
 	let agencies = [
 		{
 			feed_id: 'f-octa~rt',
-			agency_name: 'Orange County Transportation Authority',
+			agency_name: 'OCTA',
 			color: '#00AFF2',
 			static_feed_id: 'f-9mu-orangecountytransportationauthority'
 		},
 		{
 			feed_id: 'f-sf~bay~area~rg~rt',
-			agency_name: 'San Francisco Bay Area Rapid Transit',
+			agency_name: 'BART',
 			color: '#000000',
 			static_feed_id: 'f-sf~bay~area~rg'
 		},
 		{
 			feed_id: 'f-metro~losangeles~bus~rt',
-			agency_name: 'Los Angeles Metro',
+			agency_name: 'LA Metro',
 			color: '#E16710',
 			static_feed_id: 'f-9q5-metro~losangeles'
 		},
 		{
 			feed_id: 'f-metro~losangeles~rail~rt',
-			agency_name: 'Los Angeles Metro',
+			agency_name: 'LA Metro Rail',
 			color: '#E16710',
 			static_feed_id: 'f-9q5-metro~losangeles~rail'
 		},
 		{
 			feed_id: 'f-rta~rt',
 			color: '#de1e36',
-			agency_name: 'Riverside',
+			agency_name: 'Riverside RTA',
 			static_feed_id: 'f-9qh-riversidetransitagency'
 		},
 		{
@@ -468,7 +491,7 @@
 		{
 			static_feed_id: 'f-9qh-metrolinktrains',
 			feed_id: 'f-metrolinktrains~rt',
-			agency_name: 'Metrolink Trains',
+			agency_name: 'Metrolink',
 			color: '#006066'
 		},
 		{
@@ -480,13 +503,13 @@
 		{
 			feed_id: 'f-northcountrytransitdistrict~rt',
 			color: '#004cab',
-			agency_name: 'North County Transit District',
+			agency_name: 'NCTD',
 			static_feed_id: 'f-9mu-northcountytransitdistrict',
 			prefer_short_name: true
 		},
 		{
 			feed_id: 'f-mts~rt~onebusaway',
-			agency_name: 'San diego MTS',
+			agency_name: 'San Diego MTS',
 			//f-9mu-mts
 			color: '#555555',
 			static_feed_id: 'f-9mu-mts',
@@ -494,44 +517,52 @@
 		},
 		{
 			feed_id: 'f-montebello~bus~rt',
+			agency_name: 'Montebello',
 			static_feed_id: 'f-montebello~bus',
 			color: '#555555'
 		},
 		{
 			feed_id: 'f-torrancetransit~rt',
+			agency_name: 'Torrance',
 			static_feed_id: 'f-9q5b-torrancetransit',
 			color: '#555555'
 		},
 
 		{
 			static_feed_id: 'f-c28-nstranslinkca',
+			agency_name: 'Translink',
 			feed_id: 'f-translink~rt',
 			color: '#005daa'
 		},
 		{
 			static_feed_id: 'f-9q5-ladot',
+			agency_name: 'LADOT',
 			color: '#5050a0',
 			feed_id: 'f-ladot~rt',
 			prefer_short_name: true
 		},
 		{
 			static_feed_id: 'f-9q5c-culvercitybus',
+			agency_name: 'Culver City',
 			color: '#cecd71',
 			feed_id: 'f-culvercitybus~rt',
 			prefer_short_name: true
 		},
 		{
 			feed_id: 'f-ucla~bruinbus~rt',
+			agency_name: 'UCLA',
 			prefer_short_name: true,
 			use_long_name: true,
 			static_feed_id: 'f-ucla~bruinbus'
 		},
 		{
 			feed_id: 'f-9qd-mercedthebus~ca~us~rt',
+			agency_name: 'Merced',
 			static_feed_id: 'f-9qd-mercedthebus~ca~us'
 		},
 		{
 			feed_id: 'f-9q4g~santabarbaramtd~rt',
+			agency_name: 'Santa Barbara MTD',
 			static_feed_id: 'f-9q4g-santabarbaramtd'
 		},
 		/*
@@ -669,8 +700,8 @@
 					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
-			center: [-118, 33.9], // starting position [lng, lat]
-			zoom: 8 // starting zoom
+			center: [-117, 33], // starting position [lng, lat]
+			zoom: 6.8 // starting zoom
 		});
 
 		mapglobal = map;
@@ -1266,7 +1297,6 @@
 												}
 
 												hsl.l = Math.min(100, hsl.l);
-
 												//console.log('newdarkhsl',newdarkhsl)
 
 												let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
@@ -1325,22 +1355,62 @@
 											return tripid;
 										};
 
+										function fixMaptag(maptag: string, agency: string) {
+											let newtag = maptag;
+											if (agency === 'f-9mu-mts') {
+												if (maptag.includes('GRN')) {
+													newtag = maptag.replace('GRN', 'Trolley Green Line');
+												}
+												if (newtag.includes('BLU')) {
+													newtag = maptag.replace('BLU', 'Trolley Blue Line');
+												}
+												if (newtag.includes('ORG')) {
+													newtag = maptag.replace('ORG', 'Trolley Orange Line');
+												}
+
+												if (maptag === '201' || maptag === '202' || maptag === '204') {
+													newtag = 'SuperLoop ' + maptag;
+												}
+
+												if (
+													maptag === '215' ||
+													maptag === '225' ||
+													maptag === '227' ||
+													maptag === '235' ||
+													maptag === '237'
+												) {
+													newtag = 'Rapid ' + maptag;
+												}
+
+												if (maptag === '280' || maptag === '290') {
+													newtag = 'Rapid Express ' + maptag;
+												}
+											}
+
+											return newtag;
+										}
+
 										return {
 											type: 'Feature',
 											id,
 											properties: {
-												vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+												vehicleId:
+													vehicle?.vehicle?.label.replace('SPR ', '').replace('CSTR ', '') ||
+													vehicle?.vehicle?.id,
 												speed: fixSpeed(),
 												color: color,
 												contrastdarkmode: contrastdarkmode,
 												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
+												maptagFull: fixMaptag(maptag as string, agency_obj.static_feed_id),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
 												bearing: vehicle?.position?.bearing,
 												tripId: vehicle?.trip?.tripId,
-												tripIdLabel: tripIdLabel()
+												tripIdLabel: tripIdLabel(),
+												agency: agency_obj.agency_name,
+												coordinates: [vehicle.position.longitude, vehicle.position.latitude]
 											},
 											geometry: {
 												type: 'Point',
@@ -1418,6 +1488,40 @@
 				renderNewBearings();
 			}
 		});
+
+		function createPopup(e: any) {
+			const features = e.features as MapboxGeoJSONFeature[];
+			const coordinates = features[0]?.properties?.coordinates
+				.replace('[', '')
+				.replace(']', '')
+				.split(',');
+
+			const popupcontent =
+				features[0]?.properties?.agency +
+				` <span style="color:${features[0].properties?.color || 'black'}">` +
+				(features[0]?.properties?.maptagFull || 'Out of Service') +
+				'</span><br />Vehicle #' +
+				features[0]?.properties?.vehicleId +
+				(features[0]?.properties?.tripId ? '<br />Trip: ' + features[0]?.properties?.tripId : '') +
+				'<br />Lat: ' +
+				coordinates[0] +
+				'<br />Long: ' +
+				coordinates[1];
+
+			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+			}
+
+			new mapboxgl.Popup().setLngLat(coordinates).setHTML(popupcontent).addTo(map);
+		}
+
+		map.on('click', 'buses', (e) => createPopup(e));
+		map.on('click', 'raillayer', (e) => createPopup(e));
+
+		map.on('mouseenter', 'buses', () => (map.getCanvas().style.cursor = 'pointer'));
+		map.on('mouseleave', 'buses', () => (map.getCanvas().style.cursor = ''));
+		map.on('mouseenter', 'raillayer', () => (map.getCanvas().style.cursor = 'pointer'));
+		map.on('mouseleave', 'raillayer', () => (map.getCanvas().style.cursor = ''));
 
 		const successCallback = (position: any) => {
 			//console.log(position);
@@ -1622,7 +1726,7 @@
 	<div
 		on:click={togglesettingfeature}
 		on:keypress={togglesettingfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle"> settings </span>
 	</div>
@@ -1630,7 +1734,7 @@
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
 	</div>
@@ -1641,8 +1745,8 @@
 		on:click={gpsbutton}
 		on:keydown={gpsbutton}
 		class="${lockongps
-			? ' text-blue-500 dark:text-blue-300'
-			: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900 z-50 rounded-full pointer-events-auto flex justify-center items-center"
+			? ' text-blue-500 dark:text-blue-300 clickable'
+			: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900 z-50 rounded-full pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
@@ -1729,7 +1833,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="rail" class="ml-2">Realtime Locations</label>
+		<label for="rail" class="ml-2">Show on map</label>
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
@@ -1758,7 +1862,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="rail-trip" class="ml-2">Trip Name/ID</label>
+				<label for="rail-trip" class="ml-2">Trip ID</label>
 			</div>
 			<!--<div class="flex flex-row">
 				<input
@@ -1784,7 +1888,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="rail-vehicle" class="ml-2">Vehicle</label>
+				<label for="rail-vehicle" class="ml-2">Vehicle #</label>
 			</div>
 			<div class="flex flex-row">
 				<input
@@ -1850,7 +1954,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="buses" class="ml-2">Realtime Locations</label>
+		<label for="buses" class="ml-2">Show on map</label>
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
@@ -1879,7 +1983,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="buses-trips" class="ml-2">Trip Name/ID</label>
+				<label for="buses-trips" class="ml-2">Trip ID</label>
 			</div>
 			<!--<div class="flex flex-row">
 				<input
@@ -1905,7 +2009,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="buses-vehicles" class="ml-2">Vehicle</label>
+				<label for="buses-vehicles" class="ml-2">Vehicle #</label>
 			</div>
 			<div class="flex flex-row">
 				<input
@@ -1946,5 +2050,9 @@
 		margin: 12px;
 		border-radius: 4px;
 		font-size: 10px;
+	}
+
+	.clickable {
+		cursor: pointer;
 	}
 </style>
