@@ -1357,16 +1357,62 @@
 											return tripid;
 										};
 
+										function getLogo(maptag: string, agency: string) {
+											let logo = null;
+											let showBothLogoAndName = false;
+											if (agency === 'f-9mu-mts') {
+												if (maptag.includes('GRN')) {
+													logo = '/lines/mts-green.svg';
+													showBothLogoAndName = true;
+												}
+												if (maptag.includes('BLU')) {
+													logo = '/lines/mts-blue.svg';
+													showBothLogoAndName = true;
+												}
+												if (maptag.includes('ORG')) {
+													logo = '/lines/mts-orange.svg';
+													showBothLogoAndName = true;
+												}
+											}
+
+											if (agency == 'f-9q5-metro~losangeles~rail') {
+												switch (maptag) {
+													case 'A':
+														logo = '/lines/metro-a.svg';
+														break;
+													case 'B':
+														logo = '/lines/metro-b.svg';
+														break;
+													case 'C':
+														logo = '/lines/metro-c.svg';
+														break;
+													case 'D':
+														logo = '/lines/metro-d.svg';
+														break;
+													case 'E':
+														logo = '/lines/metro-e.svg';
+														break;
+													case 'K':
+														logo = '/lines/metro-k.svg';
+														break;
+													default:
+														break;
+												}
+											}
+
+											return {logo, showBothLogoAndName};
+										}
+
 										function expandMaptag(maptag: string, agency: string) {
 											let newtag = maptag;
 											if (agency === 'f-9mu-mts') {
 												if (maptag.includes('GRN')) {
 													newtag = maptag.replace('GRN', 'Green Line');
 												}
-												if (newtag.includes('BLU')) {
+												if (maptag.includes('BLU')) {
 													newtag = maptag.replace('BLU', 'Blue Line');
 												}
-												if (newtag.includes('ORG')) {
+												if (maptag.includes('ORG')) {
 													newtag = maptag.replace('ORG', 'Orange Line');
 												}
 
@@ -1439,11 +1485,12 @@
 													vehicle?.vehicle?.id,
 												speed: fixSpeed(),
 												color: color,
+												...getLogo(maptag?.replace('-13168', ''), agency_obj.static_feed_id),
 												contrastdarkmode: contrastdarkmode,
 												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
-												maptagFull: expandMaptag(maptag as string, agency_obj.static_feed_id),
+												maptagFull: expandMaptag(maptag?.replace('-13168', '') as string, agency_obj.static_feed_id),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
 												routeDesc: route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
@@ -1742,14 +1789,19 @@
 
 <div class="runSidebar">
 	{#if activeRun.features}
+		{#if activeRun.features[0]?.properties?.logo}
+			<img src="{activeRun.features[0]?.properties?.logo}" alt="" class="lineLogo" />
+		{/if}
+		{#if (activeRun.features[0]?.properties?.showBothLogoAndName || !activeRun.features[0]?.properties?.logo)}
 		<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
 			{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
 		</span>
-		{#if activeRun.features[0]?.properties?.routeDesc}
-			<br /><br />
+		<br /><br />
+		{/if}
+		{#if (activeRun.features[0]?.properties?.routeDesc && activeRun.features[0]?.properties?.routeDesc != activeRun.features[0]?.properties?.maptagFull)}
 			<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
 		{/if}
-		<br />Vehicle # {activeRun.features[0]?.properties?.vehicleId}
+		<br />Vehicle #{activeRun.features[0]?.properties?.vehicleId}
 		<br />Agency: {activeRun.features[0]?.properties?.agency}
 		<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
 		<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
@@ -2107,6 +2159,11 @@
 		font-weight: 600;
 		padding: 5px;
 		border-radius: 4px;
+	}
+
+	.lineLogo {
+		height: 70px;
+		margin-bottom: 15px;
 	}
 
 	.clickable {
