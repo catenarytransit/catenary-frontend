@@ -1366,14 +1366,16 @@
 												if (maptag.includes('GRN')) {
 													logo = '/lines/mts-green.svg';
 													showBothLogoAndName = true;
-												}
-												if (maptag.includes('BLU')) {
+												} else if (maptag.includes('BLU')) {
 													logo = '/lines/mts-blue.svg';
 													showBothLogoAndName = true;
-												}
-												if (maptag.includes('ORG')) {
+												} else if (maptag.includes('ORG')) {
 													logo = '/lines/mts-orange.svg';
 													showBothLogoAndName = true;
+												} else {
+													logo = '/lines/mts-bus.png';
+													showBothLogoAndName = true;
+													logoHeight = 50;
 												}
 											}
 
@@ -1381,9 +1383,12 @@
 												if (maptag.includes('COASTER')) {
 													logo = '/lines/nctd-coaster.svg';
 													logoHeight = 30;
-												}
-												if (maptag.includes('SPRINTER')) {
+												} else if (maptag.includes('SPRINTER')) {
 													logo = '/lines/nctd-sprinter.svg';
+													logoHeight = 30;
+												} else if (maptag.includes('350')) {
+													logo = '/lines/nctd-brt.svg';
+													showBothLogoAndName = true;
 													logoHeight = 30;
 												}
 											}
