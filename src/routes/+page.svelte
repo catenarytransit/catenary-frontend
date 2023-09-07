@@ -1686,7 +1686,7 @@
 <svelte:head>
 	<!-- Primary Meta Tags -->
 	<title>Kyler's Transit Map</title>
-	<link rel="icon" href="/favicon.png" />
+	<link rel="icon" href="/logo.png" />
 	<meta name="title" content="Kyler's Transit Map" />
 	<meta
 		name="description"
