@@ -11,8 +11,8 @@
     ],
     "icons": [
         {
-            "src": "/favicon.png",
-            "type": "image/png",
+            "src": "/logo.svg",
+            "type": "image/svg",
             "sizes": "1024x1024",
             "purpose": "any"
         }
