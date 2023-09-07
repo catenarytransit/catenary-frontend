@@ -62,7 +62,7 @@
 		const f = (n: any) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 		return { r: 255 * f(0), g: 255 * f(8), b: 255 * f(4) };
 	}
-
+  
 	function handleSwitchDarkMode() {
 		darkMode = !darkMode;
 
@@ -110,6 +110,8 @@
 	let layersettings = {
 		bus: {
 			visible: true,
+			labelshapes: false,
+			shapes: true,
 			label: {
 				route: true,
 				trip: false,
@@ -117,10 +119,11 @@
 				headsign: false,
 				direction: false,
 				speed: false
-			}
+			},
 		},
 		rail: {
 			visible: true,
+			labelshapes: false,
 			label: {
 				route: true,
 				trip: false,
@@ -128,7 +131,8 @@
 				headsign: false,
 				direction: false,
 				speed: false
-			}
+			},
+			shapes: true
 		}
 	};
 
@@ -166,6 +170,45 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
+
+			let busshapes = mapglobal.getLayer('busshapes');
+			let buslabelshapes = mapglobal.getLayer('labelbusshapes');
+
+			if (busshapes) {
+				if (layersettings.bus.shapes) {
+					mapglobal.setLayoutProperty('busshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('busshapes', 'visibility', 'none');
+				}
+			}
+
+			if (buslabelshapes) {
+				if (layersettings.bus.labelshapes) {
+					mapglobal.setLayoutProperty('labelbusshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('labelbusshapes', 'visibility', 'none');
+				}
+			}
+
+			let railshapes = mapglobal.getLayer('railshapes');
+			let raillabelshapes = mapglobal.getLayer('labelrailshapes');
+
+			if (railshapes) {
+				if (layersettings.rail.shapes) {
+					mapglobal.setLayoutProperty('railshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('railshapes', 'visibility', 'none');
+				}
+			}
+
+			if (raillabelshapes) {
+				if (layersettings.rail.labelshapes) {
+					mapglobal.setLayoutProperty('labelrailshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('labelrailshapes', 'visibility', 'none');
+				}
+			}
+
 			let buscirclelayer = mapglobal.getLayer('buses');
 			let buslabel = mapglobal.getLayer('labelbuses');
 
@@ -754,10 +797,143 @@
 			map.getSource('railbearings').setData(newrailbearingdata);
 		}
 
+		//on hover
+		map.on('mousemove', 'busshapes', (events) => {
+			console.log('hoverfea', events.features);
+		});
+
+		map.on('mousemove', 'railshapes', (events) => {
+			console.log('hoverfea-rail', events.features);
+		});
+
 		map.on('load', () => {
 			// Add new sources and layers
 
 			updateData();
+
+			map.addSource('shapes', {
+				type: 'vector',
+				url: 'https://martin.kylerchin.com/shapes'
+			});
+
+			map.addLayer({
+				id: 'busshapes',
+				type: 'line',
+				source: 'shapes',
+				'source-layer': 'shapes',
+				filter: ['all', ['==', 3, ['get', 'route_type']]],
+				paint: {
+					'line-color': ['concat', '#', ['get', 'color']],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
+					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
+					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+				},
+				minzoom: 3
+			});
+
+			map.addLayer({
+				id: 'ferryshapes',
+				type: 'line',
+				source: 'shapes',
+				'source-layer': 'shapes',
+				filter: ['==', 4, ['get', 'route_type']],
+				paint: {
+					'line-color': ['concat', '#', ['get', 'color']],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
+					'line-dasharray': [2, 1],
+					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
+					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+				},
+				minzoom: 3
+			});
+
+			map.addLayer({
+				id: 'labelbusshapes',
+				type: 'symbol',
+				source: 'shapes',
+				'source-layer': 'shapes',
+				filter: ['all', ['==', 3, ['get', 'route_type']]],
+				layout: {
+					"symbol-placement": "line",
+					'text-field': ['coalesce', ['get', 'routes'], ],
+					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+					'text-font': [
+						'step',
+						['zoom'],
+						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
+						15,
+						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
+						18,
+						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
+					],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 8, 13, 12],
+					'text-ignore-placement': true,
+					'text-allow-overlap': false,
+					"visibility": "none"
+				},
+				paint: {
+					'text-color': "#ffffff",
+					'text-halo-color': "#000000",
+					'text-halo-width': 2,
+					'text-halo-blur': 100,
+					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+				},
+				minzoom: 3
+			});
+
+			map.addLayer({
+				id: 'railshapes',
+				type: 'line',
+				source: 'shapes',
+				'source-layer': 'shapes',
+				filter: ['all', ['!=', 4, ['get', 'route_type']], ['!=', 3, ['get', 'route_type']]],
+				paint: {
+					'line-color': ['concat', '#', ['get', 'color']],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+					
+				},
+				minzoom: 3
+			});
+
+		
+
+			map.addLayer({
+				id: 'labelrailshapes',
+				type: 'symbol',
+				source: 'shapes',
+				'source-layer': 'shapes',
+				filter: ['all', ['!=', 3, ['get', 'route_type']]],
+				layout: {
+					"symbol-placement": "line",
+					'text-field': ['coalesce', ['get', 'routes'], ],
+					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+					'text-font': [
+						'step',
+						['zoom'],
+						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
+						15,
+						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
+						18,
+						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
+					],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
+					'text-ignore-placement': true,
+					
+					'text-allow-overlap': false,
+					"visibility": "none"
+				},
+				paint: {
+					'text-color': "#ffffff",
+					'text-halo-color': "#000000",
+					'text-halo-width': 2,
+					'text-halo-blur': 100,
+					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+				},
+				minzoom: 3
+			});
 
 			map.addSource('buses', {
 				type: 'geojson',
@@ -789,7 +965,7 @@
 				},
 				paint: {
 					'line-color': ['get', darkMode === true ? 'contrastdarkmodebearing' : 'color'],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.6, 13, 3],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.8, 12, 2.5, 13, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
 			});
@@ -816,7 +992,7 @@
 				},
 				paint: {
 					'line-color': ['get', 'color'],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 2, 10, 2, 13, 3],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 4, 10, 3.5, 13, 4],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
 			});
@@ -957,6 +1133,8 @@
 					'fill-opacity': 0.2
 				}
 			});
+
+			runSettingsAdapt();
 
 			map.loadImage('https://transitmap.kylerchin.com/geo-circle.png', (error, image) => {
 				if (error) throw error;
@@ -1119,7 +1297,6 @@
 												}
 
 												hsl.l = Math.min(100, hsl.l);
-
 												//console.log('newdarkhsl',newdarkhsl)
 
 												let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
@@ -1603,7 +1780,43 @@
 		Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.
 	</p>
 	<h3 class="font-bold">Rail / Other</h3>
+
+
 	<div class="flex flex-row">
+		<input
+			on:click={(x) => {
+				console.log('x is ', x);
+				layersettings.rail.shapes = x.target.checked;
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				console.log('x is ', x);
+				layersettings.rail.shapes = x.target.checked;
+				runSettingsAdapt();
+			}}
+			checked={layersettings.rail.shapes}
+			id="railshapes"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="railshapes" class="ml-2">Show Rail Shapes</label>
+		<input
+			on:click={(x) => {
+				console.log('x is ', x);
+				layersettings.rail.labelshapes = x.target.checked;
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				console.log('x is ', x);
+				layersettings.rail.labelshapes = x.target.checked;
+				runSettingsAdapt();
+			}}
+			checked={layersettings.rail.labelshapes}
+			id="labelrailshapes"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="labelrailshapes" class="ml-2">Label Rail Shapes</label>
 		<input
 			on:click={(x) => {
 				console.log('x is ', x);
@@ -1623,7 +1836,8 @@
 		<label for="rail" class="ml-2">Show on map</label>
 	</div>
 	<div>
-		<div class="flex flex-row md:flex-col gap-x-3">
+		<p class="font-semibold">Realtime Labels</p>
+		<div class="flex flex-row flex-wrap md:flex-col gap-x-3">
 			<div class="flex flex-row">
 				<input
 					on:click={(x) => {
@@ -1663,7 +1877,7 @@
 				/>
 				<label for="rail-headsign" class="ml-2">Headsign</label>
 			</div>-->
-			<div class="flex flex-row">
+			<div class="flex flex-row ">
 				<input
 					on:click={(x) => {
 						layersettings.rail.label.vehicle = x.target.checked;
@@ -1691,8 +1905,44 @@
 			</div>
 		</div>
 	</div>
-	<div class="h-[1px] bg-black" />
+	<div class="h-[1px] bg-black dark:bg-gray-500" />
 	<h3 class="font-bold">Buses</h3>
+
+	<input
+	on:click={(x) => {
+		console.log('x is ', x);
+		layersettings.bus.shapes = x.target.checked;
+		runSettingsAdapt();
+	}}
+	on:keydown={(x) => {
+		console.log('x is ', x);
+		layersettings.bus.shapes = x.target.checked;
+		runSettingsAdapt();
+	}}
+	checked={layersettings.bus.shapes}
+	id="busshapes"
+	type="checkbox"
+	class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+/>
+<label for="busshapes" class="ml-2">Show Bus Shapes</label>
+<input
+	on:click={(x) => {
+		console.log('x is ', x);
+		layersettings.bus.labelshapes = x.target.checked;
+		runSettingsAdapt();
+	}}
+	on:keydown={(x) => {
+		console.log('x is ', x);
+		layersettings.bus.labelshapes = x.target.checked;
+		runSettingsAdapt();
+	}}
+	checked={layersettings.bus.labelshapes}
+	id="labelbusshapes"
+	type="checkbox"
+	class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+/>
+<label for="labelbusshapes" class="ml-2">Label Bus Shapes</label>
+
 	<div class="flex flex-row">
 		<input
 			on:click={(x) => {
@@ -1707,8 +1957,9 @@
 		<label for="buses" class="ml-2">Show on map</label>
 	</div>
 	<div>
-		<div class="flex flex-row md:flex-col gap-x-3">
-			<div class="flex flex-row">
+		<p class="font-semibold">Realtime Labels</p>
+		<div class="flex flex-row  flex-wrap md:flex-col gap-x-3">
+			<div class="flex flex-row ">
 				<input
 					on:click={(x) => {
 						layersettings.bus.label.route = x.target.checked;
