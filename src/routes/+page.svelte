@@ -534,6 +534,11 @@
 			feed_id: 'f-9q4g~santabarbaramtd~rt',
 			static_feed_id: 'f-9q4g-santabarbaramtd'
 		},
+		{
+			feed_id: "f-pasadenatransit~rt",
+			static_feed_id: "f-pasadenatransit",
+			color: "#1ba6bc"
+		},
 		/*
 				{
 					"static_feed_id": "f-c23-soundtransit",
