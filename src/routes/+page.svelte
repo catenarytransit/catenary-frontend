@@ -719,7 +719,9 @@
 
 					return {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+		name: staticfeed.onestop_feed_id
+	  },
       "geometry": {
         "coordinates": [
           [
@@ -773,9 +775,46 @@
 				source: 'static_feeds',
 				paint: {
 					'fill-color': '#0055aa',
-					'fill-opacity': 0.8
+					'fill-opacity': 0.001
 				},
 			})
+
+			/*
+			map.addLayer({
+				id: 'static_feed_calc_line',
+				type: 'line',
+				source: 'static_feeds',
+				paint: {
+					'line-color': '#aaaaaa',
+				},
+			})
+
+			map.addLayer({
+				id: 'static_feed_calc_names',
+				type: 'symbol',
+				source: 'static_feeds',
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-size': 8,
+					'text-allow-overlap': true,
+					'text-ignore-placement': true,
+					'text-justify': 'center',
+					'text-anchor': 'center',
+					'text-padding': 0,
+					'text-line-height': 1.2,
+					'text-letter-spacing': 0.01,
+					'text-max-width': 10,
+					'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+					'text-offset': [0, 0]
+				},
+				paint: {
+					'text-color': '#ffffff',
+					'text-halo-color': '#0000aa',
+					'text-halo-width': 1,
+					'text-halo-blur': 1
+				
+				}
+			})*/
 
 			map.addSource('shapes', {
 				type: 'vector',
@@ -1820,27 +1859,6 @@
 			{#if lockongps == true}my_location{:else}location_searching{/if}
 		</span>
 	</div>
-
-	<div
-		on:click={() => document.getElementById('aboutAppDialog').showModal() }
-		on:keypress={() => document.getElementById('aboutAppDialog').showModal() }
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-	>
-		<span class="material-symbols-outlined align-middle my-auto mx-auto"> info </span>
-		<dialog id="aboutAppDialog">
-			<h1>Kyler&apos;s Transit Map</h1>
-			<h2 style:font-size="1.3rem">Data Sources</h2>
-			<ul>
-				<li>Mapbox</li>
-				<li>OpenStreetMap</li>
-				<li>Transitland Atlas</li>
-			</ul>
-			<h2 style:font-size="1.3rem">Additional Credits</h2>
-			<ul>
-				<li>MTS Trolley line icons from Koman90 / Vrysxy on Wikimedia</li>
-			</ul>
-		</dialog>
-	</div>
 </div>
 
 <div
@@ -1922,7 +1940,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="rail" class="ml-2">Show on map</label>
+		<label for="rail" class="ml-2">Realtime Vehicle Locations</label>
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
@@ -2043,7 +2061,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="buses" class="ml-2">Show on map</label>
+		<label for="buses" class="ml-2">Realtime Vehicle Locations</label>
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
