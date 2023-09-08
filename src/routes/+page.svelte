@@ -1805,31 +1805,28 @@
 	{/if}
 </div>
 
-<div class="runSidebar">
-	{#if activeRun.features}
-		{#if activeRun.features[0]?.properties?.logo}
-			<img src="{activeRun.features[0]?.properties?.logo}" style:height="{activeRun.features[0]?.properties?.logoHeight}px" alt="" class="lineLogo" />
-		{/if}
-		{#if (activeRun.features[0]?.properties?.showBothLogoAndName || !activeRun.features[0]?.properties?.logo)}
-			<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
-				{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
-			</span>
-			<br />
-		{/if}
-		{#if (activeRun.features[0]?.properties?.routeDesc && activeRun.features[0]?.properties?.routeDesc != activeRun.features[0]?.properties?.maptagFull)}
-		<br />	
-		<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
-		{/if}
-		<br />Vehicle ID: {activeRun.features[0]?.properties?.vehicleId}
-		<br />Agency: {activeRun.features[0]?.properties?.agency}
-		<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
-		<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
-		<br />Long: {parseFloat(activeRun.coordinates[1]).toFixed(5)}
-	{/if}
-	{#if !activeRun.features}
-		Select a vehicle to view more information.
-	{/if}
-</div>
+{#if activeRun.features}
+	<div class="runSidebar">
+			{#if activeRun.features[0]?.properties?.logo}
+				<img src="{activeRun.features[0]?.properties?.logo}" style:height="{activeRun.features[0]?.properties?.logoHeight}px" alt="" class="lineLogo" />
+			{/if}
+			{#if (activeRun.features[0]?.properties?.showBothLogoAndName || !activeRun.features[0]?.properties?.logo)}
+				<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
+					{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
+				</span>
+				<br />
+			{/if}
+			{#if (activeRun.features[0]?.properties?.routeDesc && activeRun.features[0]?.properties?.routeDesc != activeRun.features[0]?.properties?.maptagFull)}
+			<br />	
+			<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
+			{/if}
+			<br />Vehicle ID: {activeRun.features[0]?.properties?.vehicleId}
+			<br />Agency: {activeRun.features[0]?.properties?.agency}
+			<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
+			<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
+			<br />Long: {parseFloat(activeRun.coordinates[1]).toFixed(5)}
+	</div>
+{/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
@@ -1853,7 +1850,7 @@
 		on:keydown={gpsbutton}
 		class="${lockongps
 			? ' text-blue-500 dark:text-blue-300 clickable'
-			: ' text-black dark:text-gray-50'} bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			: ' text-black dark:text-gray-50'} bg-white z-50 fixed bottom-4 right-4 h-20 w-20 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
@@ -2161,6 +2158,7 @@
 		--background: #0A233F;
 		--primary: #79BD43;
 		--radius: 8px;
+		--glow: 0;
 	}
 
 	* {
@@ -2174,8 +2172,7 @@
 
 	.sidebar {
 		background-color: var(--background);
-		border: 3px solid var(--primary);
-		box-shadow: 0 0 15px var(--primary);
+		box-shadow: 0 0 var(--glow) var(--primary);
 		color: #fff;
 		padding: 6px 12px;
 		font-family: monospace;
@@ -2189,11 +2186,10 @@
 	}
 
 	.runSidebar {
-		border: 3px solid var(--primary);
 		border-left: none !important;
 		border-top-right-radius: var(--radius);
 		border-bottom-right-radius: var(--radius);
-		box-shadow: 0 0 15px var(--primary);
+		box-shadow: 0 0 var(--glow) var(--primary);
 		background-color: var(--background);
 		color: #fff;
 		padding: 6px 12px;
@@ -2218,17 +2214,21 @@
 	}
 
 	.clickable {
-		cursor: pointer;
-		border: 1px solid var(--primary);
-		box-shadow: 0 0 5px var(--primary);
+		cursor: pointer !important;
+		box-shadow: 0 0 var(--glow) var(--primary);
+		background-color: var(--background);
+		z-index: 9999;
+	}
+
+	.clickable * {
+		cursor: pointer !important;
 	}
 
 	#aboutAppDialog {
 		background-color: var(--background);
 		color: #fff;
 		border-radius: var(--radius);
-		border: 3px solid var(--primary);
-		box-shadow: 0 0 20px var(--primary);
+		box-shadow: 0 0 var(--glow) var(--primary);
 		text-align: center;
 		padding: 40px;
 	}
