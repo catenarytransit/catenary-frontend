@@ -12,8 +12,6 @@
 	let darkMode = true;
 	let usunits = false;
 
-	let activeRun: any = {};
-
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
 
