@@ -422,138 +422,21 @@
 		}, initialValue);
 	};
 
-	let agencies = [
-		{
-			feed_id: 'f-octa~rt',
-			agency_name: 'Orange County Transportation Authority',
-			color: '#00AFF2',
-			static_feed_id: 'f-9mu-orangecountytransportationauthority'
-		},
-		{
-			feed_id: 'f-sf~bay~area~rg~rt',
-			agency_name: 'San Francisco Bay Area Rapid Transit',
-			color: '#000000',
-			static_feed_id: 'f-sf~bay~area~rg'
-		},
-		{
-			feed_id: 'f-metro~losangeles~bus~rt',
-			agency_name: 'Los Angeles Metro',
-			color: '#E16710',
-			static_feed_id: 'f-9q5-metro~losangeles'
-		},
-		{
-			feed_id: 'f-metro~losangeles~rail~rt',
-			agency_name: 'Los Angeles Metro',
-			color: '#E16710',
-			static_feed_id: 'f-9q5-metro~losangeles~rail'
-		},
-		{
-			feed_id: 'f-rta~rt',
-			color: '#de1e36',
-			agency_name: 'Riverside',
-			static_feed_id: 'f-9qh-riversidetransitagency'
-		},
-		{
-			color: '#801f3b',
-			feed_id: 'f-longbeachtransit~rt',
-			agency_name: 'Long Beach Transit',
-			static_feed_id: 'f-9q5b-longbeachtransit'
-		},
-		{
-			feed_id: 'f-foothilltransit~rt',
-			color: '#2c6a4f',
-			agency_name: 'Foothill Transit',
-			static_feed_id: 'f-9qh1-foothilltransit'
-		},
-		{
-			static_feed_id: 'f-9qh-metrolinktrains',
-			feed_id: 'f-metrolinktrains~rt',
-			agency_name: 'Metrolink Trains',
-			color: '#006066'
-		},
-		{
-			feed_id: 'f-bigbluebus~rt',
-			color: '#0039A6',
-			agency_name: 'Big Blue Bus',
-			static_feed_id: 'f-9q5c-bigbluebus'
-		},
-		{
-			feed_id: 'f-northcountrytransitdistrict~rt',
-			color: '#004cab',
-			agency_name: 'North County Transit District',
-			static_feed_id: 'f-9mu-northcountytransitdistrict',
-			prefer_short_name: true
-		},
-		{
-			feed_id: 'f-mts~rt~onebusaway',
-			agency_name: 'San diego MTS',
-			//f-9mu-mts
-			color: '#555555',
-			static_feed_id: 'f-9mu-mts',
-			prefer_short_name: true
-		},
-		{
-			feed_id: 'f-montebello~bus~rt',
-			static_feed_id: 'f-montebello~bus',
-			color: '#555555'
-		},
-		{
-			feed_id: 'f-torrancetransit~rt',
-			static_feed_id: 'f-9q5b-torrancetransit',
-			color: '#555555'
-		},
-
-		{
-			static_feed_id: 'f-c28-nstranslinkca',
-			feed_id: 'f-translink~rt',
-			color: '#005daa'
-		},
-		{
-			static_feed_id: 'f-9q5-ladot',
-			color: '#5050a0',
-			feed_id: 'f-ladot~rt',
-			prefer_short_name: true
-		},
-		{
-			static_feed_id: 'f-9q5c-culvercitybus',
-			color: '#cecd71',
-			feed_id: 'f-culvercitybus~rt',
-			prefer_short_name: true
-		},
-		{
-			feed_id: 'f-ucla~bruinbus~rt',
-			prefer_short_name: true,
-			use_long_name: true,
-			static_feed_id: 'f-ucla~bruinbus'
-		},
-		{
-			feed_id: 'f-9qd-mercedthebus~ca~us~rt',
-			static_feed_id: 'f-9qd-mercedthebus~ca~us'
-		},
-		{
-			feed_id: 'f-9q4g~santabarbaramtd~rt',
-			static_feed_id: 'f-9q4g-santabarbaramtd'
-		},
-		{
-			feed_id: "f-pasadenatransit~rt",
-			static_feed_id: "f-pasadenatransit",
-			color: "#1ba6bc"
-		},
-		/*
-				{
-					"static_feed_id": "f-c23-soundtransit",
-					feed_id: "f-soundtransit~rt",
-					color: "#555555"
-				}
-				
-				*/
-		{
-			feed_id: 'f-calgarytransit~rt',
-			color: '#c9072a',
-			agency_name: 'Calgary Transit',
-			static_feed_id: 'f-c3nf-calgarytransit'
-		}
+	let agencies:any[] = [
+		
 	];
+	
+	let static_feeds:any[] = [
+		
+	];
+
+	let operators:any[] = [];
+
+	let realtime_feeds:any[] = [];
+
+	function getInitFeeds() {
+	
+	}
 
 	function numberForBearingLengthBus(zoom: number) {
 		if (zoom < 11) {
@@ -783,7 +666,91 @@
 		map.on('load', () => {
 			// Add new sources and layers
 
+			map.addSource('static_feeds', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: []
+				}
+			})
+
+			fetch("https://transitbackend.kylerchin.com/getinitdata")
+			.then(async (x) => await x.json())
+			.then((x) => {
+				static_feeds = x.s;
+				operators = x.a;
+				realtime_feeds = x.r;
+
+
+
+				let datatoset = {
+				type: 'FeatureCollection',
+				features: x.s.map((staticfeed:any) => {
+					console.log('staticfeed', staticfeed)
+					let max_lat = staticfeed.max_lat;
+					let max_lon = staticfeed.max_lon;
+					let min_lat = staticfeed.min_lat;
+					let min_lon = staticfeed.min_lon;
+
+					return {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+           [
+			min_lon,
+			min_lat,
+		   ],
+		   [
+			min_lon,
+			max_lat,
+		   ],
+		   [
+			max_lon,
+			max_lat,
+		   ],
+		   [
+			max_lon,
+			min_lat,
+		   ],
+		   [
+			min_lon,
+			min_lat,
+		   ]
+		   
+          ]
+        ],
+        "type": "Polygon"
+      }
+    }
+				})
+			}
+
+			console.log('datatoset', datatoset)
+				
+					map.getSource('static_feeds').setData(datatoset)
+				
+				
+				
+			})
+			.catch((e) => {
+				console.error(e);
+			});
+
 			updateData();
+
+		
+
+			map.addLayer({
+				id: 'static_feed_calc',
+				type: 'fill',
+				source: 'static_feeds',
+				paint: {
+					'fill-color': '#0055aa',
+					'fill-opacity': 0.8
+				},
+			})
 
 			map.addSource('shapes', {
 				type: 'vector',
