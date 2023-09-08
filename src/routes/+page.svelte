@@ -1847,19 +1847,38 @@
 	>
 		<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
 	</div>
-</div>
 
-<div class="fixed">
 	<div
 		on:click={gpsbutton}
 		on:keydown={gpsbutton}
 		class="${lockongps
 			? ' text-blue-500 dark:text-blue-300 clickable'
-			: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900 z-50 rounded-full pointer-events-auto flex justify-center items-center clickable"
+			: ' text-black dark:text-gray-50'} bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
 		</span>
+	</div>
+
+	<div
+		on:click={() => document.getElementById('aboutAppDialog').showModal() }
+		on:keypress={() => document.getElementById('aboutAppDialog').showModal() }
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined align-middle my-auto mx-auto"> info </span>
+		<dialog id="aboutAppDialog">
+			<h1>Kyler&apos;s Transit Map</h1>
+			<h2 style:font-size="1.3rem">Data Sources</h2>
+			<ul>
+				<li>Mapbox</li>
+				<li>OpenStreetMap</li>
+				<li>Transitland Atlas</li>
+			</ul>
+			<h2 style:font-size="1.3rem">Additional Credits</h2>
+			<ul>
+				<li>MTS Trolley line icons from Koman90 / Vrysxy on Wikimedia</li>
+			</ul>
+		</dialog>
 	</div>
 </div>
 
@@ -2138,6 +2157,15 @@
 </div>
 
 <style>
+	:root {
+		--background: #0A233F;
+		--primary: #79BD43;
+		--radius: 8px;
+	}
+
+	* {
+		cursor: default;
+	}
 
 	#map {
 		width: 100%;
@@ -2145,7 +2173,9 @@
 	}
 
 	.sidebar {
-		background-color: rgba(35, 55, 75, 0.9);
+		background-color: var(--background);
+		border: 3px solid var(--primary);
+		box-shadow: 0 0 15px var(--primary);
 		color: #fff;
 		padding: 6px 12px;
 		font-family: monospace;
@@ -2154,12 +2184,17 @@
 		left: 0;
 		top: 0;
 		margin: 12px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 10px;
 	}
 
 	.runSidebar {
-		background-color: rgba(35, 55, 75, 0.9);
+		border: 3px solid var(--primary);
+		border-left: none !important;
+		border-top-right-radius: var(--radius);
+		border-bottom-right-radius: var(--radius);
+		box-shadow: 0 0 15px var(--primary);
+		background-color: var(--background);
 		color: #fff;
 		padding: 6px 12px;
 		font-family: 'Open Sans', sans-serif;
@@ -2167,7 +2202,6 @@
 		position: absolute;
 		left: 0;
 		bottom: 40px;
-		border-radius: 4px;
 		font-size: 14px;
 		padding: 10px;
 	}
@@ -2176,7 +2210,7 @@
 		font-size: 1.2rem;
 		font-weight: 600;
 		padding: 5px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 	}
 
 	.lineLogo {
@@ -2185,5 +2219,26 @@
 
 	.clickable {
 		cursor: pointer;
+		border: 1px solid var(--primary);
+		box-shadow: 0 0 5px var(--primary);
+	}
+
+	#aboutAppDialog {
+		background-color: var(--background);
+		color: #fff;
+		border-radius: var(--radius);
+		border: 3px solid var(--primary);
+		box-shadow: 0 0 20px var(--primary);
+		text-align: center;
+		padding: 40px;
+	}
+
+	#aboutAppDialog::backdrop {
+		background-color: rgba(0, 0, 0, 0.7);
+	}
+
+	#aboutAppDialog h1 {
+		font-size: 1.5rem;
+		color: var(--primary);
 	}
 </style>

@@ -36,9 +36,3 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
----
-
-Asset attribution:
-All data from transit agency GTFS
-MTS Trolley line icons from Koman90 / Vrysxy on Wikimedia
