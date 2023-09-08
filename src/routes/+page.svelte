@@ -4,9 +4,10 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
-
+    import {hexToRgb, rgbToHsl, hslToRgb} from '../utils/colour'
 	import { browser } from '$app/environment';
 	import { LngLat } from 'maplibre-gl';
+	import {flatten} from '../utils/flatten'
 
 	let darkMode = true;
 	let usunits = false;
@@ -19,50 +20,16 @@
 		localStorage.setItem('units', usunits ? 'us' : 'metric');
 	}
 
+	function textColorOfMapLabels() {
+    return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
+}
+
 	if (browser) {
 		if (localStorage.getItem('units') === 'us') {
 			usunits = true;
 		} else {
 			usunits = false;
 		}
-	}
-
-	function hexToRgb(hex: string) {
-		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-		return result
-			? {
-					r: parseInt(result[1], 16),
-					g: parseInt(result[2], 16),
-					b: parseInt(result[3], 16)
-			  }
-			: null;
-	}
-
-	function textColorOfMapLabels() {
-		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
-	}
-
-	function rgbToHsl(r: number, g: number, b: number) {
-		r /= 255;
-		g /= 255;
-		b /= 255;
-		const l = Math.max(r, g, b);
-		const s = l - Math.min(r, g, b);
-		const h = s ? (l === r ? (g - b) / s : l === g ? 2 + (b - r) / s : 4 + (r - g) / s) : 0;
-		return {
-			h: 60 * h < 0 ? 60 * h + 360 : 60 * h,
-			s: 100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
-			l: (100 * (2 * l - s)) / 2
-		};
-	}
-
-	function hslToRgb(h: number, s: number, l: number) {
-		s /= 100;
-		l /= 100;
-		const k = (n: any) => (n + h / 30) % 12;
-		const a = s * Math.min(l, 1 - l);
-		const f = (n: any) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-		return { r: 255 * f(0), g: 255 * f(8), b: 255 * f(4) };
 	}
   
 	function handleSwitchDarkMode() {
@@ -137,12 +104,6 @@
 			shapes: true
 		}
 	};
-
-	function refreshDarkMode() {
-		if (mapglobal) {
-			//mapglobal.setStyle(darkMode === true ? "mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5" :  'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8');
-		}
-	}
 
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
@@ -388,7 +349,7 @@
 
 		let railletters = {};
 
-		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metro~losangeles~bus~rt') {
+		if (feed_id === 'f-metro~losangeles~rail~rt') {
 			railletters = {
 				'801': 'A',
 				'802': 'B',
@@ -396,9 +357,6 @@
 				'804': 'E',
 				'805': 'D',
 				'807': 'K',
-				'910-13168': 'J',
-				'950-13168': 'J',
-				'901-13168': 'G',
 			};
 		}
 
@@ -531,12 +489,6 @@
 		return 30;
 	}
 
-	function flatten(arr: any) {
-		return arr.reduce(function (flat: any, toFlatten: any) {
-			return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-		}, []);
-	}
-
 	let geolocation: GeolocationPosition;
 
 	let lastknownheading: number;
@@ -637,7 +589,10 @@
 
 			//console.log('newbearingdata', newbearingdata)
 
-			map.getSource('busbearings').setData(newbearingdata);
+			let busbearings = map.getSource('busbearings')
+			
+			if (busbearings) {
+			busbearings.setData(newbearingdata);}
 
 			const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
 
@@ -676,7 +631,12 @@
 
 			//console.log('newbearingdata', newbearingdata)
 
-			map.getSource('railbearings').setData(newrailbearingdata);
+
+			let railbearings = map.getSource('railbearings')
+
+			if (railbearings) {
+			railbearings.setData(newrailbearingdata);
+			}
 		}
 
 		//on hover
@@ -690,6 +650,9 @@
 
 		map.on('load', () => {
 			// Add new sources and layers
+			let removelogo1 = document.getElementsByClassName("mapboxgl-ctrl-logo")
+			
+			if (removelogo1) {removelogo1[0].remove()}
 
 			map.addSource('static_feeds', {
 				type: 'geojson',
@@ -1661,6 +1624,9 @@
 					}
 				}
 
+				let nobearingposlayer = map.getLayer('nobearing_position');
+				let bearingposlayer = map.getLayer('bearing_position');
+
 				if (false) {
 					console.log('bearing is', location.coords.heading);
 
@@ -1668,9 +1634,13 @@
 
 					map.setLayoutProperty('bearing_position', 'visibility', 'visible');
 				} else {
-					map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+					if (nobearingposlayer) {
+						map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+					}
 
-					map.setLayoutProperty('bearing_position', 'visibility', 'none');
+					if (bearingposlayer) {
+						map.setLayoutProperty('bearing_position', 'visibility', 'none');
+					}
 				}
 
 				gpsupdate();
@@ -1794,6 +1764,7 @@
 
 <div id="map" style="width: 100%; height: 100%;" />
 
+<!--
 <div class="sidebar">
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 	{#if (typeof geolocation === 'object' && typeof geolocation.coords.speed === 'number')}
@@ -1806,39 +1777,9 @@
 			</div>
 		{/if}
 	{/if}
-</div>
-
-{#if activeRun.features}
-	<div class="runSidebar">
-			{#if activeRun.features[0]?.properties?.logo}
-				<img src="{activeRun.features[0]?.properties?.logo}" style:height="{activeRun.features[0]?.properties?.logoHeight}px" alt="" class="lineLogo" />
-			{/if}
-			{#if (activeRun.features[0]?.properties?.showBothLogoAndName || !activeRun.features[0]?.properties?.logo)}
-				<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
-					{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
-				</span>
-				<br />
-			{/if}
-			{#if (activeRun.features[0]?.properties?.routeDesc && activeRun.features[0]?.properties?.routeDesc != activeRun.features[0]?.properties?.maptagFull)}
-			<br />	
-			<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
-			{/if}
-			<br />Vehicle ID: {activeRun.features[0]?.properties?.vehicleId}
-			<br />Agency: {activeRun.features[0]?.properties?.agency}
-			<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
-			<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
-			<br />Long: {parseFloat(activeRun.coordinates[1]).toFixed(5)}
-	</div>
-{/if}
+</div>-->
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
-	<div
-		on:click={togglesettingfeature}
-		on:keypress={togglesettingfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-	>
-		<span class="material-symbols-outlined align-middle"> settings </span>
-	</div>
 
 	<div
 		on:click={togglelayerfeature}
@@ -2204,23 +2145,5 @@
 
 	.clickable * {
 		cursor: pointer !important;
-	}
-
-	#aboutAppDialog {
-		background-color: var(--background);
-		color: #fff;
-		border-radius: var(--radius);
-		box-shadow: 0 0 var(--glow) var(--primary);
-		text-align: center;
-		padding: 40px;
-	}
-
-	#aboutAppDialog::backdrop {
-		background-color: rgba(0, 0, 0, 0.7);
-	}
-
-	#aboutAppDialog h1 {
-		font-size: 1.5rem;
-		color: var(--primary);
 	}
 </style>
