@@ -4,10 +4,10 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
-    import {hexToRgb, rgbToHsl, hslToRgb} from '../utils/colour'
+	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { LngLat } from 'maplibre-gl';
-	import {flatten} from '../utils/flatten'
+	import { flatten } from '../utils/flatten';
 
 	let darkMode = true;
 	let usunits = false;
@@ -21,8 +21,8 @@
 	}
 
 	function textColorOfMapLabels() {
-    return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
-}
+		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
+	}
 
 	if (browser) {
 		if (localStorage.getItem('units') === 'us') {
@@ -31,7 +31,7 @@
 			usunits = false;
 		}
 	}
-  
+
 	function handleSwitchDarkMode() {
 		darkMode = !darkMode;
 
@@ -88,7 +88,7 @@
 				headsign: false,
 				direction: false,
 				speed: false
-			},
+			}
 		},
 		rail: {
 			visible: true,
@@ -133,7 +133,6 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
-
 			let busshapes = mapglobal.getLayer('busshapes');
 			let buslabelshapes = mapglobal.getLayer('labelbusshapes');
 
@@ -356,13 +355,11 @@
 				'803': 'C',
 				'804': 'E',
 				'805': 'D',
-				'807': 'K',
+				'807': 'K'
 			};
 		}
 
-		if (
-			feed_id === 'f-metrolinktrains~rt'
-		) {
+		if (feed_id === 'f-metrolinktrains~rt') {
 			railletters = {
 				'Orange County Line': 'OC',
 				'San Bernardino Line': 'SB',
@@ -378,7 +375,7 @@
 				'399': 'SPRINTER',
 				'510': 'BLU',
 				'520': 'ORG',
-				'530': 'GRN',
+				'530': 'GRN'
 			};
 		}
 
@@ -405,21 +402,15 @@
 		}, initialValue);
 	};
 
-	let agencies:any[] = [
-		
-	];
-	
-	let static_feeds:any[] = [
-		
-	];
+	let agencies: any[] = [];
 
-	let operators:any[] = [];
+	let static_feeds: any[] = [];
 
-	let realtime_feeds:any[] = [];
+	let operators: any[] = [];
 
-	function getInitFeeds() {
-	
-	}
+	let realtime_feeds: any[] = [];
+
+	function getInitFeeds() {}
 
 	function numberForBearingLengthBus(zoom: number) {
 		if (zoom < 11) {
@@ -589,10 +580,11 @@
 
 			//console.log('newbearingdata', newbearingdata)
 
-			let busbearings = map.getSource('busbearings')
-			
+			let busbearings = map.getSource('busbearings');
+
 			if (busbearings) {
-			busbearings.setData(newbearingdata);}
+				busbearings.setData(newbearingdata);
+			}
 
 			const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
 
@@ -631,11 +623,10 @@
 
 			//console.log('newbearingdata', newbearingdata)
 
-
-			let railbearings = map.getSource('railbearings')
+			let railbearings = map.getSource('railbearings');
 
 			if (railbearings) {
-			railbearings.setData(newrailbearingdata);
+				railbearings.setData(newrailbearingdata);
 			}
 		}
 
@@ -650,9 +641,11 @@
 
 		map.on('load', () => {
 			// Add new sources and layers
-			let removelogo1 = document.getElementsByClassName("mapboxgl-ctrl-logo")
-			
-			if (removelogo1) {removelogo1[0].remove()}
+			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
+
+			if (removelogo1) {
+				removelogo1[0].remove();
+			}
 
 			map.addSource('static_feeds', {
 				type: 'geojson',
@@ -660,77 +653,54 @@
 					type: 'FeatureCollection',
 					features: []
 				}
-			})
-
-			fetch("https://transitbackend.kylerchin.com/getinitdata")
-			.then(async (x) => await x.json())
-			.then((x) => {
-				static_feeds = x.s;
-				operators = x.a;
-				realtime_feeds = x.r;
-
-
-
-				let datatoset = {
-				type: 'FeatureCollection',
-				features: x.s.map((staticfeed:any) => {
-					console.log('staticfeed', staticfeed)
-					let max_lat = staticfeed.max_lat;
-					let max_lon = staticfeed.max_lon;
-					let min_lat = staticfeed.min_lat;
-					let min_lon = staticfeed.min_lon;
-
-					return {
-      "type": "Feature",
-      "properties": {
-		name: staticfeed.onestop_feed_id
-	  },
-      "geometry": {
-        "coordinates": [
-          [
-           [
-			min_lon,
-			min_lat,
-		   ],
-		   [
-			min_lon,
-			max_lat,
-		   ],
-		   [
-			max_lon,
-			max_lat,
-		   ],
-		   [
-			max_lon,
-			min_lat,
-		   ],
-		   [
-			min_lon,
-			min_lat,
-		   ]
-		   
-          ]
-        ],
-        "type": "Polygon"
-      }
-    }
-				})
-			}
-
-			console.log('datatoset', datatoset)
-				
-					map.getSource('static_feeds').setData(datatoset)
-				
-				
-				
-			})
-			.catch((e) => {
-				console.error(e);
 			});
 
-			updateData();
+			fetch('https://transitbackend.kylerchin.com/getinitdata')
+				.then(async (x) => await x.json())
+				.then((x) => {
+					static_feeds = x.s;
+					operators = x.a;
+					realtime_feeds = x.r;
 
-		
+					let datatoset = {
+						type: 'FeatureCollection',
+						features: x.s.map((staticfeed: any) => {
+							console.log('staticfeed', staticfeed);
+							let max_lat = staticfeed.max_lat;
+							let max_lon = staticfeed.max_lon;
+							let min_lat = staticfeed.min_lat;
+							let min_lon = staticfeed.min_lon;
+
+							return {
+								type: 'Feature',
+								properties: {
+									name: staticfeed.onestop_feed_id
+								},
+								geometry: {
+									coordinates: [
+										[
+											[min_lon, min_lat],
+											[min_lon, max_lat],
+											[max_lon, max_lat],
+											[max_lon, min_lat],
+											[min_lon, min_lat]
+										]
+									],
+									type: 'Polygon'
+								}
+							};
+						})
+					};
+
+					console.log('datatoset', datatoset);
+
+					map.getSource('static_feeds').setData(datatoset);
+				})
+				.catch((e) => {
+					console.error(e);
+				});
+
+			updateData();
 
 			map.addLayer({
 				id: 'static_feed_calc',
@@ -739,8 +709,8 @@
 				paint: {
 					'fill-color': '#0055aa',
 					'fill-opacity': 0.001
-				},
-			})
+				}
+			});
 
 			/*
 			map.addLayer({
@@ -824,8 +794,8 @@
 				'source-layer': 'shapes',
 				filter: ['all', ['==', 3, ['get', 'route_type']]],
 				layout: {
-					"symbol-placement": "line",
-					'text-field': ['coalesce', ['get', 'routes'], ],
+					'symbol-placement': 'line',
+					'text-field': ['coalesce', ['get', 'routes']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-font': [
 						'step',
@@ -839,11 +809,11 @@
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 8, 13, 12],
 					'text-ignore-placement': true,
 					'text-allow-overlap': false,
-					"visibility": "none"
+					visibility: 'none'
 				},
 				paint: {
-					'text-color': "#ffffff",
-					'text-halo-color': "#000000",
+					'text-color': '#ffffff',
+					'text-halo-color': '#000000',
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -861,12 +831,9 @@
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
-					
 				},
 				minzoom: 3
 			});
-
-		
 
 			map.addLayer({
 				id: 'labelrailshapes',
@@ -875,8 +842,8 @@
 				'source-layer': 'shapes',
 				filter: ['all', ['!=', 3, ['get', 'route_type']]],
 				layout: {
-					"symbol-placement": "line",
-					'text-field': ['coalesce', ['get', 'routes'], ],
+					'symbol-placement': 'line',
+					'text-field': ['coalesce', ['get', 'routes']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-font': [
 						'step',
@@ -889,13 +856,13 @@
 					],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
 					'text-ignore-placement': true,
-					
+
 					'text-allow-overlap': false,
-					"visibility": "none"
+					visibility: 'none'
 				},
 				paint: {
-					'text-color': "#ffffff",
-					'text-halo-color': "#000000",
+					'text-color': '#ffffff',
+					'text-halo-color': '#000000',
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
@@ -1384,7 +1351,7 @@
 												}
 											}
 
-											return {logo, showBothLogoAndName, logoHeight};
+											return { logo, showBothLogoAndName, logoHeight };
 										}
 
 										function expandMaptag(maptag: string, agency: string) {
@@ -1474,10 +1441,16 @@
 												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
-												maptagFull: expandMaptag(maptag?.replace('-13168', '') as string, agency_obj.static_feed_id),
+												maptagFull: expandMaptag(
+													maptag?.replace('-13168', '') as string,
+													agency_obj.static_feed_id
+												),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
-												routeDesc: route_info_lookup[agency_obj.static_feed_id][routeId]?.desc != '' ? route_info_lookup[agency_obj.static_feed_id][routeId]?.desc : route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
+												routeDesc:
+													route_info_lookup[agency_obj.static_feed_id][routeId]?.desc != ''
+														? route_info_lookup[agency_obj.static_feed_id][routeId]?.desc
+														: route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
 												bearing: vehicle?.position?.bearing,
 												tripId: vehicle?.trip?.tripId,
 												tripIdLabel: tripIdLabel(),
@@ -1560,19 +1533,6 @@
 				renderNewBearings();
 			}
 		});
-
-		function setActiveRun(e: any) {
-			const features = e.features as MapboxGeoJSONFeature[];
-			const coordinates = features[0]?.properties?.coordinates
-				.replace('[', '')
-				.replace(']', '')
-				.split(',');
-
-			activeRun = { features, coordinates }
-		}
-
-		map.on('click', 'buses', (e) => setActiveRun(e));
-		map.on('click', 'raillayer', (e) => setActiveRun(e));
 
 		map.on('mouseenter', 'buses', () => (map.getCanvas().style.cursor = 'pointer'));
 		map.on('mouseleave', 'buses', () => (map.getCanvas().style.cursor = ''));
@@ -1780,7 +1740,6 @@
 </div>-->
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
-
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
@@ -1828,7 +1787,6 @@
 		Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.
 	</p>
 	<h3 class="font-bold">Rail / Other</h3>
-
 
 	<div class="flex flex-row">
 		<input
@@ -1925,7 +1883,7 @@
 				/>
 				<label for="rail-headsign" class="ml-2">Headsign</label>
 			</div>-->
-			<div class="flex flex-row ">
+			<div class="flex flex-row">
 				<input
 					on:click={(x) => {
 						layersettings.rail.label.vehicle = x.target.checked;
@@ -1957,39 +1915,39 @@
 	<h3 class="font-bold">Buses</h3>
 
 	<input
-	on:click={(x) => {
-		console.log('x is ', x);
-		layersettings.bus.shapes = x.target.checked;
-		runSettingsAdapt();
-	}}
-	on:keydown={(x) => {
-		console.log('x is ', x);
-		layersettings.bus.shapes = x.target.checked;
-		runSettingsAdapt();
-	}}
-	checked={layersettings.bus.shapes}
-	id="busshapes"
-	type="checkbox"
-	class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-/>
-<label for="busshapes" class="ml-2">Show Bus Shapes</label>
-<input
-	on:click={(x) => {
-		console.log('x is ', x);
-		layersettings.bus.labelshapes = x.target.checked;
-		runSettingsAdapt();
-	}}
-	on:keydown={(x) => {
-		console.log('x is ', x);
-		layersettings.bus.labelshapes = x.target.checked;
-		runSettingsAdapt();
-	}}
-	checked={layersettings.bus.labelshapes}
-	id="labelbusshapes"
-	type="checkbox"
-	class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-/>
-<label for="labelbusshapes" class="ml-2">Label Bus Shapes</label>
+		on:click={(x) => {
+			console.log('x is ', x);
+			layersettings.bus.shapes = x.target.checked;
+			runSettingsAdapt();
+		}}
+		on:keydown={(x) => {
+			console.log('x is ', x);
+			layersettings.bus.shapes = x.target.checked;
+			runSettingsAdapt();
+		}}
+		checked={layersettings.bus.shapes}
+		id="busshapes"
+		type="checkbox"
+		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+	/>
+	<label for="busshapes" class="ml-2">Show Bus Shapes</label>
+	<input
+		on:click={(x) => {
+			console.log('x is ', x);
+			layersettings.bus.labelshapes = x.target.checked;
+			runSettingsAdapt();
+		}}
+		on:keydown={(x) => {
+			console.log('x is ', x);
+			layersettings.bus.labelshapes = x.target.checked;
+			runSettingsAdapt();
+		}}
+		checked={layersettings.bus.labelshapes}
+		id="labelbusshapes"
+		type="checkbox"
+		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+	/>
+	<label for="labelbusshapes" class="ml-2">Label Bus Shapes</label>
 
 	<div class="flex flex-row">
 		<input
@@ -2006,8 +1964,8 @@
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
-		<div class="flex flex-row  flex-wrap md:flex-col gap-x-3">
-			<div class="flex flex-row ">
+		<div class="flex flex-row flex-wrap md:flex-col gap-x-3">
+			<div class="flex flex-row">
 				<input
 					on:click={(x) => {
 						layersettings.bus.label.route = x.target.checked;
@@ -2078,8 +2036,8 @@
 
 <style>
 	:root {
-		--background: #0A233F;
-		--primary: #79BD43;
+		--background: #0a233f;
+		--primary: #79bd43;
 		--radius: 8px;
 		--glow: 0;
 	}
