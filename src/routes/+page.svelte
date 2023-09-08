@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
-	import mapboxgl from 'mapbox-gl';
+	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
 
 	import { browser } from '$app/environment';
+	import { LngLat } from 'maplibre-gl';
 
 	let darkMode = true;
 	let usunits = false;
+
+	let activeRun: any = {};
 
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
@@ -61,7 +64,7 @@
 		const f = (n: any) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 		return { r: 255 * f(0), g: 255 * f(8), b: 255 * f(4) };
 	}
-
+  
 	function handleSwitchDarkMode() {
 		darkMode = !darkMode;
 
@@ -383,24 +386,46 @@
 			}
 		}
 
-		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metrolinktrains~rt') {
-			let railletters: any = {
+		let railletters = {};
+
+		if (feed_id === 'f-metro~losangeles~rail~rt' || feed_id === 'f-metro~losangeles~bus~rt') {
+			railletters = {
 				'801': 'A',
 				'802': 'B',
 				'803': 'C',
 				'804': 'E',
 				'805': 'D',
 				'807': 'K',
+				'910-13168': 'J',
+				'950-13168': 'J',
+				'901-13168': 'G',
+			};
+		}
+
+		if (
+			feed_id === 'f-metrolinktrains~rt'
+		) {
+			railletters = {
 				'Orange County Line': 'OC',
 				'San Bernardino Line': 'SB',
 				'Antelope Valley Line': 'AV',
 				'Inland Emp.-Orange Co. Line': 'IEOC',
 				'Ventura County Line': 'VC'
 			};
+		}
 
-			if (Object.keys(railletters).includes(routeId)) {
-				maptag = railletters[routeId];
-			}
+		if (feed_id === 'f-northcountrytransitdistrict~rt' || feed_id === 'f-mts~rt~onebusaway') {
+			railletters = {
+				'398': 'COASTER',
+				'399': 'SPRINTER',
+				'510': 'BLU',
+				'520': 'ORG',
+				'530': 'GRN',
+			};
+		}
+
+		if (Object.keys(railletters).includes(routeId)) {
+			maptag = railletters[routeId];
 		}
 
 		maptag = maptag.replace(/( )?Line/, '');
@@ -557,8 +582,8 @@
 					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
-			center: [-118, 33.9], // starting position [lng, lat]
-			zoom: 8 // starting zoom
+			center: [-117, 33], // starting position [lng, lat]
+			zoom: 6.8 // starting zoom
 		});
 
 		mapglobal = map;
@@ -1238,7 +1263,6 @@
 												}
 
 												hsl.l = Math.min(100, hsl.l);
-
 												//console.log('newdarkhsl',newdarkhsl)
 
 												let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
@@ -1297,22 +1321,166 @@
 											return tripid;
 										};
 
+										function getLogo(maptag: string, agency: string) {
+											let logo = null;
+											let showBothLogoAndName = false;
+											let logoHeight = 70;
+
+											if (agency === 'f-9mu-mts') {
+												if (maptag.includes('GRN')) {
+													logo = '/lines/mts-green.svg';
+													showBothLogoAndName = true;
+												} else if (maptag.includes('BLU')) {
+													logo = '/lines/mts-blue.svg';
+													showBothLogoAndName = true;
+												} else if (maptag.includes('ORG')) {
+													logo = '/lines/mts-orange.svg';
+													showBothLogoAndName = true;
+												} else {
+													logo = '/lines/mts-bus.png';
+													showBothLogoAndName = true;
+													logoHeight = 50;
+												}
+											}
+
+											if (agency === 'f-9mu-northcountytransitdistrict') {
+												if (maptag.includes('COASTER')) {
+													logo = '/lines/nctd-coaster.svg';
+													logoHeight = 30;
+												} else if (maptag.includes('SPRINTER')) {
+													logo = '/lines/nctd-sprinter.svg';
+													logoHeight = 30;
+												} else if (maptag.includes('350')) {
+													logo = '/lines/nctd-brt.svg';
+													showBothLogoAndName = true;
+													logoHeight = 30;
+												}
+											}
+
+											if (agency == 'f-9q5-metro~losangeles~rail') {
+												switch (maptag) {
+													case 'A':
+														logo = '/lines/metro-a.svg';
+														break;
+													case 'B':
+														logo = '/lines/metro-b.svg';
+														break;
+													case 'C':
+														logo = '/lines/metro-c.svg';
+														break;
+													case 'D':
+														logo = '/lines/metro-d.svg';
+														break;
+													case 'E':
+														logo = '/lines/metro-e.svg';
+														break;
+													case 'K':
+														logo = '/lines/metro-k.svg';
+														break;
+													default:
+														break;
+												}
+											}
+
+											return {logo, showBothLogoAndName, logoHeight};
+										}
+
+										function expandMaptag(maptag: string, agency: string) {
+											let newtag = maptag;
+											if (agency === 'f-9mu-mts') {
+												if (maptag.includes('GRN')) {
+													newtag = maptag.replace('GRN', 'Green Line');
+												}
+												if (maptag.includes('BLU')) {
+													newtag = maptag.replace('BLU', 'Blue Line');
+												}
+												if (maptag.includes('ORG')) {
+													newtag = maptag.replace('ORG', 'Orange Line');
+												}
+
+												if (maptag === '201' || maptag === '202' || maptag === '204') {
+													newtag = 'SuperLoop ' + maptag;
+												}
+
+												if (
+													maptag === '215' ||
+													maptag === '225' ||
+													maptag === '227' ||
+													maptag === '235' ||
+													maptag === '237'
+												) {
+													newtag = 'Rapid ' + maptag;
+												}
+
+												if (maptag === '280' || maptag === '290') {
+													newtag = 'Rapid Express ' + maptag;
+												}
+											}
+
+											if (agency == 'f-9q5-metro~losangeles~rail') {
+												switch (maptag) {
+													case 'A':
+														newtag = 'A Line';
+														break;
+													case 'B':
+														newtag = 'B Line';
+														break;
+													case 'C':
+														newtag = 'C Line';
+														break;
+													case 'D':
+														newtag = 'D Line';
+														break;
+													case 'E':
+														newtag = 'E Line';
+														break;
+													case 'K':
+														newtag = 'K Line';
+														break;
+													default:
+														break;
+												}
+											}
+
+											if (agency == 'f-9q5-metro~losangeles') {
+												switch (maptag) {
+													case 'G':
+														newtag = 'G Line';
+														break;
+													case 'J':
+														newtag = 'J Line';
+														break;
+													default:
+														break;
+												}
+											}
+
+											return newtag;
+										}
+
 										return {
 											type: 'Feature',
 											id,
 											properties: {
-												vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+												vehicleId:
+													vehicle?.vehicle?.label.replace('SPR ', '').replace('CSTR ', '') ||
+													vehicle?.vehicle?.id,
 												speed: fixSpeed(),
 												color: color,
+												...getLogo(maptag?.replace('-13168', ''), agency_obj.static_feed_id),
 												contrastdarkmode: contrastdarkmode,
 												contrastdarkmodebearing,
 												label: vehicle?.vehicle?.label,
 												maptag: maptag?.replace('-13168', ''),
+												maptagFull: expandMaptag(maptag?.replace('-13168', '') as string, agency_obj.static_feed_id),
 												routeType,
 												routeId: routeId?.replace('-13168', ''),
+												routeDesc: route_info_lookup[agency_obj.static_feed_id][routeId]?.desc != '' ? route_info_lookup[agency_obj.static_feed_id][routeId]?.desc : route_info_lookup[agency_obj.static_feed_id][routeId]?.long_name,
 												bearing: vehicle?.position?.bearing,
 												tripId: vehicle?.trip?.tripId,
-												tripIdLabel: tripIdLabel()
+												tripIdLabel: tripIdLabel(),
+												agency: agency_obj.agency_name,
+												coordinates: [vehicle.position.longitude, vehicle.position.latitude]
 											},
 											geometry: {
 												type: 'Point',
@@ -1390,6 +1558,24 @@
 				renderNewBearings();
 			}
 		});
+
+		function setActiveRun(e: any) {
+			const features = e.features as MapboxGeoJSONFeature[];
+			const coordinates = features[0]?.properties?.coordinates
+				.replace('[', '')
+				.replace(']', '')
+				.split(',');
+
+			activeRun = { features, coordinates }
+		}
+
+		map.on('click', 'buses', (e) => setActiveRun(e));
+		map.on('click', 'raillayer', (e) => setActiveRun(e));
+
+		map.on('mouseenter', 'buses', () => (map.getCanvas().style.cursor = 'pointer'));
+		map.on('mouseleave', 'buses', () => (map.getCanvas().style.cursor = ''));
+		map.on('mouseenter', 'raillayer', () => (map.getCanvas().style.cursor = 'pointer'));
+		map.on('mouseleave', 'raillayer', () => (map.getCanvas().style.cursor = ''));
 
 		const successCallback = (position: any) => {
 			//console.log(position);
@@ -1529,7 +1715,7 @@
 <svelte:head>
 	<!-- Primary Meta Tags -->
 	<title>Kyler's Transit Map</title>
-	<link rel="icon" href="/favicon.png" />
+	<link rel="icon" href="/logo.png" />
 	<meta name="title" content="Kyler's Transit Map" />
 	<meta
 		name="description"
@@ -1566,35 +1752,51 @@
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 	/>
 </svelte:head>
-{#if typeof geolocation === 'object'}
-	{#if typeof geolocation.coords.speed === 'number'}
-		<div
-			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
-		>
-			{#if usunits == false}
-				<div>
-					{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
-				</div>
-			{:else}
-				<div>
-					{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
-				</div>
-			{/if}
-		</div>
-	{/if}
-{/if}
 
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
+	{#if (typeof geolocation === 'object' && typeof geolocation.coords.speed === 'number')}
+		<br />
+		{#if usunits == false}
+			Speed: {geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
+		{:else}
+			<div>
+				Speed: {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+			</div>
+		{/if}
+	{/if}
 </div>
+
+{#if activeRun.features}
+	<div class="runSidebar">
+			{#if activeRun.features[0]?.properties?.logo}
+				<img src="{activeRun.features[0]?.properties?.logo}" style:height="{activeRun.features[0]?.properties?.logoHeight}px" alt="" class="lineLogo" />
+			{/if}
+			{#if (activeRun.features[0]?.properties?.showBothLogoAndName || !activeRun.features[0]?.properties?.logo)}
+				<span style:color="{activeRun.features[0].properties?.routeType == 3 ? activeRun.features[0].properties?.color : 'white'}" style:background-color="{activeRun.features[0].properties?.routeType != 3 ? activeRun.features[0].properties?.color : 'white'}" class="lineNumber">
+					{activeRun.features[0]?.properties?.maptagFull || 'Out of Service'}
+				</span>
+				<br />
+			{/if}
+			{#if (activeRun.features[0]?.properties?.routeDesc && activeRun.features[0]?.properties?.routeDesc != activeRun.features[0]?.properties?.maptagFull)}
+			<br />	
+			<span style:font-size='1.2em'>{activeRun.features[0]?.properties?.routeDesc}</span>
+			{/if}
+			<br />Vehicle ID: {activeRun.features[0]?.properties?.vehicleId}
+			<br />Agency: {activeRun.features[0]?.properties?.agency}
+			<br />{activeRun.features[0]?.properties?.tripId ? 'Trip: ' + activeRun.features[0]?.properties?.tripId : ''}
+			<br />Lat: {parseFloat(activeRun.coordinates[0]).toFixed(5)}
+			<br />Long: {parseFloat(activeRun.coordinates[1]).toFixed(5)}
+	</div>
+{/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
 		on:click={togglesettingfeature}
 		on:keypress={togglesettingfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle"> settings </span>
 	</div>
@@ -1602,23 +1804,42 @@
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
 	</div>
-</div>
 
-<div class="fixed">
 	<div
 		on:click={gpsbutton}
 		on:keydown={gpsbutton}
 		class="${lockongps
-			? ' text-blue-500 dark:text-blue-300'
-			: ' text-black dark:text-gray-50'} h-16 w-16 fixed bottom-4 right-4 bg-white dark:bg-gray-900 z-50 rounded-full pointer-events-auto flex justify-center items-center"
+			? ' text-blue-500 dark:text-blue-300 clickable'
+			: ' text-black dark:text-gray-50'} bg-white z-50 fixed bottom-4 right-4 h-20 w-20 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
 		</span>
+	</div>
+
+	<div
+		on:click={() => document.getElementById('aboutAppDialog').showModal() }
+		on:keypress={() => document.getElementById('aboutAppDialog').showModal() }
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined align-middle my-auto mx-auto"> info </span>
+		<dialog id="aboutAppDialog">
+			<h1>Kyler&apos;s Transit Map</h1>
+			<h2 style:font-size="1.3rem">Data Sources</h2>
+			<ul>
+				<li>Mapbox</li>
+				<li>OpenStreetMap</li>
+				<li>Transitland Atlas</li>
+			</ul>
+			<h2 style:font-size="1.3rem">Additional Credits</h2>
+			<ul>
+				<li>MTS Trolley line icons from Koman90 / Vrysxy on Wikimedia</li>
+			</ul>
+		</dialog>
 	</div>
 </div>
 
@@ -1701,7 +1922,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="rail" class="ml-2">Realtime Locations</label>
+		<label for="rail" class="ml-2">Show on map</label>
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
@@ -1730,7 +1951,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="rail-trip" class="ml-2">Trip Name/ID</label>
+				<label for="rail-trip" class="ml-2">Trip ID</label>
 			</div>
 			<!--<div class="flex flex-row">
 				<input
@@ -1756,7 +1977,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="rail-vehicle" class="ml-2">Vehicle</label>
+				<label for="rail-vehicle" class="ml-2">Vehicle #</label>
 			</div>
 			<div class="flex flex-row">
 				<input
@@ -1822,7 +2043,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="buses" class="ml-2">Realtime Locations</label>
+		<label for="buses" class="ml-2">Show on map</label>
 	</div>
 	<div>
 		<p class="font-semibold">Realtime Labels</p>
@@ -1851,7 +2072,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="buses-trips" class="ml-2">Trip Name/ID</label>
+				<label for="buses-trips" class="ml-2">Trip ID</label>
 			</div>
 			<!--<div class="flex flex-row">
 				<input
@@ -1877,7 +2098,7 @@
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
-				<label for="buses-vehicles" class="ml-2">Vehicle</label>
+				<label for="buses-vehicles" class="ml-2">Vehicle #</label>
 			</div>
 			<div class="flex flex-row">
 				<input
@@ -1897,8 +2118,15 @@
 </div>
 
 <style>
-	.inter {
-		font-family: 'Inter', sans-serif;
+	:root {
+		--background: #0A233F;
+		--primary: #79BD43;
+		--radius: 8px;
+		--glow: 0;
+	}
+
+	* {
+		cursor: default;
 	}
 
 	#map {
@@ -1907,16 +2135,74 @@
 	}
 
 	.sidebar {
-		background-color: rgba(35, 55, 75, 0.9);
+		background-color: var(--background);
+		box-shadow: 0 0 var(--glow) var(--primary);
 		color: #fff;
 		padding: 6px 12px;
 		font-family: monospace;
 		z-index: 1;
 		position: absolute;
-		top: 0;
 		left: 0;
+		top: 0;
 		margin: 12px;
-		border-radius: 4px;
+		border-radius: var(--radius);
 		font-size: 10px;
+	}
+
+	.runSidebar {
+		border-left: none !important;
+		border-top-right-radius: var(--radius);
+		border-bottom-right-radius: var(--radius);
+		box-shadow: 0 0 var(--glow) var(--primary);
+		background-color: var(--background);
+		color: #fff;
+		padding: 6px 12px;
+		font-family: 'Open Sans', sans-serif;
+		z-index: 1;
+		position: absolute;
+		left: 0;
+		bottom: 40px;
+		font-size: 14px;
+		padding: 10px;
+	}
+
+	.lineNumber {
+		font-size: 1.2rem;
+		font-weight: 600;
+		padding: 5px;
+		border-radius: var(--radius);
+	}
+
+	.lineLogo {
+		margin-bottom: 15px;
+	}
+
+	.clickable {
+		cursor: pointer !important;
+		box-shadow: 0 0 var(--glow) var(--primary);
+		background-color: var(--background);
+		z-index: 9999;
+	}
+
+	.clickable * {
+		cursor: pointer !important;
+	}
+
+	#aboutAppDialog {
+		background-color: var(--background);
+		color: #fff;
+		border-radius: var(--radius);
+		box-shadow: 0 0 var(--glow) var(--primary);
+		text-align: center;
+		padding: 40px;
+	}
+
+	#aboutAppDialog::backdrop {
+		background-color: rgba(0, 0, 0, 0.7);
+	}
+
+	#aboutAppDialog h1 {
+		font-size: 1.5rem;
+		color: var(--primary);
 	}
 </style>
