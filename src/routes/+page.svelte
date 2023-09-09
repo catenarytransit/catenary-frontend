@@ -238,6 +238,18 @@
                         colour = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
 					   }
 				   }
+
+				   if (realtime_id === "f-metro~losangeles~bus~rt" && colour === "#ffffff") {
+
+					colour = '#e16710';
+
+					if (routeId === '720' || routeId === '754' || routeId === '761') {
+						colour = '#d11242';
+					}
+
+				   }
+
+
 				} 
 
 				return {
@@ -947,7 +959,14 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 					'circle-stroke-color': '#fff',
 					'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
 					'circle-stroke-width': 0.8,
-					'circle-opacity': darkMode == true ? 0.7 : 0.5
+					'circle-opacity': darkMode == true ? ['interpolate', ['linear'], ['zoom'],
+				    8,
+					0,
+					8.2,
+					0.7
+				
+				] : 0.5,
+					
 				}
 			});
 
@@ -978,7 +997,7 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 					'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
-					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+					'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 10, 1]
 				}
 			});
 
@@ -994,12 +1013,13 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 				id: 'raillayer',
 				type: 'circle',
 				source: 'rail',
+				minzoom: 7.9,
 				paint: {
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, 6, 16, 10],
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
 					'circle-color': ['get', 'color'],
 					'circle-stroke-color': '#fff',
 					'circle-stroke-width': 1,
-					'circle-opacity': 0.8
+					'circle-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.8]
 				}
 			});
 
@@ -1040,7 +1060,8 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 			});
 
             setInterval(() => {
-				realtime_list.forEach((realtime_id:string) => {
+				if (map.getZoom() >= 8) {
+					realtime_list.forEach((realtime_id:string) => {
 					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${realtime_id}&category=vehicles`;
 
 					if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
@@ -1082,6 +1103,7 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 
 					
 				})
+				}
 			},1000)
 
 			map.addSource('geolocation', {
@@ -1404,6 +1426,10 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 </svelte:head>
 
 <div id="map" style="width: 100%; height: 100%;" />
+
+<div class="sidebar">
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
+</div>
 
 <!--
 <div class="sidebar">
