@@ -75,6 +75,7 @@
 
 	let maplat: number, maplng: number, mapzoom: number;
 	let route_info_lookup: any = {};
+	// trip data, indexed via static_feed_id then trip_id
 	let trips_per_agency: any = {};
 	let layersettingsBox = false;
 
@@ -87,7 +88,6 @@
 	let binaryDataOfGtfsRt: any = new Object();
 
 	let lockongps = false;
-
 	maplng = 0;
 	maplat = 0;
 	mapzoom = 0;
@@ -1184,7 +1184,9 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 				//console.log('requested rerender of ', rerenders_requested)
 
 				if (rerenders_requested.length > 0) {
-					rerenders_requested.forEach((x) => {});
+					rerenders_requested.forEach((x) => {
+						
+					});
 				}
 			}, 2000);
 		});
