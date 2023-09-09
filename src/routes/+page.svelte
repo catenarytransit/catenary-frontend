@@ -8,6 +8,7 @@
 	import { browser } from '$app/environment';
 	import { LngLat } from 'maplibre-gl';
 	import { flatten } from '../utils/flatten';
+	import {determineFeeds} from '../maploaddata';
 
 	let darkMode = true;
 	let usunits = false;
@@ -344,8 +345,6 @@
 			}
 		}
 
-		let railletters = {};
-
 		if (feed_id === 'f-metro~losangeles~rail~rt') {
 			railletters = {
 				'801': 'A',
@@ -637,6 +636,15 @@
 			console.log('hoverfea-rail', events.features);
 		});
 
+		map.on('moveend', (events) => {
+			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds,geolocation);
+			console.log('feedresults', feedresults)
+		});
+
+		map.on('zoomend', (events) => {
+			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds,geolocation)
+		});
+
 		map.on('load', () => {
 			// Add new sources and layers
 			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
@@ -657,13 +665,13 @@
 				.then(async (x) => await x.json())
 				.then((x) => {
 					static_feeds = x.s;
-					operators = x.a;
+					operators = x.o;
 					realtime_feeds = x.r;
 
 					let datatoset = {
 						type: 'FeatureCollection',
 						features: x.s.map((staticfeed: any) => {
-							console.log('staticfeed', staticfeed);
+							//console.log('staticfeed', staticfeed);
 							let max_lat = staticfeed.max_lat;
 							let max_lon = staticfeed.max_lon;
 							let min_lat = staticfeed.min_lat;
@@ -692,7 +700,11 @@
 
 					console.log('datatoset', datatoset);
 
-					map.getSource('static_feeds').setData(datatoset);
+					let sourcestatic = map.getSource('static_feeds');
+					
+					if (sourcestatic) {
+						sourcestatic.setData(datatoset);
+					}
 				})
 				.catch((e) => {
 					console.error(e);
@@ -1128,6 +1140,13 @@
 						bottomright[0].remove();
 					}
 				}
+
+				//console.log('requested rerender of ', rerenders_requested)
+
+				if (rerenders_requested.length > 0) {
+					rerenders_requested.forEach((x) => {});
+				}
+			}, 2000);
 		});
 
 		let geometryObj: any = new Object();
