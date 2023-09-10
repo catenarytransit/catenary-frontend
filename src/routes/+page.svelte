@@ -213,7 +213,7 @@
 
 			//render each vehicle vehiclesData[realtime_id].entity
 
-			console.log('mergetable', mergetable)
+			//console.log('mergetable', mergetable)
 			
 
 			let features = vehiclesData[realtime_id].entity
@@ -312,7 +312,7 @@
 		let mapzoomnumber = numberForBearingLengthBus(mapglobal.getZoom());
 
 									// Query all rendered features from a single layer
-									renderNewBearings();
+									//renderNewBearings();
 	   }
 
 	   /*
@@ -523,6 +523,25 @@ fetch(
 			style = light;
 		}
 
+		//does user have localstorage cachegeolocation
+
+		let centerinit = [-118, 33.9];
+
+		let zoominit = 8.1;
+
+		if (browser) {
+			if ('cachegeolocation' in localStorage) {
+				let cachegeolocation = localStorage.getItem('cachegeolocation').split(",");
+				console.log('cachegeolocation',cachegeolocation)
+				if (cachegeolocation.length > 1) {
+
+					centerinit = [cachegeolocation[0], cachegeolocation[1]];
+					zoominit = 14.5;
+				}
+				}
+			} 
+		
+
 		const map = new mapboxgl.Map({
 			container: 'map',
 			style:
@@ -531,10 +550,10 @@ fetch(
 					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
-				center: [-118, 33.9], // starting position [lng, lat]
+				center: centerinit, // starting position [lng, lat]
 				//keep the centre at Los Angeles, since that is our primary user base currently
 				//switch to IP geolocation and on the fly rendering for this soon
-			zoom: 8.1 // starting zoom (must be greater than 8.1)
+			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
 		mapglobal = map;
@@ -1270,6 +1289,15 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 			let location = position;
 
 			if (location) {
+				
+				//console.log('set geo to ', JSON.stringify({...location}));
+
+				//console.log('coords', location.coords.longitude, location.coords.latitude);
+
+				
+
+				localStorage.setItem('cachegeolocation', `${location.coords.longitude},${location.coords.latitude}`);
+
 				geolocation = location;
 
 				let geolocationdata = map.getSource('geolocation');
@@ -1329,6 +1357,7 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 				}
 
 				gpsupdate();
+
 			}
 		};
 
