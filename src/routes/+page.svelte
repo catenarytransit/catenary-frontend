@@ -536,7 +536,8 @@ fetch(
 				if (cachegeolocation.length > 1) {
 
 					centerinit = [cachegeolocation[0], cachegeolocation[1]];
-					zoominit = 14.5;
+//mimic Google and Transit App inital zoom
+					zoominit = 13.4;
 				}
 				}
 			} 
