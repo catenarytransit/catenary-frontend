@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+	//switch to maplibre-gl soon, protomaps in the works
 	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
@@ -538,6 +539,7 @@ fetch(
 
 		mapglobal = map;
 
+		//updates the debug window with the current map lng and lat
 		function updateData() {
 			mapzoom = map.getZoom();
 			maplng = map.getCenter().lng;
@@ -589,6 +591,7 @@ fetch(
 
 			let busbearings = map.getSource('busbearings');
 
+			//ensure the layer exists
 			if (busbearings) {
 				busbearings.setData(newbearingdata);
 			}
