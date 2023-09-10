@@ -17,7 +17,7 @@ jobs:
     - name: Install Bun
       run: curl -fsSL https://bun.sh/install | bash
     - name: Path Bun
-      run:  source /home/runner/.bashrc 
+      run: source /home/runner/.bashrc 
     - name: Install Node Dependency
       run: bun install
     - name: Build
