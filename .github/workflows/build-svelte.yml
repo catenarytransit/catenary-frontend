@@ -14,8 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install Bun
-      run: curl -fsSL https://bun.sh/install | bash
+    - uses: oven-sh/setup-bun@v1
     - name: Install Node Dependency
       run: bun install
     - name: Build
