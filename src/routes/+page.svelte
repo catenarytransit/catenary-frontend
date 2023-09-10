@@ -531,6 +531,8 @@ fetch(
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
 				center: [-118, 33.9], // starting position [lng, lat]
+				//keep the centre at Los Angeles, since that is our primary user base currently
+				//switch to IP geolocation and on the fly rendering for this soon
 			zoom: 8.1 // starting zoom (must be greater than 8.1)
 		});
 
