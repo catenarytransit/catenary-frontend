@@ -36,6 +36,8 @@
 		usunits = !usunits;
 
 		localStorage.setItem('units', usunits ? 'us' : 'metric');
+
+		//redo settings
 	}
 
 	function textColorOfMapLabels() {
@@ -93,7 +95,7 @@
 	maplat = 0;
 	mapzoom = 0;
 
-	let rerenders_requested: String[] = [];
+	let rerenders_requested: string[] = [];
 
 	let layersettings = {
 		bus: {
@@ -143,7 +145,11 @@
 		}
 
 		if (label.speed) {
-			arrayofinfo.push(['get', 'speed']);
+			if (usunits === false) {
+				arrayofinfo.push(["*",['get', 'speed'], 3.6]);
+			} else {
+				arrayofinfo.push(["*",['get', 'speed'], 2.23694]);
+			}
 		}
 
 		return ['concat', ...interleave(arrayofinfo, '|')];
@@ -173,10 +179,15 @@
 	  //console.log('operators for rerender', operators_to_render);
        let big_table:any = {};
 
+	   let static_feed_ids:string[] = [];
+
 	   Object.values(operators_to_render).forEach((operator:any) => {
          //attempt to pull the routes for this operator
 		if (operator.gtfs_static_feeds) {
         operator.gtfs_static_feeds.forEach((static_feed_id:string) => {
+
+			static_feed_ids.push(static_feed_id);
+			static_feed_ids = [...new Set(static_feed_ids)]
 			//this static feed
 
 			if (route_info_lookup[static_feed_id] == undefined) {
@@ -228,10 +239,12 @@
 			   
 				let routeId = vehicle?.trip?.routeId;
 
+				let fetchTrip = false;
+
                 if (routeId) {
                    if (mergetable[routeId]) {
 					   routeType = mergetable[routeId].route_type;
-					   colour = mergetable[routeId].route_color;
+					   colour = mergetable[routeId].color;
 
 					   if ( mergetable[routeId].color) {
 						let splitInts =mergetable[routeId].color.replace('rgb(', '').replace(')', '').split(',');
@@ -257,9 +270,112 @@
 					colour = "#e16710"
 					}
 
-					//submit a tripsId request
+					fetchTrip = true;
 				}
 
+				//this system sucks, honestly. Transition to batch trips info eventually
+				if (fetchTrip === true) {
+					//submit a tripsId requests
+					if (static_feed_ids.length === 1) {
+						if (trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] != undefined && trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] != null) {
+							//render
+							if (trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] === null) {
+								//console.log('no trip info', vehicle?.trip?.tripId)
+							} else {
+								//get routeId from the trips table
+								routeId = trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId].route_id;
+
+								if (mergetable[routeId]) {
+									
+									routeType = mergetable[routeId].route_type;
+									
+									if ( mergetable[routeId].color) {
+						let splitInts =mergetable[routeId].color.replace('rgb(', '').replace(')', '').split(',');
+
+                        colour = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
+					   }
+								}
+							}
+						} else {
+							fetch(
+							`https://transitbackend.kylerchin.com/gettrip?feed_id=${static_feed_ids[0]}&trip_id=${vehicle.trip.tripId}`
+						)
+							.then((x) => x.json())
+							.then((data) => {
+								if (data.length > 0) {
+									if (typeof trips_per_agency[static_feed_ids[0]] === 'undefined') {
+										trips_per_agency[static_feed_ids[0]] = {};
+									}
+
+									trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = data[0];
+									//rerenders request
+									if (!rerenders_requested.includes(realtime_id)) {
+										rerenders_requested.push(realtime_id);
+									}
+								} else {
+									trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
+								}
+							});
+						}
+					}
+				}
+
+				//colour section
+				
+				let contrastdarkmode = colour;
+										let contrastdarkmodebearing = colour;
+
+										if (colour && darkMode === true) {
+                                            //convert hex colour to array of 3 numbers
+
+                                          let rgb = hexToRgb(colour);
+
+										 // console.log('rgb', rgb)
+
+										  if (rgb != null) {
+
+										  let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+										 // console.log('hsl', hsl)
+
+										  let newdarkhsl = hsl;
+
+										  let blueoffset = 0;
+
+										  if (rgb.b > 40) {
+											blueoffset = 30 * ((rgb.b)/255);
+										  }
+
+										  if (hsl.l < 60) {
+                                            newdarkhsl.l = hsl.l + 10 + (25 * ((100-hsl.s)/100) + blueoffset);
+
+											if (hsl.l > 60 ) {
+
+												if ( blueoffset === 0) {
+													
+												hsl.l = 60;
+												} else {
+													hsl.l = 60 + blueoffset;
+												}
+
+											} 
+										  }
+
+										  hsl.l = Math.min(100, hsl.l);
+
+										 //console.log('newdarkhsl',newdarkhsl)
+
+										  let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
+                                         //console.log('newdarkrgb',newdarkrgb)
+
+										 let newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, (newdarkhsl.l + hsl.l) / 2);
+
+										  contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
+                                          contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
+                                          //  console.log('rgbtohex',contrastdarkmode)
+										
+										}
+										}
 				
 
 				//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
@@ -278,6 +394,9 @@
 												tripId: vehicle?.trip?.tripId,
 												//keep to degrees as gtfs specs
 												bearing: vehicle?.position?.bearing,
+												maptag: routeId.replace('-13168',""),
+												contrastdarkmode: contrastdarkmode,
+												contrastdarkmodebearing,
 											},
 											geometry: {
 												type: 'Point',
@@ -1249,8 +1368,9 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 
 				if (rerenders_requested.length > 0) {
 					rerenders_requested.forEach((x) => {
-						
+						rerenders_request(x);
 					});
+					rerenders_requested = [];
 				}
 			}, 2000);
 		});
