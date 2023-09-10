@@ -145,10 +145,11 @@
 		}
 
 		if (label.speed) {
+			//round to 0.1 place
 			if (usunits === false) {
-				arrayofinfo.push(["*",['get', 'speed'], 3.6]);
+				arrayofinfo.push(['/', ["round", ["*",['get', 'speed'], 36]], 10]);
 			} else {
-				arrayofinfo.push(["*",['get', 'speed'], 2.23694]);
+				arrayofinfo.push(['/', ["round", ["*",['get', 'speed'], 22.3694]], 10]);
 			}
 		}
 
