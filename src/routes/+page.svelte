@@ -138,7 +138,7 @@
 		}
 
 		if (label.vehicle) {
-			arrayofinfo.push(['get', 'vehicleId']);
+			arrayofinfo.push(['get', 'vehicleIdLabel']);
 		}
 
 		if (label.speed) {
@@ -250,16 +250,33 @@
 				   }
 
 
-				} 
+				} else {
+					//console.log('no route id', entity)
+					if (realtime_id === "f-metro~losangeles~bus~rt") {
+					colour = "#e16710"
+					}
 
+					//submit a tripsId request
+				}
+
+				
+
+				//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
+				//line 1000
 				return {
 											type: 'Feature',
 											properties: {
-												vehicleId: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+												//shown to user directly?
+												vehicleIdLabel: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+												//maintain metres per second, do conversion in label
 												speed: vehicle?.position?.speed,
 												color: colour,
+												//int representing enum
 												routeType : routeType,
+												//keep to gtfs lookup
 												tripId: vehicle?.trip?.tripId,
+												//keep to degrees as gtfs specs
+												bearing: vehicle?.position?.bearing,
 											},
 											geometry: {
 												type: 'Point',
@@ -294,7 +311,7 @@
 		let mapzoomnumber = numberForBearingLengthBus(mapglobal.getZoom());
 
 									// Query all rendered features from a single layer
-									//renderNewBearings();
+									renderNewBearings();
 	   }
 
 	   /*
@@ -513,8 +530,8 @@ fetch(
 					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
-			center: [-117, 33], // starting position [lng, lat]
-			zoom: 6.8 // starting zoom
+				center: [-118, 33.9], // starting position [lng, lat]
+			zoom: 8.1 // starting zoom (must be greater than 8.1)
 		});
 
 		mapglobal = map;
