@@ -451,13 +451,12 @@
 				'520': 'ORG',
 				'530': 'GRN',
 			};
+		}
 
+		
 		if (Object.keys(railletters).includes(routeId)) {
 				maptag = railletters[routeId];
 			}
-
-
-		}
 
 		maptag = maptag.replace(/( )?Line/, '');
 
