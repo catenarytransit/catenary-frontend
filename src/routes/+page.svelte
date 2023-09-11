@@ -272,8 +272,7 @@
 
 								let trimmedRouteId = routeId.replace('-13168', '');
 
-								console.log('trimmed route id', trimmedRouteId)
-
+								
 								if (['720','754','761'].includes(trimmedRouteId)) {
 									colour = '#d11242';
 								}
