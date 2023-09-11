@@ -742,7 +742,8 @@
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
-			zoom: zoominit // starting zoom (must be greater than 8.1)
+			zoom: zoominit, // starting zoom (must be greater than 8.1)
+			fadeDuration: 0
 		});
 
 		mapglobal = map;
