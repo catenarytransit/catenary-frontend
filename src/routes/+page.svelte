@@ -9,16 +9,16 @@
 	import { browser } from '$app/environment';
 	import { LngLat } from 'maplibre-gl';
 	import { flatten } from '../utils/flatten';
-	import {determineFeeds} from '../maploaddata';
+	import { determineFeeds } from '../maploaddata';
 
 	let darkMode = true;
 	//false means use metric, true means use us units
 	let usunits = false;
-	let realtime_list:string[] = [];
-	let vehiclesData:any = {};
+	let realtime_list: string[] = [];
+	let vehiclesData: any = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
-	let geometryObj:any = {};
-	
+	let geometryObj: any = {};
+
 	//obsolete
 	let agencies: any[] = [];
 
@@ -28,9 +28,9 @@
 
 	let realtime_feeds: any[] = [];
 
-	let static_feeds_in_frame:any = {};
-	let operators_in_frame:any = {};
-	let realtime_feeds_in_frame:any = {};
+	let static_feeds_in_frame: any = {};
+	let operators_in_frame: any = {};
+	let realtime_feeds_in_frame: any = {};
 
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
@@ -70,7 +70,7 @@
 			document.documentElement.classList.add('dark');
 			darkMode = true;
 		} else {
-			console.log('light mode triggered')
+			console.log('light mode triggered');
 			document.documentElement.classList.remove('dark');
 			darkMode = false;
 		}
@@ -147,311 +147,366 @@
 		if (label.speed) {
 			//round to 0.1 place
 			if (usunits === false) {
-				arrayofinfo.push(['/', ["round", ["*",['get', 'speed'], 36]], 10]);
+				arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], 36]], 10]);
 			} else {
-				arrayofinfo.push(['/', ["round", ["*",['get', 'speed'], 22.3694]], 10]);
+				arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], 22.3694]], 10]);
 			}
 		}
 
 		return ['concat', ...interleave(arrayofinfo, '|')];
 	}
 
-	function rerenders_request(realtime_id:string) {
-       //step 1, get the list of routes if it doesnt exist
+	function rerenders_request(realtime_id: string) {
+		//step 1, get the list of routes if it doesnt exist
 
-	  // console.log('processing', realtime_id)
+		// console.log('processing', realtime_id)
 
-	   let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
+		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
-	  // console.log('139',this_realtime_feed)
+		// console.log('139',this_realtime_feed)
 
-	   
-	   if (this_realtime_feed) {
+		if (this_realtime_feed) {
+			// console.log('this_realtime_feed',this_realtime_feed)
 
-      // console.log('this_realtime_feed',this_realtime_feed)
+			let operators_for_this_realtime = this_realtime_feed.operators;
 
+			let operators_to_render = operators_for_this_realtime
+				.map((x: any) => operators_in_frame[x])
+				.filter((x: any) => x != undefined);
 
-	   let operators_for_this_realtime = this_realtime_feed.operators;
+			//console.log('operators for rerender', operators_to_render);
+			let big_table: any = {};
 
-	
+			let static_feed_ids: string[] = [];
 
-       let operators_to_render = operators_for_this_realtime.map((x:any) => operators_in_frame[x]).filter((x:any) => x != undefined);
+			Object.values(operators_to_render).forEach((operator: any) => {
+				//attempt to pull the routes for this operator
+				if (operator.gtfs_static_feeds) {
+					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
+						static_feed_ids.push(static_feed_id);
+						static_feed_ids = [...new Set(static_feed_ids)];
+						//this static feed
 
-	  //console.log('operators for rerender', operators_to_render);
-       let big_table:any = {};
+						if (route_info_lookup[static_feed_id] == undefined) {
+							fetch(
+								'https://transitbackend.kylerchin.com/getroutesperagency?feed_id=' + static_feed_id
+							)
+								.then((x) => x.json())
+								.then((x) => {
+									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
 
-	   let static_feed_ids:string[] = [];
+									if (static_feed_id === "f-9q5b-longbeachtransit") {
+										Object.keys(route_info_lookup[static_feed_id]).forEach((routeName) => {
+											if (route_info_lookup[static_feed_id][routeName].color === "rgb(255,255,255)") {
+												
+											route_info_lookup[static_feed_id][routeName].color = "rgb(128,31,58)"
+											}
+										})
+									}
 
-	   Object.values(operators_to_render).forEach((operator:any) => {
-         //attempt to pull the routes for this operator
-		if (operator.gtfs_static_feeds) {
-        operator.gtfs_static_feeds.forEach((static_feed_id:string) => {
+									rerenders_request(realtime_id);
+									// console.log('saved results for this agency', static_feed_id)
+								})
+								.catch((e) => {
+									console.error(e);
+								});
+						} else {
+							//console.log('already have results for this agency', static_feed_id)
 
-			static_feed_ids.push(static_feed_id);
-			static_feed_ids = [...new Set(static_feed_ids)]
-			//this static feed
-
-			if (route_info_lookup[static_feed_id] == undefined) {
-			fetch(
-		 'https://transitbackend.kylerchin.com/getroutesperagency?feed_id=' +static_feed_id
-	 )
-		 .then((x) => x.json())
-		 .then((x) => {
-			 route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-
-			 rerenders_request(realtime_id);
-			// console.log('saved results for this agency', static_feed_id)
-		 })
-		 .catch((e) => {
-			 console.error(e);
-		 })
-		 } else {
-			 //console.log('already have results for this agency', static_feed_id)
-
-			 big_table[static_feed_id] = route_info_lookup[static_feed_id];
-
-		 }
-
-
-		})
-		}
-	   });
-
-	   if (Object.keys(big_table).length > 0) {
-		let mergetable = Object.assign({}, ...Object.values(big_table));
-
-		
-			// console.log('vehicle data', vehiclesData[realtime_id])
-
-			//render each vehicle vehiclesData[realtime_id].entity
-
-			//console.log('mergetable', mergetable)
-			
-
-			let features = vehiclesData[realtime_id].entity
-			.filter((entity:any) => entity.vehicle?.position !== null)
-			.map((entity:any) => {
-
-				const { id, vehicle } = entity;
-//default to bus type
-				let routeType = 3;
-
-				let colour = "#aaaaaa";
-			   
-				let routeId = vehicle?.trip?.routeId;
-
-				let fetchTrip = false;
-
-                if (routeId) {
-                   if (mergetable[routeId]) {
-					   routeType = mergetable[routeId].route_type;
-					   colour = mergetable[routeId].color;
-
-					   if ( mergetable[routeId].color) {
-						let splitInts =mergetable[routeId].color.replace('rgb(', '').replace(')', '').split(',');
-
-                        colour = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
-					   }
-				   }
-
-				   if (realtime_id === "f-metro~losangeles~bus~rt" && colour === "#ffffff") {
-
-					colour = '#e16710';
-
-					if (routeId === '720' || routeId === '754' || routeId === '761') {
-						colour = '#d11242';
-					}
-
-				   }
-
-
-				} else {
-					//console.log('no route id', entity)
-					if (realtime_id === "f-metro~losangeles~bus~rt") {
-					colour = "#e16710"
-					}
-
-					fetchTrip = true;
+							big_table[static_feed_id] = route_info_lookup[static_feed_id];
+						}
+					});
 				}
+			});
 
-				//this system sucks, honestly. Transition to batch trips info eventually
-				if (fetchTrip === true) {
-					//submit a tripsId requests
-					if (static_feed_ids.length === 1) {
-						if (trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] != undefined && trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] != null) {
-							//render
-							if (trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] === null) {
-								//console.log('no trip info', vehicle?.trip?.tripId)
-							} else {
-								//get routeId from the trips table
-								routeId = trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId].route_id;
+			if (Object.keys(big_table).length > 0) {
+				let mergetable = Object.assign({}, ...Object.values(big_table));
 
-								if (mergetable[routeId]) {
-									
-									routeType = mergetable[routeId].route_type;
-									
-									if ( mergetable[routeId].color) {
-						let splitInts =mergetable[routeId].color.replace('rgb(', '').replace(')', '').split(',');
+				// console.log('vehicle data', vehiclesData[realtime_id])
 
-                        colour = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
-					   }
+				//render each vehicle vehiclesData[realtime_id].entity
+
+				//console.log('mergetable', mergetable)
+
+				let features = vehiclesData[realtime_id].entity
+					.filter((entity: any) => entity.vehicle?.position !== null)
+					.map((entity: any) => {
+						const { id, vehicle } = entity;
+						//default to bus type
+						let routeType = 3;
+
+						let colour = '#aaaaaa';
+
+						let routeId = vehicle?.trip?.routeId || "";
+
+						if (!routeId) {
+//console.log('no route id', realtime_id, entity)
+						}
+
+						let fetchTrip = false;
+
+						if (routeId) {
+							if (mergetable[routeId]) {
+								routeType = mergetable[routeId].route_type;
+								colour = mergetable[routeId].color;
+
+								if (mergetable[routeId].color) {
+									let splitInts = mergetable[routeId].color
+										.replace('rgb(', '')
+										.replace(')', '')
+										.split(',');
+
+									colour = rgbToHex(
+										Number(splitInts[0]),
+										Number(splitInts[1]),
+										Number(splitInts[2])
+									);
+								}
+							}
+
+							if (realtime_id === 'f-metro~losangeles~bus~rt' && colour === '#ffffff') {
+								colour = '#e16710';
+
+								if (routeId === '720' || routeId === '754' || routeId === '761') {
+									colour = '#d11242';
 								}
 							}
 						} else {
-							fetch(
-							`https://transitbackend.kylerchin.com/gettrip?feed_id=${static_feed_ids[0]}&trip_id=${vehicle.trip.tripId}`
-						)
-							.then((x) => x.json())
-							.then((data) => {
-								if (data.length > 0) {
-									if (typeof trips_per_agency[static_feed_ids[0]] === 'undefined') {
-										trips_per_agency[static_feed_ids[0]] = {};
-									}
+							//console.log('no route id', entity)
+							if (realtime_id === 'f-metro~losangeles~bus~rt') {
+								colour = '#e16710';
+							}
 
-									trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = data[0];
-									//rerenders request
-									if (!rerenders_requested.includes(realtime_id)) {
-										rerenders_requested.push(realtime_id);
-									}
-								} else {
-									trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
-								}
-							});
+							
+
+							fetchTrip = true;
 						}
+
+						//this system sucks, honestly. Transition to batch trips info eventually
+						if (fetchTrip === true) {
+							//submit a tripsId requests
+							if (static_feed_ids.length === 1) {
+								let static_feed_id_to_use = static_feed_ids[0];
+
+								if (trips_per_agency[static_feed_id_to_use] == undefined) {
+									trips_per_agency[static_feed_id_to_use] = {};
+								}
+
+								if (vehicle?.trip?.tripId) {
+									if (
+										trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] != undefined &&
+										trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] != null
+									) {
+										//render
+										if (trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] === null) {
+											//console.log('no trip info', vehicle?.trip?.tripId)
+										} else {
+											//get routeId from the trips table
+
+											if (trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id) {
+												routeId =
+													trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
+
+												if (mergetable[routeId]) {
+													routeType = mergetable[routeId].route_type;
+
+													if (mergetable[routeId].color) {
+														let splitInts = mergetable[routeId].color
+															.replace('rgb(', '')
+															.replace(')', '')
+															.split(',');
+
+														colour = rgbToHex(
+															Number(splitInts[0]),
+															Number(splitInts[1]),
+															Number(splitInts[2])
+														);
+													}
+												}
+											}
+										}
+									} else {
+										if (vehicle.trip.tripId) {
+											fetch(
+											`https://transitbackend.kylerchin.com/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
+										)
+											.then((x) => x.json())
+											.then((data) => {
+												if (data.length > 0) {
+													if (typeof trips_per_agency[static_feed_ids[0]] === 'undefined') {
+														trips_per_agency[static_feed_ids[0]] = {};
+													}
+
+													trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = data[0];
+													//rerenders request
+													if (!rerenders_requested.includes(realtime_id)) {
+														rerenders_requested.push(realtime_id);
+													}
+												} else {
+													trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
+												}
+											});
+										}
+										
+									}
+								}
+							}
+						}
+
+						//colour section
+
+						let contrastdarkmode = colour;
+						let contrastdarkmodebearing = colour;
+
+						if (colour && darkMode === true) {
+							//convert hex colour to array of 3 numbers
+
+							let rgb = hexToRgb(colour);
+
+							// console.log('rgb', rgb)
+
+							if (rgb != null) {
+								let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+								// console.log('hsl', hsl)
+
+								let newdarkhsl = hsl;
+
+								let blueoffset = 0;
+
+								if (rgb.b > 40) {
+									blueoffset = 30 * (rgb.b / 255);
+								}
+
+								if (hsl.l < 60) {
+									newdarkhsl.l = hsl.l + 10 + (25 * ((100 - hsl.s) / 100) + blueoffset);
+
+									if (hsl.l > 60) {
+										if (blueoffset === 0) {
+											hsl.l = 60;
+										} else {
+											hsl.l = 60 + blueoffset;
+										}
+									}
+								}
+
+								hsl.l = Math.min(100, hsl.l);
+
+								//console.log('newdarkhsl',newdarkhsl)
+
+								let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
+								//console.log('newdarkrgb',newdarkrgb)
+
+								let newdarkbearingline = hslToRgb(
+									newdarkhsl.h,
+									newdarkhsl.s,
+									(newdarkhsl.l + hsl.l) / 2
+								);
+
+								contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(
+									newdarkrgb.g
+								)}${componentToHex(newdarkrgb.b)}`;
+								contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(
+									newdarkbearingline.g
+								)}${componentToHex(newdarkbearingline.b)}`;
+								//  console.log('rgbtohex',contrastdarkmode)
+							}
+						}
+
+						let maptag = routeId
+
+						if (realtime_id === "f-metro~losangeles~bus~rt") {
+							maptag = maptag.replace('-13168', '').replace('901', "G");
+						}
+
+						if (realtime_id === 'f-metro~losangeles~rail~rt' || realtime_id === 'f-metrolinktrains~rt') {
+			let railletters: any = {
+				'801': 'A',
+				'802': 'B',
+				'803': 'C',
+				'804': 'E',
+				'805': 'D',
+				'807': 'K',
+				'Orange County Line': 'OC',
+				'San Bernardino Line': 'SB',
+				'Antelope Valley Line': 'AV',
+				'Inland Emp.-Orange Co. Line': 'IEOC',
+				"Ventura County Line": "VC"
+			};
+
+			if (Object.keys(railletters).includes(routeId)) {
+				maptag = railletters[routeId];
+			}
+		}
+
+		maptag = maptag.replace(/( )?Line/, '');
+
+		maptag = maptag.replace(/counterclockwise/i, '-ACW').replace(/clockwise/i, '-CW');
+
+		//let tripIdLabel = vehicle?.trip?.tripId;
+
+	
+
+
+						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
+						//line 1000
+						return {
+							type: 'Feature',
+							properties: {
+								//shown to user directly?
+								vehicleIdLabel: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+								//maintain metres per second, do conversion in label
+								speed: vehicle?.position?.speed,
+								color: colour,
+								//int representing enum
+								routeType: routeType,
+								//keep to gtfs lookup
+								tripIdLabel: vehicle?.trip?.tripId,
+								//keep to degrees as gtfs specs
+								bearing: vehicle?.position?.bearing,
+								maptag: maptag,
+								contrastdarkmode: contrastdarkmode,
+								contrastdarkmodebearing
+							},
+							geometry: {
+								type: 'Point',
+								coordinates: [vehicle.position.longitude, vehicle.position.latitude]
+							}
+						};
+					});
+
+				const getbussource = mapglobal.getSource('buses');
+				const getrailsource = mapglobal.getSource('rail');
+
+				geometryObj[realtime_id] = features;
+
+				let flattenedarray = flatten(Object.values(geometryObj));
+
+				if (typeof getbussource != 'undefined') {
+					getbussource.setData({
+						type: 'FeatureCollection',
+						features: flattenedarray.filter((x: any) => x.properties.routeType === 3)
+					});
+
+					if (typeof getrailsource != 'undefined') {
+						getrailsource.setData({
+							type: 'FeatureCollection',
+							features: flattenedarray.filter((x: any) => x.properties.routeType != 3)
+						});
 					}
+
+					//console.log('set data of bearings');
+
+					let mapzoomnumber = numberForBearingLengthBus(mapglobal.getZoom());
+
+					// Query all rendered features from a single layer
+					//renderNewBearings();
 				}
 
-				//colour section
 				
-				let contrastdarkmode = colour;
-										let contrastdarkmodebearing = colour;
-
-										if (colour && darkMode === true) {
-                                            //convert hex colour to array of 3 numbers
-
-                                          let rgb = hexToRgb(colour);
-
-										 // console.log('rgb', rgb)
-
-										  if (rgb != null) {
-
-										  let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-										 // console.log('hsl', hsl)
-
-										  let newdarkhsl = hsl;
-
-										  let blueoffset = 0;
-
-										  if (rgb.b > 40) {
-											blueoffset = 30 * ((rgb.b)/255);
-										  }
-
-										  if (hsl.l < 60) {
-                                            newdarkhsl.l = hsl.l + 10 + (25 * ((100-hsl.s)/100) + blueoffset);
-
-											if (hsl.l > 60 ) {
-
-												if ( blueoffset === 0) {
-													
-												hsl.l = 60;
-												} else {
-													hsl.l = 60 + blueoffset;
-												}
-
-											} 
-										  }
-
-										  hsl.l = Math.min(100, hsl.l);
-
-										 //console.log('newdarkhsl',newdarkhsl)
-
-										  let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
-                                         //console.log('newdarkrgb',newdarkrgb)
-
-										 let newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, (newdarkhsl.l + hsl.l) / 2);
-
-										  contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
-                                          contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
-                                          //  console.log('rgbtohex',contrastdarkmode)
-										
-										}
-										}
-				
-
-				//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
-				//line 1000
-				return {
-											type: 'Feature',
-											properties: {
-												//shown to user directly?
-												vehicleIdLabel: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
-												//maintain metres per second, do conversion in label
-												speed: vehicle?.position?.speed,
-												color: colour,
-												//int representing enum
-												routeType : routeType,
-												//keep to gtfs lookup
-												tripId: vehicle?.trip?.tripId,
-												//keep to degrees as gtfs specs
-												bearing: vehicle?.position?.bearing,
-												maptag: routeId.replace('-13168',""),
-												contrastdarkmode: contrastdarkmode,
-												contrastdarkmodebearing,
-											},
-											geometry: {
-												type: 'Point',
-												coordinates: [vehicle.position.longitude, vehicle.position.latitude]
-											}
-										};
-
-			});
-
-			const getbussource = mapglobal.getSource('buses');
-			const getrailsource = mapglobal.getSource('rail');
-
-			geometryObj[realtime_id] = features;
-
-			let flattenedarray = flatten(Object.values(geometryObj));
-
-			if (typeof getbussource != 'undefined') {
-									getbussource.setData({
-										type: 'FeatureCollection',
-										features: flattenedarray.filter((x: any) => x.properties.routeType === 3)
-									});
-
-									if (typeof getrailsource != 'undefined') {
-										getrailsource.setData({
-											type: 'FeatureCollection',
-											features: flattenedarray.filter((x: any) => x.properties.routeType != 3)
-										});
-									}
-
-									//console.log('set data of bearings');
-
-		let mapzoomnumber = numberForBearingLengthBus(mapglobal.getZoom());
-
-									// Query all rendered features from a single layer
-									//renderNewBearings();
-	   }
-
-	   /*
-fetch(
-		 'https://transitbackend.kylerchin.com/getroutesperagency?feed_id=' + agency.static_feed_id
-	 )
-		 .then((x) => x.json())
-		 .then((x) => {
-			 route_info_lookup[agency.static_feed_id] = convertArrayToObject(x, 'route_id');
-		 })
-		 .catch((e) => {
-			 console.error(e);
-		 });*/
-	   }
+			}
+		}
 	}
-}
-
-	  
-	
 
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
@@ -549,7 +604,6 @@ fetch(
 			};
 		}, initialValue);
 	};
-
 
 	function numberForBearingLengthBus(zoom: number) {
 		if (zoom < 11) {
@@ -651,17 +705,15 @@ fetch(
 
 		if (browser) {
 			if ('cachegeolocation' in localStorage) {
-				let cachegeolocation = localStorage.getItem('cachegeolocation').split(",");
-				console.log('cachegeolocation',cachegeolocation)
+				let cachegeolocation = localStorage.getItem('cachegeolocation').split(',');
+				console.log('cachegeolocation', cachegeolocation);
 				if (cachegeolocation.length > 1) {
-
 					centerinit = [cachegeolocation[0], cachegeolocation[1]];
-//mimic Google and Transit App inital zoom
+					//mimic Google and Transit App inital zoom
 					zoominit = 13.4;
 				}
-				}
-			} 
-		
+			}
+		}
 
 		const map = new mapboxgl.Map({
 			container: 'map',
@@ -671,9 +723,9 @@ fetch(
 					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
 			accessToken:
 				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
-				center: centerinit, // starting position [lng, lat]
-				//keep the centre at Los Angeles, since that is our primary user base currently
-				//switch to IP geolocation and on the fly rendering for this soon
+			center: centerinit, // starting position [lng, lat]
+			//keep the centre at Los Angeles, since that is our primary user base currently
+			//switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
@@ -790,8 +842,8 @@ fetch(
 		});
 
 		map.on('moveend', (events) => {
-			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds,geolocation);
-		//	console.log('feedresults', feedresults)
+			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
+			//	console.log('feedresults', feedresults)
 
 			static_feeds_in_frame = feedresults.static_data_obj;
 			operators_in_frame = feedresults.operators_data_obj;
@@ -800,14 +852,14 @@ fetch(
 		});
 
 		map.on('zoomend', (events) => {
-			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds,geolocation)
+			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
 
 			//console.log('feedresults', feedresults)
 
-static_feeds_in_frame = feedresults.static_data_obj;
-operators_in_frame = feedresults.operators_data_obj;
-realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
-           realtime_list = feedresults.r;
+			static_feeds_in_frame = feedresults.static_data_obj;
+			operators_in_frame = feedresults.operators_data_obj;
+			realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
+			realtime_list = feedresults.r;
 		});
 
 		map.on('load', () => {
@@ -866,7 +918,7 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 					console.log('datatoset', datatoset);
 
 					let sourcestatic = map.getSource('static_feeds');
-					
+
 					if (sourcestatic) {
 						sourcestatic.setData(datatoset);
 					}
@@ -887,45 +939,43 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 				}
 			});
 
-			
-             const urlParams = new URLSearchParams(window.location.search);
+			const urlParams = new URLSearchParams(window.location.search);
 
-			if (urlParams.get("debug")) {
+			if (urlParams.get('debug')) {
 				map.addLayer({
-				id: 'static_feed_calc_line',
-				type: 'line',
-				source: 'static_feeds',
-				paint: {
-					'line-color': '#aaaaaa',
-				},
-			})
+					id: 'static_feed_calc_line',
+					type: 'line',
+					source: 'static_feeds',
+					paint: {
+						'line-color': '#aaaaaa'
+					}
+				});
 
-			map.addLayer({
-				id: 'static_feed_calc_names',
-				type: 'symbol',
-				source: 'static_feeds',
-				layout: {
-					'text-field': ['get', 'name'],
-					'text-size': 8,
-					//'text-allow-overlap': true,
-					//'text-ignore-placement': true,
-					'text-justify': 'center',
-					'text-anchor': 'center',
-					'text-padding': 0,
-					'text-line-height': 1.2,
-					'text-letter-spacing': 0.01,
-					'text-max-width': 10,
-					'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-					'text-offset': [0, 0]
-				},
-				paint: {
-					'text-color': '#ffffff',
-					'text-halo-color': '#0000aa',
-					'text-halo-width': 1,
-					'text-halo-blur': 1
-				
-				}
-			})
+				map.addLayer({
+					id: 'static_feed_calc_names',
+					type: 'symbol',
+					source: 'static_feeds',
+					layout: {
+						'text-field': ['get', 'name'],
+						'text-size': 8,
+						//'text-allow-overlap': true,
+						//'text-ignore-placement': true,
+						'text-justify': 'center',
+						'text-anchor': 'center',
+						'text-padding': 0,
+						'text-line-height': 1.2,
+						'text-letter-spacing': 0.01,
+						'text-max-width': 10,
+						'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+						'text-offset': [0, 0]
+					},
+					paint: {
+						'text-color': '#ffffff',
+						'text-halo-color': '#0000aa',
+						'text-halo-width': 1,
+						'text-halo-blur': 1
+					}
+				});
 			}
 
 			map.addSource('shapes', {
@@ -1121,14 +1171,8 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 					'circle-stroke-color': '#fff',
 					'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
 					'circle-stroke-width': 0.8,
-					'circle-opacity': darkMode == true ? ['interpolate', ['linear'], ['zoom'],
-				    8,
-					0,
-					8.2,
-					0.7
-				
-				] : 0.5,
-					
+					'circle-opacity':
+						darkMode == true ? ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.7] : 0.5
 				}
 			});
 
@@ -1221,52 +1265,51 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 				}
 			});
 
-            setInterval(() => {
+			setInterval(() => {
 				if (map.getZoom() >= 8) {
-					realtime_list.forEach((realtime_id:string) => {
-					let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${realtime_id}&category=vehicles`;
+					realtime_list.forEach((realtime_id: string) => {
+						let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${realtime_id}&category=vehicles`;
 
-					if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
-						url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
-					}
+						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
+							url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
+						}
 
-					if (rtFeedsHashVehicles[realtime_id] != undefined) {
-						url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
-					}
+						if (rtFeedsHashVehicles[realtime_id] != undefined) {
+							url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
+						}
 
-					if (!realtime_id.includes("alerts")) {
-						fetch(url)
-					.then(async (response) => {
-						if (response.status === 200) {
-								//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
+						if (!realtime_id.includes('alerts')) {
+							fetch(url)
+								.then(async (response) => {
+									if (response.status === 200) {
+										//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
 
-								//console.log(response.headers)
+										//console.log(response.headers)
 
-								rtFeedsHashVehicles[realtime_id] = response.headers.get('hash');
+										rtFeedsHashVehicles[realtime_id] = response.headers.get('hash');
 
-								return await response.arrayBuffer();
-							} else {
-								return null;
-							}
-					})
-					.then((buffer) => {
-							if (buffer != null) {
-								const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-									new Uint8Array(buffer)
-								);
+										return await response.arrayBuffer();
+									} else {
+										return null;
+									}
+								})
+								.then((buffer) => {
+									if (buffer != null) {
+										const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+											new Uint8Array(buffer)
+										);
 
-								rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
+										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
-								vehiclesData[realtime_id] = feed;
+										vehiclesData[realtime_id] = feed;
 
-								rerenders_request(realtime_id)
-							}});
-					}
-
-					
-				})
+										rerenders_request(realtime_id);
+									}
+								});
+						}
+					});
 				}
-			},1000)
+			}, 1000);
 
 			map.addSource('geolocation', {
 				type: 'geojson',
@@ -1411,14 +1454,14 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 			let location = position;
 
 			if (location) {
-				
 				//console.log('set geo to ', JSON.stringify({...location}));
 
 				//console.log('coords', location.coords.longitude, location.coords.latitude);
 
-				
-
-				localStorage.setItem('cachegeolocation', `${location.coords.longitude},${location.coords.latitude}`);
+				localStorage.setItem(
+					'cachegeolocation',
+					`${location.coords.longitude},${location.coords.latitude}`
+				);
 
 				geolocation = location;
 
@@ -1479,7 +1522,6 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 				}
 
 				gpsupdate();
-
 			}
 		};
 
@@ -1973,6 +2015,4 @@ realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
 	.lineLogo {
 		margin-bottom: 15px;
 	}
-
-	
 </style>
