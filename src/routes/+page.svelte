@@ -264,10 +264,15 @@
 								}
 							}
 
-							if (realtime_id === 'f-metro~losangeles~bus~rt' && colour === '#ffffff') {
+							if (realtime_id === 'f-metro~losangeles~bus~rt' ) {
+								if (colour === '#ffffff') {
+									
 								colour = '#e16710';
+								}
 
 								let trimmedRouteId = routeId.replace('-13168', '');
+
+								console.log('trimmed route id', trimmedRouteId)
 
 								if (['720','754','761'].includes(trimmedRouteId)) {
 									colour = '#d11242';
