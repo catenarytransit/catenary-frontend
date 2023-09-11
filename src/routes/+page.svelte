@@ -425,8 +425,10 @@
 							maptag = maptag.replace('-13168', '').replace('901', "G");
 						}
 
+
+						let railletters:any = {}
 						if (realtime_id === 'f-metro~losangeles~rail~rt' || realtime_id === 'f-metrolinktrains~rt') {
-			let railletters: any = {
+			railletters = {
 				'801': 'A',
 				'802': 'B',
 				'803': 'C',
@@ -439,10 +441,22 @@
 				'Inland Emp.-Orange Co. Line': 'IEOC',
 				"Ventura County Line": "VC"
 			};
+		}
 
-			if (Object.keys(railletters).includes(routeId)) {
+		if (realtime_id === 'f-northcountrytransitdistrict~rt' || realtime_id === 'f-mts~rt~onebusaway') {
+			railletters = {
+				'398': 'COASTER',
+				'399': 'SPRINTER',
+				'510': 'BLU',
+				'520': 'ORG',
+				'530': 'GRN',
+			};
+
+		if (Object.keys(railletters).includes(routeId)) {
 				maptag = railletters[routeId];
 			}
+
+
 		}
 
 		maptag = maptag.replace(/( )?Line/, '');
