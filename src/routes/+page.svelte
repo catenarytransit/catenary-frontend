@@ -267,7 +267,9 @@
 							if (realtime_id === 'f-metro~losangeles~bus~rt' && colour === '#ffffff') {
 								colour = '#e16710';
 
-								if (routeId === '720' || routeId === '754' || routeId === '761') {
+								let trimmedRouteId = routeId.replace('-13168', '');
+
+								if (['720','754','761'].includes(trimmedRouteId)) {
 									colour = '#d11242';
 								}
 							}
