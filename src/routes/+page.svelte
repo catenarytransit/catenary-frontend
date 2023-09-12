@@ -13,6 +13,7 @@
 
 	let darkMode = true;
 	//false means use metric, true means use us units
+	let selectedSettingsTab = 'rail'; //valid options {rail, bus, bike}
 	let usunits = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: any = {};
@@ -122,7 +123,7 @@
 				direction: false,
 				speed: false
 			},
-			shapes: true
+			shapes: false
 		}
 	};
 
@@ -195,13 +196,14 @@
 								.then((x) => {
 									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
 
-									if (static_feed_id === "f-9q5b-longbeachtransit") {
+									if (static_feed_id === 'f-9q5b-longbeachtransit') {
 										Object.keys(route_info_lookup[static_feed_id]).forEach((routeName) => {
-											if (route_info_lookup[static_feed_id][routeName].color === "rgb(255,255,255)") {
-												
-											route_info_lookup[static_feed_id][routeName].color = "rgb(128,31,58)"
+											if (
+												route_info_lookup[static_feed_id][routeName].color === 'rgb(255,255,255)'
+											) {
+												route_info_lookup[static_feed_id][routeName].color = 'rgb(128,31,58)';
 											}
-										})
+										});
 									}
 
 									rerenders_request(realtime_id);
@@ -237,10 +239,10 @@
 
 						let colour = '#aaaaaa';
 
-						let routeId = vehicle?.trip?.routeId || "";
+						let routeId = vehicle?.trip?.routeId || '';
 
 						if (!routeId) {
-//console.log('no route id', realtime_id, entity)
+							//console.log('no route id', realtime_id, entity)
 						}
 
 						let fetchTrip = false;
@@ -264,16 +266,14 @@
 								}
 							}
 
-							if (realtime_id === 'f-metro~losangeles~bus~rt' ) {
+							if (realtime_id === 'f-metro~losangeles~bus~rt') {
 								if (colour === '#ffffff') {
-									
-								colour = '#e16710';
+									colour = '#e16710';
 								}
 
 								let trimmedRouteId = routeId.replace('-13168', '');
 
-								
-								if (['720','754','761'].includes(trimmedRouteId)) {
+								if (['720', '754', '761'].includes(trimmedRouteId)) {
 									colour = '#d11242';
 								}
 							}
@@ -282,8 +282,6 @@
 							if (realtime_id === 'f-metro~losangeles~bus~rt') {
 								colour = '#e16710';
 							}
-
-							
 
 							fetchTrip = true;
 						}
@@ -334,26 +332,25 @@
 									} else {
 										if (vehicle.trip.tripId) {
 											fetch(
-											`https://transitbackend.kylerchin.com/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
-										)
-											.then((x) => x.json())
-											.then((data) => {
-												if (data.length > 0) {
-													if (typeof trips_per_agency[static_feed_ids[0]] === 'undefined') {
-														trips_per_agency[static_feed_ids[0]] = {};
-													}
+												`https://transitbackend.kylerchin.com/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
+											)
+												.then((x) => x.json())
+												.then((data) => {
+													if (data.length > 0) {
+														if (typeof trips_per_agency[static_feed_ids[0]] === 'undefined') {
+															trips_per_agency[static_feed_ids[0]] = {};
+														}
 
-													trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = data[0];
-													//rerenders request
-													if (!rerenders_requested.includes(realtime_id)) {
-														rerenders_requested.push(realtime_id);
+														trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = data[0];
+														//rerenders request
+														if (!rerenders_requested.includes(realtime_id)) {
+															rerenders_requested.push(realtime_id);
+														}
+													} else {
+														trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
 													}
-												} else {
-													trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
-												}
-											});
+												});
 										}
-										
 									}
 								}
 							}
@@ -419,53 +416,54 @@
 							}
 						}
 
-						let maptag = routeId
+						let maptag = routeId;
 
-						if (realtime_id === "f-metro~losangeles~bus~rt") {
-							maptag = maptag.replace('-13168', '').replace('901', "G");
+						if (realtime_id === 'f-metro~losangeles~bus~rt') {
+							maptag = maptag.replace('-13168', '').replace('901', 'G');
 						}
 
+						let railletters: any = {};
+						if (
+							realtime_id === 'f-metro~losangeles~rail~rt' ||
+							realtime_id === 'f-metrolinktrains~rt'
+						) {
+							railletters = {
+								'801': 'A',
+								'802': 'B',
+								'803': 'C',
+								'804': 'E',
+								'805': 'D',
+								'807': 'K',
+								'Orange County Line': 'OC',
+								'San Bernardino Line': 'SB',
+								'Antelope Valley Line': 'AV',
+								'Inland Emp.-Orange Co. Line': 'IEOC',
+								'Ventura County Line': 'VC'
+							};
+						}
 
-						let railletters:any = {}
-						if (realtime_id === 'f-metro~losangeles~rail~rt' || realtime_id === 'f-metrolinktrains~rt') {
-			railletters = {
-				'801': 'A',
-				'802': 'B',
-				'803': 'C',
-				'804': 'E',
-				'805': 'D',
-				'807': 'K',
-				'Orange County Line': 'OC',
-				'San Bernardino Line': 'SB',
-				'Antelope Valley Line': 'AV',
-				'Inland Emp.-Orange Co. Line': 'IEOC',
-				"Ventura County Line": "VC"
-			};
-		}
+						if (
+							realtime_id === 'f-northcountrytransitdistrict~rt' ||
+							realtime_id === 'f-mts~rt~onebusaway'
+						) {
+							railletters = {
+								'398': 'COASTER',
+								'399': 'SPRINTER',
+								'510': 'BLU',
+								'520': 'ORG',
+								'530': 'GRN'
+							};
+						}
 
-		if (realtime_id === 'f-northcountrytransitdistrict~rt' || realtime_id === 'f-mts~rt~onebusaway') {
-			railletters = {
-				'398': 'COASTER',
-				'399': 'SPRINTER',
-				'510': 'BLU',
-				'520': 'ORG',
-				'530': 'GRN',
-			};
-		}
+						if (Object.keys(railletters).includes(routeId)) {
+							maptag = railletters[routeId];
+						}
 
-		
-		if (Object.keys(railletters).includes(routeId)) {
-				maptag = railletters[routeId];
-			}
+						maptag = maptag.replace(/( )?Line/, '');
 
-		maptag = maptag.replace(/( )?Line/, '');
+						maptag = maptag.replace(/counterclockwise/i, '-ACW').replace(/clockwise/i, '-CW');
 
-		maptag = maptag.replace(/counterclockwise/i, '-ACW').replace(/clockwise/i, '-CW');
-
-		//let tripIdLabel = vehicle?.trip?.tripId;
-
-	
-
+						//let tripIdLabel = vehicle?.trip?.tripId;
 
 						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
 						//line 1000
@@ -521,8 +519,6 @@
 					// Query all rendered features from a single layer
 					//renderNewBearings();
 				}
-
-				
 			}
 		}
 	}
@@ -1007,7 +1003,7 @@
 				type: 'line',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: ['all', ['==', 3, ['get', 'route_type']]],
+				filter: ['all', ['==', 3, ['get', 'route_type']], ["!=", ['get', 'onestop_feed_id'], "f-9-flixbus"]],
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
@@ -1724,255 +1720,82 @@
 		? ''
 		: 'hidden'}"
 >
+	<h2>Change settings of:</h2>
+	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
+		<div
+			on:click={() => {
+				selectedSettingsTab = 'rail';
+			}}
+			on:keydown={() => {
+				selectedSettingsTab = 'rail';
+			}}
+			class={`${
+				selectedSettingsTab === 'rail'
+					? 'bg-gray-200 dark:bg-gray-700 border dark:border-gray-200'
+					: 'border   dark:border-gray-800  bg-gray-100 dark:bg-gray-800 '
+			} w-1/2 py-1 px-1`}
+		>
+			<p class="w-full align-center text-center">Rail/Other</p>
+		</div>
+		<div
+			on:click={() => {
+				selectedSettingsTab = 'bus';
+			}}
+			on:keydown={() => {
+				selectedSettingsTab = 'bus';
+			}}
+			class={`${
+				selectedSettingsTab === 'bus'
+					? 'bg-gray-200 dark:bg-gray-700 border dark:border-gray-200'
+					: 'border   dark:border-gray-800  bg-gray-100 dark:bg-gray-800 '
+			} w-1/2 py-1 px-1`}
+		>
+			<p class="w-full align-center text-center">Buses</p>
+		</div>
+	</div>
+
+	{#if selectedSettingsTab === 'rail' || selectedSettingsTab === "bus"}
+	<div class='flex flex-row gap-x-1'>
+		<div>
+			<!--Toggle Routes-->
+			<span class="material-symbols-outlined align-middle text-xl">
+				route
+			</span>
+			<p  class='text-sm'>Routes</p>
+		</div>
+		<div>
+			<!--Toggle Route Labeling-->
+			<span class="material-symbols-outlined align-middle text-xl">
+				
+					label
+					
+			</span>
+			<p class='text-sm'>Labels</p>
+		</div>
+		<div>
+			<!--Toggle Stops-->
+			<span class="material-symbols-outlined align-middle text-xl">
+				
+					signpost
+					
+			</span>
+			<p  class='text-sm'>Stops</p>
+		</div>
+		<div>
+			<!--Toggle Vehicles-->
+			<div class='h-12 w-12 rounded-xl dark:bg-gray-800'><span class=" material-symbols-outlined material-symbols-outlined-big align-middle ">
+				
+				share_location
+				
+		</span></div>
+			<p  class='text-sm'>Vehicles</p>
+		</div>
+	</div>
+	{/if}
+
 	<p class="text-xs">
 		Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.
 	</p>
-	<h3 class="font-bold">Rail / Other</h3>
-
-	<div class="flex flex-row">
-		<input
-			on:click={(x) => {
-				console.log('x is ', x);
-				layersettings.rail.shapes = x.target.checked;
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				console.log('x is ', x);
-				layersettings.rail.shapes = x.target.checked;
-				runSettingsAdapt();
-			}}
-			checked={layersettings.rail.shapes}
-			id="railshapes"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="railshapes" class="ml-2">Show Rail Shapes</label>
-		<input
-			on:click={(x) => {
-				console.log('x is ', x);
-				layersettings.rail.labelshapes = x.target.checked;
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				console.log('x is ', x);
-				layersettings.rail.labelshapes = x.target.checked;
-				runSettingsAdapt();
-			}}
-			checked={layersettings.rail.labelshapes}
-			id="labelrailshapes"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="labelrailshapes" class="ml-2">Label Rail Shapes</label>
-		<input
-			on:click={(x) => {
-				console.log('x is ', x);
-				layersettings.rail.visible = x.target.checked;
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				console.log('x is ', x);
-				layersettings.rail.visible = x.target.checked;
-				runSettingsAdapt();
-			}}
-			checked={layersettings.rail.visible}
-			id="rail"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="rail" class="ml-2">Realtime Vehicle Locations</label>
-	</div>
-	<div>
-		<p class="font-semibold">Realtime Labels</p>
-		<div class="flex flex-row flex-wrap md:flex-col gap-x-3">
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.rail.label.route = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.rail.label.route}
-					id="rail-route"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="rail-route" class="ml-2">Route</label>
-			</div>
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.rail.label.trip = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.rail.label.trip}
-					id="rail-trip"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="rail-trip" class="ml-2">Trip ID</label>
-			</div>
-			<!--<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.rail.label.headsign = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.rail.label.headsign}
-					id="rail-headsign"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="rail-headsign" class="ml-2">Headsign</label>
-			</div>-->
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.rail.label.vehicle = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.rail.label.vehicle}
-					id="rail-vehicle"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="rail-vehicle" class="ml-2">Vehicle #</label>
-			</div>
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.rail.label.speed = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.rail.label.speed}
-					id="rail-speed"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="rail-speed" class="ml-2">Speed</label>
-			</div>
-		</div>
-	</div>
-	<div class="h-[1px] bg-black dark:bg-gray-500" />
-	<h3 class="font-bold">Buses</h3>
-
-	<input
-		on:click={(x) => {
-			console.log('x is ', x);
-			layersettings.bus.shapes = x.target.checked;
-			runSettingsAdapt();
-		}}
-		on:keydown={(x) => {
-			console.log('x is ', x);
-			layersettings.bus.shapes = x.target.checked;
-			runSettingsAdapt();
-		}}
-		checked={layersettings.bus.shapes}
-		id="busshapes"
-		type="checkbox"
-		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-	/>
-	<label for="busshapes" class="ml-2">Show Bus Shapes</label>
-	<input
-		on:click={(x) => {
-			console.log('x is ', x);
-			layersettings.bus.labelshapes = x.target.checked;
-			runSettingsAdapt();
-		}}
-		on:keydown={(x) => {
-			console.log('x is ', x);
-			layersettings.bus.labelshapes = x.target.checked;
-			runSettingsAdapt();
-		}}
-		checked={layersettings.bus.labelshapes}
-		id="labelbusshapes"
-		type="checkbox"
-		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-	/>
-	<label for="labelbusshapes" class="ml-2">Label Bus Shapes</label>
-
-	<div class="flex flex-row">
-		<input
-			on:click={(x) => {
-				layersettings.bus.visible = x.target.checked;
-				runSettingsAdapt();
-			}}
-			checked={layersettings.bus.visible}
-			id="buses"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="buses" class="ml-2">Realtime Vehicle Locations</label>
-	</div>
-	<div>
-		<p class="font-semibold">Realtime Labels</p>
-		<div class="flex flex-row flex-wrap md:flex-col gap-x-3">
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.bus.label.route = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.bus.label.route}
-					id="buses-route"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="buses-route" class="ml-2">Route</label>
-			</div>
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.bus.label.trip = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.bus.label.trip}
-					id="buses-trips"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="buses-trips" class="ml-2">Trip ID</label>
-			</div>
-			<!--<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.bus.label.headsign = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.bus.label.headsign}
-					id="buses-headsign"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="buses-headsign" class="ml-2">Headsign</label>
-			</div>-->
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.bus.label.vehicle = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.bus.label.vehicle}
-					id="buses-vehicles"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="buses-vehicles" class="ml-2">Vehicle #</label>
-			</div>
-			<div class="flex flex-row">
-				<input
-					on:click={(x) => {
-						layersettings.bus.label.speed = x.target.checked;
-						runSettingsAdapt();
-					}}
-					checked={layersettings.bus.label.speed}
-					id="buses-speed"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="buses-speed" class="ml-2">Speed</label>
-			</div>
-		</div>
-	</div>
 </div>
 
 <style>
@@ -2034,4 +1857,14 @@
 	.lineLogo {
 		margin-bottom: 15px;
 	}
+
+.material-symbols-outlined-big {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 64;
+
+}
+
 </style>
