@@ -285,6 +285,11 @@
 							fetchTrip = true;
 						}
 
+						if (routeType === 2) {
+							//get trip id for intercity rail
+							fetchTrip = true;
+						}
+
 						//this system sucks, honestly. Transition to batch trips info eventually
 						if (fetchTrip === true) {
 							//submit a tripsId requests
