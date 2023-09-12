@@ -20,9 +20,6 @@
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj: any = {};
 
-	//obsolete
-	let agencies: any[] = [];
-
 	let static_feeds: any[] = [];
 
 	let operators: any[] = [];
@@ -283,6 +280,11 @@
 								colour = '#e16710';
 							}
 
+							fetchTrip = true;
+						}
+
+						if (routeType === 2) {
+							//get trip id for intercity rail
 							fetchTrip = true;
 						}
 
@@ -741,7 +743,8 @@
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
-			zoom: zoominit // starting zoom (must be greater than 8.1)
+			zoom: zoominit, // starting zoom (must be greater than 8.1)
+			fadeDuration: 0
 		});
 
 		mapglobal = map;
@@ -754,96 +757,111 @@
 		}
 
 		function renderNewBearings() {
-			//console.log('render new bearings');
+			if (true) {
+				//console.log('render new bearings');
+			let start = performance.now();
 
-			const features = map.queryRenderedFeatures({ layers: ['buses'] });
+const features = map.queryRenderedFeatures({ layers: ['buses'] });
 
-			let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
 
-			var start = performance.now();
-			let newbearingdata = {
-				type: 'FeatureCollection',
-				features: features
-					.filter((x: any) => x.properties.bearing != undefined)
-					.filter((x: any) => x.properties.bearing != 0)
-					.map((x: any) => {
-						let newcoords = calculateNewCoordinates(
-							x.geometry.coordinates[1],
-							x.geometry.coordinates[0],
-							x.properties.bearing,
-							mapzoomnumber / 1000
-						);
+let busstart = performance.now();
+let newbearingdata = {
+	type: 'FeatureCollection',
+	features: features
+		.filter((x: any) => x.properties.bearing != undefined)
+		.filter((x: any) => x.properties.bearing != 0)
+		.map((x: any) => {
+			let newcoords = calculateNewCoordinates(
+				x.geometry.coordinates[1],
+				x.geometry.coordinates[0],
+				x.properties.bearing,
+				mapzoomnumber / 1000
+			);
 
-						return {
-							type: 'Feature',
-							geometry: {
-								type: 'LineString',
-								coordinates: [
-									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-									[newcoords.longitude, newcoords.latitude]
-								]
-							},
-							properties: {
-								bearing: x.properties.bearing,
-								color: x.properties.color,
-								contrastdarkmodebearing: x.properties.contrastdarkmodebearing
-							}
-						};
-					})
+			return {
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: [
+						[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+						[newcoords.longitude, newcoords.latitude]
+					]
+				},
+				properties: {
+					bearing: x.properties.bearing,
+					color: x.properties.color,
+					cd: x.properties.contrastdarkmodebearing
+				}
 			};
+		})
+};
 
-			//console.log("took ", performance.now() - start, "ms")
+console.log('computed bus bearings in', performance.now() - busstart, 'ms');
 
-			//console.log('newbearingdata', newbearingdata)
 
-			let busbearings = map.getSource('busbearings');
+//console.log("took ", performance.now() - start, "ms")
 
-			//ensure the layer exists
-			if (busbearings) {
-				busbearings.setData(newbearingdata);
-			}
+//console.log('newbearingdata', newbearingdata)
 
-			const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
+let busbearings = map.getSource('busbearings');
 
-			let railmapzoomnumber = numberForBearingLengthRail(map.getZoom());
+//ensure the layer exists
+if (busbearings) {
+	busbearings.setData(newbearingdata);
+}
 
-			let newrailbearingdata = {
-				type: 'FeatureCollection',
-				features: railfeatures
-					.filter((x: any) => x.properties.bearing != undefined)
-					.filter((x: any) => x.properties.bearing != 0)
-					.map((x: any) => {
-						let newcoords = calculateNewCoordinates(
-							x.geometry.coordinates[1],
-							x.geometry.coordinates[0],
-							x.properties.bearing,
-							railmapzoomnumber / 1000
-						);
+const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
 
-						return {
-							type: 'Feature',
-							geometry: {
-								type: 'LineString',
-								coordinates: [
-									[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-									[newcoords.longitude, newcoords.latitude]
-								]
-							},
-							properties: {
-								bearing: x.properties.bearing,
-								color: x.properties.color,
-								contrastdarkmodebearing: x.properties.contrastdarkmodebearing
-							}
-						};
-					})
+let railmapzoomnumber = numberForBearingLengthRail(map.getZoom());
+
+let railstart = performance.now();
+let newrailbearingdata = {
+
+	type: 'FeatureCollection',
+	features: railfeatures
+		.filter((x: any) => x.properties.bearing != undefined)
+		.filter((x: any) => x.properties.bearing != 0)
+		.map((x: any) => {
+			let newcoords = calculateNewCoordinates(
+				x.geometry.coordinates[1],
+				x.geometry.coordinates[0],
+				x.properties.bearing,
+				railmapzoomnumber / 1000
+			);
+
+			return {
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: [
+						[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+						[newcoords.longitude, newcoords.latitude]
+					]
+				},
+				properties: {
+					//bearing: x.properties.bearing,
+					color: x.properties.color,
+					cd: x.properties.contrastdarkmodebearing
+				}
 			};
+		})
+};
 
-			//console.log('newbearingdata', newbearingdata)
+console.log('computed rail bearings in', performance.now() - railstart, 'ms');
 
-			let railbearings = map.getSource('railbearings');
+//console.log('newbearingdata', newbearingdata)
 
-			if (railbearings) {
-				railbearings.setData(newrailbearingdata);
+let railbearings = map.getSource('railbearings');
+
+if (railbearings) {
+	railbearings.setData(newrailbearingdata);
+}
+
+
+var end = performance.now();
+
+console.log('bearing calc took', end - start);
 			}
 		}
 
@@ -1143,7 +1161,7 @@
 					//'line-cap': 'round'
 				},
 				paint: {
-					'line-color': ['get', darkMode === true ? 'contrastdarkmodebearing' : 'color'],
+					'line-color': ['get', darkMode === true ? 'cd' : 'color'],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.8, 12, 2.5, 13, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
@@ -1199,15 +1217,17 @@
 					'text-field': ['get', 'maptag'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-radial-offset': 0.2,
-					'text-font': [
+					'text-font': 
+					[
 						'step',
 						['zoom'],
 						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-						10,
+						12,
 						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-						14,
+						15,
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
+					
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
 					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
@@ -1218,7 +1238,7 @@
 					'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
 					'text-halo-width': 2,
 					'text-halo-blur': 100,
-					'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 10, 1]
+					'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 11, 1]
 				}
 			});
 
@@ -1323,6 +1343,13 @@
 								});
 						}
 					});
+
+					Object.keys(vehiclesData).forEach((vehiclesDataCheckCleanUp) => {
+						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
+							console.log('delete gtfsrt', vehiclesDataCheckCleanUp)
+							delete vehiclesData[vehiclesDataCheckCleanUp];
+						}
+					})
 				}
 			}, 1000);
 
@@ -1449,6 +1476,8 @@
 			lockongps = false;
 			secondrequestlockgps = false;
 		});
+
+		
 
 		map.on('idle', () => {
 			if (lasttimezoomran < Date.now() - 800) {
