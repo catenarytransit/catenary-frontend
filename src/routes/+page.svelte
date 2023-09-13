@@ -10,6 +10,8 @@
 	import { LngLat } from 'maplibre-gl';
 	import { flatten } from '../utils/flatten';
 	import { determineFeeds } from '../maploaddata';
+	import Layerbutton from '../layerbutton.svelte';
+	import Realtimelabel from '../realtimelabel.svelte';
 
 	let darkMode = true;
 	//false means use metric, true means use us units
@@ -95,10 +97,24 @@
 
 	let rerenders_requested: string[] = [];
 
-	let layersettings = {
+	// Save the JSON object to local storage
+//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
+
+// Get the JSON object from local storage
+let cachedJsonObject = {};
+
+if (browser) {
+	if (localStorage.getItem("layersettings")) {
+	cachedJsonObject = JSON.parse(localStorage.getItem("layersettings"));
+}
+}
+
+
+	let layersettings = cachedJsonObject ||  {
 		bus: {
 			visible: true,
 			labelshapes: false,
+			stops: false,
 			shapes: true,
 			label: {
 				route: true,
@@ -111,6 +127,7 @@
 		},
 		rail: {
 			visible: true,
+			stops: true,
 			labelshapes: false,
 			label: {
 				route: true,
@@ -120,7 +137,7 @@
 				direction: false,
 				speed: false
 			},
-			shapes: false
+			shapes: true
 		}
 	};
 
@@ -229,6 +246,8 @@
 
 				let features = vehiclesData[realtime_id].entity
 					.filter((entity: any) => entity.vehicle?.position !== null)
+					//no vehicles older than 10 min
+				//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
 						const { id, vehicle } = entity;
 						//default to bus type
@@ -603,6 +622,8 @@
 				}
 			}
 		}
+
+		localStorage.setItem('layersettings', JSON.stringify(layersettings));
 		true;
 	}
 
@@ -759,109 +780,106 @@
 		function renderNewBearings() {
 			if (true) {
 				//console.log('render new bearings');
-			let start = performance.now();
+				let start = performance.now();
 
-const features = map.queryRenderedFeatures({ layers: ['buses'] });
+				const features = map.queryRenderedFeatures({ layers: ['buses'] });
 
-let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
+				let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
 
-let busstart = performance.now();
-let newbearingdata = {
-	type: 'FeatureCollection',
-	features: features
-		.filter((x: any) => x.properties.bearing != undefined)
-		.filter((x: any) => x.properties.bearing != 0)
-		.map((x: any) => {
-			let newcoords = calculateNewCoordinates(
-				x.geometry.coordinates[1],
-				x.geometry.coordinates[0],
-				x.properties.bearing,
-				mapzoomnumber / 1000
-			);
+				let busstart = performance.now();
+				let newbearingdata = {
+					type: 'FeatureCollection',
+					features: features
+						.filter((x: any) => x.properties.bearing != undefined)
+						.filter((x: any) => x.properties.bearing != 0)
+						.map((x: any) => {
+							let newcoords = calculateNewCoordinates(
+								x.geometry.coordinates[1],
+								x.geometry.coordinates[0],
+								x.properties.bearing,
+								mapzoomnumber / 1000
+							);
 
-			return {
-				type: 'Feature',
-				geometry: {
-					type: 'LineString',
-					coordinates: [
-						[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-						[newcoords.longitude, newcoords.latitude]
-					]
-				},
-				properties: {
-					bearing: x.properties.bearing,
-					color: x.properties.color,
-					cd: x.properties.contrastdarkmodebearing
+							return {
+								type: 'Feature',
+								geometry: {
+									type: 'LineString',
+									coordinates: [
+										[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+										[newcoords.longitude, newcoords.latitude]
+									]
+								},
+								properties: {
+									bearing: x.properties.bearing,
+									color: x.properties.color,
+									cd: x.properties.contrastdarkmodebearing
+								}
+							};
+						})
+				};
+
+				console.log('computed bus bearings in', performance.now() - busstart, 'ms');
+
+				//console.log("took ", performance.now() - start, "ms")
+
+				//console.log('newbearingdata', newbearingdata)
+
+				let busbearings = map.getSource('busbearings');
+
+				//ensure the layer exists
+				if (busbearings) {
+					busbearings.setData(newbearingdata);
 				}
-			};
-		})
-};
 
-console.log('computed bus bearings in', performance.now() - busstart, 'ms');
+				const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
 
+				let railmapzoomnumber = numberForBearingLengthRail(map.getZoom());
 
-//console.log("took ", performance.now() - start, "ms")
+				let railstart = performance.now();
+				let newrailbearingdata = {
+					type: 'FeatureCollection',
+					features: railfeatures
+						.filter((x: any) => x.properties.bearing != undefined)
+						.filter((x: any) => x.properties.bearing != 0)
+						.map((x: any) => {
+							let newcoords = calculateNewCoordinates(
+								x.geometry.coordinates[1],
+								x.geometry.coordinates[0],
+								x.properties.bearing,
+								railmapzoomnumber / 1000
+							);
 
-//console.log('newbearingdata', newbearingdata)
+							return {
+								type: 'Feature',
+								geometry: {
+									type: 'LineString',
+									coordinates: [
+										[x.geometry.coordinates[0], x.geometry.coordinates[1]],
+										[newcoords.longitude, newcoords.latitude]
+									]
+								},
+								properties: {
+									//bearing: x.properties.bearing,
+									color: x.properties.color,
+									cd: x.properties.contrastdarkmodebearing
+								}
+							};
+						})
+				};
 
-let busbearings = map.getSource('busbearings');
+				console.log('computed rail bearings in', performance.now() - railstart, 'ms');
 
-//ensure the layer exists
-if (busbearings) {
-	busbearings.setData(newbearingdata);
-}
+				//console.log('newbearingdata', newbearingdata)
 
-const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
+				let railbearings = map.getSource('railbearings');
 
-let railmapzoomnumber = numberForBearingLengthRail(map.getZoom());
-
-let railstart = performance.now();
-let newrailbearingdata = {
-
-	type: 'FeatureCollection',
-	features: railfeatures
-		.filter((x: any) => x.properties.bearing != undefined)
-		.filter((x: any) => x.properties.bearing != 0)
-		.map((x: any) => {
-			let newcoords = calculateNewCoordinates(
-				x.geometry.coordinates[1],
-				x.geometry.coordinates[0],
-				x.properties.bearing,
-				railmapzoomnumber / 1000
-			);
-
-			return {
-				type: 'Feature',
-				geometry: {
-					type: 'LineString',
-					coordinates: [
-						[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-						[newcoords.longitude, newcoords.latitude]
-					]
-				},
-				properties: {
-					//bearing: x.properties.bearing,
-					color: x.properties.color,
-					cd: x.properties.contrastdarkmodebearing
+				if (railbearings) {
+					railbearings.setData(newrailbearingdata);
 				}
-			};
-		})
-};
 
-console.log('computed rail bearings in', performance.now() - railstart, 'ms');
+				var end = performance.now();
 
-//console.log('newbearingdata', newbearingdata)
-
-let railbearings = map.getSource('railbearings');
-
-if (railbearings) {
-	railbearings.setData(newrailbearingdata);
-}
-
-
-var end = performance.now();
-
-console.log('bearing calc took', end - start);
+				console.log('bearing calc took', end - start);
 			}
 		}
 
@@ -1021,7 +1039,11 @@ console.log('bearing calc took', end - start);
 				type: 'line',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: ['all', ['==', 3, ['get', 'route_type']], ["!=", ['get', 'onestop_feed_id'], "f-9-flixbus"]],
+				filter: [
+					'all',
+					['==', 3, ['get', 'route_type']],
+					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
+				],
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
@@ -1217,8 +1239,7 @@ console.log('bearing calc took', end - start);
 					'text-field': ['get', 'maptag'],
 					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-radial-offset': 0.2,
-					'text-font': 
-					[
+					'text-font': [
 						'step',
 						['zoom'],
 						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
@@ -1227,7 +1248,7 @@ console.log('bearing calc took', end - start);
 						15,
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
-					
+
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
 					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
@@ -1346,10 +1367,10 @@ console.log('bearing calc took', end - start);
 
 					Object.keys(vehiclesData).forEach((vehiclesDataCheckCleanUp) => {
 						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
-							console.log('delete gtfsrt', vehiclesDataCheckCleanUp)
+							console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
 							delete vehiclesData[vehiclesDataCheckCleanUp];
 						}
-					})
+					});
 				}
 			}, 1000);
 
@@ -1476,8 +1497,6 @@ console.log('bearing calc took', end - start);
 			lockongps = false;
 			secondrequestlockgps = false;
 		});
-
-		
 
 		map.on('idle', () => {
 			if (lasttimezoomran < Date.now() - 800) {
@@ -1644,6 +1663,21 @@ console.log('bearing calc took', end - start);
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<script>
+		(function (w, d, s, l, i) {
+			w[l] = w[l] || [];
+			w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+			var f = d.getElementsByTagName(s)[0],
+				j = d.createElement(s),
+				dl = l != 'dataLayer' ? '&l=' + l : '';
+			j.async = true;
+			j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+			f.parentNode.insertBefore(j, f);
+		})(window, document, 'script', 'dataLayer', 'GTM-WD62NKLX');
+	</script>
+	<!-- End Google Tag Manager -->
 	<!-- Primary Meta Tags -->
 	<title>Kyler's Transit Map</title>
 	<link rel="icon" href="/logo.png" />
@@ -1683,7 +1717,34 @@ console.log('bearing calc took', end - start);
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 	/>
 </svelte:head>
+<!-- Google Tag Manager (noscript) -->
+<noscript
+	><iframe
+		src="https://www.googletagmanager.com/ns.html?id=GTM-WD62NKLX"
+		height="0"
+		width="0"
+		style="display:none;visibility:hidden"
+	/></noscript
+>
 
+{#if typeof geolocation === 'object'}
+	{#if typeof geolocation.coords.speed === 'number'}
+		<div
+			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
+		>
+			{#if usunits == false}
+			<div>
+				{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
+			</div>
+			{:else}
+			<div>
+				{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+		</div>
+		{/if}
+	</div>
+	{/if}
+{/if}
+<!-- End Google Tag Manager (noscript) -->
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
@@ -1783,43 +1844,79 @@ console.log('bearing calc took', end - start);
 		</div>
 	</div>
 
-	{#if selectedSettingsTab === 'rail' || selectedSettingsTab === "bus"}
-	<div class='flex flex-row gap-x-1'>
-		<div>
-			<!--Toggle Routes-->
-			<span class="material-symbols-outlined align-middle text-xl">
-				route
-			</span>
-			<p  class='text-sm'>Routes</p>
+	{#if selectedSettingsTab === 'rail' || selectedSettingsTab === 'bus'}
+		<div class="flex flex-row gap-x-1">
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="shapes"
+				name="Routes"
+				urlicon="/routesicon.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="labelshapes"
+				name="Labels"
+				urlicon="/labelsicon.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="stops"
+				name="Stops"
+				urlicon="/stopsicon.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="visible"
+				name="Vehicles"
+				urlicon="/vehiclesicon.svg"
+				{runSettingsAdapt}
+			/>
 		</div>
-		<div>
-			<!--Toggle Route Labeling-->
-			<span class="material-symbols-outlined align-middle text-xl">
-				
-					label
-					
-			</span>
-			<p class='text-sm'>Labels</p>
+		<h3 class="font-semibold text-md">Realtime Labels</h3>
+		<div class="flex flex-row gap-x-1">
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="route"
+				name="Route"
+				symbol="route"
+				{runSettingsAdapt}
+			/>
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="trip"
+				name="Trip"
+				symbol="mode_of_travel"
+				{runSettingsAdapt}
+			/>
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="vehicle"
+				name="Vehicle"
+				symbol="train"
+				{runSettingsAdapt}
+			/>
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="speed"
+				name="Speed"
+				symbol="speed"
+				{runSettingsAdapt}
+			/>
 		</div>
-		<div>
-			<!--Toggle Stops-->
-			<span class="material-symbols-outlined align-middle text-xl">
-				
-					signpost
-					
-			</span>
-			<p  class='text-sm'>Stops</p>
-		</div>
-		<div>
-			<!--Toggle Vehicles-->
-			<div class='h-12 w-12 rounded-xl dark:bg-gray-800'><span class=" material-symbols-outlined material-symbols-outlined-big align-middle ">
-				
-				share_location
-				
-		</span></div>
-			<p  class='text-sm'>Vehicles</p>
-		</div>
-	</div>
 	{/if}
 
 	<p class="text-xs">
@@ -1887,13 +1984,7 @@ console.log('bearing calc took', end - start);
 		margin-bottom: 15px;
 	}
 
-.material-symbols-outlined-big {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 64;
-
-}
-
+	.material-symbols-outlined-big {
+		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 64;
+	}
 </style>
