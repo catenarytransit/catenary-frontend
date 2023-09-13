@@ -100,17 +100,7 @@
 	// Save the JSON object to local storage
 //localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
-// Get the JSON object from local storage
-let cachedJsonObject = {};
-
-if (browser) {
-	if (localStorage.getItem("layersettings")) {
-	cachedJsonObject = JSON.parse(localStorage.getItem("layersettings"));
-}
-}
-
-
-	let layersettings = cachedJsonObject ||  {
+let layersettings =   {
 		bus: {
 			visible: true,
 			labelshapes: false,
@@ -129,6 +119,7 @@ if (browser) {
 			visible: true,
 			stops: true,
 			labelshapes: false,
+			shapes: true,
 			label: {
 				route: true,
 				trip: false,
@@ -137,9 +128,23 @@ if (browser) {
 				direction: false,
 				speed: false
 			},
-			shapes: true
 		}
 	};
+
+// Get the JSON object from local storage
+
+if (browser) {
+	if (localStorage.getItem("layersettings")) {
+	let cachedJsonObject = JSON.parse(localStorage.getItem("layersettings"));
+
+	if (cachedJsonObject != null) {
+		layersettings = cachedJsonObject;
+	}
+}
+}
+
+
+	
 
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);

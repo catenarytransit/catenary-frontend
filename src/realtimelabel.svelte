@@ -8,6 +8,8 @@
     
 </script>
 
+{#if layersettings}
+{#if layersettings[selectedSettingsTab]}
 <div on:click={() => {
     layersettings[selectedSettingsTab].label[change] = !layersettings[selectedSettingsTab].label[change] ;
     runSettingsAdapt();
@@ -37,4 +39,4 @@ on:keydown={() => {
 .bakaka {
     font-size: 36px !important;
 }
-</style>
+</style>{/if}{/if}
