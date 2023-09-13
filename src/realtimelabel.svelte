@@ -24,12 +24,13 @@ on:keydown={() => {
     <div
     class:border-blue-50={layersettings[selectedSettingsTab].label[change]  == true}
    class:border-transparent={layersettings[selectedSettingsTab].label[change]  == false}
-    class={`bg-[#1C2738] rounded-xl border-2 w-14 h-14`}>
-<div class='grid items-center align-center'><span class="material-symbols-outlined bakaka content-center">
+    class={`bg-[#1C2738] rounded-xl border-2 w-14 h-14 flex items-center align-center`}>
+<div class='mx-auto'>
+        <span class="material-symbols-outlined bakaka content-center">
     {symbol}
     </span></div>
 </div>
-    <p  class='text-sm text-center'>{name}</p>
+    <div class=' align-center items-center '><p  class='text-sm text-center'>{name}</p></div>
 </div>
 
 <style>
