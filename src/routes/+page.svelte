@@ -1675,6 +1675,33 @@ if (browser) {
 			}
 		}
 	}
+	function handleMenuOpen() {
+		console.log('open')
+		document.body.addEventListener('click', handleMenuClose)
+	}
+	function handleMenuClose() {
+		console.log('close')
+		document.body.removeEventListener('click', handleMenuClose)
+	}
+	function clickOutside(node) {
+		const handleClick = event => {
+			if (node && !node.contains(event.target) && !event.defaultPrevented) {
+				node.dispatchEvent(
+					new CustomEvent('click_outside', node)
+				)
+			}
+		}
+		document.addEventListener('click', handleClick, true);
+		return {
+			destroy() {
+				document.removeEventListener('click', handleClick, true);
+			}
+		}
+	}
+	function handleClickOutside(event) {
+		alert('Click outside!');
+	}
+	
 </script>
 
 <svelte:head>
@@ -1783,6 +1810,7 @@ if (browser) {
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
+		use:clickOutside on:click_outside={togglelayerfeature}
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
 		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
