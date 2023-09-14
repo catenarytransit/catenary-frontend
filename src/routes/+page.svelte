@@ -1140,7 +1140,7 @@ if (browser) {
 				filter: ['all', ['!=', 3, ['get', 'route_type']]],
 				layout: {
 					'symbol-placement': 'line',
-					'text-field': ['coalesce', ['get', 'routes']],
+					'text-field': ['coalesce', ['get', 'route_label']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-font': [
 						'step',
