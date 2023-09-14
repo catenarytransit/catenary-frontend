@@ -1088,7 +1088,7 @@ if (browser) {
 				],
 				layout: {
 					'symbol-placement': 'line',
-					'text-field': ['coalesce', ['get', 'routes']],
+					'text-field': ['coalesce', ['get', 'route_label']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-font': [
 						'step',
@@ -1102,10 +1102,11 @@ if (browser) {
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 8, 13, 12],
 					'text-ignore-placement': false,
 					'text-allow-overlap': false,
+					'symbol-spacing': ['step', ['zoom'], 200, 13, 120, 15, 100],
 					visibility: 'none'
 				},
 				paint: {
-					'text-color': "#ffffff",
+					'text-color': ['concat', '#', ['get', 'text_color']],
 					
 					'text-halo-color': ['concat', '#', ['get', 'color']],
 					'text-halo-width': 3,
@@ -1129,6 +1130,8 @@ if (browser) {
 				minzoom: 3
 			});
 
+
+
 			map.addLayer({
 				id: 'labelrailshapes',
 				type: 'symbol',
@@ -1151,14 +1154,16 @@ if (browser) {
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
 					'text-ignore-placement': false,
 
+					'symbol-spacing': ['step', ['zoom'], 150, 13, 80],
 					'text-allow-overlap': false,
 					visibility: 'none'
 				},
 				paint: {
-					'text-color': '#ffffff',
-					'text-halo-color': '#000000',
-					'text-halo-width': 2,
-					'text-halo-blur': 100,
+					'text-color': ['concat', '#', ['get', 'text_color']],
+					
+					'text-halo-color': ['concat', '#', ['get', 'color']],
+					'text-halo-width': 3,
+					'text-halo-blur': 1,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
 				},
 				minzoom: 3
