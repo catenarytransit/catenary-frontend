@@ -24,7 +24,9 @@ on:keydown={() => {
 >
     <!--Toggle Routes-->
     <div
-    class:border-blue-50={layersettings[selectedSettingsTab].label[change]  == true}
+    
+    class:border-blue-500={layersettings[selectedSettingsTab].label[change]  == true}
+    class:dark:border-blue-50={layersettings[selectedSettingsTab].label[change]  == true}
    class:border-transparent={layersettings[selectedSettingsTab].label[change]  == false}
     class={`bg-[#f5f1f0] dark:bg-[#1C2738] rounded-xl border-2 w-14 h-14 flex items-center align-center`}>
 <div class='mx-auto'>
