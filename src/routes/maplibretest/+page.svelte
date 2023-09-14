@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../../geoMathsAssist';
 	//switch to maplibre-gl soon, protomaps in the works
-	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
+	import  { type MapboxGeoJSONFeature } from 'mapbox-gl';
+	import maplibregl from 'maplibre-gl'
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
-	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
+	import { hexToRgb, rgbToHsl, hslToRgb } from '../../utils/colour';
 	import { browser } from '$app/environment';
 	import { LngLat } from 'maplibre-gl';
-	import { flatten } from '../utils/flatten';
-	import { determineFeeds } from '../maploaddata';
-	import Layerbutton from '../layerbutton.svelte';
-	import Realtimelabel from '../realtimelabel.svelte';
+	import { flatten } from '../../utils/flatten';
+	import { determineFeeds } from '../../maploaddata';
+	import Layerbutton from '../../layerbutton.svelte';
+	import Realtimelabel from '../../realtimelabel.svelte';
 
 	let darkMode = true;
 	//false means use metric, true means use us units
@@ -730,16 +731,6 @@ if (browser) {
 
 		let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
 
-		let style = '';
-
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			//if (false) {
-			// dark mode
-			style = dark;
-		} else {
-			style = light;
-		}
-
 		//does user have localstorage cachegeolocation
 
 		let centerinit = [-118, 33.9];
@@ -758,14 +749,9 @@ if (browser) {
 			}
 		}
 
-		const map = new mapboxgl.Map({
+		const map = new maplibregl.Map({
 			container: 'map',
-			style:
-				style === dark
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
-			accessToken:
-				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
+			style: 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539/style.json?key=tf30gb2F4vIsBW5k9Msd',
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
@@ -920,11 +906,7 @@ if (browser) {
 
 		map.on('load', () => {
 			// Add new sources and layers
-			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
-
-			if (removelogo1) {
-				removelogo1[0].remove();
-			}
+			
 
 			map.addSource('static_feeds', {
 				type: 'geojson',
@@ -1149,7 +1131,7 @@ if (browser) {
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
-					'text-ignore-placement': false,
+					'text-ignore-placement': true,
 
 					'text-allow-overlap': false,
 					visibility: 'none'
