@@ -1099,7 +1099,7 @@ if (browser) {
 						18,
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 8, 13, 12],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],
 					'text-ignore-placement': false,
 					'text-allow-overlap': false,
 					'symbol-spacing': ['step', ['zoom'], 200, 13, 120, 15, 100],
@@ -1151,7 +1151,7 @@ if (browser) {
 						18,
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 9, 13, 11],
 					'text-ignore-placement': false,
 
 					'symbol-spacing': ['step', ['zoom'], 150, 13, 80],
