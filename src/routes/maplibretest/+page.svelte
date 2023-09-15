@@ -1759,6 +1759,8 @@ if (browser) {
 </div>-->
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
+	
+
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}

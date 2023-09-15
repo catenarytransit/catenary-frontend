@@ -97,10 +97,12 @@
 
 	let rerenders_requested: string[] = [];
 
+	let showzombiebuses=false;
+
 	// Save the JSON object to local storage
 //localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
-let layersettings =   {
+let layersettings =  {
 		bus: {
 			visible: true,
 			labelshapes: false,
@@ -128,7 +130,7 @@ let layersettings =   {
 				direction: false,
 				speed: false
 			},
-		}
+		},
 	};
 
 // Get the JSON object from local storage
@@ -629,6 +631,38 @@ if (browser) {
 		}
 
 		localStorage.setItem('layersettings', JSON.stringify(layersettings));
+
+		let railvehicles = mapglobal.getLayer('raillayer');
+
+		let busvehicles = mapglobal.getLayer('buses');
+
+		let hidevehiclecommand =  ['has','tripIdLabel']
+
+		if (busvehicles) {
+			console.log('found bus vehicles layer')
+			if (showzombiebuses === true) {
+				//set filter to none
+				mapglobal.setFilter('buses', true);
+				mapglobal.setFilter('labelbuses', true)
+			} else {
+				console.log('hiding buses')
+				mapglobal.setFilter('buses', hidevehiclecommand);
+				mapglobal.setFilter('labelbuses', hidevehiclecommand);
+			}
+		} else {
+			console.error('no bus vehicles layer')
+		}
+		if (railvehicles) {
+			if (showzombiebuses === true) {
+				//set filter to none
+				mapglobal.setFilter('raillayer', true);
+				mapglobal.setFilter('labelrail', true)
+			} else {
+				mapglobal.setFilter('raillayer', hidevehiclecommand);
+				mapglobal.setFilter('labelrail', hidevehiclecommand);
+			}
+		}
+
 		true;
 	}
 
@@ -785,7 +819,7 @@ if (browser) {
 		function renderNewBearings() {
 			if (true) {
 				//console.log('render new bearings');
-				let start = performance.now();
+				//let start = performance.now();
 
 				const features = map.queryRenderedFeatures({ layers: ['buses'] });
 
@@ -823,7 +857,7 @@ if (browser) {
 						})
 				};
 
-				console.log('computed bus bearings in', performance.now() - busstart, 'ms');
+				//console.log('computed bus bearings in', performance.now() - busstart, 'ms');
 
 				//console.log("took ", performance.now() - start, "ms")
 
@@ -872,7 +906,7 @@ if (browser) {
 						})
 				};
 
-				console.log('computed rail bearings in', performance.now() - railstart, 'ms');
+				//console.log('computed rail bearings in', performance.now() - railstart, 'ms');
 
 				//console.log('newbearingdata', newbearingdata)
 
@@ -884,7 +918,7 @@ if (browser) {
 
 				var end = performance.now();
 
-				console.log('bearing calc took', end - start);
+				//console.log('bearing calc took', end - start);
 			}
 		}
 
@@ -896,6 +930,10 @@ if (browser) {
 		map.on('mousemove', 'railshapes', (events) => {
 			console.log('hoverfea-rail', events.features);
 		});
+
+		map.on('mousemove', 'buses', (events) => {
+			console.log('hover over realtime bus', events.features)
+		})
 
 		map.on('moveend', (events) => {
 			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
@@ -1783,6 +1821,14 @@ if (browser) {
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
+	on:click={togglesettingfeature}
+	on:keypress={togglesettingfeature}
+	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+>
+	<span class="material-symbols-outlined align-middle"> settings </span>
+</div>
+	
+	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
 		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
@@ -1808,16 +1854,44 @@ if (browser) {
 		? ''
 		: 'hidden'}"
 >
-	<input
+	<div><input
 		on:click={(x) => {
 			handleUsUnitsSwitch();
+			
+			runSettingsAdapt()
+		}}
+
+		on:keydown={(x) => {
+			handleUsUnitsSwitch();
+			runSettingsAdapt()
 		}}
 		checked={usunits}
 		id="us-units"
 		type="checkbox"
 		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 	/>
-	<label for="us-units" class="ml-2">Use US Units</label>
+	<label for="us-units" class="ml-2">Use US Units</label></div>
+
+	<div><input
+		on:click={(x) => {
+			showzombiebuses = !showzombiebuses;
+
+			
+		runSettingsAdapt()
+
+		}}
+	
+	on:keydown={(x) => {
+		showzombiebuses = !showzombiebuses;
+
+		runSettingsAdapt()
+	}}
+		checked={showzombiebuses}
+		id="show-zombie-buses"
+		type="checkbox"
+		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+	/>
+	<label for="show-zombie-buses" class='ml-2'>Show Tripless Vehicles</label></div>
 </div>
 
 <div
