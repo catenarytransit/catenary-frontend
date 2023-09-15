@@ -1675,17 +1675,9 @@ if (browser) {
 			}
 		}
 	}
-	function handleMenuOpen() {
-		console.log('open')
-		document.body.addEventListener('click', handleMenuClose)
-	}
-	function handleMenuClose() {
-		console.log('close')
-		document.body.removeEventListener('click', handleMenuClose)
-	}
 	function clickOutside(node) {
 		const handleClick = event => {
-			if (node && !node.contains(event.target) && !event.defaultPrevented) {
+			if (node && !node.contains(event.target) && !event.defaultPrevented && layersettingsBox) {
 				node.dispatchEvent(
 					new CustomEvent('click_outside', node)
 				)
@@ -1698,10 +1690,13 @@ if (browser) {
 			}
 		}
 	}
-	function handleClickOutside(event) {
-		alert('Click outside!');
+	function checklayerbox() {
+		if (!layersettingsBox) {
+			return togglelayerfeature();
+		} else {
+			return
+		}
 	}
-	
 </script>
 
 <svelte:head>
@@ -1810,9 +1805,8 @@ if (browser) {
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
-		use:clickOutside on:click_outside={togglelayerfeature}
-		on:click={togglelayerfeature}
-		on:keypress={togglelayerfeature}
+		on:click={checklayerbox}
+		on:keypress={checklayerbox}
 		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
 		<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
@@ -1852,7 +1846,7 @@ if (browser) {
 	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
 		: 'hidden'}"
->
+use:clickOutside on:click_outside={togglelayerfeature}>
 	<h2>Change settings of:</h2>
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		<div
