@@ -487,6 +487,16 @@ if (browser) {
 							maptag = railletters[routeId];
 						}
 
+						if (mergetable[routeId]) {
+							if (mergetable[routeId].short_name) {
+								maptag = (mergetable[routeId].short_name);
+							} else {
+								if (mergetable[routeId.long_name]) {
+									maptag = (mergetable[routeId].long_name);
+								}
+							}
+						}
+
 						maptag = maptag.replace(/( )?Line/, '');
 
 						maptag = maptag.replace(/counterclockwise/i, '-ACW').replace(/clockwise/i, '-CW');
@@ -511,7 +521,8 @@ if (browser) {
 								bearing: vehicle?.position?.bearing,
 								maptag: maptag,
 								contrastdarkmode: contrastdarkmode,
-								contrastdarkmodebearing
+								contrastdarkmodebearing,
+								routeId: routeId
 							},
 							geometry: {
 								type: 'Point',
