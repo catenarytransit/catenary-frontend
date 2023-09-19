@@ -1139,19 +1139,14 @@ if (browser) {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-font': [
-						'step',
-						['zoom'],
-						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-						15,
-						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-						18,
-						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
-					],
+					'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],
 					'text-ignore-placement': false,
 					'text-allow-overlap': false,
-					'symbol-spacing': ['step', ['zoom'], 200, 13, 120, 15, 100],
+					'symbol-spacing': window?.innerWidth > 750 ? 
+					['step', ['zoom'], 200, 12, 120, 13, 130, 15, 130, 20, 200]
+					: 
+					['step', ['zoom'], 200, 12, 100, 13, 110, 15, 100, 20, 200],
 					visibility: 'none'
 				},
 				paint: {
@@ -1191,19 +1186,11 @@ if (browser) {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-font': [
-						'step',
-						['zoom'],
-						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-						15,
-						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-						18,
-						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
-					],
+					'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 9, 13, 11],
 					'text-ignore-placement': false,
 
-					'symbol-spacing': ['step', ['zoom'], 150, 13, 80],
+					'symbol-spacing': ['step', ['zoom'], 150, 13, 80, 15, 100],
 					'text-allow-overlap': false,
 					visibility: 'none'
 				},
