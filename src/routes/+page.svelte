@@ -1143,7 +1143,10 @@ if (browser) {
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],
 					'text-ignore-placement': false,
 					'text-allow-overlap': false,
-					'symbol-spacing': ['step', ['zoom'], 200, 13, 120, 15, 100, 20, 200],
+					'symbol-spacing': window?.innerWidth > 750 ? 
+					['step', ['zoom'], 200, 12, 120, 13, 130, 15, 130, 20, 200]
+					: 
+					['step', ['zoom'], 200, 12, 100, 13, 110, 15, 100, 20, 200],
 					visibility: 'none'
 				},
 				paint: {
