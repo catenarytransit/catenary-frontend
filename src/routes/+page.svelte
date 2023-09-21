@@ -1269,7 +1269,7 @@ if (browser) {
 					'text-halo-color': '#0f172a',
 					'text-halo-width': 0.4,
 					
-				}, minzoom: window?.innerWidth >= 1023 ? 13.5 : 12.4
+				}, minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
 			})
 
 
