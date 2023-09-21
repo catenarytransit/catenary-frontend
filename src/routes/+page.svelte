@@ -1365,7 +1365,11 @@ if (browser) {
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
 
-					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 8, 9, 10, 13, 14],
+					'text-size': window?.innerWidth >= 1023  ? 
+					['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14] :
+					['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12]
+					
+					,
 					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
 				paint: {
