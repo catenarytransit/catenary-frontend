@@ -603,6 +603,19 @@ if (browser) {
 				}
 			}
 
+			let busstopscircle = mapglobal.getLayer('busstopscircle');
+			let buslabelstops = mapglobal.getLayer('busstopslabel');
+
+			if (busstopscircle && buslabelstops) {
+				if (layersettings.bus.stops) {
+					mapglobal.setLayoutProperty('busstopscircle', 'visibility', 'visible');
+					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('busstopscircle', 'visibility', 'none');
+					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'none');
+				}
+			}			
+
 			let buscirclelayer = mapglobal.getLayer('buses');
 			let buslabel = mapglobal.getLayer('labelbuses');
 
@@ -1088,6 +1101,11 @@ if (browser) {
 				url: 'https://martin.kylerchin.com/shapes'
 			});
 
+			map.addSource('stops', {
+				type: 'vector',
+				url: 'https://martin.kylerchin.com/stops'
+			})
+
 			map.addLayer({
 				id: 'busshapes',
 				type: 'line',
@@ -1204,6 +1222,54 @@ if (browser) {
 				},
 				minzoom: 3
 			});
+
+			
+			map.addLayer({
+				id: 'busstopscircle',
+				type: 'circle',
+				source: 'stops',
+				"source-layer": "stops",
+				layout: {
+				},
+				paint: {
+					"circle-color": "#1c2636",
+					"circle-radius": 2,
+					'circle-stroke-color': darkMode ? 
+					['step', ['zoom'], '#e0e0e0', 14, '#ffffff']
+					: 
+					"#222222",
+					'circle-stroke-width': 2,
+					'circle-stroke-opacity': ['step', ['zoom'], 0.6, 15, 0.8],
+					'circle-opacity': 0.1
+				},
+				minzoom: 13
+			})
+
+			map.addLayer({
+				id: 'busstopslabel',
+				type: 'symbol',
+				source: 'stops',
+				"source-layer": "stops",
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+					'text-size': 8,
+					'text-radial-offset': 0.7,
+					'icon-image': ["get", "network"],
+					'icon-size': 1,
+					'text-ignore-placement': false,
+					
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+				},
+				paint: {
+					'text-color': "#ddd6fe",
+					'text-halo-color': '#0f172a',
+					'text-halo-width': 0.4,
+					
+				},
+				minzoom: 14
+			})
+
 
 			map.addSource('buses', {
 				type: 'geojson',
