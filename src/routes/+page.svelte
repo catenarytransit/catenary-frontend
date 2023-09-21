@@ -1242,7 +1242,7 @@ if (browser) {
 					'circle-stroke-opacity': ['step', ['zoom'], 0.6, 15, 0.8],
 					'circle-opacity': 0.1
 				},
-				minzoom: 13
+				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11
 			})
 
 			map.addLayer({
@@ -1266,8 +1266,7 @@ if (browser) {
 					'text-halo-color': '#0f172a',
 					'text-halo-width': 0.4,
 					
-				},
-				minzoom: 14
+				}, minzoom: window?.innerWidth >= 1023 ? 13.5 : 12.4
 			})
 
 
