@@ -106,21 +106,23 @@ let layersettings =  {
 		bus: {
 			visible: true,
 			labelshapes: false,
-			stops: false,
+			stops: true,
 			shapes: true,
+			stoplabels: false,
 			label: {
 				route: true,
 				trip: false,
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: false,
 			}
 		},
 		rail: {
 			visible: true,
 			stops: true,
-			labelshapes: false,
+			labelshapes: true,
+			stoplabels: true,
 			shapes: true,
 			label: {
 				route: true,
@@ -128,16 +130,18 @@ let layersettings =  {
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: false,
 			},
 		},
 	};
 
 // Get the JSON object from local storage
 
+const layersettingsnamestorage= "layersettingsv2"
+
 if (browser) {
-	if (localStorage.getItem("layersettings")) {
-	let cachedJsonObject = JSON.parse(localStorage.getItem("layersettings"));
+	if (localStorage.getItem(layersettingsnamestorage)) {
+	let cachedJsonObject = JSON.parse(localStorage.getItem(layersettingsnamestorage));
 
 	if (cachedJsonObject != null) {
 		layersettings = cachedJsonObject;
@@ -164,6 +168,10 @@ if (browser) {
 
 		if (label.vehicle) {
 			arrayofinfo.push(['get', 'vehicleIdLabel']);
+		}
+
+		if (label.headsign) {
+			arrayofinfo.push(['get', 'headsign']);
 		}
 
 		if (label.speed) {
@@ -262,6 +270,8 @@ if (browser) {
 
 						let colour = '#aaaaaa';
 
+						let headsign = ""
+
 						let routeId = vehicle?.trip?.routeId || '';
 
 						if (!routeId) {
@@ -314,9 +324,12 @@ if (browser) {
 							fetchTrip = true;
 						}
 
+						//fetchTrip = true;
+
 						//this system sucks, honestly. Transition to batch trips info eventually
 						if (fetchTrip === true) {
 							//submit a tripsId requests
+
 							if (static_feed_ids.length === 1) {
 								let static_feed_id_to_use = static_feed_ids[0];
 
@@ -336,6 +349,8 @@ if (browser) {
 											//get routeId from the trips table
 
 											if (trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id) {
+												headsign = trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].trip_headsign;
+
 												routeId =
 													trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
 
@@ -522,7 +537,8 @@ if (browser) {
 								maptag: maptag,
 								contrastdarkmode: contrastdarkmode,
 								contrastdarkmodebearing,
-								routeId: routeId
+								routeId: routeId,
+								headsign: headsign
 							},
 							geometry: {
 								type: 'Point',
@@ -609,11 +625,16 @@ if (browser) {
 			if (busstopscircle && buslabelstops) {
 				if (layersettings.bus.stops) {
 					mapglobal.setLayoutProperty('busstopscircle', 'visibility', 'visible');
-					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'visible');
 				} else {
 					mapglobal.setLayoutProperty('busstopscircle', 'visibility', 'none');
-					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'none');
 				}
+
+				if (layersettings.bus.stoplabels) {
+
+					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'none');
+			}
 			}			
 
 			let buscirclelayer = mapglobal.getLayer('buses');
@@ -632,6 +653,8 @@ if (browser) {
 					mapglobal.setLayoutProperty('buses', 'visibility', 'none');
 					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'none');
 				}
+
+			
 			}
 
 			let railcirclelayer = mapglobal.getLayer('raillayer');
@@ -654,7 +677,7 @@ if (browser) {
 			}
 		}
 
-		localStorage.setItem('layersettings', JSON.stringify(layersettings));
+		localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
 
 		let railvehicles = mapglobal.getLayer('raillayer');
 
@@ -2035,6 +2058,15 @@ if (browser) {
 			<Layerbutton
 				bind:layersettings
 				bind:selectedSettingsTab
+				change="stoplabels"
+				name="S-Names"
+				urlicon="/stoplabels.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
 				change="visible"
 				name="Vehicles"
 				urlicon="/vehiclesicon.svg"
@@ -2067,6 +2099,16 @@ if (browser) {
 				symbol="train"
 				{runSettingsAdapt}
 			/>
+<!--
+			<Realtimelabel
+			bind:layersettings
+			bind:selectedSettingsTab
+			change="headsign"
+			name="Headsign"
+			symbol="sports_score"
+			{runSettingsAdapt}
+		/>-->
+
 			<Realtimelabel
 				bind:layersettings
 				bind:selectedSettingsTab
