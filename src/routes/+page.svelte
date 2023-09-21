@@ -1238,7 +1238,7 @@ if (browser) {
 					['step', ['zoom'], '#e0e0e0', 14, '#ffffff']
 					: 
 					"#222222",
-					'circle-stroke-width': 2,
+					'circle-stroke-width': ['step', ['zoom'], 1.2, 12.7, 2],
 					'circle-stroke-opacity': ['step', ['zoom'], 0.6, 15, 0.8],
 					'circle-opacity': 0.1
 				},
