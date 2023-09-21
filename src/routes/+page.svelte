@@ -818,6 +818,7 @@ if (browser) {
 
 		const map = new mapboxgl.Map({
 			container: 'map',
+			crossSourceCollisions: true,
 			style:
 				style === dark
 					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
@@ -1252,13 +1253,15 @@ if (browser) {
 				"source-layer": "stops",
 				layout: {
 					'text-field': ['get', 'name'],
-					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-size': 8,
+					'text-variable-anchor': [ 'left', 'right','top', 'bottom'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
 					'text-radial-offset': 0.7,
 					'icon-image': ["get", "network"],
 					'icon-size': 1,
-					'text-ignore-placement': false,
-					
+					//'text-ignore-placement': false,
+					//'icon-ignore-placement': false,
+					//'text-allow-overlap': true,
+					//'symbol-avoid-edges': false,
 					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
 				},
 				paint: {
