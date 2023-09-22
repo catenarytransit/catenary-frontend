@@ -3,8 +3,8 @@
 
 function isValidGeolocation(geolocation: GeolocationPosition) {
 
-    //throw out any locations with accuracy > 10 meters
-    if (geolocation.coords.accuracy < 10) {
+    //throw out any locations with accuracy > 20 meters
+    if (geolocation.coords.accuracy < 20) {
         return false;
     }
 

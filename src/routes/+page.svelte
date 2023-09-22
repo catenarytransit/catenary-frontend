@@ -1557,7 +1557,7 @@ if (browser) {
 
 			runSettingsAdapt();
 
-			map.loadImage('https://transitmap.kylerchin.com/geo-circle.png', (error, image) => {
+			map.loadImage('https://catenarymaps.org/geo-circle.png', (error, image) => {
 				if (error) throw error;
 
 				// Add the image to the map style.
@@ -1578,7 +1578,7 @@ if (browser) {
 				});
 			});
 
-			map.loadImage('https://transitmap.kylerchin.com/geo-nav.png', (error, image) => {
+			map.loadImage('https://catenarymaps.org/geo-nav.png', (error, image) => {
 				if (error) throw error;
 				// Add the image to the map style.
 				map.addImage('geonav', image);
@@ -1825,9 +1825,9 @@ if (browser) {
 	</script>
 	<!-- End Google Tag Manager -->
 	<!-- Primary Meta Tags -->
-	<title>Kyler's Transit Map</title>
+	<title>Catenary Maps</title>
 	<link rel="icon" href="/logo.png" />
-	<meta name="title" content="Kyler's Transit Map" />
+	<meta name="title" content="Catenary Maps" />
 	<meta
 		name="description"
 		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
@@ -1836,7 +1836,7 @@ if (browser) {
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content="Kyler's Transit Map" />
+	<meta property="og:title" content="Catenary Maps" />
 	<meta
 		property="og:description"
 		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
@@ -1845,7 +1845,7 @@ if (browser) {
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:title" content="Kyler's Transit Map" />
+	<meta property="twitter:title" content="Catenary Maps" />
 	<meta
 		property="twitter:description"
 		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
