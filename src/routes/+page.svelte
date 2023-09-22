@@ -1570,7 +1570,11 @@ if (browser) {
 					layout: {
 						'icon-image': 'geocircle', // reference the image
 						'icon-size': 0.1,
-						visibility: 'none'
+						visibility: 'none',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						"text-allow-overlap": true,
+						"text-ignore-placement": true,
 					},
 					paint: {
 						'icon-opacity': 0.8
