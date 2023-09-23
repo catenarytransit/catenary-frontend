@@ -1259,7 +1259,7 @@ if (browser) {
 				},
 				paint: {
 					"circle-color": "#1c2636",
-					"circle-radius": ['interpolate', ['linear'], ['zoom'], 11, 1.2, 12.7, 2],
+					"circle-radius": ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
 					'circle-stroke-color': darkMode ? 
 					['step', ['zoom'], '#e0e0e0', 14, '#ffffff']
 					: 
