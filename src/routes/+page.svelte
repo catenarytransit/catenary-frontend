@@ -280,6 +280,8 @@ if (browser) {
 
 						let fetchTrip = false;
 
+						console.log('mergetable', mergetable)
+
 						if (routeId) {
 							if (mergetable[routeId]) {
 								routeType = mergetable[routeId].route_type;
@@ -1138,7 +1140,7 @@ if (browser) {
 				filter: [
 					'all',
 					['==', 3, ['get', 'route_type']],
-					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
+					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 				],
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
@@ -1175,7 +1177,7 @@ if (browser) {
 				filter: [
 					'all',
 					['==', 3, ['get', 'route_type']],
-					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
+					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 				],
 				layout: {
 					'symbol-placement': 'line',
