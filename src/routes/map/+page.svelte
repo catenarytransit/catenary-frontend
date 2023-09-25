@@ -13,8 +13,8 @@
 	import Layerbutton from '../../layerbutton.svelte';
 	import Realtimelabel from '../../realtimelabel.svelte';
 
-	let enabledlayerstyle = 'text-black bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200'
-	let disabledlayerstyle = 'text-black border bg-gray-300 dark:bg-gray-800  dark:border-gray-800'
+	let enabledlayerstyle = 'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200'
+	let disabledlayerstyle = 'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-300 dark:bg-gray-800  dark:border-gray-800'
 
 	let darkMode = true;
 	//false means use metric, true means use us units
