@@ -1,7 +1,7 @@
 {
-    "short_name": "Transit Map",
-    "name": "Kyler's Transit Map",
-    "id": "transitmap.kylerchin.com",
+    "short_name": "Catenary",
+    "name": "Catenary Maps",
+    "id": "catenarymaps.org",
     "display": "standalone",
     "scope": "/",
     "categories": [
@@ -25,7 +25,7 @@
             "platform": "wide"
         }
     ],
-    "start_url": "/?source=pwa",
+    "start_url": "map/?source=pwa",
     "background_color": "#191919",
     "theme_color": "#191919",
     "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
