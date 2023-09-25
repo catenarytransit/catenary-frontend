@@ -1309,8 +1309,8 @@ if (browser) {
 					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
 				},
 				paint: {
-					'text-color': "#ddd6fe",
-					'text-halo-color': '#0f172a',
+					'text-color': darkMode ? "#ddd6fe" :  "#2a2a2a",
+					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 					'text-halo-width': 0.4,
 					
 				}, minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
