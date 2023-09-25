@@ -2040,8 +2040,8 @@ if (browser) {
 			}}
 			class={`${
 				selectedSettingsTab === 'bus'
-					? 'bg-gray-200 dark:bg-gray-700 border dark:border-gray-200'
-					: 'border   dark:border-gray-800  bg-gray-100 dark:bg-gray-800 '
+					? 'text-black bg-blue-400 dark:bg-gray-700 border border-blue-800 dark:border-blue-200'
+					: 'text-black border  bg-gray-100 dark:bg-gray-800  dark:border-gray-800'
 			} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">Buses</p>
