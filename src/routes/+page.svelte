@@ -1124,12 +1124,12 @@ if (browser) {
 
 			map.addSource('shapes', {
 				type: 'vector',
-				url: 'https://martin.kylerchin.com/shapes'
+				url: 'https://martin.catenarymaps.org/shapes'
 			});
 
 			map.addSource('stops', {
 				type: 'vector',
-				url: 'https://martin.kylerchin.com/stops'
+				url: 'https://martin.catenarymaps.org/stops'
 			})
 
 			map.addLayer({
@@ -1151,6 +1151,11 @@ if (browser) {
 				},
 				minzoom: 3
 			});
+
+
+								// the layer must be of type 'line'
+			
+				
 
 			map.addLayer({
 				id: 'ferryshapes',
