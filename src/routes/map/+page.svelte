@@ -13,6 +13,9 @@
 	import Layerbutton from '../../layerbutton.svelte';
 	import Realtimelabel from '../../realtimelabel.svelte';
 
+	let enabledlayerstyle = 'text-black bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200'
+	let disabledlayerstyle = 'text-black border bg-gray-300 dark:bg-gray-800  dark:border-gray-800'
+
 	let darkMode = true;
 	//false means use metric, true means use us units
 	let selectedSettingsTab = 'rail'; //valid options {rail, bus, bike}
@@ -2025,8 +2028,8 @@ if (browser) {
 			}}
 			class={`${
 				selectedSettingsTab === 'rail'
-					? 'bg-gray-200 dark:bg-gray-700 border dark:border-gray-200'
-					: 'border   dark:border-gray-800  bg-gray-100 dark:bg-gray-800 '
+				? enabledlayerstyle
+					:disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">Rail/Other</p>
@@ -2040,8 +2043,8 @@ if (browser) {
 			}}
 			class={`${
 				selectedSettingsTab === 'bus'
-					? 'text-black bg-blue-400 dark:bg-gray-700 border border-blue-800 dark:border-blue-200'
-					: 'text-black border  bg-gray-100 dark:bg-gray-800  dark:border-gray-800'
+					? enabledlayerstyle
+					:disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">Buses</p>
