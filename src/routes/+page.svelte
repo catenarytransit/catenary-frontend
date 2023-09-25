@@ -97,7 +97,7 @@
 
 			<Githubbox
 				reponame="Svelte Frontend"
-				link="https://github.com/CatenaryMaps/catenary-flutter"
+				link="https://github.com/CatenaryMaps/catenary-frontend"
 				description="Beta Web Version of our software, showing realtime vehicle locations, labelled routes and stops."
 			/>
 
@@ -109,7 +109,7 @@
 
 			<Githubbox
 				reponame="ZotGTFS"
-				link="https://github.com/CatenaryMaps/kactus-gtfs-rt"
+				link="https://github.com/CatenaryMaps/zotgtfs"
 				description="We reverse engineered the UCI Anteater Express Bus TransLoc API to create schedule and realtime feeds, which is now shown in our app."
 			/>
 		</div>
