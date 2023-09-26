@@ -1491,7 +1491,7 @@ if (browser) {
 			setInterval(() => {
 				if (map.getZoom() >= 8) {
 					realtime_list.forEach((realtime_id: string) => {
-						let url = `https://kactusapi.kylerchin.com/gtfsrt/?feed=${realtime_id}&category=vehicles`;
+						let url = `https://kactus.catenarymaps.org/gtfsrt/?feed=${realtime_id}&category=vehicles`;
 
 						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
 							url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
