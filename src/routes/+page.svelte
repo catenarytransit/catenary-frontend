@@ -36,7 +36,7 @@
 			</p>
 
 			<div class="flex flex-row gap-x-3 lg:gap-x-7 mt-5">
-				<a href="https://catenarymaps.org/map">
+				<a href="/map">
 					<div
 						class="px-5 py-3 text-white font-bold lg:text-lg bg-sky-500 shadow-lg shadow-sky-900 rounded-lg"
 					>
@@ -55,7 +55,7 @@
 		</div>
 
 		<div class="md:w-1/3 lg:w-1/2 text-white">
-			<a href="https://catenarymaps.org/map">
+			<a href="/map">
 				<img
 					src="/mainscreenshot.png"
 					class="border-2 border-gray-700 md:max-w-2xl shadow-2xl shadow-blue-200/20 mx-auto rounded-2xl"
