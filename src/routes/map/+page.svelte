@@ -222,7 +222,7 @@ if (browser) {
 
 						if (route_info_lookup[static_feed_id] == undefined) {
 							fetch(
-								'https://transitbackend.kylerchin.com/getroutesperagency?feed_id=' + static_feed_id
+								'https://backend.catenarymaps.org/getroutesperagency?feed_id=' + static_feed_id
 							)
 								.then((x) => x.json())
 								.then((x) => {
@@ -378,7 +378,7 @@ if (browser) {
 									} else {
 										if (vehicle.trip.tripId) {
 											fetch(
-												`https://transitbackend.kylerchin.com/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
+												`https://backend.catenarymaps.org/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
 											)
 												.then((x) => x.json())
 												.then((data) => {
@@ -1036,7 +1036,7 @@ if (browser) {
 				}
 			});
 
-			fetch('https://transitbackend.kylerchin.com/getinitdata')
+			fetch('https://backend.catenarymaps.org/getinitdata')
 				.then(async (x) => await x.json())
 				.then((x) => {
 					static_feeds = x.s;
