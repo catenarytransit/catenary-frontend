@@ -43,6 +43,8 @@
 		//redo settings
 	}
 
+	function formatVehicleId
+
 	function textColorOfMapLabels() {
 		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
 	}
@@ -534,13 +536,19 @@ if (browser) {
 
 						//let tripIdLabel = vehicle?.trip?.tripId;
 
+						let vehiclelabel = vehicle?.vehicle?.label || vehicle?.vehicle?.id || '';
+
+						if (realtime_id === 'f-mta~nyc~rt~bustime') {
+							vehiclelabel = vehiclelabel.replace(/mta( )?/i, "");
+						}
+
 						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
 						//line 1000
 						return {
 							type: 'Feature',
 							properties: {
 								//shown to user directly?
-								vehicleIdLabel: vehicle?.vehicle?.label || vehicle?.vehicle?.id,
+								vehicleIdLabel: vehiclelabel,
 								//maintain metres per second, do conversion in label
 								speed: vehicle?.position?.speed,
 								color: colour,
