@@ -43,8 +43,6 @@
 		//redo settings
 	}
 
-	function formatVehicleId
-
 	function textColorOfMapLabels() {
 		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
 	}
