@@ -35,6 +35,18 @@
 	let operators_in_frame: any = {};
 	let realtime_feeds_in_frame: any = {};
 
+	function processUrlLimit(inputarray:any) {
+		const urlParams = new URLSearchParams(window.location.search);
+
+		if (urlParams.get("limitfeed")) {
+			inputarray.push(["==", ["get", "onestop_feed_id"], urlParams.get("limitfeed")])
+		
+			return inputarray
+		} else {
+			return inputarray;
+		}
+	}
+
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
 
@@ -1048,44 +1060,6 @@ if (browser) {
 					static_feeds = x.s;
 					operators = x.o;
 					realtime_feeds = x.r;
-
-					let datatoset = {
-						type: 'FeatureCollection',
-						features: x.s.map((staticfeed: any) => {
-							//console.log('staticfeed', staticfeed);
-							let max_lat = staticfeed.max_lat + 0.01;
-							let max_lon = staticfeed.max_lon + 0.01;
-							let min_lat = staticfeed.min_lat - 0.01;
-							let min_lon = staticfeed.min_lon - 0.01;
-
-							return {
-								type: 'Feature',
-								properties: {
-									name: staticfeed.onestop_feed_id
-								},
-								geometry: {
-									coordinates: [
-										[
-											[min_lon, min_lat],
-											[min_lon, max_lat],
-											[max_lon, max_lat],
-											[max_lon, min_lat],
-											[min_lon, min_lat]
-										]
-									],
-									type: 'Polygon'
-								}
-							};
-						})
-					};
-
-					console.log('datatoset', datatoset);
-
-					let sourcestatic = map.getSource('static_feeds');
-
-					if (sourcestatic) {
-						sourcestatic.setData(datatoset);
-					}
 				})
 				.catch((e) => {
 					console.error(e);
@@ -1093,6 +1067,7 @@ if (browser) {
 
 			updateData();
 
+			/*
 			map.addLayer({
 				id: 'static_feed_calc',
 				type: 'fill',
@@ -1101,26 +1076,52 @@ if (browser) {
 					'fill-color': '#0055aa',
 					'fill-opacity': 0
 				}
-			});
+			});*/
 
+			
+			map.addSource('static_feeds_hull', {
+				type: 'vector',
+				url: 'https://martin.catenarymaps.org/static_feeds'
+			})
+
+			
 			const urlParams = new URLSearchParams(window.location.search);
+
+			map.addLayer({
+				id: 'static_hull_calc',
+				type: 'fill',
+				source: 'static_feeds_hull',
+				"source-layer": 'static_feeds',
+				//filter: ["==", ['get', 'onestop_feed_id'], 'f-anteaterexpress'],
+				paint: {
+					'fill-color': '#0055aa',
+					'fill-opacity': urlParams.get('debug') ? 0.01 : 0
+				}
+			})
 
 			if (urlParams.get('debug')) {
 				map.addLayer({
-					id: 'static_feed_calc_line',
-					type: 'line',
-					source: 'static_feeds',
-					paint: {
-						'line-color': '#aaaaaa'
-					}
-				});
+				id: 'static_hull_calc_line',
+				type: 'line',
+				"source-layer": "static_feeds",
+				
+			
+				source: 'static_feeds_hull',
+				paint: {
+					'line-color': '#22aaaa',
+					'line-opacity': 1,
+					
+				}
+			})
+
 
 				map.addLayer({
 					id: 'static_feed_calc_names',
 					type: 'symbol',
-					source: 'static_feeds',
+					source: 'static_feeds_hull',
+					"source-layer": "static_feeds",
 					layout: {
-						'text-field': ['get', 'name'],
+						'text-field': ['get', 'onestop_feed_id'],
 						'text-size': 8,
 						//'text-allow-overlap': true,
 						//'text-ignore-placement': true,
@@ -1152,16 +1153,19 @@ if (browser) {
 				url: 'https://martin.catenarymaps.org/stops'
 			})
 
+
+			
+
 			map.addLayer({
 				id: 'busshapes',
 				type: 'line',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: [
+				filter: processUrlLimit([
 					'all',
 					['==', 3, ['get', 'route_type']],
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
-				],
+				]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
@@ -1199,11 +1203,11 @@ if (browser) {
 				type: 'symbol',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: [
+				filter: processUrlLimit([
 					'all',
 					['==', 3, ['get', 'route_type']],
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
-				],
+				]),
 				layout: {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
@@ -1234,7 +1238,8 @@ if (browser) {
 				type: 'line',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: ['all', ['!=', 4, ['get', 'route_type']], ['!=', 3, ['get', 'route_type']]],
+				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
+				 ['!=', 3, ['get', 'route_type']]]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],

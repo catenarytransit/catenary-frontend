@@ -4,7 +4,7 @@ export function determineFeeds(map:any, staticfeeds:any, operators:any, realtime
     //start by calculating the list of static feeds in frame
 
     
-	const features = map.queryRenderedFeatures({ layers: ['static_feed_calc'] });
+	const features = map.queryRenderedFeatures({ layers: ['static_hull_calc'] });
 
     //console.log('statics_in_frame', features);
 
@@ -12,7 +12,7 @@ export function determineFeeds(map:any, staticfeeds:any, operators:any, realtime
 
  //   console.log('first feature', features[0].properties.name)
 
-    const statics_in_frame = [...new Set(features.map((f:any) => f.properties.name))];
+    const statics_in_frame = [...new Set(features.map((f:any) => f.properties.onestop_feed_id))];
     
     const static_data = statics_in_frame.map((s:string[]) => staticfeeds.find((origin:any) => s === origin.onestop_feed_id)).filter((x) => x != undefined);
 
