@@ -1076,7 +1076,7 @@ if (browser) {
 				//filter: ["==", ['get', 'onestop_feed_id'], 'f-anteaterexpress'],
 				paint: {
 					'fill-color': '#0055aa',
-					'fill-opacity': urlParams.get('debug') ? 0.01 : 0
+					'fill-opacity': 0
 				}
 			})
 
