@@ -227,17 +227,6 @@ if (browser) {
 								.then((x) => x.json())
 								.then((x) => {
 									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-
-									if (static_feed_id === 'f-9q5b-longbeachtransit') {
-										Object.keys(route_info_lookup[static_feed_id]).forEach((routeName) => {
-											if (
-												route_info_lookup[static_feed_id][routeName].color === 'rgb(255,255,255)'
-											) {
-												route_info_lookup[static_feed_id][routeName].color = 'rgb(128,31,58)';
-											}
-										});
-									}
-
 									rerenders_request(realtime_id);
 									// console.log('saved results for this agency', static_feed_id)
 								})
@@ -303,15 +292,7 @@ if (browser) {
 							}
 
 							if (realtime_id === 'f-metro~losangeles~bus~rt') {
-								if (colour === '#ffffff') {
-									colour = '#e16710';
-								}
-
 								let trimmedRouteId = routeId.replace('-13168', '');
-
-								if (['720', '754', '761'].includes(trimmedRouteId)) {
-									colour = '#d11242';
-								}
 							}
 						} else {
 							//console.log('no route id', entity)
