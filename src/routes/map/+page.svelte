@@ -25,6 +25,7 @@
 	let vehiclesData: any = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj: any = {};
+	let lasttimeofnorth = 0;
 
 	let static_feeds: any[] = [];
 
@@ -1024,6 +1025,14 @@ if (browser) {
 			realtime_list = feedresults.r;
 		});
 
+		map.on('touchmove', (events) => {
+			lasttimeofnorth = 0
+		})
+
+		map.on('mousemove', (events) => {
+			lasttimeofnorth = 0
+		})
+
 		map.on('zoomend', (events) => {
 			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
 
@@ -1798,10 +1807,8 @@ if (browser) {
 
 	function gonorth() {
 		if (mapglobal) {
+			lasttimeofnorth = performance.now();
 			mapglobal.resetNorth()
-			setTimeout(() => {
-				mapglobal.resetNorth()
-			},100)
 		}
 	}
 
@@ -1833,6 +1840,10 @@ if (browser) {
 						center: [geolocation.coords.longitude, geolocation.coords.latitude],
 						essential: true // this animation is considered essential with respect to prefers-reduced-motion
 					};
+
+					if (lasttimeofnorth > performance.now() - 4000) {
+						target.bearing = 0;
+					}
 
 					if (secondrequestlockgps === true || firstmove === false) {
 						target.zoom = lockonconst;
