@@ -27,6 +27,11 @@
 	let geometryObj: any = {};
 	let lasttimeofnorth = 0;
 
+	let avaliablerealtimevehicles = new Set();	
+	let avaliablerealtimetrips = new Set();
+	let avaliablerealtimealerts = new Set();
+	let fetchedavaliablekactus = false;
+
 	let static_feeds: any[] = [];
 
 	let current_map_heading = 0;
@@ -115,7 +120,7 @@
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
-	let binaryDataOfGtfsRt: any = new Object();
+//	let binaryDataOfGtfsRt: any = new Object();
 
 	let lockongps = false;
 	maplng = 0;
@@ -605,6 +610,8 @@ if (browser) {
 		}
 	}
 
+
+
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
@@ -1044,6 +1051,38 @@ if (browser) {
 			realtime_list = feedresults.r;
 		});
 
+		function fetchKactus() {
+			let avaliablerealtimevehicles_temp = new Set();
+			let avaliablerealtimetrips_temp = new Set();
+			let avaliablerealtimealerts_temp = new Set();
+
+			if (fetchedavaliablekactus === false) {
+				fetch("http://kactus.catenarymaps.org/gtfsrttimes")
+				.then(x => x.json())
+				.then((feeds: any) => {
+					feeds.forEach((feed:any) => {
+						if (feed.vehicles != null) {
+							avaliablerealtimevehicles_temp.add(feed.feed)
+						}
+						if (feed.trips != null) {
+							avaliablerealtimetrips_temp.add(feed.feed)
+						}
+						if (feed.alerts != null) {
+							avaliablerealtimealerts_temp.add(feed.feed)
+						}
+					})
+
+					avaliablerealtimevehicles = avaliablerealtimevehicles_temp;
+					avaliablerealtimetrips = avaliablerealtimetrips_temp;
+					avaliablerealtimealerts = avaliablerealtimealerts_temp;
+					fetchedavaliablekactus = true;
+				})
+				.catch((error) => console.error(error))
+			}
+		}
+
+		fetchKactus();
+
 		map.on('load', () => {
 			// Add new sources and layers
 			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
@@ -1051,6 +1090,8 @@ if (browser) {
 			if (removelogo1) {
 				removelogo1[0].remove();
 			}
+
+			fetchKactus();
 
 			map.addSource('static_feeds', {
 				type: 'geojson',
@@ -1518,7 +1559,13 @@ if (browser) {
 							url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
 						}
 
-						if (!realtime_id.includes('alerts')) {
+						let listhas = true;
+
+						if (fetchedavaliablekactus == true && !avaliablerealtimevehicles.has(realtime_id)) {
+							listhas = false;
+						}
+
+						if (!realtime_id.includes('alerts') && listhas == true) {
 							fetch(url)
 								.then(async (response) => {
 									if (response.status === 200) {
