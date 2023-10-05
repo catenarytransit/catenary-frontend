@@ -1991,7 +1991,7 @@ if (browser) {
 	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 >
 	<img src={current_map_heading < 7 && current_map_heading > -7 ? "/icons/north.svg" : "/icons/compass.svg"} class='h-7'
-	style={`transform: rotate(${current_map_heading}deg)`}
+	style={`transform: rotate(${0 - current_map_heading}deg)`}
 	/>
 </div>
 
