@@ -81,6 +81,9 @@ export function determineFeeds(map:any, staticfeeds:any, operators:any, realtime
 
     });
 
+    console.log('statics_data', static_data_obj)
+    console.log('operators_in_frame', operators_data_obj)
+
     return {
         s: statics_in_frame,
         o: operators_in_frame,

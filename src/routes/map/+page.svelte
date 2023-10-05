@@ -7,6 +7,7 @@
 	import { construct_svelte_component, run } from 'svelte/internal';
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../../utils/colour';
 	import { browser } from '$app/environment';
+	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { LngLat } from 'maplibre-gl';
 	import { flatten } from '../../utils/flatten';
 	import { determineFeeds } from '../../maploaddata';
@@ -46,6 +47,14 @@
 			return inputarray;
 		}
 	}
+
+	const decode = (textToDecode: string) => {
+  try {
+    return new TextDecoder().decode(decodeToAry(textToDecode));
+  } catch (e) {
+    return 'Decode failed: Invalid input';
+  }
+};
 
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
@@ -841,19 +850,10 @@ if (browser) {
 		let rtFeedsTimestampsVehicles: any = new Object();
 		let rtFeedsHashVehicles: any = new Object();
 
-		let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
+		//let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
 
-		let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
+		//let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
 
-		let style = '';
-
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			//if (false) {
-			// dark mode
-			style = dark;
-		} else {
-			style = light;
-		}
 
 		//does user have localstorage cachegeolocation
 
@@ -871,17 +871,29 @@ if (browser) {
 					zoominit = 13.4;
 				}
 			}
+
+		}
+
+		//get url param "sat"
+
+		let style = darkMode
+					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+
+		if (browser) {
+			if (window.location.search.includes('sat')) {
+				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
+			}
 		}
 
 		const map = new mapboxgl.Map({
 			container: 'map',
 			crossSourceCollisions: true,
 			style:
-				style === dark
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8', // stylesheet location
+				style, // stylesheet location
 			accessToken:
-				'pk.eyJ1Ijoia3lsZXJzY2hpbiIsImEiOiJjajFsajI0ZHMwMDIzMnFwaXNhbDlrNDhkIn0.VdZpwJyJ8gWA--JNzkU5_Q',
+			!window.location.search.includes('sat') ? decode('ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ')
+		: decode('ꉰ騮罹縱𒁪险謲靵譭阰晇陬ꍭ繨𔕩蹩繓縶荭轳晇蹯𒅮荸癄防虔靺𓈲蹫詘輲顗霱訳魩捑𖡐鑏鱘𒁍栱ꍫ桊虭晷𖡑虬'),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
