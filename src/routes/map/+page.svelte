@@ -1057,7 +1057,7 @@ if (browser) {
 			let avaliablerealtimealerts_temp = new Set();
 
 			if (fetchedavaliablekactus === false) {
-				fetch("http://kactus.catenarymaps.org/gtfsrttimes")
+				fetch("https://kactus.catenarymaps.org/gtfsrttimes")
 				.then(x => x.json())
 				.then((feeds: any) => {
 					feeds.forEach((feed:any) => {
