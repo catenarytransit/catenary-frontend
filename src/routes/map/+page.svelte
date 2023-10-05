@@ -1933,7 +1933,7 @@ if (browser) {
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | {current_map_heading}
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | {current_map_heading.toFixed(2)}
 </div>
 
 <!--
