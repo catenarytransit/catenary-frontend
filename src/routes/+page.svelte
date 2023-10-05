@@ -2,6 +2,7 @@
 	import Githubbox from '../githubbox.svelte';
 
 	import '../app.css';
+	import Maintainers from '../components/maintainers.svelte';
 </script>
 
 <svelte:head
@@ -116,37 +117,11 @@
 	</div>
 </div>
 
-<div class="bg-[#121a26]">
-	<div class="text-white lg:max-w-6xl lg:mx-auto py-10 md:py-16 lg:py-24 px-8 lg:px-16">
+<div class="bg-[#010101]">
+	<div class="text-white lg:max-w-[2000px] lg:mx-auto py-10 md:py-16 lg:py-24 px-8 lg:px-16">
 		<p class="text-xl md:text-2xl font-semibold">Our Maintainers</p>
 
-		<ul class="">
-			<li>
-				Kyler Chin<sup>1</sup> (he/him) - Founder, Director, Boardmember, Systems Programmer, Algorithms,
-				Frontend, Design
-			</li>
-			<li>Kin Tsang (he/him) - Systems Architecture, Boardmember, Algorithms</li>
-			<li>
-				Andrew Shen (he/him)<sup>1</sup> - Frontend/Flutter, Boardmember
-			</li>
-			<li>
-				Samuel Sharp (he/him)<sup>4</sup> - Frontend/Flutter, Design, UX/UI
-			</li>
-			<li>
-				Andrew Bustos (he/him)<sup>5</sup> - Frontend/Flutter, User Design
-			</li>
-			<li>
-				Josh Wong<sup>2/3</sup>(he/him) - Sysadmin, Systems Programmer, Algorithms
-			</li>
-		</ul>
-
-		<p>
-			1: University of California, Irvine <br />
-			2: Santa Monica College <br />
-			3: Don Bosco Technical Institute, Rosemead <br />
-			4: San Diego High School <br />
-			5: California State University, East Bay <br />
-		</p>
+		<Maintainers/>
 	</div>
 </div>
 
