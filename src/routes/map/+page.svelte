@@ -28,6 +28,8 @@
 
 	let static_feeds: any[] = [];
 
+	let current_map_heading = 0;
+
 	let operators: any[] = [];
 
 	let realtime_feeds: any[] = [];
@@ -889,6 +891,8 @@ if (browser) {
 			mapzoom = map.getZoom();
 			maplng = map.getCenter().lng;
 			maplat = map.getCenter().lat;
+
+			current_map_heading = map.getBearing();
 		}
 
 		function renderNewBearings() {
@@ -1792,6 +1796,12 @@ if (browser) {
 		layersettingsBox = false;
 	}
 
+	function gonorth() {
+		if (mapglobal) {
+			mapglobal.resetNorth()
+		}
+	}
+
 	function gpsbutton() {
 		if (geolocation) {
 			if (mapglobal) {
@@ -1830,7 +1840,7 @@ if (browser) {
 						secondrequestlockgps = true;
 					}
 
-					mapglobal.flyTo(target);
+					mapglobal.easeTo(target);
 				}
 			}
 		}
@@ -1923,7 +1933,7 @@ if (browser) {
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | {current_map_heading}
 </div>
 
 <!--
@@ -1948,7 +1958,7 @@ if (browser) {
 	on:touchstart={togglelayerfeature}
 	class="bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
-	<span class="material-symbols-outlined align-middle"> settings </span>
+	<span class="material-symbols-outlined align-middle select-none"> settings </span>
 </div>
 	
 	<div
@@ -1961,6 +1971,18 @@ if (browser) {
 	</div>
 
 	<div
+	on:click={gonorth}
+	on:keypress={gonorth}
+	on:touchstart={gonorth}
+	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+>
+	<img src={current_map_heading < 7 && current_map_heading > -7 ? "/icons/north.svg" : "/icons/compass.svg"} class='h-7'
+	style={`transform: rotate(${current_map_heading}deg)`}
+	/>
+</div>
+
+
+	<div
 		on:click={gpsbutton}
 		on:keydown={gpsbutton}
 		on:touchstart={gpsbutton}
@@ -1968,7 +1990,7 @@ if (browser) {
 			? ' text-blue-500 dark:text-blue-300'
 			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-4 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
-		<span class="material-symbols-outlined align-middle text-lg">
+		<span class="material-symbols-outlined align-middle text-lg select-none">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
 		</span>
 	</div>
