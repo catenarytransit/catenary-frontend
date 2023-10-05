@@ -1800,8 +1800,8 @@ if (browser) {
 		if (mapglobal) {
 			mapglobal.resetNorth()
 			setTimeout(() => {
-				mapglobal.resetNorth()
-			},300)
+				mapglobal.rotateTo(0, {duration: 0})
+			},100)
 		}
 	}
 
