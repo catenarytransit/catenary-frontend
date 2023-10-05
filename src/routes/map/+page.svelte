@@ -248,17 +248,6 @@ if (browser) {
 								.then((x) => x.json())
 								.then((x) => {
 									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-
-									if (static_feed_id === 'f-9q5b-longbeachtransit') {
-										Object.keys(route_info_lookup[static_feed_id]).forEach((routeName) => {
-											if (
-												route_info_lookup[static_feed_id][routeName].color === 'rgb(255,255,255)'
-											) {
-												route_info_lookup[static_feed_id][routeName].color = 'rgb(128,31,58)';
-											}
-										});
-									}
-
 									rerenders_request(realtime_id);
 									// console.log('saved results for this agency', static_feed_id)
 								})
@@ -324,15 +313,7 @@ if (browser) {
 							}
 
 							if (realtime_id === 'f-metro~losangeles~bus~rt') {
-								if (colour === '#ffffff') {
-									colour = '#e16710';
-								}
-
 								let trimmedRouteId = routeId.replace('-13168', '');
-
-								if (['720', '754', '761'].includes(trimmedRouteId)) {
-									colour = '#d11242';
-								}
 							}
 						} else {
 							//console.log('no route id', entity)
@@ -1107,7 +1088,7 @@ if (browser) {
 				//filter: ["==", ['get', 'onestop_feed_id'], 'f-anteaterexpress'],
 				paint: {
 					'fill-color': '#0055aa',
-					'fill-opacity': urlParams.get('debug') ? 0.01 : 0
+					'fill-opacity': 0
 				}
 			})
 
@@ -1964,7 +1945,8 @@ if (browser) {
 	<div
 	on:click={togglesettingfeature}
 	on:keypress={togglesettingfeature}
-	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	on:touchstart={togglelayerfeature}
+	class="bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
 	<span class="material-symbols-outlined align-middle"> settings </span>
 </div>
@@ -1972,17 +1954,19 @@ if (browser) {
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
+		on:touchstart={togglelayerfeature}
 		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
-		<span class="material-symbols-outlined align-middle my-auto mx-auto"> layers </span>
+		<span class="material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
 	</div>
 
 	<div
 		on:click={gpsbutton}
 		on:keydown={gpsbutton}
+		on:touchstart={gpsbutton}
 		class="${lockongps
 			? ' text-blue-500 dark:text-blue-300'
-			: ' text-black dark:text-gray-50'} bg-white text-gray-900 z-50 fixed bottom-4 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-4 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
@@ -2168,9 +2152,11 @@ if (browser) {
 		</div>
 	{/if}
 
+	<!--
 	<p class="text-xs">
 		Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.
 	</p>
+	-->
 </div>
 
 <style>
