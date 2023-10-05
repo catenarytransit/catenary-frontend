@@ -1969,7 +1969,6 @@ if (browser) {
 	<div
 	on:click={togglesettingfeature}
 	on:keypress={togglesettingfeature}
-	on:touchstart={togglelayerfeature}
 	class="bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
 	<span class="material-symbols-outlined align-middle select-none"> settings </span>
@@ -1978,7 +1977,6 @@ if (browser) {
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
-		on:touchstart={togglelayerfeature}
 		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
 		<span class="material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
