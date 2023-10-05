@@ -1841,7 +1841,7 @@ if (browser) {
 						essential: true // this animation is considered essential with respect to prefers-reduced-motion
 					};
 
-					if (lasttimeofnorth > performance.now() - 4000) {
+					if (lasttimeofnorth > performance.now() - 6000) {
 						target.bearing = 0;
 					}
 
@@ -1854,7 +1854,7 @@ if (browser) {
 						secondrequestlockgps = true;
 					}
 
-					mapglobal.easeTo(target);
+					mapglobal.easeTo(target, { duration: 500 });
 				}
 			}
 		}
