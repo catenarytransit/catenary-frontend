@@ -1799,6 +1799,9 @@ if (browser) {
 	function gonorth() {
 		if (mapglobal) {
 			mapglobal.resetNorth()
+			setTimeout(() => {
+				mapglobal.resetNorth()
+			},300)
 		}
 	}
 
