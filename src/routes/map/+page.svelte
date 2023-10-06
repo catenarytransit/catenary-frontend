@@ -1147,6 +1147,9 @@ if (browser) {
 			})
 
 			if (urlParams.get('debug')) {
+
+				map.showTileBoundaries = true;
+
 				map.addLayer({
 				id: 'static_hull_calc_line',
 				type: 'line',
