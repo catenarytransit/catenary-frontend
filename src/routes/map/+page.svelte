@@ -281,7 +281,9 @@ if (browser) {
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					.filter((entity: any) => entity.vehicle?.position !== null)
+				
+				.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
+					.filter((entity: any) => entity.vehicle?.position !== null && entity.vehicle?.position !== undefined)
 					//no vehicles older than 10 min
 				//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
@@ -1606,7 +1608,7 @@ if (browser) {
 						}
 					});
 				}
-			}, 1000);
+			}, 500);
 
 			map.addSource('geolocation', {
 				type: 'geojson',
