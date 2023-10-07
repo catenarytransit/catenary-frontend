@@ -346,7 +346,7 @@ if (browser) {
 						//fetchTrip = true;
 
 						//this system sucks, honestly. Transition to batch trips info eventually
-						if (fetchTrip === true && realtime_id != "f-mta~nyc~rt~mnr") {
+						if (fetchTrip === true) {
 							//submit a tripsId requests
 
 							if (static_feed_ids.length === 1) {
