@@ -334,6 +334,10 @@ if (browser) {
 							fetchTrip = true;
 						}
 
+						if (realtime_id === "f-mta~nyc~rt~mnr" || realtime_id === "f-mta~nyc~rt~lirr") {
+						routeType = 2;
+						}
+
 						if (routeType === 2) {
 							//get trip id for intercity rail
 							fetchTrip = true;
@@ -342,7 +346,7 @@ if (browser) {
 						//fetchTrip = true;
 
 						//this system sucks, honestly. Transition to batch trips info eventually
-						if (fetchTrip === true) {
+						if (fetchTrip === true && realtime_id != "f-mta~nyc~rt~mnr") {
 							//submit a tripsId requests
 
 							if (static_feed_ids.length === 1) {
@@ -366,8 +370,12 @@ if (browser) {
 											if (trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id) {
 												headsign = trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].trip_headsign;
 
-												routeId =
-													trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
+												if (vehicle.trip.routeId) {
+													routeId = vehicle.trip.routeId;
+												} else {
+													routeId =
+														trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
+												}
 
 												if (mergetable[routeId]) {
 													routeType = mergetable[routeId].route_type;
@@ -529,6 +537,16 @@ if (browser) {
 							maptag = railletters[routeId];
 						}
 
+						let tripIdLabel = vehicle?.trip?.tripId || '';
+
+						if ( realtime_id === "f-mta~nyc~rt~lirr") {
+							let temp1 = tripIdLabel.split('_');
+
+							console.log('lirr temp', temp1)
+
+							tripIdLabel = temp1[temp1.length - 1]
+						}
+
 						if (mergetable[routeId]) {
 							if (mergetable[routeId].short_name) {
 								maptag = (mergetable[routeId].short_name);
@@ -538,6 +556,13 @@ if (browser) {
 									console.log('overruled as long name', maptag)
 								}
 							}
+
+						
+						
+
+						if (realtime_id === "f-mta~nyc~rt~mnr" || realtime_id === "f-mta~nyc~rt~lirr") {
+							maptag = mergetable[routeId].long_name.replace(/branch/ig, "").trim();
+						}
 						}
 
 						maptag = maptag.replace(/( )?Line/, '');
@@ -565,7 +590,7 @@ if (browser) {
 								//int representing enum
 								routeType: routeType,
 								//keep to gtfs lookup
-								tripIdLabel: vehicle?.trip?.tripId,
+								tripIdLabel: tripIdLabel,
 								//keep to degrees as gtfs specs
 								bearing: vehicle?.position?.bearing,
 								maptag: maptag,
