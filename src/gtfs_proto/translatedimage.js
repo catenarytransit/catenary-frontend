@@ -7,8 +7,8 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.transit_realtime.TranslatedString');
-goog.provide('proto.transit_realtime.TranslatedString.Translation');
+goog.provide('proto.transit_realtime.TranslatedImage');
+goog.provide('proto.transit_realtime.TranslatedImage.LocalizedImage');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
@@ -25,19 +25,19 @@ goog.require('jspb.Message');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.transit_realtime.TranslatedString = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, 2, proto.transit_realtime.TranslatedString.repeatedFields_, null);
+proto.transit_realtime.TranslatedImage = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, 2, proto.transit_realtime.TranslatedImage.repeatedFields_, null);
 };
-goog.inherits(proto.transit_realtime.TranslatedString, jspb.Message);
+goog.inherits(proto.transit_realtime.TranslatedImage, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.transit_realtime.TranslatedString.displayName = 'proto.transit_realtime.TranslatedString';
+  proto.transit_realtime.TranslatedImage.displayName = 'proto.transit_realtime.TranslatedImage';
 }
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.transit_realtime.TranslatedString.repeatedFields_ = [1];
+proto.transit_realtime.TranslatedImage.repeatedFields_ = [1];
 
 
 
@@ -52,8 +52,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.transit_realtime.TranslatedString.prototype.toObject = function(opt_includeInstance) {
-  return proto.transit_realtime.TranslatedString.toObject(opt_includeInstance, this);
+proto.transit_realtime.TranslatedImage.prototype.toObject = function(opt_includeInstance) {
+  return proto.transit_realtime.TranslatedImage.toObject(opt_includeInstance, this);
 };
 
 
@@ -62,18 +62,18 @@ proto.transit_realtime.TranslatedString.prototype.toObject = function(opt_includ
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.transit_realtime.TranslatedString} msg The msg instance to transform.
+ * @param {!proto.transit_realtime.TranslatedImage} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.transit_realtime.TranslatedString.toObject = function(includeInstance, msg) {
+proto.transit_realtime.TranslatedImage.toObject = function(includeInstance, msg) {
   var f, obj = {
-    translationList: jspb.Message.toObjectList(msg.getTranslationList(),
-    proto.transit_realtime.TranslatedString.Translation.toObject, includeInstance)
+    localizedImageList: jspb.Message.toObjectList(msg.getLocalizedImageList(),
+    proto.transit_realtime.TranslatedImage.LocalizedImage.toObject, includeInstance)
   };
 
   jspb.Message.toObjectExtension(/** @type {!jspb.Message} */ (msg), obj,
-      proto.transit_realtime.TranslatedString.extensions, proto.transit_realtime.TranslatedString.prototype.getExtension,
+      proto.transit_realtime.TranslatedImage.extensions, proto.transit_realtime.TranslatedImage.prototype.getExtension,
       includeInstance);
   if (includeInstance) {
     obj.$jspbMessageInstance = msg;
@@ -86,23 +86,23 @@ proto.transit_realtime.TranslatedString.toObject = function(includeInstance, msg
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.transit_realtime.TranslatedString}
+ * @return {!proto.transit_realtime.TranslatedImage}
  */
-proto.transit_realtime.TranslatedString.deserializeBinary = function(bytes) {
+proto.transit_realtime.TranslatedImage.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.transit_realtime.TranslatedString;
-  return proto.transit_realtime.TranslatedString.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.transit_realtime.TranslatedImage;
+  return proto.transit_realtime.TranslatedImage.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.transit_realtime.TranslatedString} msg The message object to deserialize into.
+ * @param {!proto.transit_realtime.TranslatedImage} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.transit_realtime.TranslatedString}
+ * @return {!proto.transit_realtime.TranslatedImage}
  */
-proto.transit_realtime.TranslatedString.deserializeBinaryFromReader = function(msg, reader) {
+proto.transit_realtime.TranslatedImage.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -110,14 +110,14 @@ proto.transit_realtime.TranslatedString.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.transit_realtime.TranslatedString.Translation;
-      reader.readMessage(value,proto.transit_realtime.TranslatedString.Translation.deserializeBinaryFromReader);
-      msg.addTranslation(value);
+      var value = new proto.transit_realtime.TranslatedImage.LocalizedImage;
+      reader.readMessage(value,proto.transit_realtime.TranslatedImage.LocalizedImage.deserializeBinaryFromReader);
+      msg.addLocalizedImage(value);
       break;
     default:
-      jspb.Message.readBinaryExtension(msg, reader, proto.transit_realtime.TranslatedString.extensionsBinary,
-        proto.transit_realtime.TranslatedString.prototype.getExtension,
-        proto.transit_realtime.TranslatedString.prototype.setExtension);
+      jspb.Message.readBinaryExtension(msg, reader, proto.transit_realtime.TranslatedImage.extensionsBinary,
+        proto.transit_realtime.TranslatedImage.prototype.getExtension,
+        proto.transit_realtime.TranslatedImage.prototype.setExtension);
       break;
     }
   }
@@ -129,9 +129,9 @@ proto.transit_realtime.TranslatedString.deserializeBinaryFromReader = function(m
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.transit_realtime.TranslatedString.prototype.serializeBinary = function() {
+proto.transit_realtime.TranslatedImage.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.transit_realtime.TranslatedString.serializeBinaryToWriter(this, writer);
+  proto.transit_realtime.TranslatedImage.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -139,22 +139,22 @@ proto.transit_realtime.TranslatedString.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.transit_realtime.TranslatedString} message
+ * @param {!proto.transit_realtime.TranslatedImage} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.transit_realtime.TranslatedString.serializeBinaryToWriter = function(message, writer) {
+proto.transit_realtime.TranslatedImage.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getTranslationList();
+  f = message.getLocalizedImageList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.transit_realtime.TranslatedString.Translation.serializeBinaryToWriter
+      proto.transit_realtime.TranslatedImage.LocalizedImage.serializeBinaryToWriter
     );
   }
   jspb.Message.serializeBinaryExtensions(message, writer,
-    proto.transit_realtime.TranslatedString.extensionsBinary, proto.transit_realtime.TranslatedString.prototype.getExtension);
+    proto.transit_realtime.TranslatedImage.extensionsBinary, proto.transit_realtime.TranslatedImage.prototype.getExtension);
 };
 
 
@@ -169,12 +169,12 @@ proto.transit_realtime.TranslatedString.serializeBinaryToWriter = function(messa
  * @extends {jspb.Message}
  * @constructor
  */
-proto.transit_realtime.TranslatedString.Translation = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, 3, null, null);
+proto.transit_realtime.TranslatedImage.LocalizedImage = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, 4, null, null);
 };
-goog.inherits(proto.transit_realtime.TranslatedString.Translation, jspb.Message);
+goog.inherits(proto.transit_realtime.TranslatedImage.LocalizedImage, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.transit_realtime.TranslatedString.Translation.displayName = 'proto.transit_realtime.TranslatedString.Translation';
+  proto.transit_realtime.TranslatedImage.LocalizedImage.displayName = 'proto.transit_realtime.TranslatedImage.LocalizedImage';
 }
 
 
@@ -189,8 +189,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.transit_realtime.TranslatedString.Translation.prototype.toObject = function(opt_includeInstance) {
-  return proto.transit_realtime.TranslatedString.Translation.toObject(opt_includeInstance, this);
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.toObject = function(opt_includeInstance) {
+  return proto.transit_realtime.TranslatedImage.LocalizedImage.toObject(opt_includeInstance, this);
 };
 
 
@@ -199,18 +199,19 @@ proto.transit_realtime.TranslatedString.Translation.prototype.toObject = functio
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.transit_realtime.TranslatedString.Translation} msg The msg instance to transform.
+ * @param {!proto.transit_realtime.TranslatedImage.LocalizedImage} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.transit_realtime.TranslatedString.Translation.toObject = function(includeInstance, msg) {
+proto.transit_realtime.TranslatedImage.LocalizedImage.toObject = function(includeInstance, msg) {
   var f, obj = {
-    text: jspb.Message.getField(msg, 1),
-    language: jspb.Message.getField(msg, 2)
+    url: jspb.Message.getField(msg, 1),
+    mediaType: jspb.Message.getField(msg, 2),
+    language: jspb.Message.getField(msg, 3)
   };
 
   jspb.Message.toObjectExtension(/** @type {!jspb.Message} */ (msg), obj,
-      proto.transit_realtime.TranslatedString.Translation.extensions, proto.transit_realtime.TranslatedString.Translation.prototype.getExtension,
+      proto.transit_realtime.TranslatedImage.LocalizedImage.extensions, proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.getExtension,
       includeInstance);
   if (includeInstance) {
     obj.$jspbMessageInstance = msg;
@@ -223,23 +224,23 @@ proto.transit_realtime.TranslatedString.Translation.toObject = function(includeI
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.transit_realtime.TranslatedString.Translation}
+ * @return {!proto.transit_realtime.TranslatedImage.LocalizedImage}
  */
-proto.transit_realtime.TranslatedString.Translation.deserializeBinary = function(bytes) {
+proto.transit_realtime.TranslatedImage.LocalizedImage.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.transit_realtime.TranslatedString.Translation;
-  return proto.transit_realtime.TranslatedString.Translation.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.transit_realtime.TranslatedImage.LocalizedImage;
+  return proto.transit_realtime.TranslatedImage.LocalizedImage.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.transit_realtime.TranslatedString.Translation} msg The message object to deserialize into.
+ * @param {!proto.transit_realtime.TranslatedImage.LocalizedImage} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.transit_realtime.TranslatedString.Translation}
+ * @return {!proto.transit_realtime.TranslatedImage.LocalizedImage}
  */
-proto.transit_realtime.TranslatedString.Translation.deserializeBinaryFromReader = function(msg, reader) {
+proto.transit_realtime.TranslatedImage.LocalizedImage.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -248,16 +249,20 @@ proto.transit_realtime.TranslatedString.Translation.deserializeBinaryFromReader 
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setText(value);
+      msg.setUrl(value);
       break;
     case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setMediaType(value);
+      break;
+    case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setLanguage(value);
       break;
     default:
-      jspb.Message.readBinaryExtension(msg, reader, proto.transit_realtime.TranslatedString.Translation.extensionsBinary,
-        proto.transit_realtime.TranslatedString.Translation.prototype.getExtension,
-        proto.transit_realtime.TranslatedString.Translation.prototype.setExtension);
+      jspb.Message.readBinaryExtension(msg, reader, proto.transit_realtime.TranslatedImage.LocalizedImage.extensionsBinary,
+        proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.getExtension,
+        proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.setExtension);
       break;
     }
   }
@@ -269,9 +274,9 @@ proto.transit_realtime.TranslatedString.Translation.deserializeBinaryFromReader 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.transit_realtime.TranslatedString.Translation.prototype.serializeBinary = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.transit_realtime.TranslatedString.Translation.serializeBinaryToWriter(this, writer);
+  proto.transit_realtime.TranslatedImage.LocalizedImage.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -279,11 +284,11 @@ proto.transit_realtime.TranslatedString.Translation.prototype.serializeBinary = 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.transit_realtime.TranslatedString.Translation} message
+ * @param {!proto.transit_realtime.TranslatedImage.LocalizedImage} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.transit_realtime.TranslatedString.Translation.serializeBinaryToWriter = function(message, writer) {
+proto.transit_realtime.TranslatedImage.LocalizedImage.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = /** @type {string} */ (jspb.Message.getField(message, 1));
   if (f != null) {
@@ -299,27 +304,34 @@ proto.transit_realtime.TranslatedString.Translation.serializeBinaryToWriter = fu
       f
     );
   }
+  f = /** @type {string} */ (jspb.Message.getField(message, 3));
+  if (f != null) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
   jspb.Message.serializeBinaryExtensions(message, writer,
-    proto.transit_realtime.TranslatedString.Translation.extensionsBinary, proto.transit_realtime.TranslatedString.Translation.prototype.getExtension);
+    proto.transit_realtime.TranslatedImage.LocalizedImage.extensionsBinary, proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.getExtension);
 };
 
 
 /**
- * required string text = 1;
+ * required string url = 1;
  * @return {string}
  */
-proto.transit_realtime.TranslatedString.Translation.prototype.getText = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.getUrl = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.transit_realtime.TranslatedString.Translation.prototype.setText = function(value) {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.setUrl = function(value) {
   jspb.Message.setField(this, 1, value);
 };
 
 
-proto.transit_realtime.TranslatedString.Translation.prototype.clearText = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.clearUrl = function() {
   jspb.Message.setField(this, 1, undefined);
 };
 
@@ -328,27 +340,27 @@ proto.transit_realtime.TranslatedString.Translation.prototype.clearText = functi
  * Returns whether this field is set.
  * @return {!boolean}
  */
-proto.transit_realtime.TranslatedString.Translation.prototype.hasText = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.hasUrl = function() {
   return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * optional string language = 2;
+ * required string media_type = 2;
  * @return {string}
  */
-proto.transit_realtime.TranslatedString.Translation.prototype.getLanguage = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.getMediaType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /** @param {string} value */
-proto.transit_realtime.TranslatedString.Translation.prototype.setLanguage = function(value) {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.setMediaType = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
 
-proto.transit_realtime.TranslatedString.Translation.prototype.clearLanguage = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.clearMediaType = function() {
   jspb.Message.setField(this, 2, undefined);
 };
 
@@ -357,8 +369,37 @@ proto.transit_realtime.TranslatedString.Translation.prototype.clearLanguage = fu
  * Returns whether this field is set.
  * @return {!boolean}
  */
-proto.transit_realtime.TranslatedString.Translation.prototype.hasLanguage = function() {
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.hasMediaType = function() {
   return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional string language = 3;
+ * @return {string}
+ */
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.getLanguage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/** @param {string} value */
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.setLanguage = function(value) {
+  jspb.Message.setField(this, 3, value);
+};
+
+
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.clearLanguage = function() {
+  jspb.Message.setField(this, 3, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.transit_realtime.TranslatedImage.LocalizedImage.prototype.hasLanguage = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -375,7 +416,7 @@ proto.transit_realtime.TranslatedString.Translation.prototype.hasLanguage = func
  *
  * @type {!Object<number, jspb.ExtensionFieldInfo>}
  */
-proto.transit_realtime.TranslatedString.Translation.extensions = {};
+proto.transit_realtime.TranslatedImage.LocalizedImage.extensions = {};
 
 
 /**
@@ -390,36 +431,36 @@ proto.transit_realtime.TranslatedString.Translation.extensions = {};
  *
  * @type {!Object<number, jspb.ExtensionFieldBinaryInfo>}
  */
-proto.transit_realtime.TranslatedString.Translation.extensionsBinary = {};
+proto.transit_realtime.TranslatedImage.LocalizedImage.extensionsBinary = {};
 
 /**
- * repeated Translation translation = 1;
- * @return {!Array<!proto.transit_realtime.TranslatedString.Translation>}
+ * repeated LocalizedImage localized_image = 1;
+ * @return {!Array<!proto.transit_realtime.TranslatedImage.LocalizedImage>}
  */
-proto.transit_realtime.TranslatedString.prototype.getTranslationList = function() {
-  return /** @type{!Array<!proto.transit_realtime.TranslatedString.Translation>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.transit_realtime.TranslatedString.Translation, 1));
+proto.transit_realtime.TranslatedImage.prototype.getLocalizedImageList = function() {
+  return /** @type{!Array<!proto.transit_realtime.TranslatedImage.LocalizedImage>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.transit_realtime.TranslatedImage.LocalizedImage, 1));
 };
 
 
-/** @param {!Array<!proto.transit_realtime.TranslatedString.Translation>} value */
-proto.transit_realtime.TranslatedString.prototype.setTranslationList = function(value) {
+/** @param {!Array<!proto.transit_realtime.TranslatedImage.LocalizedImage>} value */
+proto.transit_realtime.TranslatedImage.prototype.setLocalizedImageList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * @param {!proto.transit_realtime.TranslatedString.Translation=} opt_value
+ * @param {!proto.transit_realtime.TranslatedImage.LocalizedImage=} opt_value
  * @param {number=} opt_index
- * @return {!proto.transit_realtime.TranslatedString.Translation}
+ * @return {!proto.transit_realtime.TranslatedImage.LocalizedImage}
  */
-proto.transit_realtime.TranslatedString.prototype.addTranslation = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.transit_realtime.TranslatedString.Translation, opt_index);
+proto.transit_realtime.TranslatedImage.prototype.addLocalizedImage = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.transit_realtime.TranslatedImage.LocalizedImage, opt_index);
 };
 
 
-proto.transit_realtime.TranslatedString.prototype.clearTranslationList = function() {
-  this.setTranslationList([]);
+proto.transit_realtime.TranslatedImage.prototype.clearLocalizedImageList = function() {
+  this.setLocalizedImageList([]);
 };
 
 
@@ -436,7 +477,7 @@ proto.transit_realtime.TranslatedString.prototype.clearTranslationList = functio
  *
  * @type {!Object<number, jspb.ExtensionFieldInfo>}
  */
-proto.transit_realtime.TranslatedString.extensions = {};
+proto.transit_realtime.TranslatedImage.extensions = {};
 
 
 /**
@@ -451,5 +492,5 @@ proto.transit_realtime.TranslatedString.extensions = {};
  *
  * @type {!Object<number, jspb.ExtensionFieldBinaryInfo>}
  */
-proto.transit_realtime.TranslatedString.extensionsBinary = {};
+proto.transit_realtime.TranslatedImage.extensionsBinary = {};
 
