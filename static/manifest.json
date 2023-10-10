@@ -3,7 +3,7 @@
     "name": "Catenary Maps",
     "id": "catenarymaps.org",
     "display": "standalone",
-    "scope": "/",
+    "scope": ".",
     "categories": [
         "utilities",
         "travel",
@@ -25,7 +25,7 @@
             "platform": "wide"
         }
     ],
-    "start_url": "/",
+    "start_url": ".",
     "background_color": "#191919",
     "theme_color": "#191919",
     "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
