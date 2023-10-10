@@ -25,7 +25,7 @@
             "platform": "wide"
         }
     ],
-    "start_url": "map/?source=pwa",
+    "start_url": "?source=pwa",
     "background_color": "#191919",
     "theme_color": "#191919",
     "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
