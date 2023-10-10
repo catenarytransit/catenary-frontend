@@ -907,6 +907,8 @@ if (browser) {
 		const map = new mapboxgl.Map({
 			container: 'map',
 			crossSourceCollisions: true,
+			hash: true,
+			antialias: true,
 			style:
 				style, // stylesheet location
 			accessToken:
@@ -1250,7 +1252,7 @@ if (browser) {
 					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 				},
-				minzoom: 3
+				minzoom: 7
 			});
 
 
@@ -1307,7 +1309,7 @@ if (browser) {
 					'text-halo-blur': 0,
 					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
 				},
-				minzoom: 3
+				minzoom: 7
 			});
 
 			map.addLayer({
