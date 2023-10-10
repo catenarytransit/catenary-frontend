@@ -1672,7 +1672,7 @@ if (browser) {
 
 			runSettingsAdapt();
 
-			map.loadImage('https://catenarymaps.org/geo-circle.png', (error, image) => {
+			map.loadImage('https://maps.catenarymaps.org/geo-circle.png', (error, image) => {
 				if (error) throw error;
 
 				// Add the image to the map style.
