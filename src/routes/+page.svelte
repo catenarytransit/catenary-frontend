@@ -2012,11 +2012,11 @@ if (browser) {
 		>
 			{#if usunits == false}
 			<div>
-				{geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
+				<span class='font-semibold'>{geolocation.coords.speed.toFixed(2)}</span> <span class='text-xs'>m/s</span> <span class='font-semibold'>{(3.6 * geolocation.coords.speed).toFixed(2)}</span> <span class='text-xs'>km/h</span>
 			</div>
 			{:else}
 			<div>
-				{(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+				<span class='font-semibold'>{(2.23694 * geolocation.coords.speed).toFixed(2)}</span> <span class='text-xs'>mph</span>
 		</div>
 		{/if}
 	</div>
