@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Githubbox from '../../githubbox.svelte';
 
-	import '../app.css';
+	import '../../app.css';
 	import Maintainers from '../../components/maintainers.svelte';
 </script>
 
