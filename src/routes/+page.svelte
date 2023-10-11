@@ -1253,7 +1253,7 @@ if (browser) {
 				'source-layer': 'shapes',
 				filter: processUrlLimit([
 					'all',
-					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],,
+					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 				]),
 				paint: {
