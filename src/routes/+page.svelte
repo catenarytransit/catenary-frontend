@@ -1242,7 +1242,7 @@ if (browser) {
 				'source-layer': 'shapes',
 				filter: processUrlLimit([
 					'all',
-					['==', 3, ['get', 'route_type']],
+					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],,
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 				]),
 				paint: {
@@ -1284,7 +1284,7 @@ if (browser) {
 				'source-layer': 'shapes',
 				filter: processUrlLimit([
 					'all',
-					['==', 3, ['get', 'route_type']],
+					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 				]),
 				layout: {
@@ -1318,7 +1318,9 @@ if (browser) {
 				source: 'shapes',
 				'source-layer': 'shapes',
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
-				 ['!=', 3, ['get', 'route_type']]]),
+				 ['!=', 3, ['get', 'route_type']],
+				 ['!=', 11, ['get', 'route_type']]
+				]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
@@ -1334,16 +1336,18 @@ if (browser) {
 				type: 'symbol',
 				source: 'shapes',
 				'source-layer': 'shapes',
-				filter: ['all', ['!=', 3, ['get', 'route_type']]],
+				filter: ['all', ['!=', 3, ['get', 'route_type']],
+				['!=', 11, ['get', 'route_type']]
+			],
 				layout: {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 7, 9, 9, 13, 11],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 					'text-ignore-placement': false,
 
-					'symbol-spacing': ['step', ['zoom'], 150, 13, 80, 15, 100],
+					'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
 					'text-allow-overlap': false,
 					visibility: 'none'
 				},
@@ -1353,7 +1357,7 @@ if (browser) {
 					'text-halo-color': ['concat', '#', ['get', 'color']],
 					'text-halo-width': 3,
 					'text-halo-blur': 1,
-					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+					//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
 				},
 				minzoom: 3
 			});
