@@ -1222,10 +1222,21 @@ if (browser) {
 				});
 			}
 
+			/*
 			map.addSource('shapes', {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/shapes'
+			});*/
+
+			map.addSource('notbusshapes', {
+				type: 'vector',
+				url: 'https://martin.catenarymaps.org/notbus'
 			});
+
+			map.addSource('busshapes', {
+				type: 'vector',
+				url: 'https://martin.catenarymaps.org/busonly'
+			})
 
 			map.addSource('stops', {
 				type: 'vector',
@@ -1238,7 +1249,7 @@ if (browser) {
 			map.addLayer({
 				id: 'busshapes',
 				type: 'line',
-				source: 'shapes',
+				source: 'busshapes',
 				'source-layer': 'shapes',
 				filter: processUrlLimit([
 					'all',
@@ -1263,7 +1274,7 @@ if (browser) {
 			map.addLayer({
 				id: 'ferryshapes',
 				type: 'line',
-				source: 'shapes',
+				source: 'notbusshapes',
 				'source-layer': 'shapes',
 				filter: ['==', 4, ['get', 'route_type']],
 				paint: {
@@ -1280,7 +1291,7 @@ if (browser) {
 			map.addLayer({
 				id: 'labelbusshapes',
 				type: 'symbol',
-				source: 'shapes',
+				source: 'busshapes',
 				'source-layer': 'shapes',
 				filter: processUrlLimit([
 					'all',
@@ -1315,7 +1326,7 @@ if (browser) {
 			map.addLayer({
 				id: 'railshapes',
 				type: 'line',
-				source: 'shapes',
+				source: 'notshapes',
 				'source-layer': 'shapes',
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
 				 ['!=', 3, ['get', 'route_type']],
@@ -1334,7 +1345,7 @@ if (browser) {
 			map.addLayer({
 				id: 'labelrailshapes',
 				type: 'symbol',
-				source: 'shapes',
+				source: 'notshapes',
 				'source-layer': 'shapes',
 				filter: ['all', ['!=', 3, ['get', 'route_type']],
 				['!=', 11, ['get', 'route_type']]
