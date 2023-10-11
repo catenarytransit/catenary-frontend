@@ -1326,7 +1326,7 @@ if (browser) {
 			map.addLayer({
 				id: 'railshapes',
 				type: 'line',
-				source: 'notshapes',
+				source: 'notbusshapes',
 				'source-layer': 'shapes',
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
 				 ['!=', 3, ['get', 'route_type']],
@@ -1345,7 +1345,7 @@ if (browser) {
 			map.addLayer({
 				id: 'labelrailshapes',
 				type: 'symbol',
-				source: 'notshapes',
+				source: 'notbusshapes',
 				'source-layer': 'shapes',
 				filter: ['all', ['!=', 3, ['get', 'route_type']],
 				['!=', 11, ['get', 'route_type']]
