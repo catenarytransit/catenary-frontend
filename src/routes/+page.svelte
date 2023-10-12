@@ -1250,7 +1250,6 @@ if (browser) {
 				'source-layer': 'busonly',
 				filter: processUrlLimit([
 					'all',
-					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 				]),
 				paint: {
@@ -1326,8 +1325,6 @@ if (browser) {
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
-				 ['!=', 3, ['get', 'route_type']],
-				 ['!=', 11, ['get', 'route_type']]
 				]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
