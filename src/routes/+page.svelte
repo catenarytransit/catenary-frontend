@@ -744,14 +744,14 @@ if (browser) {
 
 		let busvehicles = mapglobal.getLayer('buses');
 
-		let hidevehiclecommand =  ['has','tripIdLabel']
+		let hidevehiclecommand =  ["!=", "", ['get','tripIdLabel']]
 
 		if (busvehicles) {
 			console.log('found bus vehicles layer')
 			if (showzombiebuses === true) {
 				//set filter to none
-				mapglobal.setFilter('buses', true);
-				mapglobal.setFilter('labelbuses', true)
+				mapglobal.setFilter('buses', undefined);
+				mapglobal.setFilter('labelbuses', undefined)
 			} else {
 				console.log('hiding buses')
 				mapglobal.setFilter('buses', hidevehiclecommand);
@@ -763,8 +763,8 @@ if (browser) {
 		if (railvehicles) {
 			if (showzombiebuses === true) {
 				//set filter to none
-				mapglobal.setFilter('raillayer', true);
-				mapglobal.setFilter('labelrail', true)
+				mapglobal.setFilter('raillayer', undefined);
+				mapglobal.setFilter('labelrail', undefined);
 			} else {
 				mapglobal.setFilter('raillayer', hidevehiclecommand);
 				mapglobal.setFilter('labelrail', hidevehiclecommand);
@@ -1242,9 +1242,6 @@ if (browser) {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/stops'
 			})
-
-
-			
 
 			map.addLayer({
 				id: 'busshapes',
