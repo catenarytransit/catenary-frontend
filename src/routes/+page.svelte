@@ -744,14 +744,14 @@ if (browser) {
 
 		let busvehicles = mapglobal.getLayer('buses');
 
-		let hidevehiclecommand =  ['has','tripIdLabel']
+		let hidevehiclecommand =  ["!=", "", ['get','tripIdLabel']]
 
 		if (busvehicles) {
 			console.log('found bus vehicles layer')
 			if (showzombiebuses === true) {
 				//set filter to none
-				mapglobal.setFilter('buses', true);
-				mapglobal.setFilter('labelbuses', true)
+				mapglobal.setFilter('buses', undefined);
+				mapglobal.setFilter('labelbuses', undefined)
 			} else {
 				console.log('hiding buses')
 				mapglobal.setFilter('buses', hidevehiclecommand);
@@ -763,8 +763,8 @@ if (browser) {
 		if (railvehicles) {
 			if (showzombiebuses === true) {
 				//set filter to none
-				mapglobal.setFilter('raillayer', true);
-				mapglobal.setFilter('labelrail', true)
+				mapglobal.setFilter('raillayer', undefined);
+				mapglobal.setFilter('labelrail', undefined);
 			} else {
 				mapglobal.setFilter('raillayer', hidevehiclecommand);
 				mapglobal.setFilter('labelrail', hidevehiclecommand);
@@ -1222,24 +1222,32 @@ if (browser) {
 				});
 			}
 
+			/*
 			map.addSource('shapes', {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/shapes'
+			});*/
+
+			map.addSource('notbusshapes', {
+				type: 'vector',
+				url: 'https://martin.catenarymaps.org/notbus'
 			});
+
+			map.addSource('busshapes', {
+				type: 'vector',
+				url: 'https://martin.catenarymaps.org/busonly'
+			})
 
 			map.addSource('stops', {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/stops'
 			})
 
-
-			
-
 			map.addLayer({
 				id: 'busshapes',
 				type: 'line',
-				source: 'shapes',
-				'source-layer': 'shapes',
+				source: 'busshapes',
+				'source-layer': 'busonly',
 				filter: processUrlLimit([
 					'all',
 					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
@@ -1263,8 +1271,8 @@ if (browser) {
 			map.addLayer({
 				id: 'ferryshapes',
 				type: 'line',
-				source: 'shapes',
-				'source-layer': 'shapes',
+				source: 'notbusshapes',
+				'source-layer': 'notbus',
 				filter: ['==', 4, ['get', 'route_type']],
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
@@ -1280,8 +1288,8 @@ if (browser) {
 			map.addLayer({
 				id: 'labelbusshapes',
 				type: 'symbol',
-				source: 'shapes',
-				'source-layer': 'shapes',
+				source: 'busshapes',
+				'source-layer': 'busonly',
 				filter: processUrlLimit([
 					'all',
 					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
@@ -1315,8 +1323,8 @@ if (browser) {
 			map.addLayer({
 				id: 'railshapes',
 				type: 'line',
-				source: 'shapes',
-				'source-layer': 'shapes',
+				source: 'notbusshapes',
+				'source-layer': 'notbus',
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
 				 ['!=', 3, ['get', 'route_type']],
 				 ['!=', 11, ['get', 'route_type']]
@@ -1334,8 +1342,8 @@ if (browser) {
 			map.addLayer({
 				id: 'labelrailshapes',
 				type: 'symbol',
-				source: 'shapes',
-				'source-layer': 'shapes',
+				source: 'notbusshapes',
+				'source-layer': 'notbus',
 				filter: ['all', ['!=', 3, ['get', 'route_type']],
 				['!=', 11, ['get', 'route_type']]
 			],
@@ -1443,7 +1451,8 @@ if (browser) {
 					'line-color': ['get', darkMode === true ? 'cd' : 'color'],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.8, 12, 2.5, 13, 3],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
-				}
+				},
+				minzoom: 7
 			});
 
 			map.addSource('railbearings', {
@@ -1485,7 +1494,8 @@ if (browser) {
 					'circle-stroke-width': 0.8,
 					'circle-opacity':
 						darkMode == true ? ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.7] : 0.5
-				}
+				},
+				minzoom: 7
 			});
 
 			map.addLayer({
