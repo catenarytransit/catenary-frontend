@@ -1247,11 +1247,7 @@ if (browser) {
 				id: 'busshapes',
 				type: 'line',
 				source: 'busshapes',
-<<<<<<< Updated upstream
 				'source-layer': 'busonly',
-=======
-				'source-layer': 'shapes',
->>>>>>> Stashed changes
 				filter: processUrlLimit([
 					'all',
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
@@ -1275,32 +1271,20 @@ if (browser) {
 				id: 'ferryshapes',
 				type: 'line',
 				source: 'notbusshapes',
-<<<<<<< Updated upstream
 				'source-layer': 'notbus',
-=======
-				'source-layer': 'shapes',
->>>>>>> Stashed changes
+				minzoom: 3,
 				filter: ['==', 4, ['get', 'route_type']],
-				paint: {
-					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
 					'line-dasharray': [2, 1],
 					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
-				},
-				minzoom: 3
 			});
 
 			map.addLayer({
 				id: 'labelbusshapes',
 				type: 'symbol',
 				source: 'busshapes',
-<<<<<<< Updated upstream
 				'source-layer': 'busonly',
-=======
-				'source-layer': 'shapes',
->>>>>>> Stashed changes
 				filter: processUrlLimit([
 					'all',
 					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
@@ -1334,13 +1318,8 @@ if (browser) {
 			map.addLayer({
 				id: 'railshapes',
 				type: 'line',
-<<<<<<< Updated upstream
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
-=======
-				source: 'notshapes',
-				'source-layer': 'shapes',
->>>>>>> Stashed changes
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
 				]),
 				paint: {
@@ -1356,13 +1335,8 @@ if (browser) {
 			map.addLayer({
 				id: 'labelrailshapes',
 				type: 'symbol',
-<<<<<<< Updated upstream
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
-=======
-				source: 'notshapes',
-				'source-layer': 'shapes',
->>>>>>> Stashed changes
 				filter: ['all', ['!=', 3, ['get', 'route_type']],
 				['!=', 11, ['get', 'route_type']]
 			],
@@ -2101,7 +2075,7 @@ if (browser) {
 	on:touchstart={gonorth}
 	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 >
-	<img src={current_map_heading < 7 && current_map_heading > -7 ? (darkMode ? "/icons/north.svg": "/icons/light_north.svg") : "/icons/compass.svg"} class='h-7' alt='icon'
+	<img src={current_map_heading < 7 && current_map_heading > -7 ? (darkMode === true ? "/icons/north.svg": "/icons/light_north.svg") : "/icons/compass.svg"} class='h-7' alt='icon'
 	style={`transform: rotate(${0 - current_map_heading}deg)`}
 	/>
 </div>
