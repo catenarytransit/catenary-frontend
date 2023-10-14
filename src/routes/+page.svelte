@@ -2013,6 +2013,7 @@ if (browser) {
 		height="0"
 		width="0"
 		style="display:none;visibility:hidden"
+    title="Google Tag Manager"
 	/></noscript
 >
 
@@ -2059,17 +2060,17 @@ if (browser) {
 	<div
 	on:click={togglesettingfeature}
 	on:keypress={togglesettingfeature}
-	class="bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	class="!cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
-	<span class="material-symbols-outlined align-middle select-none"> settings </span>
+	<span class="!cursor-pointer material-symbols-outlined align-middle select-none"> settings </span>
 </div>
 	
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="!cursor-pointer bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
-		<span class="material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
+		<span class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
 	</div>
 
 	<div
@@ -2078,7 +2079,7 @@ if (browser) {
 	on:touchstart={gonorth}
 	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 >
-	<img src={current_map_heading < 7 && current_map_heading > -7 ? "/icons/north.svg" : "/icons/compass.svg"} class='h-7'
+	<img src={current_map_heading < 7 && current_map_heading > -7 ? "/icons/north.svg" : "/icons/compass.svg"} class='h-7' alt='icon'
 	style={`transform: rotate(${0 - current_map_heading}deg)`}
 	/>
 </div>

@@ -18,7 +18,7 @@
 	class="sticky bg-[#1a2536] flex flex-row gap-x-2 px-2 py-4 shadow-sm shadow-blue-100 shadow-opacity-50"
 >
 	<div class="flex flex-row gap-x-3">
-		<img src="/logo1.png" class=" h-10" />
+		<img src="/logo1.png" class=" h-10" alt="Catenary Maps" />
 		<p class="text-white text-2xl font-semibold my-auto">Catenary Maps</p>
 	</div>
 	<div class="hidden ml-auto text-white my-auto mr-5 sm:flex flex-row gap-x-4" />
@@ -60,6 +60,7 @@
 				<img
 					src="/mainscreenshot.png"
 					class="border-2 border-gray-700 md:max-w-2xl shadow-2xl shadow-blue-200/20 mx-auto rounded-2xl"
+          alt="screenshot"
 				/>
 			</a>
 		</div>
