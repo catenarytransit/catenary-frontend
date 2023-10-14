@@ -28,16 +28,10 @@
         {
             "src": "screenshot.png",
             "sizes": "2146x1200",
-            "type": "image/png",
-            "form_factor": "wide"
-        },
-        {
-            "src": "screenshot.png",
-            "sizes": "2146x1200",
             "type": "image/png"
         }
     ],
-    "start_url": "?utm_source=pwa",
+    "start_url": "/?utm_source=pwa",
     "background_color": "#0A233F",
     "theme_color": "#0A233F",
     "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
