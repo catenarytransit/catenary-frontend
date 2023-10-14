@@ -1272,16 +1272,12 @@ if (browser) {
 				type: 'line',
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
+				minzoom: 3,
 				filter: ['==', 4, ['get', 'route_type']],
-				paint: {
-					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
 					'line-dasharray': [2, 1],
 					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
-				},
-				minzoom: 3
 			});
 
 			map.addLayer({
@@ -2013,6 +2009,7 @@ if (browser) {
 		height="0"
 		width="0"
 		style="display:none;visibility:hidden"
+    title="Google Tag Manager"
 	/></noscript
 >
 
@@ -2059,26 +2056,27 @@ if (browser) {
 	<div
 	on:click={togglesettingfeature}
 	on:keypress={togglesettingfeature}
-	class="bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	class="!cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 >
-	<span class="material-symbols-outlined align-middle select-none"> settings </span>
+	<span class="!cursor-pointer material-symbols-outlined align-middle select-none"> settings </span>
 </div>
 	
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="!cursor-pointer bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
-		<span class="material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
+		<span class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
 	</div>
 
 	<div
 	on:click={gonorth}
 	on:keypress={gonorth}
 	on:touchstart={gonorth}
+	aria-label="Reset Map to North"
 	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 >
-	<img src={current_map_heading < 7 && current_map_heading > -7 ? "/icons/north.svg" : "/icons/compass.svg"} class='h-7'
+	<img src={current_map_heading < 7 && current_map_heading > -7 ? (darkMode === true ? "/icons/north.svg": "/icons/light_north.svg") : "/icons/compass.svg"} class='h-7'
 	style={`transform: rotate(${0 - current_map_heading}deg)`}
 	/>
 </div>
