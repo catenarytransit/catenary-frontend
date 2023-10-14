@@ -2073,9 +2073,10 @@ if (browser) {
 	on:click={gonorth}
 	on:keypress={gonorth}
 	on:touchstart={gonorth}
+	aria-label="Reset Map to North"
 	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 >
-	<img src={current_map_heading < 7 && current_map_heading > -7 ? (darkMode === true ? "/icons/north.svg": "/icons/light_north.svg") : "/icons/compass.svg"} class='h-7' alt='Align North Map'
+	<img src={current_map_heading < 7 && current_map_heading > -7 ? (darkMode === true ? "/icons/north.svg": "/icons/light_north.svg") : "/icons/compass.svg"} class='h-7'
 	style={`transform: rotate(${0 - current_map_heading}deg)`}
 	/>
 </div>
