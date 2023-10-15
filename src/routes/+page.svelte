@@ -238,6 +238,7 @@ if (browser) {
 
 			//console.log('operators for rerender', operators_to_render);
 			let big_table: any = {};
+			let trips_possible_agencies: any = {};
 
 			let static_feed_ids: string[] = [];
 
@@ -266,6 +267,7 @@ if (browser) {
 							//console.log('already have results for this agency', static_feed_id)
 
 							big_table[static_feed_id] = route_info_lookup[static_feed_id];
+							trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
 						}
 					});
 				}
@@ -273,6 +275,8 @@ if (browser) {
 
 			if (Object.keys(big_table).length > 0) {
 				let mergetable = Object.assign({}, ...Object.values(big_table));
+
+				let mergetabletrips = Object.assign({}, ...Object.values(trips_possible_agencies));
 
 				// console.log('vehicle data', vehiclesData[realtime_id])
 
@@ -538,6 +542,14 @@ if (browser) {
 						}
 
 						let tripIdLabel = vehicle?.trip?.tripId || '';
+
+						if (vehicle?.trip?.tripId) {
+
+						
+						if (mergetabletrips[vehicle?.trip?.tripId])
+						{
+							tripIdLabel = mergetabletrips[vehicle?.trip?.tripId].trip_short_name;
+						}}
 
 						if ( realtime_id === "f-mta~nyc~rt~lirr") {
 							let temp1 = tripIdLabel.split('_');
