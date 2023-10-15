@@ -14,8 +14,10 @@
 	import Layerbutton from '../layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
 
-	let enabledlayerstyle = 'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200'
-	let disabledlayerstyle = 'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-300 dark:bg-gray-800  dark:border-gray-800'
+	let enabledlayerstyle =
+		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
+	let disabledlayerstyle =
+		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-300 dark:bg-gray-800  dark:border-gray-800';
 
 	let darkMode = true;
 	//false means use metric, true means use us units
@@ -27,7 +29,7 @@
 	let geometryObj: any = {};
 	let lasttimeofnorth = 0;
 
-	let avaliablerealtimevehicles = new Set();	
+	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
 	let avaliablerealtimealerts = new Set();
 	let fetchedavaliablekactus = false;
@@ -44,25 +46,25 @@
 	let operators_in_frame: any = {};
 	let realtime_feeds_in_frame: any = {};
 
-	function processUrlLimit(inputarray:any) {
+	function processUrlLimit(inputarray: any) {
 		const urlParams = new URLSearchParams(window.location.search);
 
-		if (urlParams.get("limitfeed")) {
-			inputarray.push(["==", ["get", "onestop_feed_id"], urlParams.get("limitfeed")])
-		
-			return inputarray
+		if (urlParams.get('limitfeed')) {
+			inputarray.push(['==', ['get', 'onestop_feed_id'], urlParams.get('limitfeed')]);
+
+			return inputarray;
 		} else {
 			return inputarray;
 		}
 	}
 
 	const decode = (textToDecode: string) => {
-  try {
-    return new TextDecoder().decode(decodeToAry(textToDecode));
-  } catch (e) {
-    return 'Decode failed: Invalid input';
-  }
-};
+		try {
+			return new TextDecoder().decode(decodeToAry(textToDecode));
+		} catch (e) {
+			return 'Decode failed: Invalid input';
+		}
+	};
 
 	function handleUsUnitsSwitch() {
 		usunits = !usunits;
@@ -120,7 +122,7 @@
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
-//	let binaryDataOfGtfsRt: any = new Object();
+	//	let binaryDataOfGtfsRt: any = new Object();
 
 	let lockongps = false;
 	maplng = 0;
@@ -129,12 +131,12 @@
 
 	let rerenders_requested: string[] = [];
 
-	let showzombiebuses=false;
+	let showzombiebuses = false;
 
 	// Save the JSON object to local storage
-//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
+	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
-let layersettings =  {
+	let layersettings = {
 		bus: {
 			visible: true,
 			labelshapes: false,
@@ -147,7 +149,7 @@ let layersettings =  {
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false,
+				speed: false
 			}
 		},
 		rail: {
@@ -162,27 +164,24 @@ let layersettings =  {
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false,
-			},
-		},
+				speed: false
+			}
+		}
 	};
 
-// Get the JSON object from local storage
+	// Get the JSON object from local storage
 
-const layersettingsnamestorage= "layersettingsv2"
+	const layersettingsnamestorage = 'layersettingsv2';
 
-if (browser) {
-	if (localStorage.getItem(layersettingsnamestorage)) {
-	let cachedJsonObject = JSON.parse(localStorage.getItem(layersettingsnamestorage));
+	if (browser) {
+		if (localStorage.getItem(layersettingsnamestorage)) {
+			let cachedJsonObject = JSON.parse(localStorage.getItem(layersettingsnamestorage));
 
-	if (cachedJsonObject != null) {
-		layersettings = cachedJsonObject;
+			if (cachedJsonObject != null) {
+				layersettings = cachedJsonObject;
+			}
+		}
 	}
-}
-}
-
-
-	
 
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
@@ -251,9 +250,7 @@ if (browser) {
 						//this static feed
 
 						if (route_info_lookup[static_feed_id] == undefined) {
-							fetch(
-								'https://backend.catenarymaps.org/getroutesperagency?feed_id=' + static_feed_id
-							)
+							fetch('https://backend.catenarymaps.org/getroutesperagency?feed_id=' + static_feed_id)
 								.then((x) => x.json())
 								.then((x) => {
 									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
@@ -285,11 +282,14 @@ if (browser) {
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-				
-				.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
-					.filter((entity: any) => entity.vehicle?.position !== null && entity.vehicle?.position !== undefined)
+
+					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
+					.filter(
+						(entity: any) =>
+							entity.vehicle?.position !== null && entity.vehicle?.position !== undefined
+					)
 					//no vehicles older than 10 min
-				//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
+					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
 						const { id, vehicle } = entity;
 						//default to bus type
@@ -297,7 +297,7 @@ if (browser) {
 
 						let colour = '#aaaaaa';
 
-						let headsign = ""
+						let headsign = '';
 
 						let routeId = vehicle?.trip?.routeId || '';
 
@@ -338,8 +338,8 @@ if (browser) {
 							fetchTrip = true;
 						}
 
-						if (realtime_id === "f-mta~nyc~rt~mnr" || realtime_id === "f-mta~nyc~rt~lirr") {
-						routeType = 2;
+						if (realtime_id === 'f-mta~nyc~rt~mnr' || realtime_id === 'f-mta~nyc~rt~lirr') {
+							routeType = 2;
 						}
 
 						if (routeType === 2) {
@@ -372,7 +372,9 @@ if (browser) {
 											//get routeId from the trips table
 
 											if (trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id) {
-												headsign = trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].trip_headsign;
+												headsign =
+													trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId]
+														.trip_headsign;
 
 												if (vehicle.trip.routeId) {
 													routeId = vehicle.trip.routeId;
@@ -493,15 +495,11 @@ if (browser) {
 						}
 
 						if (realtime_id === 'f-ucla~bruinbus~rt') {
-
 							if (mergetable[routeId]) {
-								
-
-							maptag = mergetable[routeId].long_name;
+								maptag = mergetable[routeId].long_name;
+							} else {
+								maptag = 'Bruin-No Route';
 							}
-							 else {
-								maptag = "Bruin-No Route"
-							 }
 						}
 
 						let railletters: any = {};
@@ -544,37 +542,32 @@ if (browser) {
 						let tripIdLabel = vehicle?.trip?.tripId || '';
 
 						if (vehicle?.trip?.tripId) {
+							if (mergetabletrips[vehicle?.trip?.tripId]) {
+								tripIdLabel = mergetabletrips[vehicle?.trip?.tripId].trip_short_name;
+							}
+						}
 
-						
-						if (mergetabletrips[vehicle?.trip?.tripId])
-						{
-							tripIdLabel = mergetabletrips[vehicle?.trip?.tripId].trip_short_name;
-						}}
-
-						if ( realtime_id === "f-mta~nyc~rt~lirr") {
+						if (realtime_id === 'f-mta~nyc~rt~lirr') {
 							let temp1 = tripIdLabel.split('_');
 
-							console.log('lirr temp', temp1)
+							console.log('lirr temp', temp1);
 
-							tripIdLabel = temp1[temp1.length - 1]
+							tripIdLabel = temp1[temp1.length - 1];
 						}
 
 						if (mergetable[routeId]) {
 							if (mergetable[routeId].short_name) {
-								maptag = (mergetable[routeId].short_name);
+								maptag = mergetable[routeId].short_name;
 							} else {
 								if (mergetable[routeId.long_name]) {
-									maptag = (mergetable[routeId].long_name);
-									console.log('overruled as long name', maptag)
+									maptag = mergetable[routeId].long_name;
+									console.log('overruled as long name', maptag);
 								}
 							}
 
-						
-						
-
-						if (realtime_id === "f-mta~nyc~rt~mnr" || realtime_id === "f-mta~nyc~rt~lirr") {
-							maptag = mergetable[routeId].long_name.replace(/branch/ig, "").trim();
-						}
+							if (realtime_id === 'f-mta~nyc~rt~mnr' || realtime_id === 'f-mta~nyc~rt~lirr') {
+								maptag = mergetable[routeId].long_name.replace(/branch/gi, '').trim();
+							}
 						}
 
 						maptag = maptag.replace(/( )?Line/, '');
@@ -586,7 +579,7 @@ if (browser) {
 						let vehiclelabel = vehicle?.vehicle?.label || vehicle?.vehicle?.id || '';
 
 						if (realtime_id === 'f-mta~nyc~rt~bustime') {
-							vehiclelabel = vehiclelabel.replace(/mta( )?/i, "");
+							vehiclelabel = vehiclelabel.replace(/mta( )?/i, '');
 						}
 
 						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
@@ -649,8 +642,6 @@ if (browser) {
 		}
 	}
 
-
-
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
@@ -703,12 +694,11 @@ if (browser) {
 				}
 
 				if (layersettings.bus.stoplabels) {
-
 					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'none');
+				} else {
+					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'none');
+				}
 			}
-			}			
 
 			let buscirclelayer = mapglobal.getLayer('buses');
 			let buslabel = mapglobal.getLayer('labelbuses');
@@ -726,8 +716,6 @@ if (browser) {
 					mapglobal.setLayoutProperty('buses', 'visibility', 'none');
 					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'none');
 				}
-
-			
 			}
 
 			let railcirclelayer = mapglobal.getLayer('raillayer');
@@ -756,21 +744,21 @@ if (browser) {
 
 		let busvehicles = mapglobal.getLayer('buses');
 
-		let hidevehiclecommand =  ["!=", "", ['get','tripIdLabel']]
+		let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
 
 		if (busvehicles) {
-			console.log('found bus vehicles layer')
+			console.log('found bus vehicles layer');
 			if (showzombiebuses === true) {
 				//set filter to none
 				mapglobal.setFilter('buses', undefined);
-				mapglobal.setFilter('labelbuses', undefined)
+				mapglobal.setFilter('labelbuses', undefined);
 			} else {
-				console.log('hiding buses')
+				console.log('hiding buses');
 				mapglobal.setFilter('buses', hidevehiclecommand);
 				mapglobal.setFilter('labelbuses', hidevehiclecommand);
 			}
 		} else {
-			console.error('no bus vehicles layer')
+			console.error('no bus vehicles layer');
 		}
 		if (railvehicles) {
 			if (showzombiebuses === true) {
@@ -884,7 +872,6 @@ if (browser) {
 
 		//let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
 
-
 		//does user have localstorage cachegeolocation
 
 		let centerinit = [-118, 33.9];
@@ -901,14 +888,13 @@ if (browser) {
 					zoominit = 13.4;
 				}
 			}
-
 		}
 
 		//get url param "sat"
 
 		let style = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+			: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
 		if (browser) {
 			if (window.location.search.includes('sat')) {
@@ -921,11 +907,16 @@ if (browser) {
 			crossSourceCollisions: true,
 			hash: true,
 			antialias: true,
-			style:
-				style, // stylesheet location
-			accessToken:
-			!window.location.search.includes('sat') ? decode('ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ')
-		: decode(decode('𠿪𦾰𣒨𤏧𦶹𣞸𡣰𣂁𡿩𦺩𣢬𢏩𦺵𣎭𡻩𦲰𠶙𡿩𧂬𣎍𣿧𧚨𡮔𦺩𢾹𣿧𦶓𣲸𡏨𦺭𣦽𡿦𦺇𣖹𡣰𣒅𡏨𦶸𠪙𡻩𦺲𡪙𢏩𧚺𠺓𦺲𣆹𢿨𦺘𣢼𢟩𦾗𣞜𢻨𦾳𢾭𡏦𧚑𢞖𦾐𡖑𣟩𧚘𠞒𦲍𣞠𡏪𦲫𡂡𡿨𦲭𣶙𡳰𡞡𡿨ᖬ')),
+			style: style, // stylesheet location
+			accessToken: !window.location.search.includes('sat')
+				? decode(
+						'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
+				  )
+				: decode(
+						decode(
+							'𠿪𦾰𣒨𤏧𦶹𣞸𡣰𣂁𡿩𦺩𣢬𢏩𦺵𣎭𡻩𦲰𠶙𡿩𧂬𣎍𣿧𧚨𡮔𦺩𢾹𣿧𦶓𣲸𡏨𦺭𣦽𡿦𦺇𣖹𡣰𣒅𡏨𦶸𠪙𡻩𦺲𡪙𢏩𧚺𠺓𦺲𣆹𢿨𦺘𣢼𢟩𦾗𣞜𢻨𦾳𢾭𡏦𧚑𢞖𦾐𡖑𣟩𧚘𠞒𦲍𣞠𡏪𦲫𡂡𡿨𦲭𣶙𡳰𡞡𡿨ᖬ'
+						)
+				  ),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
@@ -1056,12 +1047,12 @@ if (browser) {
 		});
 
 		map.on('mousemove', 'railshapes', (events) => {
-		//	console.log('hoverfea-rail', events.features);
+			//	console.log('hoverfea-rail', events.features);
 		});
 
 		map.on('mousemove', 'buses', (events) => {
 			//console.log('hover over realtime bus', events.features)
-		})
+		});
 
 		map.on('moveend', (events) => {
 			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
@@ -1074,12 +1065,12 @@ if (browser) {
 		});
 
 		map.on('touchmove', (events) => {
-			lasttimeofnorth = 0
-		})
+			lasttimeofnorth = 0;
+		});
 
 		map.on('mousemove', (events) => {
-			lasttimeofnorth = 0
-		})
+			lasttimeofnorth = 0;
+		});
 
 		map.on('zoomend', (events) => {
 			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
@@ -1098,27 +1089,27 @@ if (browser) {
 			let avaliablerealtimealerts_temp = new Set();
 
 			if (fetchedavaliablekactus === false) {
-				fetch("https://kactus.catenarymaps.org/gtfsrttimes")
-				.then(x => x.json())
-				.then((feeds: any) => {
-					feeds.forEach((feed:any) => {
-						if (feed.vehicles != null) {
-							avaliablerealtimevehicles_temp.add(feed.feed)
-						}
-						if (feed.trips != null) {
-							avaliablerealtimetrips_temp.add(feed.feed)
-						}
-						if (feed.alerts != null) {
-							avaliablerealtimealerts_temp.add(feed.feed)
-						}
-					})
+				fetch('https://kactus.catenarymaps.org/gtfsrttimes')
+					.then((x) => x.json())
+					.then((feeds: any) => {
+						feeds.forEach((feed: any) => {
+							if (feed.vehicles != null) {
+								avaliablerealtimevehicles_temp.add(feed.feed);
+							}
+							if (feed.trips != null) {
+								avaliablerealtimetrips_temp.add(feed.feed);
+							}
+							if (feed.alerts != null) {
+								avaliablerealtimealerts_temp.add(feed.feed);
+							}
+						});
 
-					avaliablerealtimevehicles = avaliablerealtimevehicles_temp;
-					avaliablerealtimetrips = avaliablerealtimetrips_temp;
-					avaliablerealtimealerts = avaliablerealtimealerts_temp;
-					fetchedavaliablekactus = true;
-				})
-				.catch((error) => console.error(error))
+						avaliablerealtimevehicles = avaliablerealtimevehicles_temp;
+						avaliablerealtimetrips = avaliablerealtimetrips_temp;
+						avaliablerealtimealerts = avaliablerealtimealerts_temp;
+						fetchedavaliablekactus = true;
+					})
+					.catch((error) => console.error(error));
 			}
 		}
 
@@ -1166,51 +1157,45 @@ if (browser) {
 				}
 			});*/
 
-			
 			map.addSource('static_feeds_hull', {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/static_feeds'
-			})
+			});
 
-			
 			const urlParams = new URLSearchParams(window.location.search);
 
 			map.addLayer({
 				id: 'static_hull_calc',
 				type: 'fill',
 				source: 'static_feeds_hull',
-				"source-layer": 'static_feeds',
+				'source-layer': 'static_feeds',
 				//filter: ["==", ['get', 'onestop_feed_id'], 'f-anteaterexpress'],
 				paint: {
 					'fill-color': '#0055aa',
 					'fill-opacity': 0
 				}
-			})
+			});
 
 			if (urlParams.get('debug')) {
-
 				map.showTileBoundaries = true;
 
 				map.addLayer({
-				id: 'static_hull_calc_line',
-				type: 'line',
-				"source-layer": "static_feeds",
-				
-			
-				source: 'static_feeds_hull',
-				paint: {
-					'line-color': '#22aaaa',
-					'line-opacity': 1,
-					
-				}
-			})
+					id: 'static_hull_calc_line',
+					type: 'line',
+					'source-layer': 'static_feeds',
 
+					source: 'static_feeds_hull',
+					paint: {
+						'line-color': '#22aaaa',
+						'line-opacity': 1
+					}
+				});
 
 				map.addLayer({
 					id: 'static_feed_calc_names',
 					type: 'symbol',
 					source: 'static_feeds_hull',
-					"source-layer": "static_feeds",
+					'source-layer': 'static_feeds',
 					layout: {
 						'text-field': ['get', 'onestop_feed_id'],
 						'text-size': 8,
@@ -1248,12 +1233,12 @@ if (browser) {
 			map.addSource('busshapes', {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/busonly'
-			})
+			});
 
 			map.addSource('stops', {
 				type: 'vector',
 				url: 'https://martin.catenarymaps.org/stops'
-			})
+			});
 
 			map.addLayer({
 				id: 'busshapes',
@@ -1263,6 +1248,15 @@ if (browser) {
 				filter: processUrlLimit([
 					'all',
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+					[
+						'!',
+						[
+							'all',
+								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+								['==', ['coalesce', ['get', 'route_label']], '950']
+							
+						]
+					]
 				]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
@@ -1274,23 +1268,9 @@ if (browser) {
 				minzoom: 7
 			});
 
+			// the layer must be of type 'line'
 
-								// the layer must be of type 'line'
 			
-				
-
-			map.addLayer({
-				id: 'ferryshapes',
-				type: 'line',
-				source: 'notbusshapes',
-				'source-layer': 'notbus',
-				minzoom: 3,
-				filter: ['==', 4, ['get', 'route_type']],
-					'line-dasharray': [2, 1],
-					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
-			});
 
 			map.addLayer({
 				id: 'labelbusshapes',
@@ -1299,8 +1279,16 @@ if (browser) {
 				'source-layer': 'busonly',
 				filter: processUrlLimit([
 					'all',
-					['any', ['==', 3, ['get', 'route_type']], ['==', 11, ['get', 'route_type']]],
-					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+					[
+						'!',
+						[
+							'all',
+								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+								['==', ['coalesce', ['get', 'route_label']], '950']
+							
+						]
+					],
+					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
 				]),
 				layout: {
 					'symbol-placement': 'line',
@@ -1310,15 +1298,15 @@ if (browser) {
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],
 					'text-ignore-placement': false,
 					'text-allow-overlap': false,
-					'symbol-spacing': window?.innerWidth > 750 ? 
-					['step', ['zoom'], 200, 12, 120, 13, 130, 15, 130, 20, 200]
-					: 
-					['step', ['zoom'], 200, 12, 100, 13, 110, 15, 100, 20, 200],
+					'symbol-spacing':
+						window?.innerWidth > 750
+							? ['step', ['zoom'], 200, 12, 120, 13, 130, 15, 130, 20, 200]
+							: ['step', ['zoom'], 200, 12, 100, 13, 110, 15, 100, 20, 200],
 					visibility: 'none'
 				},
 				paint: {
 					'text-color': ['concat', '#', ['get', 'text_color']],
-					
+
 					'text-halo-color': ['concat', '#', ['get', 'color']],
 					'text-halo-width': 3,
 					'text-halo-blur': 0,
@@ -1332,8 +1320,7 @@ if (browser) {
 				type: 'line',
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
-				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']],
-				]),
+				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']]]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
@@ -1342,16 +1329,43 @@ if (browser) {
 				minzoom: 3
 			});
 
+			map.addLayer({
+				id: 'ferryshapes2',
+				type: 'line',
+				source: 'notbusshapes',
+				'source-layer': 'notbus',
+				filter: processUrlLimit(['all', ['==', 4, ['get', 'route_type']]]),
+				paint: {
+					'line-dasharray': [1, 2],
+					'line-color': ['concat', '#', ['get', 'color']],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+				},
+				minzoom: 3
+			});
 
+			/*
+			map.addLayer({
+				id: 'ferryshapes',
+				type: 'line',
+				source: 'notbusshapes',
+				'source-layer': 'notbus',
+				minzoom: 3,
+				
+				filter: processUrlLimit(['all', ['==', 4, ['get', 'route_type']]]),
+				//filter: processUrlLimit(['==', 4, ['get', 'route_type']]),
+			'line-dasharray': [2, 1],
+				'line-color': "#00ff00",
+				//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
+				'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+			});*/
 
 			map.addLayer({
 				id: 'labelrailshapes',
 				type: 'symbol',
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
-				filter: ['all', ['!=', 3, ['get', 'route_type']],
-				['!=', 11, ['get', 'route_type']]
-			],
+				filter: ['all', ['!=', 3, ['get', 'route_type']], ['!=', 11, ['get', 'route_type']]],
 				layout: {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
@@ -1366,63 +1380,59 @@ if (browser) {
 				},
 				paint: {
 					'text-color': ['concat', '#', ['get', 'text_color']],
-					
+
 					'text-halo-color': ['concat', '#', ['get', 'color']],
 					'text-halo-width': 3,
-					'text-halo-blur': 1,
+					'text-halo-blur': 1
 					//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
 				},
 				minzoom: 3
 			});
 
-			
 			map.addLayer({
 				id: 'busstopscircle',
 				type: 'circle',
 				source: 'stops',
-				"source-layer": "stops",
-				layout: {
-				},
+				'source-layer': 'stops',
+				layout: {},
 				paint: {
-					"circle-color": "#1c2636",
-					"circle-radius": ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
-					'circle-stroke-color': darkMode ? 
-					['step', ['zoom'], '#e0e0e0', 14, '#ffffff']
-					: 
-					"#222222",
+					'circle-color': '#1c2636',
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
+					'circle-stroke-color': darkMode
+						? ['step', ['zoom'], '#e0e0e0', 14, '#ffffff']
+						: '#222222',
 					'circle-stroke-width': ['step', ['zoom'], 1.2, 12.7, 2],
 					'circle-stroke-opacity': ['step', ['zoom'], 0.6, 15, 0.8],
 					'circle-opacity': 0.1
 				},
 				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11
-			})
+			});
 
 			map.addLayer({
 				id: 'busstopslabel',
 				type: 'symbol',
 				source: 'stops',
-				"source-layer": "stops",
+				'source-layer': 'stops',
 				layout: {
 					'text-field': ['get', 'name'],
-					'text-variable-anchor': [ 'left', 'right','top', 'bottom'],
+					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
 					'text-radial-offset': 0.7,
-					'icon-image': ["get", "network"],
+					'icon-image': ['get', 'network'],
 					'icon-size': 1,
 					//'text-ignore-placement': false,
 					//'icon-ignore-placement': false,
 					//'text-allow-overlap': true,
 					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
 				},
 				paint: {
-					'text-color': darkMode ? "#ddd6fe" :  "#2a2a2a",
+					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
 					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 0.4,
-					
-				}, minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
-			})
-
+					'text-halo-width': 0.4
+				},
+				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
+			});
 
 			map.addSource('buses', {
 				type: 'geojson',
@@ -1521,11 +1531,11 @@ if (browser) {
 						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
 					],
 
-					'text-size': window?.innerWidth >= 1023  ? 
-					['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14] :
-					['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12]
-					
-					,
+					'text-size':
+						window?.innerWidth >= 1023
+							? ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14]
+							: ['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12],
+
 					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 				},
 				paint: {
@@ -1709,8 +1719,8 @@ if (browser) {
 						visibility: 'none',
 						'icon-allow-overlap': true,
 						'icon-ignore-placement': true,
-						"text-allow-overlap": true,
-						"text-ignore-placement": true,
+						'text-allow-overlap': true,
+						'text-ignore-placement': true
 					},
 					paint: {
 						'icon-opacity': 0.8
@@ -1906,7 +1916,7 @@ if (browser) {
 	function gonorth() {
 		if (mapglobal) {
 			lasttimeofnorth = performance.now();
-			mapglobal.resetNorth()
+			mapglobal.resetNorth();
 		}
 	}
 
@@ -1960,6 +1970,8 @@ if (browser) {
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<script>
@@ -2021,7 +2033,7 @@ if (browser) {
 		height="0"
 		width="0"
 		style="display:none;visibility:hidden"
-    title="Google Tag Manager"
+		title="Google Tag Manager"
 	/></noscript
 >
 
@@ -2031,22 +2043,28 @@ if (browser) {
 			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
 		>
 			{#if usunits == false}
-			<div>
-				<span class='font-semibold'>{geolocation.coords.speed.toFixed(2)}</span> <span class='text-xs'>m/s</span> <span class='font-semibold'>{(3.6 * geolocation.coords.speed).toFixed(2)}</span> <span class='text-xs'>km/h</span>
-			</div>
+				<div>
+					<span class="font-semibold">{geolocation.coords.speed.toFixed(2)}</span>
+					<span class="text-xs">m/s</span>
+					<span class="font-semibold">{(3.6 * geolocation.coords.speed).toFixed(2)}</span>
+					<span class="text-xs">km/h</span>
+				</div>
 			{:else}
-			<div>
-				<span class='font-semibold'>{(2.23694 * geolocation.coords.speed).toFixed(2)}</span> <span class='text-xs'>mph</span>
+				<div>
+					<span class="font-semibold">{(2.23694 * geolocation.coords.speed).toFixed(2)}</span>
+					<span class="text-xs">mph</span>
+				</div>
+			{/if}
 		</div>
-		{/if}
-	</div>
 	{/if}
 {/if}
 <!-- End Google Tag Manager (noscript) -->
 <div id="map" style="width: 100%; height: 100%;" />
 
 <div class="sidebar">
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | {current_map_heading.toFixed(2)}
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | {current_map_heading.toFixed(
+		2
+	)}
 </div>
 
 <!--
@@ -2066,33 +2084,44 @@ if (browser) {
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
-	on:click={togglesettingfeature}
-	on:keypress={togglesettingfeature}
-	class="!cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
->
-	<span class="!cursor-pointer material-symbols-outlined align-middle select-none"> settings </span>
-</div>
-	
+		on:click={togglesettingfeature}
+		on:keypress={togglesettingfeature}
+		class="!cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="!cursor-pointer material-symbols-outlined align-middle select-none">
+			settings
+		</span>
+	</div>
+
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
 		class="!cursor-pointer bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
-		<span class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
+		<span
+			class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
+		>
+			layers
+		</span>
 	</div>
 
 	<div
-	on:click={gonorth}
-	on:keypress={gonorth}
-	on:touchstart={gonorth}
-	aria-label="Reset Map to North"
-	class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
->
-	<img src={current_map_heading < 7 && current_map_heading > -7 ? (darkMode === true ? "/icons/north.svg": "/icons/light_north.svg") : "/icons/compass.svg"} class='h-7'
-	style={`transform: rotate(${0 - current_map_heading}deg)`}
-	/>
-</div>
-
+		on:click={gonorth}
+		on:keypress={gonorth}
+		on:touchstart={gonorth}
+		aria-label="Reset Map to North"
+		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+	>
+		<img
+			src={current_map_heading < 7 && current_map_heading > -7
+				? darkMode === true
+					? '/icons/north.svg'
+					: '/icons/light_north.svg'
+				: '/icons/compass.svg'}
+			class="h-7"
+			style={`transform: rotate(${0 - current_map_heading}deg)`}
+		/>
+	</div>
 
 	<div
 		on:click={gpsbutton}
@@ -2113,44 +2142,44 @@ if (browser) {
 		? ''
 		: 'hidden'}"
 >
-	<div><input
-		on:click={(x) => {
-			handleUsUnitsSwitch();
-			
-			runSettingsAdapt()
-		}}
+	<div>
+		<input
+			on:click={(x) => {
+				handleUsUnitsSwitch();
 
-		on:keydown={(x) => {
-			handleUsUnitsSwitch();
-			runSettingsAdapt()
-		}}
-		checked={usunits}
-		id="us-units"
-		type="checkbox"
-		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-	/>
-	<label for="us-units" class="ml-2">Use US Units</label></div>
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				handleUsUnitsSwitch();
+				runSettingsAdapt();
+			}}
+			checked={usunits}
+			id="us-units"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="us-units" class="ml-2">Use US Units</label>
+	</div>
 
-	<div><input
-		on:click={(x) => {
-			showzombiebuses = !showzombiebuses;
+	<div>
+		<input
+			on:click={(x) => {
+				showzombiebuses = !showzombiebuses;
 
-			
-		runSettingsAdapt()
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				showzombiebuses = !showzombiebuses;
 
-		}}
-	
-	on:keydown={(x) => {
-		showzombiebuses = !showzombiebuses;
-
-		runSettingsAdapt()
-	}}
-		checked={showzombiebuses}
-		id="show-zombie-buses"
-		type="checkbox"
-		class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-	/>
-	<label for="show-zombie-buses" class='ml-2'>Show Tripless Vehicles</label></div>
+				runSettingsAdapt();
+			}}
+			checked={showzombiebuses}
+			id="show-zombie-buses"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="show-zombie-buses" class="ml-2">Show Tripless Vehicles</label>
+	</div>
 </div>
 
 <div
@@ -2168,9 +2197,7 @@ if (browser) {
 				selectedSettingsTab = 'rail';
 			}}
 			class={`${
-				selectedSettingsTab === 'rail'
-				? enabledlayerstyle
-					:disabledlayerstyle
+				selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">Rail/Other</p>
@@ -2183,9 +2210,7 @@ if (browser) {
 				selectedSettingsTab = 'bus';
 			}}
 			class={`${
-				selectedSettingsTab === 'bus'
-					? enabledlayerstyle
-					:disabledlayerstyle
+				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">Buses</p>
@@ -2265,7 +2290,7 @@ if (browser) {
 				symbol="train"
 				{runSettingsAdapt}
 			/>
-<!--
+			<!--
 			<Realtimelabel
 			bind:layersettings
 			bind:selectedSettingsTab
