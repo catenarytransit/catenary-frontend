@@ -2,6 +2,7 @@
     "short_name": "Catenary",
     "name": "Catenary Maps",
     "id": "catenarymaps.org",
+    "display_override": ["window-controls-overlay"],
     "display": "standalone",
     "scope": ".",
     "categories": [
@@ -11,22 +12,27 @@
     ],
     "icons": [
         {
-            "src": "/logo.png",
+            "src": "logo.png",
             "type": "image/png",
             "sizes": "1667x1667",
             "purpose": "any"
         }
     ],
-    "screenshots": [
+    "protocol_handlers": [
         {
-            "src": "screenshot1.png",
-            "sizes": "1942x1197",
-            "type": "image/png",
-            "platform": "wide"
+            "protocol": "web+catenary",
+            "url": "/#%s"
         }
     ],
-    "start_url": ".",
-    "background_color": "#191919",
-    "theme_color": "#191919",
+    "screenshots": [
+        {
+            "src": "screenshot.png",
+            "sizes": "2146x1200",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/?utm_source=pwa",
+    "background_color": "#0A233F",
+    "theme_color": "#0A233F",
     "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
 }
