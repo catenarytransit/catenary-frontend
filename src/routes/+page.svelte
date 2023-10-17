@@ -2093,7 +2093,7 @@
 		</div>
 		<img src="/img/special/rapid227.svg" style="" style:height="40px" alt="Catenary logo with an electric bolt in the middle">
 		<h1 style:font-size="1.3em"><i>Rapid</i> 227 is here!</h1>
-		<p>Otay Mesa Port of Entry to Imperial Beach<br />every 15min or less.</p>
+		<p>Otay Mesa to IB<br />every 15min or less.</p>
 		<br />
 		<a href="https://sdmts.com/rapid-227" style:cursor="pointer" class='text-yellow-200'>Learn more &rarr;</a>
 		<br>
