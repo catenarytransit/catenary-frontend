@@ -2084,15 +2084,19 @@
 	{/if}
 </div>-->
 
-{#if maplat < 33 && maplat > 32 && maplng < -116 && maplng > -118 && alertPopupShown}
+{#if realtime_list.includes("f-mts~rt~onebusaway") && alertPopupShown}
 	<div class="fixed bottom-14 left-4 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-radius="10px" style:box-shadow="0 0 10px #bcd52e" style:color="white">
+		<div on:click={() => alertPopupShown = false } style:cursor="pointer" class='border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2'>
+			<span class="material-symbols-outlined margin-auto">
+				close
+				</span>
+		</div>
 		<img src="/img/special/rapid227.svg" style="" style:height="40px" alt="Catenary logo with an electric bolt in the middle">
 		<h1 style:font-size="1.3em"><i>Rapid</i> 227 is here!</h1>
-		<h2>Border to beach<br />every 15min or less.</h2>
+		<p>Otay Mesa Point of Entry to Imperial Beach<br />every 15min or less.</p>
 		<br />
-		<a href="https://sdmts.com/rapid-227" style:cursor="pointer">Learn more &rarr;</a>
+		<a href="https://sdmts.com/rapid-227" style:cursor="pointer" class='text-yellow-200'>Learn more &rarr;</a>
 		<br>
-		<a href="#hide" on:click={() => alertPopupShown = false } style:cursor="pointer">Close X</a>
 	</div>
 {/if}
 
