@@ -2082,6 +2082,15 @@
 	{/if}
 </div>-->
 
+{#if maplat < 33 && maplat > 32 && maplng < -116 && maplng > -118}
+	<div class="fixed bottom-6 left-6 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-radius="10px" style:box-shadow="0 0 10px #bcd52e" style:color="white">
+		<img src="/img/special/rapid227.svg" style="" style:height="50px" alt="Catenary logo with an electric bolt in the middle">
+		<br>
+		<h1 style:font-size="1.3em"><i>Rapid</i> 227 is here!</h1>
+		<a href="https://sdmts.com/rapid-227" style:cursor="pointer">Learn more &rarr;</a>
+	</div>
+{/if}
+
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
 		on:click={togglesettingfeature}
