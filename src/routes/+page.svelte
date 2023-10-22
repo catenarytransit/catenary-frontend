@@ -58,6 +58,47 @@
 		}
 	}
 
+	function removeWeekends(inputarray: any[]) {
+		//if it is currently a weekend in california
+
+		let result = inputarray;
+
+		let dayinla = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"})).getDay();
+
+		if (dayinla == 6 || dayinla == 0) {
+				result.push(['!=', ['get', 'onestop_feed_id'], "f-anteaterexpress"]);
+				result.push(["!", ['all',
+			['==', ['get', 'onestop_feed_id'], 'f-9mu-orangecountytransportationauthority'],
+			['any', 
+			['==', ['coalesce', ['get', 'route_label']], '167'],
+			['==', ['coalesce', ['get', 'route_label']], '473'],
+			['==', ['coalesce', ['get', 'route_label']], '178'],
+			['==', ['coalesce', ['get', 'route_label']], '86'],
+			['==', ['coalesce', ['get', 'route_label']], '401'],
+			['==', ['coalesce', ['get', 'route_label']], '400'],
+			['==', ['coalesce', ['get', 'route_label']], '403'],
+			['==', ['coalesce', ['get', 'route_label']], '472']
+		]]])
+			
+		}
+
+		return result;
+	}
+
+	function removeWeekendStops(inputarray: any[]) {
+		//if it is currently a weekend in california
+
+		let result = inputarray;
+
+		let dayinla = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"})).getDay();
+
+		if (dayinla == 6 || dayinla == 0) {
+			result.push(['!=', ['get', 'onestop_feed_id'], "f-anteaterexpress"])
+		}
+
+		return result;
+	}
+
 	const decode = (textToDecode: string) => {
 		try {
 			return new TextDecoder().decode(decodeToAry(textToDecode));
@@ -1245,7 +1286,7 @@
 				type: 'line',
 				source: 'busshapes',
 				'source-layer': 'busonly',
-				filter: processUrlLimit([
+				filter: removeWeekends(processUrlLimit([
 					'all',
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 					[
@@ -1257,7 +1298,7 @@
 							
 						]
 					]
-				]),
+				])),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
@@ -1277,7 +1318,7 @@
 				type: 'symbol',
 				source: 'busshapes',
 				'source-layer': 'busonly',
-				filter: processUrlLimit([
+				filter: removeWeekends(processUrlLimit([
 					'all',
 					[
 						'!',
@@ -1289,7 +1330,7 @@
 						]
 					],
 					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
-				]),
+				])),
 				layout: {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
@@ -1405,7 +1446,8 @@
 					'circle-stroke-opacity': ['step', ['zoom'], 0.6, 15, 0.8],
 					'circle-opacity': 0.1
 				},
-				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11
+				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11,
+				filter: removeWeekendStops(['all'])
 			});
 
 			map.addLayer({
@@ -1413,6 +1455,7 @@
 				type: 'symbol',
 				source: 'stops',
 				'source-layer': 'stops',
+				filter: removeWeekendStops(['all']),
 				layout: {
 					'text-field': ['get', 'name'],
 					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
@@ -1424,7 +1467,7 @@
 					//'icon-ignore-placement': false,
 					//'text-allow-overlap': true,
 					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
 				},
 				paint: {
 					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
