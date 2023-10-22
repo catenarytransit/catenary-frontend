@@ -325,7 +325,7 @@
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-
+					.filter((entity: any) => entity.vehicle.timestamp < (Date.now() / 1000) - 600)
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>
