@@ -948,7 +948,7 @@
 		const map = new mapboxgl.Map({
 			container: 'map',
 			crossSourceCollisions: true,
-			hash: true,
+			hash: "pos",
 			antialias: true,
 			style: style, // stylesheet location
 			accessToken: !window.location.search.includes('sat')
@@ -1988,7 +1988,11 @@
 	function gpsupdate() {
 		if (geolocation) {
 			if (mapglobal) {
-				if (lockongps === true || firstmove === false) {
+
+				//get url param pos
+				let emptyhash = !window.location.hash.includes("pos");
+
+				if (lockongps === true || (firstmove === false && emptyhash === true)) {
 					let target: any = {
 						center: [geolocation.coords.longitude, geolocation.coords.latitude],
 						essential: true // this animation is considered essential with respect to prefers-reduced-motion
