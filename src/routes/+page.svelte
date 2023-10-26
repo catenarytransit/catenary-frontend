@@ -1278,12 +1278,12 @@
 
 			map.addSource('busshapes', {
 				type: 'vector',
-				url: what_martin_to_use()+'busonly'
+				url: what_martin_to_use()+'/busonly'
 			});
 
 			map.addSource('stops', {
 				type: 'vector',
-				url: what_martin_to_use()+'stops'
+				url: what_martin_to_use()+'/stops'
 			});
 
 			map.addLayer({
