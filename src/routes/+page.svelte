@@ -949,7 +949,9 @@
 			container: 'map',
 			crossSourceCollisions: true,
 			hash: "pos",
-			antialias: true,
+			useWebGL2: true,
+			preserveDrawingBuffer: false,
+		//	antialias: true,
 			style: style, // stylesheet location
 			accessToken: !window.location.search.includes('sat')
 				? decode(
