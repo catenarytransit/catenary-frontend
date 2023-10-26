@@ -1205,7 +1205,7 @@
 
 			map.addSource('static_feeds_hull', {
 				type: 'vector',
-				url: `${what_martin_to_use}/static_feeds`
+				url: `${what_martin_to_use()}/static_feeds`
 			});
 
 			const urlParams = new URLSearchParams(window.location.search);
