@@ -48,6 +48,7 @@ export function check_backend() {
 };
 
 check_martin();
+check_backend();
 
 function pick_valid_url(pool: Array<string>,map: Map<string, boolean>) {
     if (map.size == 0) {
@@ -79,6 +80,7 @@ check_kactus();
 
 setInterval(check_kactus, 120_000);
 setInterval(check_martin, 120_000);
+setInterval(check_backend, 120_000);
 
 export function what_kactus_to_use() {
     return pick_valid_url(kactuspool, kactus_uptime);
