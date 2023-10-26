@@ -13,6 +13,7 @@
 	import { determineFeeds } from '../maploaddata';
 	import Layerbutton from '../layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
+	import { what_kactus_to_use, what_martin_to_use, what_backend_to_use } from '../components/distributed';
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
@@ -293,7 +294,7 @@
 						//this static feed
 
 						if (route_info_lookup[static_feed_id] == undefined) {
-							fetch('https://backend.catenarymaps.org/getroutesperagency?feed_id=' + static_feed_id)
+							fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
 								.then((x) => x.json())
 								.then((x) => {
 									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
@@ -447,7 +448,7 @@
 									} else {
 										if (vehicle.trip.tripId) {
 											fetch(
-												`https://backend.catenarymaps.org/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
+												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
 											)
 												.then((x) => x.json())
 												.then((data) => {
@@ -1134,7 +1135,7 @@
 			let avaliablerealtimealerts_temp = new Set();
 
 			if (fetchedavaliablekactus === false) {
-				fetch('https://kactus.catenarymaps.org/gtfsrttimes')
+				fetch(what_kactus_to_use()+'/gtfsrttimes')
 					.then((x) => x.json())
 					.then((feeds: any) => {
 						feeds.forEach((feed: any) => {
@@ -1178,7 +1179,7 @@
 				}
 			});
 
-			fetch('https://backend.catenarymaps.org/getinitdata')
+			fetch(what_backend_to_use()+'/getinitdata')
 				.then(async (x) => await x.json())
 				.then((x) => {
 					static_feeds = x.s;
@@ -1204,7 +1205,7 @@
 
 			map.addSource('static_feeds_hull', {
 				type: 'vector',
-				url: 'https://martin.catenarymaps.org/static_feeds'
+				url: `${what_martin_to_use}/static_feeds`
 			});
 
 			const urlParams = new URLSearchParams(window.location.search);
@@ -1272,17 +1273,17 @@
 
 			map.addSource('notbusshapes', {
 				type: 'vector',
-				url: 'https://martin.catenarymaps.org/notbus'
+				url: what_martin_to_use()+'/notbus'
 			});
 
 			map.addSource('busshapes', {
 				type: 'vector',
-				url: 'https://martin.catenarymaps.org/busonly'
+				url: what_martin_to_use()+'busonly'
 			});
 
 			map.addSource('stops', {
 				type: 'vector',
-				url: 'https://martin.catenarymaps.org/stops'
+				url: what_martin_to_use()+'stops'
 			});
 
 			map.addLayer({
@@ -1657,7 +1658,7 @@
 			setInterval(() => {
 				if (map.getZoom() >= 8) {
 					realtime_list.forEach((realtime_id: string) => {
-						let url = `https://kactus.catenarymaps.org/gtfsrt/?feed=${realtime_id}&category=vehicles`;
+						let url = `${what_kactus_to_use()}/gtfsrt/?feed=${realtime_id}&category=vehicles`;
 
 						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
 							url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
