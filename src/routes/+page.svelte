@@ -13,7 +13,7 @@
 	import { determineFeeds } from '../maploaddata';
 	import Layerbutton from '../layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
-	import { what_kactus_to_use, what_martin_to_use, what_backend_to_use } from '../components/distributed';
+	import { what_kactus_to_use, what_martin_to_use, what_backend_to_use, check_kactus, check_backend, check_martin } from '../components/distributed';
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
@@ -303,6 +303,7 @@
 								})
 								.catch((e) => {
 									console.error(e);
+									check_backend();
 								});
 						} else {
 							//console.log('already have results for this agency', static_feed_id)
@@ -465,6 +466,10 @@
 													} else {
 														trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
 													}
+												})
+												.catch((e) => {
+													console.error(e);
+													check_backend();
 												});
 										}
 									}
@@ -1155,7 +1160,10 @@
 						avaliablerealtimealerts = avaliablerealtimealerts_temp;
 						fetchedavaliablekactus = true;
 					})
-					.catch((error) => console.error(error));
+					.catch((error) => {console.error(error);
+					
+						check_kactus();
+					});
 			}
 		}
 
@@ -1188,6 +1196,7 @@
 				})
 				.catch((e) => {
 					console.error(e);
+					check_backend();
 				});
 
 			updateData();
@@ -1701,6 +1710,10 @@
 
 										rerenders_request(realtime_id);
 									}
+								})
+								.catch((e) => {
+									check_kactus();
+									check_backend();
 								});
 						}
 					});
