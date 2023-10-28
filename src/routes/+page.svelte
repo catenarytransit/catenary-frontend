@@ -2197,9 +2197,25 @@
 		</div>
 		<img src="https://www.ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" style="" style:height="70px" alt="">
 		<br />
-		<h1 style:font-size="1.3em">{strings.alertheader}</h1>
-		<p>{strings.alertsubtext}</p>
+		<h1 style:font-size="1.3em">{strings.alertheadersd}</h1>
+		<p>{strings.alertsubtextsd}</p>
 		<a href="https://ridepronto.com" style:cursor="pointer" class='text-yellow-200'>{strings.learnmore} &rarr;</a>
+		<br>
+	</div>
+{/if}
+
+{#if realtime_list.includes("f-metro~losangeles~rail~rt") && mapzoom > 9 && alertPopupShown}
+	<div class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-radius-top-right="10px" style:border-radius-bottom-right="10px" style:box-shadow="0 0 10px #00a1de" style:color="white">
+		<div on:click={() => alertPopupShown = false } style:cursor="pointer" class='border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2  flex justify-center items-center'>
+			<span class="material-symbols-outlined margin-auto select-none">
+				close
+				</span>
+		</div>
+		<img src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh" style="" style:height="70px" alt="">
+		<br />
+		<h1 style:font-size="1.3em">{strings.alertheaderla}</h1>
+		<p>{strings.alertsubtextla}</p>
+		<a href="https://taptogo.net" style:cursor="pointer" class='text-yellow-200'>{strings.learnmore} &rarr;</a>
 		<br>
 	</div>
 {/if}

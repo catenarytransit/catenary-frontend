@@ -1,8 +1,10 @@
 const i18n = {
     en: {
         // special
-        alertheader: 'Every ride, every time.',
-        alertsubtext: 'You must tap or scan the validator when boarding the bus, or before boarding the Trolley.',
+        alertheadersd: 'Every ride, every time.',
+        alertsubtextsd: 'You must tap or scan the validator when boarding the bus, or before boarding the Trolley.',
+        alertheaderla: 'TAP with pride every time you ride.',
+        alertsubtextla: 'You\'ll avoid penalties and fines, and help us keep fares low and run better service.',
         learnmore: 'Learn more',
         // settings
         foamermode: 'Railfan mode (extreme foamers only)',
@@ -24,8 +26,10 @@ const i18n = {
     },
     fr: {
         // special
-        alertheader: 'À chaque voyage, à chaque fois.',
-        alertsubtext: 'Vous devez toucher ou scanner le valideur lors de l\'embarquement dans le bus, ou avant d\'embarquer dans le Trolley.',
+        alertheadersd: 'À chaque voyage, à chaque fois.',
+        alertsubtextsd: 'Vous devez toucher ou scanner le valideur lors de l\'embarquement dans le bus, ou avant d\'embarquer dans le Trolley.',
+        alertheaderla: 'TAP avec fierté à chaque fois que vous montez.',
+        alertsubtextla: 'Vous éviterez les pénalités et les amendes, et vous nous aiderez à maintenir les tarifs bas et à améliorer le service.',
         learnmore: 'En savoir plus',
         // settings
         foamermode: 'Mode railfan',
@@ -47,8 +51,10 @@ const i18n = {
     },
     es: {
         // special
-        alertheader: 'Cada viaje, cada vez.',
-        alertsubtext: 'Debe tocar o escanear el validador al abordar el autobús, o antes de abordar el Trolley.',
+        alertheadersd: 'Cada viaje, cada vez.',
+        alertsubtextsd: 'Debe tocar o escanear el validador al abordar el autobús, o antes de abordar el Trolley.',
+        alertheaderla: 'Use su tarjeta TAP con orgullo cada vez que aborde.',
+        alertsubtextla: 'Evitará penalidades y multas, y nos ayudará a mantener las tarifas bajas y a ofrecer un mejor servicio.',
         learnmore: 'Aprende mas',
         // settings
         foamermode: 'Modo railfan',
@@ -70,8 +76,10 @@ const i18n = {
     },
     ko: {
         // special
-        alertheader: '모든 여행, 매번.',
-        alertsubtext: '버스를 탑승하거나 트롤리를 탑승하기 전에 유효성 검사기를 탭하거나 스캔해야 합니다.',
+        alertheadersd: '모든 여행, 매번.',
+        alertsubtextsd: '버스를 탑승하거나 트롤리를 탑승하기 전에 유효성 검사기를 탭하거나 스캔해야 합니다.',
+        alertheaderla: '탑승할 때마다 TAP를 자랑스럽게 사용하세요.',
+        alertsubtextla: '벌금을 피하고 우리가 요금을 낮게 유지하고 더 나은 서비스를 제공하는 데 도움이 됩니다.',
         learnmore: '더 알아보기',
         // settings
         foamermode: '레일팬 모드',
