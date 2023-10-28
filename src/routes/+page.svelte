@@ -15,15 +15,26 @@
 	import Realtimelabel from '../realtimelabel.svelte';
 	import { what_kactus_to_use, what_martin_to_use, what_backend_to_use, check_kactus, check_backend, check_martin } from '../components/distributed';
 
+	import i18n from '../i18n/strings';
+
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
 	let disabledlayerstyle =
 		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-300 dark:bg-gray-800  dark:border-gray-800';
 
 	let darkMode = true;
+
+	let strings = i18n.en;
+
+	if (typeof window !== 'undefined') {
+		// @ts-expect-error
+		strings = i18n[window.localStorage.language || 'en']
+	}
+
 	//false means use metric, true means use us units
 	let selectedSettingsTab = 'rail'; //valid options {rail, bus, bike}
 	let usunits = false;
+	let foamermode = true;
 	let realtime_list: string[] = [];
 	let vehiclesData: any = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
@@ -118,6 +129,11 @@
 		//redo settings
 	}
 
+	function handleFoamerModeSwitch() {
+		foamermode = !foamermode;
+		localStorage.setItem('foamermode', foamermode ? 'true' : 'false');
+	}
+
 	function textColorOfMapLabels() {
 		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
 	}
@@ -127,6 +143,12 @@
 			usunits = true;
 		} else {
 			usunits = false;
+		}
+
+		if (localStorage.getItem('foamermode') === 'true') {
+			foamermode = true;
+		} else {
+			foamermode = false;
 		}
 	}
 
@@ -693,9 +715,16 @@
 
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
+
 		if (mapglobal) {
 			let busshapes = mapglobal.getLayer('busshapes');
 			let buslabelshapes = mapglobal.getLayer('labelbusshapes');
+
+			if (foamermode) {
+				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
+			}
 
 			if (busshapes) {
 				if (layersettings.bus.shapes) {
@@ -1171,11 +1200,11 @@
 
 		map.on('load', () => {
 			// Add new sources and layers
-			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
+			// let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 
-			if (removelogo1) {
-				removelogo1[0].remove();
-			}
+			// if (removelogo1) {
+			// 	removelogo1[0].remove();
+			// }
 
 			fetchKactus();
 
@@ -1294,6 +1323,18 @@
 				type: 'vector',
 				url: what_martin_to_use()+'/stops'
 			});
+
+			map.addSource('foamertiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'],
+				tileSize: 256
+			})
+
+			map.addLayer({
+				id: 'foamershapes',
+				type: 'raster',
+				source: 'foamertiles',
+			})
 
 			map.addLayer({
 				id: 'busshapes',
@@ -2148,17 +2189,17 @@
 </div>-->
 
 {#if realtime_list.includes("f-mts~rt~onebusaway") && mapzoom > 9 && alertPopupShown}
-	<div class="fixed bottom-14 left-4 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-radius="10px" style:box-shadow="0 0 10px #bcd52e" style:color="white">
+	<div class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-radius-top-right="10px" style:border-radius-bottom-right="10px" style:box-shadow="0 0 10px #522398" style:color="white">
 		<div on:click={() => alertPopupShown = false } style:cursor="pointer" class='border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2  flex justify-center items-center'>
 			<span class="material-symbols-outlined margin-auto select-none">
 				close
 				</span>
 		</div>
-		<img src="/img/special/rapid227.svg" style="" style:height="40px" alt="Catenary logo with an electric bolt in the middle">
-		<h1 style:font-size="1.3em"><i>Rapid</i> 227 is here!</h1>
-		<p>Otay Mesa to IB<br />every 15min or less.</p>
+		<img src="https://www.ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" style="" style:height="70px" alt="">
 		<br />
-		<a href="https://sdmts.com/rapid-227" style:cursor="pointer" class='text-yellow-200'>Learn more &rarr;</a>
+		<h1 style:font-size="1.3em">{strings.alertheader}</h1>
+		<p>{strings.alertsubtext}</p>
+		<a href="https://ridepronto.com" style:cursor="pointer" class='text-yellow-200'>{strings.learnmore} &rarr;</a>
 		<br>
 	</div>
 {/if}
@@ -2219,7 +2260,7 @@
 </div>
 
 <div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {settingsBox
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 text-right {settingsBox
 		? ''
 		: 'hidden'}"
 >
@@ -2239,7 +2280,25 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="us-units" class="ml-2">Use US Units</label>
+		<label for="us-units" class="ml-2">{strings.useUSunits}</label>
+	</div>
+
+	<div>
+		<input
+			on:click={(x) => {
+				handleFoamerModeSwitch();
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				handleFoamerModeSwitch();
+				runSettingsAdapt();
+			}}
+			checked={foamermode}
+			id="foamermode"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="foamermode" class="ml-2">{strings.foamermode}</label>
 	</div>
 
 	<div>
@@ -2259,8 +2318,29 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="show-zombie-buses" class="ml-2">Show Tripless Vehicles</label>
+		<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
 	</div>
+
+	<div>
+		<select id="languageSelect" name="languageSelect" style="color: black;" on:change={() => {
+			// @ts-expect-error
+			let language = document.querySelector('#languageSelect').value
+			document.querySelector('html')?.setAttribute('lang', language)
+			// @ts-expect-error
+			strings = i18n[language]
+			window.localStorage.setItem('language', language)
+		}}>
+			<option value="en">English</option>
+			<option value="fr">Français</option>
+			<option value="es">Español</option>
+			<option value="ko">한국어</option>
+		  </select>
+		<label for="languageSelect" class="ml-2">{strings.language}</label>
+	</div>
+	{#if foamermode}
+		<br />
+		Data: <a style="text-decoration:underline;cursor:pointer" href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a><br />Style: <a style="text-decoration:underline;cursor:pointer" href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
+	{/if}
 </div>
 
 <div
@@ -2268,7 +2348,6 @@
 		? ''
 		: 'hidden'}"
 >
-	<h2>Change settings of:</h2>
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		<div
 			on:click={() => {
@@ -2281,7 +2360,7 @@
 				selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
-			<p class="w-full align-center text-center">Rail/Other</p>
+			<p class="w-full align-center text-center">{strings.headingRail}</p>
 		</div>
 		<div
 			on:click={() => {
@@ -2294,7 +2373,7 @@
 				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
-			<p class="w-full align-center text-center">Buses</p>
+			<p class="w-full align-center text-center">{strings.headingBus}</p>
 		</div>
 	</div>
 
@@ -2304,7 +2383,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="shapes"
-				name="Routes"
+				name={strings.routes}
 				urlicon="/routesicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -2313,7 +2392,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="labelshapes"
-				name="Labels"
+				name={strings.labels}
 				urlicon="/labelsicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -2322,7 +2401,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="stops"
-				name="Stops"
+				name={strings.stops}
 				urlicon="/stopsicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -2331,7 +2410,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="stoplabels"
-				name="S-Names"
+				name={strings.stopnames}
 				urlicon="/stoplabels.svg"
 				{runSettingsAdapt}
 			/>
@@ -2340,18 +2419,17 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="visible"
-				name="Vehicles"
+				name={strings.vehicles}
 				urlicon="/vehiclesicon.svg"
 				{runSettingsAdapt}
 			/>
 		</div>
-		<h3 class="font-semibold text-md">Realtime Labels</h3>
 		<div class="flex flex-row gap-x-1">
 			<Realtimelabel
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="route"
-				name="Route"
+				name={strings.showroute}
 				symbol="route"
 				{runSettingsAdapt}
 			/>
@@ -2359,7 +2437,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="trip"
-				name="Trip"
+				name={strings.showtrip}
 				symbol="mode_of_travel"
 				{runSettingsAdapt}
 			/>
@@ -2367,7 +2445,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="vehicle"
-				name="Vehicle"
+				name={strings.showvehicle}
 				symbol="train"
 				{runSettingsAdapt}
 			/>
@@ -2385,7 +2463,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="speed"
-				name="Speed"
+				name={strings.showspeed}
 				symbol="speed"
 				{runSettingsAdapt}
 			/>
