@@ -27,8 +27,8 @@ jobs:
       - name: Setup ssh cloudflared config
         run: |
           mkdir -p ~/.ssh
-          printf "Host sshtransit03.catenarymaps.org\nProxyCommand /usr/bin/cloudflared access ssh --hostname %%h" > ~/.ssh/config
-          echo "${{ secrets.REMOTE_SERVER }}" > ~/.ssh/known_hosts
+          printf "Host sshlol.kylerchin.com\nProxyCommand /usr/bin/cloudflared access ssh --hostname %%h" > ~/.ssh/config
+          echo "${{ secrets.MEERKAT_SERVER }}" > ~/.ssh/known_hosts
         shell: bash
         
       - name: Setup SSH Key
@@ -40,5 +40,5 @@ jobs:
 
       - name: SSH
         run: |
-          ssh runner@sshtransit03.catenarymaps.org "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R lolpro11 /opt/catenary-backend; rm /opt/catenary-backend/Cargo.lock'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u lolpro11 bash -c 'cd /opt/catenary-backend; git pull'; echo '${{ secrets.SUDO_PASSWD }}'; cargo build --release | sudo -S systemctl restart transitbackend.service"
+          ssh runner@sshtransit03.catenarymaps.org "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R kyler /opt/catenary-frontend'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u runner bash -c 'cd /opt/catenary-frontend; git pull'; sudo -S systemctl restart transitfrontend.service"
         shell: bash
