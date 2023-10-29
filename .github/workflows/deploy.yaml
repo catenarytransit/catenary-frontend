@@ -1,8 +1,8 @@
-name: Deploy on Successful Build Proxmox
+name: Deploy on Successful Build
 
 on:
   workflow_run:
-    workflows: ["Rust"]
+    workflows: ["Build Svelte using Bun"]
     types:
       - completed
 
