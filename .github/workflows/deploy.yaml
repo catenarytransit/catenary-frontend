@@ -40,5 +40,5 @@ jobs:
 
       - name: SSH
         run: |
-          ssh runner@sshlol.kylerchin.com "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R kyler /opt/catenary-frontend'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u runner bash -c 'cd /opt/catenary-frontend; git pull'; sudo -S systemctl restart transitfrontend.service"
+          ssh runner@sshlol.kylerchin.com "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R kyler /opt/catenary-frontend'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u runner bash -c 'cd /opt/catenary-frontend; git pull'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S systemctl restart transitfrontend.service"
         shell: bash
