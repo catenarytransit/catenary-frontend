@@ -2189,7 +2189,7 @@
 </div>-->
 
 {#if realtime_list.includes("f-mts~rt~onebusaway") && mapzoom > 9 && alertPopupShown}
-	<div class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-radius-top-right="10px" style:border-radius-bottom-right="10px" style:box-shadow="0 0 10px #522398" style:color="white">
+	<div class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-top-right-radius="20px" style:border-bottom-right-radius="20px" style:box-shadow="0 0 10px #522398" style:color="white">
 		<div on:click={() => alertPopupShown = false } style:cursor="pointer" class='border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2  flex justify-center items-center'>
 			<span class="material-symbols-outlined margin-auto select-none">
 				close
