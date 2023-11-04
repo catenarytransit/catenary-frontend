@@ -92,7 +92,8 @@
 			['==', ['coalesce', ['get', 'route_label']], '400'],
 			['==', ['coalesce', ['get', 'route_label']], '403'],
 			['==', ['coalesce', ['get', 'route_label']], '472'],
-			['==', ['coalesce', ['get', 'route_label']], '76']
+			['==', ['coalesce', ['get', 'route_label']], '76'],
+			['==', ['coalesce', ['get', 'route_label']], '150']
 		]]])
 			
 		}
