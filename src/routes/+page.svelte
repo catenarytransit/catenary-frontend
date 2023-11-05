@@ -1201,12 +1201,108 @@
 		fetchKactus();
 
 		map.on('load', () => {
+
+			
+			const urlParams = new URLSearchParams(window.location.search);
 			// Add new sources and layers
 			// let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 
 			// if (removelogo1) {
 			// 	removelogo1[0].remove();
 			// }
+
+			if (urlParams.get('debug')) {
+			const graticule:any = {
+    type: 'FeatureCollection',
+    features: []
+};
+
+const graticule_minor:any = {
+    type: 'FeatureCollection',
+    features: []
+};
+
+for (let lng = -180; lng <= 180; lng += 1) {
+    graticule.features.push({
+        type: 'Feature',
+        geometry: {type: 'LineString', coordinates: [[lng, -90], [lng, 90]]},
+        properties: {value: lng}
+    });
+}
+for (let lat = -85; lat <= 85; lat += 1) {
+    graticule.features.push({
+        type: 'Feature',
+        geometry: {type: 'LineString', coordinates: [[-180, lat], [180, lat]]},
+        properties: {value: lat}
+    });
+}
+
+for (let lng = -180; lng <= 180; lng += 0.1) {
+   if (Math.floor(lng) != lng) {
+	graticule_minor.features.push({
+        type: 'Feature',
+        geometry: {type: 'LineString', coordinates: [[lng, -90], [lng, 90]]},
+        properties: {value: lng}
+    });
+   }
+}
+for (let lat = -85; lat <= 85; lat += 0.1) {
+    if (Math.floor(lat) != lat ){
+		graticule_minor.features.push({
+        type: 'Feature',
+        geometry: {type: 'LineString', coordinates: [[-180, lat], [180, lat]]},
+        properties: {value: lat}
+    });
+	}
+}
+
+map.addSource('graticule', {
+        type: 'geojson',
+        data: graticule
+    });
+
+	
+    map.addLayer({
+        id: 'graticule',
+        type: 'line',
+        source: 'graticule',
+		paint: {
+			'line-color': '#aaa',
+			'line-width': 1.5
+		},
+		minzoom: 5
+    });
+
+	map.addLayer({
+		id: "labalgraticule",
+		type: "symbol",
+		source: "graticule",
+		paint: {
+			'text-color': "#bbb",
+			'text-halo-color': '#004',
+			'text-halo-width': 2,
+		},
+		layout: {
+			'text-field': ['coalesce', ['get', 'value'], "°"],
+			'symbol-placement': 'line',
+		}
+	})
+
+	map.addSource('graticule_sub', {
+        type: 'geojson',
+        data: graticule_minor
+    });
+    map.addLayer({
+        id: 'graticule_sub',
+        type: 'line',
+        source: 'graticule_sub',
+		paint: {
+			'line-color': '#888',
+			'line-width': 1
+		},
+		minzoom: 7
+    });
+			}
 
 			fetchKactus();
 
@@ -1248,7 +1344,6 @@
 				url: `${what_martin_to_use()}/static_feeds`
 			});
 
-			const urlParams = new URLSearchParams(window.location.search);
 
 			map.addLayer({
 				id: 'static_hull_calc',
@@ -2213,12 +2308,15 @@
 				close
 				</span>
 		</div>
-		<img src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh" style="" style:height="70px" alt="">
-		<br />
-		<h1 style:font-size="1.3em">{strings.alertheaderla}</h1>
-		<p>{strings.alertsubtextla}</p>
-		<a href="https://taptogo.net" style:cursor="pointer" class='text-yellow-200'>{strings.learnmore} &rarr;</a>
-		<br>
+		<div class='flex flex-row gap-x-3'>
+			<img src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh" style="" style:height="70px" alt="">
+			<div>
+				<h1 class='text-lg md:text-xl'>{strings.alertheaderla}</h1>
+				<p class='text-sm md:text-base'>{strings.alertsubtextla}</p>
+				<a href="https://taptogo.net" style:cursor="pointer" class='text-yellow-200 text-sm md:text-base' >{strings.learnmore} &rarr;</a>
+			</div>
+		</div>
+		
 	</div>
 {/if}
 
