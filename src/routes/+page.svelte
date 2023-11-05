@@ -1285,7 +1285,8 @@ map.addSource('graticule', {
 		layout: {
 			'text-field': ['coalesce', ['get', 'value'], "°"],
 			'symbol-placement': 'line',
-		}
+		},
+		minzoom: 5
 	})
 
 	map.addSource('graticule_sub', {
