@@ -10,7 +10,8 @@ export function addGeoRadius(map: any) {
         }
     });
 
-    map.addLayer("onekm", {
+    map.addLayer({
+        id: "onekm",
         type: 'fill',
 				source: 'onekmsource',
 				paint: {
