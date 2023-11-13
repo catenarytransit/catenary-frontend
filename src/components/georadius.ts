@@ -2,24 +2,26 @@
 import { createGeoJSONCircle } from '../geoMathsAssist';
 
 export function addGeoRadius(map: any) {
-    map.addSource('onekmsource', {
-        type: 'geojson',
-        data: {
-            type: 'FeatureCollection',
-            features: []
-        }
-    });
-
-    map.addLayer({
-        id: "onekm",
-        type: 'fill',
-				source: 'onekmsource',
-				paint: {
-					'fill-color': '#000000',
-					'fill-opacity': 0,
-                    'line-color': '#aaaaff'
-				}
-    });
+    try {
+        map.addSource('onekmsource', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: []
+            }
+        });
+    
+        map.addLayer({
+            id: "onekm",
+            type: 'fill',
+                    source: 'onekmsource',
+                    paint: {
+                        'fill-color': '#000000',
+                        'fill-opacity': 0,
+                        'line-color': '#aaaaff'
+                    }
+        });
+    } catch (err) {console.error(err);}
 }
 
 export function setUserCircles(map: any, lng: number, lat: number) {
