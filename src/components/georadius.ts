@@ -13,12 +13,11 @@ export function addGeoRadius(map: any) {
     
         map.addLayer({
             id: "onekm",
-            type: 'fill',
+            type: 'line',
                     source: 'onekmsource',
                     paint: {
-                        'fill-color': '#000000',
-                        'fill-opacity': 0,
-                        'line-color': '#aaaaff'
+                        'line-color': '#aaaaff',
+                        'line-width': 1.2,
                     }
         });
     } catch (err) {console.error(err);}
