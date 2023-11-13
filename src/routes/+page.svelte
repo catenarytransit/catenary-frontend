@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
+	import {addGeoRadius, setUserCircles} from '../components/georadius'
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
@@ -1206,6 +1207,8 @@
 			// 	removelogo1[0].remove();
 			// }
 
+			addGeoRadius(map);
+
 			fetchKactus();
 
 			map.addSource('static_feeds', {
@@ -1946,6 +1949,8 @@
 						]
 					});
 
+					setUserCircles(map, location.coords.longitude, location.coords.latitude);
+
 					if (location.coords.accuracy) {
 						let accuracyLayer = map.getSource('userpositionacc');
 
@@ -1958,7 +1963,7 @@
 								numberofpoints
 							);
 
-							accuracyLayer.setData(geojsondata);
+							accuracyLayer.setData(geojsondata, location.coords.longitude, location.coords.latitude);
 						}
 					}
 				}
