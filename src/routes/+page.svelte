@@ -1212,9 +1212,7 @@
 			// 	removelogo1[0].remove();
 			// }
 
-<<<<<<< HEAD
 			addGeoRadius(map);
-=======
 			if (urlParams.get('debug')) {
 			const graticule:any = {
     type: 'FeatureCollection',
@@ -1308,7 +1306,6 @@ map.addSource('graticule', {
 		minzoom: 7
     });
 			}
->>>>>>> aeed79eeab7299692b3684bb361a1e39fc3f9b03
 
 			fetchKactus();
 
