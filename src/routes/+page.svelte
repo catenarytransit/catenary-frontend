@@ -2046,7 +2046,23 @@ map.addSource('graticule', {
 						]
 					});
 
-					setUserCircles(map, location.coords.longitude, location.coords.latitude);
+					//setUserCircles(map, location.coords.longitude, location.coords.latitude);
+
+					let onekmlayer = map.getLayer("onekm");
+
+if (onekmlayer) {
+
+	let numberofpoints: number = 256;
+
+	let geojsondata = createGeoJSONCircle(
+		[lng, lat],
+		1,
+		numberofpoints
+	);
+
+
+onekmlayer.setData(geojsondata);
+}
 
 					if (location.coords.accuracy) {
 						let accuracyLayer = map.getSource('userpositionacc');

@@ -14,17 +14,6 @@ export function addGeoRadius(map: any) {
 }
 
 export function setUserCircles(map: any, lng: number, lat: number) {
-    let numberofpoints: number = 256;
-
-							let geojsondata = createGeoJSONCircle(
-								[lng, lat],
-								1,
-								numberofpoints
-							);
-
-                            let layer = map.getLayer("onekm");
-
-                            if (layer) {
-							layer.setData(geojsondata);
-                            }
+  
+                       
 }
