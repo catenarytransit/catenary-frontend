@@ -270,6 +270,8 @@
 
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
+		console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
+
 		// console.log('139',this_realtime_feed)
 
 		if (this_realtime_feed) {
@@ -329,7 +331,7 @@
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					.filter((entity: any) => entity.vehicle.timestamp > Date.now() / 1000 - 300)
+					//.filter((entity: any) => entity.vehicle.timestamp > Date.now() / 1000 - 300)
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>
@@ -385,8 +387,13 @@
 							fetchTrip = true;
 						}
 
-						if (realtime_id === 'f-mta~nyc~rt~mnr' || realtime_id === 'f-mta~nyc~rt~lirr') {
+						if (['f-mta~nyc~rt~mnr','f-metrolink~rt','f-mta~nyc~rt~lirr','f-amtrak~rt'].includes(realtime_id)) {
 							routeType = 2;
+						}
+
+						if (realtime_id === "f-amtrak~rt") {
+							colour = '#18567d';
+							console.log('found amtrak')
 						}
 
 						if (routeType === 2) {
@@ -772,9 +779,15 @@
 						'text-field',
 						interpretLabelsToCode(layersettings.bus.label, usunits)
 					);
+					['busespointingshell',"busespointing"].forEach((x) => {
+					mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+					})
 				} else {
 					mapglobal.setLayoutProperty('buses', 'visibility', 'none');
 					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'none');
+					['busespointingshell',"busespointing"].forEach((x) => {
+					mapglobal.setLayoutProperty(x, 'visibility', 'none');
+					})
 				}
 			}
 
@@ -790,9 +803,15 @@
 						'text-field',
 						interpretLabelsToCode(layersettings.rail.label, usunits)
 					);
+					['railpointingshell',"railpointing"].forEach((x) => {
+					mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+					})
 				} else {
 					mapglobal.setLayoutProperty('raillayer', 'visibility', 'none');
 					mapglobal.setLayoutProperty('labelrail', 'visibility', 'none');
+					['railpointingshell',"railpointing"].forEach((x) => {
+					mapglobal.setLayoutProperty(x, 'visibility', 'none');
+					})
 				}
 			}
 		}
@@ -1264,7 +1283,12 @@
 				.then((x) => {
 					static_feeds = x.s;
 					operators = x.o;
-					realtime_feeds = x.r;
+					let temp_rt=  x.r;
+					temp_rt.push({
+						onestop_feed_id: "f-amtrak~rt",
+						operators: ['o-9q-amtrakcalifornia','o-9-amtrak','o-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle-southeastareatransit']
+					})
+					realtime_feeds = temp_rt;
 				})
 				.catch((e) => {
 					console.error(e);
@@ -1300,6 +1324,8 @@
 					'fill-opacity': 0
 				}
 			});
+
+
 
 			if (urlParams.get('debug')) {
 				//map.showTileBoundaries = true;
@@ -1686,6 +1712,7 @@
 
 										vehiclesData[realtime_id] = feed;
 
+										console.log('request render', realtime_id)
 										rerenders_request(realtime_id);
 									}
 								})
@@ -1834,10 +1861,12 @@
 		});
 
 		map.on('idle', () => {
-			if (lasttimezoomran < Date.now() - 800) {
+			if (lasttimezoomran < Date.now() - 1000) {
 				lasttimezoomran = Date.now();
 
 				//renderNewBearings();
+				
+			runSettingsAdapt();
 			}
 		});
 

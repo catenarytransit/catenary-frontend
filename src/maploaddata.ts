@@ -33,6 +33,10 @@ export function determineFeeds(map:any, staticfeeds:any, operators:any, realtime
    // console.log('operators_data',operators_data)
 
     const realtime_feeds_in_frame = [... new Set(operators_data.map((o:any) => o.gtfs_realtime_feeds).flat())];
+
+    if (operators_data.find((o) => o.onestop_operator_id == "o-9-amtrak")) {
+        realtime_feeds_in_frame.push("f-amtrak~rt");
+    }
     //console.log('realtime_feeds_in_frame',realtime_feeds_in_frame)
 
     let static_data_obj:any = {};
