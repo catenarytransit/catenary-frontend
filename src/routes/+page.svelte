@@ -16,6 +16,7 @@
 	import {makeCircleLayers} from '../components/makeCircleLayers';
 	import Layerbutton from '../layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
+	import {numberForBearingLengthBus, numberForBearingLengthRail} from '../components/lineBasedBearing'
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -848,74 +849,6 @@
 			};
 		}, initialValue);
 	};
-
-	function numberForBearingLengthBus(zoom: number) {
-		if (zoom < 11) {
-			return 800;
-		}
-
-		if (zoom < 12) {
-			return 400;
-		}
-
-		if (zoom < 12.5) {
-			return 250;
-		}
-
-		if (zoom < 13) {
-			return 160;
-		}
-
-		if (zoom < 14) {
-			return 120;
-		}
-
-		if (zoom < 15) {
-			return 80;
-		}
-
-		if (zoom < 17) {
-			return 50;
-		}
-
-		return 20;
-	}
-
-	function numberForBearingLengthRail(zoom: number) {
-		if (zoom < 10) {
-			return 1700;
-		}
-
-		if (zoom < 11) {
-			return 1000;
-		}
-
-		if (zoom < 12) {
-			return 500;
-		}
-
-		if (zoom < 12.5) {
-			return 300;
-		}
-
-		if (zoom < 13) {
-			return 180;
-		}
-
-		if (zoom < 14) {
-			return 120;
-		}
-
-		if (zoom < 15) {
-			return 90;
-		}
-
-		if (zoom < 17) {
-			return 60;
-		}
-
-		return 30;
-	}
 
 	let geolocation: GeolocationPosition;
 
@@ -2111,7 +2044,7 @@
 		property="og:description"
 		content="Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
 	/>
-	<meta property="og:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
+	<meta property="og:image" content="https://catenarymaps.org/screenshot1.png" />
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
