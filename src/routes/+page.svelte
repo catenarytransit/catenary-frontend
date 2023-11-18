@@ -1068,7 +1068,7 @@
 
 				//ensure the layer exists
 				if (busbearings) {
-					busbearings.setData(newbearingdata);
+					//busbearings.setData(newbearingdata);
 				}
 
 				const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
@@ -1518,7 +1518,7 @@ map.addSource('graticule', {
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.8]
 				},
 				minzoom: 3
 			});
@@ -1593,10 +1593,10 @@ map.addSource('graticule', {
 					'circle-color': '#1c2636',
 					'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
 					'circle-stroke-color': darkMode
-						? ['step', ['zoom'], '#e0e0e0', 14, '#ffffff']
-						: '#222222',
-					'circle-stroke-width': ['step', ['zoom'], 1.2, 12.7, 2],
-					'circle-stroke-opacity': ['step', ['zoom'], 0.6, 15, 0.8],
+						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
+						: '#333333',
+					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 					'circle-opacity': 0.1
 				},
 				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11,
@@ -1650,6 +1650,7 @@ map.addSource('graticule', {
 				}
 			});
 
+			/*
 			map.addLayer({
 				id: 'busbearingslayer',
 				type: 'line',
@@ -1664,7 +1665,7 @@ map.addSource('graticule', {
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				},
 				minzoom: 7
-			});
+			});*/
 
 			map.addSource('railbearings', {
 				type: 'geojson',
@@ -1678,6 +1679,7 @@ map.addSource('graticule', {
 				}
 			});
 
+			/*
 			map.addLayer({
 				id: 'railbearingslayer',
 				type: 'line',
@@ -1691,7 +1693,126 @@ map.addSource('graticule', {
 					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 4, 10, 3.5, 13, 4],
 					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
 				}
-			});
+			});*/
+
+			let busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.25, 15, 0.4]
+
+			let busbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]]
+
+			let railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.3, 15, 0.5]
+
+			let railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]]
+
+			map.loadImage('./icons/pointing-shell-light.png', (error, image) => {
+				if (image) {
+					
+					map.addImage('pointingshelllight', image);
+				}});
+
+			if (true) {
+				map.loadImage('./icons/pointing-filled.png', (error, image) => {
+				if (error) throw error;
+
+				if (image) {
+				map.addImage('pointingcoloured', image, {sdf: true});
+
+				
+				map.addLayer({
+					id: "busespointing",
+					source: 'buses',
+					type: 'symbol',
+					filter: ["!=", 0, ['get', 'bearing']],
+					paint: {
+						'icon-color': ['get', 'contrastdarkmodebearing'],
+						'icon-opacity': 0.4
+					},
+					layout: {
+						'icon-image': 'pointingcoloured',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
+						'icon-offset': busbearingoffset,
+						'icon-size': busbearingiconsize
+					}
+
+				});
+
+				map.addLayer({
+					id: "railpointing",
+					source: 'rail',
+					type: 'symbol',
+					filter: ["!=", 0, ['get', 'bearing']],
+					paint: {
+						'icon-color': ['get', 'color'],
+						'icon-opacity': 0.6
+					},
+					layout: {
+						'icon-image': 'pointingcoloured',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
+						'icon-offset': railbearingoffset,
+						'icon-size': railbearingiconsize
+					}
+				});
+
+				
+				}
+
+			})
+
+			}
+
+			if (true) {
+				map.loadImage('./icons/pointing-shell.png', (error, image) => {
+				if (error) throw error;
+
+				if (image) {
+					
+				map.addImage('pointingshell', image);
+
+				map.addLayer({
+					id: "busespointingshell",
+					source: 'buses',
+					type: 'symbol',
+					filter: ["!=", 0, ['get', 'bearing']],
+					paint: {
+						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
+					},
+					layout: {
+						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
+						'icon-offset': busbearingoffset,
+						'icon-size': busbearingiconsize
+					}
+				});
+
+				map.addLayer({
+					id: "railpointingshell",
+					source: 'rail',
+					type: 'symbol',
+					filter: ["!=", 0, ['get', 'bearing']],
+					paint: {
+						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
+					},
+					layout: {
+						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
+						'icon-offset': railbearingoffset,
+						'icon-size': railbearingiconsize
+					}
+				});
+				}
+			})
+			}
 
 			map.addLayer({
 				id: 'buses',
@@ -1998,7 +2119,7 @@ map.addSource('graticule', {
 			if (lasttimezoomran < Date.now() - 800) {
 				lasttimezoomran = Date.now();
 
-				renderNewBearings();
+				//renderNewBearings();
 			}
 		});
 
