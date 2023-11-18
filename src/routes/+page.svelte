@@ -770,7 +770,7 @@
 					mapglobal.setLayoutProperty(
 						'labelbuses',
 						'text-field',
-						interpretLabelsToCode(layersettings.bus.label)
+						interpretLabelsToCode(layersettings.bus.label, usunits)
 					);
 				} else {
 					mapglobal.setLayoutProperty('buses', 'visibility', 'none');
@@ -789,7 +789,7 @@
 					mapglobal.setLayoutProperty(
 						'labelrail',
 						'text-field',
-						interpretLabelsToCode(layersettings.rail.label)
+						interpretLabelsToCode(layersettings.rail.label, usunits)
 					);
 				} else {
 					mapglobal.setLayoutProperty('raillayer', 'visibility', 'none');
