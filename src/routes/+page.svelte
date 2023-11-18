@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
+	import { addGeoRadius, setUserCircles } from '../components/georadius';
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
@@ -13,7 +14,14 @@
 	import { determineFeeds } from '../maploaddata';
 	import Layerbutton from '../layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
-	import { what_kactus_to_use, what_martin_to_use, what_backend_to_use, check_kactus, check_backend, check_martin } from '../components/distributed';
+	import {
+		what_kactus_to_use,
+		what_martin_to_use,
+		what_backend_to_use,
+		check_kactus,
+		check_backend,
+		check_martin
+	} from '../components/distributed';
 
 	import i18n from '../i18n/strings';
 
@@ -28,7 +36,7 @@
 
 	if (typeof window !== 'undefined') {
 		// @ts-expect-error
-		strings = i18n[window.localStorage.language || 'en']
+		strings = i18n[window.localStorage.language || 'en'];
 	}
 
 	//false means use metric, true means use us units
@@ -77,25 +85,32 @@
 
 		let result = inputarray;
 
-		let dayinla = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"})).getDay();
+		let dayinla = new Date(
+			new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+		).getDay();
 
 		if (dayinla == 6 || dayinla == 0) {
-				result.push(['!=', ['get', 'onestop_feed_id'], "f-anteaterexpress"]);
-				result.push(["!", ['all',
-			['==', ['get', 'onestop_feed_id'], 'f-9mu-orangecountytransportationauthority'],
-			['any', 
-			['==', ['coalesce', ['get', 'route_label']], '167'],
-			['==', ['coalesce', ['get', 'route_label']], '473'],
-			['==', ['coalesce', ['get', 'route_label']], '178'],
-			['==', ['coalesce', ['get', 'route_label']], '86'],
-			['==', ['coalesce', ['get', 'route_label']], '401'],
-			['==', ['coalesce', ['get', 'route_label']], '400'],
-			['==', ['coalesce', ['get', 'route_label']], '403'],
-			['==', ['coalesce', ['get', 'route_label']], '472'],
-			['==', ['coalesce', ['get', 'route_label']], '76'],
-			['==', ['coalesce', ['get', 'route_label']], '150']
-		]]])
-			
+			result.push(['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']);
+			result.push([
+				'!',
+				[
+					'all',
+					['==', ['get', 'onestop_feed_id'], 'f-9mu-orangecountytransportationauthority'],
+					[
+						'any',
+						['==', ['coalesce', ['get', 'route_label']], '167'],
+						['==', ['coalesce', ['get', 'route_label']], '473'],
+						['==', ['coalesce', ['get', 'route_label']], '178'],
+						['==', ['coalesce', ['get', 'route_label']], '86'],
+						['==', ['coalesce', ['get', 'route_label']], '401'],
+						['==', ['coalesce', ['get', 'route_label']], '400'],
+						['==', ['coalesce', ['get', 'route_label']], '403'],
+						['==', ['coalesce', ['get', 'route_label']], '472'],
+						['==', ['coalesce', ['get', 'route_label']], '76'],
+						['==', ['coalesce', ['get', 'route_label']], '150']
+					]
+				]
+			]);
 		}
 
 		return result;
@@ -106,10 +121,12 @@
 
 		let result = inputarray;
 
-		let dayinla = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"})).getDay();
+		let dayinla = new Date(
+			new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+		).getDay();
 
 		if (dayinla == 6 || dayinla == 0) {
-			result.push(['!=', ['get', 'onestop_feed_id'], "f-anteaterexpress"])
+			result.push(['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']);
 		}
 
 		return result;
@@ -351,7 +368,7 @@
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300)
+					.filter((entity: any) => entity.vehicle.timestamp > Date.now() / 1000 - 300)
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>
@@ -473,7 +490,9 @@
 									} else {
 										if (vehicle.trip.tripId) {
 											fetch(
-												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${vehicle.trip.tripId}`
+												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
+													vehicle.trip.tripId
+												}`
 											)
 												.then((x) => x.json())
 												.then((data) => {
@@ -985,10 +1004,10 @@
 		const map = new mapboxgl.Map({
 			container: 'map',
 			crossSourceCollisions: true,
-			hash: "pos",
+			hash: 'pos',
 			useWebGL2: true,
 			preserveDrawingBuffer: false,
-		//	antialias: true,
+			//	antialias: true,
 			style: style, // stylesheet location
 			accessToken: !window.location.search.includes('sat')
 				? decode(
@@ -1171,7 +1190,7 @@
 			let avaliablerealtimealerts_temp = new Set();
 
 			if (fetchedavaliablekactus === false) {
-				fetch(what_kactus_to_use()+'/gtfsrttimes')
+				fetch(what_kactus_to_use() + '/gtfsrttimes')
 					.then((x) => x.json())
 					.then((feeds: any) => {
 						feeds.forEach((feed: any) => {
@@ -1191,8 +1210,9 @@
 						avaliablerealtimealerts = avaliablerealtimealerts_temp;
 						fetchedavaliablekactus = true;
 					})
-					.catch((error) => {console.error(error);
-					
+					.catch((error) => {
+						console.error(error);
+
 						check_kactus();
 					});
 			}
@@ -1201,8 +1221,6 @@
 		fetchKactus();
 
 		map.on('load', () => {
-
-			
 			const urlParams = new URLSearchParams(window.location.search);
 			// Add new sources and layers
 			// let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
@@ -1211,98 +1229,122 @@
 			// 	removelogo1[0].remove();
 			// }
 
+			addGeoRadius(map);
 			if (urlParams.get('debug')) {
-			const graticule:any = {
-    type: 'FeatureCollection',
-    features: []
-};
+				const graticule: any = {
+					type: 'FeatureCollection',
+					features: []
+				};
 
-const graticule_minor:any = {
-    type: 'FeatureCollection',
-    features: []
-};
+				const graticule_minor: any = {
+					type: 'FeatureCollection',
+					features: []
+				};
 
-for (let lng = -180; lng <= 180; lng += 1) {
-    graticule.features.push({
-        type: 'Feature',
-        geometry: {type: 'LineString', coordinates: [[lng, -90], [lng, 90]]},
-        properties: {value: lng}
-    });
-}
-for (let lat = -85; lat <= 85; lat += 1) {
-    graticule.features.push({
-        type: 'Feature',
-        geometry: {type: 'LineString', coordinates: [[-180, lat], [180, lat]]},
-        properties: {value: lat}
-    });
-}
+				for (let lng = -180; lng <= 180; lng += 1) {
+					graticule.features.push({
+						type: 'Feature',
+						geometry: {
+							type: 'LineString',
+							coordinates: [
+								[lng, -90],
+								[lng, 90]
+							]
+						},
+						properties: { value: lng }
+					});
+				}
+				for (let lat = -85; lat <= 85; lat += 1) {
+					graticule.features.push({
+						type: 'Feature',
+						geometry: {
+							type: 'LineString',
+							coordinates: [
+								[-180, lat],
+								[180, lat]
+							]
+						},
+						properties: { value: lat }
+					});
+				}
 
-for (let lng = -180; lng <= 180; lng += 0.1) {
-   if (Math.floor(lng) != lng) {
-	graticule_minor.features.push({
-        type: 'Feature',
-        geometry: {type: 'LineString', coordinates: [[lng, -90], [lng, 90]]},
-        properties: {value: lng}
-    });
-   }
-}
-for (let lat = -85; lat <= 85; lat += 0.1) {
-    if (Math.floor(lat) != lat ){
-		graticule_minor.features.push({
-        type: 'Feature',
-        geometry: {type: 'LineString', coordinates: [[-180, lat], [180, lat]]},
-        properties: {value: lat}
-    });
-	}
-}
+				for (let lng = -180; lng <= 180; lng += 0.1) {
+					if (Math.floor(lng) != lng) {
+						graticule_minor.features.push({
+							type: 'Feature',
+							geometry: {
+								type: 'LineString',
+								coordinates: [
+									[lng, -90],
+									[lng, 90]
+								]
+							},
+							properties: { value: lng }
+						});
+					}
+				}
+				for (let lat = -85; lat <= 85; lat += 0.1) {
+					if (Math.floor(lat) != lat) {
+						graticule_minor.features.push({
+							type: 'Feature',
+							geometry: {
+								type: 'LineString',
+								coordinates: [
+									[-180, lat],
+									[180, lat]
+								]
+							},
+							properties: { value: lat }
+						});
+					}
+				}
 
-map.addSource('graticule', {
-        type: 'geojson',
-        data: graticule
-    });
+				map.addSource('graticule', {
+					type: 'geojson',
+					data: graticule
+				});
 
-	
-    map.addLayer({
-        id: 'graticule',
-        type: 'line',
-        source: 'graticule',
-		paint: {
-			'line-color': '#aaa',
-			'line-width': 1.5
-		},
-		minzoom: 5
-    });
+				map.addLayer({
+					id: 'graticule',
+					type: 'line',
+					source: 'graticule',
+					paint: {
+						'line-color': '#aaa',
+						'line-width': 1.5
+					},
+					minzoom: 5
+				});
 
-	map.addLayer({
-		id: "labalgraticule",
-		type: "symbol",
-		source: "graticule",
-		paint: {
-			'text-color': "#bbb",
-			'text-halo-color': '#004',
-			'text-halo-width': 2,
-		},
-		layout: {
-			'text-field': ['coalesce', ['get', 'value'], "°"],
-			'symbol-placement': 'line',
-		},
-		minzoom: 5
-	})
+				map.addLayer({
+					id: 'labalgraticule',
+					type: 'symbol',
+					source: 'graticule',
+					paint: {
+						'text-color': '#bbb',
+						'text-halo-color': '#004',
+						'text-halo-width': 2
+					},
+					layout: {
+						'text-field': ['coalesce', ['get', 'value'], '°'],
+						'symbol-placement': 'line'
+					},
+					minzoom: 5
+				});
 
-	map.addSource('graticule_sub', {
-        type: 'geojson',
-        data: graticule_minor
-    });
-    map.addLayer({
-        id: 'graticule_sub',
-        type: 'line',
-        source: 'graticule_sub',
-		paint: {
-			'line-color': '#888',
-			'line-width': 1
-		},
-		minzoom: 7
-    });
+				map.addSource('graticule_sub', {
+					type: 'geojson',
+					data: graticule_minor
+				});
+				map.addLayer({
+					id: 'graticule_sub',
+					type: 'line',
+					source: 'graticule_sub',
+					paint: {
+						'line-color': '#888',
+						'line-width': 1
+					},
+					minzoom: 7
+				});
 			}
 
 			fetchKactus();
@@ -1315,7 +1357,7 @@ map.addSource('graticule', {
 				}
 			});
 
-			fetch(what_backend_to_use()+'/getinitdata')
+			fetch(what_backend_to_use() + '/getinitdata')
 				.then(async (x) => await x.json())
 				.then((x) => {
 					static_feeds = x.s;
@@ -1344,7 +1386,6 @@ map.addSource('graticule', {
 				type: 'vector',
 				url: `${what_martin_to_use()}/static_feeds`
 			});
-
 
 			map.addLayer({
 				id: 'static_hull_calc',
@@ -1409,49 +1450,50 @@ map.addSource('graticule', {
 
 			map.addSource('notbusshapes', {
 				type: 'vector',
-				url: what_martin_to_use()+'/notbus'
+				url: what_martin_to_use() + '/notbus'
 			});
 
 			map.addSource('busshapes', {
 				type: 'vector',
-				url: what_martin_to_use()+'/busonly'
+				url: what_martin_to_use() + '/busonly'
 			});
 
 			map.addSource('stops', {
 				type: 'vector',
-				url: what_martin_to_use()+'/stops'
+				url: what_martin_to_use() + '/stops'
 			});
 
 			map.addSource('foamertiles', {
 				type: 'raster',
 				tiles: ['https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'],
 				tileSize: 256
-			})
+			});
 
 			map.addLayer({
 				id: 'foamershapes',
 				type: 'raster',
-				source: 'foamertiles',
-			})
+				source: 'foamertiles'
+			});
 
 			map.addLayer({
 				id: 'busshapes',
 				type: 'line',
 				source: 'busshapes',
 				'source-layer': 'busonly',
-				filter: removeWeekends(processUrlLimit([
-					'all',
-					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
-					[
-						'!',
+				filter: removeWeekends(
+					processUrlLimit([
+						'all',
+						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 						[
-							'all',
+							'!',
+							[
+								'all',
 								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
 								['==', ['coalesce', ['get', 'route_label']], '950']
-							
+							]
 						]
-					]
-				])),
+					])
+				),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
@@ -1464,26 +1506,25 @@ map.addSource('graticule', {
 
 			// the layer must be of type 'line'
 
-			
-
 			map.addLayer({
 				id: 'labelbusshapes',
 				type: 'symbol',
 				source: 'busshapes',
 				'source-layer': 'busonly',
-				filter: removeWeekends(processUrlLimit([
-					'all',
-					[
-						'!',
+				filter: removeWeekends(
+					processUrlLimit([
+						'all',
 						[
-							'all',
+							'!',
+							[
+								'all',
 								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
 								['==', ['coalesce', ['get', 'route_label']], '950']
-							
-						]
-					],
-					['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
-				])),
+							]
+						],
+						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
+					])
+				),
 				layout: {
 					'symbol-placement': 'line',
 					'text-field': ['coalesce', ['get', 'route_label']],
@@ -1620,7 +1661,7 @@ map.addSource('graticule', {
 					//'icon-ignore-placement': false,
 					//'text-allow-overlap': true,
 					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
 				},
 				paint: {
 					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
@@ -2165,6 +2206,8 @@ map.addSource('graticule', {
 						]
 					});
 
+					setUserCircles(map, location.coords.longitude, location.coords.latitude);
+
 					if (location.coords.accuracy) {
 						let accuracyLayer = map.getSource('userpositionacc');
 
@@ -2177,7 +2220,11 @@ map.addSource('graticule', {
 								numberofpoints
 							);
 
-							accuracyLayer.setData(geojsondata);
+							accuracyLayer.setData(
+								geojsondata,
+								location.coords.longitude,
+								location.coords.latitude
+							);
 						}
 					}
 				}
@@ -2264,9 +2311,8 @@ map.addSource('graticule', {
 	function gpsupdate() {
 		if (geolocation) {
 			if (mapglobal) {
-
 				//get url param pos
-				let emptyhash = !window.location.hash.includes("pos");
+				let emptyhash = !window.location.hash.includes('pos');
 
 				if (lockongps === true || (firstmove === false && emptyhash === true)) {
 					let target: any = {
@@ -2295,6 +2341,7 @@ map.addSource('graticule', {
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
@@ -2407,38 +2454,73 @@ map.addSource('graticule', {
 	{/if}
 </div>-->
 
-{#if realtime_list.includes("f-mts~rt~onebusaway") && mapzoom > 9 && alertPopupShown}
-	<div class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-top-right-radius="20px" style:border-bottom-right-radius="20px" style:box-shadow="0 0 10px #522398" style:color="white">
-		<div on:click={() => alertPopupShown = false } style:cursor="pointer" class='border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2  flex justify-center items-center'>
-			<span class="material-symbols-outlined margin-auto select-none">
-				close
-				</span>
+{#if realtime_list.includes('f-mts~rt~onebusaway') && mapzoom > 9 && alertPopupShown}
+	<div
+		class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		style:padding="20px"
+		style:border-top-right-radius="20px"
+		style:border-bottom-right-radius="20px"
+		style:box-shadow="0 0 10px #522398"
+		style:color="white"
+	>
+		<div
+			on:click={() => (alertPopupShown = false)}
+			style:cursor="pointer"
+			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> close </span>
 		</div>
-		<img src="https://www.ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" style="" style:height="70px" alt="">
+		<img
+			src="https://www.ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100"
+			style=""
+			style:height="70px"
+			alt=""
+		/>
 		<br />
 		<h1 style:font-size="1.3em">{strings.alertheadersd}</h1>
 		<p>{strings.alertsubtextsd}</p>
-		<a href="https://ridepronto.com" style:cursor="pointer" class='text-yellow-200'>{strings.learnmore} &rarr;</a>
-		<br>
+		<a href="https://ridepronto.com" style:cursor="pointer" class="text-yellow-200"
+			>{strings.learnmore} &rarr;</a
+		>
+		<br />
 	</div>
 {/if}
 
-{#if realtime_list.includes("f-metro~losangeles~rail~rt") && mapzoom > 9 && alertPopupShown}
-	<div class="fixed bottom-14 left-1 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable" style:padding="20px" style:border-top-left-radius="20px" style:border-bottom-left-radius="20px" style:border-top-right-radius="20px" style:border-bottom-right-radius="20px" style:box-shadow="0 0 10px #00a1de" style:color="white">
-		<div on:click={() => alertPopupShown = false } style:cursor="pointer" class='border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2  flex justify-center items-center'>
-			<span class="material-symbols-outlined margin-auto select-none">
-				close
-				</span>
+{#if realtime_list.includes('f-metro~losangeles~rail~rt') && mapzoom > 9 && alertPopupShown}
+	<div
+		class="fixed bottom-14 left-1 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		style:padding="20px"
+		style:border-top-left-radius="20px"
+		style:border-bottom-left-radius="20px"
+		style:border-top-right-radius="20px"
+		style:border-bottom-right-radius="20px"
+		style:box-shadow="0 0 10px #00a1de"
+		style:color="white"
+	>
+		<div
+			on:click={() => (alertPopupShown = false)}
+			style:cursor="pointer"
+			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> close </span>
 		</div>
-		<div class='flex flex-row gap-x-3'>
-			<img src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh" style="" style:height="70px" alt="">
+		<div class="flex flex-row gap-x-3">
+			<img
+				src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh"
+				style=""
+				style:height="70px"
+				alt=""
+			/>
 			<div>
-				<h1 class='text-lg md:text-xl'>{strings.alertheaderla}</h1>
-				<p class='text-sm md:text-base'>{strings.alertsubtextla}</p>
-				<a href="https://taptogo.net" style:cursor="pointer" class='text-yellow-200 text-sm md:text-base' >{strings.learnmore} &rarr;</a>
+				<h1 class="text-lg md:text-xl">{strings.alertheaderla}</h1>
+				<p class="text-sm md:text-base">{strings.alertsubtextla}</p>
+				<a
+					href="https://taptogo.net"
+					style:cursor="pointer"
+					class="text-yellow-200 text-sm md:text-base">{strings.learnmore} &rarr;</a
+				>
 			</div>
 		</div>
-		
 	</div>
 {/if}
 
@@ -2560,29 +2642,42 @@ map.addSource('graticule', {
 	</div>
 
 	<div>
-		<select id="languageSelect" name="languageSelect" style="color: black;" on:change={() => {
-			// @ts-expect-error
-			let language = document.querySelector('#languageSelect').value
-			document.querySelector('html')?.setAttribute('lang', language)
-			// @ts-expect-error
-			strings = i18n[language]
-			window.localStorage.setItem('language', language)
-		}}>
+		<select
+			id="languageSelect"
+			name="languageSelect"
+			style="color: black;"
+			on:change={() => {
+				// @ts-expect-error
+				let language = document.querySelector('#languageSelect').value;
+				document.querySelector('html')?.setAttribute('lang', language);
+				// @ts-expect-error
+				strings = i18n[language];
+				window.localStorage.setItem('language', language);
+			}}
+		>
 			<option value="en">English</option>
 			<option value="fr">Français</option>
 			<option value="es">Español</option>
 			<option value="ko">한국어</option>
-		  </select>
+		</select>
 		<label for="languageSelect" class="ml-2">{strings.language}</label>
 	</div>
 	{#if foamermode}
 		<br />
-		Data: <a style="text-decoration:underline;cursor:pointer" href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a><br />Style: <a style="text-decoration:underline;cursor:pointer" href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
+		Data:
+		<a
+			style="text-decoration:underline;cursor:pointer"
+			href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
+		><br />Style:
+		<a
+			style="text-decoration:underline;cursor:pointer"
+			href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
+		> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
 	{/if}
 </div>
 
 <div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90  sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
 		: 'hidden'}"
 >
