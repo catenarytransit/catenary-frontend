@@ -1,3 +1,6 @@
+const interleave = (arr: any, thing: any) =>
+		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
+
 export function interpretLabelsToCode(label: any, usunits: boolean) {
     const arrayofinfo = [];
 

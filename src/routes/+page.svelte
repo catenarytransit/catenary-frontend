@@ -785,7 +785,6 @@
 				if (layersettings.rail.visible) {
 					mapglobal.setLayoutProperty('raillayer', 'visibility', 'visible');
 					mapglobal.setLayoutProperty('labelrail', 'visibility', 'visible');
-
 					mapglobal.setLayoutProperty(
 						'labelrail',
 						'text-field',
@@ -806,16 +805,26 @@
 
 		let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
 
+		
+		let hidevehiclecommand = ['all', ['!=', '', ['get', 'tripIdLabel']], ["!=", 0, ['get', 'bearing']]];
+
 		if (busvehicles) {
 			console.log('found bus vehicles layer');
+
+			let filter
+
 			if (showzombiebuses === true) {
 				//set filter to none
 				mapglobal.setFilter('buses', undefined);
 				mapglobal.setFilter('labelbuses', undefined);
+				mapglobal.setFilter('busespointing', );
+				mapglobal.setFilter('busespointingshell', )
 			} else {
 				console.log('hiding buses');
 				mapglobal.setFilter('buses', hidevehiclecommand);
 				mapglobal.setFilter('labelbuses', hidevehiclecommand);
+				mapglobal.setFilter('busespointing', );
+				mapglobal.setFilter('busespointingshell', )
 			}
 		} else {
 			console.error('no bus vehicles layer');
