@@ -10,8 +10,10 @@
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { LngLat } from 'maplibre-gl';
+	import {interpretLabelsToCode} from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
 	import { determineFeeds } from '../maploaddata';
+	import {makeCircleLayers} from '../components/makeCircleLayers';
 	import Layerbutton from '../layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import {
@@ -22,6 +24,8 @@
 		check_backend,
 		check_martin
 	} from '../components/distributed';
+
+	import {makeBearingArrowPointers} from '../components/makebearingarrowpointers'
 
 	import i18n from '../i18n/strings';
 
@@ -153,9 +157,6 @@
 		localStorage.setItem('foamermode', foamermode ? 'true' : 'false');
 	}
 
-	function textColorOfMapLabels() {
-		return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
-	}
 
 	if (browser) {
 		if (localStorage.getItem('units') === 'us') {
@@ -169,16 +170,6 @@
 		} else {
 			foamermode = false;
 		}
-	}
-
-	function handleSwitchDarkMode() {
-		darkMode = !darkMode;
-
-		localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-
-		darkMode
-			? document.documentElement.classList.add('dark')
-			: document.documentElement.classList.remove('dark');
 	}
 
 	if (browser) {
@@ -270,37 +261,6 @@
 
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
-
-	function interpretLabelsToCode(label: any) {
-		let arrayofinfo = [];
-
-		if (label.route) {
-			arrayofinfo.push(['get', 'maptag']);
-		}
-
-		if (label.trip) {
-			arrayofinfo.push(['get', 'tripIdLabel']);
-		}
-
-		if (label.vehicle) {
-			arrayofinfo.push(['get', 'vehicleIdLabel']);
-		}
-
-		if (label.headsign) {
-			arrayofinfo.push(['get', 'headsign']);
-		}
-
-		if (label.speed) {
-			//round to 0.1 place
-			if (usunits === false) {
-				arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], 36]], 10]);
-			} else {
-				arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], 22.3694]], 10]);
-			}
-		}
-
-		return ['concat', ...interleave(arrayofinfo, '|')];
-	}
 
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
@@ -1736,234 +1696,9 @@
 				}
 			});*/
 
-			let busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.25, 15, 0.4]
+			makeBearingArrowPointers(map, darkMode);
 
-			let busbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]]
-
-			let railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.3, 15, 0.5]
-
-			let railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]]
-
-			map.loadImage('./icons/pointing-shell-light.png', (error, image) => {
-				if (image) {
-					
-					map.addImage('pointingshelllight', image);
-				}});
-
-			if (true) {
-				map.loadImage('./icons/pointing-filled.png', (error, image) => {
-				if (error) throw error;
-
-				if (image) {
-				map.addImage('pointingcoloured', image, {sdf: true});
-
-				
-				map.addLayer({
-					id: "busespointing",
-					source: 'buses',
-					type: 'symbol',
-					filter: ["!=", 0, ['get', 'bearing']],
-					paint: {
-						'icon-color': ['get', 'contrastdarkmodebearing'],
-						'icon-opacity': 0.4
-					},
-					layout: {
-						'icon-image': 'pointingcoloured',
-						'icon-allow-overlap': true,
-						'icon-ignore-placement': true,
-						'icon-rotate': ['get', 'bearing'],
-						'icon-rotation-alignment': 'map',
-						'icon-offset': busbearingoffset,
-						'icon-size': busbearingiconsize
-					}
-
-				});
-
-				map.addLayer({
-					id: "railpointing",
-					source: 'rail',
-					type: 'symbol',
-					filter: ["!=", 0, ['get', 'bearing']],
-					paint: {
-						'icon-color': ['get', 'color'],
-						'icon-opacity': 0.6
-					},
-					layout: {
-						'icon-image': 'pointingcoloured',
-						'icon-allow-overlap': true,
-						'icon-ignore-placement': true,
-						'icon-rotate': ['get', 'bearing'],
-						'icon-rotation-alignment': 'map',
-						'icon-offset': railbearingoffset,
-						'icon-size': railbearingiconsize
-					}
-				});
-
-				
-				}
-
-			})
-
-			}
-
-			if (true) {
-				map.loadImage('./icons/pointing-shell.png', (error, image) => {
-				if (error) throw error;
-
-				if (image) {
-					
-				map.addImage('pointingshell', image);
-
-				map.addLayer({
-					id: "busespointingshell",
-					source: 'buses',
-					type: 'symbol',
-					filter: ["!=", 0, ['get', 'bearing']],
-					paint: {
-						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
-					},
-					layout: {
-						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
-						'icon-allow-overlap': true,
-						'icon-ignore-placement': true,
-						'icon-rotate': ['get', 'bearing'],
-						'icon-rotation-alignment': 'map',
-						'icon-offset': busbearingoffset,
-						'icon-size': busbearingiconsize
-					}
-				});
-
-				map.addLayer({
-					id: "railpointingshell",
-					source: 'rail',
-					type: 'symbol',
-					filter: ["!=", 0, ['get', 'bearing']],
-					paint: {
-						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
-					},
-					layout: {
-						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
-						'icon-allow-overlap': true,
-						'icon-ignore-placement': true,
-						'icon-rotate': ['get', 'bearing'],
-						'icon-rotation-alignment': 'map',
-						'icon-offset': railbearingoffset,
-						'icon-size': railbearingiconsize
-					}
-				});
-				}
-			})
-			}
-
-			map.addLayer({
-				id: 'buses',
-				type: 'circle',
-				source: 'buses',
-				paint: {
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 10, 4, 16, 6],
-					'circle-color': ['get', 'color'],
-					'circle-stroke-color': '#fff',
-					'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
-					'circle-stroke-width': 0.8,
-					'circle-opacity':
-						darkMode == true ? ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.7] : 0.5
-				},
-				minzoom: 7
-			});
-
-			map.addLayer({
-				id: 'labelbuses',
-				type: 'symbol',
-				source: 'buses',
-				layout: {
-					'text-field': ['get', 'maptag'],
-					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-radial-offset': 0.2,
-					'text-font': [
-						'step',
-						['zoom'],
-						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-						12,
-						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-						15,
-						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
-					],
-
-					'text-size':
-						window?.innerWidth >= 1023
-							? ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14]
-							: ['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12],
-
-					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
-				},
-				paint: {
-					'text-color': textColorOfMapLabels(),
-					//'text-color': ['get', 'color'],
-					//'text-halo-color': '#eaeaea',
-					'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-					'text-halo-width': 2,
-					'text-halo-blur': 100,
-					'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 11, 1]
-				}
-			});
-
-			map.addSource('rail', {
-				type: 'geojson',
-				data: {
-					type: 'FeatureCollection',
-					features: []
-				}
-			});
-
-			map.addLayer({
-				id: 'raillayer',
-				type: 'circle',
-				source: 'rail',
-				minzoom: 7.9,
-				paint: {
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
-					'circle-color': ['get', 'color'],
-					'circle-stroke-color': '#fff',
-					'circle-stroke-width': 1,
-					'circle-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.8]
-				}
-			});
-
-			map.addLayer({
-				id: 'labelrail',
-				type: 'symbol',
-				source: 'rail',
-				layout: {
-					'text-field': ['get', 'maptag'],
-					/*'text-field': [
-						"concat",
-						['get', 'maptag'],
-						" | ",
-						['get', 'vehicleId']
-					],*/
-					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-radial-offset': 0.2,
-					'text-font': [
-						'step',
-						['zoom'],
-						['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-						11,
-						['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-						13,
-						['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
-					],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
-					'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
-				},
-				paint: {
-					'text-color': textColorOfMapLabels(),
-					//'text-halo-color': '#eaeaea',
-					'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-					'text-halo-width': 2,
-					'text-halo-blur': 100,
-					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
-				}
-			});
+			makeCircleLayers(map, darkMode);
 
 			setInterval(() => {
 				if (map.getZoom() >= 8) {
