@@ -805,26 +805,22 @@
 
 		let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
 
-		
-		let hidevehiclecommand = ['all', ['!=', '', ['get', 'tripIdLabel']], ["!=", 0, ['get', 'bearing']]];
+		let regularpointers = ["!=", 0, ['get', 'bearing']];
+		let hidevehiclecommandpointers = ['all', ['!=', '', ['get', 'tripIdLabel']], ["!=", 0, ['get', 'bearing']]];
 
 		if (busvehicles) {
-			console.log('found bus vehicles layer');
-
-			let filter
-
 			if (showzombiebuses === true) {
 				//set filter to none
 				mapglobal.setFilter('buses', undefined);
 				mapglobal.setFilter('labelbuses', undefined);
-				mapglobal.setFilter('busespointing', );
-				mapglobal.setFilter('busespointingshell', )
+				mapglobal.setFilter('busespointing', regularpointers);
+				mapglobal.setFilter('busespointingshell', regularpointers)
 			} else {
 				console.log('hiding buses');
 				mapglobal.setFilter('buses', hidevehiclecommand);
 				mapglobal.setFilter('labelbuses', hidevehiclecommand);
-				mapglobal.setFilter('busespointing', );
-				mapglobal.setFilter('busespointingshell', )
+				mapglobal.setFilter('busespointing', hidevehiclecommandpointers);
+				mapglobal.setFilter('busespointingshell', hidevehiclecommandpointers);
 			}
 		} else {
 			console.error('no bus vehicles layer');
@@ -834,9 +830,13 @@
 				//set filter to none
 				mapglobal.setFilter('raillayer', undefined);
 				mapglobal.setFilter('labelrail', undefined);
+				mapglobal.setFilter('railpointing', regularpointers);
+				mapglobal.setFilter('railpointingshell', regularpointers);
 			} else {
 				mapglobal.setFilter('raillayer', hidevehiclecommand);
 				mapglobal.setFilter('labelrail', hidevehiclecommand);
+				mapglobal.setFilter('railpointing', hidevehiclecommandpointers);
+				mapglobal.setFilter('railpointingshell', hidevehiclecommandpointers);
 			}
 		}
 
