@@ -38,8 +38,8 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean) {
 						'icon-rotation-alignment': 'map',
 						'icon-offset': busbearingoffset,
 						'icon-size': busbearingiconsize
-					}
-
+					},
+                    minzoom: 8
 				});
 
 				map.addLayer({
@@ -93,7 +93,8 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean) {
 						'icon-rotation-alignment': 'map',
 						'icon-offset': busbearingoffset,
 						'icon-size': busbearingiconsize
-					}
+					},
+                    minzoom: 8
 				});
 
 				map.addLayer({
@@ -112,7 +113,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean) {
 						'icon-rotation-alignment': 'map',
 						'icon-offset': railbearingoffset,
 						'icon-size': railbearingiconsize
-					}
+					},
 				});
 				}
 			})

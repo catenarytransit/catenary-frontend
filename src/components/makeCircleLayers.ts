@@ -12,10 +12,10 @@ export function makeCircleLayers(map:any, darkMode: boolean) {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 10, 4, 16, 6],
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
-            'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.9],
+            'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
             'circle-stroke-width': 0.8,
             'circle-opacity':
-                darkMode == true ? ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.7] : 0.5
+                darkMode == true ? ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8.2, 0.7] : 0.5
         },
         minzoom: 7
     });
