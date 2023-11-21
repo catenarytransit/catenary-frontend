@@ -47,7 +47,7 @@ message FeedMessage {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // Metadata about a feed, included in feed messages.
@@ -75,7 +75,7 @@ message FeedHeader {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // A definition (or update) of an entity in the transit feed.
@@ -103,7 +103,7 @@ message FeedEntity {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 //
@@ -181,7 +181,7 @@ message TripUpdate {
     // The extensions namespace allows 3rd-party developers to extend the
     // GTFS Realtime Specification in order to add and evaluate new features
     // and modifications to the spec.
-    extensions 1000 to 1999 [verification = UNVERIFIED];
+    extensions 1000 to 1999 ;
   }
 
   // Realtime update for arrival and/or departure events for a given stop on a
@@ -226,7 +226,7 @@ message TripUpdate {
     // The extensions namespace allows 3rd-party developers to extend the
     // GTFS Realtime Specification in order to add and evaluate new features
     // and modifications to the spec.
-    extensions 1000 to 1999 [verification = UNVERIFIED];
+    extensions 1000 to 1999 ;
   }
 
   // Updates to StopTimes for the trip (both future, i.e., predictions, and in
@@ -277,7 +277,7 @@ message TripUpdate {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // Realtime positioning information for a given vehicle.
@@ -370,7 +370,7 @@ message VehiclePosition {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // An alert, indicating some sort of incident in the public transit network.
@@ -432,7 +432,7 @@ message Alert {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features
   // and modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 //
@@ -455,7 +455,7 @@ message TimeRange {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // A position.
@@ -481,7 +481,7 @@ message Position {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // A descriptor that identifies an instance of a GTFS trip, or all instances of
@@ -562,7 +562,7 @@ message TripDescriptor {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // Identification information for the vehicle performing the trip.
@@ -582,7 +582,7 @@ message VehicleDescriptor {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // A selector for an entity in a GTFS feed.
@@ -601,7 +601,7 @@ message EntitySelector {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
 
 // An internationalized message containing per-language versions of a snippet of
@@ -626,7 +626,7 @@ message TranslatedString {
     // The extensions namespace allows 3rd-party developers to extend the
     // GTFS Realtime Specification in order to add and evaluate new features and
     // modifications to the spec.
-    extensions 1000 to 1999 [verification = UNVERIFIED];
+    extensions 1000 to 1999 ;
   }
   // At least one translation must be provided.
   repeated Translation translation = 1;
@@ -634,5 +634,5 @@ message TranslatedString {
   // The extensions namespace allows 3rd-party developers to extend the
   // GTFS Realtime Specification in order to add and evaluate new features and
   // modifications to the spec.
-  extensions 1000 to 1999 [verification = UNVERIFIED];
+  extensions 1000 to 1999 ;
 }
