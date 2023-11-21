@@ -331,7 +331,7 @@
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					//.filter((entity: any) => entity.vehicle.timestamp > Date.now() / 1000 - 300)
+					.filter((entity: any) => entity.vehicle.timestamp > Date.now() / 1000 - 300 || realtime_id === "f-amtrak~rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>

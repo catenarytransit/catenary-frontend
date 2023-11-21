@@ -78,8 +78,8 @@ const i18n = {
         // special
         alertheadersd: '모든 여행, 매번.',
         alertsubtextsd: '버스를 탑승하거나 트롤리를 탑승하기 전에 유효성 검사기를 탭하거나 스캔해야 합니다.',
-        alertheaderla: '탑승할 때마다 TAP를 자랑스럽게 사용하세요.',
-        alertsubtextla: '벌금을 피하고 우리가 요금을 낮게 유지하고 더 나은 서비스를 제공하는 데 도움이 됩니다.',
+        alertheaderla: '탈 때마다 자랑스럽게 탭하세요!',
+        alertsubtextla: '여러분은 우리가 요금을 낮게 유지하고 더 나은 서비스를 제공하는 데 도움을 주고 있습니다!',
         learnmore: '더 알아보기',
         // settings
         foamermode: '레일팬 모드',
@@ -98,7 +98,7 @@ const i18n = {
         showtrip: '여행',
         showvehicle: '차량',
         showspeed: '속도',
-    }
+    },
 }
 
 export default i18n;
