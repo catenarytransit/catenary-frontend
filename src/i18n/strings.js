@@ -7,13 +7,13 @@ const i18n = {
         alertsubtextla: 'You\'ll avoid penalties and fines, and help us keep fares low and run better service.',
         learnmore: 'Learn more',
         // settings
-        foamermode: 'Railfan mode (extreme foamers only)',
         useUSunits: 'Use US units',
         showtripless: 'Show tripless vehicles',
         language: 'Language',
         // layers
-        headingRail: 'Rail/Other',
-        headingBus: 'Buses',
+        headingRail: 'Rail',
+        headingBus: 'Bus',
+        headingMisc: 'More',
         routes: 'Routes',
         labels: 'Labels',
         stops: 'Stops',
@@ -23,6 +23,12 @@ const i18n = {
         showtrip: 'Trip',
         showvehicle: 'Vehicle',
         showspeed: 'Speed',
+        // foamer layers
+        orminfra: 'Infrastructure',
+        ormspeeds: 'Max Speeds',
+        ormsignalling: 'Signalling',
+        ormelectrification: 'Electrification',
+        ormgauge: 'Gauge',
     },
     fr: {
         // special
@@ -32,7 +38,6 @@ const i18n = {
         alertsubtextla: 'Vous éviterez les pénalités et les amendes, et vous nous aiderez à maintenir les tarifs bas et à améliorer le service.',
         learnmore: 'En savoir plus',
         // settings
-        foamermode: 'Mode railfan',
         useUSunits: 'Utiliser des unités américaines',
         showtripless: 'Afficher les véhicules sans voyage',
         language: 'Langue',
@@ -48,6 +53,12 @@ const i18n = {
         showtrip: 'Voyage',
         showvehicle: 'Véhicule',
         showspeed: 'Vitesse',
+        // foamer layers
+        orminfra: 'Infrastructure',
+        ormspeeds: 'Vitesses maximales',
+        ormsignalling: 'Signalisation',
+        ormelectrification: 'Électrification',
+        ormgauge: 'Jauge',
     },
     es: {
         // special
@@ -57,7 +68,6 @@ const i18n = {
         alertsubtextla: 'Evitará penalidades y multas, y nos ayudará a mantener las tarifas bajas y a ofrecer un mejor servicio.',
         learnmore: 'Aprende mas',
         // settings
-        foamermode: 'Modo railfan',
         useUSunits: 'Use unidades de EE.UU.',
         showtripless: 'Mostrar vehículos sin viajes',
         language: 'Idioma',
@@ -72,7 +82,13 @@ const i18n = {
         showroute: 'Ruta',
         showtrip: 'Viaje',
         showvehicle: 'Vehículo',
-        showspeed: 'Velocidad',        
+        showspeed: 'Velocidad',
+        // foamer layers
+        orminfra: 'Infraestructura',
+        ormspeeds: 'Velocidades máximas',
+        ormsignalling: 'Señalización',
+        ormelectrification: 'Electrificación',
+        ormgauge: 'Calibre',
     },
     ko: {
         // special
@@ -82,7 +98,6 @@ const i18n = {
         alertsubtextla: '여러분은 우리가 요금을 낮게 유지하고 더 나은 서비스를 제공하는 데 도움을 주고 있습니다!',
         learnmore: '더 알아보기',
         // settings
-        foamermode: '레일팬 모드',
         useUSunits: '미국 단위 사용',
         showtripless: '여행없는 차량 표시',
         language: '언어',
@@ -98,6 +113,12 @@ const i18n = {
         showtrip: '여행',
         showvehicle: '차량',
         showspeed: '속도',
+        // foamer layers
+        orminfra: '인프라',
+        ormspeeds: '최대 속도',
+        ormsignalling: '신호',
+        ormelectrification: '전기화',
+        ormgauge: '게이지',
     },
 }
 

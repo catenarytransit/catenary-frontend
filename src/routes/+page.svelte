@@ -243,6 +243,15 @@
 				direction: false,
 				speed: false
 			}
+		},
+		more: {
+			foamermode: {
+				infra: false,
+				speeds: false,
+				signalling: false,
+				electrification: false,
+				gague: false,
+			}
 		}
 	};
 
@@ -1419,17 +1428,25 @@
 								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
 								['==', ['coalesce', ['get', 'route_label']], '950']
 							]
-						]
+						],
+						[
+							'!',
+							[
+								'all',
+								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
+							]
+						],
 					])
 				),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
 					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-					//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+					'line-opacity': 0.4
+					// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 				},
-				minzoom: 7
+				minzoom: 8
 			});
 
 			// the layer must be of type 'line'
@@ -1448,6 +1465,14 @@
 								'all',
 								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
 								['==', ['coalesce', ['get', 'route_label']], '950']
+							]
+						],
+						[
+							'!',
+							[
+								'all',
+								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 							]
 						],
 						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
@@ -1486,8 +1511,8 @@
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']]]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.8]
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 6, 14, 3],
+					'line-opacity': 1
 				},
 				minzoom: 3
 			});
@@ -2160,18 +2185,20 @@
 	{/if}
 </div>-->
 
-{#if realtime_list.includes('f-mts~rt~onebusaway') && mapzoom > 9 && alertPopupShown}
+{#if realtime_list.includes('f-mts~rt~onebusaway') && mapzoom > 10 && alertPopupShown}
 	<div
-		class="fixed bottom-14 left-0 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		class="fixed bottom-14 left-6 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
 		style:padding="20px"
+		style:border-top-left-radius="20px"
+		style:border-bottom-left-radius="20px"
 		style:border-top-right-radius="20px"
 		style:border-bottom-right-radius="20px"
-		style:box-shadow="0 0 10px #522398"
 		style:color="white"
+		style:background="url(https://www.ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80)"
 	>
 		<div
 			on:click={() => (alertPopupShown = false)}
-			style:cursor="pointer"
+			style:cursor="pointer !important"
 			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> close </span>
@@ -2182,7 +2209,6 @@
 			style:height="70px"
 			alt=""
 		/>
-		<br />
 		<h1 style:font-size="1.3em">{strings.alertheadersd}</h1>
 		<p>{strings.alertsubtextsd}</p>
 		<a href="https://ridepronto.com" style:cursor="pointer" class="text-yellow-200"
@@ -2192,41 +2218,38 @@
 	</div>
 {/if}
 
-{#if realtime_list.includes('f-metro~losangeles~rail~rt') && mapzoom > 9 && alertPopupShown}
+{#if realtime_list.includes('f-metro~losangeles~rail~rt') && mapzoom > 10 && alertPopupShown}
 	<div
-		class="fixed bottom-14 left-1 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		class="fixed bottom-14 left-6 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
 		style:padding="20px"
 		style:border-top-left-radius="20px"
 		style:border-bottom-left-radius="20px"
 		style:border-top-right-radius="20px"
 		style:border-bottom-right-radius="20px"
-		style:box-shadow="0 0 10px #00a1de"
 		style:color="white"
+		style:background="url(https://www.taptogo.net/resource/1552006555000/footer_wave2) no-repeat fixed, black"
+		style:background-size="cover"
+		style:background-position="center right"
 	>
 		<div
 			on:click={() => (alertPopupShown = false)}
-			style:cursor="pointer"
+			style:cursor="pointer !important"
 			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> close </span>
 		</div>
-		<div class="flex flex-row gap-x-3">
-			<img
-				src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh"
-				style=""
-				style:height="70px"
-				alt=""
-			/>
-			<div>
-				<h1 class="text-lg md:text-xl">{strings.alertheaderla}</h1>
-				<p class="text-sm md:text-base">{strings.alertsubtextla}</p>
-				<a
-					href="https://taptogo.net"
-					style:cursor="pointer"
-					class="text-yellow-200 text-sm md:text-base">{strings.learnmore} &rarr;</a
-				>
-			</div>
-		</div>
+		<img
+			src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh"
+			style=""
+			style:height="70px"
+			alt=""
+		/>
+		<h1 style:font-size="1.3em">{strings.alertheaderla}</h1>
+		<p>{strings.alertsubtextla}</p>
+		<a href="https://taptogo.net" style:cursor="pointer" class="text-yellow-200"
+			>{strings.learnmore} &rarr;</a
+		>
+		<br />
 	</div>
 {/if}
 
@@ -2414,7 +2437,26 @@
 		>
 			<p class="w-full align-center text-center">{strings.headingBus}</p>
 		</div>
+		<!-- <div
+			on:click={() => {
+				selectedSettingsTab = 'more';
+			}}
+			on:keydown={() => {
+				selectedSettingsTab = 'more';
+			}}
+			class={`${
+				selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
+		>
+			<p class="w-full align-center text-center">{strings.headingMisc}</p>
+		</div> -->
 	</div>
+
+	{#if selectedSettingsTab === 'more'}
+		<div class="flex flex-row gap-x-1">
+			
+		</div>
+	{/if}
 
 	{#if selectedSettingsTab === 'rail' || selectedSettingsTab === 'bus'}
 		<div class="flex flex-row gap-x-1">
@@ -2438,7 +2480,7 @@
 
 			<Layerbutton
 				bind:layersettings
-				bind:selectedSettingsTab
+				selectedSettingsTab="bus"
 				change="stops"
 				name={strings.stops}
 				urlicon="/stopsicon.svg"
@@ -2447,7 +2489,7 @@
 
 			<Layerbutton
 				bind:layersettings
-				bind:selectedSettingsTab
+				selectedSettingsTab="bus"
 				change="stoplabels"
 				name={strings.stopnames}
 				urlicon="/stoplabels.svg"
