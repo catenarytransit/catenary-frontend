@@ -651,6 +651,7 @@
 								vehicleIdLabel: vehiclelabel,
 								//maintain metres per second, do conversion in label
 								speed: vehicle?.position?.speed,
+								speedvalid: typeof vehicle?.position?.speed == "number",
 								color: colour,
 								//int representing enum
 								routeType: routeType,
