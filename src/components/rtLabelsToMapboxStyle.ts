@@ -27,8 +27,8 @@ export function interpretLabelsToCode(label: any, usunits: boolean) {
             unitmultiplier = 22.3694;
         }
 
-       arrayofinfo.push(['case', true, ['/', ['round', ['*', ['get', 'speed'], unitmultiplier]], 10]])
-
+       //arrayofinfo.push(['case', true, ['/', ['round', ['*', ['get', 'speed'], unitmultiplier]], 10]])
+       arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], unitmultiplier]], 10])
        //arrayofinfo.push(['get', 'speedtype'])
     }
 
