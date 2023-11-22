@@ -1511,7 +1511,7 @@
 				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']]]),
 				paint: {
 					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 6, 14, 3],
+					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
 					'line-opacity': 1
 				},
 				minzoom: 3
@@ -2347,7 +2347,7 @@
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="foamermode" class="ml-2">{strings.foamermode}</label>
+		<label for="foamermode" class="ml-2">{strings.orminfra}</label>
 	</div>
 
 	<div>
