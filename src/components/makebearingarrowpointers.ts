@@ -3,7 +3,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean) {
 
 			const busbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]]
 
-			const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.3, 15, 0.5]
+			const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.3, 15, 0.5]
 
 			const railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]]
 
@@ -48,7 +48,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean) {
 					type: 'symbol',
 					filter: ["!=", 0, ['get', 'bearing']],
 					paint: {
-						'icon-color': ['get', 'color'],
+						'icon-color': ['get', 'contrastdarkmodebearing'],
 						'icon-opacity': 0.6
 					},
 					layout: {
@@ -83,7 +83,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean) {
 					type: 'symbol',
 					filter: ["!=", 0, ['get', 'bearing']],
 					paint: {
-						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
+						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.9, 5, 0.8, 9, 0.6, 11.5, 0.8]
 					},
 					layout: {
 						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',

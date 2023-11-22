@@ -7,8 +7,8 @@
     export let change:string;
 </script>
 
-{#if layersettings}
-{#if layersettings[selectedSettingsTab]}
+<!-- {#if layersettings} -->
+<!-- {#if layersettings[selectedSettingsTab]} -->
 <div on:click={() => {
     layersettings[selectedSettingsTab][change] = !layersettings[selectedSettingsTab][change] ;
     runSettingsAdapt();
@@ -28,4 +28,4 @@ on:keydown={() => {
     class={`bg-[#f5f1f0] dark:bg-[#1C2738] rounded-xl border-2`}><img src={urlicon} class='w-14 h-14' alt='' /></div>
     <p  class='text-sm text-center '>{name}</p>
 </div>
-{/if}{/if}
+<!-- {/if}{/if} -->

@@ -22,11 +22,14 @@ export function interpretLabelsToCode(label: any, usunits: boolean) {
 
     if (label.speed) {
         //round to 0.1 place
-        if (usunits === false) {
-            arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], 36]], 10]);
-        } else {
-            arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], 22.3694]], 10]);
+        let unitmultiplier = 36;
+        if (usunits === true) {
+            unitmultiplier = 22.3694;
         }
+
+       //arrayofinfo.push(['case', true, ['/', ['round', ['*', ['get', 'speed'], unitmultiplier]], 10]])
+       arrayofinfo.push(['/', ['round', ['*', ['get', 'speed'], unitmultiplier]], 10])
+       //arrayofinfo.push(['get', 'speedtype'])
     }
 
     return ['concat', ...interleave(arrayofinfo, '|')];

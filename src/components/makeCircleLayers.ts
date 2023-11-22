@@ -68,13 +68,13 @@ export function makeCircleLayers(map:any, darkMode: boolean) {
         id: 'raillayer',
         type: 'circle',
         source: 'rail',
-        minzoom: 7.9,
+        minzoom: 2,
         paint: {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
             'circle-stroke-width': 1,
-            'circle-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0, 8.2, 0.8]
+            'circle-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.2, 0.6, 8.2, 0.8]
         }
     });
 
@@ -82,6 +82,7 @@ export function makeCircleLayers(map:any, darkMode: boolean) {
         id: 'labelrail',
         type: 'symbol',
         source: 'rail',
+        minzoom: 2,
         layout: {
             'text-field': ['get', 'maptag'],
             /*'text-field': [
@@ -110,7 +111,7 @@ export function makeCircleLayers(map:any, darkMode: boolean) {
             'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
             'text-halo-width': 2,
             'text-halo-blur': 100,
-            'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+            'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
         }
     });
 }
