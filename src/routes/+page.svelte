@@ -1437,6 +1437,8 @@
 								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 							]
 						],
+					//	['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+					//	['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
 					])
 				),
 				paint: {
@@ -1475,12 +1477,15 @@
 								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 							]
 						],
-						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus']
+						//['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+						//['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
 					])
 				),
 				layout: {
 					'symbol-placement': 'line',
-					'text-field': ['coalesce', ['get', 'route_label']],
+					//'text-field': ['coalesce', ['get', 'route_label']],
+					'text-field': urlParams.get('debug') ? 
+					['concat', ['get','onestop_feed_id'],"|",['get','shape_id'],"|",['coalesce', ['get', 'route_label']]] : ['coalesce', ['get', 'route_label']],
 					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 					'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],

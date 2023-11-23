@@ -36,7 +36,7 @@ export function addGeoRadius(map: any) {
                     paint: {
 						'text-color': '#eee',
 						'text-halo-color': '#003',
-						'text-halo-width': 2
+						'text-halo-width': 2,
 					},
         });
 
