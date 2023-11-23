@@ -1,4 +1,4 @@
-//make a socket connection to the server wstransit.kylerchin.com
+//make a socket connection to the server ws.catenarymaps.org
 //throw submissions at it :)
 
 function isValidGeolocation(geolocation: GeolocationPosition) {
