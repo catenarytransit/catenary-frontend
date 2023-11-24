@@ -12,7 +12,10 @@ const i18n = {
         language: 'Language',
         // layers
         headingRail: 'Rail',
+        headingLocalRail: 'Metro/Tram',
+        headingIntercityRail: 'Rail',
         headingBus: 'Bus',
+        headingOther: 'Other',
         headingMisc: 'More',
         routes: 'Routes',
         labels: 'Labels',
@@ -45,7 +48,11 @@ const i18n = {
         language: 'Langue',
         // layers
         headingRail: 'Rail/Autres',
+        headingLocalRail: 'Metro/Tram',
+        headingIntercityRail: 'Rail',
         headingBus: 'Bus',
+        headingOther: 'Autres',
+        headingMisc: 'Plus',
         routes: 'Itinéraires',
         labels: 'Étiquettes',
         stops: 'Arrêts',
@@ -78,6 +85,10 @@ const i18n = {
         // layers
         headingRail: 'Ferrocarril/Otros',
         headingBus: 'Autobuses',
+        headingLocalRail: 'Metro/Tranvía',
+        headingIntercityRail: 'Ferrocarril',
+        headingOther: 'Otros',
+        headingMisc: 'Misc',
         routes: 'Rutas',
         labels: 'Etiquetas',
         stops: 'Paradas',
@@ -110,6 +121,11 @@ const i18n = {
         // layers
         headingRail: '철도/기타',
         headingBus: '버스',
+        headingLocalRail: '지하철/트램',
+        headingIntercityRail: '철도',
+        headingOther: '다른',
+        headingMisc: '기타 레이어',
+
         routes: '노선',
         labels: '라벨',
         stops: '정류장',
