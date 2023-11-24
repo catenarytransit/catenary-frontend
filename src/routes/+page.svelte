@@ -29,6 +29,7 @@
 	import {makeBearingArrowPointers} from '../components/makebearingarrowpointers'
 
 	import i18n from '../i18n/strings';
+	import { playRandomSequence } from '../components/announcements';
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
@@ -47,7 +48,8 @@
 	//false means use metric, true means use us units
 	let selectedSettingsTab = 'rail'; //valid options {rail, bus, bike}
 	let usunits = false;
-	let foamermode = true;
+	let foamermode = false;
+	let announcermode = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: any = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
@@ -72,6 +74,22 @@
 	let static_feeds_in_frame: any = {};
 	let operators_in_frame: any = {};
 	let realtime_feeds_in_frame: any = {};
+
+	setTimeout(() => {
+		if (announcermode) {
+			try {
+				playRandomSequence()
+			} catch {}
+		}
+	}, 6000)
+
+	setInterval(() => {
+		if (announcermode) {
+			try {
+				playRandomSequence()
+			} catch {}
+		}
+	}, 60000)
 
 	function processUrlLimit(inputarray: any) {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -156,6 +174,11 @@
 	function handleFoamerModeSwitch() {
 		foamermode = !foamermode;
 		localStorage.setItem('foamermode', foamermode ? 'true' : 'false');
+	}
+
+	function handleAnnouncerModeSwitch() {
+		announcermode = !announcermode;
+		localStorage.setItem('announcermode', announcermode ? 'true' : 'false');
 	}
 
 
@@ -2270,7 +2293,7 @@
 	{/if}
 </div>-->
 
-{#if realtime_list.includes('f-mts~rt~onebusaway') && mapzoom > 10 && alertPopupShown}
+{#if (realtime_list.includes('f-mts~rt~onebusaway') || realtime_list.includes('f-northcountrytransitdistrict~rt')) && mapzoom > 10 && alertPopupShown}
 	<div
 		class="fixed bottom-14 left-6 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
 		style:padding="20px"
@@ -2433,6 +2456,24 @@
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
 		<label for="foamermode" class="ml-2">{strings.orminfra}</label>
+	</div>
+	
+	<div>
+		<input
+			on:click={(x) => {
+				handleAnnouncerModeSwitch();
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				handleAnnouncerModeSwitch();
+				runSettingsAdapt();
+			}}
+			checked={announcermode}
+			id="announcements"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="announcements" class="ml-2">{strings.announcements}</label>
 	</div>
 
 	<div>
