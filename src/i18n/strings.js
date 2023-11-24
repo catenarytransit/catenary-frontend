@@ -1,10 +1,12 @@
 const i18n = {
     en: {
         // special
+        appwidealert: 'Happy Holidays from the Catenary team!',
+        appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around.',
         alertheadersd: 'Every ride, every time.',
         alertsubtextsd: 'You must tap or scan the validator when boarding the bus, or before boarding the Trolley.',
-        alertheaderla: 'TAP with pride every time you ride.',
-        alertsubtextla: 'You\'ll avoid penalties and fines, and help us keep fares low and run better service.',
+        alertheaderla: 'Explore public art on Catenary',
+        alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
         learnmore: 'Learn more',
         // settings
         useUSunits: 'Use US units',
@@ -39,8 +41,8 @@ const i18n = {
         // special
         alertheadersd: 'À chaque voyage, à chaque fois.',
         alertsubtextsd: 'Vous devez toucher ou scanner le valideur lors de l\'embarquement dans le bus, ou avant d\'embarquer dans le Trolley.',
-        alertheaderla: 'TAP avec fierté à chaque fois que vous montez.',
-        alertsubtextla: 'Vous éviterez les pénalités et les amendes, et vous nous aiderez à maintenir les tarifs bas et à améliorer le service.',
+        alertheaderla: 'Explorez l\'art public d\'artistes locaux sur Catenary',
+        alertsubtextla: 'Activez la couche Art public pour voir les œuvres d\'art commandées par Metro situées dans les stations du comté de Los Angeles.',
         learnmore: 'En savoir plus',
         // settings
         useUSunits: 'Utiliser des unités américaines',
@@ -75,8 +77,8 @@ const i18n = {
         // special
         alertheadersd: 'Cada viaje, cada vez.',
         alertsubtextsd: 'Debe tocar o escanear el validador al abordar el autobús, o antes de abordar el Trolley.',
-        alertheaderla: 'Use su tarjeta TAP con orgullo cada vez que aborde.',
-        alertsubtextla: 'Evitará penalidades y multas, y nos ayudará a mantener las tarifas bajas y a ofrecer un mejor servicio.',
+        alertheaderla: 'Explore el arte público de artistas locales en Catenary',
+        alertsubtextla: 'Habilite la capa de Arte público para ver el arte encargado por Metro ubicado en las estaciones del condado de Los Ángeles.',
         learnmore: 'Aprende mas',
         // settings
         useUSunits: 'Use unidades de EE.UU.',
@@ -111,8 +113,8 @@ const i18n = {
         // special
         alertheadersd: '모든 여행, 매번.',
         alertsubtextsd: '버스를 탑승하거나 트롤리를 탑승하기 전에 유효성 검사기를 탭하거나 스캔해야 합니다.',
-        alertheaderla: '탈 때마다 자랑스럽게 탭하세요!',
-        alertsubtextla: '여러분은 우리가 요금을 낮게 유지하고 더 나은 서비스를 제공하는 데 도움을 주고 있습니다!',
+        alertheaderla: 'Catenary에서 지역 예술가의 공공 예술 탐색',
+        alertsubtextla: '공공 예술 레이어를 활성화하여 LA 카운티의 역에 위치한 메트로 의뢰 예술을 볼 수 있습니다.',
         learnmore: '더 알아보기',
         // settings
         useUSunits: '미국 단위 사용',
