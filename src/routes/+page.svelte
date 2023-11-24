@@ -2643,10 +2643,10 @@
 
 		<Layerselectionbox text={strings.headingLocalRail}
 		changesetting={() => {
-			selectedSettingsTab = 'localrail';
+			selectedSettingsTab = 'rail';
 		}}
 		cssclass={`${
-			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
 
