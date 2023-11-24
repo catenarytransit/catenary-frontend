@@ -1420,7 +1420,7 @@
 				filter: removeWeekends(
 					processUrlLimit([
 						'all',
-					//	['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 						[
 							'!',
 							[
@@ -1477,7 +1477,7 @@
 								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 							]
 						],
-						//['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 						//['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
 					])
 				),
@@ -1607,6 +1607,59 @@
 				type: 'symbol',
 				source: 'stops',
 				'source-layer': 'stops',
+				filter: removeWeekendStops(['all', 
+				['!', ['in', 1, ['get', 'route_types']]],
+				['!', ['in', 0, ['get', 'route_types']]],
+				['!', ['in', 2, ['get', 'route_types']]]
+			]),
+				layout: {
+					//'text-field': ['get', 'name'],
+					'text-field': ['coalesce', ['get', 'route_types']],
+					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+					'text-radial-offset': 0.7,
+					'icon-image': ['get', 'network'],
+					'icon-size': 1,
+					//'text-ignore-placement': false,
+					//'icon-ignore-placement': false,
+					//'text-allow-overlap': true,
+					//'symbol-avoid-edges': false,
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+				},
+				paint: {
+					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+					'text-halo-width': 0.4
+				},
+				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
+			});
+
+			/*
+			map.addLayer({
+				id: 'railstopscircle',
+				type: 'circle',
+				source: 'stops',
+				'source-layer': 'stops',
+				layout: {},
+				paint: {
+					'circle-color': '#1c2636',
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
+					'circle-stroke-color': darkMode
+						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
+						: '#333333',
+					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
+					'circle-opacity': 0.1
+				},
+				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11,
+				filter: removeWeekendStops(['all'])
+			});
+
+			map.addLayer({
+				id: 'railstopslabelclose',
+				type: 'symbol',
+				source: 'stops',
+				'source-layer': 'stops',
 				filter: removeWeekendStops(['all']),
 				layout: {
 					'text-field': ['get', 'name'],
@@ -1628,6 +1681,33 @@
 				},
 				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
 			});
+
+			map.addLayer({
+				id: 'railstopslabelfar',
+				type: 'symbol',
+				source: 'stops',
+				'source-layer': 'stops',
+				filter: ['all'],
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 8, 15, 9],
+					'text-radial-offset': 0.7,
+					'icon-image': ['get', 'network'],
+					'icon-size': 1,
+					//'text-ignore-placement': false,
+					//'icon-ignore-placement': false,
+					//'text-allow-overlap': true,
+					//'symbol-avoid-edges': false,
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+				},
+				paint: {
+					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+					'text-halo-width': 0.4
+				},
+				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
+			});*/
 
 			map.addSource('buses', {
 				type: 'geojson',
