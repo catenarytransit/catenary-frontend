@@ -39,6 +39,8 @@ const i18n = {
     },
     fr: {
         // special
+        appwidealert: 'Joyeuses fêtes de la part de l\'équipe Catenary!',
+        appwidesubtext: 'Peu importe vos plans de vacances, nous sommes toujours là pour vous aider à vous déplacer.',
         alertheadersd: 'À chaque voyage, à chaque fois.',
         alertsubtextsd: 'Vous devez toucher ou scanner le valideur lors de l\'embarquement dans le bus, ou avant d\'embarquer dans le Trolley.',
         alertheaderla: 'Explorez l\'art public d\'artistes locaux sur Catenary',
@@ -75,6 +77,8 @@ const i18n = {
     },
     es: {
         // special
+        appwidealert: '¡Felices fiestas del equipo de Catenary!',
+        appwidesubtext: 'No importa cuáles sean sus planes navideños, todavía estamos aquí para ayudarlo a moverse.',
         alertheadersd: 'Cada viaje, cada vez.',
         alertsubtextsd: 'Debe tocar o escanear el validador al abordar el autobús, o antes de abordar el Trolley.',
         alertheaderla: 'Explore el arte público de artistas locales en Catenary',
@@ -111,6 +115,8 @@ const i18n = {
     },
     ko: {
         // special
+        appwidealert: 'Catenary 팀의 행복한 휴일!',
+        appwidesubtext: '휴일 계획이 무엇이든 상관없이 여전히 도움을 드릴 수 있습니다.',
         alertheadersd: '모든 여행, 매번.',
         alertsubtextsd: '버스를 탑승하거나 트롤리를 탑승하기 전에 유효성 검사기를 탭하거나 스캔해야 합니다.',
         alertheaderla: 'Catenary에서 지역 예술가의 공공 예술 탐색',
