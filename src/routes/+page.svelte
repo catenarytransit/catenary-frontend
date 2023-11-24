@@ -47,7 +47,7 @@
 	}
 
 	//false means use metric, true means use us units
-	let selectedSettingsTab = 'rail'; //valid options {rail, bus, bike}
+	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
 	let announcermode = false;
@@ -1229,11 +1229,11 @@
 		map.on('load', () => {
 			const urlParams = new URLSearchParams(window.location.search);
 			// Add new sources and layers
-			// let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
+			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 
-			// if (removelogo1) {
-			// 	removelogo1[0].remove();
-			// }
+			 if (removelogo1) {
+			 	removelogo1[0].remove();
+			 }
 
 			addGeoRadius(map);
 			if (urlParams.get('debug')) {
@@ -2625,7 +2625,9 @@
 		<a
 			style="text-decoration:underline;cursor:pointer"
 			href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
-		><br />Style:
+		>
+		<a style="text-decoration:underline;cursor:pointer" href='https://www.mapbox.com/about/maps/'>© Mapbox</a>
+		<br />Style:
 		<a
 			style="text-decoration:underline;cursor:pointer"
 			href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
@@ -2643,38 +2645,42 @@
 
 		
 
-		<Layerselectionbox text={strings.headingRail}
+		<Layerselectionbox text={strings.headingLocalRail}
 		changesetting={() => {
-			selectedSettingsTab = 'rail';
+			selectedSettingsTab = 'localrail';
 		}}
 		cssclass={`${
-			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
+			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
 
-		<Layerselectionbox text={strings.headingRail}
+		<Layerselectionbox text={strings.headingIntercityRail}
 		changesetting={() => {
-			selectedSettingsTab = 'rail';
+			selectedSettingsTab = 'intercityrail';
 		}}
 		cssclass={`${
-			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
+			selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
 
 
-		<div
-			on:click={() => {
-				selectedSettingsTab = 'bus';
-			}}
-			on:keydown={() => {
-				selectedSettingsTab = 'bus';
-			}}
-			class={`${
-				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		>
-			<p class="w-full align-center text-center">{strings.headingBus}</p>
-		</div>
+		<Layerselectionbox text={strings.headingBus}
+		changesetting={() => {
+			selectedSettingsTab = 'bus';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
+
+		<Layerselectionbox text={strings.headingOther}
+		changesetting={() => {
+			selectedSettingsTab = 'other';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
 		<!-- <div
 			on:click={() => {
 				selectedSettingsTab = 'more';
@@ -2696,7 +2702,7 @@
 		</div>
 	{/if}
 
-	{#if selectedSettingsTab === 'rail' || selectedSettingsTab === 'bus'}
+	{#if ["other", "bus", 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
 		<div class="flex flex-row gap-x-1">
 			<Layerbutton
 				bind:layersettings
