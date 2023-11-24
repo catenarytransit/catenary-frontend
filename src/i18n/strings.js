@@ -29,6 +29,8 @@ const i18n = {
         ormsignalling: 'Signalling',
         ormelectrification: 'Electrification',
         ormgauge: 'Gauge',
+        // announcements
+        announcements: 'Play Announcements',
     },
     fr: {
         // special
@@ -59,6 +61,8 @@ const i18n = {
         ormsignalling: 'Signalisation',
         ormelectrification: 'Électrification',
         ormgauge: 'Jauge',
+        // announcements
+        announcements: 'Lire les annonces',
     },
     es: {
         // special
@@ -89,6 +93,8 @@ const i18n = {
         ormsignalling: 'Señalización',
         ormelectrification: 'Electrificación',
         ormgauge: 'Calibre',
+        // announcements
+        announcements: 'Reproducir anuncios',
     },
     ko: {
         // special
@@ -119,6 +125,8 @@ const i18n = {
         ormsignalling: '신호',
         ormelectrification: '전기화',
         ormgauge: '게이지',
+        // announcements
+        announcements: '알림 재생',
     },
 }
 
