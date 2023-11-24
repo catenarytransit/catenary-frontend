@@ -1418,9 +1418,14 @@
 				url: what_martin_to_use() + '/busonly'
 			});
 
-			map.addSource('stops', {
+			map.addSource('busstops', {
 				type: 'vector',
-				url: what_martin_to_use() + '/stops'
+				url: what_martin_to_use() + '/busstops'
+			});
+
+			map.addSource('stationfeatures', {
+				type: 'vector',
+				url: what_martin_to_use() + '/stationfeatures'
 			});
 
 			map.addSource('foamertiles', {
@@ -1608,8 +1613,8 @@
 			map.addLayer({
 				id: 'busstopscircle',
 				type: 'circle',
-				source: 'stops',
-				'source-layer': 'stops',
+				source: 'busstops',
+				'source-layer': 'busstops',
 				layout: {},
 				paint: {
 					'circle-color': '#1c2636',
@@ -1622,27 +1627,29 @@
 					'circle-opacity': 0.1
 				},
 				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11,
-				filter: removeWeekendStops(['all'])
+				filter: removeWeekendStops(['all',
+			
+				['!', ['in', 1, ['get', 'route_types']]],
+				['!', ['in', 0, ['get', 'route_types']]],
+				['!', ['in', 2, ['get', 'route_types']]]])
 			});
 
 			map.addLayer({
 				id: 'busstopslabel',
 				type: 'symbol',
-				source: 'stops',
-				'source-layer': 'stops',
+				source: 'busstops',
+				'source-layer': 'busstops',
 				filter: removeWeekendStops(['all', 
 				['!', ['in', 1, ['get', 'route_types']]],
 				['!', ['in', 0, ['get', 'route_types']]],
 				['!', ['in', 2, ['get', 'route_types']]]
 			]),
 				layout: {
-					//'text-field': ['get', 'name'],
-					'text-field': ['coalesce', ['get', 'route_types']],
+					'text-field': ['get', 'name'],
+					//'text-field': ['coalesce', ['get', 'route_types']],
 					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
 					'text-radial-offset': 0.7,
-					'icon-image': ['get', 'network'],
-					'icon-size': 1,
 					//'text-ignore-placement': false,
 					//'icon-ignore-placement': false,
 					//'text-allow-overlap': true,
@@ -1656,6 +1663,27 @@
 				},
 				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
 			});
+
+			map.loadImage("/station-enter.png", (error, image) => {
+				if (error) throw error;
+
+				map.addImage('station-enter', image);
+
+				map.addLayer({
+					id: 'stationenter',
+					type: 'symbol',
+					source: 'stationfeatures',
+					"source-layer": "stationfeatures",
+					layout: {
+						'icon-image': "station-enter",
+						"icon-size": ['interpolate', ['linear'],['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
+						'icon-ignore-placement': false,
+						'icon-allow-overlap': true,
+					},
+					
+				minzoom: window?.innerWidth >= 1023 ? 14 : 14.5
+				});
+			})
 
 			/*
 			map.addLayer({
@@ -1902,7 +1930,7 @@
 
 			runSettingsAdapt();
 
-			map.loadImage('https://maps.catenarymaps.org/geo-circle.png', (error, image) => {
+			map.loadImage('/geo-circle.png', (error, image) => {
 				if (error) throw error;
 
 				// Add the image to the map style.
