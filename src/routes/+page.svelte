@@ -1683,6 +1683,32 @@
 					
 				minzoom: window?.innerWidth >= 1023 ? 14 : 14.5
 				});
+
+				map.addLayer({
+				id: 'busstopslabel',
+				type: 'symbol',
+					source: 'stationfeatures',
+					"source-layer": "stationfeatures",
+				
+				layout: {
+					'text-field': ['get', 'name'],
+					//'text-field': ['coalesce', ['get', 'route_types']],
+					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+					'text-radial-offset': 0.7,
+					//'text-ignore-placement': false,
+					//'icon-ignore-placement': false,
+					//'text-allow-overlap': true,
+					//'symbol-avoid-edges': false,
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+				},
+				paint: {
+					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+					'text-halo-width': 0.4
+				},
+				minzoom: 16
+			});
 			})
 
 			/*
