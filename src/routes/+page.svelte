@@ -1735,7 +1735,7 @@
 					},
 					
 				minzoom: window?.innerWidth >= 1023 ? 14 : 15
-				});
+				}, "buses");
 
 				map.addLayer({
 				id: 'stationenterlabel',
@@ -1760,7 +1760,7 @@
 					'text-halo-width': darkMode ? 0.4 : 0.2
 				},
 				minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
-			});
+			}, "buses");
 			})
 
 			/*
@@ -2353,60 +2353,59 @@
 		title="Google Tag Manager"
 	/></noscript
 >
-
-{#if typeof geolocation === 'object'}
-	{#if typeof geolocation.coords.speed === 'number'}
-		<div
-			class="inter fixed bottom-1 z-50 rounded-sm px-2 py-1 bg-white w-content ml-2 text-black text-sm z-10"
-		>
-			{#if usunits == false}
-				<div>
-					<span class="font-semibold">{geolocation.coords.speed.toFixed(2)}</span>
-					<span class="text-xs">m/s</span>
-					<span class="font-semibold">{(3.6 * geolocation.coords.speed).toFixed(2)}</span>
-					<span class="text-xs">km/h</span>
-				</div>
-			{:else}
-				<div>
-					<span class="font-semibold">{(2.23694 * geolocation.coords.speed).toFixed(2)}</span>
-					<span class="text-xs">mph</span>
-				</div>
-			{/if}
-		</div>
-	{/if}
-{/if}
 <!-- End Google Tag Manager (noscript) -->
-<div id="map" style="width: 100%; height: 100%;" />
 
-<div class="sidebar">
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | {current_map_heading.toFixed(
-		2
-	)}
-</div>
+<div id="map" style="width: 100svw; height: 100svh;" />
 
-<!--
-<div class="sidebar">
+<div class="fixed bottom-11 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+	style:padding="10px"
+	style:border-radius="10px"
+>
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
-	{#if (typeof geolocation === 'object' && typeof geolocation.coords.speed === 'number')}
-		<br />
-		{#if usunits == false}
-			Speed: {geolocation.coords.speed.toFixed(2)} m/s {(3.6 * geolocation.coords.speed).toFixed(2)} km/h
-		{:else}
-			<div>
-				Speed: {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
-			</div>
+	{#if typeof geolocation === 'object'}
+		{#if typeof geolocation.coords.speed === 'number'}
+				{#if usunits == false}
+					| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(2)} km/h)
+				{:else}
+					| {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+				{/if}
 		{/if}
 	{/if}
-</div>-->
+</div>
 
-{#if (realtime_list.includes('f-mts~rt~onebusaway') || realtime_list.includes('f-northcountrytransitdistrict~rt')) && mapzoom > 10 && alertPopupShown}
+{#if alertPopupShown}
 	<div
-		class="fixed bottom-14 left-6 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-		style:padding="20px"
-		style:border-top-left-radius="20px"
-		style:border-bottom-left-radius="20px"
-		style:border-top-right-radius="20px"
-		style:border-bottom-right-radius="20px"
+		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		style:padding="15px"
+		style:border-radius="10px"
+		style:max-width="20vw"
+		style:color="white"
+		style:background="linear-gradient(#0A233F, #000000)"
+	>
+		<div
+			on:click={() => (alertPopupShown = false)}
+			style:cursor="pointer !important"
+			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> close </span>
+		</div>
+		<img
+			src="/img/special/holiday.png"
+			style=""
+			style:height="70px"
+			alt=""
+		/>
+		<h1 style:font-size="1.3em">{strings.appwidealert}</h1>
+		<p>{strings.appwidesubtext}</p>
+	</div>
+{/if}
+
+<!-- {#if (realtime_list.includes('f-mts~rt~onebusaway') || realtime_list.includes('f-northcountrytransitdistrict~rt')) && mapzoom > 10 && alertPopupShown}
+	<div
+		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		style:padding="15px"
+		style:border-radius="10px"
+		style:max-width="20vw"
 		style:color="white"
 		style:background="url(https://www.ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80)"
 	>
@@ -2430,20 +2429,17 @@
 		>
 		<br />
 	</div>
-{/if}
+{/if} -->
 
-{#if realtime_list.includes('f-metro~losangeles~rail~rt') && mapzoom > 10 && alertPopupShown}
+<!-- {#if realtime_list.includes('f-metro~losangeles~rail~rt') && mapzoom > 10 && alertPopupShown}
 	<div
-		class="fixed bottom-14 left-6 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-		style:padding="20px"
-		style:border-top-left-radius="20px"
-		style:border-bottom-left-radius="20px"
-		style:border-top-right-radius="20px"
-		style:border-bottom-right-radius="20px"
+		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		style:padding="15px"
+		style:border-radius="10px"
+		style:max-width="20vw"
 		style:color="white"
-		style:background="url(https://www.taptogo.net/resource/1552006555000/footer_wave2) no-repeat fixed, black"
+		style:background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/Mark-Steven-Greenfield-Red-Car-Requiem-B.jpeg) center right no-repeat, black"
 		style:background-size="cover"
-		style:background-position="center right"
 	>
 		<div
 			on:click={() => (alertPopupShown = false)}
@@ -2453,7 +2449,7 @@
 			<span class="material-symbols-outlined margin-auto select-none"> close </span>
 		</div>
 		<img
-			src="https://www.taptogo.net/resource/1552006555000/tap_card_swoosh"
+			src="/img/special/stationart.svg"
 			style=""
 			style:height="70px"
 			alt=""
@@ -2465,7 +2461,7 @@
 		>
 		<br />
 	</div>
-{/if}
+{/if} -->
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
@@ -2645,14 +2641,26 @@
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		
 
-		<Layerselectionbox text={strings.headingLocalRail}
+		
+
+		<Layerselectionbox text={strings.headingRail}
 		changesetting={() => {
-			selectedSettingsTab = 'localrail';
+			selectedSettingsTab = 'rail';
 		}}
 		cssclass={`${
-			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
+
+		<Layerselectionbox text={strings.headingRail}
+		changesetting={() => {
+			selectedSettingsTab = 'rail';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
+
 
 		<div
 			on:click={() => {
@@ -2803,21 +2811,6 @@
 	#map {
 		width: 100%;
 		height: 100%;
-	}
-
-	.sidebar {
-		background-color: var(--background);
-		box-shadow: 0 0 var(--glow) var(--primary);
-		color: #fff;
-		padding: 6px 12px;
-		font-family: monospace;
-		z-index: 1;
-		position: absolute;
-		left: 0;
-		top: 0;
-		margin: 12px;
-		border-radius: var(--radius);
-		font-size: 10px;
 	}
 
 	.runSidebar {
