@@ -11,7 +11,7 @@
 	import { LngLat } from 'maplibre-gl';
 	import { flatten } from '../../utils/flatten';
 	import { determineFeeds } from '../../maploaddata';
-	import Layerbutton from '../../layerbutton.svelte';
+	import Layerbutton from '../../components/layerbutton.svelte';
 	import Realtimelabel from '../../realtimelabel.svelte';
 
 	let darkMode = true;

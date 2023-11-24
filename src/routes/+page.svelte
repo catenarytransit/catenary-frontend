@@ -14,8 +14,9 @@
 	import { flatten } from '../utils/flatten';
 	import { determineFeeds } from '../maploaddata';
 	import {makeCircleLayers} from '../components/makeCircleLayers';
-	import Layerbutton from '../layerbutton.svelte';
+	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
+	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import {numberForBearingLengthBus, numberForBearingLengthRail} from '../components/lineBasedBearing'
 	import {
 		what_kactus_to_use,
@@ -252,7 +253,53 @@
 				speed: false
 			}
 		},
+		//freeze settings
 		rail: {
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		localrail: {
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		intercity: {
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		other: {
 			visible: true,
 			stops: true,
 			labelshapes: true,
@@ -274,13 +321,15 @@
 				signalling: false,
 				electrification: false,
 				gague: false,
-			}
+			},
+			showstationentrances: true,
+			showstationart: true
 		}
 	};
 
 	// Get the JSON object from local storage
 
-	const layersettingsnamestorage = 'layersettingsv2';
+	const layersettingsnamestorage = 'layersettingsv3';
 
 	if (browser) {
 		if (localStorage.getItem(layersettingsnamestorage)) {
@@ -488,7 +537,7 @@
 											}
 										}
 									} else {
-										if (vehicle.trip.tripId) {
+										if (vehicle.trip.tripId && static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
 											fetch(
 												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
 													vehicle.trip.tripId
@@ -672,6 +721,10 @@
 
 						if (realtime_id === 'f-mta~nyc~rt~bustime') {
 							vehiclelabel = vehiclelabel.replace(/mta( )?/i, '');
+						}
+
+						if (vehiclelabel == "Pacific Surfliner") {
+							vehiclelabel = "Surfliner"
 						}
 
 						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
@@ -1661,7 +1714,7 @@
 					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 					'text-halo-width': 0.4
 				},
-				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
+				minzoom: 14
 			});
 
 			map.loadImage("/station-enter.png", (error, image) => {
@@ -1681,33 +1734,32 @@
 						'icon-allow-overlap': true,
 					},
 					
-				minzoom: window?.innerWidth >= 1023 ? 14 : 14.5
+				minzoom: window?.innerWidth >= 1023 ? 14 : 15
 				});
 
 				map.addLayer({
-				id: 'busstopslabel',
+				id: 'stationenterlabel',
 				type: 'symbol',
 					source: 'stationfeatures',
 					"source-layer": "stationfeatures",
 				
 				layout: {
 					'text-field': ['get', 'name'],
-					//'text-field': ['coalesce', ['get', 'route_types']],
 					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
-					'text-radial-offset': 0.7,
-					//'text-ignore-placement': false,
+					'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 9, 19, 12],
+					'text-radial-offset': 1,
+					'text-ignore-placement': false,
 					//'icon-ignore-placement': false,
-					//'text-allow-overlap': true,
+					'text-allow-overlap': true,
 					//'symbol-avoid-edges': false,
 					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
 				},
 				paint: {
-					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+					'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
 					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 0.4
+					'text-halo-width': darkMode ? 0.4 : 0.2
 				},
-				minzoom: 16
+				minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
 			});
 			})
 
@@ -2591,19 +2643,17 @@
 		: 'hidden'}"
 >
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
-		<div
-			on:click={() => {
-				selectedSettingsTab = 'rail';
-			}}
-			on:keydown={() => {
-				selectedSettingsTab = 'rail';
-			}}
-			class={`${
-				selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		>
-			<p class="w-full align-center text-center">{strings.headingRail}</p>
-		</div>
+		
+
+		<Layerselectionbox text={strings.headingLocalRail}
+		changesetting={() => {
+			selectedSettingsTab = 'localrail';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
+
 		<div
 			on:click={() => {
 				selectedSettingsTab = 'bus';
