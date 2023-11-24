@@ -2375,10 +2375,9 @@
 
 {#if alertPopupShown}
 	<div
-		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
+		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable lg:max-w-[20vw]"
 		style:padding="15px"
 		style:border-radius="10px"
-		style:max-width="20vw"
 		style:color="white"
 		style:background="linear-gradient(#0A233F, #000000)"
 	>
