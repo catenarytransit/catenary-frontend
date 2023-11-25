@@ -2361,7 +2361,7 @@
 <div id="map" style="width: 100svw; height: 100svh;" />
 
 
-<div class="fixed bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
+<div class="fixed text-xs md:text-sm bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 
 >
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
