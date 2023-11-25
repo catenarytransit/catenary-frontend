@@ -49,7 +49,7 @@ export function determineFeeds(map:any, staticfeeds:any, operators:any, realtime
 
     let realtime_feeds_data_obj:any = {};
 
-    console.log('realtime_feeds_in_frame',realtime_feeds_in_frame)
+    // console.log('realtime_feeds_in_frame',realtime_feeds_in_frame)
 
     let realtime_data = realtime_feeds_in_frame.map((r:any) => realtimefeeds.find((rf:any) => r === rf.onestop_feed_id)).filter((x) => x != undefined);
 
@@ -85,8 +85,8 @@ export function determineFeeds(map:any, staticfeeds:any, operators:any, realtime
 
     });
 
-    console.log('statics_data', static_data_obj)
-    console.log('operators_in_frame', operators_data_obj)
+    // console.log('statics_data', static_data_obj)
+    // console.log('operators_in_frame', operators_data_obj)
 
     return {
         s: statics_in_frame,

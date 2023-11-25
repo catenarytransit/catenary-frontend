@@ -31,6 +31,7 @@
 
 	import i18n from '../i18n/strings';
 	import { playRandomSequence } from '../components/announcements';
+	import Alertpopup from '../components/alertpopup.svelte';
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
@@ -790,7 +791,7 @@
 	}
 
 	function runSettingsAdapt() {
-		console.log('run settings adapt', layersettings);
+		// console.log('run settings adapt', layersettings);
 
 		if (mapglobal) {
 			let busshapes = mapglobal.getLayer('busshapes');
@@ -2359,9 +2360,9 @@
 
 <div id="map" style="width: 100svw; height: 100svh;" />
 
+
 <div class="fixed bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
-	
-	
+
 >
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 	{#if typeof geolocation === 'object'}
@@ -2375,32 +2376,16 @@
 	{/if}
 </div>
 
-{#if alertPopupShown}
-	<div
-		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-		style:padding="15px"
-		style:border-radius="10px"
-		style:max-width="20vw"
-		style:color="white"
-		style:background="linear-gradient(#0A233F, #000000)"
-	>
-		<div
-			on:click={() => (alertPopupShown = false)}
-			style:cursor="pointer !important"
-			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> close </span>
-		</div>
-		<img
-			src="/img/special/holiday.png"
-			style=""
-			style:height="70px"
-			alt=""
-		/>
-		<h1 style:font-size="1.3em">{strings.appwidealert}</h1>
-		<p>{strings.appwidesubtext}</p>
-	</div>
+
+{#if typeof window !== 'undefined'}
+	{#if window.localStorage.alertPopupShown != 'hide'}
+		<Alertpopup imageURL={"/img/special/holiday.png"}>
+			<h1 class="text-lg">{strings.appwidealert}</h1>
+			<p class="text-sm">{strings.appwidesubtext}</p>
+		</Alertpopup>
+	{/if}
 {/if}
+
 
 <!-- {#if (realtime_list.includes('f-mts~rt~onebusaway') || realtime_list.includes('f-northcountrytransitdistrict~rt')) && mapzoom > 10 && alertPopupShown}
 	<div
@@ -2621,6 +2606,17 @@
 		</select>
 		<label for="languageSelect" class="ml-2">{strings.language}</label>
 	</div>
+
+	<a
+		href="#"
+        on:click={() => {
+            window.localStorage.alertPopupShown = null;
+            window.location.reload()
+        }}
+    >
+        Click to reset popup consent
+    </a>
+
 	{#if foamermode}
 		<br />
 		Data:
@@ -2649,10 +2645,10 @@
 
 		<Layerselectionbox text={strings.headingLocalRail}
 		changesetting={() => {
-			selectedSettingsTab = 'localrail';
+			selectedSettingsTab = 'rail';
 		}}
 		cssclass={`${
-			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
 
