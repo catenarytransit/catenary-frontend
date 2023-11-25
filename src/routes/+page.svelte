@@ -324,7 +324,8 @@
 			},
 			showstationentrances: true,
 			showstationart: false,
-			showbikelanes: false
+			showbikelanes: false,
+			showcoords: false
 		}
 	};
 
@@ -1747,7 +1748,7 @@
 				layout: {
 					'text-field': ['get', 'name'],
 					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 9, 19, 12],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 8, 19, 9.5],
 					'text-radial-offset': 1,
 					'text-ignore-placement': false,
 					//'icon-ignore-placement': false,
