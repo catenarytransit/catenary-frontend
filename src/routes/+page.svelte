@@ -251,7 +251,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		//freeze settings
@@ -263,11 +263,11 @@
 			shapes: true,
 			label: {
 				route: true,
-				trip: false,
-				vehicle: false,
+				trip: true,
+				vehicle: true,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		localrail: {
@@ -282,7 +282,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		intercityrail: {
@@ -297,7 +297,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		other: {
