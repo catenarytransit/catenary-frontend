@@ -1786,7 +1786,7 @@
 				layout: {},
 				paint: {
 					'circle-color': '#1c2636',
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 4, 12, 6, 15, 8],
 					'circle-stroke-color': darkMode
 						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
 						: '#333333',
@@ -1858,7 +1858,7 @@
 				layout: {},
 				paint: {
 					'circle-color': '#1c2636',
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 4, 15, 5],
 					'circle-stroke-color': darkMode
 						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
 						: '#333333',
