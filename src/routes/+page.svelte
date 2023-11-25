@@ -1850,6 +1850,84 @@
 				minzoom: 3
 			});
 
+			map.addLayer({
+				id: 'localrailstopscircle',
+				type: 'circle',
+				source: 'railstops',
+				'source-layer': 'railstops',
+				layout: {},
+				paint: {
+					'circle-color': '#1c2636',
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+					'circle-stroke-color': darkMode
+						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
+						: '#333333',
+					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
+					'circle-opacity': 0.1
+				},
+				minzoom: 8,
+				filter: removeWeekendStops(['all',
+				[
+					'all',
+					[
+						'any',
+						['>',['zoom'],16],
+						['==', null, ['get', "children_route_types"]]
+					],
+					['any',
+					['in', 0, ['get', 'route_types']],
+					['in', 0, ['get', "children_route_types"]],
+					['in', 1, ['get', 'route_types']],
+					['in', 1, ['get', "children_route_types"]]
+					],
+					['!',['in', 2, ['get', "children_route_types"]]]
+				],
+				])
+			});
+
+			map.addLayer({
+				id: 'localraillabel',
+				type: 'symbol',
+				source: 'railstops',
+				'source-layer': 'railstops',
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
+					'text-radial-offset': 1,
+					//'text-ignore-placement': true,
+					//'icon-ignore-placement': false,
+					//'text-allow-overlap': true,
+					//'symbol-avoid-edges': false,
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+					
+				},
+				paint: {
+					
+					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+					'text-halo-width': 1
+				},
+				filter: [
+					'all',
+					[
+						'any',
+						['>',['zoom'],16],
+						['==', null, ['get', "children_route_types"]],
+						
+					],
+					['any',
+					['in', 0, ['get', 'route_types']],
+					['in', 0, ['get', "children_route_types"]],
+					['in', 1, ['get', 'route_types']],
+					['in', 1, ['get', "children_route_types"]]
+					],
+					['!',['in', 2, ['get', "children_route_types"]]]
+				],
+				minzoom: 9
+			});
+
 
 			/*
 			map.addLayer({
