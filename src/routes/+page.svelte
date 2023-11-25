@@ -241,7 +241,7 @@
 	let layersettings = {
 		bus: {
 			visible: true,
-			labelshapes: false,
+			labelshapes: true,
 			stops: true,
 			shapes: true,
 			stoplabels: true,
@@ -1484,6 +1484,16 @@
 				url: what_martin_to_use() + '/stationfeatures'
 			});
 
+			map.addSource('railstops', {
+				type: 'vector',
+				url: what_martin_to_use() + '/railstops'
+			});
+
+			map.addSource('otherstops', {
+				type: 'vector',
+				url: what_martin_to_use() + '/otherstops'
+			});
+
 			map.addSource('foamertiles', {
 				type: 'raster',
 				tiles: ['https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'],
@@ -1729,6 +1739,7 @@
 					id: 'stationenter',
 					type: 'symbol',
 					source: 'stationfeatures',
+					filter: ['all', ['==', 2, ['get','location_type']]],
 					"source-layer": "stationfeatures",
 					layout: {
 						'icon-image': "station-enter",
@@ -1738,14 +1749,15 @@
 					},
 					
 				minzoom: window?.innerWidth >= 1023 ? 14 : 15
-				}, "buses");
+				}, "railstopscircle");
 
 				map.addLayer({
 				id: 'stationenterlabel',
+				filter: ['all', ['==', 2, ['get','location_type']]],
 				type: 'symbol',
 					source: 'stationfeatures',
 					"source-layer": "stationfeatures",
-				
+					
 				layout: {
 					'text-field': ['get', 'name'],
 					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
@@ -1763,8 +1775,81 @@
 					'text-halo-width': darkMode ? 0.4 : 0.2
 				},
 				minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
-			}, "buses");
+			}, "railstopscircle");
 			})
+
+			map.addLayer({
+				id: 'railstopscircle',
+				type: 'circle',
+				source: 'railstops',
+				'source-layer': 'railstops',
+				layout: {},
+				paint: {
+					'circle-color': '#1c2636',
+					'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+					'circle-stroke-color': darkMode
+						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
+						: '#333333',
+					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
+					'circle-opacity': 0.1
+				},
+				minzoom: 3,
+				filter: removeWeekendStops(['all',
+				[
+					'all',
+					[
+						'any',
+						['>',['zoom'],15],
+						['==', null, ['get', "children_route_types"]]
+					],
+					['any',
+					['in', 2, ['get', 'route_types']],
+					['in', 2, ['get', "children_route_types"]]
+					]
+				],
+				])
+			});
+
+			map.addLayer({
+				id: 'raillabel',
+				type: 'symbol',
+				source: 'railstops',
+				'source-layer': 'railstops',
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
+					'text-radial-offset': 1,
+					//'text-ignore-placement': true,
+					//'icon-ignore-placement': false,
+					//'text-allow-overlap': true,
+					//'symbol-avoid-edges': false,
+					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+					
+				},
+				paint: {
+					
+					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+					'text-halo-width': 1
+				},
+				filter: [
+					'all',
+					[
+						'any',
+						['>',['zoom'],15],
+						['==', null, ['get', "children_route_types"]],
+						
+					],
+					['any',
+					['in', 2, ['get', 'route_types']],
+					['in', 2, ['get', "children_route_types"]]
+					]
+				],
+				minzoom: 3
+			});
+
 
 			/*
 			map.addLayer({
@@ -2650,10 +2735,10 @@
 
 		<Layerselectionbox text={strings.headingLocalRail}
 		changesetting={() => {
-			selectedSettingsTab = 'rail';
+			selectedSettingsTab = 'localrail';
 		}}
 		cssclass={`${
-			selectedSettingsTab === 'rail' ? enabledlayerstyle : disabledlayerstyle
+			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
 
@@ -2705,7 +2790,7 @@
 		</div>
 	{/if}
 
-	{#if ["other", "bus", 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
+	{#if ["other", "bus", 'intercityrail', 'localrail', 'rail'].includes(selectedSettingsTab)}
 		<div class="flex flex-row gap-x-1">
 			<Layerbutton
 				bind:layersettings
