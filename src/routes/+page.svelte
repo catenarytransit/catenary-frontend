@@ -243,7 +243,7 @@
 			labelshapes: false,
 			stops: true,
 			shapes: true,
-			stoplabels: false,
+			stoplabels: true,
 			label: {
 				route: true,
 				trip: false,
@@ -284,7 +284,7 @@
 				speed: false
 			}
 		},
-		intercity: {
+		intercityrail: {
 			visible: true,
 			stops: true,
 			labelshapes: true,
@@ -292,7 +292,7 @@
 			shapes: true,
 			label: {
 				route: true,
-				trip: false,
+				trip: true,
 				vehicle: false,
 				headsign: false,
 				direction: false,
@@ -323,13 +323,14 @@
 				gague: false,
 			},
 			showstationentrances: true,
-			showstationart: true
+			showstationart: false,
+			showbikelanes: false
 		}
 	};
 
 	// Get the JSON object from local storage
 
-	const layersettingsnamestorage = 'layersettingsv3';
+	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
 		if (localStorage.getItem(layersettingsnamestorage)) {
@@ -2357,9 +2358,9 @@
 
 <div id="map" style="width: 100svw; height: 100svh;" />
 
-<div class="fixed bottom-11 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-	style:padding="10px"
-	style:border-radius="10px"
+<div class="fixed bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
+	
+	
 >
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 	{#if typeof geolocation === 'object'}
@@ -2510,7 +2511,7 @@
 		on:touchstart={gpsbutton}
 		class="${lockongps
 			? ' text-blue-500 dark:text-blue-300'
-			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-4 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-8 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg select-none">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
