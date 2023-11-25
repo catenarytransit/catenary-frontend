@@ -2363,8 +2363,13 @@
 	
 	
 >
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
+	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | 
 	{#if typeof geolocation === 'object'}
+		{geolocation.coords.latitude}, 
+		{geolocation.coords.longitude}, 
+		{#if typeof geolocation.coords.altitude === 'number'}
+		{geolocation.coords.altitude} m
+		{/if}
 		{#if typeof geolocation.coords.speed === 'number'}
 				{#if usunits == false}
 					| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(2)} km/h)
@@ -2377,10 +2382,8 @@
 
 {#if alertPopupShown}
 	<div
-		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-		style:padding="15px"
+		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable p-[15px] max-w-[20vw]"
 		style:border-radius="10px"
-		style:max-width="20vw"
 		style:color="white"
 		style:background="linear-gradient(#0A233F, #000000)"
 	>
