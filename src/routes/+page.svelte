@@ -2364,12 +2364,12 @@
 <div class="fixed bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 
 >
-	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)} | 
+	View: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} | 
 	{#if typeof geolocation === 'object'}
-		{geolocation.coords.latitude}, 
-		{geolocation.coords.longitude}, 
+		You: {geolocation.coords.latitude.toFixed(5)}, 
+		{geolocation.coords.longitude.toFixed(5)}
 		{#if typeof geolocation.coords.altitude === 'number'}
-		{geolocation.coords.altitude} m
+		{geolocation.coords.altitude.toFixed(0)} m
 		{/if}
 		{#if typeof geolocation.coords.speed === 'number'}
 				{#if usunits == false}
