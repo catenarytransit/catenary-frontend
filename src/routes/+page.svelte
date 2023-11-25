@@ -323,7 +323,7 @@
 				gague: false,
 			},
 			showstationentrances: true,
-			showstationart: false,
+			//showstationart: false,
 			showbikelanes: false
 		}
 	};
