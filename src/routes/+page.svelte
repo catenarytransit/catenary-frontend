@@ -48,7 +48,7 @@
 	}
 
 	//false means use metric, true means use us units
-	let selectedSettingsTab = 'rail'; //valid options {rail, bus, bike}
+	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
 	let announcermode = false;
@@ -244,7 +244,7 @@
 			labelshapes: false,
 			stops: true,
 			shapes: true,
-			stoplabels: false,
+			stoplabels: true,
 			label: {
 				route: true,
 				trip: false,
@@ -285,7 +285,7 @@
 				speed: false
 			}
 		},
-		intercity: {
+		intercityrail: {
 			visible: true,
 			stops: true,
 			labelshapes: true,
@@ -293,7 +293,7 @@
 			shapes: true,
 			label: {
 				route: true,
-				trip: false,
+				trip: true,
 				vehicle: false,
 				headsign: false,
 				direction: false,
@@ -324,13 +324,15 @@
 				gague: false,
 			},
 			showstationentrances: true,
-			showstationart: true
+			showstationart: false,
+			showbikelanes: false,
+			showcoords: false
 		}
 	};
 
 	// Get the JSON object from local storage
 
-	const layersettingsnamestorage = 'layersettingsv3';
+	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
 		if (localStorage.getItem(layersettingsnamestorage)) {
@@ -1230,11 +1232,11 @@
 		map.on('load', () => {
 			const urlParams = new URLSearchParams(window.location.search);
 			// Add new sources and layers
-			// let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
+			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 
-			// if (removelogo1) {
-			// 	removelogo1[0].remove();
-			// }
+			 if (removelogo1) {
+			 	removelogo1[0].remove();
+			 }
 
 			addGeoRadius(map);
 			if (urlParams.get('debug')) {
@@ -1736,7 +1738,7 @@
 					},
 					
 				minzoom: window?.innerWidth >= 1023 ? 14 : 15
-				});
+				}, "buses");
 
 				map.addLayer({
 				id: 'stationenterlabel',
@@ -1747,7 +1749,7 @@
 				layout: {
 					'text-field': ['get', 'name'],
 					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 9, 19, 12],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 8, 19, 9.5],
 					'text-radial-offset': 1,
 					'text-ignore-placement': false,
 					//'icon-ignore-placement': false,
@@ -1761,7 +1763,7 @@
 					'text-halo-width': darkMode ? 0.4 : 0.2
 				},
 				minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
-			});
+			}, "buses");
 			})
 
 			/*
@@ -2358,9 +2360,9 @@
 
 <div id="map" style="width: 100svw; height: 100svh;" />
 
-<div class="fixed bottom-11 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-	style:padding="10px"
-	style:border-radius="10px"
+
+<div class="fixed bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
+
 >
 	{maplat.toFixed(5)}, {maplng.toFixed(5)} | Z: {mapzoom.toFixed(2)}
 	{#if typeof geolocation === 'object'}
@@ -2374,6 +2376,7 @@
 	{/if}
 </div>
 
+
 {#if typeof window !== 'undefined'}
 	{#if window.localStorage.alertPopupShown != 'hide'}
 		<Alertpopup imageURL={"/img/special/holiday.png"}>
@@ -2382,6 +2385,7 @@
 		</Alertpopup>
 	{/if}
 {/if}
+
 
 <!-- {#if (realtime_list.includes('f-mts~rt~onebusaway') || realtime_list.includes('f-northcountrytransitdistrict~rt')) && mapzoom > 10 && alertPopupShown}
 	<div
@@ -2493,7 +2497,7 @@
 		on:touchstart={gpsbutton}
 		class="${lockongps
 			? ' text-blue-500 dark:text-blue-300'
-			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-4 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-8 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined align-middle text-lg select-none">
 			{#if lockongps == true}my_location{:else}location_searching{/if}
@@ -2619,7 +2623,9 @@
 		<a
 			style="text-decoration:underline;cursor:pointer"
 			href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
-		><br />Style:
+		>
+		<a style="text-decoration:underline;cursor:pointer" href='https://www.mapbox.com/about/maps/'>© Mapbox</a>
+		<br />Style:
 		<a
 			style="text-decoration:underline;cursor:pointer"
 			href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
@@ -2635,6 +2641,8 @@
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		
 
+		
+
 		<Layerselectionbox text={strings.headingLocalRail}
 		changesetting={() => {
 			selectedSettingsTab = 'rail';
@@ -2644,19 +2652,33 @@
 		} w-1/2 py-1 px-1`}
 		/>
 
-		<div
-			on:click={() => {
-				selectedSettingsTab = 'bus';
-			}}
-			on:keydown={() => {
-				selectedSettingsTab = 'bus';
-			}}
-			class={`${
-				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		>
-			<p class="w-full align-center text-center">{strings.headingBus}</p>
-		</div>
+		<Layerselectionbox text={strings.headingIntercityRail}
+		changesetting={() => {
+			selectedSettingsTab = 'intercityrail';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
+
+
+		<Layerselectionbox text={strings.headingBus}
+		changesetting={() => {
+			selectedSettingsTab = 'bus';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
+
+		<Layerselectionbox text={strings.headingOther}
+		changesetting={() => {
+			selectedSettingsTab = 'other';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
 		<!-- <div
 			on:click={() => {
 				selectedSettingsTab = 'more';
@@ -2678,7 +2700,7 @@
 		</div>
 	{/if}
 
-	{#if selectedSettingsTab === 'rail' || selectedSettingsTab === 'bus'}
+	{#if ["other", "bus", 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
 		<div class="flex flex-row gap-x-1">
 			<Layerbutton
 				bind:layersettings
