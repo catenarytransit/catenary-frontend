@@ -26,7 +26,7 @@
 		check_backend,
 		check_martin
 	} from '../components/distributed';
-	import { toast } from '@zerodevx/svelte-toast'
+	import { toasts, ToastContainer, FlatToast, BootstrapToast }  from "svelte-toasts";
 	import {addStopsLayers} from '../components/addLayers/addStops'
 
 	import {makeBearingArrowPointers} from '../components/addLayers/makebearingarrowpointers'
@@ -139,42 +139,6 @@
 			} catch {}
 		}
 	}, 60000)
-
-	function removeWeekends(inputarray: any[]) {
-		//if it is currently a weekend in california
-
-		let result = inputarray;
-
-		let dayinla = new Date(
-			new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
-		).getDay();
-
-		if (dayinla == 6 || dayinla == 0) {
-			result.push(['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']);
-			result.push([
-				'!',
-				[
-					'all',
-					['==', ['get', 'onestop_feed_id'], 'f-9mu-orangecountytransportationauthority'],
-					[
-						'any',
-						['==', ['coalesce', ['get', 'route_label']], '167'],
-						['==', ['coalesce', ['get', 'route_label']], '473'],
-						['==', ['coalesce', ['get', 'route_label']], '178'],
-						['==', ['coalesce', ['get', 'route_label']], '86'],
-						['==', ['coalesce', ['get', 'route_label']], '401'],
-						['==', ['coalesce', ['get', 'route_label']], '400'],
-						['==', ['coalesce', ['get', 'route_label']], '403'],
-						['==', ['coalesce', ['get', 'route_label']], '472'],
-						['==', ['coalesce', ['get', 'route_label']], '76'],
-						['==', ['coalesce', ['get', 'route_label']], '150']
-					]
-				]
-			]);
-		}
-
-		return result;
-	}
 
 	const decode = (textToDecode: string) => {
 		try {
@@ -348,6 +312,44 @@
 		}
 	}
 
+	function saveCoordsToClipboard() {
+
+		let textClipboard = `View: ${maplat.toFixed(5)}, ${maplng.toFixed(5)} Z: ${mapzoom.toFixed(2)}`
+		if (typeof geolocation === "object") {
+			textClipboard += `\nGPS: ${geolocation.coords.latitude.toFixed(5)}, ${geolocation.coords.longitude.toFixed(5)}`
+
+			if (geolocation.coords.heading) {
+				textClipboard += ` Heading: ${geolocation.coords.heading.toFixed(2)}`
+			}
+
+			if (geolocation.coords.speed) {
+				textClipboard += ` Speed: ${geolocation.coords.speed.toFixed(2)}`
+			}
+
+			if (geolocation.coords.altitude) {
+				textClipboard += ` Alt: ${geolocation.coords.altitude.toFixed(2)}`
+			}
+		}
+
+		navigator.clipboard.writeText(textClipboard);
+
+		const showToast = () => {
+    const toast = toasts.add({
+      title: 'Coords copied to clipboard',
+      duration: 1000, // 0 or negative to avoid auto-remove
+      theme: 'dark',
+      placement: 'top-left',
+      type: 'success'
+      // component: BootstrapToast, // allows to override toast component/template per toast
+    });
+
+    // toast.remove()
+
+  };
+
+  showToast()
+	}
+	
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
 
@@ -1937,18 +1939,21 @@
 
 <div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {
-	toast.push("Coords copied to keyboard!");
+	saveCoordsToClipboard()
 }}
 on:keydown={() => {
-	toast.push("Coords copied to keyboard!");
+	saveCoordsToClipboard()
 }}
 >
 	<p>
 		View: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
 		<span><br class='block md:hidden'/></span>
 	{#if typeof geolocation === 'object'}
-		<span class='text-blue-700 dark:text-green-300'>You: {geolocation.coords.latitude.toFixed(5)}, 
+		<span class='text-blue-700 dark:text-green-300'>GPS: {geolocation.coords.latitude.toFixed(5)}, 
 		{geolocation.coords.longitude.toFixed(5)}
+		{#if typeof geolocation.coords.heading === 'number'}
+		{geolocation.coords.heading.toFixed(0)}°
+		{/if}
 		{#if typeof geolocation.coords.altitude === 'number'}
 		{geolocation.coords.altitude.toFixed(0)} m
 		{/if}
@@ -2229,8 +2234,14 @@ on:keydown={() => {
 >
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		
-
-		
+		<Layerselectionbox text={strings.headingIntercityRail}
+		changesetting={() => {
+			selectedSettingsTab = 'intercityrail';
+		}}
+		cssclass={`${
+			selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
+		} w-1/2 py-1 px-1`}
+		/>
 
 		<Layerselectionbox text={strings.headingLocalRail}
 		changesetting={() => {
@@ -2241,14 +2252,7 @@ on:keydown={() => {
 		} w-1/2 py-1 px-1`}
 		/>
 
-		<Layerselectionbox text={strings.headingIntercityRail}
-		changesetting={() => {
-			selectedSettingsTab = 'intercityrail';
-		}}
-		cssclass={`${
-			selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
-		} w-1/2 py-1 px-1`}
-		/>
+		
 
 
 		<Layerselectionbox text={strings.headingBus}

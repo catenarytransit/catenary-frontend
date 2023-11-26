@@ -46,6 +46,7 @@
     "mapbox-gl": "^2.15.0",
     "maplibre-gl": "^3.6.2",
     "moment": "^2.29.4",
-    "protobufjs": "^7.2.4"
+    "protobufjs": "^7.2.4",
+    "svelte-toasts": "^1.1.2"
   }
 }
