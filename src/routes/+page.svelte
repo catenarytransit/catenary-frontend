@@ -319,7 +319,7 @@
 	function saveCoordsToClipboard() {
 		console.log('save coords')
 
-		let textClipboard = `View: ${maplat.toFixed(5)}, ${maplng.toFixed(5)} Z: ${mapzoom.toFixed(2)}`
+		let textClipboard = `${strings.coordsview}: ${maplat.toFixed(5)}, ${maplng.toFixed(5)} Z: ${mapzoom.toFixed(2)}`
 		if (typeof geolocation === "object") {
 			textClipboard += `\nGPS: ${geolocation.coords.latitude.toFixed(5)}, ${geolocation.coords.longitude.toFixed(5)}`
 
@@ -1963,7 +1963,7 @@ on:keydown={() => {
 }}
 >
 	<p>
-		View: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
+		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
 		<span><br class='block md:hidden'/></span>
 	{#if typeof geolocation === 'object'}
 		<span class='text-blue-700 dark:text-green-300'>GPS: {geolocation.coords.latitude.toFixed(5)}, 
