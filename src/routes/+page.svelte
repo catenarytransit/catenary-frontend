@@ -1106,7 +1106,6 @@
 					});
 					rerenders_requested = [];
 				}
-			}, 1000);
 		}
 
 		map.on('load', () => {
