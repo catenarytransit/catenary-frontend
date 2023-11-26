@@ -2324,7 +2324,7 @@ on:keydown={() => {
 
 			<Layerbutton
 				bind:layersettings
-				selectedSettingsTab="bus"
+				bind:selectedSettingsTab
 				change="stops"
 				name={strings.stops}
 				urlicon="/stopsicon.svg"
@@ -2333,7 +2333,7 @@ on:keydown={() => {
 
 			<Layerbutton
 				bind:layersettings
-				selectedSettingsTab="bus"
+				bind:selectedSettingsTab
 				change="stoplabels"
 				name={strings.stopnames}
 				urlicon="/stoplabels.svg"
