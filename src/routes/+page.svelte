@@ -26,7 +26,7 @@
 		check_backend,
 		check_martin
 	} from '../components/distributed';
-	import { toasts, ToastContainer, FlatToast, BootstrapToast }  from "svelte-toasts";
+	import Toastify from 'toastify-js'
 	import {addStopsLayers} from '../components/addLayers/addStops'
 
 	import {makeBearingArrowPointers} from '../components/addLayers/makebearingarrowpointers'
@@ -313,6 +313,7 @@
 	}
 
 	function saveCoordsToClipboard() {
+		console.log('save coords')
 
 		let textClipboard = `View: ${maplat.toFixed(5)}, ${maplng.toFixed(5)} Z: ${mapzoom.toFixed(2)}`
 		if (typeof geolocation === "object") {
@@ -333,22 +334,11 @@
 
 		navigator.clipboard.writeText(textClipboard);
 
-		const showToast = () => {
-    const toast = toasts.add({
-      title: 'Coords copied to clipboard',
-      duration: 1000, // 0 or negative to avoid auto-remove
-      theme: 'dark',
-      placement: 'top-left',
-      type: 'success'
-      // component: BootstrapToast, // allows to override toast component/template per toast
-    });
+		alert("Coords copied to clipboard")
 
     // toast.remove()
 
-  };
-
-  showToast()
-	}
+  }
 	
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
