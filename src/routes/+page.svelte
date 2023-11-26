@@ -1964,7 +1964,7 @@ on:keydown={() => {
 		{geolocation.coords.heading.toFixed(0)}°
 		{/if}
 		{#if typeof geolocation.coords.altitude === 'number'}
-		{geolocation.coords.altitude.toFixed(0)} m
+		| {geolocation.coords.altitude.toFixed(0)} m
 		{/if}
 		{#if typeof geolocation.coords.speed === 'number'}
 				{#if usunits == false}
