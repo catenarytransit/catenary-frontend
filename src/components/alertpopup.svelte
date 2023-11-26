@@ -7,7 +7,7 @@
     class="fixed top-3 left-3 pointer-events-none text-white pointer-events-auto clickable lg:max-w-[25vw] max-w-[70vw]"
     style:padding="15px"
     style:border-radius="10px"
-    style:background="linear-gradient(#0A233F, #000000)"
+    style:background={background}
 >
     <a
         on:click={() => {

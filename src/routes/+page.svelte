@@ -1989,10 +1989,14 @@ on:keydown={() => {
 
 {#if typeof window !== 'undefined'}
 	{#if window.localStorage.alertPopupShown != 'hide'}
-		<Alertpopup imageURL={"/img/special/holiday.png"}>
+		<Alertpopup imageURL="/img/special/holiday.png" background="linear-gradient(#0A233F, #000000)">
 			<h1 class="text-lg">{strings.appwidealert}</h1>
 			<p class="text-sm">{strings.appwidesubtext}</p>
 		</Alertpopup>
+		<!-- <Alertpopup imageURL="/img/special/stationart.svg" background="linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(https://art.metro.net/wp-content/uploads/2021/08/Mark-Steven-Greenfield-Red-Car-Requiem-B.jpeg) center right no-repeat, black">
+			<h1 class="text-lg">{strings.alertheaderla}</h1>
+			<p class="text-sm">{strings.alertsubtextla}</p>
+		</Alertpopup> -->
 	{/if}
 {/if}
 
