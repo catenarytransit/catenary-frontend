@@ -36,6 +36,7 @@ const i18n = {
         ormgauge: 'Gauge',
         // announcements
         announcements: 'Play Announcements',
+        coordsview: "View"
     },
     fr: {
         // special
@@ -72,6 +73,7 @@ const i18n = {
         ormgauge: 'Jauge',
         // announcements
         announcements: 'Lire les annonces',
+        coordsview: "Vue"
     },
     es: {
         // special
@@ -108,6 +110,7 @@ const i18n = {
         ormgauge: 'Calibre',
         // announcements
         announcements: 'Reproducir anuncios',
+        coordsview: "Vista"
     },
     ko: {
         // special
@@ -145,6 +148,7 @@ const i18n = {
         ormgauge: '게이지',
         // announcements
         announcements: '알림 재생',
+        coordsview: "보기"
     },
 }
 
