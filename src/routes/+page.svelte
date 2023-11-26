@@ -12,6 +12,7 @@
 	import { LngLat } from 'maplibre-gl';
 	import {interpretLabelsToCode} from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
+	import { fade } from 'svelte/transition';
 	import { determineFeeds } from '../maploaddata';
 	import {makeCircleLayers} from '../components/addLayers/addLiveDots';
 	import Layerbutton from '../components/layerbutton.svelte';
@@ -218,6 +219,9 @@
 
 	let showzombiebuses = false;
 
+	let showclipboardalert = false;
+	let lastclipboardtime:number = 0;
+
 	// Save the JSON object to local storage
 	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
@@ -333,8 +337,16 @@
 		}
 
 		navigator.clipboard.writeText(textClipboard);
+		showclipboardalert = true;
+		lastclipboardtime = Date.now();
 
-		alert("Coords copied to clipboard")
+		setTimeout(() => {
+			if (lastclipboardtime < Date.now() - 500) {
+				showclipboardalert = false;
+			}
+		}, 501);
+
+		//alert("Coords copied to clipboard")
 
     // toast.remove()
 
@@ -1925,6 +1937,14 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <div id="map" style="width: 100svw; height: 100svh;" />
+
+{#key showclipboardalert}
+<div
+out:fade={{duration: 400}}
+class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${showclipboardalert === true ? "" : "hidden"}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80`}>
+	Coords saved to clipboard
+</div>
+{/key}
 
 <div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {

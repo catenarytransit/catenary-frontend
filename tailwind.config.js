@@ -2,7 +2,11 @@
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        fade: 'fadeOut 1s ease-in-out',
+      },
+    },
   },
   plugins: [],
 }
