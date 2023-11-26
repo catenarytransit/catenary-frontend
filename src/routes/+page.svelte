@@ -1089,7 +1089,29 @@
 
 		fetchKactus();
 
+		function clearbottomright() {
+			let bottomright = document.getElementsByClassName('mapboxgl-ctrl-bottom-right');
+
+				if (bottomright) {
+					if (bottomright[0] != undefined) {
+						bottomright[0].remove();
+					}
+				}
+
+				//console.log('requested rerender of ', rerenders_requested)
+
+				if (rerenders_requested.length > 0) {
+					rerenders_requested.forEach((x) => {
+						rerenders_request(x);
+					});
+					rerenders_requested = [];
+				}
+			}, 1000);
+		}
+
 		map.on('load', () => {
+			clearbottomright();
+
 			const urlParams = new URLSearchParams(window.location.search);
 			// Add new sources and layers
 			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
@@ -1611,7 +1633,7 @@
 				});
 			});
 
-			map.loadImage('https://maps.catenarymaps.org/geo-nav.png', (error, image) => {
+			map.loadImage('/geo-nav.png', (error, image) => {
 				if (error) throw error;
 				// Add the image to the map style.
 				map.addImage('geonav', image);
@@ -1641,25 +1663,7 @@
 				}			
 			})*/
 
-			setInterval(() => {
-				let bottomright = document.getElementsByClassName('mapboxgl-ctrl-bottom-right');
-
-				if (bottomright) {
-					if (bottomright[0] != undefined) {
-						bottomright[0].remove();
-					}
-				}
-
-				//console.log('requested rerender of ', rerenders_requested)
-
-				if (rerenders_requested.length > 0) {
-					rerenders_requested.forEach((x) => {
-						rerenders_request(x);
-					});
-					rerenders_requested = [];
-				}
-			}, 2000);
-		});
+			
 
 		map.on('move', () => {
 			updateData();
@@ -1934,6 +1938,9 @@
 
 <div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {
+	toast.push("Coords copied to keyboard!");
+}}
+on:keydown={() => {
 	toast.push("Coords copied to keyboard!");
 }}
 >
