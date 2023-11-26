@@ -218,6 +218,9 @@
 
 	let showzombiebuses = false;
 
+	let showclipboardalert = false;
+	let lastclipboardtime:number = 0;
+
 	// Save the JSON object to local storage
 	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
@@ -333,8 +336,16 @@
 		}
 
 		navigator.clipboard.writeText(textClipboard);
+		showclipboardalert = true;
+		lastclipboardtime = Date.now();
 
-		alert("Coords copied to clipboard")
+		setTimeout(() => {
+			if (lastclipboardtime < Date.now() - 1000) {
+				showclipboardalert = false;
+			}
+		}, 1020);
+
+		//alert("Coords copied to clipboard")
 
     // toast.remove()
 
@@ -1926,6 +1937,14 @@
 
 <div id="map" style="width: 100svw; height: 100svh;" />
 
+<<<<<<< Updated upstream
+=======
+<div
+class={`fixed bottom-10 right-2 rounded-full px-4 py-4 ${showclipboardalert === true ? " hidden " : ""}`}>
+	Coords saved to clipboard
+</div>
+
+>>>>>>> Stashed changes
 <div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {
 	saveCoordsToClipboard()
