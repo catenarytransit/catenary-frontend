@@ -13,7 +13,7 @@
 	import {interpretLabelsToCode} from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
 	import { determineFeeds } from '../maploaddata';
-	import {makeCircleLayers} from '../components/makeCircleLayers';
+	import {makeCircleLayers} from '../components/addLayers/addLiveDots';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
@@ -26,12 +26,14 @@
 		check_backend,
 		check_martin
 	} from '../components/distributed';
+	import {addStopsLayers} from '../components/addLayers/addStops'
 
-	import {makeBearingArrowPointers} from '../components/makebearingarrowpointers'
+	import {makeBearingArrowPointers} from '../components/addLayers/makebearingarrowpointers'
 
 	import i18n from '../i18n/strings';
 	import { playRandomSequence } from '../components/announcements';
 	import Alertpopup from '../components/alertpopup.svelte';
+	import { addShapes } from '../components/addLayers/addShapes';
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
@@ -58,8 +60,6 @@
 	let geometryObj: any = {};
 	let lasttimeofnorth = 0;
 
-	let alertPopupShown = true;
-
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
 	let avaliablerealtimealerts = new Set();
@@ -77,6 +77,52 @@
 	let operators_in_frame: any = {};
 	let realtime_feeds_in_frame: any = {};
 
+	const layerspercategory = {
+		
+		"bus": {
+			"livedots": "bus",
+			"labeldots": "labelbuses",
+			"pointing": "busespointing",
+			"pointingshell": "busespointingshell",
+			"stops": "busstopscircle",
+			"labelstops": "busstopslabel",
+			"shapes": "busshapes",
+			"labelshapes": "labelbusshapes"
+		},
+		"intercityrail": {
+			"livedots": "intercityrail",
+			"labeldots": "labelintercityrail",
+			"pointing": "intercityrailpointing",
+			"pointingshell": "intercityrailpointingshell",
+			"stops": "intercityrailstopscircle",
+			"labelstops": "intercityrailstopslabel",
+			"shapes": "intercityrailshapes",
+			"labelshapes": "intercityraillabelshapes"
+		},
+		"localrail": {
+			"livedots": "localrail",
+			"labeldots": "labellocalrail",
+			"pointing": "localrailpointing",
+			"pointingshell": "localrailpointingshell",
+			"stops": "localrailstopscircle",
+			"labelstops": "localrailstopslabel",
+			"shapes": "localrailshapes",
+			"labelshapes": "localraillabelshapes"
+		},
+
+		"other": {
+			"livedots": "other",
+			"labeldots": "labelother",
+			"pointing": "otherpointing",
+			"pointingshell": "otherpointingshell",
+			"stops": "otherstopscircle",
+			"labelstops": "otherstopslabel",
+			"shapes": "othershapes",
+			"labelshapes": "otherlabelshapes"
+		}
+
+	}
+
 	setTimeout(() => {
 		if (announcermode) {
 			try {
@@ -92,18 +138,6 @@
 			} catch {}
 		}
 	}, 60000)
-
-	function processUrlLimit(inputarray: any) {
-		const urlParams = new URLSearchParams(window.location.search);
-
-		if (urlParams.get('limitfeed')) {
-			inputarray.push(['==', ['get', 'onestop_feed_id'], urlParams.get('limitfeed')]);
-
-			return inputarray;
-		} else {
-			return inputarray;
-		}
-	}
 
 	function removeWeekends(inputarray: any[]) {
 		//if it is currently a weekend in california
@@ -136,22 +170,6 @@
 					]
 				]
 			]);
-		}
-
-		return result;
-	}
-
-	function removeWeekendStops(inputarray: any[]) {
-		//if it is currently a weekend in california
-
-		let result = inputarray;
-
-		let dayinla = new Date(
-			new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
-		).getDay();
-
-		if (dayinla == 6 || dayinla == 0) {
-			result.push(['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']);
 		}
 
 		return result;
@@ -238,29 +256,13 @@
 	// Save the JSON object to local storage
 	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
-	let layersettings = {
+	let layersettings: any = {
 		bus: {
 			visible: true,
 			labelshapes: true,
 			stops: true,
 			shapes: true,
 			stoplabels: true,
-			label: {
-				route: true,
-				trip: false,
-				vehicle: false,
-				headsign: false,
-				direction: false,
-				speed: false
-			}
-		},
-		//freeze settings
-		rail: {
-			visible: true,
-			stops: true,
-			labelshapes: true,
-			stoplabels: true,
-			shapes: true,
 			label: {
 				route: true,
 				trip: false,
@@ -335,8 +337,9 @@
 	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
-		if (localStorage.getItem(layersettingsnamestorage)) {
-			let cachedJsonObject = JSON.parse(localStorage.getItem(layersettingsnamestorage));
+		let fetchitem = localStorage.getItem(layersettingsnamestorage);
+		if (fetchitem != null) {
+			let cachedJsonObject = JSON.parse(fetchitem);
 
 			if (cachedJsonObject != null) {
 				layersettings = cachedJsonObject;
@@ -354,7 +357,7 @@
 
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
-		console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
+		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
 		// console.log('139',this_realtime_feed)
 
@@ -415,7 +418,7 @@
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					.filter((entity: any) => entity.vehicle.timestamp > Date.now() / 1000 - 300 || realtime_id === "f-amtrak~rt")
+					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>
@@ -477,7 +480,6 @@
 
 						if (realtime_id === "f-amtrak~rt") {
 							colour = '#18567d';
-							console.log('found amtrak')
 						}
 
 						if (routeType === 2) {
@@ -760,7 +762,9 @@
 					});
 
 				const getbussource = mapglobal.getSource('buses');
-				const getrailsource = mapglobal.getSource('rail');
+				const getintercityrailsource = mapglobal.getSource('intercityrail');
+				const getlocalrailsource = mapglobal.getSource('localrail');
+				const othersource = mapglobal.getSource('other');
 
 				geometryObj[realtime_id] = features;
 
@@ -769,186 +773,141 @@
 				if (typeof getbussource != 'undefined') {
 					getbussource.setData({
 						type: 'FeatureCollection',
-						features: flattenedarray.filter((x: any) => x.properties.routeType === 3)
+						features: flattenedarray.filter((x: any) => x.properties.routeType === 3 || x.properties.routeType === 11)
 					});
 
-					if (typeof getrailsource != 'undefined') {
-						getrailsource.setData({
+					if (typeof getintercityrailsource != 'undefined') {
+						getintercityrailsource.setData({
 							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) => x.properties.routeType != 3)
+							features: flattenedarray.filter((x: any) => x.properties.routeType == 2)
 						});
 					}
 
-					//console.log('set data of bearings');
+					if (typeof getlocalrailsource != 'undefined') {
+						getintercityrailsource.setData({
+							type: 'FeatureCollection',
+							features: flattenedarray.filter((x: any) => [0,1,5,12].includes(x.properties.routeType))
+						});
+					}
 
-					let mapzoomnumber = numberForBearingLengthBus(mapglobal.getZoom());
-
-					// Query all rendered features from a single layer
-					//renderNewBearings();
+					if (typeof othersource != 'undefined') {
+						othersource.setData({
+							type: 'FeatureCollection',
+							features: flattenedarray.filter((x: any) => [4,6,7].includes(x.properties.routeType))
+						});
+					}
 				}
 			}
 		}
 	}
 
 	function runSettingsAdapt() {
-		// console.log('run settings adapt', layersettings);
-
+		 console.log('run settings adapt', layersettings);
 		if (mapglobal) {
-			let busshapes = mapglobal.getLayer('busshapes');
-			let buslabelshapes = mapglobal.getLayer('labelbusshapes');
-
 			if (foamermode) {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
 			} else {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
 			}
 
-			if (busshapes) {
-				if (layersettings.bus.shapes) {
-					mapglobal.setLayoutProperty('busshapes', 'visibility', 'visible');
+			Object.entries(layerspercategory).map((eachcategory) => {
+				let category = eachcategory[0];
+				let categoryvalues = eachcategory[1];
+
+				let shape = mapglobal.getLayer(categoryvalues.shapes);
+
+				let this_layer_settings = layersettings[category];
+
+				
+				console.log('processing settings',eachcategory, this_layer_settings)
+
+				if (shape) {
+					if (this_layer_settings.shapes) {
+						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
+					} else {
+						
+						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
+					}
+
+					if (this_layer_settings.labelshapes) {
+						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
+					}
 				} else {
-					mapglobal.setLayoutProperty('busshapes', 'visibility', 'none');
-				}
-			}
-
-			if (buslabelshapes) {
-				if (layersettings.bus.labelshapes) {
-					mapglobal.setLayoutProperty('labelbusshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('labelbusshapes', 'visibility', 'none');
-				}
-			}
-
-			let railshapes = mapglobal.getLayer('railshapes');
-			let raillabelshapes = mapglobal.getLayer('labelrailshapes');
-
-			if (railshapes) {
-				if (layersettings.rail.shapes) {
-					mapglobal.setLayoutProperty('railshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('railshapes', 'visibility', 'none');
-				}
-			}
-
-			if (raillabelshapes) {
-				if (layersettings.rail.labelshapes) {
-					mapglobal.setLayoutProperty('labelrailshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('labelrailshapes', 'visibility', 'none');
-				}
-			}
-
-			let busstopscircle = mapglobal.getLayer('busstopscircle');
-			let buslabelstops = mapglobal.getLayer('busstopslabel');
-
-			if (busstopscircle && buslabelstops) {
-				if (layersettings.bus.stops) {
-					mapglobal.setLayoutProperty('busstopscircle', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('busstopscircle', 'visibility', 'none');
+					console.log('could not fetch shapes layer', category)
 				}
 
-				if (layersettings.bus.stoplabels) {
-					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('busstopslabel', 'visibility', 'none');
-				}
-			}
+				if (this_layer_settings.stops) {
+						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
+					}
 
-			let buscirclelayer = mapglobal.getLayer('buses');
-			let buslabel = mapglobal.getLayer('labelbuses');
+					if (this_layer_settings.stoplabels) {
+						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
+					}
 
-			if (buscirclelayer && buslabel) {
-				if (layersettings.bus.visible) {
-					mapglobal.setLayoutProperty('buses', 'visibility', 'visible');
-					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'visible');
+				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
+			let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
+
+			if (dotcirclelayer && dotlabel) {
+				if (this_layer_settings.visible) {
+					mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
+					mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
 					mapglobal.setLayoutProperty(
-						'labelbuses',
+						categoryvalues.labeldots,
 						'text-field',
-						interpretLabelsToCode(layersettings.bus.label, usunits)
+						interpretLabelsToCode(this_layer_settings.label, usunits)
 					);
-					['busespointingshell',"busespointing"].forEach((x) => {
+					[categoryvalues.pointing,categoryvalues.pointingshell].forEach((x) => {
 					mapglobal.setLayoutProperty(x, 'visibility', 'visible');
 					})
 				} else {
-					mapglobal.setLayoutProperty('buses', 'visibility', 'none');
-					mapglobal.setLayoutProperty('labelbuses', 'visibility', 'none');
-					['busespointingshell',"busespointing"].forEach((x) => {
+					mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'none');
+					mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'none');
+					[categoryvalues.pointing,categoryvalues.pointingshell].forEach((x) => {
 					mapglobal.setLayoutProperty(x, 'visibility', 'none');
 					})
 				}
-			}
-
-			let railcirclelayer = mapglobal.getLayer('raillayer');
-			let raillabel = mapglobal.getLayer('labelrail');
-
-			if (railcirclelayer && raillabel) {
-				if (layersettings.rail.visible) {
-					mapglobal.setLayoutProperty('raillayer', 'visibility', 'visible');
-					mapglobal.setLayoutProperty('labelrail', 'visibility', 'visible');
-					mapglobal.setLayoutProperty(
-						'labelrail',
-						'text-field',
-						interpretLabelsToCode(layersettings.rail.label, usunits)
-					);
-					['railpointingshell',"railpointing"].forEach((x) => {
-					mapglobal.setLayoutProperty(x, 'visibility', 'visible');
-					})
-				} else {
-					mapglobal.setLayoutProperty('raillayer', 'visibility', 'none');
-					mapglobal.setLayoutProperty('labelrail', 'visibility', 'none');
-					['railpointingshell',"railpointing"].forEach((x) => {
-					mapglobal.setLayoutProperty(x, 'visibility', 'none');
-					})
+			} else {
+				if (dotcirclelayer == null) {
+					console.log('could not fetch dotcirclelayer', category)
+				}
+				if (dotlabel == null) {
+					console.log('could not fetch dotlabel', category)
 				}
 			}
-		}
 
-		localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
-
-		let railvehicles = mapglobal.getLayer('raillayer');
-
-		let busvehicles = mapglobal.getLayer('buses');
-
-		let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
+			let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
 
 		let regularpointers = ["!=", 0, ['get', 'bearing']];
 		let hidevehiclecommandpointers = ['all', ['!=', '', ['get', 'tripIdLabel']], ["!=", 0, ['get', 'bearing']]];
 
-		if (busvehicles) {
-			if (showzombiebuses === true) {
-				//set filter to none
-				mapglobal.setFilter('buses', undefined);
-				mapglobal.setFilter('labelbuses', undefined);
-				mapglobal.setFilter('busespointing', regularpointers);
-				mapglobal.setFilter('busespointingshell', regularpointers)
-			} else {
-				console.log('hiding buses');
-				mapglobal.setFilter('buses', hidevehiclecommand);
-				mapglobal.setFilter('labelbuses', hidevehiclecommand);
-				mapglobal.setFilter('busespointing', hidevehiclecommandpointers);
-				mapglobal.setFilter('busespointingshell', hidevehiclecommandpointers);
-			}
-		} else {
-			console.error('no bus vehicles layer');
-		}
-		if (railvehicles) {
-			if (showzombiebuses === true) {
-				//set filter to none
-				mapglobal.setFilter('raillayer', undefined);
-				mapglobal.setFilter('labelrail', undefined);
-				mapglobal.setFilter('railpointing', regularpointers);
-				mapglobal.setFilter('railpointingshell', regularpointers);
-			} else {
-				mapglobal.setFilter('raillayer', hidevehiclecommand);
-				mapglobal.setFilter('labelrail', hidevehiclecommand);
-				mapglobal.setFilter('railpointing', hidevehiclecommandpointers);
-				mapglobal.setFilter('railpointingshell', hidevehiclecommandpointers);
-			}
-		}
+			if (dotcirclelayer) {
+				if (showzombiebuses === true) {
+				mapglobal.setFilter(categoryvalues.livedots, undefined);
+				mapglobal.setFilter(categoryvalues.labeldots, undefined);
+				mapglobal.setFilter(categoryvalues.pointing, regularpointers);
+				mapglobal.setFilter(categoryvalues.pointingshell, regularpointers)
+				} else 
+{
+	mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
+	mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
+	mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
+	mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers)
+
+}			}
+
+			});
+
+		localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
 
 		true;
 	}
+}
 
 	function rgbToHex(r: number, g: number, b: number) {
 		return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
@@ -1043,112 +1002,6 @@
 			maplat = map.getCenter().lat;
 
 			current_map_heading = map.getBearing();
-		}
-
-		function renderNewBearings() {
-			if (true) {
-				//console.log('render new bearings');
-				//let start = performance.now();
-
-				const features = map.queryRenderedFeatures({ layers: ['buses'] });
-
-				let mapzoomnumber = numberForBearingLengthBus(map.getZoom());
-
-				let busstart = performance.now();
-				let newbearingdata = {
-					type: 'FeatureCollection',
-					features: features
-						.filter((x: any) => x.properties.bearing != undefined)
-						.filter((x: any) => x.properties.bearing != 0)
-						.map((x: any) => {
-							let newcoords = calculateNewCoordinates(
-								x.geometry.coordinates[1],
-								x.geometry.coordinates[0],
-								x.properties.bearing,
-								mapzoomnumber / 1000
-							);
-
-							return {
-								type: 'Feature',
-								geometry: {
-									type: 'LineString',
-									coordinates: [
-										[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-										[newcoords.longitude, newcoords.latitude]
-									]
-								},
-								properties: {
-									bearing: x.properties.bearing,
-									color: x.properties.color,
-									cd: x.properties.contrastdarkmodebearing
-								}
-							};
-						})
-				};
-
-				//console.log('computed bus bearings in', performance.now() - busstart, 'ms');
-
-				//console.log("took ", performance.now() - start, "ms")
-
-				//console.log('newbearingdata', newbearingdata)
-
-				let busbearings = map.getSource('busbearings');
-
-				//ensure the layer exists
-				if (busbearings) {
-					//busbearings.setData(newbearingdata);
-				}
-
-				const railfeatures = map.queryRenderedFeatures({ layers: ['raillayer'] });
-
-				let railmapzoomnumber = numberForBearingLengthRail(map.getZoom());
-
-				let railstart = performance.now();
-				let newrailbearingdata = {
-					type: 'FeatureCollection',
-					features: railfeatures
-						.filter((x: any) => x.properties.bearing != undefined)
-						.filter((x: any) => x.properties.bearing != 0)
-						.map((x: any) => {
-							let newcoords = calculateNewCoordinates(
-								x.geometry.coordinates[1],
-								x.geometry.coordinates[0],
-								x.properties.bearing,
-								railmapzoomnumber / 1000
-							);
-
-							return {
-								type: 'Feature',
-								geometry: {
-									type: 'LineString',
-									coordinates: [
-										[x.geometry.coordinates[0], x.geometry.coordinates[1]],
-										[newcoords.longitude, newcoords.latitude]
-									]
-								},
-								properties: {
-									//bearing: x.properties.bearing,
-									color: x.properties.color,
-									cd: x.properties.contrastdarkmodebearing
-								}
-							};
-						})
-				};
-
-				//console.log('computed rail bearings in', performance.now() - railstart, 'ms');
-
-				//console.log('newbearingdata', newbearingdata)
-
-				let railbearings = map.getSource('railbearings');
-
-				if (railbearings) {
-					railbearings.setData(newrailbearingdata);
-				}
-
-				var end = performance.now();
-
-				//console.log('bearing calc took', end - start);
-			}
 		}
 
 		//on hover
@@ -1507,121 +1360,11 @@
 			});
 
 			map.addLayer({
-				id: 'busshapes',
-				type: 'line',
-				source: 'busshapes',
-				'source-layer': 'busonly',
-				filter: removeWeekends(
-					processUrlLimit([
-						'all',
-						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
-						[
-							'!',
-							[
-								'all',
-								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-								['==', ['coalesce', ['get', 'route_label']], '950']
-							]
-						],
-						[
-							'!',
-							[
-								'all',
-								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
-							]
-						],
-					//	['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
-					//	['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
-					])
-				),
-				paint: {
-					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
-					//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-					'line-opacity': 0.4
-					// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
-				},
-				minzoom: 8
-			});
-
-			// the layer must be of type 'line'
-
-			map.addLayer({
-				id: 'labelbusshapes',
-				type: 'symbol',
-				source: 'busshapes',
-				'source-layer': 'busonly',
-				filter: removeWeekends(
-					processUrlLimit([
-						'all',
-						[
-							'!',
-							[
-								'all',
-								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-								['==', ['coalesce', ['get', 'route_label']], '950']
-							]
-						],
-						[
-							'!',
-							[
-								'all',
-								['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-								['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
-							]
-						],
-						['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
-						//['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
-					])
-				),
-				layout: {
-					'symbol-placement': 'line',
-					//'text-field': ['coalesce', ['get', 'route_label']],
-					'text-field': urlParams.get('debug') ? 
-					['concat', ['get','onestop_feed_id'],"|",['get','shape_id'],"|",['coalesce', ['get', 'route_label']]] : ['coalesce', ['get', 'route_label']],
-					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],
-					'text-ignore-placement': false,
-					'text-allow-overlap': false,
-					'symbol-spacing':
-						window?.innerWidth > 750
-							? ['step', ['zoom'], 200, 12, 120, 13, 130, 15, 130, 20, 200]
-							: ['step', ['zoom'], 200, 12, 100, 13, 110, 15, 100, 20, 200],
-					visibility: 'none'
-				},
-				paint: {
-					'text-color': ['concat', '#', ['get', 'text_color']],
-
-					'text-halo-color': ['concat', '#', ['get', 'color']],
-					'text-halo-width': 3,
-					'text-halo-blur': 0,
-					'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
-				},
-				minzoom: 7
-			});
-
-			map.addLayer({
-				id: 'railshapes',
-				type: 'line',
-				source: 'notbusshapes',
-				'source-layer': 'notbus',
-				filter: processUrlLimit(['all', ['!=', 4, ['get', 'route_type']]]),
-				paint: {
-					'line-color': ['concat', '#', ['get', 'color']],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
-					'line-opacity': 1
-				},
-				minzoom: 3
-			});
-
-			map.addLayer({
 				id: 'ferryshapes2',
 				type: 'line',
 				source: 'notbusshapes',
 				'source-layer': 'notbus',
-				filter: processUrlLimit(['all', ['==', 4, ['get', 'route_type']]]),
+				filter: ['all', ['==', 4, ['get', 'route_type']]],
 				paint: {
 					'line-dasharray': [1, 2],
 					'line-color': ['concat', '#', ['get', 'color']],
@@ -1647,88 +1390,10 @@
 				'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 			});*/
 
-			map.addLayer({
-				id: 'labelrailshapes',
-				type: 'symbol',
-				source: 'notbusshapes',
-				'source-layer': 'notbus',
-				filter: ['all', ['!=', 3, ['get', 'route_type']], ['!=', 11, ['get', 'route_type']]],
-				layout: {
-					'symbol-placement': 'line',
-					'text-field': ['coalesce', ['get', 'route_label']],
-					//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-					'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
-					'text-ignore-placement': false,
+				
+			addShapes(map, darkMode, layerspercategory);
 
-					'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
-					'text-allow-overlap': false,
-					visibility: 'none'
-				},
-				paint: {
-					'text-color': ['concat', '#', ['get', 'text_color']],
-
-					'text-halo-color': ['concat', '#', ['get', 'color']],
-					'text-halo-width': 3,
-					'text-halo-blur': 1
-					//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
-				},
-				minzoom: 3
-			});
-
-			map.addLayer({
-				id: 'busstopscircle',
-				type: 'circle',
-				source: 'busstops',
-				'source-layer': 'busstops',
-				layout: {},
-				paint: {
-					'circle-color': '#1c2636',
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
-					'circle-stroke-color': darkMode
-						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
-						: '#333333',
-					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
-					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-					'circle-opacity': 0.1
-				},
-				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11,
-				filter: removeWeekendStops(['all',
-			
-				['!', ['in', 1, ['get', 'route_types']]],
-				['!', ['in', 0, ['get', 'route_types']]],
-				['!', ['in', 2, ['get', 'route_types']]]])
-			});
-
-			map.addLayer({
-				id: 'busstopslabel',
-				type: 'symbol',
-				source: 'busstops',
-				'source-layer': 'busstops',
-				filter: removeWeekendStops(['all', 
-				['!', ['in', 1, ['get', 'route_types']]],
-				['!', ['in', 0, ['get', 'route_types']]],
-				['!', ['in', 2, ['get', 'route_types']]]
-			]),
-				layout: {
-					'text-field': ['get', 'name'],
-					//'text-field': ['coalesce', ['get', 'route_types']],
-					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
-					'text-radial-offset': 0.7,
-					//'text-ignore-placement': false,
-					//'icon-ignore-placement': false,
-					//'text-allow-overlap': true,
-					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
-				},
-				paint: {
-					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
-					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 0.4
-				},
-				minzoom: 14
-			});
+			addStopsLayers(map, darkMode, layerspercategory);
 
 			map.loadImage("/station-enter.png", (error, image) => {
 				if (error) throw error;
@@ -1749,7 +1414,7 @@
 					},
 					
 				minzoom: window?.innerWidth >= 1023 ? 14 : 15
-				}, "railstopscircle");
+				},layerspercategory.bus.stops);
 
 				map.addLayer({
 				id: 'stationenterlabel',
@@ -1775,235 +1440,10 @@
 					'text-halo-width': darkMode ? 0.4 : 0.2
 				},
 				minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
-			}, "railstopscircle");
-			})
+			},layerspercategory.bus.stops);
+			});			
 
-			map.addLayer({
-				id: 'railstopscircle',
-				type: 'circle',
-				source: 'railstops',
-				'source-layer': 'railstops',
-				layout: {},
-				paint: {
-					'circle-color': '#1c2636',
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 4, 12, 6, 15, 8],
-					'circle-stroke-color': darkMode
-						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
-						: '#333333',
-					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
-					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-					'circle-opacity': 0.1
-				},
-				minzoom: 3,
-				filter: removeWeekendStops(['all',
-				[
-					'all',
-					[
-						'any',
-						['>',['zoom'],15],
-						['==', null, ['get', "children_route_types"]]
-					],
-					['any',
-					['in', 2, ['get', 'route_types']],
-					['in', 2, ['get', "children_route_types"]]
-					]
-				],
-				])
-			});
-
-			map.addLayer({
-				id: 'raillabel',
-				type: 'symbol',
-				source: 'railstops',
-				'source-layer': 'railstops',
-				layout: {
-					'text-field': ['get', 'name'],
-					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
-					'text-radial-offset': 1,
-					//'text-ignore-placement': true,
-					//'icon-ignore-placement': false,
-					//'text-allow-overlap': true,
-					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
-					
-				},
-				paint: {
-					
-					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
-					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 1
-				},
-				filter: [
-					'all',
-					[
-						'any',
-						['>',['zoom'],15],
-						['==', null, ['get', "children_route_types"]],
-						
-					],
-					['any',
-					['in', 2, ['get', 'route_types']],
-					['in', 2, ['get', "children_route_types"]]
-					]
-				],
-				minzoom: 3
-			});
-
-			map.addLayer({
-				id: 'localrailstopscircle',
-				type: 'circle',
-				source: 'railstops',
-				'source-layer': 'railstops',
-				layout: {},
-				paint: {
-					'circle-color': '#1c2636',
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 4, 15, 5],
-					'circle-stroke-color': darkMode
-						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
-						: '#333333',
-					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
-					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-					'circle-opacity': 0.1
-				},
-				minzoom: 8,
-				filter: removeWeekendStops(['all',
-				[
-					'all',
-					[
-						'any',
-						['>',['zoom'],16],
-						['==', null, ['get', "children_route_types"]]
-					],
-					['any',
-					['in', 0, ['get', 'route_types']],
-					['in', 0, ['get', "children_route_types"]],
-					['in', 1, ['get', 'route_types']],
-					['in', 1, ['get', "children_route_types"]]
-					],
-					['!',['in', 2, ['get', "children_route_types"]]]
-				],
-				])
-			});
-
-			map.addLayer({
-				id: 'localraillabel',
-				type: 'symbol',
-				source: 'railstops',
-				'source-layer': 'railstops',
-				layout: {
-					'text-field': ['get', 'name'],
-					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
-					'text-radial-offset': 1,
-					//'text-ignore-placement': true,
-					//'icon-ignore-placement': false,
-					//'text-allow-overlap': true,
-					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
-					
-				},
-				paint: {
-					
-					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
-					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 1
-				},
-				filter: [
-					'all',
-					[
-						'any',
-						['>',['zoom'],16],
-						['==', null, ['get', "children_route_types"]],
-						
-					],
-					['any',
-					['in', 0, ['get', 'route_types']],
-					['in', 0, ['get', "children_route_types"]],
-					['in', 1, ['get', 'route_types']],
-					['in', 1, ['get', "children_route_types"]]
-					],
-					['!',['in', 2, ['get', "children_route_types"]]]
-				],
-				minzoom: 9
-			});
-
-
-			/*
-			map.addLayer({
-				id: 'railstopscircle',
-				type: 'circle',
-				source: 'stops',
-				'source-layer': 'stops',
-				layout: {},
-				paint: {
-					'circle-color': '#1c2636',
-					'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
-					'circle-stroke-color': darkMode
-						? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
-						: '#333333',
-					'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
-					'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-					'circle-opacity': 0.1
-				},
-				minzoom: window?.innerWidth >= 1023 ? 12.5 : 11,
-				filter: removeWeekendStops(['all'])
-			});
-
-			map.addLayer({
-				id: 'railstopslabelclose',
-				type: 'symbol',
-				source: 'stops',
-				'source-layer': 'stops',
-				filter: removeWeekendStops(['all']),
-				layout: {
-					'text-field': ['get', 'name'],
-					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
-					'text-radial-offset': 0.7,
-					'icon-image': ['get', 'network'],
-					'icon-size': 1,
-					//'text-ignore-placement': false,
-					//'icon-ignore-placement': false,
-					//'text-allow-overlap': true,
-					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
-				},
-				paint: {
-					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
-					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 0.4
-				},
-				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
-			});
-
-			map.addLayer({
-				id: 'railstopslabelfar',
-				type: 'symbol',
-				source: 'stops',
-				'source-layer': 'stops',
-				filter: ['all'],
-				layout: {
-					'text-field': ['get', 'name'],
-					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 12, 8, 15, 9],
-					'text-radial-offset': 0.7,
-					'icon-image': ['get', 'network'],
-					'icon-size': 1,
-					//'text-ignore-placement': false,
-					//'icon-ignore-placement': false,
-					//'text-allow-overlap': true,
-					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
-				},
-				paint: {
-					'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
-					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': 0.4
-				},
-				minzoom: window?.innerWidth >= 1023 ? 14 : 12.4
-			});*/
-
+			
 			map.addSource('buses', {
 				type: 'geojson',
 				data: {
@@ -2012,66 +1452,33 @@
 				}
 			});
 
-			map.addSource('busbearings', {
+			map.addSource('localrail', {
 				type: 'geojson',
 				data: {
-					type: 'Feature',
-					properties: {},
-					geometry: {
-						type: 'LineString',
-						coordinates: []
-					}
+					type: 'FeatureCollection',
+					features: []
 				}
 			});
 
-			/*
-			map.addLayer({
-				id: 'busbearingslayer',
-				type: 'line',
-				source: 'busbearings',
-				layout: {
-					//'line-join': 'round',
-					//'line-cap': 'round'
-				},
-				paint: {
-					'line-color': ['get', darkMode === true ? 'cd' : 'color'],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 3, 10, 1.8, 12, 2.5, 13, 3],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
-				},
-				minzoom: 7
-			});*/
-
-			map.addSource('railbearings', {
+			map.addSource('intercityrail', {
 				type: 'geojson',
 				data: {
-					type: 'Feature',
-					properties: {},
-					geometry: {
-						type: 'LineString',
-						coordinates: []
-					}
+					type: 'FeatureCollection',
+					features: []
 				}
 			});
 
-			/*
-			map.addLayer({
-				id: 'railbearingslayer',
-				type: 'line',
-				source: 'railbearings',
-				layout: {
-					//'line-join': 'round',
-					//'line-cap': 'round'
-				},
-				paint: {
-					'line-color': ['get', 'color'],
-					'line-width': ['interpolate', ['linear'], ['zoom'], 9, 4, 10, 3.5, 13, 4],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.9]
+			map.addSource('other', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: []
 				}
-			});*/
+			});
 
-			makeBearingArrowPointers(map, darkMode);
+			makeBearingArrowPointers(map, darkMode, layerspercategory);
 
-			makeCircleLayers(map, darkMode);
+			makeCircleLayers(map, darkMode, layerspercategory);
 
 			setInterval(() => {
 				if (map.getZoom() >= 8) {
@@ -2116,8 +1523,6 @@
 										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
 										vehiclesData[realtime_id] = feed;
-
-										console.log('request render', realtime_id)
 										rerenders_request(realtime_id);
 									}
 								})
@@ -2135,7 +1540,7 @@
 						}
 					});
 				}
-			}, 500);
+			}, 1000);
 
 			map.addSource('geolocation', {
 				type: 'geojson',
@@ -2271,14 +1676,9 @@
 
 				//renderNewBearings();
 				
-			runSettingsAdapt();
+			//runSettingsAdapt();
 			}
 		});
-
-		map.on('mouseenter', 'buses', () => (map.getCanvas().style.cursor = 'pointer'));
-		map.on('mouseleave', 'buses', () => (map.getCanvas().style.cursor = ''));
-		map.on('mouseenter', 'raillayer', () => (map.getCanvas().style.cursor = 'pointer'));
-		map.on('mouseleave', 'raillayer', () => (map.getCanvas().style.cursor = ''));
 
 		const successCallback = (position: any) => {
 			//console.log(position);
@@ -2449,6 +1849,7 @@
 			}
 		}
 	}
+	
 </script>
 
 <svelte:head>
@@ -2524,12 +1925,14 @@
 <div id="map" style="width: 100svw; height: 100svh;" />
 
 
-<div class="fixed bottom-0 right-0 pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
+<div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 
 >
-	View: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} | 
+	<p>
+		View: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
+		<span><br class='block md:hidden'/></span>
 	{#if typeof geolocation === 'object'}
-		You: {geolocation.coords.latitude.toFixed(5)}, 
+		<span class='text-blue-800 dark:text-blue-100'>You: {geolocation.coords.latitude.toFixed(5)}, 
 		{geolocation.coords.longitude.toFixed(5)}
 		{#if typeof geolocation.coords.altitude === 'number'}
 		{geolocation.coords.altitude.toFixed(0)} m
@@ -2541,7 +1944,9 @@
 					| {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
 				{/if}
 		{/if}
+	</span>
 	{/if}
+</p>
 </div>
 
 
@@ -2777,12 +2182,13 @@
 
 	<a
 		href="#"
+		class='underline text-green-500'
         on:click={() => {
             window.localStorage.alertPopupShown = null;
             window.location.reload()
         }}
     >
-        Click to reset popup consent
+        Reload page & reset popup
     </a>
 
 	{#if foamermode}
@@ -2868,7 +2274,7 @@
 		</div>
 	{/if}
 
-	{#if ["other", "bus", 'intercityrail', 'localrail', 'rail'].includes(selectedSettingsTab)}
+	{#if ["other", "bus", 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
 		<div class="flex flex-row gap-x-1">
 			<Layerbutton
 				bind:layersettings
@@ -2960,12 +2366,6 @@
 			/>
 		</div>
 	{/if}
-
-	<!--
-	<p class="text-xs">
-		Current Units: {#if usunits === false}metric{:else}US{/if}. Switch in settings.
-	</p>
-	-->
 </div>
 
 <style>
