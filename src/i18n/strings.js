@@ -36,7 +36,8 @@ const i18n = {
         ormgauge: 'Gauge',
         // announcements
         announcements: 'Play Announcements',
-        coordsview: "View"
+        coordsview: "View",
+        coordscopied: "Coords copied to clipboard"
     },
     fr: {
         // special
@@ -75,7 +76,8 @@ const i18n = {
         ormgauge: 'Jauge',
         // announcements
         announcements: 'Lire les annonces',
-        coordsview: "Vue"
+        coordsview: "Vue",
+        coordscopied: "Coordonnées copiées dans le presse-papiers",
     },
     es: {
         // special
@@ -114,7 +116,8 @@ const i18n = {
         ormgauge: 'Calibre',
         // announcements
         announcements: 'Reproducir anuncios',
-        coordsview: "Vista"
+        coordsview: "Vista",
+        coordscopied: "Coords copiadas al portapapeles"
     },
     ko: {
         // special
@@ -154,7 +157,8 @@ const i18n = {
         ormgauge: '게이지',
         // announcements
         announcements: '알림 재생',
-        coordsview: "보기"
+        coordsview: "보기",
+        coordscopied: "좌표가 클립보드에 복사되었습니다"
     },
 }
 

@@ -346,10 +346,6 @@
 			}
 		}, 501);
 
-		//alert("Coords copied to clipboard")
-
-    // toast.remove()
-
   }
 	
 	const interleave = (arr: any, thing: any) =>
@@ -1950,7 +1946,7 @@
 <div
 out:fade={{duration: 400}}
 class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${showclipboardalert === true ? "" : "hidden"}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80`}>
-	Coords saved to clipboard
+	{strings.coordscopied}
 </div>
 {/key}
 
