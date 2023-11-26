@@ -1662,7 +1662,7 @@
 				}			
 			})*/
 
-			
+		});
 
 		map.on('move', () => {
 			updateData();
