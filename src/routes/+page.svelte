@@ -839,6 +839,14 @@
 					} else {
 						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
 					}
+
+					if (category === "other") {
+						if (this_layer_settings.shapes) {
+							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
+						} else {
+							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'none');
+						}
+					}
 				} else {
 					console.log('could not fetch shapes layer', category)
 				}
@@ -1392,7 +1400,7 @@
 			});
 
 			map.addLayer({
-				id: 'ferryshapes2',
+				id: 'ferryshapes',
 				type: 'line',
 				source: 'notbusshapes',
 				'source-layer': 'notbus',

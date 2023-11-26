@@ -108,7 +108,6 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         'source-layer': 'notbus',
         filter: ['all',
             ['any',
-            ['==', 4, ['get', 'route_type']],
             ['==', 6, ['get', 'route_type']],
             ['==', 7, ['get', 'route_type']]
             ]
