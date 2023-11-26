@@ -784,7 +784,7 @@
 					}
 
 					if (typeof getlocalrailsource != 'undefined') {
-						getintercityrailsource.setData({
+						getlocalrailsource.setData({
 							type: 'FeatureCollection',
 							features: flattenedarray.filter((x: any) => [0,1,5,12].includes(x.properties.routeType))
 						});
