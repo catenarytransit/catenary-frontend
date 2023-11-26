@@ -1516,6 +1516,8 @@
 
 			makeCircleLayers(map, darkMode, layerspercategory);
 
+			runSettingsAdapt();
+
 			setInterval(() => {
 				if (map.getZoom() >= 8) {
 					realtime_list.forEach((realtime_id: string) => {
@@ -1694,7 +1696,7 @@
 
 				//renderNewBearings();
 				
-			//runSettingsAdapt();
+			//	runSettingsAdapt();
 			}
 		});
 
