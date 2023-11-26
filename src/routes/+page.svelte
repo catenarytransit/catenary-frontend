@@ -26,6 +26,7 @@
 		check_backend,
 		check_martin
 	} from '../components/distributed';
+	import { toast } from '@zerodevx/svelte-toast'
 	import {addStopsLayers} from '../components/addLayers/addStops'
 
 	import {makeBearingArrowPointers} from '../components/addLayers/makebearingarrowpointers'
@@ -38,7 +39,7 @@
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
 	let disabledlayerstyle =
-		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-300 dark:bg-gray-800  dark:border-gray-800';
+		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700';
 
 	let darkMode = true;
 
@@ -838,16 +839,22 @@
 					console.log('could not fetch shapes layer', category)
 				}
 
-				if (this_layer_settings.stops) {
+				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
+				if (stoplayer) {
+					if (this_layer_settings.stops) {
 						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
 					} else {
-						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
+						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
 					}
+				} else {
+					console.log('no stop layer found for',category)
+				}
+				
 
 					if (this_layer_settings.stoplabels) {
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
 					} else {
-						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
+						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
 					}
 
 				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
@@ -1540,7 +1547,7 @@
 						}
 					});
 				}
-			}, 1000);
+			}, 600);
 
 			map.addSource('geolocation', {
 				type: 'geojson',
@@ -1926,13 +1933,15 @@
 
 
 <div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
-
+on:click={() => {
+	toast.push("Coords copied to keyboard!");
+}}
 >
 	<p>
 		View: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
 		<span><br class='block md:hidden'/></span>
 	{#if typeof geolocation === 'object'}
-		<span class='text-blue-800 dark:text-blue-100'>You: {geolocation.coords.latitude.toFixed(5)}, 
+		<span class='text-blue-700 dark:text-green-300'>You: {geolocation.coords.latitude.toFixed(5)}, 
 		{geolocation.coords.longitude.toFixed(5)}
 		{#if typeof geolocation.coords.altitude === 'number'}
 		{geolocation.coords.altitude.toFixed(0)} m

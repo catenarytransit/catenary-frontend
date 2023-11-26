@@ -39,6 +39,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@zerodevx/svelte-toast": "^0.9.5",
     "base65536": "^4.0.3",
     "geolocation": "^0.2.0",
     "gtfs-realtime-bindings": "^1.1.1",
