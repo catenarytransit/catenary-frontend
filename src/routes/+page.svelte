@@ -38,9 +38,9 @@
 	import { addShapes } from '../components/addLayers/addShapes';
 
 	let enabledlayerstyle =
-		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200';
+		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-base';
 	let disabledlayerstyle =
-		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700';
+		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-base';
 
 	let darkMode = true;
 
@@ -2131,23 +2131,7 @@ on:keydown={() => {
 		<label for="us-units" class="ml-2">{strings.useUSunits}</label>
 	</div>
 
-	<div>
-		<input
-			on:click={(x) => {
-				handleFoamerModeSwitch();
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				handleFoamerModeSwitch();
-				runSettingsAdapt();
-			}}
-			checked={foamermode}
-			id="foamermode"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="foamermode" class="ml-2">{strings.orminfra}</label>
-	</div>
+
 	
 	<div>
 		<input
@@ -2167,25 +2151,6 @@ on:keydown={() => {
 		<label for="announcements" class="ml-2">{strings.announcements}</label>
 	</div>
 
-	<div>
-		<input
-			on:click={(x) => {
-				showzombiebuses = !showzombiebuses;
-
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				showzombiebuses = !showzombiebuses;
-
-				runSettingsAdapt();
-			}}
-			checked={showzombiebuses}
-			id="show-zombie-buses"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
-	</div>
 
 	<div>
 		<select
@@ -2261,9 +2226,6 @@ on:keydown={() => {
 		} w-1/2 py-1 px-1`}
 		/>
 
-		
-
-
 		<Layerselectionbox text={strings.headingBus}
 		changesetting={() => {
 			selectedSettingsTab = 'bus';
@@ -2281,7 +2243,9 @@ on:keydown={() => {
 			selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
 		} w-1/2 py-1 px-1`}
 		/>
-		<!-- <div
+
+		
+		<div
 			on:click={() => {
 				selectedSettingsTab = 'more';
 			}}
@@ -2293,13 +2257,48 @@ on:keydown={() => {
 			} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">{strings.headingMisc}</p>
-		</div> -->
+		</div>
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
-		<div class="flex flex-row gap-x-1">
 			
-		</div>
+	<div>
+		<input
+			on:click={(x) => {
+				handleFoamerModeSwitch();
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				handleFoamerModeSwitch();
+				runSettingsAdapt();
+			}}
+			checked={foamermode}
+			id="foamermode"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="foamermode" class="ml-2">{strings.orminfra}</label>
+	</div>
+
+	<div>
+		<input
+			on:click={(x) => {
+				showzombiebuses = !showzombiebuses;
+
+				runSettingsAdapt();
+			}}
+			on:keydown={(x) => {
+				showzombiebuses = !showzombiebuses;
+
+				runSettingsAdapt();
+			}}
+			checked={showzombiebuses}
+			id="show-zombie-buses"
+			type="checkbox"
+			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		/>
+		<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
+	</div>
 	{/if}
 
 	{#if ["other", "bus", 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
