@@ -234,7 +234,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		localrail: {
@@ -249,7 +249,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		intercityrail: {
@@ -264,7 +264,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: true
 			}
 		},
 		other: {
@@ -1925,7 +1925,6 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <div id="map" style="width: 100svw; height: 100svh;" />
-
 
 <div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {
