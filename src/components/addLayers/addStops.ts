@@ -38,7 +38,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         ['!', ['in', 2, ['get', 'route_types']]]
     ]),
         layout: {
-            'text-field': ['get', 'name'],
+            'text-field': ['get', 'displayname'],
             //'text-field': ['coalesce', ['get', 'route_types']],
             'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
             'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
@@ -103,7 +103,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         source: 'railstops',
         'source-layer': 'railstops',
         layout: {
-            'text-field': ['get', 'name'],
+            'text-field': ['get', 'displayname'],
             'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
             'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
             'text-radial-offset': 1,
@@ -180,7 +180,7 @@ map.addLayer({
     source: 'railstops',
     'source-layer': 'railstops',
     layout: {
-        'text-field': ['get', 'name'],
+        'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
         'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
         'text-radial-offset': 1,
@@ -221,7 +221,7 @@ map.addLayer({
     source: 'railstops',
     'source-layer': 'railstops',
     layout: {
-        'text-field': ['get', 'name'],
+        'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
         'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
         'text-radial-offset': 1,
@@ -271,7 +271,7 @@ map.addLayer({
     source: 'railstops',
     'source-layer': 'railstops',
     layout: {
-        'text-field': ['get', 'name'],
+        'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
         'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
         'text-radial-offset': 1,
