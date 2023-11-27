@@ -1952,7 +1952,7 @@ class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 t
 </div>
 {/key}
 
-<div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-zinc-900 bg-opacity-70 text-gray-50 pointer-events-auto select-none clickable"
+<div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {
 	saveCoordsToClipboard()
 }}
