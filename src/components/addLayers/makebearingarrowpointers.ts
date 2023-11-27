@@ -110,7 +110,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					id: 'geolocationheadingfill',
 					source: 'geolocation',
 					type: 'symbol',
-					filter: ["!=", 0, ['get', 'heading']],
+					filter: ["!=", null, ['get', 'heading']],
 					paint: {
 						'icon-color': "#2563EB",
 						'icon-opacity': 0.8
