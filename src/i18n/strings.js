@@ -1,11 +1,12 @@
 const i18n = {
     en: {
+        search: 'Search',
         // special
         appwidealert: 'Happy Holidays from the Catenary team!',
-        appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around.',
+        appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around. Check your agency\'s schedules for holiday service.',
         alertheadersd: 'Every ride, every time.',
-        alertsubtextsd: 'You must tap or scan the validator when boarding the bus, or before boarding the Trolley.',
-        alertheaderla: 'Explore public art on Catenary',
+        alertsubtextsd: 'You must tap or scan when boarding the bus, or before boarding the Trolley.',
+        alertheaderla: 'Explore Public Art on Catenary',
         alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
         learnmore: 'Learn more',
         // settings
@@ -40,6 +41,7 @@ const i18n = {
         coordscopied: "Coords copied to clipboard"
     },
     fr: {
+        search: 'Rechercher',
         // special
         appwidealert: 'Joyeuses fêtes de la part de l\'équipe Catenary!',
         appwidesubtext: 'Peu importe vos plans de vacances, nous sommes toujours là pour vous aider à vous déplacer.',
@@ -80,6 +82,7 @@ const i18n = {
         coordscopied: "Coordonnées copiées dans le presse-papiers",
     },
     es: {
+        search: 'Buscar',
         // special
         appwidealert: '¡Felices fiestas del equipo de Catenary!',
         appwidesubtext: 'No importa cuáles sean sus planes navideños, todavía estamos aquí para ayudarlo a moverse.',
@@ -120,6 +123,7 @@ const i18n = {
         coordscopied: "Coords copiadas al portapapeles"
     },
     ko: {
+        search: '검색',
         // special
         appwidealert: 'Catenary 팀의 행복한 휴일!',
         appwidesubtext: '휴일 계획이 무엇이든 상관없이 여전히 도움을 드릴 수 있습니다.',

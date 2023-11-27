@@ -56,6 +56,7 @@
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
+	let sidebarCollapsed = false;
 	let announcermode = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: any = {};
@@ -1916,7 +1917,7 @@
 >
 <!-- End Google Tag Manager (noscript) -->
 
-<div id="map" style="width: 100svw; height: 100svh;" />
+<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 
 {#key showclipboardalert}
 <div
@@ -1958,18 +1959,57 @@ on:keydown={() => {
 </p>
 </div>
 
-
-{#if typeof window !== 'undefined'}
-	{#if window.localStorage.alertPopupShown != 'hide'}
-		<Alertpopup imageURL="/img/special/holiday.png" background="linear-gradient(#0A233F, #000000)">
-			<h1 class="text-lg">{strings.appwidealert}</h1>
-			<p class="text-sm">{strings.appwidesubtext}</p>
+{#if sidebarCollapsed == false}
+	<div
+		class="fixed top-0 left-0 pointer-events-none text-white pointer-events-auto z-50 clickable lg:w-[35vw] w-[100vw] h-[100vh] backdrop-blur-sm"
+		style:background="rgba(0, 0, 0, 0.4)"
+		style:border-image-source="linear-gradient(to bottom, #42A7C5, #0A233F)"
+		style:border-image-slice="1"
+		style:border-right="5px solid"
+		style:padding="20px"
+		style:overflow="auto"
+	>
+		<div class="mt-16"></div>
+		<Alertpopup background="linear-gradient(#0A233F, #42A7C5)">
+			<h1 class="text-xl">{strings.appwidealert}</h1>
+			<p>{strings.appwidesubtext}</p>
 		</Alertpopup>
-		<!-- <Alertpopup imageURL="/img/special/stationart.svg" background="linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(https://art.metro.net/wp-content/uploads/2021/08/Mark-Steven-Greenfield-Red-Car-Requiem-B.jpeg) center right no-repeat, black">
+		<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
+		<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">
 			<h1 class="text-lg">{strings.alertheaderla}</h1>
-			<p class="text-sm">{strings.alertsubtextla}</p>
-		</Alertpopup> -->
-	{/if}
+			<p>{strings.alertsubtextla}</p>
+		</Alertpopup>
+		{/if} -->
+		{#if realtime_list.includes('f-mts~rt~onebusaway')}
+		<Alertpopup imageURL="https://ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" background="linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(https://ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80), black">
+			<h1 class="text-lg">{strings.alertheadersd}</h1>
+			<p class="text-sm">{strings.alertsubtextsd}</p>
+		</Alertpopup>
+		{/if}
+		<!-- <input
+			type="text"
+			style:cursor="pointer !important"
+			class="absolute right-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 rounded-lg pl-3 dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			placeholder={strings.search}
+		/> -->
+		<a
+			on:click={() => { sidebarCollapsed = true }}
+			style:cursor="pointer !important"
+			class="absolute left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> left_panel_close </span>
+		</a>
+	</div>
+{/if}
+
+{#if sidebarCollapsed}
+<a
+			on:click={() => { sidebarCollapsed = false }}
+			style:cursor="pointer !important"
+			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> left_panel_open </span>
+		</a>
 {/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
