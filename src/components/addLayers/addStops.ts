@@ -84,7 +84,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             [
                 'any',
                 ['>',['zoom'],16],
-                ['==', null, ['get', "children_route_types"]]
+                ['==', null, ['get', "parent_station"]]
             ],
             ['any',
             ['in', 0, ['get', 'route_types']],
@@ -105,7 +105,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         layout: {
             'text-field': ['get', 'displayname'],
             'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
+            'text-size': window.innerWidth >= 1023 ? ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12] : ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
             'text-radial-offset': 1,
             //'text-ignore-placement': true,
             //'icon-ignore-placement': false,
@@ -125,7 +125,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             [
                 'any',
                 ['>',['zoom'],16],
-                ['==', null, ['get', "children_route_types"]],
+                ['==', null, ['get', "parent_station"]]
                 
             ],
             ['any',
@@ -164,7 +164,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         [
             'any',
             ['>',['zoom'],15],
-            ['==', null, ['get', "children_route_types"]]
+            ['==', null, ['get', "parent_station"]]
         ],
         ['any',
         ['in', 2, ['get', 'route_types']],
@@ -182,7 +182,7 @@ map.addLayer({
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-        'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
+        'text-size': window.innerWidth >= 1023 ? ['interpolate', ['linear'], ['zoom'], 9, 10, 15, 12, 17, 14] : ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
         'text-radial-offset': 1,
         //'text-ignore-placement': true,
         //'icon-ignore-placement': false,
@@ -202,7 +202,7 @@ map.addLayer({
         [
             'any',
             ['>',['zoom'],15],
-            ['==', null, ['get', "children_route_types"]],
+            ['==', null, ['get', "parent_station"]]
             
         ],
         ['any',
@@ -242,8 +242,7 @@ map.addLayer({
         'all',
         [
             'any',
-            ['>',['zoom'],16],
-            ['==', null, ['get', "children_route_types"]],
+            ['>',['zoom'],16],['==', null, ['get', "parent_station"]]
             
         ],
         ['any',
@@ -293,7 +292,7 @@ map.addLayer({
         [
             'any',
             ['>',['zoom'],16],
-            ['==', null, ['get', "children_route_types"]],
+            ['==', null, ['get', "parent_station"]]
             
         ],
         ['any',
