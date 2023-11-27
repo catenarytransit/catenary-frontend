@@ -106,7 +106,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 
 				map.addLayer({
 					id: 'geolocationheadingfill',
-					source: 'other',
+					source: 'geolocation',
 					type: 'symbol',
 					filter: ["!=", 0, ['get', 'bearing']],
 					paint: {
