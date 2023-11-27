@@ -1122,7 +1122,7 @@
 		}
 
 		map.on('load', () => {
-			ScreenOrientation.unlock();
+			screen.orientation.unlock();
 			
 			clearbottomright();
 
