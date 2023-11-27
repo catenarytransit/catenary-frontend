@@ -7,6 +7,8 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 
 			const railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]]
 
+			const geobearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]], 17, ['literal', [0, -50]]];
+
 			map.loadImage('./icons/pointing-shell-light.png', (error, image) => {
 				if (image) {
 					
@@ -119,7 +121,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 						'icon-ignore-placement': true,
 						'icon-rotate': ['get', 'heading'],
 						'icon-rotation-alignment': 'map',
-						'icon-offset': railbearingoffset,
+						'icon-offset':  geobearingoffset,
 						'icon-size': railbearingiconsize
 					}
 				});
@@ -232,7 +234,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 						'icon-ignore-placement': true,
 						'icon-rotate': ['get', 'heading'],
 						'icon-rotation-alignment': 'map',
-						'icon-offset': railbearingoffset,
+						'icon-offset':  geobearingoffset,
 						'icon-size': railbearingiconsize
 					},
 				});
