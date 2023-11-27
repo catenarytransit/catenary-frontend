@@ -1274,17 +1274,6 @@
 
 			updateData();
 
-			/*
-			map.addLayer({
-				id: 'static_feed_calc',
-				type: 'fill',
-				source: 'static_feeds',
-				paint: {
-					'fill-color': '#0055aa',
-					'fill-opacity': 0
-				}
-			});*/
-
 			map.addSource('static_feeds_hull', {
 				type: 'vector',
 				url: `${what_martin_to_use()}/static_feeds`
@@ -1295,18 +1284,13 @@
 				type: 'fill',
 				source: 'static_feeds_hull',
 				'source-layer': 'static_feeds',
-				//filter: ["==", ['get', 'onestop_feed_id'], 'f-anteaterexpress'],
 				paint: {
 					'fill-color': '#0055aa',
 					'fill-opacity': 0
 				}
 			});
 
-
-
 			if (urlParams.get('debug')) {
-				//map.showTileBoundaries = true;
-
 				map.addLayer({
 					id: 'static_hull_calc_line',
 					type: 'line',
@@ -1409,23 +1393,6 @@
 				},
 				minzoom: 3
 			});
-
-			/*
-			map.addLayer({
-				id: 'ferryshapes',
-				type: 'line',
-				source: 'notbusshapes',
-				'source-layer': 'notbus',
-				minzoom: 3,
-				
-				filter: processUrlLimit(['all', ['==', 4, ['get', 'route_type']]]),
-				//filter: processUrlLimit(['==', 4, ['get', 'route_type']]),
-			'line-dasharray': [2, 1],
-				'line-color': "#00ff00",
-				//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-				'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
-			});*/
-
 				
 			addShapes(map, darkMode, layerspercategory);
 
@@ -1696,7 +1663,7 @@
 
 				//renderNewBearings();
 				
-			//	runSettingsAdapt();
+				runSettingsAdapt();
 			}
 		});
 
@@ -1997,70 +1964,6 @@ on:keydown={() => {
 		</Alertpopup> -->
 	{/if}
 {/if}
-
-
-<!-- {#if (realtime_list.includes('f-mts~rt~onebusaway') || realtime_list.includes('f-northcountrytransitdistrict~rt')) && mapzoom > 10 && alertPopupShown}
-	<div
-		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-		style:padding="15px"
-		style:border-radius="10px"
-		style:max-width="20vw"
-		style:color="white"
-		style:background="url(https://www.ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80)"
-	>
-		<div
-			on:click={() => (alertPopupShown = false)}
-			style:cursor="pointer !important"
-			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> close </span>
-		</div>
-		<img
-			src="https://www.ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100"
-			style=""
-			style:height="70px"
-			alt=""
-		/>
-		<h1 style:font-size="1.3em">{strings.alertheadersd}</h1>
-		<p>{strings.alertsubtextsd}</p>
-		<a href="https://ridepronto.com" style:cursor="pointer" class="text-yellow-200"
-			>{strings.learnmore} &rarr;</a
-		>
-		<br />
-	</div>
-{/if} -->
-
-<!-- {#if realtime_list.includes('f-metro~losangeles~rail~rt') && mapzoom > 10 && alertPopupShown}
-	<div
-		class="fixed top-3 left-3 pointer-events-none dark:bg-gray-900 dark:text-gray-50 pointer-events-auto clickable"
-		style:padding="15px"
-		style:border-radius="10px"
-		style:max-width="20vw"
-		style:color="white"
-		style:background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/Mark-Steven-Greenfield-Red-Car-Requiem-B.jpeg) center right no-repeat, black"
-		style:background-size="cover"
-	>
-		<div
-			on:click={() => (alertPopupShown = false)}
-			style:cursor="pointer !important"
-			class="border border-gray-500 bg-gray-700 rounded-full h-8 w-8 absolute right-2 top-2 flex justify-center items-center"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> close </span>
-		</div>
-		<img
-			src="/img/special/stationart.svg"
-			style=""
-			style:height="70px"
-			alt=""
-		/>
-		<h1 style:font-size="1.3em">{strings.alertheaderla}</h1>
-		<p>{strings.alertsubtextla}</p>
-		<a href="https://taptogo.net" style:cursor="pointer" class="text-yellow-200"
-			>{strings.learnmore} &rarr;</a
-		>
-		<br />
-	</div>
-{/if} -->
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
