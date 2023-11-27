@@ -108,7 +108,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					id: 'geolocationheadingfill',
 					source: 'geolocation',
 					type: 'symbol',
-					filter: ["!=", 0, ['get', 'bearing']],
+					filter: ["!=", 0, ['get', 'heading']],
 					paint: {
 						'icon-color': "#2563EB",
 						'icon-opacity': 0.8
@@ -117,7 +117,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 						'icon-image': 'pointingcoloured',
 						'icon-allow-overlap': true,
 						'icon-ignore-placement': true,
-						'icon-rotate': ['get', 'bearing'],
+						'icon-rotate': ['get', 'heading'],
 						'icon-rotation-alignment': 'map',
 						'icon-offset': railbearingoffset,
 						'icon-size': railbearingiconsize
@@ -230,7 +230,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
 						'icon-allow-overlap': true,
 						'icon-ignore-placement': true,
-						'icon-rotate': ['get', 'bearing'],
+						'icon-rotate': ['get', 'heading'],
 						'icon-rotation-alignment': 'map',
 						'icon-offset': railbearingoffset,
 						'icon-size': railbearingiconsize
