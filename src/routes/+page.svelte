@@ -1122,6 +1122,8 @@
 		}
 
 		map.on('load', () => {
+			ScreenOrientation.unlock();
+			
 			clearbottomright();
 
 			const urlParams = new URLSearchParams(window.location.search);
