@@ -29,6 +29,7 @@
 	} from '../components/distributed';
 	import Toastify from 'toastify-js'
 	import {addStopsLayers} from '../components/addLayers/addStops'
+	import CloseButton from '../components/CloseButton.svelte';
 
 	import {makeBearingArrowPointers} from '../components/addLayers/makebearingarrowpointers'
 
@@ -2047,8 +2048,6 @@ on:keydown={() => {
 		/>
 		<label for="us-units" class="ml-2">{strings.useUSunits}</label>
 	</div>
-
-
 	
 	<div>
 		<input
@@ -2175,6 +2174,10 @@ on:keydown={() => {
 		>
 			<p class="w-full align-center text-center">{strings.headingMisc}</p>
 		</div>
+		<CloseButton
+	onclose={() => {layersettingsBox = false}}
+	moreclasses=""
+	/>
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
@@ -2310,6 +2313,8 @@ on:keydown={() => {
 			/>
 		</div>
 	{/if}
+
+	
 </div>
 
 <style>

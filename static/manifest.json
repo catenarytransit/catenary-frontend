@@ -10,6 +10,7 @@
         "travel",
         "navigation"
     ],
+    "orientation": "any",
     "icons": [
         {
             "src": "logo.png",
