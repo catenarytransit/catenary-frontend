@@ -102,6 +102,26 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					}
 				});
 
+				map.addLayer({
+					id: 'geolocationheadingfill',
+					source: 'other',
+					type: 'symbol',
+					filter: ["!=", 0, ['get', 'bearing']],
+					paint: {
+						'icon-color': "#2563EB",
+						'icon-opacity': 0.8
+					},
+					layout: {
+						'icon-image': 'pointingcoloured',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
+						'icon-offset': railbearingoffset,
+						'icon-size': railbearingiconsize
+					}
+				});
+
 				
 				}
 
@@ -180,6 +200,27 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					source: 'other',
 					type: 'symbol',
 					filter: ["!=", 0, ['get', 'bearing']],
+					paint: {
+						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
+					},
+					layout: {
+						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'icon-rotate': ['get', 'bearing'],
+						'icon-rotation-alignment': 'map',
+						'icon-offset': railbearingoffset,
+						'icon-size': railbearingiconsize
+					},
+				});
+
+				//usergeo
+
+				map.addLayer({
+					id: "geolocationheadingshell",
+					source: 'geolocation',
+					type: 'symbol',
+					filter: ["!=", null, ['get', 'heading']],
 					paint: {
 						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 					},
