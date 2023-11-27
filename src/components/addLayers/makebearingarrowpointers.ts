@@ -102,6 +102,8 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					}
 				});
 
+				//USER LOCATION
+
 				map.addLayer({
 					id: 'geolocationheadingfill',
 					source: 'other',
