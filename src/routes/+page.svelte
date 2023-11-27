@@ -858,11 +858,15 @@
 					console.log('no stop layer found for',category)
 				}
 				
-
-					if (this_layer_settings.stoplabels) {
+				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
+					if (stopslabellayer) {
+						if (this_layer_settings.stoplabels) {
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
 					} else {
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
+					}
+					} else {
+						console.log('no stops label layer found for ', category)
 					}
 
 				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
@@ -1658,7 +1662,7 @@
 		});
 
 		map.on('idle', () => {
-			if (lasttimezoomran < Date.now() - 1000) {
+			if (lasttimezoomran < Date.now() - 5000) {
 				lasttimezoomran = Date.now();
 
 				//renderNewBearings();

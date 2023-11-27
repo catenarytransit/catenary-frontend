@@ -157,7 +157,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
         'circle-opacity': 0.1
     },
-    minzoom: 3,
+    minzoom: 5,
     filter: removeWeekendStops(['all',
     [
         'all',
@@ -210,7 +210,7 @@ map.addLayer({
         ['in', 2, ['get', "children_route_types"]]
         ]
     ],
-    minzoom: 3
+    minzoom: 5
 });
 
    //OTHER
@@ -297,12 +297,15 @@ map.addLayer({
             
         ],
         ['any',
-        ['in', 0, ['get', 'route_types']],
-        ['in', 0, ['get', "children_route_types"]],
-        ['in', 1, ['get', 'route_types']],
-        ['in', 1, ['get', "children_route_types"]]
+
         ],
-        ['!',['in', 2, ['get', "children_route_types"]]]
+        ['!',['in', 0, ['get', "children_route_types"]]],
+        ['!',['in', 1, ['get', "children_route_types"]]],
+        ['!',['in', 2, ['get', "children_route_types"]]],
+        
+        ['!',['in', 0, ['get', "route_types"]]],
+        ['!',['in', 1, ['get', "route_types"]]],
+        ['!',['in', 2, ['get', "route_types"]]],
     ],
     minzoom: 9
 });
