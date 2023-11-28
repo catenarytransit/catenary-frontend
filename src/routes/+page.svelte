@@ -1961,7 +1961,7 @@ on:keydown={() => {
 
 {#if sidebarCollapsed == false}
 	<div
-		class="fixed top-0 left-0 pointer-events-none text-white pointer-events-auto z-50 clickable lg:w-[35vw] w-[100vw] h-[100vh] backdrop-blur-sm"
+		class="fixed top-0 left-0 pointer-events-none text-white pointer-events-auto z-50 clickable lg:w-[25vw] w-[100vw] h-[100vh] backdrop-blur-sm"
 		style:background="rgba(0, 0, 0, 0.4)"
 		style:border-image-source="linear-gradient(to bottom, #42A7C5, #0A233F)"
 		style:border-image-slice="1"
@@ -1971,13 +1971,13 @@ on:keydown={() => {
 	>
 		<div class="mt-16"></div>
 		<Alertpopup background="linear-gradient(#0A233F, #42A7C5)">
-			<h1 class="text-xl">{strings.appwidealert}</h1>
-			<p>{strings.appwidesubtext}</p>
+			<h1 class="text-lg">{strings.appwidealert}</h1>
+			<p class="text-sm">{strings.appwidesubtext}</p>
 		</Alertpopup>
 		<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
 		<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">
 			<h1 class="text-lg">{strings.alertheaderla}</h1>
-			<p>{strings.alertsubtextla}</p>
+			<p class="text-sm">{strings.alertsubtextla}</p>
 		</Alertpopup>
 		{/if} -->
 		{#if realtime_list.includes('f-mts~rt~onebusaway')}
