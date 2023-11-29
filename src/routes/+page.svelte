@@ -379,27 +379,13 @@
 
 			let static_feed_ids: string[] = [];
 
-			if (this_realtime_feed === "f-横浜市-municipal-bus-rt") {
-					static_feed_ids = ["f-横浜市-municipal-bus"]
-				}
-
-				if (this_realtime_feed === "f-横浜市-municipal-subway-rt") {
-					static_feed_ids = ["f-横浜市-municipal-subway"]
-				}
-
 			Object.values(operators_to_render).forEach((operator: any) => {
 				//attempt to pull the routes for this operator
 				if (operator.gtfs_static_feeds) {
 					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
-						if (!static_feed_ids.includes(static_feed_id)) {
-
-							
-							if (!this_realtime_feed.contains("f-横浜市")) {
-							static_feed_ids.push(static_feed_id);
-							static_feed_ids = [...new Set(static_feed_ids)];
-							}
-
-												//this static feed
+						static_feed_ids.push(static_feed_id);
+						static_feed_ids = [...new Set(static_feed_ids)];
+						//this static feed
 
 						if (route_info_lookup[static_feed_id] == undefined) {
 							fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
@@ -419,12 +405,9 @@
 							big_table[static_feed_id] = route_info_lookup[static_feed_id];
 							trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
 						}
-						}
 					});
 				}
 			});
-
-			
 
 			if (Object.keys(big_table).length > 0) {
 				let mergetable = Object.assign({}, ...Object.values(big_table));
@@ -456,15 +439,12 @@
 						let headsign = '';
 
 						let routeId = vehicle?.trip?.routeId || '';
-						
-						let fetchTrip = false;
 
 						if (!routeId) {
-							//console.log('no route id', realtime_id, entity);
-							
-							fetchTrip = true;
+							//console.log('no route id', realtime_id, entity)
 						}
 
+						let fetchTrip = false;
 
 						if (routeId) {
 							if (mergetable[routeId]) {
@@ -493,6 +473,8 @@
 							if (realtime_id === 'f-metro~losangeles~bus~rt') {
 								colour = '#e16710';
 							}
+
+							fetchTrip = true;
 						}
 
 						if (['f-mta~nyc~rt~mnr','f-metrolink~rt','f-mta~nyc~rt~lirr','f-amtrak~rt'].includes(realtime_id)) {
@@ -513,7 +495,15 @@
 						//this system sucks, honestly. Transition to batch trips info eventually
 						if (fetchTrip === true) {
 							//submit a tripsId requests
-							//console.log('fetch trip is enabled')
+							console.log('submit trip')
+
+							if (realtime_id == "f-横浜市-municipal-subway-rt") {
+								static_feed_ids = ["f-横浜市-municipal-subway"]
+							}
+
+							if (realtime_id == "f-横浜市-municipal-bus-rt") {
+								static_feed_ids = ["f-横浜市-municipal-bus"]
+							}
 
 							if (static_feed_ids.length === 1) {
 								let static_feed_id_to_use = static_feed_ids[0];
@@ -529,7 +519,7 @@
 									) {
 										//render
 										if (trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] === null) {
-											console.log('no trip info', vehicle?.trip?.tripId)
+											//console.log('no trip info', vehicle?.trip?.tripId)
 										} else {
 											//get routeId from the trips table
 
@@ -564,8 +554,7 @@
 											}
 										}
 									} else {
-										console.log('okay fetch then!')
-										if (vehicle.trip.tripId || static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
+										if (vehicle.trip.tripId && static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
 											fetch(
 												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
 													vehicle.trip.tripId
