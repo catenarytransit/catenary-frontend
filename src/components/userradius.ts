@@ -14,7 +14,7 @@ export function addGeoRadius(map: any) {
         map.addLayer({
             id: "2km_line",
             type: 'line',
-                    source: 'onekmsource',
+                    source: '2km_source',
                     paint: {
                         'line-color': '#aaaaaa',
                         'line-width': 1.2,
@@ -24,7 +24,7 @@ export function addGeoRadius(map: any) {
         map.addLayer({
             id: "2km_text",
             type: 'symbol',
-                    source: 'onekmsource',
+                    source: '2km_source',
                     layout: {
                         "text-field": "1km",
                         "symbol-placement": "line",
