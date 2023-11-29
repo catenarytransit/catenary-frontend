@@ -37,6 +37,7 @@
 	import { playRandomSequence } from '../components/announcements';
 	import Alertpopup from '../components/alertpopup.svelte';
 	import { addShapes } from '../components/addLayers/addShapes';
+	import Artwork from '../components/artwork.svelte';
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-base';
@@ -57,6 +58,7 @@
 	let usunits = false;
 	let foamermode = false;
 	let sidebarCollapsed = true;
+	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: any = {};
@@ -1982,21 +1984,30 @@ on:keydown={() => {
 		style:overflow="auto"
 	>
 		<div class="mt-16"></div>
-		<Alertpopup background="linear-gradient(#0A233F, #42A7C5)">
-			<h1 class="text-lg">{strings.appwidealert}</h1>
-			<p class="text-sm">{strings.appwidesubtext}</p>
-		</Alertpopup>
-		<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
-		<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">
-			<h1 class="text-lg">{strings.alertheaderla}</h1>
-			<p class="text-sm">{strings.alertsubtextla}</p>
-		</Alertpopup>
-		{/if} -->
-		{#if realtime_list.includes('f-mts~rt~onebusaway')}
-		<Alertpopup imageURL="https://ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" background="linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(https://ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80), black">
-			<h1 class="text-lg">{strings.alertheadersd}</h1>
-			<p class="text-sm">{strings.alertsubtextsd}</p>
-		</Alertpopup>
+		{#if sidebarView == 0}
+			<Alertpopup background="linear-gradient(#0A233F, #42A7C5)">
+				<h1 class="text-lg">{strings.appwidealert}</h1>
+				<p class="text-sm">{strings.appwidesubtext}</p>
+			</Alertpopup>
+			<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
+			<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">
+				<h1 class="text-lg">{strings.alertheaderla}</h1>
+				<p class="text-sm">{strings.alertsubtextla}</p>
+			</Alertpopup>
+			{/if} -->
+			{#if realtime_list.includes('f-mts~rt~onebusaway')}
+			<Alertpopup imageURL="https://ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" background="linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(https://ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80), black">
+				<h1 class="text-lg">{strings.alertheadersd}</h1>
+				<p class="text-sm">{strings.alertsubtextsd}</p>
+			</Alertpopup>
+			{/if}
+		{/if}
+		{#if sidebarView == 1}
+			<h1 class="text-3xl">{strings.art}</h1>
+			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
+			<Artwork image='https://art.metro.net/wp-content/uploads/2021/07/Susan-Logoreci_Right-Of-Way.jpeg' name='Right Above The Right-Of-Way' artist='Susan Logoreci' description='Just as this aerial station provides views of the surrounding areas, the artworks present aerial views of local neighborhoods, depicted in an intricate series of colored pencil drawings. Drawn from photographs that were shot from a helicopter hovering above the city, the images present the structured landscape of the area punctuated with identifiable landmarks.' />
+			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/feature-tree-califas-1200x800-1.jpg' name='Tree of Califas' artist='Margaret Garcia' description='Adjacent to the historic site of the Campo de Cahuenga where in 1847 Mexico relinquished control of California to the United States in the Treaty of Cahuenga, Tree of Califas draws its title from the the mythological black Amazon queen Califas who was said to have ruled a tribe of women warriors and after whom the Spaniards named California.' />
+			<Artwork image='https://art.metro.net/wp-content/uploads/2022/12/Phung-Huynh-Allegorical-Portal-to-the-City-Within-a-City-A.png' name='Allegorical Portal to the City Within a City' artist='Phung Huynh' description='Phung Huynh explores the origin story of Century City through her unique approach of urban folklore and community voices. The artwork will include portraits of recognizable actors from the area’s early history as a film studio back lot and renowned architects who built Century City, as well as everyday people who work and own businesses in the area.' />
 		{/if}
 		<!-- <input
 			type="text"
@@ -2011,6 +2022,20 @@ on:keydown={() => {
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> left_panel_close </span>
 		</a>
+		<a
+			on:click={() => { sidebarView = 0 }}
+			style:cursor="pointer !important"
+			class="absolute left-16 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> home </span>
+		</a>
+		<!-- <a
+			on:click={() => { sidebarView = 0 }}
+			style:cursor="pointer !important"
+			class="absolute left-28 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> layers </span>
+		</a> -->
 	</div>
 {/if}
 
