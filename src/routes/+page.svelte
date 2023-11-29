@@ -498,7 +498,8 @@
 							console.log('submit trip')
 
 							if (realtime_id == "f-横浜市-municipal-subway-rt") {
-								static_feed_ids = ["f-横浜市-municipal-subway"]
+								static_feed_ids = ["f-横浜市-municipal-subway"];
+								routeType = 1;
 							}
 
 							if (realtime_id == "f-横浜市-municipal-bus-rt") {
