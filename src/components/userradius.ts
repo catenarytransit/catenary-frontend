@@ -26,7 +26,7 @@ export function addGeoRadius(map: any) {
             type: 'symbol',
                     source: '2km_source',
                     layout: {
-                        "text-field": "1km",
+                        "text-field": "2km",
                         "symbol-placement": "line",
                         "text-size": 10,
                         'symbol-spacing': 100,
