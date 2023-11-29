@@ -545,7 +545,7 @@
 											}
 										}
 									} else {
-										if (vehicle.trip.tripId && static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
+										if (vehicle.trip.tripId) {
 											fetch(
 												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
 													vehicle.trip.tripId
