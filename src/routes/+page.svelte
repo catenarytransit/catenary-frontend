@@ -356,7 +356,7 @@
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
 
-		// console.log('processing', realtime_id)
+		 console.log('processing', realtime_id)
 
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
@@ -365,7 +365,7 @@
 		// console.log('139',this_realtime_feed)
 
 		if (this_realtime_feed) {
-			// console.log('this_realtime_feed',this_realtime_feed)
+			 console.log('this_realtime_feed',this_realtime_feed)
 
 			let operators_for_this_realtime = this_realtime_feed.operators;
 
@@ -410,18 +410,20 @@
 			});
 
 			if (Object.keys(big_table).length > 0) {
+				//console.log('big table has data for ', realtime_id)
+
 				let mergetable = Object.assign({}, ...Object.values(big_table));
 
 				let mergetabletrips = Object.assign({}, ...Object.values(trips_possible_agencies));
 
-				// console.log('vehicle data', vehiclesData[realtime_id])
+				//console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
 
 				//render each vehicle vehiclesData[realtime_id].entity
 
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt")
+					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>
@@ -495,7 +497,7 @@
 						//this system sucks, honestly. Transition to batch trips info eventually
 						if (fetchTrip === true) {
 							//submit a tripsId requests
-							console.log('submit trip')
+							console.log('submit trip',realtime_id)
 
 							if (realtime_id == "f-横浜市-municipal-subway-rt") {
 								static_feed_ids = ["f-横浜市-municipal-subway"];
