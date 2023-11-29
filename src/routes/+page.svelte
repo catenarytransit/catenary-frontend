@@ -392,8 +392,12 @@
 				if (operator.gtfs_static_feeds) {
 					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
 						if (!static_feed_ids.includes(static_feed_id)) {
+
+							
+							if (!this_realtime_feed.contains("f-横浜市")) {
 							static_feed_ids.push(static_feed_id);
 							static_feed_ids = [...new Set(static_feed_ids)];
+							}
 
 												//this static feed
 
