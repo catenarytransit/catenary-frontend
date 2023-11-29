@@ -3,6 +3,43 @@ import { createGeoJSONCircle } from '../geoMathsAssist';
 
 export function addGeoRadius(map: any) {
     try {
+        map.addSource('2km_source', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: []
+            }
+        });
+    
+        map.addLayer({
+            id: "2km_line",
+            type: 'line',
+                    source: 'onekmsource',
+                    paint: {
+                        'line-color': '#aaaaaa',
+                        'line-width': 1.2,
+                    }
+        });
+
+        map.addLayer({
+            id: "2km_text",
+            type: 'symbol',
+                    source: 'onekmsource',
+                    layout: {
+                        "text-field": "1km",
+                        "symbol-placement": "line",
+                        "text-size": 10,
+                        'symbol-spacing': 100,
+                        'text-ignore-placement': true,
+					'text-allow-overlap': true,
+                    },
+                    paint: {
+						'text-color': '#eee',
+						'text-halo-color': '#003',
+						'text-halo-width': 2,
+					},
+        });
+
         map.addSource('onekmsource', {
             type: 'geojson',
             data: {
@@ -88,6 +125,13 @@ export function setUserCircles(map: any, lng: number, lat: number) {
         let geojsondata = createGeoJSONCircle([lng, lat], 1, numberofpoints);
 
         onekmlayer.setData(geojsondata);
+    }
+
+    let twokmlayer = map.getSource('2km_source');
+
+    if (twokmlayer) {
+        let geojsondata_2km = createGeoJSONCircle([lng, lat], 2, numberofpoints);
+        twokmlayer.setData(geojsondata_2km);
     }
 
     let tenkmlayer = map.getSource('tenkmsource');
