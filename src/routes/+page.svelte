@@ -1989,13 +1989,12 @@ on:keydown={() => {
 				<h1 class="text-lg">{strings.appwidealert}</h1>
 				<p class="text-sm">{strings.appwidesubtext}</p>
 			</Alertpopup>
-			{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
+			<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
 			<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">
 				<h1 class="text-lg">{strings.alertheaderla}</h1>
 				<p class="text-sm">{strings.alertsubtextla}</p>
-				<!-- TODO: button triggering art mode -->
 			</Alertpopup>
-			{/if}
+			{/if} -->
 			{#if realtime_list.includes('f-mts~rt~onebusaway')}
 			<Alertpopup imageURL="https://ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" background="linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(https://ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80), black">
 				<h1 class="text-lg">{strings.alertheadersd}</h1>
