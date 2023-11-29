@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
-	import { addGeoRadius, setUserCircles } from '../components/georadius';
+	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
