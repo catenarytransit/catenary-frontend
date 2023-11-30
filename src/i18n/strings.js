@@ -9,6 +9,8 @@ const i18n = {
         alertheaderla: 'Explore Public Art on Catenary',
         alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
         learnmore: 'Learn more',
+        // art
+        art: 'Public Art',
         // settings
         useUSunits: 'Use US units',
         showtripless: 'Show tripless vehicles',
@@ -50,6 +52,8 @@ const i18n = {
         alertheaderla: 'Explorez l\'art public d\'artistes locaux sur Catenary',
         alertsubtextla: 'Activez la couche Art public pour voir les œuvres d\'art commandées par Metro situées dans les stations du comté de Los Angeles.',
         learnmore: 'En savoir plus',
+        // art
+        art: 'Art public',
         // settings
         useUSunits: 'Utiliser des unités américaines',
         showtripless: 'Afficher les véhicules sans voyage',
@@ -91,6 +95,8 @@ const i18n = {
         alertheaderla: 'Explore el arte público de artistas locales en Catenary',
         alertsubtextla: 'Habilite la capa de Arte público para ver el arte encargado por Metro ubicado en las estaciones del condado de Los Ángeles.',
         learnmore: 'Aprende mas',
+        // art
+        art: 'Arte público',
         // settings
         useUSunits: 'Use unidades de EE.UU.',
         showtripless: 'Mostrar vehículos sin viajes',
@@ -132,6 +138,8 @@ const i18n = {
         alertheaderla: 'Catenary에서 지역 예술가의 공공 예술 탐색',
         alertsubtextla: '공공 예술 레이어를 활성화하여 LA 카운티의 역에 위치한 메트로 의뢰 예술을 볼 수 있습니다.',
         learnmore: '더 알아보기',
+        // art
+        art: '공공 예술',
         // settings
         useUSunits: '미국 단위 사용',
         showtripless: '여행없는 차량 표시',
