@@ -1606,7 +1606,7 @@
 				source: 'userpositionacc',
 				paint: {
 					'fill-color': '#38bdf8',
-					'fill-opacity': 0.2
+					'fill-opacity': ['get', 'opacity']
 				}
 			});
 
@@ -1740,11 +1740,25 @@
 						if (accuracyLayer) {
 							let numberofpoints: number = 64;
 
-							let geojsondata = createGeoJSONCircle(
+							let geojsondata:any = createGeoJSONCircle(
 								[location.coords.longitude, location.coords.latitude],
 								location.coords.accuracy / 1000,
 								numberofpoints
 							);
+
+							geojsondata.features[0].properties.opacity = 0.2;
+
+							if (location.coords.accuracy >= 1000) {
+								geojsondata.features[0].properties.opacity = 0.1;
+							}
+
+							if (location.coords.accuracy >= 2000) {
+								geojsondata.features[0].properties.opacity = 0.05;
+							}
+
+							if (location.coords.accuracy >= 5000) {
+								geojsondata.features[0].properties.opacity = 0.02;
+							}
 
 							accuracyLayer.setData(
 								geojsondata,
