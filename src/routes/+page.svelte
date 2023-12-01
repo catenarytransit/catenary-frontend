@@ -724,6 +724,14 @@
 							tripIdLabel = temp1[temp1.length - 1];
 						}
 
+						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
+							if (vehicle?.trip?.tripId) {
+								tripIdLabel = vehicle?.trip?.tripId.slice(2).toUpperCase();
+							}
+								
+							
+						}
+
 						if (mergetable[routeId]) {
 							if (mergetable[routeId].short_name) {
 								maptag = mergetable[routeId].short_name;
