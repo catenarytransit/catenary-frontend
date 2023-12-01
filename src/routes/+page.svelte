@@ -665,6 +665,12 @@
 							}
 						}
 
+						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
+							if (mergetable[routeId]) {
+								maptag = mergetable[routeId].long_name;
+							}
+						}
+
 						let railletters: any = {};
 						if (
 							realtime_id === 'f-metro~losangeles~rail~rt' ||
