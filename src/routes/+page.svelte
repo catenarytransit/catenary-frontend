@@ -667,7 +667,7 @@
 
 						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
 							if (mergetable[routeId]) {
-								maptag = mergetable[routeId].long_name.replace("◌"," ");
+								maptag = mergetable[routeId].long_name.replace("　→　","→");
 							}
 						}
 
