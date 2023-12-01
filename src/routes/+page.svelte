@@ -242,7 +242,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: true
+				speed: false
 			}
 		},
 		localrail: {
@@ -257,7 +257,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: true
+				speed: false
 			}
 		},
 		intercityrail: {
