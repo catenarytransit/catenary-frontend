@@ -45,7 +45,8 @@ export 	function  createGeoJSONCircle(center:number[], radiusInKm:number, points
                 "geometry": {
                     "type": "Polygon",
                     "coordinates": [ret]
-                }
+                },
+                "properties": {}
             }]
         
     };
