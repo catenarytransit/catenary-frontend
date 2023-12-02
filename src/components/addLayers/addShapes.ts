@@ -97,7 +97,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
             'text-halo-blur': 0,
             'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
         },
-        minzoom: 7
+        minzoom: 8
     });
 
     //OTHER RAIL
