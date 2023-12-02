@@ -38,7 +38,7 @@ const i18n = {
         ormelectrification: 'Electrification',
         ormgauge: 'Gauge',
         // announcements
-        announcements: 'Play Announcements',
+        announcements: 'Play Random Announcements (Troll)',
         coordsview: "View",
         coordscopied: "Coords copied to clipboard"
     },
