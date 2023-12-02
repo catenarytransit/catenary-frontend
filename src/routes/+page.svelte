@@ -38,7 +38,6 @@
 	import Alertpopup from '../components/alertpopup.svelte';
 	import { addShapes } from '../components/addLayers/addShapes';
 	import Artwork from '../components/artwork.svelte';
-
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-base';
 	let disabledlayerstyle =
@@ -66,6 +65,9 @@
 	let geometryObj: any = {};
 	let lasttimeofnorth = 0;
 
+	const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+	let debugmode = !!(urlParams.get('debug'));
+
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
 	let avaliablerealtimealerts = new Set();
@@ -82,6 +84,10 @@
 	let static_feeds_in_frame: any = {};
 	let operators_in_frame: any = {};
 	let realtime_feeds_in_frame: any = {};
+
+	let lastrunmapcalc = 0;
+	let mapboundingbox:number[][] = [[0,0],[0,0],[0,0],[0,0]];
+	let mapboundingboxstring: String = "";
 
 	const layerspercategory = {
 		
@@ -208,7 +214,7 @@
 
 	const lockonconst = 14.5;
 
-	let mapglobal: any;
+	let mapglobal: mapboxgl.Map ;
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
@@ -358,7 +364,7 @@
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
 
-		 console.log('processing', realtime_id)
+		// console.log('processing', realtime_id)
 
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
@@ -367,7 +373,7 @@
 		// console.log('139',this_realtime_feed)
 
 		if (this_realtime_feed) {
-			 console.log('this_realtime_feed',this_realtime_feed)
+			// console.log('this_realtime_feed',this_realtime_feed)
 
 			let operators_for_this_realtime = this_realtime_feed.operators;
 
@@ -832,6 +838,23 @@
 		}
 	}
 
+	function getBoundingBoxMap():number[][] {
+		const canvas = mapglobal.getCanvas(),
+  		w:number = canvas.width,
+  	h:number = canvas.height;
+
+  	const cUL = mapglobal.unproject([0,0]).toArray(),
+  	cUR = mapglobal.unproject([w,0]).toArray(),
+  	cLR = mapglobal.unproject([w,h]).toArray(),
+  	cLL = mapglobal.unproject([0,h]).toArray();
+
+  	var coordinates = [cUL,cUR,cLR,cLL,cUL];
+
+	console.log(coordinates);
+
+	return coordinates;
+	}
+
 	function runSettingsAdapt() {
 		 console.log('run settings adapt', layersettings);
 		if (mapglobal) {
@@ -1154,8 +1177,6 @@
 			screen.orientation.unlock();
 			
 			clearbottomright();
-
-			const urlParams = new URLSearchParams(window.location.search);
 			// Add new sources and layers
 			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 
@@ -1164,7 +1185,7 @@
 			 }
 
 			addGeoRadius(map);
-			if (urlParams.get('debug')) {
+			if (debugmode) {
 				const graticule: any = {
 					type: 'FeatureCollection',
 					features: []
@@ -1677,8 +1698,27 @@
 
 		});
 
+		function runBoxCalc() {
+			
+				
+				mapboundingbox = getBoundingBoxMap();
+	
+				console.log('mapboundingbox',mapboundingbox)
+	
+					if (debugmode) {
+						mapboundingboxstring = mapboundingbox.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`).join("/")
+					}
+	
+					
+				}
+		
+
 		map.on('move', () => {
 			updateData();
+			if (performance.now() - lastrunmapcalc > 200) {
+			runBoxCalc();
+			lastrunmapcalc = performance.now();
+			}
 		});
 
 		map.on('mousemove', () => {
@@ -1694,6 +1734,8 @@
 		});
 
 		map.on('idle', () => {
+			runBoxCalc();
+
 			if (lasttimezoomran < Date.now() - 5000) {
 				lasttimezoomran = Date.now();
 
@@ -1964,12 +2006,12 @@
 {#key showclipboardalert}
 <div
 out:fade={{duration: 400}}
-class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${showclipboardalert === true ? "" : "hidden"}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80`}>
+class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${showclipboardalert === true ? "" : "hidden"}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80 dark:bg-opacity-80`}>
 	{strings.coordscopied}
 </div>
 {/key}
 
-<div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
+<div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
 on:click={() => {
 	saveCoordsToClipboard()
 }}
@@ -1978,6 +2020,10 @@ on:keydown={() => {
 }}
 >
 	<p>
+		{#if debugmode == true}
+			{mapboundingboxstring}
+			<br/>
+		{/if}
 		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
 		<span><br class='block md:hidden'/></span>
 	{#if typeof geolocation === 'object'}
