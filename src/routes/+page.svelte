@@ -1756,8 +1756,6 @@
 					if (debugmode) {
 						mapboundingboxstring = mapboundingbox.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`).join("/")
 					}
-	
-					
 				}
 		
 
@@ -1836,7 +1834,7 @@
 						let accuracyLayer = map.getSource('userpositionacc');
 
 						if (accuracyLayer) {
-							let numberofpoints: number = 64;
+							let numberofpoints: number = 128;
 
 							let geojsondata:any = createGeoJSONCircle(
 								[location.coords.longitude, location.coords.latitude],
