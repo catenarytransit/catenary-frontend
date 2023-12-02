@@ -2070,15 +2070,15 @@ on:keydown={() => {
 	<p>
 		{#if debugmode == true}
 			{mapboundingboxstring}
-			<span class='block md:hidden'><br/></span>
+			<span class='inline md:hidden'><br/></span>
 		{/if}
 
 		{#if fpsmode == true}
-			<span class='text-yellow-800 dark:text-yellow-200'>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span>
-			<span class='block md:hidden'><br/></span>
+			<span class='inline text-yellow-800 dark:text-yellow-200'>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span>
+			<span class='inline md:hidden'><br/></span>
 		{/if}
 		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
-		<span><br class='block md:hidden'/></span>
+		<span><br class='inline md:hidden'/></span>
 	{#if typeof geolocation === 'object'}
 		<span class='text-blue-700 dark:text-green-300'>GPS: {geolocation.coords.latitude.toFixed(5)}, 
 		{geolocation.coords.longitude.toFixed(5)}
