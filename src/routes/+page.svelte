@@ -1148,7 +1148,11 @@
 
 			fps_array = fps_array.filter((x) => x > performance.now() - 1000);
 
-			fps = fps_array.length;
+			if (fps_array.length > 2) {
+				fps = fps_array.length / ((fps_array[fps_array.length - 1] - fps_array[0]) / 1000);
+			} else {
+				fps = 0;
+			}
 		})
 
 		map.on('zoomend', (events) => {
@@ -2070,7 +2074,7 @@ on:keydown={() => {
 		{/if}
 
 		{#if fpsmode == true}
-			<span class='text-yellow-800 dark:text-yellow-200'>FPS: {fps} | render time: {frame_render_duration.toFixed(2)} ms</span>
+			<span class='text-yellow-800 dark:text-yellow-200'>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span>
 			<span class='block md:hidden'><br/></span>
 		{/if}
 		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
