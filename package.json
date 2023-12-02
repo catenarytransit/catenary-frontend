@@ -39,11 +39,13 @@
   },
   "type": "module",
   "dependencies": {
+    "@mapbox/mapbox-gl-framerate": "github:mapbox/mapbox-gl-framerate",
     "@zerodevx/svelte-toast": "^0.9.5",
     "base65536": "^4.0.3",
     "geolocation": "^0.2.0",
     "gtfs-realtime-bindings": "^1.1.1",
     "mapbox-gl": "^3.0.0",
+    "mapbox-gl-fps": "github:MazeMap/mapbox-gl-fps",
     "maplibre-gl": "^3.6.2",
     "moment": "^2.29.4",
     "protobufjs": "^7.2.4",

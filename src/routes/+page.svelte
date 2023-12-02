@@ -68,6 +68,8 @@
 	const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
 	let debugmode = !!(urlParams.get('debug'));
 
+	let fpsmode = !!(urlParams.get('fps'));
+
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
 	let avaliablerealtimealerts = new Set();
@@ -88,6 +90,12 @@
 	let lastrunmapcalc = 0;
 	let mapboundingbox:number[][] = [[0,0],[0,0],[0,0],[0,0]];
 	let mapboundingboxstring: String = "";
+
+	//frame render duration in ms
+	let last_render_start:number = 0;
+	let frame_render_duration = 0;
+	let fps = 0;
+	let fps_array:number[] = [];
 
 	const layerspercategory = {
 		
@@ -1129,6 +1137,20 @@
 			lasttimeofnorth = 0;
 		});
 
+		map.on('renderstart', (event) => {
+			last_render_start = performance.now();
+		});
+
+		map.on('render', (event) => {
+			frame_render_duration = performance.now() - last_render_start;
+
+			fps_array.push(performance.now());
+
+			fps_array = fps_array.filter((x) => x > performance.now() - 1000);
+
+			fps = fps_array.length;
+		})
+
 		map.on('zoomend', (events) => {
 			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
 
@@ -2044,6 +2066,11 @@ on:keydown={() => {
 	<p>
 		{#if debugmode == true}
 			{mapboundingboxstring}
+			<br/>
+		{/if}
+
+		{#if fpsmode == true}
+			FPS: {fps} | render time: {frame_render_duration.toFixed(2)} ms
 			<br/>
 		{/if}
 		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
