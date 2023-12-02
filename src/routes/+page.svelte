@@ -1763,7 +1763,7 @@
 
 		map.on('move', () => {
 			updateData();
-			if (performance.now() - lastrunmapcalc > 200) {
+			if (performance.now() - lastrunmapcalc > 50) {
 			runBoxCalc();
 			lastrunmapcalc = performance.now();
 			}
