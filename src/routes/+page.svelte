@@ -505,7 +505,7 @@
 						//this system sucks, honestly. Transition to batch trips info eventually
 						if (fetchTrip === true) {
 							//submit a tripsId requests
-							console.log('submit trip',realtime_id)
+							//console.log('submit trip',realtime_id)
 
 							if (realtime_id == "f-横浜市-municipal-subway-rt") {
 								static_feed_ids = ["f-横浜市-municipal-subway"];
