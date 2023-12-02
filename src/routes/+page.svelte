@@ -2047,12 +2047,12 @@ on:keydown={() => {
 	<p>
 		{#if debugmode == true}
 			{mapboundingboxstring}
-			<br/>
+			<span class='block md:hidden'><br/></span>
 		{/if}
 
 		{#if fpsmode == true}
 			FPS: {fps} | render time: {frame_render_duration.toFixed(2)} ms
-			<br/>
+			<span class='block md:hidden'><br/></span>
 		{/if}
 		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
 		<span><br class='block md:hidden'/></span>
