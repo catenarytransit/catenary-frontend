@@ -839,6 +839,8 @@
 	}
 
 	function getBoundingBoxMap():number[][] {
+		let start = performance.now();
+
 		const canvas = mapglobal.getCanvas(),
   		w:number = canvas.width,
   	h:number = canvas.height;
@@ -850,7 +852,9 @@
 
   	var coordinates = [cUL,cUR,cLR,cLL,cUL];
 
-	console.log(coordinates);
+	console.log('getBoundingBoxMap', performance.now() - start);
+
+	//console.log(coordinates);
 
 	return coordinates;
 	}
@@ -1703,7 +1707,7 @@
 				
 				mapboundingbox = getBoundingBoxMap();
 	
-				console.log('mapboundingbox',mapboundingbox)
+				//console.log('mapboundingbox',mapboundingbox)
 	
 					if (debugmode) {
 						mapboundingboxstring = mapboundingbox.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`).join("/")
