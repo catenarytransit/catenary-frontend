@@ -9,7 +9,7 @@ on:keydown={onclose}
 on:click={onclose}
 class={parentclass}
 >
-    <span class={"material-symbols-outlined margin-auto select-none " + moreclasses}
+    <span class={"material-symbols-outlined select-none " + moreclasses}
    
 > close </span>
 </div>
