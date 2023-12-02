@@ -248,7 +248,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: true
+				speed: false
 			}
 		},
 		localrail: {
@@ -263,7 +263,7 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: true
+				speed: false
 			}
 		},
 		intercityrail: {
@@ -690,6 +690,12 @@
 							}
 						}
 
+						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
+							if (mergetable[routeId]) {
+								maptag = mergetable[routeId].long_name.replace("　→　","→");
+							}
+						}
+
 						let railletters: any = {};
 						if (
 							realtime_id === 'f-metro~losangeles~rail~rt' ||
@@ -741,6 +747,14 @@
 							console.log('lirr temp', temp1);
 
 							tripIdLabel = temp1[temp1.length - 1];
+						}
+
+						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
+							if (vehicle?.trip?.tripId) {
+								tripIdLabel = vehicle?.trip?.tripId.slice(2).toUpperCase();
+							}
+								
+							
 						}
 
 						if (mergetable[routeId]) {
