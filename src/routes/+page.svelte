@@ -894,9 +894,8 @@
 				let shape = mapglobal.getLayer(categoryvalues.shapes);
 
 				let this_layer_settings = layersettings[category];
-
 				
-				console.log('processing settings',eachcategory, this_layer_settings)
+				//console.log('processing settings',eachcategory, this_layer_settings)
 
 				if (shape) {
 					if (this_layer_settings.shapes) {
@@ -1620,7 +1619,7 @@
 
 					Object.keys(vehiclesData).forEach((vehiclesDataCheckCleanUp) => {
 						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
-							console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
+							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
 							delete vehiclesData[vehiclesDataCheckCleanUp];
 						}
 					});
