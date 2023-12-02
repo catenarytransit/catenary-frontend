@@ -39,9 +39,9 @@
 	import { addShapes } from '../components/addLayers/addShapes';
 	import Artwork from '../components/artwork.svelte';
 	let enabledlayerstyle =
-		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-base';
+		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
 	let disabledlayerstyle =
-		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-base';
+		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
 
 	let darkMode = true;
 
@@ -2323,6 +2323,11 @@ on:keydown={() => {
 		? ''
 		: 'hidden'}"
 >
+<div class='flex flex-row align-middle'><h2 class='font-bold text-gray-800 dark:text-gray-200'>Layers</h2> <div class='ml-auto'><CloseButton
+	onclose={() => {layersettingsBox = false}}
+	moreclasses=""
+	parentclass=''
+	/></div></div>
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		
 		<Layerselectionbox text={strings.headingIntercityRail}
@@ -2375,10 +2380,7 @@ on:keydown={() => {
 		>
 			<p class="w-full align-center text-center">{strings.headingMisc}</p>
 		</div>
-		<CloseButton
-	onclose={() => {layersettingsBox = false}}
-	moreclasses=""
-	/>
+		
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
