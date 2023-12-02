@@ -2070,7 +2070,7 @@ on:keydown={() => {
 		{/if}
 
 		{#if fpsmode == true}
-			FPS: {fps} | render time: {frame_render_duration.toFixed(2)} ms
+			<span class='text-yellow-800 dark:text-yellow-200'>FPS: {fps} | render time: {frame_render_duration.toFixed(2)} ms</span>
 			<span class='block md:hidden'><br/></span>
 		{/if}
 		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
