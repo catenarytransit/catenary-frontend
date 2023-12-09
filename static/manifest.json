@@ -41,6 +41,6 @@
     ],
     "start_url": "/?utm_source=pwa",
     "background_color": "#0A233F",
-    "theme_color": "#0A233F",
+    "theme_color": "#0000FF",
     "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
 }
