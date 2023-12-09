@@ -15,7 +15,7 @@
         {
             "src": "logo.png",
             "type": "image/png",
-            "sizes": "1667x1667",
+            "sizes": "1024x1024",
             "purpose": "any"
         }
     ],
@@ -27,9 +27,16 @@
     ],
     "screenshots": [
         {
-            "src": "screenshot.png",
-            "sizes": "2146x1200",
-            "type": "image/png"
+            "src": "wide-screenshot.png",
+            "sizes": "2077x1497",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "phone-screenshot.png",
+            "sizes": "480x1043",
+            "type": "image/png",
+            "form_factor": "narrow"
         }
     ],
     "start_url": "/?utm_source=pwa",
