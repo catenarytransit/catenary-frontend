@@ -538,6 +538,10 @@
 								routeType = 1;
 							}
 
+							if (realtime_id == "f-metrolinktrains~rt") {
+								routeType = 2;
+							}
+
 							if (realtime_id == "f-横浜市-municipal-bus-rt") {
 								static_feed_ids = ["f-横浜市-municipal-bus"]
 							}
