@@ -60,9 +60,9 @@
 	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
-	let vehiclesData: any = {};
+	let vehiclesData: Record<string, any> = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
-	let geometryObj: any = {};
+	let geometryObj : Record<string, any> = {};
 	let lasttimeofnorth = 0;
 
 	const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
@@ -83,9 +83,9 @@
 
 	let realtime_feeds: any[] = [];
 
-	let static_feeds_in_frame: any = {};
-	let operators_in_frame: any = {};
-	let realtime_feeds_in_frame: any = {};
+	let static_feeds_in_frame: Record<string, any> = {};
+	let operators_in_frame: Record<string, any> = {};
+	let realtime_feeds_in_frame: Record<string, any> = {};
 
 	let lastrunmapcalc = 0;
 	let mapboundingbox:number[][] = [[0,0],[0,0],[0,0],[0,0]];
