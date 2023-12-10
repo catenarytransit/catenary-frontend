@@ -484,7 +484,7 @@
 							}
 
 							if (realtime_id === 'f-metro~losangeles~bus~rt') {
-								let trimmedRouteId = routeId.replace('-13168', '');
+								let trimmedRouteId = routeId.replace('-13172', '');
 							}
 						} else {
 							//console.log('no route id', entity)
