@@ -668,7 +668,7 @@
 						let maptag = routeId;
 
 						if (realtime_id === 'f-metro~losangeles~bus~rt') {
-							maptag = maptag.replace('-13168', '').replace('901', 'G');
+							maptag = maptag.replace('-13172', '').replace('901', 'G');
 						}
 
 						if (realtime_id === 'f-ucla~bruinbus~rt') {
