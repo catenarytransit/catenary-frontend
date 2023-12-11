@@ -372,7 +372,7 @@
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
 
-		// console.log('processing', realtime_id)
+		console.log('processing', realtime_id)
 
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
@@ -775,10 +775,6 @@
 
 						if (realtime_id === 'f-mta~nyc~rt~bustime') {
 							vehiclelabel = vehiclelabel.replace(/mta( )?/i, '');
-						}
-
-						if (vehiclelabel == "Pacific Surfliner") {
-							vehiclelabel = "Surfliner"
 						}
 
 						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
