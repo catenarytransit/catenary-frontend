@@ -371,10 +371,10 @@
 
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
-
-		console.log('processing', realtime_id)
-
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
+
+
+		console.log('processing', realtime_id, this_realtime_feed)
 
 		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
