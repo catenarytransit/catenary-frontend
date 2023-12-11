@@ -374,7 +374,7 @@
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
 
-		console.log('processing', realtime_id, this_realtime_feed)
+		//console.log('processing', realtime_id, this_realtime_feed)
 
 		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
@@ -438,10 +438,6 @@
 
 				//console.log('mergetable', mergetable)
 
-				if (realtime_id == "f-metrolinktrains~rt") {
-							console.log(realtime_id, "vehiclesData", vehiclesData[realtime_id]);
-						}
-
 				let features = vehiclesData[realtime_id].entity
 					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
@@ -452,10 +448,6 @@
 					//no vehicles older than 10 min
 					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
-
-						if (realtime_id == "f-metrolinktrains~rt") {
-							console.log(realtime_id,entity);
-						}
 
 						const { id, vehicle } = entity;
 						//default to bus type
@@ -587,7 +579,8 @@
 											}
 										}
 									} else {
-										if (vehicle.trip.tripId && static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
+										//console.log('okay fetch then!')
+										if (vehicle.trip.tripId || static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
 											fetch(
 												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
 													vehicle.trip.tripId
@@ -746,9 +739,6 @@
 
 						if (realtime_id === 'f-mta~nyc~rt~lirr') {
 							let temp1 = tripIdLabel.split('_');
-
-							console.log('lirr temp', temp1);
-
 							tripIdLabel = temp1[temp1.length - 1];
 						}
 
@@ -2255,11 +2245,11 @@ on:keydown={() => {
 				fpsmode = !fpsmode;
 			}}
 			checked={usunits}
-			id="us-units"
+			id="FPS"
 			type="checkbox"
 			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 		/>
-		<label for="us-units" class="ml-2">Show FPS</label>
+		<label for="FPS" class="ml-2">Show FPS</label>
 	</div>
 	
 	<div>
