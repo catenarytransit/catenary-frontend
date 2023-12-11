@@ -503,6 +503,11 @@
 							colour = '#18567d';
 						}
 
+						
+						if (realtime_id == "f-metrolinktrains~rt") {
+								routeType = 2;
+							}
+
 						if (routeType === 2) {
 							//get trip id for intercity rail
 							fetchTrip = true;
@@ -518,10 +523,6 @@
 							if (realtime_id == "f-横浜市-municipal-subway-rt") {
 								static_feed_ids = ["f-横浜市-municipal-subway"];
 								routeType = 1;
-							}
-
-							if (realtime_id == "f-metrolinktrains~rt") {
-								routeType = 2;
 							}
 
 							if (realtime_id == "f-横浜市-municipal-bus-rt") {
@@ -814,6 +815,8 @@
 				geometryObj[realtime_id] = features;
 
 				let flattenedarray = flatten(Object.values(geometryObj));
+
+				console.log(flattenedarray);
 
 				if (typeof getbussource != 'undefined') {
 					getbussource.setData({
