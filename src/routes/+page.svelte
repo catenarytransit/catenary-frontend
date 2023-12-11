@@ -385,9 +385,9 @@
 
 			let operators_for_this_realtime = this_realtime_feed.operators;
 
-			let operators_to_render = operators_for_this_realtime
+			let operators_to_render = [...new Set(operators_for_this_realtime
 				.map((x: any) => operators_in_frame[x])
-				.filter((x: any) => x != undefined);
+				.filter((x: any) => x != undefined))];
 
 			//console.log('operators for rerender', operators_to_render);
 			let big_table: any = {};
