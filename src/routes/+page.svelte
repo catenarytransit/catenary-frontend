@@ -438,6 +438,10 @@
 
 				//console.log('mergetable', mergetable)
 
+				if (realtime_id == "f-metrolinktrains~rt") {
+							console.log(realtime_id, "vehiclesData", vehiclesData[realtime_id]);
+						}
+
 				let features = vehiclesData[realtime_id].entity
 					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
