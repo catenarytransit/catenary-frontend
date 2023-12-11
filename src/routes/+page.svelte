@@ -374,7 +374,7 @@
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
 
-		console.log('processing', realtime_id, this_realtime_feed)
+		//console.log('processing', realtime_id, this_realtime_feed)
 
 		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
@@ -455,10 +455,6 @@
 
 				//console.log('mergetable', mergetable)
 
-				if (realtime_id == "f-metrolinktrains~rt") {
-							console.log(realtime_id, "vehiclesData", vehiclesData[realtime_id]);
-						}
-
 				let features = vehiclesData[realtime_id].entity
 					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
@@ -469,10 +465,6 @@
 					//no vehicles older than 10 min
 					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
-
-						if (realtime_id == "f-metrolinktrains~rt") {
-							console.log(realtime_id,entity);
-						}
 
 						const { id, vehicle } = entity;
 						//default to bus type
@@ -605,7 +597,7 @@
 											}
 										}
 									} else {
-										console.log('okay fetch then!')
+										//console.log('okay fetch then!')
 										if (vehicle.trip.tripId || static_feed_id_to_use != "f-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle") {
 											fetch(
 												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
@@ -765,9 +757,6 @@
 
 						if (realtime_id === 'f-mta~nyc~rt~lirr') {
 							let temp1 = tripIdLabel.split('_');
-
-							console.log('lirr temp', temp1);
-
 							tripIdLabel = temp1[temp1.length - 1];
 						}
 
