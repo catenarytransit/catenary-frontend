@@ -833,9 +833,9 @@
 
 				geometryObj[realtime_id] = features;
 
-				let flattenedarray = flatten(Object.values(geometryObj));
+				console.log(geometryObj);
 
-				console.log(flattenedarray);
+				let flattenedarray = flatten(Object.values(geometryObj));
 
 				if (typeof getbussource != 'undefined') {
 					getbussource.setData({
