@@ -465,6 +465,11 @@
 					//no vehicles older than 10 min
 					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
+
+						if (realtime_id == "f-metrolinktrains~rt") {
+							console.log(realtime_id,entity);
+						}
+
 						const { id, vehicle } = entity;
 						//default to bus type
 						let routeType = 3;
