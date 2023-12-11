@@ -835,6 +835,8 @@
 
 				let flattenedarray = flatten(Object.values(geometryObj));
 
+				console.log(flattenedarray);
+
 				if (typeof getbussource != 'undefined') {
 					getbussource.setData({
 						type: 'FeatureCollection',
