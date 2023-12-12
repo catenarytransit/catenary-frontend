@@ -20,7 +20,7 @@
     "@sveltejs/kit": "^1.29.1",
     "@types/mapbox-gl": "^2.7.19",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
+    "@typescript-eslint/parser": "^6.14.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
