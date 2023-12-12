@@ -346,7 +346,7 @@
 			}
 
 			if (geolocation.coords.speed) {
-				textClipboard += ` Speed: ${geolocation.coords.speed.toFixed(2)}`
+				textClipboard += ` Speed: ${geolocation.coords.speed.toFixed(2)} m/s  Speed: ${(3.6 * geolocation.coords.speed).toFixed(2)} km/h`
 			}
 
 			if (geolocation.coords.altitude) {
