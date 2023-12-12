@@ -710,6 +710,8 @@
 							}
 						}
 
+						
+
 						let railletters: any = {};
 						if (
 							realtime_id === 'f-metro~losangeles~rail~rt' ||
@@ -766,6 +768,10 @@
 							}
 								
 							
+						}
+
+						if (realtime_id === 'f-amtrak~rt') {
+							maptag = mergetable[routeId].long_name;
 						}
 
 						if (mergetable[routeId]) {
