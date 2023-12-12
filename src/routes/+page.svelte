@@ -770,10 +770,6 @@
 							
 						}
 
-						if (realtime_id === 'f-amtrak~rt') {
-							maptag = mergetable[routeId].long_name;
-						}
-
 						if (mergetable[routeId]) {
 							if (mergetable[routeId].short_name) {
 								maptag = mergetable[routeId].short_name;
@@ -787,7 +783,14 @@
 							if (realtime_id === 'f-mta~nyc~rt~mnr' || realtime_id === 'f-mta~nyc~rt~lirr') {
 								maptag = mergetable[routeId].long_name.replace(/branch/gi, '').trim();
 							}
+
+							
+						
+							if (realtime_id === 'f-amtrak~rt') {
+								maptag = mergetable[routeId].long_name;
+							}
 						}
+
 
 						maptag = maptag.replace(/( )?Line/, '');
 
