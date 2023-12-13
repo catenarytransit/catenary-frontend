@@ -1226,7 +1226,7 @@
 
 		function process_request_for_rerender() {
 			if (rerenders_requested.length > 0) {
-					rerenders_requested.forEach((x) => {
+					[...new Set(rerenders_requested)].forEach((x) => {
 						rerenders_request(x);
 					});
 					rerenders_requested = [];
