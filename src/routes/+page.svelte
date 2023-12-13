@@ -1204,8 +1204,10 @@
 				}
 
 				//console.log('requested rerender of ', rerenders_requested)
+		}
 
-				if (rerenders_requested.length > 0) {
+		function process_request_for_rerender() {
+			if (rerenders_requested.length > 0) {
 					rerenders_requested.forEach((x) => {
 						rerenders_request(x);
 					});
@@ -1781,6 +1783,8 @@
 				
 				runSettingsAdapt();
 			}
+
+			process_request_for_rerender()
 		});
 
 		const successCallback = (position: any) => {
