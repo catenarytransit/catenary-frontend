@@ -4,8 +4,8 @@ const i18n = {
         // special
         appwidealert: 'Happy Holidays from the Catenary team!',
         appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around. Check your agency\'s schedules for holiday service.',
-        alertheadersd: 'Every ride, every time.',
-        alertsubtextsd: 'You must tap or scan when boarding the bus, or before boarding the Trolley.',
+        alertheadersd: 'What future programs do you think would improve public transit the most?',
+        alertsubtextsd: 'Take SANDAG’s survey by 1/2/24 and you can enter a sweepstakes to win a $50 Amazon gift card.',
         alertheaderla: 'Explore Public Art on Catenary',
         alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
         learnmore: 'Learn more',
@@ -47,8 +47,8 @@ const i18n = {
         // special
         appwidealert: 'Joyeuses fêtes de la part de l\'équipe Catenary!',
         appwidesubtext: 'Peu importe vos plans de vacances, nous sommes toujours là pour vous aider à vous déplacer.',
-        alertheadersd: 'À chaque voyage, à chaque fois.',
-        alertsubtextsd: 'Vous devez toucher ou scanner le valideur lors de l\'embarquement dans le bus, ou avant d\'embarquer dans le Trolley.',
+        alertheadersd: 'Quels programmes futurs pensez-vous qui amélioreraient le plus les transports en commun?',
+        alertsubtextsd: 'Répondez au sondage de SANDAG d\'ici le 2/1/24 et vous pourrez participer à un tirage au sort pour gagner une carte-cadeau Amazon de 50 $.',
         alertheaderla: 'Explorez l\'art public d\'artistes locaux sur Catenary',
         alertsubtextla: 'Activez la couche Art public pour voir les œuvres d\'art commandées par Metro situées dans les stations du comté de Los Angeles.',
         learnmore: 'En savoir plus',
@@ -90,8 +90,8 @@ const i18n = {
         // special
         appwidealert: '¡Felices fiestas del equipo de Catenary!',
         appwidesubtext: 'No importa cuáles sean sus planes navideños, todavía estamos aquí para ayudarlo a moverse.',
-        alertheadersd: 'Cada viaje, cada vez.',
-        alertsubtextsd: 'Debe tocar o escanear el validador al abordar el autobús, o antes de abordar el Trolley.',
+        alertheadersd: '¿Qué programas futuros cree que mejorarían más el transporte público?',
+        alertsubtextsd: 'Responda la encuesta de SANDAG antes del 2 de enero del 2024 y entrará en un sorteo para ganar una tarjeta de regalo de Amazon de $50.',
         alertheaderla: 'Explore el arte público de artistas locales en Catenary',
         alertsubtextla: 'Habilite la capa de Arte público para ver el arte encargado por Metro ubicado en las estaciones del condado de Los Ángeles.',
         learnmore: 'Aprende mas',
@@ -133,8 +133,8 @@ const i18n = {
         // special
         appwidealert: 'Catenary 팀의 행복한 휴일!',
         appwidesubtext: '휴일 계획이 무엇이든 상관없이 여전히 도움을 드릴 수 있습니다.',
-        alertheadersd: '모든 여행, 매번.',
-        alertsubtextsd: '버스를 탑승하거나 트롤리를 탑승하기 전에 유효성 검사기를 탭하거나 스캔해야 합니다.',
+        alertheadersd: '대중 교통을 가장 개선할 것으로 생각되는 미래 프로그램은 무엇입니까?',
+        alertsubtextsd: 'SANDAG의 설문 조사에 1/2/24까지 참여하면 50 달러의 아마존 상품권을 받을 수있는 추첨에 참여 할 수 있습니다.',
         alertheaderla: 'Catenary에서 지역 예술가의 공공 예술 탐색',
         alertsubtextla: '공공 예술 레이어를 활성화하여 LA 카운티의 역에 위치한 메트로 의뢰 예술을 볼 수 있습니다.',
         learnmore: '더 알아보기',

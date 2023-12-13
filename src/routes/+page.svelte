@@ -56,7 +56,7 @@
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
-	let sidebarCollapsed = true;
+	let sidebarCollapsed = false;
 	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
@@ -2135,9 +2135,10 @@ on:keydown={() => {
 			</Alertpopup>
 			{/if} -->
 			{#if realtime_list.includes('f-mts~rt~onebusaway')}
-			<Alertpopup imageURL="https://ridepronto.com/media/k5gp4agw/tap-or-scan-home-v2-icon.png?format=webp&quality=80&height=100" background="linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url(https://ridepronto.com/media/yyoa3ggh/repeating-bg-pronto.jpg?format=webp&quality=80), black">
+			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://www.sandag.org/-/media/SANDAG/Main-Heros/regional-plan/regional-plan-landing.png) center center no-repeat, black">
 				<h1 class="text-lg">{strings.alertheadersd}</h1>
 				<p class="text-sm">{strings.alertsubtextsd}</p>
+				<a style:cursor="pointer" style:color="#f9e300" href="https://sandag.org/transitfarestudy">{strings.learnmore} &rarr;</a>
 			</Alertpopup>
 			{/if}
 		{/if}
