@@ -1216,7 +1216,7 @@
 		}
 
 		map.on('load', () => {
-			screen.orientation.unlock();
+			//screen.orientation.unlock();
 			
 			clearbottomright();
 			// Add new sources and layers
