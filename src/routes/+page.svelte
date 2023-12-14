@@ -2149,6 +2149,9 @@ on:keydown={() => {
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/feature-tree-califas-1200x800-1.jpg' name='Tree of Califas' artist='Margaret Garcia' description='Adjacent to the historic site of the Campo de Cahuenga where in 1847 Mexico relinquished control of California to the United States in the Treaty of Cahuenga, Tree of Califas draws its title from the the mythological black Amazon queen Califas who was said to have ruled a tribe of women warriors and after whom the Spaniards named California.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2022/12/Phung-Huynh-Allegorical-Portal-to-the-City-Within-a-City-A.png' name='Allegorical Portal to the City Within a City' artist='Phung Huynh' description='Phung Huynh explores the origin story of Century City through her unique approach of urban folklore and community voices. The artwork will include portraits of recognizable actors from the area’s early history as a film studio back lot and renowned architects who built Century City, as well as everyday people who work and own businesses in the area.' />
 		{/if}
+		{#if sidebarView == 2}
+			<h1 class="text-3xl">Memory Game</h1>
+		{/if}
 		<!-- <input
 			type="text"
 			style:cursor="pointer !important"
