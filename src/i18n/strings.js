@@ -40,7 +40,8 @@ const i18n = {
         // announcements
         announcements: 'Play Random Announcements (Troll)',
         coordsview: "View",
-        coordscopied: "Coords copied to clipboard"
+        coordscopied: "Coords copied to clipboard",
+        showFPS: "Show FPS"
     },
     fr: {
         search: 'Rechercher',
@@ -84,6 +85,7 @@ const i18n = {
         announcements: 'Lire les annonces',
         coordsview: "Vue",
         coordscopied: "Coordonnées copiées dans le presse-papiers",
+        showFPS: "Afficher fps"
     },
     es: {
         search: 'Buscar',
@@ -126,7 +128,8 @@ const i18n = {
         // announcements
         announcements: 'Reproducir anuncios',
         coordsview: "Vista",
-        coordscopied: "Coords copiadas al portapapeles"
+        coordscopied: "Coords copiadas al portapapeles",
+        showFPS: "Mostrar fps"
     },
     ko: {
         search: '검색',
@@ -170,7 +173,8 @@ const i18n = {
         // announcements
         announcements: '알림 재생',
         coordsview: "보기",
-        coordscopied: "좌표가 클립보드에 복사되었습니다"
+        coordscopied: "좌표가 클립보드에 복사되었습니다",
+        showFPS: "FPS 보기"
     },
 }
 
