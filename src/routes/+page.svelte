@@ -198,6 +198,12 @@
 		} else {
 			foamermode = false;
 		}
+
+		if (localStorage.getItem('fpsmode') === 'true') {
+			fpsmode = true;
+		} else {
+			fpsmode = false;
+		}
 	}
 
 	if (browser) {
@@ -2257,9 +2263,11 @@ on:keydown={() => {
 		<input
 			on:click={(x) => {
 				fpsmode = !fpsmode;
+				localStorage.setItem('fpsmode', String(fpsmode));
 			}}
 			on:keydown={(x) => {
 				fpsmode = !fpsmode;
+				localStorage.setItem('fpsmode', String(fpsmode));
 			}}
 			checked={usunits}
 			id="FPS"
