@@ -698,6 +698,12 @@
 							}
 						}
 
+						if (realtime_id === 'f-avalon~ca~rt') {
+							if (mergetable[routeId]) {
+								maptag = mergetable[routeId].long_name;
+							}
+						}
+
 						
 
 						let railletters: any = {};
