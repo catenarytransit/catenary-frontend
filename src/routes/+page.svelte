@@ -206,11 +206,6 @@
 		} else {
 			fpsmode = false;
 		}
-
-		if (localStorage.getItem('showzombiebuses') === 'true') {
-			showzombiebuses = true;
-			runSettingsAdapt()
-		}
 	}
 
 	if (browser) {
@@ -1261,6 +1256,11 @@
 			 if (removelogo1) {
 			 	removelogo1[0].remove();
 			 }
+
+			 if (localStorage.getItem('showzombiebuses') === 'true') {
+			showzombiebuses = true;
+			runSettingsAdapt()
+		}
 
 			addGeoRadius(map);
 			if (debugmode) {
