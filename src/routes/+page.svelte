@@ -185,6 +185,8 @@
 		localStorage.setItem('announcermode', announcermode ? 'true' : 'false');
 	}
 
+	
+	let showzombiebuses = false;
 
 	if (browser) {
 		if (localStorage.getItem('units') === 'us') {
@@ -203,6 +205,11 @@
 			fpsmode = true;
 		} else {
 			fpsmode = false;
+		}
+
+		if (localStorage.getItem('showzombiebuses') === 'true') {
+			showzombiebuses = true;
+			runSettingsAdapt()
 		}
 	}
 
@@ -241,7 +248,6 @@
 
 	let rerenders_requested: string[] = [];
 
-	let showzombiebuses = false;
 
 	let showclipboardalert = false;
 	let lastclipboardtime:number = 0;
@@ -2458,11 +2464,15 @@ on:keydown={() => {
 		<input
 			on:click={(x) => {
 				showzombiebuses = !showzombiebuses;
+				
+				localStorage.setItem('showzombiebuses', String(showzombiebuses));
 
 				runSettingsAdapt();
 			}}
 			on:keydown={(x) => {
 				showzombiebuses = !showzombiebuses;
+
+				localStorage.setItem('showzombiebuses', String(showzombiebuses));
 
 				runSettingsAdapt();
 			}}
