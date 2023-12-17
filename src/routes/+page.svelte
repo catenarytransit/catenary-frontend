@@ -1119,7 +1119,7 @@
 		});
 
 		mapboxgl.setRTLTextPlugin(
-		'https://raw.githubusercontent.com/mapbox/mapbox-gl-rtl-text/main/mapbox-gl-rtl-text.min.js',
+		'/mapbox-gl-rtl-text.min.js',
 		(err) => {
 			console.error(err)
 		},
