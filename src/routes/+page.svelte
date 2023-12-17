@@ -1118,6 +1118,14 @@
 			fadeDuration: 0
 		});
 
+		mapboxgl.setRTLTextPlugin(
+		'https://raw.githubusercontent.com/mapbox/mapbox-gl-rtl-text/main/mapbox-gl-rtl-text.min.js',
+		(err) => {
+			console.error(err)
+		},
+		true // Lazy load the plugin
+		);
+
 		mapglobal = map;
 
 		//updates the debug window with the current map lng and lat
