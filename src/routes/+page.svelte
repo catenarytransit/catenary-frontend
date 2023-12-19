@@ -1782,6 +1782,16 @@
 				}			
 			})*/
 
+			setTimeout(() => {
+				let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
+			//	console.log('feedresults', feedresults)
+
+			static_feeds_in_frame = feedresults.static_data_obj;
+			operators_in_frame = feedresults.operators_data_obj;
+			realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
+			realtime_list = feedresults.r;
+			}, 1000);
+
 		});
 
 		function runBoxCalc() {
