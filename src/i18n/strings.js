@@ -179,13 +179,13 @@ const i18n = {
     zh_TW: {
         search: '查詢',
         // special
-        appwidealert: 'Happy Holidays from the Catenary team!',
-        appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around. Check your agency\'s schedules for holiday service.',
-        alertheadersd: 'What future programs do you think would improve public transit the most?',
-        alertsubtextsd: 'Take SANDAG’s survey by 1/2/24 and you can enter a sweepstakes to win a $50 Amazon gift card.',
-        alertheaderla: 'Explore Public Art on Catenary',
-        alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
-        learnmore: 'Learn more',
+        appwidealert: 'Catenary 的開發隊祝您節日愉快！',
+        appwidesubtext: '無論您的假日計畫，我們都還會提供您交通服務。節日班車往往不同，請參考您當地的交通資訊。',
+        alertheadersd: '您覺得什麼未來發展會對公共交通最有善？',
+        alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷設計可入取機會抽獎一個 $50 美元亞馬遜禮物卡。',
+        alertheaderla: '用 Catenary 發現公共藝術展覽',
+        alertsubtextla: '顯示「公共藝術」設定來看洛杉磯線Metro從當地藝術家定制在捷運站內的展覽。',
+        learnmore: '跟多資料',
         // art
         art: '公共藝術',
         // settings
