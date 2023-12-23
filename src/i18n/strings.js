@@ -180,7 +180,7 @@ const i18n = {
         search: '查詢',
         // special
         appwidealert: 'Catenary 的開發隊祝您節日愉快！',
-        appwidesubtext: '無論您的假日計畫是什麼，我們都會提供您服務。節日班車往往不同，請您參考當地的交通資訊。',
+        appwidesubtext: '無論您的假日計畫是什麼，我們都會提供您服務。節日班車往往會有變化，請您參考當地的交通資訊。',
         alertheadersd: '您覺得什麼樣的未來發展會對公共交通最友善？',
         alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷，就可獲得一次抽獎 $50 美元亞馬遜禮物卡的機會。',
         alertheaderla: '用 Catenary 探索當地公共藝術展覽',
