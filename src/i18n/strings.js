@@ -180,11 +180,11 @@ const i18n = {
         search: '查詢',
         // special
         appwidealert: 'Catenary 的開發隊祝您節日愉快！',
-        appwidesubtext: '無論您的假日計畫，我們都還會提供您交通服務。節日班車往往不同，請參考您當地的交通資訊。',
-        alertheadersd: '您覺得什麼未來發展會對公共交通最有善？',
-        alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷設計可入取機會抽獎一個 $50 美元亞馬遜禮物卡。',
-        alertheaderla: '用 Catenary 發現公共藝術展覽',
-        alertsubtextla: '顯示「公共藝術」設定來看洛杉磯線Metro從當地藝術家定制在捷運站內的展覽。',
+        appwidesubtext: '無論您的假日計畫是什麼，我們都會提供您服務。節日班車往往不同，請您參考當地的交通資訊。',
+        alertheadersd: '您覺得什麼樣的未來發展會對公共交通最友善？',
+        alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷，就可獲得一次抽獎 $50 美元亞馬遜禮物卡的機會。',
+        alertheaderla: '用 Catenary 探索當地公共藝術展覽',
+        alertsubtextla: '啟動「公共藝術」設定，就可以看到洛杉磯地區 Metro 線上，所有當地藝術家在捷運站的藝術展覽。',
         learnmore: '跟多資料',
         // art
         art: '公共藝術',
@@ -212,7 +212,7 @@ const i18n = {
         orminfra: '鐵軌',
         ormspeeds: '最高速度',
         ormsignalling: '鐵路號誌',
-        ormelectrification: '電氣化',
+        ormelectrification: '電氣化方式',
         ormgauge: '軌距',
         // announcements
         announcements: '播放隨意廣播',
