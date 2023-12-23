@@ -176,6 +176,50 @@ const i18n = {
         coordscopied: "좌표가 클립보드에 복사되었습니다",
         showFPS: "FPS 보기"
     },
+    zh_TW: {
+        search: '查詢',
+        // special
+        appwidealert: 'Happy Holidays from the Catenary team!',
+        appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around. Check your agency\'s schedules for holiday service.',
+        alertheadersd: 'What future programs do you think would improve public transit the most?',
+        alertsubtextsd: 'Take SANDAG’s survey by 1/2/24 and you can enter a sweepstakes to win a $50 Amazon gift card.',
+        alertheaderla: 'Explore Public Art on Catenary',
+        alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
+        learnmore: 'Learn more',
+        // art
+        art: '公共藝術',
+        // settings
+        useUSunits: '用美制單位',
+        showtripless: '不在服務中',
+        language: '語言',
+        // layers
+        headingRail: '鐵路',
+        headingLocalRail: '捷運 (MRT)',
+        headingIntercityRail: '鐵路',
+        headingBus: '公車',
+        headingOther: '其他',
+        headingMisc: '更多選擇',
+        routes: '路線',
+        labels: '標籤',
+        stops: '車站',
+        stopnames: '地點',
+        vehicles: '車輛',
+        showroute: '路線',
+        showtrip: '車程',
+        showvehicle: '車輛編號',
+        showspeed: '速度',
+        // foamer layers
+        orminfra: '鐵軌',
+        ormspeeds: '最高速度',
+        ormsignalling: '鐵路號誌',
+        ormelectrification: '電氣化',
+        ormgauge: '軌距',
+        // announcements
+        announcements: '播放隨意廣播',
+        coordsview: "顯示",
+        coordscopied: "坐標",
+        showFPS: "影格速率 (FPS)"
+    },
 }
 
 export default i18n;
