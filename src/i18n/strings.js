@@ -220,6 +220,50 @@ const i18n = {
         coordscopied: "坐標",
         showFPS: "影格速率 (FPS)"
     },
+    zh_CN: {
+        search: '查询',
+        // special
+        appwidealert: 'Catenary 的开发队祝您节日愉快！',
+        appwidesubtext: '无论您的假日计画是什么，我们都会提供您服务。节日班车往往会有变化，请您参考当地的交通资讯。',
+        alertheadersd: '您觉得什么样的未来发展会对公共交通最友善？',
+        alertsubtextsd: '在 1月2日2024年 前参加 SANDAG 的问卷，就可获得一次抽奖 $50 美元亚马逊礼物卡的机会。',
+        alertheaderla: '用 Catenary 探索当地公共艺术展览',
+        alertsubtextla: '启动「公共艺术」设定，就可以看到洛杉矶地区 Metro 线上，所有当地艺术家在捷运站的艺术展览。',
+        learnmore: '跟多资料',
+        // art
+        art: '公共艺术',
+        // settings
+        useUSunits: '用美制单位',
+        showtripless: '不在服务中',
+        language: '语言',
+        // layers
+        headingRail: '铁路',
+        headingLocalRail: '捷运 (MRT)',
+        headingIntercityRail: '铁路',
+        headingBus: '公車',
+        headingOther: '其他',
+        headingMisc: '更多选择',
+        routes: '路線',
+        labels: '標籤',
+        stops: '車站',
+        stopnames: '地點',
+        vehicles: '車輛',
+        showroute: '路线',
+        showtrip: '车程',
+        showvehicle: '车辆编号',
+        showspeed: '速度',
+        // foamer layers
+        orminfra: '铁轨',
+        ormspeeds: '最高速度',
+        ormsignalling: '铁路号志',
+        ormelectrification: '电气化方式',
+        ormgauge: '轨距',
+        // announcements
+        announcements: '播放随意广播',
+        coordsview: "显示",
+        coordscopied: "坐标",
+        showFPS: "影格速率 (FPS)"
+    }
 }
 
 export default i18n;
