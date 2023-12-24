@@ -2344,6 +2344,8 @@ on:keydown={() => {
 			<option value="fr">Français</option>
 			<option value="es">Español</option>
 			<option value="ko">한국어</option>
+			<option value="zh_CN">简体中文</option>
+			<option value="zh_TW">繁體中文</option>
 		</select>
 		<label for="languageSelect" class="ml-2">{strings.language}</label>
 	</div>
