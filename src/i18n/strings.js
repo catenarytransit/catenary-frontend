@@ -176,6 +176,50 @@ const i18n = {
         coordscopied: "좌표가 클립보드에 복사되었습니다",
         showFPS: "FPS 보기"
     },
+    zh_TW: {
+        search: '查詢',
+        // special
+        appwidealert: 'Catenary 的開發隊祝您節日愉快！',
+        appwidesubtext: '無論您的假日計畫是什麼，我們都會提供您服務。節日班車往往會有變化，請您參考當地的交通資訊。',
+        alertheadersd: '您覺得什麼樣的未來發展會對公共交通最友善？',
+        alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷，就可獲得一次抽獎 $50 美元亞馬遜禮物卡的機會。',
+        alertheaderla: '用 Catenary 探索當地公共藝術展覽',
+        alertsubtextla: '啟動「公共藝術」設定，就可以看到洛杉磯地區 Metro 線上，所有當地藝術家在捷運站的藝術展覽。',
+        learnmore: '跟多資料',
+        // art
+        art: '公共藝術',
+        // settings
+        useUSunits: '用美制單位',
+        showtripless: '不在服務中',
+        language: '語言',
+        // layers
+        headingRail: '鐵路',
+        headingLocalRail: '捷運 (MRT)',
+        headingIntercityRail: '鐵路',
+        headingBus: '公車',
+        headingOther: '其他',
+        headingMisc: '更多選擇',
+        routes: '路線',
+        labels: '標籤',
+        stops: '車站',
+        stopnames: '地點',
+        vehicles: '車輛',
+        showroute: '路線',
+        showtrip: '車程',
+        showvehicle: '車輛編號',
+        showspeed: '速度',
+        // foamer layers
+        orminfra: '鐵軌',
+        ormspeeds: '最高速度',
+        ormsignalling: '鐵路號誌',
+        ormelectrification: '電氣化方式',
+        ormgauge: '軌距',
+        // announcements
+        announcements: '播放隨意廣播',
+        coordsview: "顯示",
+        coordscopied: "坐標",
+        showFPS: "影格速率 (FPS)"
+    },
 }
 
 export default i18n;
