@@ -47,7 +47,7 @@
     "mapbox-gl": "^3.0.1",
     "mapbox-gl-fps": "github:MazeMap/mapbox-gl-fps",
     "maplibre-gl": "^3.6.2",
-    "moment": "^2.29.4",
+    "moment": "^2.30.0",
     "protobufjs": "^7.2.4",
     "svelte-toasts": "^1.1.2",
     "toastify-js": "^1.12.0"
