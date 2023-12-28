@@ -2,19 +2,21 @@ const i18n = {
     en: {
         search: 'Search',
         // special
-        appwidealert: 'Happy New Year from the Catenary team!',
+        appwidealert: 'Happy New Year from Catenary!',
         appwidesubtext: 'Time to ring in 2024! Remember to check your agency\'s schedules for holiday service.',
         alertheadersd: 'What future programs do you think would improve public transit the most?',
         alertsubtextsd: 'Take SANDAG’s survey by 1/2/24 and you can enter a sweepstakes to win a $50 Amazon gift card.',
-        alertheaderla: 'Explore Public Art on Catenary',
-        alertsubtextla: 'Enable the Public Art layer to see Metro-commissioned artworks from local artists, located at stations around LA County.',
+        alertheaderla: 'Your community, through the eyes of artists',
+        alertsubtextla: 'For 20 years, Metro Art has commissioned artists to capture the magic of LA\'s vibrant neighborhoods.',
         learnmore: 'Learn more',
         // art
         art: 'Public Art',
         // settings
+        settings: 'Settings',
         useUSunits: 'Use US units',
         showtripless: 'Show tripless vehicles',
         language: 'Language',
+        mapstyle: 'Map style',
         // layers
         headingRail: 'Rail',
         headingLocalRail: 'Metro/Tram',
@@ -50,15 +52,17 @@ const i18n = {
         appwidesubtext: 'Il est temps de célébrer 2024! N\'oubliez pas de vérifier les horaires de votre agence pour le service des jours fériés.',
         alertheadersd: 'Quels programmes futurs pensez-vous qui amélioreraient le plus les transports en commun?',
         alertsubtextsd: 'Répondez au sondage de SANDAG d\'ici le 2/1/24 et vous pourrez participer à un tirage au sort pour gagner une carte-cadeau Amazon de 50 $.',
-        alertheaderla: 'Explorez l\'art public d\'artistes locaux sur Catenary',
-        alertsubtextla: 'Activez la couche Art public pour voir les œuvres d\'art commandées par Metro situées dans les stations du comté de Los Angeles.',
+        alertheaderla: 'Voyez votre communauté à travers les yeux d\'artistes locaux',
+        alertsubtextla: 'Célébrez les 20 ans de la série Through the Eyes of Artists de Metro Art!',
         learnmore: 'En savoir plus',
         // art
         art: 'Art public',
         // settings
+        settings: 'Paramètres',
         useUSunits: 'Utiliser des unités américaines',
         showtripless: 'Afficher les véhicules sans voyage',
         language: 'Langue',
+        mapstyle: 'Style de carte',
         // layers
         headingRail: 'Rail/Autres',
         headingLocalRail: 'Metro/Tram',
@@ -94,15 +98,17 @@ const i18n = {
         appwidesubtext: '¡Es hora de celebrar 2024! Recuerde verificar los horarios de su agencia para el servicio de vacaciones.',
         alertheadersd: '¿Qué programas futuros cree que mejorarían más el transporte público?',
         alertsubtextsd: 'Responda la encuesta de SANDAG antes del 2 de enero del 2024 y entrará en un sorteo para ganar una tarjeta de regalo de Amazon de $50.',
-        alertheaderla: 'Explore el arte público de artistas locales en Catenary',
-        alertsubtextla: 'Habilite la capa de Arte público para ver el arte encargado por Metro ubicado en las estaciones del condado de Los Ángeles.',
+        alertheaderla: 'Vea su comunidad a través de los ojos de artistas locales',
+        alertsubtextla: '¡Celebre los 20 años de la serie Through the Eyes of Artists de Metro Art!',
         learnmore: 'Aprende mas',
         // art
         art: 'Arte público',
         // settings
+        settings: 'Ajustes',
         useUSunits: 'Use unidades de EE.UU.',
         showtripless: 'Mostrar vehículos sin viajes',
         language: 'Idioma',
+        mapstyle: 'Estilo de mapa',
         // layers
         headingRail: 'Ferrocarril/Otros',
         headingBus: 'Autobuses',
@@ -138,15 +144,17 @@ const i18n = {
         appwidesubtext: '2024년을 맞이하며, 휴일 운행에 대한 정보는 해당 운영기관의 홈페이지를 참고하시기 바랍니다.',
         alertheadersd: '대중 교통을 가장 개선할 것으로 생각되는 미래 프로그램은 무엇입니까?',
         alertsubtextsd: 'SANDAG의 설문 조사에 1/2/24까지 참여하면 50 달러의 아마존 상품권을 받을 수있는 추첨에 참여 할 수 있습니다.',
-        alertheaderla: 'Catenary에서 지역 예술가의 공공 예술 탐색',
-        alertsubtextla: '공공 예술 레이어를 활성화하여 LA 카운티의 역에 위치한 메트로 의뢰 예술을 볼 수 있습니다.',
+        alertheaderla: '지역 예술가의 눈으로 지역 사회를 보세요',
+        alertsubtextla: 'Metro Art의 Through the Eyes of Artists 시리즈 20 주년을 축하합니다!',
         learnmore: '더 알아보기',
         // art
         art: '공공 예술',
         // settings
+        settings: '설정',
         useUSunits: '미국 단위 사용',
         showtripless: '여행없는 차량 표시',
         language: '언어',
+        mapstyle: '지도 스타일',
         // layers
         headingRail: '철도/기타',
         headingBus: '버스',
@@ -183,15 +191,17 @@ const i18n = {
         appwidesubtext: '無論您的假日計畫是什麼，我們都會提供您服務。節日班車往往會有變化，請您參考當地的交通資訊。',
         alertheadersd: '您覺得什麼樣的未來發展會對公共交通最友善？',
         alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷，就可獲得一次抽獎 $50 美元亞馬遜禮物卡的機會。',
-        alertheaderla: '用 Catenary 探索當地公共藝術展覽',
-        alertsubtextla: '啟動「公共藝術」設定，就可以看到洛杉磯地區 Metro 線上，所有當地藝術家在捷運站的藝術展覽。',
+        alertheaderla: '看藝術家的眼中的社區',
+        alertsubtextla: '慶祝 Metro Art 的 Through the Eyes of Artists 系列 20 週年！',
         learnmore: '跟多資料',
         // art
         art: '公共藝術',
         // settings
+        settings: '設定',
         useUSunits: '用美制單位',
         showtripless: '不在服務中',
         language: '語言',
+        mapstyle: '地圖樣式',
         // layers
         headingRail: '鐵路',
         headingLocalRail: '捷運 (MRT)',
@@ -227,15 +237,17 @@ const i18n = {
         appwidesubtext: '无论您的假日计划是什么，我们都会提供您服务。节日班车往往会有变化，请您参考当地的交通资讯。',
         alertheadersd: '您觉得什么样的未来发展会对公共交通最友善？',
         alertsubtextsd: '在 1月2日2024年 前参加 SANDAG 的问卷，就可获得一次抽奖 $50 美元亚马逊礼物卡的机会。',
-        alertheaderla: '用 Catenary 探索当地公共艺术展览',
-        alertsubtextla: '启动「公共艺术」设定，就可以看到洛杉矶地区 Metro 线上，所有当地艺术家在捷运站的艺术展览。',
+        alertheaderla: '看艺术家的眼中的社区',
+        alertsubtextla: '庆祝 Metro Art 的 Through the Eyes of Artists 系列 20 周年！',
         learnmore: '跟多资料',
         // art
         art: '公共艺术',
         // settings
+        settings: '设定',
         useUSunits: '用美制单位',
         showtripless: '不在服务中',
         language: '语言',
+        mapstyle: '地图样式',
         // layers
         headingRail: '铁路',
         headingLocalRail: '捷运 (MRT)',
