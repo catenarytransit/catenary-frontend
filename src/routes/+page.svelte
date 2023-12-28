@@ -210,15 +210,15 @@
 
 	if (browser) {
 		if (
-			localStorage.theme === 'dark' ||
-			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+			localStorage.theme === 'light' ||
+			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)
 		) {
-			document.documentElement.classList.add('dark');
-			darkMode = true;
-		} else {
-			console.log('light mode triggered');
+			console.log('dark mode triggered');
 			document.documentElement.classList.remove('dark');
 			darkMode = false;
+		} else {
+			document.documentElement.classList.add('dark');
+			darkMode = true;
 		}
 	}
 
@@ -1085,12 +1085,20 @@
 		//get url param "sat"
 
 		let style = darkMode
-			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-			: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+			? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
+			: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 
 		if (browser) {
-			if (window.location.search.includes('sat')) {
+			if (window.localStorage.mapStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
+			}
+			if (window.localStorage.mapStyle == 'classic') {
+				style = darkMode
+					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+			}
+			if (window.localStorage.mapStyle == 'archi') {
+				style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
 			}
 		}
 
@@ -1102,14 +1110,8 @@
 			preserveDrawingBuffer: false,
 			//	antialias: true,
 			style: style, // stylesheet location
-			accessToken: !window.location.search.includes('sat')
-				? decode(
+			accessToken: decode(
 						'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
-				  )
-				: decode(
-						decode(
-							'𠿪𦾰𣒨𤏧𦶹𣞸𡣰𣂁𡿩𦺩𣢬𢏩𦺵𣎭𡻩𦲰𠶙𡿩𧂬𣎍𣿧𧚨𡮔𦺩𢾹𣿧𦶓𣲸𡏨𦺭𣦽𡿦𦺇𣖹𡣰𣒅𡏨𦶸𠪙𡻩𦺲𡪙𢏩𧚺𠺓𦺲𣆹𢿨𦺘𣢼𢟩𦾗𣞜𢻨𦾳𢾭𡏦𧚑𢞖𦾐𡖑𣟩𧚘𠞒𦲍𣞠𡏪𦲫𡂡𡿨𦲭𣶙𡳰𡞡𡿨ᖬ'
-						)
 				  ),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
@@ -1950,21 +1952,12 @@
 		}
 	});
 
-	let settingsBox: boolean = false;
-
 	function togglelayerfeature() {
-		settingsBox = false;
 		layersettingsBox = !layersettingsBox;
 	}
 
 	if (typeof window === 'object') {
 		document.getElementsByTagName('body')[0].classList.add('overflow-none');
-	}
-
-	function togglesettingfeature() {
-		settingsBox = !settingsBox;
-
-		layersettingsBox = false;
 	}
 
 	function gonorth() {
@@ -2151,7 +2144,8 @@ on:keydown={() => {
 {#if sidebarCollapsed == false}
 	<div
 		class="fixed top-0 left-0 pointer-events-none text-white pointer-events-auto z-50 clickable lg:w-[25vw] w-[100vw] h-[100vh] backdrop-blur-sm"
-		style:background="rgba(0, 0, 0, 0.4)"
+		style:background={darkMode ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)"}
+		style:color={`${darkMode ? 'white' : 'black'}`}
 		style:border-image-source="linear-gradient(to bottom, #42A7C5, #0A233F)"
 		style:border-image-slice="1"
 		style:border-right="5px solid"
@@ -2160,22 +2154,24 @@ on:keydown={() => {
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
-			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/featured-highlandpark-1200x800-1.jpeg) top center no-repeat, black">
-				<img src="/img/special/newyears.svg" alt="" style:height="70px">
-				<br />
-				<h1 class="text-lg">{strings.appwidealert}</h1>
-				<p class="text-sm">{strings.appwidesubtext}</p>
-			</Alertpopup>
 			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/img/special/onlinesurvey.png) center left no-repeat, black">
 				<h1 class="text-lg">Take our anonymous survey and tell us about your transit habits!</h1>
 				<a style:cursor="pointer" style:color="#f9e300" href="https://forms.gle/zD3aEp8ziJUEehvg7">{strings.learnmore} &rarr;</a>
 			</Alertpopup>
-			<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
-			<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">
+			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/featured-highlandpark-1200x800-1.jpeg) top center no-repeat, black">
+				<img src="/img/special/newyears.svg" alt="" style:height="70px">
+				<br />
+				<h1 class="text-lg font-bold">{strings.appwidealert}</h1>
+				<p class="text-sm">{strings.appwidesubtext}</p>
+			</Alertpopup>
+			{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
+			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url(https://art.metro.net/wp-content/uploads/2021/08/feature-chatsworth-1200x800-1.jpeg) bottom center no-repeat, black">
 				<h1 class="text-lg">{strings.alertheaderla}</h1>
 				<p class="text-sm">{strings.alertsubtextla}</p>
+				<a style:cursor="pointer" style:color="#f9e300" href="https://art.metro.net/category/artworks/exhibitions/tteoa/">{strings.learnmore} &rarr;</a>
+				<br /><br /><br /><br /><br /><br />
 			</Alertpopup>
-			{/if} -->
+			{/if}
 			{#if realtime_list.includes('f-mts~rt~onebusaway')}
 			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://www.sandag.org/-/media/SANDAG/Main-Heros/regional-plan/regional-plan-landing.png) center center no-repeat, black">
 				<h1 class="text-lg">{strings.alertheadersd}</h1>
@@ -2185,14 +2181,138 @@ on:keydown={() => {
 			{/if}
 		{/if}
 		{#if sidebarView == 1}
+			<h1 class="text-3xl">{strings.settings}</h1>
+			<div>
+				<input
+					on:click={(x) => {
+						handleUsUnitsSwitch();
+		
+						runSettingsAdapt();
+					}}
+					on:keydown={(x) => {
+						handleUsUnitsSwitch();
+						runSettingsAdapt();
+					}}
+					checked={usunits}
+					id="us-units"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="us-units" class="ml-2">{strings.useUSunits}</label>
+			</div>
+		
+			<div>
+				<input
+					on:click={(x) => {
+						fpsmode = !fpsmode;
+						localStorage.setItem('fpsmode', String(fpsmode));
+					}}
+					on:keydown={(x) => {
+						fpsmode = !fpsmode;
+						localStorage.setItem('fpsmode', String(fpsmode));
+					}}
+					checked={fpsmode}
+					id="FPS"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="FPS" class="ml-2">{strings.showFPS}</label>
+			</div>
+			
+			<div>
+				<input
+					on:click={(x) => {
+						handleAnnouncerModeSwitch();
+						runSettingsAdapt();
+					}}
+					on:keydown={(x) => {
+						handleAnnouncerModeSwitch();
+						runSettingsAdapt();
+					}}
+					checked={announcermode}
+					id="announcements"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="announcements" class="ml-2">{strings.announcements}</label>
+			</div>
+		
+		
+			<div>
+				<select
+					id="languageSelect"
+					name="languageSelect"
+					style="color: black;"
+					on:change={() => {
+						// @ts-expect-error
+						let language = document.querySelector('#languageSelect').value;
+						if (language !== 'none') {
+							document.querySelector('html')?.setAttribute('lang', language);
+							// @ts-expect-error
+							strings = i18n[language];
+							window.localStorage.setItem('language', language);
+						}
+					}}
+				>
+					<option value="none">--</option>
+					<option value="en">English</option>
+					<option value="fr">Français</option>
+					<option value="es">Español</option>
+					<option value="ko">한국어</option>
+					<option value="zh_CN">简体中文</option>
+					<option value="zh_TW">繁體中文</option>
+				</select>
+				<label for="languageSelect" class="ml-2">{strings.language}</label>
+			</div>
+
+			<div>
+				<select
+					id="styleSelect"
+					name="styleSelect"
+					style="color: black;"
+					on:change={() => {
+						// @ts-expect-error
+						let mapStyle = document.querySelector('#styleSelect').value;
+						if (mapStyle !== 'none') {
+							window.localStorage.setItem('mapStyle', mapStyle);
+							window.location.reload();
+						}
+					}}
+				>
+					<option value="none">--</option>
+					<option value="default">Default</option>
+					<option value="classic">Classic</option>
+					{#if browser}
+						{#if window.location.search.includes('sat')}
+							<option value="sat">Satellite</option>
+						{/if}
+					{/if}
+					<option value="archi">Archi</option>
+				</select>
+				<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
+			</div>
+		
+			{#if foamermode}
+				<br />
+				Data:
+				<a
+					style="text-decoration:underline;cursor:pointer"
+					href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
+				>
+				<a style="text-decoration:underline;cursor:pointer" href='https://www.mapbox.com/about/maps/'>© Mapbox</a>
+				<br />Style:
+				<a
+					style="text-decoration:underline;cursor:pointer"
+					href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
+				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
+			{/if}
+		{/if}
+		{#if sidebarView == 9999}
 			<h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/07/Susan-Logoreci_Right-Of-Way.jpeg' name='Right Above The Right-Of-Way' artist='Susan Logoreci' description='Just as this aerial station provides views of the surrounding areas, the artworks present aerial views of local neighborhoods, depicted in an intricate series of colored pencil drawings. Drawn from photographs that were shot from a helicopter hovering above the city, the images present the structured landscape of the area punctuated with identifiable landmarks.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/feature-tree-califas-1200x800-1.jpg' name='Tree of Califas' artist='Margaret Garcia' description='Adjacent to the historic site of the Campo de Cahuenga where in 1847 Mexico relinquished control of California to the United States in the Treaty of Cahuenga, Tree of Califas draws its title from the the mythological black Amazon queen Califas who was said to have ruled a tribe of women warriors and after whom the Spaniards named California.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2022/12/Phung-Huynh-Allegorical-Portal-to-the-City-Within-a-City-A.png' name='Allegorical Portal to the City Within a City' artist='Phung Huynh' description='Phung Huynh explores the origin story of Century City through her unique approach of urban folklore and community voices. The artwork will include portraits of recognizable actors from the area’s early history as a film studio back lot and renowned architects who built Century City, as well as everyday people who work and own businesses in the area.' />
-		{/if}
-		{#if sidebarView == 2}
-			<h1 class="text-3xl">Memory Game</h1>
 		{/if}
 		<!-- <input
 			type="text"
@@ -2203,7 +2323,7 @@ on:keydown={() => {
 		<a
 			on:click={() => { sidebarCollapsed = true }}
 			style:cursor="pointer !important"
-			class="absolute left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> left_panel_close </span>
 		</a>
@@ -2213,6 +2333,13 @@ on:keydown={() => {
 			class="absolute left-16 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> home </span>
+		</a>
+		<a
+			on:click={() => { sidebarView = 1 }}
+			style:cursor="pointer !important"
+			class="absolute left-28 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> settings </span>
 		</a>
 		<!-- <a
 			on:click={() => { sidebarView = 0 }}
@@ -2235,16 +2362,6 @@ on:keydown={() => {
 {/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
-	<div
-		on:click={togglesettingfeature}
-		on:keypress={togglesettingfeature}
-		class="!cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-	>
-		<span class="!cursor-pointer material-symbols-outlined align-middle select-none">
-			settings
-		</span>
-	</div>
-
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
@@ -2287,118 +2404,6 @@ on:keydown={() => {
 			{#if lockongps == true}my_location{:else}location_searching{/if}
 		</span>
 	</div>
-</div>
-
-<div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 text-right {settingsBox
-		? ''
-		: 'hidden'}"
->
-	<div>
-		<input
-			on:click={(x) => {
-				handleUsUnitsSwitch();
-
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				handleUsUnitsSwitch();
-				runSettingsAdapt();
-			}}
-			checked={usunits}
-			id="us-units"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="us-units" class="ml-2">{strings.useUSunits}</label>
-	</div>
-
-	<div>
-		<input
-			on:click={(x) => {
-				fpsmode = !fpsmode;
-				localStorage.setItem('fpsmode', String(fpsmode));
-			}}
-			on:keydown={(x) => {
-				fpsmode = !fpsmode;
-				localStorage.setItem('fpsmode', String(fpsmode));
-			}}
-			checked={usunits}
-			id="FPS"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="FPS" class="ml-2">{strings.showFPS}</label>
-	</div>
-	
-	<div>
-		<input
-			on:click={(x) => {
-				handleAnnouncerModeSwitch();
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				handleAnnouncerModeSwitch();
-				runSettingsAdapt();
-			}}
-			checked={announcermode}
-			id="announcements"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="announcements" class="ml-2">{strings.announcements}</label>
-	</div>
-
-
-	<div>
-		<select
-			id="languageSelect"
-			name="languageSelect"
-			style="color: black;"
-			on:change={() => {
-				// @ts-expect-error
-				let language = document.querySelector('#languageSelect').value;
-				document.querySelector('html')?.setAttribute('lang', language);
-				// @ts-expect-error
-				strings = i18n[language];
-				window.localStorage.setItem('language', language);
-			}}
-		>
-			<option value="en">English</option>
-			<option value="fr">Français</option>
-			<option value="es">Español</option>
-			<option value="ko">한국어</option>
-			<option value="zh_CN">简体中文</option>
-			<option value="zh_TW">繁體中文</option>
-		</select>
-		<label for="languageSelect" class="ml-2">{strings.language}</label>
-	</div>
-
-	<a
-		href="#"
-		class='underline text-green-500'
-        on:click={() => {
-            window.localStorage.alertPopupShown = null;
-            window.location.reload()
-        }}
-    >
-        Reload page & reset popup
-    </a>
-
-	{#if foamermode}
-		<br />
-		Data:
-		<a
-			style="text-decoration:underline;cursor:pointer"
-			href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
-		>
-		<a style="text-decoration:underline;cursor:pointer" href='https://www.mapbox.com/about/maps/'>© Mapbox</a>
-		<br />Style:
-		<a
-			style="text-decoration:underline;cursor:pointer"
-			href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
-		> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
-	{/if}
 </div>
 
 <div
@@ -2617,28 +2622,16 @@ on:keydown={() => {
 
 	* {
 		cursor: default;
+		font-family: 'Satoshi-Variable', sans-serif;
+	}
+
+	.material-symbols-outlined {
+		font-family: 'Material Symbols Outlined', sans-serif;
 	}
 
 	#map {
 		width: 100%;
 		height: 100%;
-	}
-
-	.runSidebar {
-		border-left: none !important;
-		border-top-right-radius: var(--radius);
-		border-bottom-right-radius: var(--radius);
-		box-shadow: 0 0 var(--glow) var(--primary);
-		background-color: var(--background);
-		color: #fff;
-		padding: 6px 12px;
-		font-family: 'Open Sans', sans-serif;
-		z-index: 1;
-		position: absolute;
-		left: 0;
-		bottom: 40px;
-		font-size: 14px;
-		padding: 10px;
 	}
 
 	.lineNumber {

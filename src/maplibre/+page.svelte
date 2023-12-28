@@ -893,10 +893,6 @@ if (buffer != null) {
 
 
 <style>
-	.inter {
-		font-family: 'Inter', sans-serif;
-	}
-
 	#map {
 		width: 100%;
 		height: 100%;
