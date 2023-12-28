@@ -56,7 +56,7 @@
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
-	let sidebarCollapsed = true;
+	let sidebarCollapsed = false;
 	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
@@ -2142,9 +2142,15 @@ on:keydown={() => {
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
-			<Alertpopup background="linear-gradient(#0A233F, #42A7C5)">
+			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/featured-highlandpark-1200x800-1.jpeg) top center no-repeat, black">
+				<img src="/img/special/newyears.svg" alt="" style:height="70px">
+				<br />
 				<h1 class="text-lg">{strings.appwidealert}</h1>
 				<p class="text-sm">{strings.appwidesubtext}</p>
+			</Alertpopup>
+			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/img/special/onlinesurvey.png) center left no-repeat, black">
+				<h1 class="text-lg">Take our anonymous survey and tell us about your transit habits!</h1>
+				<a style:cursor="pointer" style:color="#f9e300" href="https://forms.gle/zD3aEp8ziJUEehvg7">{strings.learnmore} &rarr;</a>
 			</Alertpopup>
 			<!-- {#if realtime_list.includes('f-metro~losangeles~bus~rt')}
 			<Alertpopup background="url(https://art.metro.net/wp-content/uploads/2021/08/Ramon-Ramirez-Pico-Rivera.jpeg) top center no-repeat, black">

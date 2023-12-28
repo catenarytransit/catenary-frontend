@@ -2,8 +2,8 @@ const i18n = {
     en: {
         search: 'Search',
         // special
-        appwidealert: 'Happy Holidays from the Catenary team!',
-        appwidesubtext: 'No matter what your holiday plans are, we\'re still here to help you get around. Check your agency\'s schedules for holiday service.',
+        appwidealert: 'Happy New Year from the Catenary team!',
+        appwidesubtext: 'Time to ring in 2024! Remember to check your agency\'s schedules for holiday service.',
         alertheadersd: 'What future programs do you think would improve public transit the most?',
         alertsubtextsd: 'Take SANDAG’s survey by 1/2/24 and you can enter a sweepstakes to win a $50 Amazon gift card.',
         alertheaderla: 'Explore Public Art on Catenary',
@@ -46,8 +46,8 @@ const i18n = {
     fr: {
         search: 'Rechercher',
         // special
-        appwidealert: 'Joyeuses fêtes de la part de l\'équipe Catenary!',
-        appwidesubtext: 'Peu importe vos plans de vacances, nous sommes toujours là pour vous aider à vous déplacer.',
+        appwidealert: 'Bonne année de la part de l\'équipe Catenary !',
+        appwidesubtext: 'Il est temps de célébrer 2024! N\'oubliez pas de vérifier les horaires de votre agence pour le service des jours fériés.',
         alertheadersd: 'Quels programmes futurs pensez-vous qui amélioreraient le plus les transports en commun?',
         alertsubtextsd: 'Répondez au sondage de SANDAG d\'ici le 2/1/24 et vous pourrez participer à un tirage au sort pour gagner une carte-cadeau Amazon de 50 $.',
         alertheaderla: 'Explorez l\'art public d\'artistes locaux sur Catenary',
@@ -90,8 +90,8 @@ const i18n = {
     es: {
         search: 'Buscar',
         // special
-        appwidealert: '¡Felices fiestas del equipo de Catenary!',
-        appwidesubtext: 'No importa cuáles sean sus planes navideños, todavía estamos aquí para ayudarlo a moverse.',
+        appwidealert: '¡Feliz año nuevo del equipo Catenary!',
+        appwidesubtext: '¡Es hora de celebrar 2024! Recuerde verificar los horarios de su agencia para el servicio de vacaciones.',
         alertheadersd: '¿Qué programas futuros cree que mejorarían más el transporte público?',
         alertsubtextsd: 'Responda la encuesta de SANDAG antes del 2 de enero del 2024 y entrará en un sorteo para ganar una tarjeta de regalo de Amazon de $50.',
         alertheaderla: 'Explore el arte público de artistas locales en Catenary',
@@ -134,8 +134,8 @@ const i18n = {
     ko: {
         search: '검색',
         // special
-        appwidealert: 'Catenary 팀의 행복한 휴일!',
-        appwidesubtext: '휴일 계획이 무엇이든 상관없이 여전히 도움을 드릴 수 있습니다.',
+        appwidealert: 'Catenary 팀에서 새해 복 많이 받으세요!',
+        appwidesubtext: '2024년을 맞이하며, 휴일 운행에 대한 정보는 해당 운영기관의 홈페이지를 참고하시기 바랍니다.',
         alertheadersd: '대중 교통을 가장 개선할 것으로 생각되는 미래 프로그램은 무엇입니까?',
         alertsubtextsd: 'SANDAG의 설문 조사에 1/2/24까지 참여하면 50 달러의 아마존 상품권을 받을 수있는 추첨에 참여 할 수 있습니다.',
         alertheaderla: 'Catenary에서 지역 예술가의 공공 예술 탐색',
@@ -224,7 +224,7 @@ const i18n = {
         search: '查询',
         // special
         appwidealert: 'Catenary 的开发队祝您节日愉快！',
-        appwidesubtext: '无论您的假日计画是什么，我们都会提供您服务。节日班车往往会有变化，请您参考当地的交通资讯。',
+        appwidesubtext: '无论您的假日计划是什么，我们都会提供您服务。节日班车往往会有变化，请您参考当地的交通资讯。',
         alertheadersd: '您觉得什么样的未来发展会对公共交通最友善？',
         alertsubtextsd: '在 1月2日2024年 前参加 SANDAG 的问卷，就可获得一次抽奖 $50 美元亚马逊礼物卡的机会。',
         alertheaderla: '用 Catenary 探索当地公共艺术展览',

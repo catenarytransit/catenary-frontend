@@ -8,6 +8,7 @@
     style:padding="15px"
     style:border-radius="10px"
     style:background={background}
+    style:background-size="cover"
 >
     {#if imageURL}
         <img src={imageURL} style:height="70px" class="m-2" />
