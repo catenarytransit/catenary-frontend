@@ -1082,6 +1082,9 @@
 			if (window.localStorage.mapStyle == 'archi') {
 				style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
 			}
+			if (window.localStorage.mapStyle == 'minimal') {
+				style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
+			}
 		}
 
 		const map = new mapboxgl.Map({
@@ -2136,13 +2139,7 @@ on:keydown={() => {
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
-			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(/img/special/onlinesurvey.png) center left no-repeat, black">
-				<h1 class="text-lg">Take our anonymous survey and tell us about your transit habits!</h1>
-				<a style:cursor="pointer" style:color="#f9e300" href="https://forms.gle/zD3aEp8ziJUEehvg7">{strings.learnmore} &rarr;</a>
-			</Alertpopup>
 			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/featured-highlandpark-1200x800-1.jpeg) top center no-repeat, black">
-				<img src="/img/special/newyears.svg" alt="" style:height="70px">
-				<br />
 				<h1 class="text-lg font-bold">{strings.appwidealert}</h1>
 				<p class="text-sm">{strings.appwidesubtext}</p>
 			</Alertpopup>
@@ -2262,14 +2259,15 @@ on:keydown={() => {
 					}}
 				>
 					<option value="none">--</option>
-					<option value="default">Default</option>
-					<option value="classic">Classic</option>
+					<option value="default">{strings.styledefault}</option>
+					<option value="classic">{strings.styleclassic}</option>
 					{#if browser}
 						{#if window.location.search.includes('sat')}
-							<option value="sat">Satellite</option>
+							<option value="sat">{strings.stylesat}</option>
 						{/if}
 					{/if}
-					<option value="archi">Archi</option>
+					<option value="minimal">{strings.styleminimal}</option>
+					<option value="archi">{strings.stylearchi}</option>
 				</select>
 				<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
 			</div>
