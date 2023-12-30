@@ -56,7 +56,7 @@
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
-	let sidebarCollapsed = false;
+	let sidebarCollapsed = true;
 	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
