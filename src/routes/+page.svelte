@@ -1023,14 +1023,13 @@
 				mapglobal.setFilter(categoryvalues.labeldots, undefined);
 				mapglobal.setFilter(categoryvalues.pointing, regularpointers);
 				mapglobal.setFilter(categoryvalues.pointingshell, regularpointers)
-				} else 
-{
-	mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
-	mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
-	mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
-	mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers)
-
-}			}
+				} else {
+					mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
+					mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
+					mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
+					mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers)
+				}
+			}
 
 			});
 
