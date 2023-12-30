@@ -403,40 +403,45 @@
 			let static_feed_ids: string[] = [];
 
 			if (this_realtime_feed === "f-横浜市-municipal-bus-rt") {
-				static_feed_ids = ["f-横浜市-municipal-bus"]
-			}
+					static_feed_ids = ["f-横浜市-municipal-bus"]
+				}
 
-			if (this_realtime_feed === "f-横浜市-municipal-subway-rt") {
-				static_feed_ids = ["f-横浜市-municipal-subway"]
-			}
+				if (this_realtime_feed === "f-横浜市-municipal-subway-rt") {
+					static_feed_ids = ["f-横浜市-municipal-subway"]
+				}
 
 			Object.values(operators_to_render).forEach((operator: any) => {
 				//attempt to pull the routes for this operator
 				if (operator.gtfs_static_feeds) {
 					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
 						if (!static_feed_ids.includes(static_feed_id)) {
+
+							
 							if (!this_realtime_feed.contains("f-横浜市")) {
-								static_feed_ids.push(static_feed_id);
-								static_feed_ids = [...new Set(static_feed_ids)];
+							static_feed_ids.push(static_feed_id);
+							static_feed_ids = [...new Set(static_feed_ids)];
 							}
-							//this static feed
-							if (route_info_lookup[static_feed_id] == undefined) {
-								fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
-									.then((x) => x.json())
-									.then((x) => {
-										route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-										rerenders_request(realtime_id);
-										// console.log('saved results for this agency', static_feed_id)
-									})
-									.catch((e) => {
-										console.error(e);
-										check_backend();
-									});
-							} else {
-								//console.log('already have results for this agency', static_feed_id)
-								big_table[static_feed_id] = route_info_lookup[static_feed_id];
-								trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
-							}
+
+												//this static feed
+
+						if (route_info_lookup[static_feed_id] == undefined) {
+							fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
+								.then((x) => x.json())
+								.then((x) => {
+									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
+									rerenders_request(realtime_id);
+									// console.log('saved results for this agency', static_feed_id)
+								})
+								.catch((e) => {
+									console.error(e);
+									check_backend();
+								});
+						} else {
+							//console.log('already have results for this agency', static_feed_id)
+
+							big_table[static_feed_id] = route_info_lookup[static_feed_id];
+							trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
+						}
 						}
 					});
 				}
@@ -521,9 +526,10 @@
 							colour = '#18567d';
 						}
 
+						
 						if (realtime_id == "f-metrolinktrains~rt") {
-							routeType = 2;
-						}
+								routeType = 2;
+							}
 
 						if (routeType === 2) {
 							//get trip id for intercity rail
@@ -900,7 +906,7 @@
 	return coordinates;
 	}
 
-	function removelive(map: any, layerspercategory: any) {
+	function removealllive(map: any, layerspercategory: any) {
 		map.removeLayer(layerspercategory.bus.livedots);
 		map.removeLayer(layerspercategory.bus.labeldots);
 		map.removeLayer(layerspercategory.other.livedots);
@@ -1018,13 +1024,14 @@
 				mapglobal.setFilter(categoryvalues.labeldots, undefined);
 				mapglobal.setFilter(categoryvalues.pointing, regularpointers);
 				mapglobal.setFilter(categoryvalues.pointingshell, regularpointers)
-				} else {
-					mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
-					mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
-					mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
-					mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers)
-				}
-			}
+				} else 
+{
+	mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
+	mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
+	mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
+	mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers)
+
+}			}
 
 			});
 
@@ -2273,7 +2280,7 @@ on:keydown={() => {
 						let agencySelect = document.querySelector('#agencySelect').value;
 						if (agencySelect !== 'none') {
 							window.localStorage.setItem('agencySelect', agencySelect);
-							//removelive(mapglobal, layerspercategory);
+							removealllive(mapglobal, layerspercategory);
 							realtime_list = [agencySelect];
 						}
 					}}
