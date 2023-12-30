@@ -420,25 +420,23 @@
 								static_feed_ids = [...new Set(static_feed_ids)];
 							}
 							//this static feed
-
-						if (route_info_lookup[static_feed_id] == undefined) {
-							fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
-								.then((x) => x.json())
-								.then((x) => {
-									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-									rerenders_request(realtime_id);
-									// console.log('saved results for this agency', static_feed_id)
-								})
-								.catch((e) => {
-									console.error(e);
-									check_backend();
-								});
-						} else {
-							//console.log('already have results for this agency', static_feed_id)
-
-							big_table[static_feed_id] = route_info_lookup[static_feed_id];
-							trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
-						}
+							if (route_info_lookup[static_feed_id] == undefined) {
+								fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
+									.then((x) => x.json())
+									.then((x) => {
+										route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
+										rerenders_request(realtime_id);
+										// console.log('saved results for this agency', static_feed_id)
+									})
+									.catch((e) => {
+										console.error(e);
+										check_backend();
+									});
+							} else {
+								//console.log('already have results for this agency', static_feed_id)
+								big_table[static_feed_id] = route_info_lookup[static_feed_id];
+								trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
+							}
 						}
 					});
 				}
