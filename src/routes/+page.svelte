@@ -381,7 +381,7 @@
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
 
-		//console.log('processing', realtime_id, this_realtime_feed)
+		console.log('processing', realtime_id, this_realtime_feed)
 
 		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
@@ -396,19 +396,21 @@
 				.map((x: any) => operators_in_frame[x])
 				.filter((x: any) => x != undefined))];
 
+			console.log('operators_to_render', operators_to_render);
+
 			//console.log('operators for rerender', operators_to_render);
 			let big_table: any = {};
 			let trips_possible_agencies: any = {};
 
-			let static_feed_ids: string[] = [];
+			let static_feed_ids: Array<string> = [];
 
 			if (this_realtime_feed === "f-横浜市-municipal-bus-rt") {
 					static_feed_ids = ["f-横浜市-municipal-bus"]
 				}
 
-				if (this_realtime_feed === "f-横浜市-municipal-subway-rt") {
-					static_feed_ids = ["f-横浜市-municipal-subway"]
-				}
+			if (this_realtime_feed === "f-横浜市-municipal-subway-rt") {
+				static_feed_ids = ["f-横浜市-municipal-subway"]
+			}
 
 			Object.values(operators_to_render).forEach((operator: any) => {
 				//attempt to pull the routes for this operator
@@ -416,14 +418,15 @@
 					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
 						if (!static_feed_ids.includes(static_feed_id)) {
 
-							
-							if (!this_realtime_feed.contains("f-横浜市")) {
+							console.log('this_realtime_feed', this_realtime_feed)
+
+							if (!this_realtime_feed.onestop_feed_id.includes("f-横浜市")) {
 							static_feed_ids.push(static_feed_id);
 							static_feed_ids = [...new Set(static_feed_ids)];
 							}
+							console.log('potato')
 
 												//this static feed
-
 						if (route_info_lookup[static_feed_id] == undefined) {
 							fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
 								.then((x) => x.json())
@@ -447,16 +450,16 @@
 				}
 			});
 
-			
+			console.log('Object.keys(big_table)', Object.keys(big_table))			
 
-			if (Object.keys(big_table).length > 0) {
+			if ([...new Set(Object.keys(big_table))].length > 0) {
 				//console.log('big table has data for ', realtime_id)
 
 				let mergetable = Object.assign({}, ...Object.values(big_table));
 
 				let mergetabletrips = Object.assign({}, ...Object.values(trips_possible_agencies));
 
-				//console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
+				console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
 
 				//render each vehicle vehiclesData[realtime_id].entity
 
@@ -850,6 +853,10 @@
 				const getintercityrailsource = mapglobal.getSource('intercityrail');
 				const getlocalrailsource = mapglobal.getSource('localrail');
 				const othersource = mapglobal.getSource('other');
+
+				console.log(
+					'made features', features
+				)
 
 				geometryObj[realtime_id] = features;
 
@@ -1672,6 +1679,8 @@
 										const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
 											new Uint8Array(buffer)
 										);
+
+										console.log('buffer decoded for', realtime_id)
 
 										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
