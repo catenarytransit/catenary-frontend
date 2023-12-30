@@ -2282,7 +2282,7 @@ on:keydown={() => {
 						<option value={option}>{option}</option>
 					{/each}
 				</select>
-				<label for="languageSelect" class="ml-2">Display agency</label>
+				<label for="agencySelect" class="ml-2">Display agency</label>
 			</div>
 
 			<div>
