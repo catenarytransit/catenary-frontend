@@ -909,6 +909,16 @@
 	return coordinates;
 	}
 
+	function removealllive(map: any, layerspercategory: any) {
+		map.removeLayer(layerspercategory.bus.livedots);
+		map.removeLayer(layerspercategory.bus.labeldots);
+		map.removeLayer(layerspercategory.other.livedots);
+		map.removeLayer(layerspercategory.other.labeldots);
+		map.removeLayer(layerspercategory.localrail.livedots);
+		map.removeLayer(layerspercategory.localrail.labeldots);
+		map.removeLayer(layerspercategory.intercityrail.livedots);
+		map.removeLayer(layerspercategory.intercityrail.labeldots);
+	}
 	function runSettingsAdapt() {
 		 console.log('run settings adapt', layersettings);
 		if (mapglobal) {
@@ -2273,6 +2283,7 @@ on:keydown={() => {
 						let agencySelect = document.querySelector('#agencySelect').value;
 						if (agencySelect !== 'none') {
 							window.localStorage.setItem('agencySelect', agencySelect);
+							removealllive(mapglobal, layerspercategory);
 							realtime_list = [agencySelect];
 						}
 					}}
