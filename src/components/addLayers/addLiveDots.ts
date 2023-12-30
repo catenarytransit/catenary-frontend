@@ -3,7 +3,7 @@ function textColorOfMapLabels(darkMode:boolean) {
     return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
 }
 
-export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory: any) {
+export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: any) {
     map.addLayer({
         id: layerspercategory.bus.livedots,
         type: 'circle',
