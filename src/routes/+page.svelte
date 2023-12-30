@@ -2261,6 +2261,29 @@ on:keydown={() => {
 				</select>
 				<label for="languageSelect" class="ml-2">{strings.language}</label>
 			</div>
+			
+			<div>
+				<select
+					id="agencySelect"
+					name="agencySelect"
+					style="color: black;"
+					on:change={() => {
+						console.log(realtime_list);
+						// @ts-expect-error
+						let agencySelect = document.querySelector('#agencySelect').value;
+						if (agencySelect !== 'none') {
+							window.localStorage.setItem('agencySelect', agencySelect);
+							realtime_list = agencySelect
+						}
+					}}
+				>
+					<option value="none">--</option>
+					{#each realtime_list as option (option)}
+						<option value={option}>{option}</option>
+					{/each}
+				</select>
+				<label for="languageSelect" class="ml-2">Display agency</label>
+			</div>
 
 			<div>
 				<select
