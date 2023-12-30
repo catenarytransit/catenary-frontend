@@ -2273,7 +2273,7 @@ on:keydown={() => {
 						let agencySelect = document.querySelector('#agencySelect').value;
 						if (agencySelect !== 'none') {
 							window.localStorage.setItem('agencySelect', agencySelect);
-							realtime_list = agencySelect
+							realtime_list = [agencySelect];
 						}
 					}}
 				>
