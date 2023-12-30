@@ -4,6 +4,7 @@
 sudo apt install vite
 npm install vite
 npm install -D tailwindcss
+npm install svelte-adapter-bun
 npx tailwindcss init
 npm update @sveltejs/kit
 ```
