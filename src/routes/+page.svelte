@@ -424,7 +424,6 @@
 							static_feed_ids.push(static_feed_id);
 							static_feed_ids = [...new Set(static_feed_ids)];
 							}
-							console.log('potato')
 
 												//this static feed
 						if (route_info_lookup[static_feed_id] == undefined) {
@@ -1259,6 +1258,7 @@
 		function process_request_for_rerender() {
 			if (rerenders_requested.length > 0) {
 					[...new Set(rerenders_requested)].forEach((x) => {
+						console.log('rerender automatic', x);
 						rerenders_request(x);
 					});
 					rerenders_requested = [];
@@ -1849,8 +1849,10 @@
 				//renderNewBearings();
 				
 				runSettingsAdapt();
+				
 			}
 
+			
 			process_request_for_rerender()
 		});
 
