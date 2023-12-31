@@ -449,7 +449,7 @@
 				}
 			});
 
-			console.log('Object.keys(big_table)', Object.keys(big_table))			
+			//console.log('Object.keys(big_table)', Object.keys(big_table))			
 
 			if ([...new Set(Object.keys(big_table))].length > 0) {
 				//console.log('big table has data for ', realtime_id)
@@ -458,14 +458,14 @@
 
 				let mergetabletrips = Object.assign({}, ...Object.values(trips_possible_agencies));
 
-				console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
+				//console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
 
 				//render each vehicle vehiclesData[realtime_id].entity
 
 				//console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
-					.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
+					//.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
 					.filter(
 						(entity: any) =>
@@ -852,7 +852,7 @@
 				const othersource = mapglobal.getSource('other');
 
 				console.log(
-					'made features', features
+					'made features of ', realtime_id, features
 				)
 
 				geometryObj[realtime_id] = features;
