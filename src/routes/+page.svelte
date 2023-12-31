@@ -724,8 +724,6 @@
 							}
 						}
 
-						
-
 						let railletters: any = {};
 						if (
 							realtime_id === 'f-metro~losangeles~rail~rt' ||
