@@ -252,11 +252,11 @@
 
 	let layersettings: any = {
 		bus: {
-			visible: true,
-			labelshapes: true,
-			stops: true,
-			shapes: true,
-			stoplabels: true,
+			visible: false,
+			labelshapes: false,
+			stops: false,
+			shapes: false,
+			stoplabels: false,
 			label: {
 				route: true,
 				trip: false,
@@ -269,11 +269,11 @@
 		localrail: {
 			visible: true,
 			stops: true,
-			labelshapes: true,
-			stoplabels: true,
+			labelshapes: false,
+			stoplabels: false,
 			shapes: true,
 			label: {
-				route: true,
+				route: false,
 				trip: false,
 				vehicle: false,
 				headsign: false,
@@ -284,26 +284,26 @@
 		intercityrail: {
 			visible: true,
 			stops: true,
-			labelshapes: true,
-			stoplabels: true,
+			labelshapes: false,
+			stoplabels: false,
 			shapes: true,
 			label: {
-				route: true,
-				trip: true,
+				route: false,
+				trip: false,
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: true
+				speed: false
 			}
 		},
 		other: {
-			visible: true,
-			stops: true,
-			labelshapes: true,
-			stoplabels: true,
-			shapes: true,
+			visible: false,
+			stops: false,
+			labelshapes: false,
+			stoplabels: false,
+			shapes: false,
 			label: {
-				route: true,
+				route: false,
 				trip: false,
 				vehicle: false,
 				headsign: false,
@@ -2165,8 +2165,8 @@ on:keydown={() => {
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
-			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2021/08/featured-highlandpark-1200x800-1.jpeg) top center no-repeat, black">
-				<h1 class="text-lg font-bold">{strings.appwidealert}</h1>
+			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black">
+				<h1 class="text-md text-bold">{strings.appwidealert}</h1>
 				<p class="text-sm">{strings.appwidesubtext}</p>
 			</Alertpopup>
 			{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
@@ -2263,6 +2263,7 @@ on:keydown={() => {
 					<option value="en">English</option>
 					<option value="fr">Français</option>
 					<option value="es">Español</option>
+					<option value="de">Deutsch</option>
 					<option value="ko">한국어</option>
 					<option value="zh_CN">简体中文</option>
 					<option value="zh_TW">繁體中文</option>
