@@ -2629,7 +2629,7 @@ on:keydown={() => {
 
 	* {
 		cursor: default;
-		font-family: 'Satoshi-Variable', sans-serif;
+		font-family: 'Open Sans', sans-serif;
 	}
 
 	.material-symbols-outlined {
