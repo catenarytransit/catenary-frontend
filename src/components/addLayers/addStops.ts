@@ -47,10 +47,10 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
         },
         paint: {
-            'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+            'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
             'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
             'text-halo-width': 0.4
         },
@@ -111,7 +111,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
             
         },
         paint: {
@@ -188,7 +188,7 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
@@ -229,12 +229,12 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
         
-        'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+        'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
         'text-halo-width': 1
     },
@@ -278,12 +278,12 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
         
-        'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+        'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
         'text-halo-width': 1
     },
