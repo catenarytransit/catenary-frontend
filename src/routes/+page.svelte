@@ -38,6 +38,9 @@
 	import Alertpopup from '../components/alertpopup.svelte';
 	import { addShapes } from '../components/addLayers/addShapes';
 	import Artwork from '../components/artwork.svelte';
+
+	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json'
+
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
 	let disabledlayerstyle =
@@ -64,6 +67,8 @@
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj : Record<string, any> = {};
 	let lasttimeofnorth = 0;
+
+	let selectedVehicle: any = null;
 
 	const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
 	let debugmode = !!(urlParams.get('debug'));
@@ -836,7 +841,8 @@
 								contrastdarkmode: contrastdarkmode,
 								contrastdarkmodebearing,
 								routeId: routeId,
-								headsign: headsign
+								headsign: headsign,
+								agency: realtime_id,
 							},
 							geometry: {
 								type: 'Point',
@@ -1145,17 +1151,53 @@
 			current_map_heading = map.getBearing();
 		}
 
-		//on hover
-		map.on('mousemove', 'busshapes', (events) => {
-			//console.log('hoverfea', events.features);
+		map.on('click', 'localrail', (events) => {
+			sidebarCollapsed = false
+			if (events.features) {
+				console.log(events.features[0])
+				selectedVehicle = events.features[0]
+				sidebarView = 9999
+			}
 		});
 
-		map.on('mousemove', 'railshapes', (events) => {
-			//	console.log('hoverfea-rail', events.features);
+		map.on('click', 'intercityrail', (events) => {
+			sidebarCollapsed = false
+			if (events.features) {
+				selectedVehicle = events.features[0]
+				sidebarView = 9999
+			}
 		});
 
-		map.on('mousemove', 'buses', (events) => {
-			//console.log('hover over realtime bus', events.features)
+		map.on('click', 'bus', (events) => {
+			sidebarCollapsed = false
+			if (events.features) {
+				selectedVehicle = events.features[0]
+				sidebarView = 9999
+			}
+		});
+
+		map.on('mouseenter', 'localrail', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+		
+		map.on('mouseleave', 'localrail', () => {
+			map.getCanvas().style.cursor = '';
+		});
+
+		map.on('mouseenter', 'intercityrail', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+		
+		map.on('mouseleave', 'intercityrail', () => {
+			map.getCanvas().style.cursor = '';
+		});
+
+		map.on('mouseenter', 'bus', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+		
+		map.on('mouseleave', 'bus', () => {
+			map.getCanvas().style.cursor = '';
 		});
 
 		map.on('moveend', (events) => {
@@ -2315,12 +2357,91 @@ on:keydown={() => {
 			{/if}
 		{/if}
 		{#if sidebarView == 9999}
-			<h1 class="text-3xl">{strings.art}</h1>
+			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
+				{#if selectedVehicle.properties.maptag == 'Green'}
+					<img src="/lines/mts-green.svg" style:height="90px" />	
+				{:else if selectedVehicle.properties.maptag == 'Orange'}
+					<img src="/lines/mts-orange.svg" style:height="90px" />	
+				{:else if selectedVehicle.properties.maptag == 'Blue'}
+					<img src="/lines/mts-blue.svg" style:height="90px" />
+				{/if}
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-northcountrytransitdistrict~rt'}
+				{#if selectedVehicle.properties.maptag == 'COASTER'}
+					<img src="/lines/nctd-coaster.svg" style:width="100%" />	
+				{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
+					<img src="/lines/nctd-sprinter.svg" style:width="100%" />
+				{:else if selectedVehicle.properties.maptag == '350'}
+					<img src="/lines/nctd-brt.svg" style:width="100%" />
+				{/if}
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
+				{#if selectedVehicle.properties.maptag == 'A'}
+					<img src="/lines/metro-a.svg" style:height="50px" />	
+				{:else if selectedVehicle.properties.maptag == 'B'}
+					<img src="/lines/metro-b.svg" style:height="50px" />
+				{:else if selectedVehicle.properties.maptag == 'C'}
+					<img src="/lines/metro-c.svg" style:height="50px" />
+				{:else if selectedVehicle.properties.maptag == 'D'}
+					<img src="/lines/metro-d.svg" style:height="50px" />
+				{:else if selectedVehicle.properties.maptag == 'E'}
+					<img src="/lines/metro-e.svg" style:height="50px" />
+				{:else if selectedVehicle.properties.maptag == 'K'}
+					<img src="/lines/metro-k.svg" style:height="50px" />
+				{/if}
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-metrolinktrains~rt'}
+				<img src="https://metrolinktrains.com/Static/img/dist/metrolink-text-logo.svg" style:width="100%" />
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-octa~rt'}
+				<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
+				<br />
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-amtrak~rt'}
+				<img src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg" style:width="100%" />
+				<br />
+			{/if}
+			{#if (selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt')}
+				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">{selectedVehicle.properties.maptag}</h1>
+			{/if}
+			<br />
+			{#if selectedVehicle.properties.vehicleIdLabel}
+				<b>Vehicle ID</b> {selectedVehicle.properties.vehicleIdLabel}
+				<br />
+			{/if}
+			{#if selectedVehicle.properties.tripIdLabel}
+				<b>Trip ID</b> {selectedVehicle.properties.tripIdLabel}
+				<br />
+			{/if}
+			{#if selectedVehicle.properties.speed !== 0}
+				<b>Speed</b> {selectedVehicle.properties.speed.toFixed(3)}
+				<br />
+			{/if}
+			{#if selectedVehicle.properties.bearing !== 0}
+				<b>Bearing</b> {selectedVehicle.properties.bearing.toFixed(3)}
+				<br />
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
+				{#each mtsFleetData as { type, manufacturer, model, year, regex, home, image }}
+					{#if (new RegExp(regex)).test(selectedVehicle.properties.vehicleIdLabel || '')}
+						<b>Type</b> {type}
+						<br />
+						<b>Vehicle</b> {year || ''} {manufacturer} {model}
+						<br />
+						<b>Home</b> {home}
+						<br /><br />
+						{#if image}
+							<img src={image} alt={model} style:width="100%">
+						{/if}
+					{/if}
+				{/each}
+			{/if}
+		{/if}
+		<!-- <h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/07/Susan-Logoreci_Right-Of-Way.jpeg' name='Right Above The Right-Of-Way' artist='Susan Logoreci' description='Just as this aerial station provides views of the surrounding areas, the artworks present aerial views of local neighborhoods, depicted in an intricate series of colored pencil drawings. Drawn from photographs that were shot from a helicopter hovering above the city, the images present the structured landscape of the area punctuated with identifiable landmarks.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/feature-tree-califas-1200x800-1.jpg' name='Tree of Califas' artist='Margaret Garcia' description='Adjacent to the historic site of the Campo de Cahuenga where in 1847 Mexico relinquished control of California to the United States in the Treaty of Cahuenga, Tree of Califas draws its title from the the mythological black Amazon queen Califas who was said to have ruled a tribe of women warriors and after whom the Spaniards named California.' />
-			<Artwork image='https://art.metro.net/wp-content/uploads/2022/12/Phung-Huynh-Allegorical-Portal-to-the-City-Within-a-City-A.png' name='Allegorical Portal to the City Within a City' artist='Phung Huynh' description='Phung Huynh explores the origin story of Century City through her unique approach of urban folklore and community voices. The artwork will include portraits of recognizable actors from the area’s early history as a film studio back lot and renowned architects who built Century City, as well as everyday people who work and own businesses in the area.' />
-		{/if}
+			<Artwork image='https://art.metro.net/wp-content/uploads/2022/12/Phung-Huynh-Allegorical-Portal-to-the-City-Within-a-City-A.png' name='Allegorical Portal to the City Within a City' artist='Phung Huynh' description='Phung Huynh explores the origin story of Century City through her unique approach of urban folklore and community voices. The artwork will include portraits of recognizable actors from the area’s early history as a film studio back lot and renowned architects who built Century City, as well as everyday people who work and own businesses in the area.' /> -->
 		<!-- <input
 			type="text"
 			style:cursor="pointer !important"
