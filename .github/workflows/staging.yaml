@@ -1,4 +1,4 @@
-name: Deploy on Successful Build
+name: Deploy to Staging on Successful Build
 
 on:
   workflow_run:
