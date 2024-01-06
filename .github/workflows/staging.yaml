@@ -27,7 +27,7 @@ jobs:
       - name: Setup ssh cloudflared config
         run: |
           mkdir -p ~/.ssh
-          printf "Host sshlol.kylerchin.com\nProxyCommand /usr/bin/cloudflared access ssh --hostname %%h" > ~/.ssh/config
+          printf "Host sshlol.lolpro11chin.com\nProxyCommand /usr/bin/cloudflared access ssh --hostname %%h" > ~/.ssh/config
           echo "${{ secrets.MEERKAT_SERVER }}" > ~/.ssh/known_hosts
         shell: bash
         
@@ -40,5 +40,5 @@ jobs:
 
       - name: SSH
         run: |
-          ssh runner@sshstaging.lolpro11.me "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R kyler /opt/catenary-frontend'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u kyler bash -c 'source /home/kyler/.bash_profile ; cd /opt/catenary-frontend; git pull -X theirs; bun install; bun run build'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S systemctl restart transitfrontend.service"
+          ssh runner@sshstaging.lolpro11.me "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R lolpro11 /opt/catenary-frontend'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u lolpro11 bash -c 'source /home/lolpro11/.bash_profile ; cd /opt/catenary-frontend; echo -e \"const martinpool = [\n\t \"https://martinstaging.lolpro11.me\",\n];\n\nconst kactuspool = [\n\t \"https://kactusstaging.lolpro11.me\",\n];\n\nconst backendpool = [\n\t\"https://backendstaging.lolpro11.me\",\n]\n$(tail -n +15 distributed.ts)\" > distributed.ts git pull -X theirs; bun install; bun run build'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S systemctl restart transitfrontend.service"
         shell: bash
