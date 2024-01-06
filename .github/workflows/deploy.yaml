@@ -1,10 +1,7 @@
 name: Deploy on Successful Build
 
 on:
-  workflow_run:
-    workflows: ["Build Svelte using Bun"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   deploy:
