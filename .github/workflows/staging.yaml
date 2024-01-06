@@ -48,8 +48,8 @@ jobs:
             git clean .; \
             echo -e \"const martinpool = [\\n\\t \\\"https://martinstaging.lolpro11.me\\\",\\n];\\n\\nconst kactuspool = [\\n\\t \\\"https://kactusstaging.lolpro11.me\\\",\\n];\\n\\nconst backendpool = [\\n\\t\\\"https://backendstaging.lolpro11.me\\\",\\n]\\n\$(tail -n +15 /distributed.ts)\" > distributed.ts; \
             git pull -X theirs; \
-            bundler install; \
-            bundler exec rake build'; \
+            bun install; \
+            bun run build'; \
             echo '${{ secrets.SUDO_PASSWD }}' | sudo -S systemctl restart transitfrontend.service"
 
         shell: bash
