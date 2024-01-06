@@ -136,7 +136,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             ],
             ['!',['in', 2, ['get', "children_route_types"]]]
         ],
-        minzoom: 9
+        minzoom: 10
     });
 
     //INTERCITY RAIL
@@ -157,7 +157,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
         'circle-opacity': 0.1
     },
-    minzoom: 5,
+    minzoom: 7,
     filter: removeWeekendStops(['all',
     [
         'all',
@@ -182,7 +182,7 @@ map.addLayer({
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-        'text-size': window.innerWidth >= 1023 ? ['interpolate', ['linear'], ['zoom'], 9, 10, 15, 12, 17, 14] : ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
+        'text-size': window.innerWidth >= 1023 ? ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 10, 15, 12, 17, 14] : ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
         'text-radial-offset': 1,
         //'text-ignore-placement': true,
         //'icon-ignore-placement': false,
@@ -210,7 +210,7 @@ map.addLayer({
         ['in', 2, ['get', "children_route_types"]]
         ]
     ],
-    minzoom: 5
+    minzoom: 7
 });
 
    //OTHER
