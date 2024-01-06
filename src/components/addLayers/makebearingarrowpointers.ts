@@ -53,6 +53,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 						'icon-color': ['get', 'contrastdarkmodebearing'],
 						'icon-opacity': 0.6
 					},
+					minZoom: 2,
 					layout: {
 						'icon-image': 'pointingcoloured',
 						'icon-allow-overlap': true,
@@ -169,6 +170,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					paint: {
 						'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 					},
+					minZoom: 2,
 					layout: {
 						'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
 						'icon-allow-overlap': true,
