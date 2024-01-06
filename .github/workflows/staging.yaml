@@ -45,7 +45,7 @@ jobs:
             echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u lolpro11 bash -c \
             'source /home/lolpro11/.profile ; \
             cd /opt/catenary-frontend; \
-            git clean .; \
+            git restore .; \
             echo -e \"const martinpool = [\\n\\t \\\"https://martinstaging.lolpro11.me\\\",\\n];\\n\\nconst kactuspool = [\\n\\t \\\"https://kactusstaging.lolpro11.me\\\",\\n];\\n\\nconst backendpool = [\\n\\t\\\"https://backendstaging.lolpro11.me\\\",\\n]\\n\$(tail -n +15 src/components/distributed.ts)\" > src/components/distributed.ts; \
             git pull -X theirs; \
             bun install; \
