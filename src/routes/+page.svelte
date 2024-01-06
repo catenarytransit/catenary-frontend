@@ -1094,17 +1094,18 @@
 		//get url param "sat"
 
 		let style = darkMode
-			? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
-			: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
 		if (browser) {
 			if (window.localStorage.mapStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
 			}
-			if (window.localStorage.mapStyle == 'classic') {
-				style = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+			if (window.localStorage.mapStyle == 'brightocean') {
+				style = 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+			}
+			if (window.localStorage.mapStyle == 'deepsea') {
+				style = 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o';
 			}
 			if (window.localStorage.mapStyle == 'archi') {
 				style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
@@ -2329,7 +2330,8 @@ on:keydown={() => {
 				>
 					<option value="none">--</option>
 					<option value="default">{strings.styledefault}</option>
-					<option value="classic">{strings.styleclassic}</option>
+					<option value="brightocean">{strings.styleocean}</option>
+					<option value="deepsea">{strings.stylesea}</option>
 					{#if browser}
 						{#if window.location.search.includes('sat')}
 							<option value="sat">{strings.stylesat}</option>
@@ -2422,7 +2424,7 @@ on:keydown={() => {
 				<br />
 			{/if}
 			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
-				{#each mtsFleetData as { type, manufacturer, model, year, regex, home, image }}
+				{#each mtsFleetData as { type, manufacturer, model, year, regex, home, image, credit }}
 					{#if (new RegExp(regex)).test(selectedVehicle.properties.vehicleIdLabel || '')}
 						<b>Type</b> {type}
 						<br />
@@ -2432,6 +2434,7 @@ on:keydown={() => {
 						<br /><br />
 						{#if image}
 							<img src={image} alt={model} style:width="100%">
+							<i>{credit}</i>
 						{/if}
 					{/if}
 				{/each}

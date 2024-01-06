@@ -58,6 +58,8 @@
         "model": "Low-Floor",
         "year": 2013,
         "regex": "^23[0-9]{2}$",
+        "image": "/vehicles/mts/2322.webp",
+        "credit": "Myra F for Catenary",
         "home": "SBD/ECD"
     },
     {
@@ -74,6 +76,8 @@
         "model": "Low-Floor",
         "year": 2014,
         "regex": "^24[0-9]{2}$",
+        "image": "/vehicles/mts/2411.webp",
+        "credit": "Myra F for Catenary",
         "home": "SBD"
     },
     {
@@ -82,6 +86,8 @@
         "model": "Low-Floor",
         "year": 2015,
         "regex": "^20[0-9]{2}$",
+        "image": "/vehicles/mts/2008.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "SBD"
     },
     {
@@ -90,6 +96,8 @@
         "model": "Low-Floor",
         "year": 2015,
         "regex": "^82[0-9]{2}$",
+        "image": "/vehicles/mts/8210.webp",
+        "credit": "Myra F for Catenary",
         "home": "ECD"
     },
     {
@@ -98,6 +106,8 @@
         "model": "AeroElite 320",
         "year": 2016,
         "regex": "^31[0-9]{2}$",
+        "image": "/vehicles/mts/3108.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "CPD"
     },
     {
@@ -105,7 +115,7 @@
         "manufacturer": "Gillig",
         "model": "Low-Floor",
         "year": 2016,
-        "regex": "^83[0-9]{2}$",
+        "regex": "^831[0-9]$|^832[0-9]$|^833[0-9]$|^834[0-9]$",
         "home": "ECD"
     },
     {
@@ -114,6 +124,8 @@
         "model": "Low-Floor",
         "year": 2017,
         "regex": "^21[0-9]{2}$",
+        "image": "/vehicles/mts/2133.webp",
+        "credit": "Myra F for Catenary",
         "home": "SBD"
     },
     {
@@ -129,7 +141,19 @@
         "manufacturer": "New Flyer",
         "model": "XN60",
         "year": 2017,
-        "regex": "^75[0-9]{2}$",
+        "regex": "^750[0-9]$|^751[0-9]$|^752[0-9]$|^753[0-9]$|^754[0-9]$",
+        "image": "/vehicles/mts/7505.jpg",
+        "credit": "Samuel Sharp for Catenary",
+        "home": "SBD"
+    },
+    {
+        "type": "Articulated Bus - Rapid Electric",
+        "manufacturer": "New Flyer",
+        "model": "XE60",
+        "year": 2023,
+        "regex": "^755[0-9]$|^756[0-9]$",
+        "image": "/vehicles/mts/7553.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "SBD"
     },
     {
@@ -162,6 +186,18 @@
         "model": "Low-Floor",
         "year": 2022,
         "regex": "^22[0-9]{2}$",
+        "image": "/vehicles/mts/2236.webp",
+        "credit": "Myra F for Catenary",
+        "home": "SBD"
+    },
+    {
+        "type": "Standard MTS Bus",
+        "manufacturer": "Gillig",
+        "model": "Low-Floor",
+        "year": 2021,
+        "regex": "^26[0-9]{2}$",
+        "image": "/vehicles/mts/2624.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "SBD"
     },
     {
@@ -226,6 +262,8 @@
         "model": "Low-Floor",
         "year": 2020,
         "regex": "^16[0-9]{2}$",
+        "image": "/vehicles/mts/1603.webp",
+        "credit": "Myra F for Catenary",
         "home": "IAD"
     },
     {
@@ -234,6 +272,8 @@
         "model": "Low-Floor",
         "year": 2020,
         "regex": "^17[0-9]{2}$",
+        "image": "/vehicles/mts/1701.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "IAD/KMD"
     },
     {
@@ -242,6 +282,8 @@
         "model": "XN60",
         "year": 2020,
         "regex": "^18[0-9]{2}$",
+        "image": "/vehicles/mts/1819.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "IAD"
     },
     {
@@ -251,6 +293,7 @@
         "year": 2019,
         "regex": "^15[0-9]{2}$",
         "image": "https://www.sdmts.com/sites/default/files/attachments/zeb1.jpg",
+        "credit": "MTS photo",
         "home": "ANY"
     },
     {
@@ -284,6 +327,7 @@
         "year": 2014,
         "regex": "^9[0-9]{2}$",
         "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2839%29.jpg",
+        "credit": "MTS photo",
         "home": "KMD"
     },
     {
@@ -293,6 +337,7 @@
         "year": 2013,
         "regex": "^12[0-9]{2}$",
         "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2857%29.jpg",
+        "credit": "MTS photo",
         "home": "IAD"
     },
     {
@@ -301,6 +346,8 @@
         "model": "XN60",
         "year": 2013,
         "regex": "^11[0-9]{2}$",
+        "image": "/vehicles/mts/1110.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "KMD"
     },
     {
@@ -309,8 +356,9 @@
         "model": "Low-Floor",
         "year": 2013,
         "regex": "^8[0-9]{2}$",
-        "home": "IAD",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2844%29.jpg"
+        "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2844%29.jpg",
+        "credit": "MTS photo",
+        "home": "IAD"
     },
     {
         "type": "Standard MTS Bus",
@@ -318,6 +366,8 @@
         "model": "C40LFR",
         "year": 2012,
         "regex": "^7[0-9]{2}$",
+        "image": "/vehicles/mts/729.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "IAD"
     },
     {
@@ -326,6 +376,8 @@
         "model": "C40LFR",
         "year": 2011,
         "regex": "^6[0-9]{2}$",
+        "image": "/vehicles/mts/612.jpg",
+        "credit": "Samuel Sharp for Catenary",
         "home": "IAD"
     },
     {
