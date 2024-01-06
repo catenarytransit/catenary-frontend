@@ -47,10 +47,10 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
         },
         paint: {
-            'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+            'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
             'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
             'text-halo-width': 0.4
         },
@@ -111,7 +111,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
             
         },
         paint: {
@@ -136,7 +136,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             ],
             ['!',['in', 2, ['get', "children_route_types"]]]
         ],
-        minzoom: 9
+        minzoom: 10
     });
 
     //INTERCITY RAIL
@@ -157,7 +157,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
         'circle-opacity': 0.1
     },
-    minzoom: 5,
+    minzoom: 7,
     filter: removeWeekendStops(['all',
     [
         'all',
@@ -182,13 +182,13 @@ map.addLayer({
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-        'text-size': window.innerWidth >= 1023 ? ['interpolate', ['linear'], ['zoom'], 9, 10, 15, 12, 17, 14] : ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
+        'text-size': window.innerWidth >= 1023 ? ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 10, 15, 12, 17, 14] : ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
         'text-radial-offset': 1,
         //'text-ignore-placement': true,
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
@@ -210,7 +210,7 @@ map.addLayer({
         ['in', 2, ['get', "children_route_types"]]
         ]
     ],
-    minzoom: 5
+    minzoom: 7
 });
 
    //OTHER
@@ -229,12 +229,12 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
         
-        'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+        'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
         'text-halo-width': 1
     },
@@ -278,12 +278,12 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
         
-        'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+        'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
         'text-halo-width': 1
     },
