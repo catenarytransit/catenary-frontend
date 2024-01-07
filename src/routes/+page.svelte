@@ -2217,17 +2217,17 @@ on:keydown={() => {
 			</Alertpopup>
 			{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
 			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url(https://art.metro.net/wp-content/uploads/2021/08/feature-chatsworth-1200x800-1.jpeg) bottom center no-repeat, black">
-				<h1 class="text-lg">{strings.alertheaderla}</h1>
-				<p class="text-sm">{strings.alertsubtextla}</p>
+				<h1 class="text-lg">Your community, through the eyes of artists</h1>
+				<p class="text-sm">For 20 years, Metro Art has commissioned artists to capture the magic of LA\'s vibrant neighborhoods.</p>
 				<a style:cursor="pointer" style:color="#f9e300" href="https://art.metro.net/category/artworks/exhibitions/tteoa/">{strings.learnmore} &rarr;</a>
 				<br /><br /><br /><br /><br /><br />
 			</Alertpopup>
 			{/if}
 			{#if realtime_list.includes('f-mts~rt~onebusaway')}
-			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://www.sandag.org/-/media/SANDAG/Main-Heros/regional-plan/regional-plan-landing.png) center center no-repeat, black">
-				<h1 class="text-lg">{strings.alertheadersd}</h1>
-				<p class="text-sm">{strings.alertsubtextsd}</p>
-				<a style:cursor="pointer" style:color="#f9e300" href="https://sandag.org/transitfarestudy">{strings.learnmore} &rarr;</a>
+			<Alertpopup background="#E68357">
+				<h1 class="text-lg">January Service Changes</h1>
+				<p class="text-sm">Frequency and schedule adjustments for MTS routes 215, 227, 894, 905, 955, 962, 964, and 992 take effect January 28, 2024. New timetables will be orange.</p>
+				<a style:cursor="pointer" style:color="#f9e300" href="https://www.sdmts.com/sites/default/files/attachments/january-service-changes-2024.pdf">{strings.learnmore} &rarr;</a>
 			</Alertpopup>
 			{/if}
 		{/if}

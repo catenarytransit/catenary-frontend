@@ -4,10 +4,6 @@ const i18n = {
         // special
         appwidealert: 'Customize your Catenary experience!',
         appwidesubtext: 'Want to see buses or additional information on the map? Select the Layers menu in the top right corner.',
-        alertheadersd: 'What future programs do you think would improve public transit the most?',
-        alertsubtextsd: 'Take SANDAG’s survey by 1/2/24 and you can enter a sweepstakes to win a $50 Amazon gift card.',
-        alertheaderla: 'Your community, through the eyes of artists',
-        alertsubtextla: 'For 20 years, Metro Art has commissioned artists to capture the magic of LA\'s vibrant neighborhoods.',
         learnmore: 'Learn more',
         // art
         art: 'Public Art',
@@ -55,10 +51,6 @@ const i18n = {
         // special
         appwidealert: 'Personnalisez votre expérience Catenary!',
         appwidesubtext: 'Vous voulez voir des bus ou des informations supplémentaires sur la carte? Sélectionnez le menu Layers dans le coin supérieur droit.',
-        alertheadersd: 'Quels programmes futurs pensez-vous qui amélioreraient le plus les transports en commun?',
-        alertsubtextsd: 'Répondez au sondage de SANDAG d\'ici le 2/1/24 et vous pourrez participer à un tirage au sort pour gagner une carte-cadeau Amazon de 50 $.',
-        alertheaderla: 'Voyez votre communauté à travers les yeux d\'artistes locaux',
-        alertsubtextla: 'Célébrez les 20 ans de la série Through the Eyes of Artists de Metro Art!',
         learnmore: 'En savoir plus',
         // art
         art: 'Art public',
@@ -106,10 +98,6 @@ const i18n = {
         // special
         appwidealert: '¡Personaliza tu experiencia Catenary!',
         appwidesubtext: '¿Quieres ver autobuses o información adicional en el mapa? Seleccione el menú Capas en la esquina superior derecha.',
-        alertheadersd: '¿Qué programas futuros cree que mejorarían más el transporte público?',
-        alertsubtextsd: 'Responda la encuesta de SANDAG antes del 2 de enero del 2024 y entrará en un sorteo para ganar una tarjeta de regalo de Amazon de $50.',
-        alertheaderla: 'Vea su comunidad a través de los ojos de artistas locales',
-        alertsubtextla: '¡Celebre los 20 años de la serie Through the Eyes of Artists de Metro Art!',
         learnmore: 'Aprende mas',
         // art
         art: 'Arte público',
@@ -157,10 +145,6 @@ const i18n = {
         // special
         appwidealert: 'Passen Sie Ihr Catenary-Erlebnis an!',
         appwidesubtext: 'Möchten Sie Busse oder zusätzliche Informationen auf der Karte sehen? Wählen Sie das Menü Ebenen in der oberen rechten Ecke.',
-        alertheadersd: 'Welche zukünftigen Programme würden Ihrer Meinung nach den öffentlichen Nahverkehr am meisten verbessern?',
-        alertsubtextsd: 'Nehmen Sie an der Umfrage von SANDAG bis zum 2. Januar 2024 teil und Sie können an einer Verlosung für einen 50 $ Amazon-Gutschein teilnehmen.',
-        alertheaderla: 'Sehen Sie Ihre Gemeinde durch die Augen lokaler Künstler',
-        alertsubtextla: 'Feiern Sie 20 Jahre Metro Art\'s Through the Eyes of Artists Serie!',
         learnmore: 'Erfahren Sie mehr',
         // art
         art: 'Öffentliche Kunst',
@@ -208,10 +192,6 @@ const i18n = {
         // special
         appwidealert: 'Catenary 경험을 사용자 정의하십시오!',
         appwidesubtext: '지도에서 버스 또는 추가 정보를 보고 싶습니까? 오른쪽 상단 모서리에있는 레이어 메뉴를 선택하십시오.',
-        alertheadersd: '대중 교통을 가장 개선할 것으로 생각되는 미래 프로그램은 무엇입니까?',
-        alertsubtextsd: 'SANDAG의 설문 조사에 1/2/24까지 참여하면 50 달러의 아마존 상품권을 받을 수있는 추첨에 참여 할 수 있습니다.',
-        alertheaderla: '지역 예술가의 눈으로 지역 사회를 보세요',
-        alertsubtextla: 'Metro Art의 Through the Eyes of Artists 시리즈 20 주년을 축하합니다!',
         learnmore: '더 알아보기',
         // art
         art: '공공 예술',
@@ -260,10 +240,6 @@ const i18n = {
         // special
         appwidealert: '自訂您的 Catenary 體驗！',
         appwidesubtext: '想在地圖上看到巴士或其他資訊？請選擇右上角的圖層選單。',
-        alertheadersd: '您覺得什麼樣的未來發展會對公共交通最友善？',
-        alertsubtextsd: '在 1月2日2024年 前參加 SANDAG 的問卷，就可獲得一次抽獎 $50 美元亞馬遜禮物卡的機會。',
-        alertheaderla: '看藝術家的眼中的社區',
-        alertsubtextla: '慶祝 Metro Art 的 Through the Eyes of Artists 系列 20 週年！',
         learnmore: '跟多資料',
         // art
         art: '公共藝術',
@@ -311,10 +287,6 @@ const i18n = {
         // special
         appwidealert: '自定义您的 Catenary 体验！',
         appwidesubtext: '想在地图上看到巴士或其他信息？请选择右上角的图层选单。',
-        alertheadersd: '您觉得什么样的未来发展会对公共交通最友善？',
-        alertsubtextsd: '在 1月2日2024年 前参加 SANDAG 的问卷，就可获得一次抽奖 $50 美元亚马逊礼物卡的机会。',
-        alertheaderla: '看艺术家的眼中的社区',
-        alertsubtextla: '庆祝 Metro Art 的 Through the Eyes of Artists 系列 20 周年！',
         learnmore: '跟多资料',
         // art
         art: '公共艺术',
