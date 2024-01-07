@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fly } from "svelte/transition";
+
     export let imageURL = '';
     export let background = '';
 </script>
@@ -9,6 +11,7 @@
     style:border-radius="10px"
     style:background={background}
     style:background-size="cover"
+    in:fly
 >
     {#if imageURL}
         <img src={imageURL} style:height="70px" class="m-2" />
