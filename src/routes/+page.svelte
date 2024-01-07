@@ -1,16 +1,13 @@
 <script lang="ts">
-	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
-	//switch to maplibre-gl soon, protomaps in the works
-	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
+	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
-	import { construct_svelte_component, run } from 'svelte/internal';
 	import { blur, fade } from 'svelte/transition';
 	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
-	import { LngLat } from 'maplibre-gl';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
 	import { determineFeeds } from '../maploaddata';
@@ -19,18 +16,12 @@
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import {
-		numberForBearingLengthBus,
-		numberForBearingLengthRail
-	} from '../components/lineBasedBearing';
-	import {
 		what_kactus_to_use,
 		what_martin_to_use,
 		what_backend_to_use,
 		check_kactus,
 		check_backend,
-		check_martin
 	} from '../components/distributed';
-	import Toastify from 'toastify-js';
 	import { addStopsLayers } from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
 
@@ -44,6 +35,7 @@
 
 	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
 	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
+	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
 
 	let expandMetrolink = {
 		AV: 'Antelope Valley',
@@ -71,7 +63,8 @@
 
 	let fleetData = {
 		'f-mts~rt~onebusaway': mtsFleetData,
-		'f-metro~losangeles~rail~rt': metroFleetData
+		'f-metro~losangeles~rail~rt': metroFleetData,
+		'f-northcountrytransitdistrict~rt': nctdFleetData,
 	};
 
 	let enabledlayerstyle =
@@ -2137,14 +2130,6 @@
 
 <svelte:head>
 	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2188,10 +2173,6 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true} />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-		rel="stylesheet"
-	/>
 	<link
 		rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
@@ -2623,12 +2604,12 @@
 					</h1>
 				{/if}
 				<br />
-				{#if (selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt')}
+				{#if selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
 					<b class="text-lg">Vehicle</b>
 					{selectedVehicle.properties.vehicleIdLabel}
 					<br />
 				{/if}
-				{#if (selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt')}
+				{#if selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
 					<b class="text-lg">Trip</b>
 					{selectedVehicle.properties.tripIdLabel}
 					<br />
@@ -2638,7 +2619,7 @@
 					{selectedVehicle.properties.bearing.toFixed(3)}°
 					<br />
 				{/if}
-				{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway' || selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
+				{#if fleetData[selectedVehicle.properties.agency]}
 					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
 						{#if new RegExp(regex).test(selectedVehicle.properties.vehicleIdLabel || '')}
 							<b class="text-lg">Type</b>
