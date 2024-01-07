@@ -2143,6 +2143,8 @@
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2292,8 +2294,8 @@
 					>
 						<h1 class="text-lg">Your community, through the eyes of artists</h1>
 						<p class="text-sm">
-							For 20 years, Metro Art has commissioned artists to capture the magic of LA\'s vibrant
-							neighborhoods.
+							For 20 years, Metro Art has commissioned artists to capture the magic of LA&apos;s
+							vibrant neighborhoods.
 						</p>
 						<a
 							style:cursor="pointer"
@@ -2600,9 +2602,17 @@
 						src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
 						style:height="30px"
 					/>
-					<br />
+					<h1
+						style:color={darkMode
+							? selectedVehicle.properties.contrastdarkmode
+							: selectedVehicle.properties.color}
+						class="text-3xl"
+					>
+						<span class="font-black text-4xl">{selectedVehicle.properties.tripIdLabel}</span>
+						{selectedVehicle.properties.maptag}
+					</h1>
 				{/if}
-				{#if selectedVehicle.properties.agency != 'f-mts~rt~onebusaway' && selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metrolinktrains~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt' && selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt'}
+				{#if selectedVehicle.properties.agency != 'f-mts~rt~onebusaway' && selectedVehicle.properties.agency != 'f-amtrak~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metrolinktrains~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt' && selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt'}
 					<h1
 						style:color={darkMode
 							? selectedVehicle.properties.contrastdarkmode
@@ -2613,12 +2623,12 @@
 					</h1>
 				{/if}
 				<br />
-				{#if selectedVehicle.properties.vehicleIdLabel}
+				{#if (selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt')}
 					<b class="text-lg">Vehicle</b>
 					{selectedVehicle.properties.vehicleIdLabel}
 					<br />
 				{/if}
-				{#if selectedVehicle.properties.tripIdLabel}
+				{#if (selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt')}
 					<b class="text-lg">Trip</b>
 					{selectedVehicle.properties.tripIdLabel}
 					<br />
