@@ -35,10 +35,10 @@ const i18n = {
         showvehicle: 'Vehicle',
         showspeed: 'Speed',
         // foamer layers
-        orminfra: 'Infrastructure',
-        ormspeeds: 'Max Speeds',
-        ormsignalling: 'Signalling',
-        ormelectrification: 'Electrification',
+        orminfra: 'Infra',
+        ormspeeds: 'Speeds',
+        ormsignalling: 'Signals',
+        ormelectrification: 'Power',
         ormgauge: 'Gauge',
         // announcements
         announcements: 'Play Random Announcements (Troll)',

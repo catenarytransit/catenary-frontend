@@ -20,7 +20,7 @@
 		what_martin_to_use,
 		what_backend_to_use,
 		check_kactus,
-		check_backend,
+		check_backend
 	} from '../components/distributed';
 	import { addStopsLayers } from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
@@ -64,7 +64,7 @@
 	let fleetData = {
 		'f-mts~rt~onebusaway': mtsFleetData,
 		'f-metro~losangeles~rail~rt': metroFleetData,
-		'f-northcountrytransitdistrict~rt': nctdFleetData,
+		'f-northcountrytransitdistrict~rt': nctdFleetData
 	};
 
 	let enabledlayerstyle =
@@ -84,7 +84,7 @@
 	//false means use metric, true means use us units
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
-	let foamermode = false;
+
 	let sidebarCollapsed = false;
 	let sidebarView = 0;
 	let announcermode = false;
@@ -212,11 +212,6 @@
 		//redo settings
 	}
 
-	function handleFoamerModeSwitch() {
-		foamermode = !foamermode;
-		localStorage.setItem('foamermode', foamermode ? 'true' : 'false');
-	}
-
 	function handleAnnouncerModeSwitch() {
 		announcermode = !announcermode;
 		localStorage.setItem('announcermode', announcermode ? 'true' : 'false');
@@ -229,12 +224,6 @@
 			usunits = true;
 		} else {
 			usunits = false;
-		}
-
-		if (localStorage.getItem('foamermode') === 'true') {
-			foamermode = true;
-		} else {
-			foamermode = false;
 		}
 
 		if (localStorage.getItem('fpsmode') === 'true') {
@@ -349,10 +338,10 @@
 		more: {
 			foamermode: {
 				infra: false,
-				speeds: false,
+				maxspeed: false,
 				signalling: false,
 				electrification: false,
-				gague: false
+				gauge: false
 			},
 			showstationentrances: true,
 			showstationart: false,
@@ -961,10 +950,34 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
-			if (foamermode) {
+			if (layersettings.more.foamermode.infra) {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
 			} else {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.maxspeed) {
+				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.signalling) {
+				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.electrification) {
+				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.gauge) {
+				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
 			}
 
 			Object.entries(layerspercategory).map((eachcategory) => {
@@ -1610,10 +1623,58 @@
 				tileSize: 256
 			});
 
+			map.addSource('maxspeedtiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
+			map.addSource('signallingtiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
+			map.addSource('electrificationtiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
+			map.addSource('gaugetiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
 			map.addLayer({
 				id: 'foamershapes',
 				type: 'raster',
 				source: 'foamertiles'
+			});
+
+			map.addLayer({
+				id: 'maxspeedshapes',
+				type: 'raster',
+				source: 'maxspeedtiles'
+			});
+
+			map.addLayer({
+				id: 'signallingshapes',
+				type: 'raster',
+				source: 'signallingtiles'
+			});
+
+			map.addLayer({
+				id: 'electrificationshapes',
+				type: 'raster',
+				source: 'electrificationtiles'
+			});
+
+			map.addLayer({
+				id: 'gaugeshapes',
+				type: 'raster',
+				source: 'gaugetiles'
 			});
 
 			map.addLayer({
@@ -2129,6 +2190,7 @@
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
@@ -2835,22 +2897,56 @@
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
-		<div>
-			<input
-				on:click={(x) => {
-					handleFoamerModeSwitch();
-					runSettingsAdapt();
-				}}
-				on:keydown={(x) => {
-					handleFoamerModeSwitch();
-					runSettingsAdapt();
-				}}
-				checked={foamermode}
-				id="foamermode"
-				type="checkbox"
-				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		<div class="flex flex-row gap-x-1">
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="infra"
+				name={strings.orminfra}
+				urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
+				{runSettingsAdapt}
 			/>
-			<label for="foamermode" class="ml-2">{strings.orminfra}</label>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="maxspeed"
+				name={strings.ormspeeds}
+				urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="signalling"
+				name={strings.ormsignalling}
+				urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="electrification"
+				name={strings.ormelectrification}
+				urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="gauge"
+				name={strings.ormgauge}
+				urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
 		</div>
 
 		<div>
