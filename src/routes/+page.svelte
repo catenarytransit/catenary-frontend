@@ -65,7 +65,7 @@
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 	let foamermode = false;
-	let sidebarCollapsed = true;
+	let sidebarCollapsed = false;
 	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
@@ -2200,12 +2200,10 @@ on:keydown={() => {
 
 {#if sidebarCollapsed == false}
 	<div
-		class="fixed top-0 left-0 pointer-events-none text-white pointer-events-auto z-50 clickable lg:w-[25vw] w-[100vw] h-[100vh] backdrop-blur-sm"
+		class="fixed bottom-0 left-0 pointer-events-none border-r-0 lg:border-r-4 border-t-4 lg:border-t-0 text-white pointer-events-auto z-50 clickable lg:w-[20vw] w-[100vw] lg:h-[100vh] h-[40vh] backdrop-blur-sm"
 		style:background={darkMode ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)"}
 		style:color={`${darkMode ? 'white' : 'black'}`}
-		style:border-image-source="linear-gradient(to bottom, #42A7C5, #0A233F)"
-		style:border-image-slice="1"
-		style:border-right="5px solid"
+		style:border-color="#42A7C5"
 		style:padding="20px"
 		style:overflow="auto"
 	>
@@ -2469,7 +2467,8 @@ on:keydown={() => {
 			style:cursor="pointer !important"
 			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
-			<span class="material-symbols-outlined margin-auto select-none"> left_panel_close </span>
+			<span class="hidden lg:flex material-symbols-outlined margin-auto select-none"> left_panel_close </span>
+			<span class="lg:hidden material-symbols-outlined margin-auto select-none"> bottom_panel_close </span>
 		</a>
 		<a
 			on:click={() => { sidebarView = 0 }}
@@ -2496,12 +2495,19 @@ on:keydown={() => {
 {/if}
 
 {#if sidebarCollapsed}
-<a
+		<a
 			on:click={() => { sidebarCollapsed = false }}
 			style:cursor="pointer !important"
-			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			class="fixed hidden lg:flex left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> left_panel_open </span>
+		</a>
+		<a
+			on:click={() => { sidebarCollapsed = false }}
+			style:cursor="pointer !important"
+			class="fixed lg:hidden left-4 bottom-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
 		</a>
 {/if}
 
