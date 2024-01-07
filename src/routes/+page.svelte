@@ -1095,14 +1095,11 @@
 
 		let style = darkMode
 					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 
 		if (browser) {
 			if (window.localStorage.mapStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
-			}
-			if (window.localStorage.mapStyle == 'brightocean') {
-				style = 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 			}
 			if (window.localStorage.mapStyle == 'deepsea') {
 				style = 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o';
@@ -2330,7 +2327,6 @@ on:keydown={() => {
 				>
 					<option value="none">--</option>
 					<option value="default">{strings.styledefault}</option>
-					<option value="brightocean">{strings.styleocean}</option>
 					<option value="deepsea">{strings.stylesea}</option>
 					{#if browser}
 						{#if window.location.search.includes('sat')}
