@@ -2377,6 +2377,13 @@ on:keydown={() => {
 					<img src="/lines/nctd-sprinter.svg" style:width="100%" />
 				{:else if selectedVehicle.properties.maptag == '350'}
 					<img src="/lines/nctd-brt.svg" style:width="100%" />
+					<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
+						350
+					</h1>
+				{:else}
+					<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
+						{selectedVehicle.properties.maptag}
+					</h1>
 				{/if}
 			{/if}
 			{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
@@ -2410,35 +2417,31 @@ on:keydown={() => {
 				<img src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg" style:width="100%" />
 				<br />
 			{/if}
-			{#if (selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt')}
+			{#if (selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt'&& selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt')}
 				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">{selectedVehicle.properties.maptag}</h1>
 			{/if}
 			<br />
 			{#if selectedVehicle.properties.vehicleIdLabel}
-				<b>Vehicle ID</b> {selectedVehicle.properties.vehicleIdLabel}
+				<b class="text-lg">Vehicle</b> {selectedVehicle.properties.vehicleIdLabel}
 				<br />
 			{/if}
 			{#if selectedVehicle.properties.tripIdLabel}
-				<b>Trip ID</b> {selectedVehicle.properties.tripIdLabel}
-				<br />
-			{/if}
-			{#if selectedVehicle.properties.speed !== 0}
-				<b>Speed</b> {selectedVehicle.properties.speed.toFixed(3)}
+				<b class="text-lg">Trip</b> {selectedVehicle.properties.tripIdLabel}
 				<br />
 			{/if}
 			{#if selectedVehicle.properties.bearing !== 0}
-				<b>Bearing</b> {selectedVehicle.properties.bearing.toFixed(3)}
+				<b class="text-lg">Bearing</b> {selectedVehicle.properties.bearing.toFixed(3)}°
 				<br />
 			{/if}
 			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway' || selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
 				{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
 					{#if (new RegExp(regex)).test(selectedVehicle.properties.vehicleIdLabel || '')}
-						<b>Type</b> {type}
+						<b class="text-lg">Type</b> {type}
 						<br />
-						<b>Vehicle</b> {year || ''} {manufacturer} {model}
+						<b class="text-lg">Vehicle</b> {year || ''} {manufacturer} {model}
 						<br />
 						{#if home}
-							<b>Home</b> {home}
+							<b class="text-lg">Division</b> {home}
 							<br />
 						{/if}
 						<br />
