@@ -5,20 +5,23 @@
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { construct_svelte_component, run } from 'svelte/internal';
+	import { blur, fade } from 'svelte/transition';
 	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { LngLat } from 'maplibre-gl';
-	import {interpretLabelsToCode} from '../components/rtLabelsToMapboxStyle';
+	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
-	import { fade } from 'svelte/transition';
 	import { determineFeeds } from '../maploaddata';
-	import {makeCircleLayers} from '../components/addLayers/addLiveDots';
+	import { makeCircleLayers } from '../components/addLayers/addLiveDots';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import {numberForBearingLengthBus, numberForBearingLengthRail} from '../components/lineBasedBearing'
+	import {
+		numberForBearingLengthBus,
+		numberForBearingLengthRail
+	} from '../components/lineBasedBearing';
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -27,11 +30,11 @@
 		check_backend,
 		check_martin
 	} from '../components/distributed';
-	import Toastify from 'toastify-js'
-	import {addStopsLayers} from '../components/addLayers/addStops'
+	import Toastify from 'toastify-js';
+	import { addStopsLayers } from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
 
-	import {makeBearingArrowPointers} from '../components/addLayers/makebearingarrowpointers'
+	import { makeBearingArrowPointers } from '../components/addLayers/makebearingarrowpointers';
 
 	import i18n from '../i18n/strings';
 	import { playRandomSequence } from '../components/announcements';
@@ -39,13 +42,37 @@
 	import { addShapes } from '../components/addLayers/addShapes';
 	import Artwork from '../components/artwork.svelte';
 
-	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json'
-	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json'
+	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
+	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
+
+	let expandMetrolink = {
+		AV: 'Antelope Valley',
+		IEOC: 'Inland Empire-Orange County',
+		OC: 'Orange County',
+		SB: 'San Bernardino',
+		VC: 'Ventura County',
+		'91': '91/Perris Valley',
+		RIV: 'Riverside'
+	};
+
+	let expandMetra = {
+		'MD-N': 'Milwaukee District North',
+		NCS: 'North Central Service',
+		'UP-N': 'Union Pacific North',
+		'UP-NW': 'Union Pacific Northwest',
+		HC: 'Heritage Corridor',
+		ME: 'Metra Electric',
+		RI: 'Rock Island',
+		SWS: 'SouthWest Service',
+		BNSF: 'BNSF',
+		'MD-W': 'Milwaukee District West',
+		'UP-W': 'Union Pacific West'
+	};
 
 	let fleetData = {
-		"f-mts~rt~onebusaway": mtsFleetData,
-		"f-metro~losangeles~rail~rt": metroFleetData
-	}
+		'f-mts~rt~onebusaway': mtsFleetData,
+		'f-metro~losangeles~rail~rt': metroFleetData
+	};
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -71,15 +98,18 @@
 	let realtime_list: string[] = [];
 	let vehiclesData: Record<string, any> = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
-	let geometryObj : Record<string, any> = {};
+	let geometryObj: Record<string, any> = {};
 	let lasttimeofnorth = 0;
 
 	let selectedVehicle: any = null;
 
-	const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
-	let debugmode = !!(urlParams.get('debug'));
+	const urlParams =
+		typeof window !== 'undefined'
+			? new URLSearchParams(window.location.search)
+			: new URLSearchParams();
+	let debugmode = !!urlParams.get('debug');
 
-	let fpsmode = !!(urlParams.get('fps'));
+	let fpsmode = !!urlParams.get('fps');
 
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
@@ -99,76 +129,79 @@
 	let realtime_feeds_in_frame: Record<string, any> = {};
 
 	let lastrunmapcalc = 0;
-	let mapboundingbox:number[][] = [[0,0],[0,0],[0,0],[0,0]];
-	let mapboundingboxstring: String = "";
+	let mapboundingbox: number[][] = [
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0]
+	];
+	let mapboundingboxstring: String = '';
 
 	//frame render duration in ms
-	let last_render_start:number = 0;
+	let last_render_start: number = 0;
 	let frame_render_duration = 0;
 	let fps = 0;
-	let fps_array:number[] = [];
+	let fps_array: number[] = [];
 
 	const layerspercategory = {
-		
-		"bus": {
-			"livedots": "bus",
-			"labeldots": "labelbuses",
-			"pointing": "busespointing",
-			"pointingshell": "busespointingshell",
-			"stops": "busstopscircle",
-			"labelstops": "busstopslabel",
-			"shapes": "busshapes",
-			"labelshapes": "labelbusshapes"
+		bus: {
+			livedots: 'bus',
+			labeldots: 'labelbuses',
+			pointing: 'busespointing',
+			pointingshell: 'busespointingshell',
+			stops: 'busstopscircle',
+			labelstops: 'busstopslabel',
+			shapes: 'busshapes',
+			labelshapes: 'labelbusshapes'
 		},
-		"intercityrail": {
-			"livedots": "intercityrail",
-			"labeldots": "labelintercityrail",
-			"pointing": "intercityrailpointing",
-			"pointingshell": "intercityrailpointingshell",
-			"stops": "intercityrailstopscircle",
-			"labelstops": "intercityrailstopslabel",
-			"shapes": "intercityrailshapes",
-			"labelshapes": "intercityraillabelshapes"
+		intercityrail: {
+			livedots: 'intercityrail',
+			labeldots: 'labelintercityrail',
+			pointing: 'intercityrailpointing',
+			pointingshell: 'intercityrailpointingshell',
+			stops: 'intercityrailstopscircle',
+			labelstops: 'intercityrailstopslabel',
+			shapes: 'intercityrailshapes',
+			labelshapes: 'intercityraillabelshapes'
 		},
-		"localrail": {
-			"livedots": "localrail",
-			"labeldots": "labellocalrail",
-			"pointing": "localrailpointing",
-			"pointingshell": "localrailpointingshell",
-			"stops": "localrailstopscircle",
-			"labelstops": "localrailstopslabel",
-			"shapes": "localrailshapes",
-			"labelshapes": "localraillabelshapes"
+		localrail: {
+			livedots: 'localrail',
+			labeldots: 'labellocalrail',
+			pointing: 'localrailpointing',
+			pointingshell: 'localrailpointingshell',
+			stops: 'localrailstopscircle',
+			labelstops: 'localrailstopslabel',
+			shapes: 'localrailshapes',
+			labelshapes: 'localraillabelshapes'
 		},
 
-		"other": {
-			"livedots": "other",
-			"labeldots": "labelother",
-			"pointing": "otherpointing",
-			"pointingshell": "otherpointingshell",
-			"stops": "otherstopscircle",
-			"labelstops": "otherstopslabel",
-			"shapes": "othershapes",
-			"labelshapes": "otherlabelshapes"
+		other: {
+			livedots: 'other',
+			labeldots: 'labelother',
+			pointing: 'otherpointing',
+			pointingshell: 'otherpointingshell',
+			stops: 'otherstopscircle',
+			labelstops: 'otherstopslabel',
+			shapes: 'othershapes',
+			labelshapes: 'otherlabelshapes'
 		}
-
-	}
+	};
 
 	setTimeout(() => {
 		if (announcermode) {
 			try {
-				playRandomSequence()
+				playRandomSequence();
 			} catch {}
 		}
-	}, 6000)
+	}, 6000);
 
 	setInterval(() => {
 		if (announcermode) {
 			try {
-				playRandomSequence()
+				playRandomSequence();
 			} catch {}
 		}
-	}, 60000)
+	}, 60000);
 
 	const decode = (textToDecode: string) => {
 		try {
@@ -196,7 +229,6 @@
 		localStorage.setItem('announcermode', announcermode ? 'true' : 'false');
 	}
 
-	
 	let showzombiebuses = false;
 
 	if (browser) {
@@ -241,7 +273,7 @@
 
 	const lockonconst = 14.5;
 
-	let mapglobal: mapboxgl.Map ;
+	let mapglobal: mapboxgl.Map;
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
@@ -254,9 +286,8 @@
 
 	let rerenders_requested: string[] = [];
 
-
 	let showclipboardalert = false;
-	let lastclipboardtime:number = 0;
+	let lastclipboardtime: number = 0;
 
 	// Save the JSON object to local storage
 	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
@@ -328,7 +359,7 @@
 				speeds: false,
 				signalling: false,
 				electrification: false,
-				gague: false,
+				gague: false
 			},
 			showstationentrances: true,
 			showstationart: false,
@@ -353,22 +384,28 @@
 	}
 
 	function saveCoordsToClipboard() {
-		console.log('save coords')
+		console.log('save coords');
 
-		let textClipboard = `${strings.coordsview}: ${maplat.toFixed(5)}, ${maplng.toFixed(5)} Z: ${mapzoom.toFixed(2)}`
-		if (typeof geolocation === "object") {
-			textClipboard += `\nGPS: ${geolocation.coords.latitude.toFixed(5)}, ${geolocation.coords.longitude.toFixed(5)}`
+		let textClipboard = `${strings.coordsview}: ${maplat.toFixed(5)}, ${maplng.toFixed(
+			5
+		)} Z: ${mapzoom.toFixed(2)}`;
+		if (typeof geolocation === 'object') {
+			textClipboard += `\nGPS: ${geolocation.coords.latitude.toFixed(
+				5
+			)}, ${geolocation.coords.longitude.toFixed(5)}`;
 
 			if (geolocation.coords.heading) {
-				textClipboard += ` Heading: ${geolocation.coords.heading.toFixed(2)}`
+				textClipboard += ` Heading: ${geolocation.coords.heading.toFixed(2)}`;
 			}
 
 			if (geolocation.coords.speed) {
-				textClipboard += ` Speed: ${geolocation.coords.speed.toFixed(2)} m/s  Speed: ${(3.6 * geolocation.coords.speed).toFixed(2)} km/h`
+				textClipboard += ` Speed: ${geolocation.coords.speed.toFixed(2)} m/s  Speed: ${(
+					3.6 * geolocation.coords.speed
+				).toFixed(2)} km/h`;
 			}
 
 			if (geolocation.coords.altitude) {
-				textClipboard += ` Alt: ${geolocation.coords.altitude.toFixed(2)}`
+				textClipboard += ` Alt: ${geolocation.coords.altitude.toFixed(2)}`;
 			}
 		}
 
@@ -381,9 +418,8 @@
 				showclipboardalert = false;
 			}
 		}, 501);
+	}
 
-  }
-	
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
 
@@ -391,8 +427,7 @@
 		//step 1, get the list of routes if it doesnt exist
 		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
-
-		console.log('processing', realtime_id, this_realtime_feed)
+		console.log('processing', realtime_id, this_realtime_feed);
 
 		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
@@ -403,9 +438,13 @@
 
 			let operators_for_this_realtime = this_realtime_feed.operators;
 
-			let operators_to_render = [...new Set(operators_for_this_realtime
-				.map((x: any) => operators_in_frame[x])
-				.filter((x: any) => x != undefined))];
+			let operators_to_render = [
+				...new Set(
+					operators_for_this_realtime
+						.map((x: any) => operators_in_frame[x])
+						.filter((x: any) => x != undefined)
+				)
+			];
 
 			console.log('operators_to_render', operators_to_render);
 
@@ -415,12 +454,12 @@
 
 			let static_feed_ids: Array<string> = [];
 
-			if (this_realtime_feed === "f-横浜市-municipal-bus-rt") {
-					static_feed_ids = ["f-横浜市-municipal-bus"]
-				}
+			if (this_realtime_feed === 'f-横浜市-municipal-bus-rt') {
+				static_feed_ids = ['f-横浜市-municipal-bus'];
+			}
 
-			if (this_realtime_feed === "f-横浜市-municipal-subway-rt") {
-				static_feed_ids = ["f-横浜市-municipal-subway"]
+			if (this_realtime_feed === 'f-横浜市-municipal-subway-rt') {
+				static_feed_ids = ['f-横浜市-municipal-subway'];
 			}
 
 			Object.values(operators_to_render).forEach((operator: any) => {
@@ -428,39 +467,38 @@
 				if (operator.gtfs_static_feeds) {
 					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
 						if (!static_feed_ids.includes(static_feed_id)) {
+							console.log('this_realtime_feed', this_realtime_feed);
 
-							console.log('this_realtime_feed', this_realtime_feed)
-
-							if (!this_realtime_feed.onestop_feed_id.includes("f-横浜市")) {
-							static_feed_ids.push(static_feed_id);
-							static_feed_ids = [...new Set(static_feed_ids)];
+							if (!this_realtime_feed.onestop_feed_id.includes('f-横浜市')) {
+								static_feed_ids.push(static_feed_id);
+								static_feed_ids = [...new Set(static_feed_ids)];
 							}
 
-												//this static feed
-						if (route_info_lookup[static_feed_id] == undefined) {
-							fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
-								.then((x) => x.json())
-								.then((x) => {
-									route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-									rerenders_request(realtime_id);
-									// console.log('saved results for this agency', static_feed_id)
-								})
-								.catch((e) => {
-									console.error(e);
-									check_backend();
-								});
-						} else {
-							//console.log('already have results for this agency', static_feed_id)
+							//this static feed
+							if (route_info_lookup[static_feed_id] == undefined) {
+								fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
+									.then((x) => x.json())
+									.then((x) => {
+										route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
+										rerenders_request(realtime_id);
+										// console.log('saved results for this agency', static_feed_id)
+									})
+									.catch((e) => {
+										console.error(e);
+										check_backend();
+									});
+							} else {
+								//console.log('already have results for this agency', static_feed_id)
 
-							big_table[static_feed_id] = route_info_lookup[static_feed_id];
-							trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
-						}
+								big_table[static_feed_id] = route_info_lookup[static_feed_id];
+								trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
+							}
 						}
 					});
 				}
 			});
 
-			//console.log('Object.keys(big_table)', Object.keys(big_table))			
+			//console.log('Object.keys(big_table)', Object.keys(big_table))
 
 			if ([...new Set(Object.keys(big_table))].length > 0) {
 				//console.log('big table has data for ', realtime_id)
@@ -485,7 +523,6 @@
 					//no vehicles older than 10 min
 					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
-
 						const { id, vehicle } = entity;
 						//default to bus type
 						let routeType = 3;
@@ -533,18 +570,21 @@
 							fetchTrip = true;
 						}
 
-						if (['f-mta~nyc~rt~mnr','f-metrolink~rt','f-mta~nyc~rt~lirr','f-amtrak~rt'].includes(realtime_id)) {
+						if (
+							['f-mta~nyc~rt~mnr', 'f-metrolink~rt', 'f-mta~nyc~rt~lirr', 'f-amtrak~rt'].includes(
+								realtime_id
+							)
+						) {
 							routeType = 2;
 						}
 
-						if (realtime_id === "f-amtrak~rt") {
+						if (realtime_id === 'f-amtrak~rt') {
 							colour = '#18567d';
 						}
 
-						
-						if (realtime_id == "f-metrolinktrains~rt") {
-								routeType = 2;
-							}
+						if (realtime_id == 'f-metrolinktrains~rt') {
+							routeType = 2;
+						}
 
 						if (routeType === 2) {
 							//get trip id for intercity rail
@@ -558,13 +598,13 @@
 							//submit a tripsId requests
 							//console.log('submit trip',realtime_id)
 
-							if (realtime_id == "f-横浜市-municipal-subway-rt") {
-								static_feed_ids = ["f-横浜市-municipal-subway"];
+							if (realtime_id == 'f-横浜市-municipal-subway-rt') {
+								static_feed_ids = ['f-横浜市-municipal-subway'];
 								routeType = 1;
 							}
 
-							if (realtime_id == "f-横浜市-municipal-bus-rt") {
-								static_feed_ids = ["f-横浜市-municipal-bus"]
+							if (realtime_id == 'f-横浜市-municipal-bus-rt') {
+								static_feed_ids = ['f-横浜市-municipal-bus'];
 							}
 
 							if (static_feed_ids.length === 1) {
@@ -725,7 +765,7 @@
 
 						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
 							if (mergetable[routeId]) {
-								maptag = mergetable[routeId].long_name.replace("　→　","→");
+								maptag = mergetable[routeId].long_name.replace('　→　', '→');
 							}
 						}
 
@@ -751,7 +791,9 @@
 								'San Bernardino Line': 'SB',
 								'Antelope Valley Line': 'AV',
 								'Inland Emp.-Orange Co. Line': 'IEOC',
-								'Ventura County Line': 'VC'
+								'Ventura County Line': 'VC',
+								'91/Perris Valley Line': '91',
+								'Riverside Line': 'RIV'
 							};
 						}
 
@@ -789,8 +831,6 @@
 							if (vehicle?.trip?.tripId) {
 								tripIdLabel = vehicle?.trip?.tripId.slice(2).toUpperCase();
 							}
-								
-							
 						}
 
 						if (mergetable[routeId]) {
@@ -807,13 +847,10 @@
 								maptag = mergetable[routeId].long_name.replace(/branch/gi, '').trim();
 							}
 
-							
-						
 							if (realtime_id === 'f-amtrak~rt') {
 								maptag = mergetable[routeId].long_name;
 							}
 						}
-
 
 						maptag = maptag.replace(/( )?Line/, '');
 
@@ -848,7 +885,7 @@
 								contrastdarkmodebearing,
 								routeId: routeId,
 								headsign: headsign,
-								agency: realtime_id,
+								agency: realtime_id
 							},
 							geometry: {
 								type: 'Point',
@@ -862,9 +899,7 @@
 				const getlocalrailsource = mapglobal.getSource('localrail');
 				const othersource = mapglobal.getSource('other');
 
-				console.log(
-					'made features of ', realtime_id, features
-				)
+				console.log('made features of ', realtime_id, features);
 
 				geometryObj[realtime_id] = features;
 
@@ -875,7 +910,9 @@
 				if (typeof getbussource != 'undefined') {
 					getbussource.setData({
 						type: 'FeatureCollection',
-						features: flattenedarray.filter((x: any) => x.properties.routeType === 3 || x.properties.routeType === 11)
+						features: flattenedarray.filter(
+							(x: any) => x.properties.routeType === 3 || x.properties.routeType === 11
+						)
 					});
 
 					if (typeof getintercityrailsource != 'undefined') {
@@ -888,14 +925,18 @@
 					if (typeof getlocalrailsource != 'undefined') {
 						getlocalrailsource.setData({
 							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) => [0,1,5,12].includes(x.properties.routeType))
+							features: flattenedarray.filter((x: any) =>
+								[0, 1, 5, 12].includes(x.properties.routeType)
+							)
 						});
 					}
 
 					if (typeof othersource != 'undefined') {
 						othersource.setData({
 							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) => [4,6,7].includes(x.properties.routeType))
+							features: flattenedarray.filter((x: any) =>
+								[4, 6, 7].includes(x.properties.routeType)
+							)
 						});
 					}
 				}
@@ -903,29 +944,29 @@
 		}
 	}
 
-	function getBoundingBoxMap():number[][] {
+	function getBoundingBoxMap(): number[][] {
 		let start = performance.now();
 
 		const canvas = mapglobal.getCanvas(),
-  		w:number = canvas.width,
-  	h:number = canvas.height;
+			w: number = canvas.width,
+			h: number = canvas.height;
 
-  	const cUL = mapglobal.unproject([0,0]).toArray(),
-  	cUR = mapglobal.unproject([w,0]).toArray(),
-  	cLR = mapglobal.unproject([w,h]).toArray(),
-  	cLL = mapglobal.unproject([0,h]).toArray();
+		const cUL = mapglobal.unproject([0, 0]).toArray(),
+			cUR = mapglobal.unproject([w, 0]).toArray(),
+			cLR = mapglobal.unproject([w, h]).toArray(),
+			cLL = mapglobal.unproject([0, h]).toArray();
 
-  	var coordinates = [cUL,cUR,cLR,cLL,cUL];
+		var coordinates = [cUL, cUR, cLR, cLL, cUL];
 
-	console.log('getBoundingBoxMap', performance.now() - start);
+		console.log('getBoundingBoxMap', performance.now() - start);
 
-	//console.log(coordinates);
+		//console.log(coordinates);
 
-	return coordinates;
+		return coordinates;
 	}
 
 	function runSettingsAdapt() {
-		 console.log('run settings adapt', layersettings);
+		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
 			if (foamermode) {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
@@ -940,14 +981,13 @@
 				let shape = mapglobal.getLayer(categoryvalues.shapes);
 
 				let this_layer_settings = layersettings[category];
-				
+
 				//console.log('processing settings',eachcategory, this_layer_settings)
 
 				if (shape) {
 					if (this_layer_settings.shapes) {
 						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
 					} else {
-						
 						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
 					}
 
@@ -957,7 +997,7 @@
 						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
 					}
 
-					if (category === "other") {
+					if (category === 'other') {
 						if (this_layer_settings.shapes) {
 							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
 						} else {
@@ -965,7 +1005,7 @@
 						}
 					}
 				} else {
-					console.log('could not fetch shapes layer', category)
+					console.log('could not fetch shapes layer', category);
 				}
 
 				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
@@ -976,78 +1016,80 @@
 						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
 					}
 				} else {
-					console.log('no stop layer found for',category)
+					console.log('no stop layer found for', category);
 				}
-				
+
 				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
-					if (stopslabellayer) {
-						if (this_layer_settings.stoplabels) {
+				if (stopslabellayer) {
+					if (this_layer_settings.stoplabels) {
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
 					} else {
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
 					}
-					} else {
-						console.log('no stops label layer found for ', category)
-					}
+				} else {
+					console.log('no stops label layer found for ', category);
+				}
 
 				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
-			let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
+				let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
 
-			if (dotcirclelayer && dotlabel) {
-				if (this_layer_settings.visible) {
-					mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
-					mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
-					mapglobal.setLayoutProperty(
-						categoryvalues.labeldots,
-						'text-field',
-						interpretLabelsToCode(this_layer_settings.label, usunits)
-					);
-					[categoryvalues.pointing,categoryvalues.pointingshell].forEach((x) => {
-					mapglobal.setLayoutProperty(x, 'visibility', 'visible');
-					})
+				if (dotcirclelayer && dotlabel) {
+					if (this_layer_settings.visible) {
+						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
+						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
+						mapglobal.setLayoutProperty(
+							categoryvalues.labeldots,
+							'text-field',
+							interpretLabelsToCode(this_layer_settings.label, usunits)
+						);
+						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
+							mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+						});
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'none');
+						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'none');
+						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
+							mapglobal.setLayoutProperty(x, 'visibility', 'none');
+						});
+					}
 				} else {
-					mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'none');
-					mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'none');
-					[categoryvalues.pointing,categoryvalues.pointingshell].forEach((x) => {
-					mapglobal.setLayoutProperty(x, 'visibility', 'none');
-					})
+					if (dotcirclelayer == null) {
+						console.log('could not fetch dotcirclelayer', category);
+					}
+					if (dotlabel == null) {
+						console.log('could not fetch dotlabel', category);
+					}
 				}
-			} else {
-				if (dotcirclelayer == null) {
-					console.log('could not fetch dotcirclelayer', category)
+
+				let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
+
+				let regularpointers = ['!=', 0, ['get', 'bearing']];
+				let hidevehiclecommandpointers = [
+					'all',
+					['!=', '', ['get', 'tripIdLabel']],
+					['!=', 0, ['get', 'bearing']]
+				];
+
+				if (dotcirclelayer) {
+					if (showzombiebuses === true) {
+						mapglobal.setFilter(categoryvalues.livedots, undefined);
+						mapglobal.setFilter(categoryvalues.labeldots, undefined);
+						mapglobal.setFilter(categoryvalues.pointing, regularpointers);
+						mapglobal.setFilter(categoryvalues.pointingshell, regularpointers);
+					} else {
+						mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
+						mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
+						mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
+						mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers);
+					}
 				}
-				if (dotlabel == null) {
-					console.log('could not fetch dotlabel', category)
-				}
-			}
-
-			let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
-
-		let regularpointers = ["!=", 0, ['get', 'bearing']];
-		let hidevehiclecommandpointers = ['all', ['!=', '', ['get', 'tripIdLabel']], ["!=", 0, ['get', 'bearing']]];
-
-			if (dotcirclelayer) {
-				if (showzombiebuses === true) {
-				mapglobal.setFilter(categoryvalues.livedots, undefined);
-				mapglobal.setFilter(categoryvalues.labeldots, undefined);
-				mapglobal.setFilter(categoryvalues.pointing, regularpointers);
-				mapglobal.setFilter(categoryvalues.pointingshell, regularpointers)
-				} else 
-{
-	mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
-	mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
-	mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
-	mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers)
-
-}			}
-
 			});
 
-		localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
+			localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
 
-		true;
+			true;
+		}
 	}
-}
 
 	function rgbToHex(r: number, g: number, b: number) {
 		return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
@@ -1100,8 +1142,8 @@
 		//get url param "sat"
 
 		let style = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+			: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 
 		if (browser) {
 			if (window.localStorage.mapStyle == 'sat') {
@@ -1127,8 +1169,8 @@
 			//	antialias: true,
 			style: style, // stylesheet location
 			accessToken: decode(
-						'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
-				  ),
+				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
+			),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
@@ -1137,11 +1179,11 @@
 		});
 
 		mapboxgl.setRTLTextPlugin(
-		'/mapbox-gl-rtl-text.min.js',
-		(err) => {
-			console.error(err)
-		},
-		true // Lazy load the plugin
+			'/mapbox-gl-rtl-text.min.js',
+			(err) => {
+				console.error(err);
+			},
+			true // Lazy load the plugin
 		);
 
 		mapglobal = map;
@@ -1156,34 +1198,34 @@
 		}
 
 		map.on('click', 'localrail', (events) => {
-			sidebarCollapsed = false
+			sidebarCollapsed = false;
 			if (events.features) {
-				console.log(events.features[0])
-				selectedVehicle = events.features[0]
-				sidebarView = 9999
+				console.log(events.features[0]);
+				selectedVehicle = events.features[0];
+				sidebarView = 9999;
 			}
 		});
 
 		map.on('click', 'intercityrail', (events) => {
-			sidebarCollapsed = false
+			sidebarCollapsed = false;
 			if (events.features) {
-				selectedVehicle = events.features[0]
-				sidebarView = 9999
+				selectedVehicle = events.features[0];
+				sidebarView = 9999;
 			}
 		});
 
 		map.on('click', 'bus', (events) => {
-			sidebarCollapsed = false
+			sidebarCollapsed = false;
 			if (events.features) {
-				selectedVehicle = events.features[0]
-				sidebarView = 9999
+				selectedVehicle = events.features[0];
+				sidebarView = 9999;
 			}
 		});
 
 		map.on('mouseenter', 'localrail', () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
-		
+
 		map.on('mouseleave', 'localrail', () => {
 			map.getCanvas().style.cursor = '';
 		});
@@ -1191,7 +1233,7 @@
 		map.on('mouseenter', 'intercityrail', () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
-		
+
 		map.on('mouseleave', 'intercityrail', () => {
 			map.getCanvas().style.cursor = '';
 		});
@@ -1199,7 +1241,7 @@
 		map.on('mouseenter', 'bus', () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
-		
+
 		map.on('mouseleave', 'bus', () => {
 			map.getCanvas().style.cursor = '';
 		});
@@ -1238,7 +1280,7 @@
 			} else {
 				fps = 0;
 			}
-		})
+		});
 
 		map.on('zoomend', (events) => {
 			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
@@ -1290,40 +1332,40 @@
 		function clearbottomright() {
 			let bottomright = document.getElementsByClassName('mapboxgl-ctrl-bottom-right');
 
-				if (bottomright) {
-					if (bottomright[0] != undefined) {
-						bottomright[0].remove();
-					}
+			if (bottomright) {
+				if (bottomright[0] != undefined) {
+					bottomright[0].remove();
 				}
+			}
 
-				//console.log('requested rerender of ', rerenders_requested)
+			//console.log('requested rerender of ', rerenders_requested)
 		}
 
 		function process_request_for_rerender() {
 			if (rerenders_requested.length > 0) {
-					[...new Set(rerenders_requested)].forEach((x) => {
-						console.log('rerender automatic', x);
-						rerenders_request(x);
-					});
-					rerenders_requested = [];
-				}
+				[...new Set(rerenders_requested)].forEach((x) => {
+					console.log('rerender automatic', x);
+					rerenders_request(x);
+				});
+				rerenders_requested = [];
+			}
 		}
 
 		map.on('load', () => {
 			//screen.orientation.unlock();
-			
+
 			clearbottomright();
 			// Add new sources and layers
 			let removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 
-			 if (removelogo1) {
-			 	removelogo1[0].remove();
-			 }
+			if (removelogo1) {
+				removelogo1[0].remove();
+			}
 
-			 if (localStorage.getItem('showzombiebuses') === 'true') {
-			showzombiebuses = true;
-			runSettingsAdapt()
-		}
+			if (localStorage.getItem('showzombiebuses') === 'true') {
+				showzombiebuses = true;
+				runSettingsAdapt();
+			}
 
 			addGeoRadius(map);
 			if (debugmode) {
@@ -1458,11 +1500,15 @@
 				.then((x) => {
 					static_feeds = x.s;
 					operators = x.o;
-					let temp_rt=  x.r;
+					let temp_rt = x.r;
 					temp_rt.push({
-						onestop_feed_id: "f-amtrak~rt",
-						operators: ['o-9q-amtrakcalifornia','o-9-amtrak','o-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle-southeastareatransit']
-					})
+						onestop_feed_id: 'f-amtrak~rt',
+						operators: [
+							'o-9q-amtrakcalifornia',
+							'o-9-amtrak',
+							'o-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle-southeastareatransit'
+						]
+					});
 					realtime_feeds = temp_rt;
 				})
 				.catch((e) => {
@@ -1591,60 +1637,77 @@
 				},
 				minzoom: 3
 			});
-				
+
 			addShapes(map, darkMode, layerspercategory);
 
 			addStopsLayers(map, darkMode, layerspercategory);
 
-			map.loadImage("/station-enter.png", (error, image) => {
+			map.loadImage('/station-enter.png', (error, image) => {
 				if (error) throw error;
 
 				map.addImage('station-enter', image);
 
-				map.addLayer({
-					id: 'stationenter',
-					type: 'symbol',
-					source: 'stationfeatures',
-					filter: ['all', ['==', 2, ['get','location_type']]],
-					"source-layer": "stationfeatures",
-					layout: {
-						'icon-image': "station-enter",
-						"icon-size": ['interpolate', ['linear'],['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
-						'icon-ignore-placement': false,
-						'icon-allow-overlap': true,
+				map.addLayer(
+					{
+						id: 'stationenter',
+						type: 'symbol',
+						source: 'stationfeatures',
+						filter: ['all', ['==', 2, ['get', 'location_type']]],
+						'source-layer': 'stationfeatures',
+						layout: {
+							'icon-image': 'station-enter',
+							'icon-size': [
+								'interpolate',
+								['linear'],
+								['zoom'],
+								14,
+								0.2,
+								15,
+								0.2,
+								16,
+								0.25,
+								18,
+								0.4
+							],
+							'icon-ignore-placement': false,
+							'icon-allow-overlap': true
+						},
+
+						minzoom: window?.innerWidth >= 1023 ? 14 : 15
 					},
-					
-				minzoom: window?.innerWidth >= 1023 ? 14 : 15
-				},layerspercategory.bus.stops);
+					layerspercategory.bus.stops
+				);
 
-				map.addLayer({
-				id: 'stationenterlabel',
-				filter: ['all', ['==', 2, ['get','location_type']]],
-				type: 'symbol',
-					source: 'stationfeatures',
-					"source-layer": "stationfeatures",
-					
-				layout: {
-					'text-field': ['get', 'name'],
-					'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-					'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 8, 19, 9.5],
-					'text-radial-offset': 1,
-					'text-ignore-placement': false,
-					//'icon-ignore-placement': false,
-					'text-allow-overlap': true,
-					//'symbol-avoid-edges': false,
-					'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
-				},
-				paint: {
-					'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
-					'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-					'text-halo-width': darkMode ? 0.4 : 0.2
-				},
-				minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
-			},layerspercategory.bus.stops);
-			});			
+				map.addLayer(
+					{
+						id: 'stationenterlabel',
+						filter: ['all', ['==', 2, ['get', 'location_type']]],
+						type: 'symbol',
+						source: 'stationfeatures',
+						'source-layer': 'stationfeatures',
 
-			
+						layout: {
+							'text-field': ['get', 'name'],
+							'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+							'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 8, 19, 9.5],
+							'text-radial-offset': 1,
+							'text-ignore-placement': false,
+							//'icon-ignore-placement': false,
+							'text-allow-overlap': true,
+							//'symbol-avoid-edges': false,
+							'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+						},
+						paint: {
+							'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
+							'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+							'text-halo-width': darkMode ? 0.4 : 0.2
+						},
+						minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
+					},
+					layerspercategory.bus.stops
+				);
+			});
+
 			map.addSource('buses', {
 				type: 'geojson',
 				data: {
@@ -1723,7 +1786,7 @@
 											new Uint8Array(buffer)
 										);
 
-										console.log('buffer decoded for', realtime_id)
+										console.log('buffer decoded for', realtime_id);
 
 										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
@@ -1841,34 +1904,32 @@
 
 			setTimeout(() => {
 				let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
-			//	console.log('feedresults', feedresults)
+				//	console.log('feedresults', feedresults)
 
-			static_feeds_in_frame = feedresults.static_data_obj;
-			operators_in_frame = feedresults.operators_data_obj;
-			realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
-			realtime_list = feedresults.r;
+				static_feeds_in_frame = feedresults.static_data_obj;
+				operators_in_frame = feedresults.operators_data_obj;
+				realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
+				realtime_list = feedresults.r;
 			}, 1000);
-
 		});
 
 		function runBoxCalc() {
-			
-				
-				mapboundingbox = getBoundingBoxMap();
-	
-				//console.log('mapboundingbox',mapboundingbox)
-	
-					if (debugmode) {
-						mapboundingboxstring = mapboundingbox.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`).join("/")
-					}
-				}
-		
+			mapboundingbox = getBoundingBoxMap();
+
+			//console.log('mapboundingbox',mapboundingbox)
+
+			if (debugmode) {
+				mapboundingboxstring = mapboundingbox
+					.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`)
+					.join('/');
+			}
+		}
 
 		map.on('move', () => {
 			updateData();
 			if (performance.now() - lastrunmapcalc > 50) {
-			runBoxCalc();
-			lastrunmapcalc = performance.now();
+				runBoxCalc();
+				lastrunmapcalc = performance.now();
 			}
 		});
 
@@ -1891,13 +1952,11 @@
 				lasttimezoomran = Date.now();
 
 				//renderNewBearings();
-				
+
 				runSettingsAdapt();
-				
 			}
 
-			
-			process_request_for_rerender()
+			process_request_for_rerender();
 		});
 
 		const successCallback = (position: any) => {
@@ -1945,7 +2004,7 @@
 						if (accuracyLayer) {
 							let numberofpoints: number = 128;
 
-							let geojsondata:any = createGeoJSONCircle(
+							let geojsondata: any = createGeoJSONCircle(
 								[location.coords.longitude, location.coords.latitude],
 								location.coords.accuracy / 1000,
 								numberofpoints
@@ -2074,10 +2133,11 @@
 			}
 		}
 	}
-	
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
@@ -2150,306 +2210,449 @@
 <div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 
 {#key showclipboardalert}
-<div
-out:fade={{duration: 400}}
-class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${showclipboardalert === true ? "" : "hidden"}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80 dark:bg-opacity-80`}>
-	{strings.coordscopied}
-</div>
+	<div
+		out:fade={{ duration: 400 }}
+		class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${
+			showclipboardalert === true ? '' : 'hidden'
+		}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80 dark:bg-opacity-80`}
+	>
+		{strings.coordscopied}
+	</div>
 {/key}
 
-<div class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
-on:click={() => {
-	saveCoordsToClipboard()
-}}
-on:keydown={() => {
-	saveCoordsToClipboard()
-}}
+<div
+	class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
+	on:click={() => {
+		saveCoordsToClipboard();
+	}}
+	on:keydown={() => {
+		saveCoordsToClipboard();
+	}}
 >
 	<p>
 		{#if debugmode == true}
 			{mapboundingboxstring}
-			<span class='inline md:hidden'><br/></span>
+			<span class="inline md:hidden"><br /></span>
 		{/if}
 
 		{#if fpsmode == true}
-			<span class='inline text-yellow-800 dark:text-yellow-200'>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span>
-			<span class='inline md:hidden'><br/></span>
+			<span class="inline text-yellow-800 dark:text-yellow-200"
+				>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span
+			>
+			<span class="inline md:hidden"><br /></span>
 		{/if}
-		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)} 
-		<span><br class='inline md:hidden'/></span>
-	{#if typeof geolocation === 'object'}
-		<span class='text-blue-700 dark:text-green-300'>GPS: {geolocation.coords.latitude.toFixed(5)}, 
-		{geolocation.coords.longitude.toFixed(5)}
-		{#if typeof geolocation.coords.heading === 'number'}
-		{geolocation.coords.heading.toFixed(0)}°
-		{/if}
-		{#if typeof geolocation.coords.altitude === 'number'}
-		| {geolocation.coords.altitude.toFixed(0)} m
-		{/if}
-		{#if typeof geolocation.coords.speed === 'number'}
-				{#if usunits == false}
-					| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(2)} km/h)
-				{:else}
-					| {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)}
+		<span><br class="inline md:hidden" /></span>
+		{#if typeof geolocation === 'object'}
+			<span class="text-blue-700 dark:text-green-300"
+				>GPS: {geolocation.coords.latitude.toFixed(5)},
+				{geolocation.coords.longitude.toFixed(5)}
+				{#if typeof geolocation.coords.heading === 'number'}
+					{geolocation.coords.heading.toFixed(0)}°
 				{/if}
+				{#if typeof geolocation.coords.altitude === 'number'}
+					| {geolocation.coords.altitude.toFixed(0)} m
+				{/if}
+				{#if typeof geolocation.coords.speed === 'number'}
+					{#if usunits == false}
+						| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(
+							2
+						)} km/h)
+					{:else}
+						| {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
+					{/if}
+				{/if}
+			</span>
 		{/if}
-	</span>
-	{/if}
-</p>
+	</p>
 </div>
 
 {#if sidebarCollapsed == false}
 	<div
-		class="fixed bottom-0 left-0 pointer-events-none border-r-0 lg:border-r-4 border-t-4 lg:border-t-0 text-white pointer-events-auto z-50 clickable lg:w-[20vw] w-[100vw] lg:h-[100vh] h-[40vh] backdrop-blur-sm"
-		style:background={darkMode ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.4)"}
+		class="fixed bottom-0 left-0 pointer-events-none border-r-0 md:border-r-4 border-t-4 md:border-t-0 text-white pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
+		style:background={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'}
 		style:color={`${darkMode ? 'white' : 'black'}`}
 		style:border-color="#42A7C5"
 		style:padding="20px"
 		style:overflow="auto"
+		transition:blur
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
-			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black">
-				<h1 class="text-md text-bold">{strings.appwidealert}</h1>
-				<p class="text-sm">{strings.appwidesubtext}</p>
-			</Alertpopup>
-			{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
-			<Alertpopup background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url(https://art.metro.net/wp-content/uploads/2021/08/feature-chatsworth-1200x800-1.jpeg) bottom center no-repeat, black">
-				<h1 class="text-lg">Your community, through the eyes of artists</h1>
-				<p class="text-sm">For 20 years, Metro Art has commissioned artists to capture the magic of LA\'s vibrant neighborhoods.</p>
-				<a style:cursor="pointer" style:color="#f9e300" href="https://art.metro.net/category/artworks/exhibitions/tteoa/">{strings.learnmore} &rarr;</a>
-				<br /><br /><br /><br /><br /><br />
-			</Alertpopup>
-			{/if}
-			{#if realtime_list.includes('f-mts~rt~onebusaway')}
-			<Alertpopup background="#E68357">
-				<h1 class="text-lg">January Service Changes</h1>
-				<p class="text-sm">Frequency and schedule adjustments for MTS routes 215, 227, 894, 905, 955, 962, 964, and 992 take effect January 28, 2024. New timetables will be orange.</p>
-				<a style:cursor="pointer" style:color="#f9e300" href="https://www.sdmts.com/sites/default/files/attachments/january-service-changes-2024.pdf">{strings.learnmore} &rarr;</a>
-			</Alertpopup>
-			{/if}
+			<div in:fade>
+				<Alertpopup
+					background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black"
+				>
+					<h1 class="text-md text-bold">{strings.appwidealert}</h1>
+					<p class="text-sm">{strings.appwidesubtext}</p>
+				</Alertpopup>
+				{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
+					<Alertpopup
+						background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url(https://art.metro.net/wp-content/uploads/2021/08/feature-chatsworth-1200x800-1.jpeg) bottom center no-repeat, black"
+					>
+						<h1 class="text-lg">Your community, through the eyes of artists</h1>
+						<p class="text-sm">
+							For 20 years, Metro Art has commissioned artists to capture the magic of LA\'s vibrant
+							neighborhoods.
+						</p>
+						<a
+							style:cursor="pointer"
+							style:color="#f9e300"
+							href="https://art.metro.net/category/artworks/exhibitions/tteoa/"
+							>{strings.learnmore} &rarr;</a
+						>
+						<br /><br /><br /><br /><br /><br />
+					</Alertpopup>
+				{/if}
+				{#if realtime_list.includes('f-mts~rt~onebusaway')}
+					<Alertpopup background="#E68357">
+						<h1 class="text-lg">January Service Changes</h1>
+						<p class="text-sm">
+							Frequency and schedule adjustments for MTS routes 215, 227, 894, 905, 955, 962, 964,
+							and 992 take effect January 28, 2024. New timetables will be orange.
+						</p>
+						<a
+							style:cursor="pointer"
+							style:color="#f9e300"
+							href="https://www.sdmts.com/sites/default/files/attachments/january-service-changes-2024.pdf"
+							>{strings.learnmore} &rarr;</a
+						>
+					</Alertpopup>
+				{/if}
+			</div>
 		{/if}
 		{#if sidebarView == 1}
-			<h1 class="text-3xl">{strings.settings}</h1>
-			<div>
-				<input
-					on:click={(x) => {
-						handleUsUnitsSwitch();
-		
-						runSettingsAdapt();
-					}}
-					on:keydown={(x) => {
-						handleUsUnitsSwitch();
-						runSettingsAdapt();
-					}}
-					checked={usunits}
-					id="us-units"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="us-units" class="ml-2">{strings.useUSunits}</label>
-			</div>
-		
-			<div>
-				<input
-					on:click={(x) => {
-						fpsmode = !fpsmode;
-						localStorage.setItem('fpsmode', String(fpsmode));
-					}}
-					on:keydown={(x) => {
-						fpsmode = !fpsmode;
-						localStorage.setItem('fpsmode', String(fpsmode));
-					}}
-					checked={fpsmode}
-					id="FPS"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="FPS" class="ml-2">{strings.showFPS}</label>
-			</div>
-			
-			<div>
-				<input
-					on:click={(x) => {
-						handleAnnouncerModeSwitch();
-						runSettingsAdapt();
-					}}
-					on:keydown={(x) => {
-						handleAnnouncerModeSwitch();
-						runSettingsAdapt();
-					}}
-					checked={announcermode}
-					id="announcements"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="announcements" class="ml-2">{strings.announcements}</label>
-			</div>
-		
-		
-			<div>
-				<select
-					id="languageSelect"
-					name="languageSelect"
-					style="color: black;"
-					on:change={() => {
-						// @ts-expect-error
-						let language = document.querySelector('#languageSelect').value;
-						if (language !== 'none') {
-							document.querySelector('html')?.setAttribute('lang', language);
-							// @ts-expect-error
-							strings = i18n[language];
-							window.localStorage.setItem('language', language);
-						}
-					}}
-				>
-					<option value="none">--</option>
-					<option value="en">English</option>
-					<option value="fr">Français</option>
-					<option value="es">Español</option>
-					<option value="de">Deutsch</option>
-					<option value="ko">한국어</option>
-					<option value="zh_CN">简体中文</option>
-					<option value="zh_TW">繁體中文</option>
-				</select>
-				<label for="languageSelect" class="ml-2">{strings.language}</label>
-			</div>
+			<div in:fade>
+				<h1 class="text-3xl">{strings.settings}</h1>
+				<div>
+					<input
+						on:click={(x) => {
+							handleUsUnitsSwitch();
 
-			<div>
-				<select
-					id="styleSelect"
-					name="styleSelect"
-					style="color: black;"
-					on:change={() => {
-						// @ts-expect-error
-						let mapStyle = document.querySelector('#styleSelect').value;
-						if (mapStyle !== 'none') {
-							window.localStorage.setItem('mapStyle', mapStyle);
-							window.location.reload();
-						}
-					}}
-				>
-					<option value="none">--</option>
-					<option value="default">{strings.styledefault}</option>
-					<option value="deepsea">{strings.stylesea}</option>
-					{#if browser}
-						{#if window.location.search.includes('sat')}
-							<option value="sat">{strings.stylesat}</option>
+							runSettingsAdapt();
+						}}
+						on:keydown={(x) => {
+							handleUsUnitsSwitch();
+							runSettingsAdapt();
+						}}
+						checked={usunits}
+						id="us-units"
+						type="checkbox"
+						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+					/>
+					<label for="us-units" class="ml-2">{strings.useUSunits}</label>
+				</div>
+
+				<div>
+					<input
+						on:click={(x) => {
+							fpsmode = !fpsmode;
+							localStorage.setItem('fpsmode', String(fpsmode));
+						}}
+						on:keydown={(x) => {
+							fpsmode = !fpsmode;
+							localStorage.setItem('fpsmode', String(fpsmode));
+						}}
+						checked={fpsmode}
+						id="FPS"
+						type="checkbox"
+						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+					/>
+					<label for="FPS" class="ml-2">{strings.showFPS}</label>
+				</div>
+
+				<div>
+					<input
+						on:click={(x) => {
+							handleAnnouncerModeSwitch();
+							runSettingsAdapt();
+						}}
+						on:keydown={(x) => {
+							handleAnnouncerModeSwitch();
+							runSettingsAdapt();
+						}}
+						checked={announcermode}
+						id="announcements"
+						type="checkbox"
+						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+					/>
+					<label for="announcements" class="ml-2">{strings.announcements}</label>
+				</div>
+
+				<div>
+					<select
+						id="languageSelect"
+						name="languageSelect"
+						style="color: black;"
+						on:change={() => {
+							// @ts-expect-error
+							let language = document.querySelector('#languageSelect').value;
+							if (language !== 'none') {
+								document.querySelector('html')?.setAttribute('lang', language);
+								// @ts-expect-error
+								strings = i18n[language];
+								window.localStorage.setItem('language', language);
+							}
+						}}
+					>
+						<option value="none">--</option>
+						<option value="en">English</option>
+						<option value="fr">Français</option>
+						<option value="es">Español</option>
+						<option value="de">Deutsch</option>
+						<option value="ko">한국어</option>
+						<option value="zh_CN">简体中文</option>
+						<option value="zh_TW">繁體中文</option>
+					</select>
+					<label for="languageSelect" class="ml-2">{strings.language}</label>
+				</div>
+
+				<div>
+					<select
+						id="styleSelect"
+						name="styleSelect"
+						style="color: black;"
+						on:change={() => {
+							// @ts-expect-error
+							let mapStyle = document.querySelector('#styleSelect').value;
+							if (mapStyle !== 'none') {
+								window.localStorage.setItem('mapStyle', mapStyle);
+								window.location.reload();
+							}
+						}}
+					>
+						<option value="none">--</option>
+						<option value="default">{strings.styledefault}</option>
+						<option value="deepsea">{strings.stylesea}</option>
+						{#if browser}
+							{#if window.location.search.includes('sat')}
+								<option value="sat">{strings.stylesat}</option>
+							{/if}
 						{/if}
-					{/if}
-					<option value="minimal">{strings.styleminimal}</option>
-					<option value="archi">{strings.stylearchi}</option>
-				</select>
-				<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
+						<option value="minimal">{strings.styleminimal}</option>
+						<option value="archi">{strings.stylearchi}</option>
+					</select>
+					<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
+				</div>
+
+				{#if foamermode}
+					<br />
+					Data:
+					<a
+						style="text-decoration:underline;cursor:pointer"
+						href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
+					>
+					<a
+						style="text-decoration:underline;cursor:pointer"
+						href="https://www.mapbox.com/about/maps/">© Mapbox</a
+					>
+					<br />Style:
+					<a
+						style="text-decoration:underline;cursor:pointer"
+						href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
+					> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
+				{/if}
 			</div>
-		
-			{#if foamermode}
-				<br />
-				Data:
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
-				>
-				<a style="text-decoration:underline;cursor:pointer" href='https://www.mapbox.com/about/maps/'>© Mapbox</a>
-				<br />Style:
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
-				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
-			{/if}
 		{/if}
 		{#if sidebarView == 9999}
-			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
-				{#if selectedVehicle.properties.maptag == 'Green'}
-					<img src="/lines/mts-green.svg" style:height="90px" />	
-				{:else if selectedVehicle.properties.maptag == 'Orange'}
-					<img src="/lines/mts-orange.svg" style:height="90px" />	
-				{:else if selectedVehicle.properties.maptag == 'Blue'}
-					<img src="/lines/mts-blue.svg" style:height="90px" />
-				{/if}
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-northcountrytransitdistrict~rt'}
-				{#if selectedVehicle.properties.maptag == 'COASTER'}
-					<img src="/lines/nctd-coaster.svg" style:width="100%" />	
-				{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
-					<img src="/lines/nctd-sprinter.svg" style:width="100%" />
-				{:else if selectedVehicle.properties.maptag == '350'}
-					<img src="/lines/nctd-brt.svg" style:width="100%" />
-					<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
-						350
-					</h1>
-				{:else}
-					<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
+			<div in:fade>
+				{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
+					<h1
+						style:color={darkMode
+							? selectedVehicle.properties.contrastdarkmode
+							: selectedVehicle.properties.color}
+						class="text-3xl"
+					>
+						{#if selectedVehicle.properties.maptag == 'Green'}
+							<img
+								src="/lines/mts-green.svg"
+								style:height="50px"
+								style:float="left"
+								style:margin-right="15px"
+							/>
+						{:else if selectedVehicle.properties.maptag == 'Orange'}
+							<img
+								src="/lines/mts-orange.svg"
+								style:height="50px"
+								style:float="left"
+								style:margin-right="15px"
+							/>
+						{:else if selectedVehicle.properties.maptag == 'Blue'}
+							<img
+								src="/lines/mts-blue.svg"
+								style:height="50px"
+								style:float="left"
+								style:margin-right="15px"
+							/>
+						{/if}
 						{selectedVehicle.properties.maptag}
 					</h1>
 				{/if}
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
-				<img src="/lines/metro.svg" style:height="50px" style:float="left" style:vertical-align="bottom" style:padding-right="10px" />
-				<img src="/lines/metro-{selectedVehicle.properties.maptag.toLowerCase()}.svg" style:height="50px" style:vertical-align="bottom" />
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-metro~losangeles~bus~rt'}
-				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
-					<img src={`/lines/metro.svg`} style:height="35px" style:float="left" style:vertical-align="middle" />
-					&nbsp;
-					{selectedVehicle.properties.maptag}
-				</h1>
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-metrolinktrains~rt'}
-				<img src="https://metrolinktrains.com/Static/img/dist/metrolink-text-logo.svg" style:width="100%" />
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-octa~rt'}
-				<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
-				<br />
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-metra~rt'}
-				<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px">
-				<br />
-				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
-					<img src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${(selectedVehicle.properties.maptag == 'ME' || selectedVehicle.properties.maptag == 'RI') ? (selectedVehicle.properties.maptag == 'ME' ? 'med' : 'rid') : selectedVehicle.properties.maptag.replace('-', '').toLowerCase()}.png`} style:height="35px" style:float="left" />
-					&nbsp;
-					{selectedVehicle.properties.maptag}
-				</h1>
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-amtrak~rt'}
-				<img src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg" style:width="100%" />
-				<br />
-			{/if}
-			{#if (selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt'&& selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt')}
-				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">{selectedVehicle.properties.maptag}</h1>
-			{/if}
-			<br />
-			{#if selectedVehicle.properties.vehicleIdLabel}
-				<b class="text-lg">Vehicle</b> {selectedVehicle.properties.vehicleIdLabel}
-				<br />
-			{/if}
-			{#if selectedVehicle.properties.tripIdLabel}
-				<b class="text-lg">Trip</b> {selectedVehicle.properties.tripIdLabel}
-				<br />
-			{/if}
-			{#if selectedVehicle.properties.bearing !== 0}
-				<b class="text-lg">Bearing</b> {selectedVehicle.properties.bearing.toFixed(3)}°
-				<br />
-			{/if}
-			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway' || selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
-				{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
-					{#if (new RegExp(regex)).test(selectedVehicle.properties.vehicleIdLabel || '')}
-						<b class="text-lg">Type</b> {type}
-						<br />
-						<b class="text-lg">Vehicle</b> {year || ''} {manufacturer} {model}
-						<br />
-						{#if home}
-							<b class="text-lg">Division</b> {home}
-							<br />
-						{/if}
-						<br />
-						{#if image}
-							<img src={image} alt={model} style:width="100%">
-							<i>{credit}</i>
-						{/if}
+				{#if selectedVehicle.properties.agency == 'f-northcountrytransitdistrict~rt'}
+					{#if selectedVehicle.properties.maptag == 'COASTER'}
+						<img src="/lines/nctd-coaster.svg" style:height="30px" />
+					{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
+						<img src="/lines/nctd-sprinter.svg" style:height="30px" />
+					{:else if selectedVehicle.properties.maptag == '350'}
+						<img src="/lines/nctd-brt.svg" style:height="30px" />
+						<h1
+							style:color={darkMode
+								? selectedVehicle.properties.contrastdarkmode
+								: selectedVehicle.properties.color}
+							class="text-3xl"
+						>
+							350
+						</h1>
+					{:else}
+						<h1
+							style:color={darkMode
+								? selectedVehicle.properties.contrastdarkmode
+								: selectedVehicle.properties.color}
+							class="text-3xl"
+						>
+							{selectedVehicle.properties.maptag}
+						</h1>
 					{/if}
-				{/each}
-			{/if}
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
+					<img
+						src="/lines/metro.svg"
+						style:height="50px"
+						style:float="left"
+						style:vertical-align="bottom"
+						style:padding-right="10px"
+					/>
+					<img
+						src="/lines/metro-{selectedVehicle.properties.maptag.toLowerCase()}.svg"
+						style:height="50px"
+						style:vertical-align="bottom"
+					/>
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-metro~losangeles~bus~rt'}
+					<h1
+						style:color={darkMode
+							? selectedVehicle.properties.contrastdarkmode
+							: selectedVehicle.properties.color}
+						class="text-3xl"
+					>
+						<img
+							src={`/lines/metro.svg`}
+							style:height="35px"
+							style:float="left"
+							style:vertical-align="middle"
+						/>
+						&nbsp;
+						{selectedVehicle.properties.maptag}
+					</h1>
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-metrolinktrains~rt'}
+					<h1
+						style:color={darkMode
+							? selectedVehicle.properties.contrastdarkmode
+							: selectedVehicle.properties.color}
+						class="text-3xl"
+					>
+						<img
+							src="https://metrolinktrains.com/favicon.ico"
+							style:height="40px"
+							style:float="left"
+						/>
+						&nbsp;
+						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
+						{expandMetrolink[selectedVehicle.properties.maptag]} Line
+					</h1>
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-octa~rt'}
+					<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
+					<br />
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-metra~rt'}
+					<img
+						src="https://metra.com/themes/custom/metrarail/images/logo.svg"
+						style:height="40px"
+					/>
+					<br />
+					<h1
+						style:color={darkMode
+							? selectedVehicle.properties.contrastdarkmode
+							: selectedVehicle.properties.color}
+						class="text-3xl"
+					>
+						<img
+							src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
+								selectedVehicle.properties.maptag == 'ME' ||
+								selectedVehicle.properties.maptag == 'RI'
+									? selectedVehicle.properties.maptag == 'ME'
+										? 'med'
+										: 'rid'
+									: selectedVehicle.properties.maptag.replace('-', '').toLowerCase()
+							}.png`}
+							style:height="35px"
+							style:float="left"
+						/>
+						&nbsp;
+						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
+						{expandMetra[selectedVehicle.properties.maptag]}
+					</h1>
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-amtrak~rt'}
+					<img
+						src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
+						style:height="30px"
+					/>
+					<br />
+				{/if}
+				{#if selectedVehicle.properties.agency != 'f-mts~rt~onebusaway' && selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metrolinktrains~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt' && selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt'}
+					<h1
+						style:color={darkMode
+							? selectedVehicle.properties.contrastdarkmode
+							: selectedVehicle.properties.color}
+						class="text-3xl"
+					>
+						{selectedVehicle.properties.maptag}
+					</h1>
+				{/if}
+				<br />
+				{#if selectedVehicle.properties.vehicleIdLabel}
+					<b class="text-lg">Vehicle</b>
+					{selectedVehicle.properties.vehicleIdLabel}
+					<br />
+				{/if}
+				{#if selectedVehicle.properties.tripIdLabel}
+					<b class="text-lg">Trip</b>
+					{selectedVehicle.properties.tripIdLabel}
+					<br />
+				{/if}
+				{#if selectedVehicle.properties.bearing !== 0}
+					<b class="text-lg">Bearing</b>
+					{selectedVehicle.properties.bearing.toFixed(3)}°
+					<br />
+				{/if}
+				{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway' || selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
+					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
+						{#if new RegExp(regex).test(selectedVehicle.properties.vehicleIdLabel || '')}
+							<b class="text-lg">Type</b>
+							{type}
+							<br />
+							<b class="text-lg">Vehicle</b>
+							{year || ''}
+							{manufacturer}
+							{model}
+							<br />
+							{#if home}
+								<b class="text-lg">Division</b>
+								{home}
+								<br />
+							{/if}
+							<br />
+							{#if image}
+								<img src={image} alt={model} style:width="100%" />
+								<i>{credit}</i>
+							{/if}
+						{/if}
+					{/each}
+				{/if}
+			</div>
 		{/if}
 		<!-- <h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
@@ -2463,22 +2666,27 @@ on:keydown={() => {
 			placeholder={strings.search}
 		/> -->
 		<a
-			on:click={() => { sidebarCollapsed = true }}
+			on:click={() => {
+				sidebarCollapsed = true;
+			}}
 			style:cursor="pointer !important"
 			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
-			<span class="hidden lg:flex material-symbols-outlined margin-auto select-none"> left_panel_close </span>
-			<span class="lg:hidden material-symbols-outlined margin-auto select-none"> bottom_panel_close </span>
+			<span class="flex material-symbols-outlined margin-auto select-none"> close </span>
 		</a>
 		<a
-			on:click={() => { sidebarView = 0 }}
+			on:click={() => {
+				sidebarView = 0;
+			}}
 			style:cursor="pointer !important"
 			class="absolute left-16 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> home </span>
 		</a>
 		<a
-			on:click={() => { sidebarView = 1 }}
+			on:click={() => {
+				sidebarView = 1;
+			}}
 			style:cursor="pointer !important"
 			class="absolute left-28 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
@@ -2495,20 +2703,26 @@ on:keydown={() => {
 {/if}
 
 {#if sidebarCollapsed}
-		<a
-			on:click={() => { sidebarCollapsed = false }}
-			style:cursor="pointer !important"
-			class="fixed hidden lg:flex left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> left_panel_open </span>
-		</a>
-		<a
-			on:click={() => { sidebarCollapsed = false }}
-			style:cursor="pointer !important"
-			class="fixed lg:hidden left-4 bottom-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
-		</a>
+	<a
+		on:click={() => {
+			sidebarCollapsed = false;
+		}}
+		transition:fade
+		style:cursor="pointer !important"
+		class="fixed hidden lg:flex left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined margin-auto select-none"> left_panel_open </span>
+	</a>
+	<a
+		on:click={() => {
+			sidebarCollapsed = false;
+		}}
+		transition:fade
+		style:cursor="pointer !important"
+		class="fixed lg:hidden left-4 bottom-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+	>
+		<span class="material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
+	</a>
 {/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
@@ -2561,50 +2775,59 @@ on:keydown={() => {
 		? ''
 		: 'hidden'}"
 >
-<div class='flex flex-row align-middle'><h2 class='font-bold text-gray-800 dark:text-gray-200'>Layers</h2> <div class='ml-auto'><CloseButton
-	onclose={() => {layersettingsBox = false}}
-	moreclasses=""
-	parentclass=''
-	/></div></div>
+	<div class="flex flex-row align-middle">
+		<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
+		<div class="ml-auto">
+			<CloseButton
+				onclose={() => {
+					layersettingsBox = false;
+				}}
+				moreclasses=""
+				parentclass=""
+			/>
+		</div>
+	</div>
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
-		
-		<Layerselectionbox text={strings.headingIntercityRail}
-		changesetting={() => {
-			selectedSettingsTab = 'intercityrail';
-		}}
-		cssclass={`${
-			selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
-		} w-1/2 py-1 px-1`}
+		<Layerselectionbox
+			text={strings.headingIntercityRail}
+			changesetting={() => {
+				selectedSettingsTab = 'intercityrail';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
 		/>
 
-		<Layerselectionbox text={strings.headingLocalRail}
-		changesetting={() => {
-			selectedSettingsTab = 'localrail';
-		}}
-		cssclass={`${
-			selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
-		} w-1/2 py-1 px-1`}
+		<Layerselectionbox
+			text={strings.headingLocalRail}
+			changesetting={() => {
+				selectedSettingsTab = 'localrail';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
 		/>
 
-		<Layerselectionbox text={strings.headingBus}
-		changesetting={() => {
-			selectedSettingsTab = 'bus';
-		}}
-		cssclass={`${
-			selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
-		} w-1/2 py-1 px-1`}
+		<Layerselectionbox
+			text={strings.headingBus}
+			changesetting={() => {
+				selectedSettingsTab = 'bus';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
 		/>
 
-		<Layerselectionbox text={strings.headingOther}
-		changesetting={() => {
-			selectedSettingsTab = 'other';
-		}}
-		cssclass={`${
-			selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
-		} w-1/2 py-1 px-1`}
+		<Layerselectionbox
+			text={strings.headingOther}
+			changesetting={() => {
+				selectedSettingsTab = 'other';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
 		/>
 
-		
 		<div
 			on:click={() => {
 				selectedSettingsTab = 'more';
@@ -2618,55 +2841,53 @@ on:keydown={() => {
 		>
 			<p class="w-full align-center text-center">{strings.headingMisc}</p>
 		</div>
-		
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
-			
-	<div>
-		<input
-			on:click={(x) => {
-				handleFoamerModeSwitch();
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				handleFoamerModeSwitch();
-				runSettingsAdapt();
-			}}
-			checked={foamermode}
-			id="foamermode"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="foamermode" class="ml-2">{strings.orminfra}</label>
-	</div>
+		<div>
+			<input
+				on:click={(x) => {
+					handleFoamerModeSwitch();
+					runSettingsAdapt();
+				}}
+				on:keydown={(x) => {
+					handleFoamerModeSwitch();
+					runSettingsAdapt();
+				}}
+				checked={foamermode}
+				id="foamermode"
+				type="checkbox"
+				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+			/>
+			<label for="foamermode" class="ml-2">{strings.orminfra}</label>
+		</div>
 
-	<div>
-		<input
-			on:click={(x) => {
-				showzombiebuses = !showzombiebuses;
-				
-				localStorage.setItem('showzombiebuses', String(showzombiebuses));
+		<div>
+			<input
+				on:click={(x) => {
+					showzombiebuses = !showzombiebuses;
 
-				runSettingsAdapt();
-			}}
-			on:keydown={(x) => {
-				showzombiebuses = !showzombiebuses;
+					localStorage.setItem('showzombiebuses', String(showzombiebuses));
 
-				localStorage.setItem('showzombiebuses', String(showzombiebuses));
+					runSettingsAdapt();
+				}}
+				on:keydown={(x) => {
+					showzombiebuses = !showzombiebuses;
 
-				runSettingsAdapt();
-			}}
-			checked={showzombiebuses}
-			id="show-zombie-buses"
-			type="checkbox"
-			class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-		/>
-		<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
-	</div>
+					localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+					runSettingsAdapt();
+				}}
+				checked={showzombiebuses}
+				id="show-zombie-buses"
+				type="checkbox"
+				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+			/>
+			<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
+		</div>
 	{/if}
 
-	{#if ["other", "bus", 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
+	{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
 		<div class="flex flex-row gap-x-1">
 			<Layerbutton
 				bind:layersettings
@@ -2758,8 +2979,6 @@ on:keydown={() => {
 			/>
 		</div>
 	{/if}
-
-	
 </div>
 
 <style>
@@ -2796,6 +3015,10 @@ on:keydown={() => {
 	}
 
 	.material-symbols-outlined-big {
-		font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 64;
+		font-variation-settings:
+			'FILL' 0,
+			'wght' 400,
+			'GRAD' 0,
+			'opsz' 64;
 	}
 </style>
