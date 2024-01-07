@@ -40,6 +40,12 @@
 	import Artwork from '../components/artwork.svelte';
 
 	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json'
+	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json'
+
+	let fleetData = {
+		"f-mts~rt~onebusaway": mtsFleetData,
+		"f-metro~losangeles~rail~rt": metroFleetData
+	}
 
 	let enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -2374,19 +2380,15 @@ on:keydown={() => {
 				{/if}
 			{/if}
 			{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
-				{#if selectedVehicle.properties.maptag == 'A'}
-					<img src="/lines/metro-a.svg" style:height="50px" />	
-				{:else if selectedVehicle.properties.maptag == 'B'}
-					<img src="/lines/metro-b.svg" style:height="50px" />
-				{:else if selectedVehicle.properties.maptag == 'C'}
-					<img src="/lines/metro-c.svg" style:height="50px" />
-				{:else if selectedVehicle.properties.maptag == 'D'}
-					<img src="/lines/metro-d.svg" style:height="50px" />
-				{:else if selectedVehicle.properties.maptag == 'E'}
-					<img src="/lines/metro-e.svg" style:height="50px" />
-				{:else if selectedVehicle.properties.maptag == 'K'}
-					<img src="/lines/metro-k.svg" style:height="50px" />
-				{/if}
+				<img src="/lines/metro.svg" style:height="50px" style:float="left" style:vertical-align="bottom" style:padding-right="10px" />
+				<img src="/lines/metro-{selectedVehicle.properties.maptag.toLowerCase()}.svg" style:height="50px" style:vertical-align="bottom" />
+			{/if}
+			{#if selectedVehicle.properties.agency == 'f-metro~losangeles~bus~rt'}
+				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
+					<img src={`/lines/metro.svg`} style:height="35px" style:float="left" style:vertical-align="middle" />
+					&nbsp;
+					{selectedVehicle.properties.maptag}
+				</h1>
 			{/if}
 			{#if selectedVehicle.properties.agency == 'f-metrolinktrains~rt'}
 				<img src="https://metrolinktrains.com/Static/img/dist/metrolink-text-logo.svg" style:width="100%" />
@@ -2395,11 +2397,20 @@ on:keydown={() => {
 				<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
 				<br />
 			{/if}
+			{#if selectedVehicle.properties.agency == 'f-metra~rt'}
+				<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px">
+				<br />
+				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">
+					<img src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${(selectedVehicle.properties.maptag == 'ME' || selectedVehicle.properties.maptag == 'RI') ? (selectedVehicle.properties.maptag == 'ME' ? 'med' : 'rid') : selectedVehicle.properties.maptag.replace('-', '').toLowerCase()}.png`} style:height="35px" style:float="left" />
+					&nbsp;
+					{selectedVehicle.properties.maptag}
+				</h1>
+			{/if}
 			{#if selectedVehicle.properties.agency == 'f-amtrak~rt'}
 				<img src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg" style:width="100%" />
 				<br />
 			{/if}
-			{#if (selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt')}
+			{#if (selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt')}
 				<h1 style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color} class="text-3xl">{selectedVehicle.properties.maptag}</h1>
 			{/if}
 			<br />
@@ -2419,15 +2430,18 @@ on:keydown={() => {
 				<b>Bearing</b> {selectedVehicle.properties.bearing.toFixed(3)}
 				<br />
 			{/if}
-			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
-				{#each mtsFleetData as { type, manufacturer, model, year, regex, home, image, credit }}
+			{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway' || selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
+				{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
 					{#if (new RegExp(regex)).test(selectedVehicle.properties.vehicleIdLabel || '')}
 						<b>Type</b> {type}
 						<br />
 						<b>Vehicle</b> {year || ''} {manufacturer} {model}
 						<br />
-						<b>Home</b> {home}
-						<br /><br />
+						{#if home}
+							<b>Home</b> {home}
+							<br />
+						{/if}
+						<br />
 						{#if image}
 							<img src={image} alt={model} style:width="100%">
 							<i>{credit}</i>
