@@ -1,16 +1,13 @@
 <script lang="ts">
-	import { calculateNewCoordinates, createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
-	//switch to maplibre-gl soon, protomaps in the works
-	import mapboxgl, { type MapboxGeoJSONFeature } from 'mapbox-gl';
+	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
-	import { construct_svelte_component, run } from 'svelte/internal';
 	import { blur, fade } from 'svelte/transition';
 	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
-	import { LngLat } from 'maplibre-gl';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
 	import { determineFeeds } from '../maploaddata';
@@ -19,18 +16,12 @@
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import {
-		numberForBearingLengthBus,
-		numberForBearingLengthRail
-	} from '../components/lineBasedBearing';
-	import {
 		what_kactus_to_use,
 		what_martin_to_use,
 		what_backend_to_use,
 		check_kactus,
-		check_backend,
-		check_martin
+		check_backend
 	} from '../components/distributed';
-	import Toastify from 'toastify-js';
 	import { addStopsLayers } from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
 
@@ -44,6 +35,7 @@
 
 	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
 	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
+	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
 
 	let expandMetrolink = {
 		AV: 'Antelope Valley',
@@ -71,7 +63,8 @@
 
 	let fleetData = {
 		'f-mts~rt~onebusaway': mtsFleetData,
-		'f-metro~losangeles~rail~rt': metroFleetData
+		'f-metro~losangeles~rail~rt': metroFleetData,
+		'f-northcountrytransitdistrict~rt': nctdFleetData
 	};
 
 	let enabledlayerstyle =
@@ -91,7 +84,7 @@
 	//false means use metric, true means use us units
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
-	let foamermode = false;
+
 	let sidebarCollapsed = false;
 	let sidebarView = 0;
 	let announcermode = false;
@@ -219,11 +212,6 @@
 		//redo settings
 	}
 
-	function handleFoamerModeSwitch() {
-		foamermode = !foamermode;
-		localStorage.setItem('foamermode', foamermode ? 'true' : 'false');
-	}
-
 	function handleAnnouncerModeSwitch() {
 		announcermode = !announcermode;
 		localStorage.setItem('announcermode', announcermode ? 'true' : 'false');
@@ -236,12 +224,6 @@
 			usunits = true;
 		} else {
 			usunits = false;
-		}
-
-		if (localStorage.getItem('foamermode') === 'true') {
-			foamermode = true;
-		} else {
-			foamermode = false;
 		}
 
 		if (localStorage.getItem('fpsmode') === 'true') {
@@ -356,10 +338,10 @@
 		more: {
 			foamermode: {
 				infra: false,
-				speeds: false,
+				maxspeed: false,
 				signalling: false,
 				electrification: false,
-				gague: false
+				gauge: false
 			},
 			showstationentrances: true,
 			showstationart: false,
@@ -968,10 +950,34 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
-			if (foamermode) {
+			if (layersettings.more.foamermode.infra) {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
 			} else {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.maxspeed) {
+				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.signalling) {
+				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.electrification) {
+				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.gauge) {
+				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
 			}
 
 			Object.entries(layerspercategory).map((eachcategory) => {
@@ -1617,10 +1623,58 @@
 				tileSize: 256
 			});
 
+			map.addSource('maxspeedtiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
+			map.addSource('signallingtiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
+			map.addSource('electrificationtiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
+			map.addSource('gaugetiles', {
+				type: 'raster',
+				tiles: ['https://a.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png'],
+				tileSize: 256
+			});
+
 			map.addLayer({
 				id: 'foamershapes',
 				type: 'raster',
 				source: 'foamertiles'
+			});
+
+			map.addLayer({
+				id: 'maxspeedshapes',
+				type: 'raster',
+				source: 'maxspeedtiles'
+			});
+
+			map.addLayer({
+				id: 'signallingshapes',
+				type: 'raster',
+				source: 'signallingtiles'
+			});
+
+			map.addLayer({
+				id: 'electrificationshapes',
+				type: 'raster',
+				source: 'electrificationtiles'
+			});
+
+			map.addLayer({
+				id: 'gaugeshapes',
+				type: 'raster',
+				source: 'gaugetiles'
 			});
 
 			map.addLayer({
@@ -2138,13 +2192,6 @@
 <svelte:head>
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2188,10 +2235,6 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true} />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-		rel="stylesheet"
-	/>
 	<link
 		rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
@@ -2623,12 +2666,12 @@
 					</h1>
 				{/if}
 				<br />
-				{#if (selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt')}
+				{#if selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
 					<b class="text-lg">Vehicle</b>
 					{selectedVehicle.properties.vehicleIdLabel}
 					<br />
 				{/if}
-				{#if (selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt')}
+				{#if selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
 					<b class="text-lg">Trip</b>
 					{selectedVehicle.properties.tripIdLabel}
 					<br />
@@ -2638,7 +2681,7 @@
 					{selectedVehicle.properties.bearing.toFixed(3)}°
 					<br />
 				{/if}
-				{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway' || selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
+				{#if fleetData[selectedVehicle.properties.agency]}
 					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
 						{#if new RegExp(regex).test(selectedVehicle.properties.vehicleIdLabel || '')}
 							<b class="text-lg">Type</b>
@@ -2854,22 +2897,56 @@
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
-		<div>
-			<input
-				on:click={(x) => {
-					handleFoamerModeSwitch();
-					runSettingsAdapt();
-				}}
-				on:keydown={(x) => {
-					handleFoamerModeSwitch();
-					runSettingsAdapt();
-				}}
-				checked={foamermode}
-				id="foamermode"
-				type="checkbox"
-				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+		<div class="flex flex-row gap-x-1">
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="infra"
+				name={strings.orminfra}
+				urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
+				{runSettingsAdapt}
 			/>
-			<label for="foamermode" class="ml-2">{strings.orminfra}</label>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="maxspeed"
+				name={strings.ormspeeds}
+				urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="signalling"
+				name={strings.ormsignalling}
+				urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="electrification"
+				name={strings.ormelectrification}
+				urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="gauge"
+				name={strings.ormgauge}
+				urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
 		</div>
 
 		<div>
