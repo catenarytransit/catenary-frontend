@@ -14,7 +14,7 @@ const i18n = {
         language: 'Language',
         mapstyle: 'Map style',
         styledefault: 'Default',
-        stylesea: 'Deep Sea (AMOLED)',
+        stylesea: 'Deep Sea',
         stylearchi: 'Archi',
         stylesat: 'Satellite',
         styleminimal: 'Minimal',
@@ -41,10 +41,19 @@ const i18n = {
         ormelectrification: 'Power',
         ormgauge: 'Gauge',
         // announcements
-        announcements: 'Play Random Announcements (Troll)',
+        announcements: 'Courtesy Reminders',
         coordsview: "View",
         coordscopied: "Coords copied to clipboard",
-        showFPS: "Show FPS"
+        showFPS: "Show FPS",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "Vehicle",
+        trip: "Trip",
+        bearing: "Bearing",
+        speed: "Speed",
+        type: "Type",
+        fleet: "Fleet",
+        division: "Division",
     },
     fr: {
         search: 'Rechercher',
@@ -91,7 +100,16 @@ const i18n = {
         announcements: 'Lire les annonces',
         coordsview: "Vue",
         coordscopied: "Coordonnées copiées dans le presse-papiers",
-        showFPS: "Afficher fps"
+        showFPS: "Afficher fps",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "Véhicule",
+        trip: "Voyage",
+        bearing: "Palier",
+        speed: "Vitesse",
+        type: "Type",
+        fleet: "Flotte",
+        division: "Division",
     },
     es: {
         search: 'Buscar',
@@ -138,7 +156,16 @@ const i18n = {
         announcements: 'Reproducir anuncios',
         coordsview: "Vista",
         coordscopied: "Coords copiadas al portapapeles",
-        showFPS: "Mostrar fps"
+        showFPS: "Mostrar fps",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "Vehículo",
+        trip: "Viaje",
+        bearing: "Teniendo",
+        speed: "Velocidad",
+        type: "Tipo",
+        fleet: "Flota",
+        division: "División",
     },
     de: {
         search: 'Suche',
@@ -185,7 +212,16 @@ const i18n = {
         announcements: 'Zufällige Ankündigungen abspielen',
         coordsview: "Ansicht",
         coordscopied: "Koordinaten in die Zwischenablage kopiert",
-        showFPS: "FPS anzeigen"
+        showFPS: "FPS anzeigen",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "Fahrzeug",
+        trip: "Reise",
+        bearing: "Lager",
+        speed: "Geschwindigkeit",
+        type: "Art",
+        fleet: "Flotte",
+        division: "Division",
     },
     ko: {
         search: '검색',
@@ -233,7 +269,16 @@ const i18n = {
         announcements: '알림 재생',
         coordsview: "보기",
         coordscopied: "좌표가 클립보드에 복사되었습니다",
-        showFPS: "FPS 보기"
+        showFPS: "FPS 보기",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "차량",
+        trip: "여행",
+        bearing: "베어링",
+        speed: "속도",
+        type: "유형",
+        fleet: "함대",
+        division: "분할",
     },
     zh_TW: {
         search: '查詢',
@@ -280,7 +325,16 @@ const i18n = {
         announcements: '播放隨意廣播',
         coordsview: "顯示",
         coordscopied: "坐標",
-        showFPS: "影格速率 (FPS)"
+        showFPS: "影格速率 (FPS)",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "車輛",
+        trip: "車程",
+        bearing: "方位",
+        speed: "速度",
+        type: "類型",
+        fleet: "車隊",
+        division: "分隊",
     },
     zh_CN: {
         search: '查询',
@@ -327,7 +381,16 @@ const i18n = {
         announcements: '播放随意广播',
         coordsview: "显示",
         coordscopied: "坐标",
-        showFPS: "影格速率 (FPS)"
+        showFPS: "影格速率 (FPS)",
+        // foamervision
+        foamervision: "FoamerVision",
+        vehicle: "车辆",
+        trip: "车程",
+        bearing: "方位",
+        speed: "速度",
+        type: "类型",
+        fleet: "车队",
+        division: "分队",
     }
 }
 
