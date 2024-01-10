@@ -276,7 +276,7 @@
 
 	let layersettings: any = {
 		bus: {
-			visible: false,
+			visible: true,
 			labelshapes: false,
 			stops: false,
 			shapes: false,
@@ -2479,24 +2479,21 @@
 					</select>
 					<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
 				</div>
-
-				{#if foamermode}
-					<br />
-					Data:
-					<a
-						style="text-decoration:underline;cursor:pointer"
-						href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
-					>
-					<a
-						style="text-decoration:underline;cursor:pointer"
-						href="https://www.mapbox.com/about/maps/">© Mapbox</a
-					>
-					<br />Style:
-					<a
-						style="text-decoration:underline;cursor:pointer"
-						href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
-					> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
-				{/if}
+				<br />
+				Data:
+				<a
+					style="text-decoration:underline;cursor:pointer"
+					href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
+				>
+				<a
+					style="text-decoration:underline;cursor:pointer"
+					href="https://www.mapbox.com/about/maps/">© Mapbox</a
+				>
+				<br />Style:
+				<a
+					style="text-decoration:underline;cursor:pointer"
+					href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
+				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
 			</div>
 		{/if}
 		{#if sidebarView == 9999}
@@ -2667,33 +2664,33 @@
 				{/if}
 				<br />
 				{#if selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
-					<b class="text-lg">Vehicle</b>
+					<b class="text-lg">{strings.vehicle}</b>
 					{selectedVehicle.properties.vehicleIdLabel}
 					<br />
 				{/if}
 				{#if selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
-					<b class="text-lg">Trip</b>
+					<b class="text-lg">{strings.trip}</b>
 					{selectedVehicle.properties.tripIdLabel}
 					<br />
 				{/if}
 				{#if selectedVehicle.properties.bearing !== 0}
-					<b class="text-lg">Bearing</b>
+					<b class="text-lg">{strings.bearing}</b>
 					{selectedVehicle.properties.bearing.toFixed(3)}°
 					<br />
 				{/if}
 				{#if fleetData[selectedVehicle.properties.agency]}
 					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
 						{#if new RegExp(regex).test(selectedVehicle.properties.vehicleIdLabel || '')}
-							<b class="text-lg">Type</b>
+							<b class="text-lg">{strings.type}</b>
 							{type}
 							<br />
-							<b class="text-lg">Vehicle</b>
+							<b class="text-lg">{strings.fleet}</b>
 							{year || ''}
 							{manufacturer}
 							{model}
 							<br />
 							{#if home}
-								<b class="text-lg">Division</b>
+								<b class="text-lg">{strings.division}</b>
 								{home}
 								<br />
 							{/if}
