@@ -276,7 +276,7 @@
 
 	let layersettings: any = {
 		bus: {
-			visible: false,
+			visible: true,
 			labelshapes: false,
 			stops: false,
 			shapes: false,
