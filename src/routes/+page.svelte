@@ -341,7 +341,8 @@
 				maxspeed: false,
 				signalling: false,
 				electrification: false,
-				gauge: false
+				gauge: false,
+				dummy: true
 			},
 			showstationentrances: true,
 			showstationart: false,
@@ -2942,6 +2943,15 @@
 				nestedchange="gauge"
 				name={strings.ormgauge}
 				urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="dummy"
+				name={strings.none}
+				urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
 				{runSettingsAdapt}
 			/>
 		</div>
