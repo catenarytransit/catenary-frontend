@@ -1098,10 +1098,13 @@
 		//get url param "sat"
 
 		let style = darkMode
-			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-			: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 
 		if (browser) {
+			if (window.localStorage.mapStyle == '3d') {
+				style = undefined;
+			}
 			if (window.localStorage.mapStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
 			}
@@ -1123,14 +1126,25 @@
 			useWebGL2: true,
 			preserveDrawingBuffer: false,
 			//	antialias: true,
-			style: style, // stylesheet location
-			accessToken: decode('ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'),
+			style, // stylesheet location
+			accessToken: decode(
+				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
+			),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
-			fadeDuration: 0
+			fadeDuration: 0,
 		});
+
+		if (darkMode) {
+			map.on('style.load', () => {
+				// @ts-expect-error
+    			map.setConfigProperty('basemap', 'lightPreset', 'night')
+				// @ts-expect-error
+				map.setConfigProperty('basemap', 'showTransitLabels', false)
+			});
+		}
 
 		mapboxgl.setRTLTextPlugin(
 			'/mapbox-gl-rtl-text.min.js',
@@ -1402,7 +1416,8 @@
 					source: 'graticule',
 					paint: {
 						'line-color': '#aaa',
-						'line-width': 1.5
+						'line-width': 1.5,
+						'line-emissive-strength': 1
 					},
 					minzoom: 5
 				});
@@ -1598,31 +1613,31 @@
 			map.addLayer({
 				id: 'foamershapes',
 				type: 'raster',
-				source: 'foamertiles'
+				source: 'foamertiles',
 			});
 
 			map.addLayer({
 				id: 'maxspeedshapes',
 				type: 'raster',
-				source: 'maxspeedtiles'
+				source: 'maxspeedtiles',
 			});
 
 			map.addLayer({
 				id: 'signallingshapes',
 				type: 'raster',
-				source: 'signallingtiles'
+				source: 'signallingtiles',
 			});
 
 			map.addLayer({
 				id: 'electrificationshapes',
 				type: 'raster',
-				source: 'electrificationtiles'
+				source: 'electrificationtiles',
 			});
 
 			map.addLayer({
 				id: 'gaugeshapes',
 				type: 'raster',
-				source: 'gaugetiles'
+				source: 'gaugetiles',
 			});
 
 			map.addLayer({
@@ -1635,7 +1650,7 @@
 					'line-dasharray': [1, 2],
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
 				},
 				minzoom: 3
 			});
@@ -1656,6 +1671,9 @@
 						source: 'stationfeatures',
 						filter: ['all', ['==', 2, ['get', 'location_type']]],
 						'source-layer': 'stationfeatures',
+						paint: {
+							'symbol-emissive-strength': 1
+						},
 						layout: {
 							'icon-image': 'station-enter',
 							'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
@@ -1690,7 +1708,8 @@
 						paint: {
 							'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
 							'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-							'text-halo-width': darkMode ? 0.4 : 0.2
+							'text-halo-width': darkMode ? 0.4 : 0.2,
+							'text-emissive-strength': 1
 						},
 						minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
 					},
@@ -1829,7 +1848,8 @@
 				source: 'userpositionacc',
 				paint: {
 					'fill-color': '#38bdf8',
-					'fill-opacity': ['get', 'opacity']
+					'fill-opacity': ['get', 'opacity'],
+					'fill-emissive-strength': 1
 				}
 			});
 
@@ -1855,7 +1875,8 @@
 						'text-ignore-placement': true
 					},
 					paint: {
-						'icon-opacity': 0.8
+						'icon-opacity': 0.8,
+						'icon-emissive-strength': 1
 					}
 				});
 			});
@@ -1876,7 +1897,8 @@
 						visibility: 'none'
 					},
 					paint: {
-						'icon-opacity': 0.8
+						'icon-opacity': 0.8,
+						'icon-emissive-strength': 1
 					}
 				});
 			});
@@ -2395,12 +2417,9 @@
 					>
 						<option value="none">--</option>
 						<option value="default">{strings.styledefault}</option>
+						<option value="3d">{strings.style3d}</option>
 						<option value="deepsea">{strings.stylesea}</option>
-						{#if browser}
-							{#if window.location.search.includes('sat')}
-								<option value="sat">{strings.stylesat}</option>
-							{/if}
-						{/if}
+						<option value="sat">{strings.stylesat}</option>
 						<option value="minimal">{strings.styleminimal}</option>
 						<option value="archi">{strings.stylearchi}</option>
 					</select>
