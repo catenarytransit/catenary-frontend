@@ -17,7 +17,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
                 : '#333333',
             'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
             'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-            'circle-opacity': 0.1
+            'circle-opacity': 0.1,
+            'circle-emissive-strength': 1
         },
         minzoom: window?.innerWidth >= 768 ? 13 : 12,
         filter: removeWeekendStops(['all',
@@ -52,7 +53,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         paint: {
             'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
             'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-            'text-halo-width': 0.4
+            'text-halo-width': 0.4,
+            'text-emissive-strength': 1
         },
         minzoom: window?.innerWidth >= 768 ? 14.5 : 13
     });
@@ -75,7 +77,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
                 : '#333333',
             'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
             'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-            'circle-opacity': 0.1
+            'circle-opacity': 0.1,
+            'circle-emissive-strength': 1
         },
         minzoom: 8,
         filter: removeWeekendStops(['all',
@@ -118,7 +121,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             
             'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
             'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-            'text-halo-width': 1
+            'text-halo-width': 1,
+            'text-emissive-strength': 1,
         },
         filter: [
             'all',
@@ -155,7 +159,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             : '#333333',
         'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
         'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-        'circle-opacity': 0.1
+        'circle-opacity': 0.1,
+        'circle-emissive-strength': 1
     },
     minzoom: 7,
     filter: removeWeekendStops(['all',
@@ -195,7 +200,8 @@ map.addLayer({
         
         'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-        'text-halo-width': 1
+        'text-halo-width': 1,
+        'text-emissive-strength': 1
     },
     filter: [
         'all',
@@ -236,7 +242,8 @@ map.addLayer({
         
         'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-        'text-halo-width': 1
+        'text-halo-width': 1,
+        'text-emissive-strength': 1
     },
     filter: [
         'all',
@@ -285,7 +292,8 @@ map.addLayer({
         
         'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-        'text-halo-width': 1
+        'text-halo-width': 1,
+        'text-emissive-strength': 1
     },
     filter: [
         'all',

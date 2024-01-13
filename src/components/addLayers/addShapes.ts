@@ -39,7 +39,8 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
             'line-color': ['concat', '#', ['get', 'color']],
             'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
             //'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-            'line-opacity': 0.4
+            'line-opacity': 0.4,
+            'line-emissive-strength': 1,
             // 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
         },
         minzoom: 8
@@ -91,11 +92,11 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         },
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
-
             'text-halo-color': ['concat', '#', ['get', 'color']],
             'text-halo-width': 3,
             'text-halo-blur': 0,
-            'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1]
+            'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1],
+            'line-emissive-strength': 1
         },
         minzoom: 8
     });
@@ -147,10 +148,10 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         },
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
-
             'text-halo-color': ['concat', '#', ['get', 'color']],
             'text-halo-width': 3,
-            'text-halo-blur': 1
+            'text-halo-blur': 1,
+            'line-emissive-strength': 1,
             //'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
         },
         minzoom: 3
@@ -174,7 +175,8 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
             'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
-            'line-opacity': 1
+            'line-opacity': 1,
+            'line-emissive-strength': 1,
         },
         minzoom: 3
     });
@@ -206,7 +208,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         },
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
-
+            'text-emissive-strength': 1,
             'text-halo-color': ['concat', '#', ['get', 'color']],
             'text-halo-width': 3,
             'text-halo-blur': 1
@@ -231,7 +233,8 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
             'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
-            'line-opacity': 1
+            'line-opacity': 1,
+            'line-emissive-strength': 1,
         },
         minzoom: 3
     });
@@ -256,7 +259,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         },
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
-
+            'text-emissive-strength': 1,
             'text-halo-color': ['concat', '#', ['get', 'color']],
             'text-halo-width': 3,
             'text-halo-blur': 1
