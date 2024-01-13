@@ -11,14 +11,14 @@
 <!-- {#if layersettings} -->
 <!-- {#if layersettings[selectedSettingsTab]} -->
 <div
-    role="button"
-    tabindex="0"
+	role="button"
+	tabindex="0"
 	on:click={() => {
 		if (nestedchange != '') {
-            Object.keys(layersettings[selectedSettingsTab][change]).forEach(element => {
-                console.log(element)
-                layersettings[selectedSettingsTab][change][element] = false;
-            });
+			Object.keys(layersettings[selectedSettingsTab][change]).forEach((element) => {
+				console.log(element);
+				layersettings[selectedSettingsTab][change][element] = false;
+			});
 			layersettings[selectedSettingsTab][change][nestedchange] = true;
 		} else {
 			layersettings[selectedSettingsTab][change] = !layersettings[selectedSettingsTab][change];
@@ -27,9 +27,9 @@
 	}}
 	on:keydown={() => {
 		if (nestedchange != '') {
-			Object.keys(layersettings[selectedSettingsTab][change]).forEach(element => {
-                layersettings[selectedSettingsTab][change][element] = false;
-            });
+			Object.keys(layersettings[selectedSettingsTab][change]).forEach((element) => {
+				layersettings[selectedSettingsTab][change][element] = false;
+			});
 			layersettings[selectedSettingsTab][change][nestedchange] = true;
 		} else {
 			layersettings[selectedSettingsTab][change] = !layersettings[selectedSettingsTab][change];
