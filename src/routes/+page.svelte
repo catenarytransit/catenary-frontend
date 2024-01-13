@@ -1148,13 +1148,13 @@
 
 		//get url param "sat"
 
-		let style = undefined;
+		let style = darkMode
+					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 
 		if (browser) {
-			if (window.localStorage.mapStyle == 'classic') {
-				style = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty'
+			if (window.localStorage.mapStyle == '3d') {
+				style = undefined;
 			}
 			if (window.localStorage.mapStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
@@ -2489,7 +2489,7 @@
 					>
 						<option value="none">--</option>
 						<option value="default">{strings.styledefault}</option>
-						<option value="classic">{strings.styleclassic}</option>
+						<option value="3d">{strings.style3d}</option>
 						<option value="deepsea">{strings.stylesea}</option>
 						<option value="sat">{strings.stylesat}</option>
 						<option value="minimal">{strings.styleminimal}</option>
