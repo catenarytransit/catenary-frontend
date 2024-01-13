@@ -1098,8 +1098,8 @@
 		//get url param "sat"
 
 		let style = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+			: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
 
 		if (browser) {
 			if (window.localStorage.mapStyle == '3d') {
@@ -1127,22 +1127,20 @@
 			preserveDrawingBuffer: false,
 			//	antialias: true,
 			style, // stylesheet location
-			accessToken: decode(
-				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
-			),
+			accessToken: decode('ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
-			fadeDuration: 0,
+			fadeDuration: 0
 		});
 
 		if (darkMode) {
 			map.on('style.load', () => {
 				// @ts-expect-error
-    			map.setConfigProperty('basemap', 'lightPreset', 'night')
+				map.setConfigProperty('basemap', 'lightPreset', 'night');
 				// @ts-expect-error
-				map.setConfigProperty('basemap', 'showTransitLabels', false)
+				map.setConfigProperty('basemap', 'showTransitLabels', false);
 			});
 		}
 
@@ -1613,31 +1611,31 @@
 			map.addLayer({
 				id: 'foamershapes',
 				type: 'raster',
-				source: 'foamertiles',
+				source: 'foamertiles'
 			});
 
 			map.addLayer({
 				id: 'maxspeedshapes',
 				type: 'raster',
-				source: 'maxspeedtiles',
+				source: 'maxspeedtiles'
 			});
 
 			map.addLayer({
 				id: 'signallingshapes',
 				type: 'raster',
-				source: 'signallingtiles',
+				source: 'signallingtiles'
 			});
 
 			map.addLayer({
 				id: 'electrificationshapes',
 				type: 'raster',
-				source: 'electrificationtiles',
+				source: 'electrificationtiles'
 			});
 
 			map.addLayer({
 				id: 'gaugeshapes',
 				type: 'raster',
-				source: 'gaugetiles',
+				source: 'gaugetiles'
 			});
 
 			map.addLayer({
@@ -1650,7 +1648,7 @@
 					'line-dasharray': [1, 2],
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 				},
 				minzoom: 3
 			});
@@ -2137,6 +2135,8 @@
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->

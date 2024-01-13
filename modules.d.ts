@@ -1,1 +1,1 @@
-declare module "mapbox-gl-framerate";
+declare module 'mapbox-gl-framerate';

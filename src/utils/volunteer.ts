@@ -23,10 +23,7 @@ function isValidGeolocation(geolocation: GeolocationPosition) {
 		return false;
 	}
 
-	if (
-		Math.abs(geolocation.coords.latitude) < 0.01 &&
-		Math.abs(geolocation.coords.longitude) < 0.01
-	) {
+	if (Math.abs(geolocation.coords.latitude) < 0.01 && Math.abs(geolocation.coords.longitude) < 0.01) {
 		return false;
 	}
 

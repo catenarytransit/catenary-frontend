@@ -46,9 +46,7 @@ export function determineFeeds(
 
 	// console.log('operators_data',operators_data)
 
-	const realtime_feeds_in_frame = [
-		...new Set(operators_data.map((o: any) => o.gtfs_realtime_feeds).flat())
-	];
+	const realtime_feeds_in_frame = [...new Set(operators_data.map((o: any) => o.gtfs_realtime_feeds).flat())];
 
 	if (operators_data.find((o) => o.onestop_operator_id == 'o-9-amtrak')) {
 		realtime_feeds_in_frame.push('f-amtrak~rt');
@@ -97,9 +95,8 @@ export function determineFeeds(
 
 			realtime_feeds_data_obj[eachrealtimefeedid].operators.push(eachoperator.onestop_operator_id);
 
-			realtime_feeds_data_obj[eachrealtimefeedid].operators_to_gtfs_ids[
-				eachoperator.onestop_operator_id
-			] = eachoperator.realtime_onestop_feeds_to_gtfs_ids[eachrealtimefeedid];
+			realtime_feeds_data_obj[eachrealtimefeedid].operators_to_gtfs_ids[eachoperator.onestop_operator_id] =
+				eachoperator.realtime_onestop_feeds_to_gtfs_ids[eachrealtimefeedid];
 		});
 	});
 

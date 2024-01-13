@@ -2,10 +2,7 @@ const martinpool = ['https://martin.catenarymaps.org', 'https://martinmeerkat.ca
 
 const kactuspool = ['https://kactus.catenarymaps.org', 'https://kactus-meerkat.catenarymaps.org'];
 
-const backendpool = [
-	'https://backend.catenarymaps.org',
-	'https://backend-meerkat.catenarymaps.org'
-];
+const backendpool = ['https://backend.catenarymaps.org', 'https://backend-meerkat.catenarymaps.org'];
 
 const martin_uptime = new Map();
 

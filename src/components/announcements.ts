@@ -1,7 +1,6 @@
 const playSequence = (sounds: string[]) => {
 	const playNextSound = (audio: HTMLAudioElement) => {
-		audio.src =
-			'https://github.com/CatenaryMaps/announcements/raw/main/' + sounds[currentSoundIndex++];
+		audio.src = 'https://github.com/CatenaryMaps/announcements/raw/main/' + sounds[currentSoundIndex++];
 		audio.currentTime = 0;
 		audio.play();
 	};

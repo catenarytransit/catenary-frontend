@@ -1,46 +1,42 @@
 {
-    "short_name": "Catenary",
-    "name": "Catenary Maps",
-    "id": "catenarymaps.org",
-    "display_override": ["window-controls-overlay"],
-    "display": "standalone",
-    "scope": ".",
-    "categories": [
-        "utilities",
-        "travel",
-        "navigation"
-    ],
-    "orientation": "any",
-    "icons": [
-        {
-            "src": "logo.png",
-            "type": "image/png",
-            "sizes": "1024x1024",
-            "purpose": "any"
-        }
-    ],
-    "protocol_handlers": [
-        {
-            "protocol": "web+catenary",
-            "url": "/#%s"
-        }
-    ],
-    "screenshots": [
-        {
-            "src": "wide-screenshot.png",
-            "sizes": "2077x1497",
-            "type": "image/png",
-            "form_factor": "wide"
-        },
-        {
-            "src": "phone-screenshot.png",
-            "sizes": "480x1043",
-            "type": "image/png",
-            "form_factor": "narrow"
-        }
-    ],
-    "start_url": "/?utm_source=pwa",
-    "background_color": "#0A233F",
-    "theme_color": "#0000FF",
-    "description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
+	"short_name": "Catenary",
+	"name": "Catenary Maps",
+	"id": "catenarymaps.org",
+	"display_override": ["window-controls-overlay"],
+	"display": "standalone",
+	"scope": ".",
+	"categories": ["utilities", "travel", "navigation"],
+	"orientation": "any",
+	"icons": [
+		{
+			"src": "logo.png",
+			"type": "image/png",
+			"sizes": "1024x1024",
+			"purpose": "any"
+		}
+	],
+	"protocol_handlers": [
+		{
+			"protocol": "web+catenary",
+			"url": "/#%s"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "wide-screenshot.png",
+			"sizes": "2077x1497",
+			"type": "image/png",
+			"form_factor": "wide"
+		},
+		{
+			"src": "phone-screenshot.png",
+			"sizes": "480x1043",
+			"type": "image/png",
+			"form_factor": "narrow"
+		}
+	],
+	"start_url": "/?utm_source=pwa",
+	"background_color": "#0A233F",
+	"theme_color": "#0000FF",
+	"description": "Realtime bus and train location tracking, stop times prediction, analysis, and routing algorithm calculations."
 }

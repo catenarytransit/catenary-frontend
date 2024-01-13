@@ -1,9 +1,4 @@
-export function calculateNewCoordinates(
-	latitude: number,
-	longitude: number,
-	bearing: number,
-	distance: number
-) {
+export function calculateNewCoordinates(latitude: number, longitude: number, bearing: number, distance: number) {
 	// taken from: https://stackoverflow.com/a/46410871/13549
 	// distance in KM, bearing in degrees
 
@@ -13,9 +8,7 @@ export function calculateNewCoordinates(
 	let lon = (longitude * Math.PI) / 180;
 
 	// Do the math magic
-	lat = Math.asin(
-		Math.sin(lat) * Math.cos(distance / R) + Math.cos(lat) * Math.sin(distance / R) * Math.cos(brng)
-	);
+	lat = Math.asin(Math.sin(lat) * Math.cos(distance / R) + Math.cos(lat) * Math.sin(distance / R) * Math.cos(brng));
 	lon += Math.atan2(
 		Math.sin(brng) * Math.sin(distance / R) * Math.cos(lat),
 		Math.cos(distance / R) - Math.sin(lat) * Math.sin(lat)

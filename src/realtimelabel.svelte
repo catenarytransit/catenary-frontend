@@ -11,14 +11,12 @@
 	{#if layersettings[selectedSettingsTab]}
 		<div
 			on:click={() => {
-				layersettings[selectedSettingsTab].label[change] =
-					!layersettings[selectedSettingsTab].label[change];
+				layersettings[selectedSettingsTab].label[change] = !layersettings[selectedSettingsTab].label[change];
 				runSettingsAdapt();
 				console.log(layersettings[selectedSettingsTab].label[change]);
 			}}
 			on:keydown={() => {
-				layersettings[selectedSettingsTab].label[change] =
-					!layersettings[selectedSettingsTab].label[change];
+				layersettings[selectedSettingsTab].label[change] = !layersettings[selectedSettingsTab].label[change];
 				runSettingsAdapt();
 				console.log(layersettings[selectedSettingsTab].label[change]);
 			}}
