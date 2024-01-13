@@ -1,40 +1,39 @@
 <script lang="ts">
-	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+	import { browser } from '$app/environment';
+	import { decode as decodeToAry } from 'base65536';
+	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
-	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { blur, fade } from 'svelte/transition';
-	import { addGeoRadius, setUserCircles } from '../components/userradius';
-	import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
-	import { browser } from '$app/environment';
-	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
-	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
-	import { flatten } from '../utils/flatten';
-	import { determineFeeds } from '../maploaddata';
-	import { makeCircleLayers } from '../components/addLayers/addLiveDots';
-	import Layerbutton from '../components/layerbutton.svelte';
-	import Realtimelabel from '../realtimelabel.svelte';
-	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import {
-		what_kactus_to_use,
-		what_martin_to_use,
-		what_backend_to_use,
-		check_kactus,
-		check_backend
-	} from '../components/distributed';
-	import { addStopsLayers } from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
+	import { makeCircleLayers } from '../components/addLayers/addLiveDots';
+	import { addStopsLayers } from '../components/addLayers/addStops';
+	import {
+		check_backend,
+		check_kactus,
+		what_backend_to_use,
+		what_kactus_to_use,
+		what_martin_to_use
+	} from '../components/distributed';
+	import Layerbutton from '../components/layerbutton.svelte';
+	import Layerselectionbox from '../components/layerselectionbox.svelte';
+	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
+	import { addGeoRadius, setUserCircles } from '../components/userradius';
+	import { componentToHex, createGeoJSONCircle } from '../geoMathsAssist';
+	import { determineFeeds } from '../maploaddata';
+	import Realtimelabel from '../realtimelabel.svelte';
+	import { hexToRgb, hslToRgb, rgbToHsl } from '../utils/colour';
+	import { flatten } from '../utils/flatten';
 
 	import { makeBearingArrowPointers } from '../components/addLayers/makebearingarrowpointers';
 
-	import i18n from '../i18n/strings';
-	import { playRandomSequence } from '../components/announcements';
-	import Alertpopup from '../components/alertpopup.svelte';
 	import { addShapes } from '../components/addLayers/addShapes';
-	import Artwork from '../components/artwork.svelte';
+	import Alertpopup from '../components/alertpopup.svelte';
+	import { playRandomSequence } from '../components/announcements';
+	import i18n from '../i18n/strings';
 
-	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
 	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
+	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
 	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
 
 	let expandMetrolink = {
@@ -96,10 +95,7 @@
 
 	let selectedVehicle: any = null;
 
-	const urlParams =
-		typeof window !== 'undefined'
-			? new URLSearchParams(window.location.search)
-			: new URLSearchParams();
+	const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 	let debugmode = !!urlParams.get('debug');
 
 	let fpsmode = !!urlParams.get('fps');
@@ -369,13 +365,9 @@
 	function saveCoordsToClipboard() {
 		console.log('save coords');
 
-		let textClipboard = `${strings.coordsview}: ${maplat.toFixed(5)}, ${maplng.toFixed(
-			5
-		)} Z: ${mapzoom.toFixed(2)}`;
+		let textClipboard = `${strings.coordsview}: ${maplat.toFixed(5)}, ${maplng.toFixed(5)} Z: ${mapzoom.toFixed(2)}`;
 		if (typeof geolocation === 'object') {
-			textClipboard += `\nGPS: ${geolocation.coords.latitude.toFixed(
-				5
-			)}, ${geolocation.coords.longitude.toFixed(5)}`;
+			textClipboard += `\nGPS: ${geolocation.coords.latitude.toFixed(5)}, ${geolocation.coords.longitude.toFixed(5)}`;
 
 			if (geolocation.coords.heading) {
 				textClipboard += ` Heading: ${geolocation.coords.heading.toFixed(2)}`;
@@ -403,8 +395,7 @@
 		}, 501);
 	}
 
-	const interleave = (arr: any, thing: any) =>
-		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
+	const interleave = (arr: any, thing: any) => [].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
 
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
@@ -423,9 +414,7 @@
 
 			let operators_to_render = [
 				...new Set(
-					operators_for_this_realtime
-						.map((x: any) => operators_in_frame[x])
-						.filter((x: any) => x != undefined)
+					operators_for_this_realtime.map((x: any) => operators_in_frame[x]).filter((x: any) => x != undefined)
 				)
 			];
 
@@ -499,10 +488,7 @@
 				let features = vehiclesData[realtime_id].entity
 					//.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
-					.filter(
-						(entity: any) =>
-							entity.vehicle?.position !== null && entity.vehicle?.position !== undefined
-					)
+					.filter((entity: any) => entity.vehicle?.position !== null && entity.vehicle?.position !== undefined)
 					//no vehicles older than 10 min
 					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
@@ -528,16 +514,9 @@
 								colour = mergetable[routeId].color;
 
 								if (mergetable[routeId].color) {
-									let splitInts = mergetable[routeId].color
-										.replace('rgb(', '')
-										.replace(')', '')
-										.split(',');
+									let splitInts = mergetable[routeId].color.replace('rgb(', '').replace(')', '').split(',');
 
-									colour = rgbToHex(
-										Number(splitInts[0]),
-										Number(splitInts[1]),
-										Number(splitInts[2])
-									);
+									colour = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
 								}
 							}
 
@@ -553,11 +532,7 @@
 							fetchTrip = true;
 						}
 
-						if (
-							['f-mta~nyc~rt~mnr', 'f-metrolink~rt', 'f-mta~nyc~rt~lirr', 'f-amtrak~rt'].includes(
-								realtime_id
-							)
-						) {
+						if (['f-mta~nyc~rt~mnr', 'f-metrolink~rt', 'f-mta~nyc~rt~lirr', 'f-amtrak~rt'].includes(realtime_id)) {
 							routeType = 2;
 						}
 
@@ -609,31 +584,21 @@
 											//get routeId from the trips table
 
 											if (trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id) {
-												headsign =
-													trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId]
-														.trip_headsign;
+												headsign = trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].trip_headsign;
 
 												if (vehicle.trip.routeId) {
 													routeId = vehicle.trip.routeId;
 												} else {
-													routeId =
-														trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
+													routeId = trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
 												}
 
 												if (mergetable[routeId]) {
 													routeType = mergetable[routeId].route_type;
 
 													if (mergetable[routeId].color) {
-														let splitInts = mergetable[routeId].color
-															.replace('rgb(', '')
-															.replace(')', '')
-															.split(',');
+														let splitInts = mergetable[routeId].color.replace('rgb(', '').replace(')', '').split(',');
 
-														colour = rgbToHex(
-															Number(splitInts[0]),
-															Number(splitInts[1]),
-															Number(splitInts[2])
-														);
+														colour = rgbToHex(Number(splitInts[0]), Number(splitInts[1]), Number(splitInts[2]));
 													}
 												}
 											}
@@ -716,15 +681,11 @@
 								let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
 								//console.log('newdarkrgb',newdarkrgb)
 
-								let newdarkbearingline = hslToRgb(
-									newdarkhsl.h,
-									newdarkhsl.s,
-									(newdarkhsl.l + hsl.l) / 2
-								);
+								let newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, (newdarkhsl.l + hsl.l) / 2);
 
-								contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(
-									newdarkrgb.g
-								)}${componentToHex(newdarkrgb.b)}`;
+								contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(
+									newdarkrgb.b
+								)}`;
 								contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(
 									newdarkbearingline.g
 								)}${componentToHex(newdarkbearingline.b)}`;
@@ -759,10 +720,7 @@
 						}
 
 						let railletters: any = {};
-						if (
-							realtime_id === 'f-metro~losangeles~rail~rt' ||
-							realtime_id === 'f-metrolinktrains~rt'
-						) {
+						if (realtime_id === 'f-metro~losangeles~rail~rt' || realtime_id === 'f-metrolinktrains~rt') {
 							railletters = {
 								'801': 'A',
 								'802': 'B',
@@ -780,10 +738,7 @@
 							};
 						}
 
-						if (
-							realtime_id === 'f-northcountrytransitdistrict~rt' ||
-							realtime_id === 'f-mts~rt~onebusaway'
-						) {
+						if (realtime_id === 'f-northcountrytransitdistrict~rt' || realtime_id === 'f-mts~rt~onebusaway') {
 							railletters = {
 								'398': 'COASTER',
 								'399': 'SPRINTER',
@@ -877,13 +832,19 @@
 						};
 					});
 
-				const getbussource = mapglobal.getSource('buses');
-				const getintercityrailsource = mapglobal.getSource('intercityrail');
-				const getlocalrailsource = mapglobal.getSource('localrail');
-				const othersource = mapglobal.getSource('other');
+				// const getbussource = mapglobal.getSource('buses');
+				// const getintercityrailsource = mapglobal.getSource('intercityrail');
+				// const getlocalrailsource = mapglobal.getSource('localrail');
+				// const othersource = mapglobal.getSource('other');
+
+				const getbussource: mapboxgl.GeoJSONSource = mapglobal.getSource('bus') as mapboxgl.GeoJSONSource;
+				const getintercityrailsource: mapboxgl.GeoJSONSource = mapglobal.getSource(
+					'intercityrail'
+				) as mapboxgl.GeoJSONSource;
+				const getlocalrailsource: mapboxgl.GeoJSONSource = mapglobal.getSource('localrail') as mapboxgl.GeoJSONSource;
+				const othersource: mapboxgl.GeoJSONSource = mapglobal.getSource('other') as mapboxgl.GeoJSONSource;
 
 				console.log('made features of ', realtime_id, features);
-
 				geometryObj[realtime_id] = features;
 
 				console.log(geometryObj);
@@ -893,9 +854,7 @@
 				if (typeof getbussource != 'undefined') {
 					getbussource.setData({
 						type: 'FeatureCollection',
-						features: flattenedarray.filter(
-							(x: any) => x.properties.routeType === 3 || x.properties.routeType === 11
-						)
+						features: flattenedarray.filter((x: any) => x.properties.routeType === 3 || x.properties.routeType === 11)
 					});
 
 					if (typeof getintercityrailsource != 'undefined') {
@@ -908,18 +867,14 @@
 					if (typeof getlocalrailsource != 'undefined') {
 						getlocalrailsource.setData({
 							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) =>
-								[0, 1, 5, 12].includes(x.properties.routeType)
-							)
+							features: flattenedarray.filter((x: any) => [0, 1, 5, 12].includes(x.properties.routeType))
 						});
 					}
 
 					if (typeof othersource != 'undefined') {
 						othersource.setData({
 							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) =>
-								[4, 6, 7].includes(x.properties.routeType)
-							)
+							features: flattenedarray.filter((x: any) => [4, 6, 7].includes(x.properties.routeType))
 						});
 					}
 				}
@@ -1071,11 +1026,7 @@
 				let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
 
 				let regularpointers = ['!=', 0, ['get', 'bearing']];
-				let hidevehiclecommandpointers = [
-					'all',
-					['!=', '', ['get', 'tripIdLabel']],
-					['!=', 0, ['get', 'bearing']]
-				];
+				let hidevehiclecommandpointers = ['all', ['!=', '', ['get', 'tripIdLabel']], ['!=', 0, ['get', 'bearing']]];
 
 				if (dotcirclelayer) {
 					if (showzombiebuses === true) {
@@ -1124,11 +1075,9 @@
 		let rtFeedsTimestampsVehicles: any = new Object();
 		let rtFeedsHashVehicles: any = new Object();
 
-		//let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
-
-		//let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
-
-		//does user have localstorage cachegeolocation
+		// let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
+		// let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
+		// does user have localstorage cachegeolocation
 
 		let centerinit = [-118, 33.9];
 
@@ -1727,19 +1676,7 @@
 						},
 						layout: {
 							'icon-image': 'station-enter',
-							'icon-size': [
-								'interpolate',
-								['linear'],
-								['zoom'],
-								14,
-								0.2,
-								15,
-								0.2,
-								16,
-								0.25,
-								18,
-								0.4
-							],
+							'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
 							'icon-ignore-placement': false,
 							'icon-allow-overlap': true
 						},
@@ -1854,9 +1791,7 @@
 								})
 								.then((buffer) => {
 									if (buffer != null) {
-										const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-											new Uint8Array(buffer)
-										);
+										const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
 
 										console.log('buffer decoded for', realtime_id);
 
@@ -1994,9 +1929,7 @@
 			//console.log('mapboundingbox',mapboundingbox)
 
 			if (debugmode) {
-				mapboundingboxstring = mapboundingbox
-					.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`)
-					.join('/');
+				mapboundingboxstring = mapboundingbox.map((x) => `${x[1].toFixed(4)},${x[0].toFixed(4)}`).join('/');
 			}
 		}
 
@@ -2044,10 +1977,7 @@
 
 				//console.log('coords', location.coords.longitude, location.coords.latitude);
 
-				localStorage.setItem(
-					'cachegeolocation',
-					`${location.coords.longitude},${location.coords.latitude}`
-				);
+				localStorage.setItem('cachegeolocation', `${location.coords.longitude},${location.coords.latitude}`);
 
 				geolocation = location;
 
@@ -2099,11 +2029,7 @@
 								geojsondata.features[0].properties.opacity = 0.02;
 							}
 
-							accuracyLayer.setData(
-								geojsondata,
-								location.coords.longitude,
-								location.coords.latitude
-							);
+							accuracyLayer.setData(geojsondata, location.coords.longitude, location.coords.latitude);
 						}
 					}
 				}
@@ -2211,6 +2137,12 @@
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<script>
@@ -2321,9 +2253,7 @@
 				{/if}
 				{#if typeof geolocation.coords.speed === 'number'}
 					{#if usunits == false}
-						| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(
-							2
-						)} km/h)
+						| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(2)} km/h)
 					{:else}
 						| {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
 					{/if}
@@ -2358,14 +2288,12 @@
 					>
 						<h1 class="text-lg">Your community, through the eyes of artists</h1>
 						<p class="text-sm">
-							For 20 years, Metro Art has commissioned artists to capture the magic of LA&apos;s
-							vibrant neighborhoods.
+							For 20 years, Metro Art has commissioned artists to capture the magic of LA&apos;s vibrant neighborhoods.
 						</p>
 						<a
 							style:cursor="pointer"
 							style:color="#f9e300"
-							href="https://art.metro.net/category/artworks/exhibitions/tteoa/"
-							>{strings.learnmore} &rarr;</a
+							href="https://art.metro.net/category/artworks/exhibitions/tteoa/">{strings.learnmore} &rarr;</a
 						>
 						<br /><br /><br /><br /><br /><br />
 					</Alertpopup>
@@ -2374,8 +2302,8 @@
 					<Alertpopup background="#E68357">
 						<h1 class="text-lg">January Service Changes</h1>
 						<p class="text-sm">
-							Frequency and schedule adjustments for MTS routes 215, 227, 894, 905, 955, 962, 964,
-							and 992 take effect January 28, 2024. New timetables will be orange.
+							Frequency and schedule adjustments for MTS routes 215, 227, 894, 905, 955, 962, 964, and 992 take effect
+							January 28, 2024. New timetables will be orange.
 						</p>
 						<a
 							style:cursor="pointer"
@@ -2392,12 +2320,12 @@
 				<h1 class="text-3xl">{strings.settings}</h1>
 				<div>
 					<input
-						on:click={(x) => {
+						on:click={() => {
 							handleUsUnitsSwitch();
 
 							runSettingsAdapt();
 						}}
-						on:keydown={(x) => {
+						on:keydown={() => {
 							handleUsUnitsSwitch();
 							runSettingsAdapt();
 						}}
@@ -2411,11 +2339,11 @@
 
 				<div>
 					<input
-						on:click={(x) => {
+						on:click={() => {
 							fpsmode = !fpsmode;
 							localStorage.setItem('fpsmode', String(fpsmode));
 						}}
-						on:keydown={(x) => {
+						on:keydown={() => {
 							fpsmode = !fpsmode;
 							localStorage.setItem('fpsmode', String(fpsmode));
 						}}
@@ -2429,11 +2357,11 @@
 
 				<div>
 					<input
-						on:click={(x) => {
+						on:click={() => {
 							handleAnnouncerModeSwitch();
 							runSettingsAdapt();
 						}}
-						on:keydown={(x) => {
+						on:keydown={() => {
 							handleAnnouncerModeSwitch();
 							runSettingsAdapt();
 						}}
@@ -2499,51 +2427,30 @@
 				</div>
 				<br />
 				Data:
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
+				<a style="text-decoration:underline;cursor:pointer" href="https://www.openstreetmap.org/copyright"
+					>© OpenStreetMap contributors</a
 				>
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="https://www.mapbox.com/about/maps/">© Mapbox</a
-				>
+				<a style="text-decoration:underline;cursor:pointer" href="https://www.mapbox.com/about/maps/">© Mapbox</a>
 				<br />Style:
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
-				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
+				<a style="text-decoration:underline;cursor:pointer" href="http://creativecommons.org/licenses/by-sa/2.0/"
+					>CC-BY-SA 2.0</a
+				>
+				<a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
 			</div>
 		{/if}
 		{#if sidebarView == 9999}
 			<div in:fade>
 				{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
 					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
 						{#if selectedVehicle.properties.maptag == 'Green'}
-							<img
-								src="/lines/mts-green.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-							/>
+							<img src="/lines/mts-green.svg" style:height="50px" style:float="left" style:margin-right="15px" />
 						{:else if selectedVehicle.properties.maptag == 'Orange'}
-							<img
-								src="/lines/mts-orange.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-							/>
+							<img src="/lines/mts-orange.svg" style:height="50px" style:float="left" style:margin-right="15px" />
 						{:else if selectedVehicle.properties.maptag == 'Blue'}
-							<img
-								src="/lines/mts-blue.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-							/>
+							<img src="/lines/mts-blue.svg" style:height="50px" style:float="left" style:margin-right="15px" />
 						{/if}
 						{selectedVehicle.properties.maptag}
 					</h1>
@@ -2556,18 +2463,14 @@
 					{:else if selectedVehicle.properties.maptag == '350'}
 						<img src="/lines/nctd-brt.svg" style:height="30px" />
 						<h1
-							style:color={darkMode
-								? selectedVehicle.properties.contrastdarkmode
-								: selectedVehicle.properties.color}
+							style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 							class="text-3xl"
 						>
 							350
 						</h1>
 					{:else}
 						<h1
-							style:color={darkMode
-								? selectedVehicle.properties.contrastdarkmode
-								: selectedVehicle.properties.color}
+							style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 							class="text-3xl"
 						>
 							{selectedVehicle.properties.maptag}
@@ -2590,33 +2493,20 @@
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-metro~losangeles~bus~rt'}
 					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
-						<img
-							src={`/lines/metro.svg`}
-							style:height="35px"
-							style:float="left"
-							style:vertical-align="middle"
-						/>
+						<img src={`/lines/metro.svg`} style:height="35px" style:float="left" style:vertical-align="middle" />
 						&nbsp;
 						{selectedVehicle.properties.maptag}
 					</h1>
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-metrolinktrains~rt'}
 					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
-						<img
-							src="https://metrolinktrains.com/favicon.ico"
-							style:height="40px"
-							style:float="left"
-						/>
+						<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" />
 						&nbsp;
 						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
 						{expandMetrolink[selectedVehicle.properties.maptag]} Line
@@ -2627,21 +2517,15 @@
 					<br />
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-metra~rt'}
-					<img
-						src="https://metra.com/themes/custom/metrarail/images/logo.svg"
-						style:height="40px"
-					/>
+					<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
 					<br />
 					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
 						<img
 							src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
-								selectedVehicle.properties.maptag == 'ME' ||
-								selectedVehicle.properties.maptag == 'RI'
+								selectedVehicle.properties.maptag == 'ME' || selectedVehicle.properties.maptag == 'RI'
 									? selectedVehicle.properties.maptag == 'ME'
 										? 'med'
 										: 'rid'
@@ -2661,9 +2545,7 @@
 						style:height="30px"
 					/>
 					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
 						<span class="font-black text-4xl">{selectedVehicle.properties.tripIdLabel}</span>
@@ -2672,9 +2554,7 @@
 				{/if}
 				{#if selectedVehicle.properties.agency != 'f-mts~rt~onebusaway' && selectedVehicle.properties.agency != 'f-amtrak~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metrolinktrains~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt' && selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt'}
 					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
 						{selectedVehicle.properties.maptag}
@@ -2799,11 +2679,7 @@
 		on:keypress={togglelayerfeature}
 		class="!cursor-pointer bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
-		<span
-			class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
-		>
-			layers
-		</span>
+		<span class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
 	</div>
 
 	<div
@@ -2861,9 +2737,7 @@
 			changesetting={() => {
 				selectedSettingsTab = 'intercityrail';
 			}}
-			cssclass={`${
-				selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
+			cssclass={`${selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
 		/>
 
 		<Layerselectionbox
@@ -2871,9 +2745,7 @@
 			changesetting={() => {
 				selectedSettingsTab = 'localrail';
 			}}
-			cssclass={`${
-				selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
+			cssclass={`${selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
 		/>
 
 		<Layerselectionbox
@@ -2881,9 +2753,7 @@
 			changesetting={() => {
 				selectedSettingsTab = 'bus';
 			}}
-			cssclass={`${
-				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
+			cssclass={`${selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
 		/>
 
 		<Layerselectionbox
@@ -2891,9 +2761,7 @@
 			changesetting={() => {
 				selectedSettingsTab = 'other';
 			}}
-			cssclass={`${
-				selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
+			cssclass={`${selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
 		/>
 
 		<div
@@ -2903,9 +2771,7 @@
 			on:keydown={() => {
 				selectedSettingsTab = 'more';
 			}}
-			class={`${
-				selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
+			class={`${selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
 		>
 			<p class="w-full align-center text-center">{strings.headingMisc}</p>
 		</div>

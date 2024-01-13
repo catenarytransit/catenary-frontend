@@ -1,6 +1,5 @@
-
-function textColorOfMapLabels(darkMode:boolean) {
-    return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
+function textColorOfMapLabels(darkMode: boolean) {
+	return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
 }
 
 export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: any) {
@@ -40,25 +39,25 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
             ],
 
-            'text-size':
-                window?.innerWidth >= 1023
-                    ? ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14]
-                    : ['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12],
+			'text-size':
+				window?.innerWidth >= 1023
+					? ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14]
+					: ['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12],
 
-            'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
-        },
-        paint: {
-            'text-color': textColorOfMapLabels(darkMode),
-            //'text-color': ['get', 'color'],
-            //'text-halo-color': '#eaeaea',
-            'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-            'text-halo-width': 2,
-            'text-halo-blur': 100,
-            'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 11, 1]
-        }
-    });
+			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
+		},
+		paint: {
+			'text-color': textColorOfMapLabels(darkMode),
+			//'text-color': ['get', 'color'],
+			//'text-halo-color': '#eaeaea',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
+			'text-halo-width': 2,
+			'text-halo-blur': 100,
+			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 11, 1]
+		}
+	});
 
-     //OTHER
+	//OTHER
 
      map.addLayer({
         id: layerspercategory.other.livedots,
@@ -75,14 +74,14 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
         }
     });
 
-    map.addLayer({
-        id:  layerspercategory.other.labeldots,
-        type: 'symbol',
-        source: 'other',
-        minzoom: 2,
-        layout: {
-            'text-field': ['get', 'maptag'],
-            /*'text-field': [
+	map.addLayer({
+		id: layerspercategory.other.labeldots,
+		type: 'symbol',
+		source: 'other',
+		minzoom: 2,
+		layout: {
+			'text-field': ['get', 'maptag'],
+			/*'text-field': [
                 "concat",
                 ['get', 'maptag'],
                 " | ",
@@ -113,8 +112,21 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
         }
     });
 
+	//LOCAL RAIL
 
-    //LOCAL RAIL
+	map.addLayer({
+		id: layerspercategory.localrail.livedots,
+		type: 'circle',
+		source: 'localrail',
+		minzoom: 2,
+		paint: {
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
+			'circle-color': ['get', 'color'],
+			'circle-stroke-color': '#fff',
+			'circle-stroke-width': 1,
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.2, 0.6, 8.2, 0.8]
+		}
+	});
 
     map.addLayer({
         id: layerspercategory.localrail.livedots,
@@ -169,7 +181,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
         }
     });
 
-    //INTERCITY
+	//INTERCITY
 
     map.addLayer({
         id: layerspercategory.intercityrail.livedots,
@@ -186,14 +198,14 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
         }
     });
 
-    map.addLayer({
-        id:  layerspercategory.intercityrail.labeldots,
-        type: 'symbol',
-        source: 'intercityrail',
-        minzoom: 2,
-        layout: {
-            'text-field': ['get', 'maptag'],
-            /*'text-field': [
+	map.addLayer({
+		id: layerspercategory.intercityrail.labeldots,
+		type: 'symbol',
+		source: 'intercityrail',
+		minzoom: 2,
+		layout: {
+			'text-field': ['get', 'maptag'],
+			/*'text-field': [
                 "concat",
                 ['get', 'maptag'],
                 " | ",

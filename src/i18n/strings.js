@@ -15,7 +15,6 @@ const i18n = {
         language: 'Language',
         mapstyle: 'Map style',
         styledefault: 'Default',
-        styleclassic: 'Classic',
         style3d: '3D (perfomance nightmare)',
         stylesea: 'Deep Sea',
         stylearchi: 'Archi',
@@ -264,6 +263,7 @@ const i18n = {
         headingIntercityRail: '철도',
         headingOther: '다른',
         headingMisc: '기타 레이어',
+        styleclassic: 'Classic',
 
         routes: '노선',
         labels: '라벨',

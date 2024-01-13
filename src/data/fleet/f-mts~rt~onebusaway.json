@@ -1,397 +1,397 @@
 [
-    {
-        "type": "Trolley",
-        "manufacturer": "Siemens",
-        "model": "LRV",
-        "regex": "^0[0-9]{2}$",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/GAS15%20%2828%29.jpg",
-        "credit": "MTS photo",
-        "home": "SDTI"
-    },
-    {
-        "type": "Vintage Trolley",
-        "manufacturer": "St. Louis Car Company",
-        "model": "PCC",
-        "year": 1946,
-        "regex": "529|530",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/MTS-VT-AmericaPlaza%5B2%5D.jpg",
-        "credit": "MTS photo",
-        "home": "SDTI"
-    },
-    {
-        "type": "Vintage Trolley",
-        "manufacturer": "Siemens-Düwag",
-        "model": "U2",
-        "year": 1980,
-        "regex": "^1001$",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/vintage-streetcar.jpg",
-        "credit": "MTS photo",
-        "home": "SDTI"
-    },
-    {
-        "type": "Over-the-Road Coach",
-        "manufacturer": "MCI",
-        "model": "D4500",
-        "year": 2020,
-        "regex": "^85[0-9]{2}$",
-        "home": "ECD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "New Flyer",
-        "model": "C40LF",
-        "year": 2009,
-        "regex": "^28[0-9]{2}$|^73[0-9]{2}$",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "New Flyer",
-        "model": "C40LFR",
-        "year": 2012,
-        "regex": "^29[0-9]{2}$",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2013,
-        "regex": "^23[0-9]{2}$",
-        "image": "/vehicles/mts/2322.webp",
-        "credit": "Myra Frame-Day for Catenary",
-        "home": "SBD/ECD"
-    },
-    {
-        "type": "Minibus",
-        "manufacturer": "El Dorado Nat'l",
-        "model": "AeroElite 320",
-        "year": 2014,
-        "regex": "^30[0-9]{2}$",
-        "home": "CPD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2014,
-        "regex": "^24[0-9]{2}$",
-        "image": "/vehicles/mts/2411.webp",
-        "credit": "Myra Frame-Day for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2015,
-        "regex": "^20[0-9]{2}$",
-        "image": "/vehicles/mts/2008.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2015,
-        "regex": "^82[0-9]{2}$",
-        "image": "/vehicles/mts/8210.webp",
-        "credit": "Myra Frame-Day for Catenary",
-        "home": "ECD"
-    },
-    {
-        "type": "Minibus",
-        "manufacturer": "El Dorado Nat'l",
-        "model": "AeroElite 320",
-        "year": 2016,
-        "regex": "^31[0-9]{2}$",
-        "image": "/vehicles/mts/3108.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "CPD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2016,
-        "regex": "^831[0-9]$|^832[0-9]$|^833[0-9]$|^834[0-9]$",
-        "image": "/vehicles/mts/8317.jpg",
-        "credit":"Myra Frame-Day for Catenary",
-        "home": "ECD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2017,
-        "regex": "^21[0-9]{2}$",
-        "image": "/vehicles/mts/2133.webp",
-        "credit": "Myra Frame-Day for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Articulated Bus - Urban",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2017,
-        "regex": "^74[0-9]{2}$",
-        "home": "SBD"
-    },
-    {
-        "type": "Articulated Bus - Rapid Freeway",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2017,
-        "regex": "^750[0-9]$|^751[0-9]$|^752[0-9]$|^753[0-9]$|^754[0-9]$",
-        "image": "/vehicles/mts/7505.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Articulated Bus - Rapid Electric",
-        "manufacturer": "New Flyer",
-        "model": "XE60",
-        "year": 2023,
-        "regex": "^755[0-9]$|^756[0-9]$",
-        "image": "/vehicles/mts/7553.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Articulated Bus - Rapid Freeway",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2023,
-        "regex": "^19[0-9]{2}$",
-        "home": "SBD"
-    },
-    {
-        "type": "Minibus",
-        "manufacturer": "Starcraft",
-        "model": "Allstar XL",
-        "year": 2018,
-        "regex": "3506|3507|3508",
-        "home": "ECD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2018,
-        "regex": "^278[0-9]$",
-        "image": "/vehicles/mts/2785.jpg",
-        "credit":"Myra Frame-Day for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2022,
-        "regex": "^22[0-9]{2}$",
-        "image": "/vehicles/mts/2236.webp",
-        "credit": "Myra Frame-Day for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2021,
-        "regex": "^26[0-9]{2}$",
-        "image": "/vehicles/mts/2624.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "SBD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2019,
-        "regex": "^835[0-9]$",
-        "home": "ECD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2020,
-        "regex": "^279[0-9]$",
-        "home": "SBD"
-    },
-    {
-        "type": "ADA Minibus",
-        "manufacturer": "Starcraft",
-        "model": "AllStar",
-        "year": 2014,
-        "regex": "^390[0-9]$",
-        "home": "CPD"
-    },
-    {
-        "type": "ADA Minibus",
-        "manufacturer": "Starcraft",
-        "model": "AllStar",
-        "year": 2015,
-        "regex": "^397[0-9]$",
-        "home": "CPD"
-    },
-    {
-        "type": "ADA Minibus",
-        "manufacturer": "Starcraft",
-        "model": "AllStar",
-        "year": 2016,
-        "regex": "^33[0-9]{2}$",
-        "home": "CPD"
-    },
-    {
-        "type": "ADA Minibus",
-        "manufacturer": "Starcraft",
-        "model": "AllStar",
-        "year": 2017,
-        "regex": "^32[0-9]{2}$",
-        "home": "CPD"
-    },
-    {
-        "type": "ADA Minibus",
-        "manufacturer": "Starcraft",
-        "model": "AllStar",
-        "year": 2018,
-        "regex": "^363[0-9]$",
-        "home": "CPD"
-    },
-    {
-        "type": "Zero Emission Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2020,
-        "regex": "^16[0-9]{2}$",
-        "image": "/vehicles/mts/1603.webp",
-        "credit": "Myra Frame-Day for Catenary",
-        "home": "IAD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2020,
-        "regex": "^17[0-9]{2}$",
-        "image": "/vehicles/mts/1701.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "IAD/KMD"
-    },
-    {
-        "type": "Articulated Bus - Urban",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2020,
-        "regex": "^18[0-9]{2}$",
-        "image": "/vehicles/mts/1819.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "IAD"
-    },
-    {
-        "type": "Zero Emission Bus",
-        "manufacturer": "New Flyer",
-        "model": "XE40",
-        "year": 2019,
-        "regex": "^15[0-9]{2}$",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/zeb1.jpg",
-        "credit": "MTS photo",
-        "home": "ANY"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2017,
-        "regex": "^14[0-9]{2}$",
-        "home": "IAD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2015,
-        "regex": "^2[0-9]{2}$",
-        "home": "KMD"
-    },
-    {
-        "type": "Articulated Bus - Urban",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2015,
-        "regex": "^13[0-9]{2}$",
-        "image": "/vehicles/mts/1304.jpg",
-        "credit":"Myra Frame-Day for Catenary",
-        "home": "KMD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2014,
-        "regex": "^9[0-9]{2}$",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2839%29.jpg",
-        "credit": "MTS photo",
-        "home": "KMD"
-    },
-    {
-        "type": "Articulated Bus - Rapid",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2013,
-        "regex": "^12[0-9]{2}$",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2857%29.jpg",
-        "credit": "MTS photo",
-        "home": "IAD"
-    },
-    {
-        "type": "Articulated Bus - Rapid Freeway",
-        "manufacturer": "New Flyer",
-        "model": "XN60",
-        "year": 2013,
-        "regex": "^11[0-9]{2}$",
-        "image": "/vehicles/mts/1110.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "KMD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "Gillig",
-        "model": "Low-Floor",
-        "year": 2013,
-        "regex": "^8[0-9]{2}$",
-        "image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2844%29.jpg",
-        "credit": "MTS photo",
-        "home": "IAD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "New Flyer",
-        "model": "C40LFR",
-        "year": 2012,
-        "regex": "^7[0-9]{2}$",
-        "image": "/vehicles/mts/729.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "IAD"
-    },
-    {
-        "type": "Standard MTS Bus",
-        "manufacturer": "New Flyer",
-        "model": "C40LFR",
-        "year": 2011,
-        "regex": "^6[0-9]{2}$",
-        "image": "/vehicles/mts/612.jpg",
-        "credit": "Samuel Sharp for Catenary",
-        "home": "IAD"
-    },
-    {
-        "type": "Standard Rapid Bus",
-        "manufacturer": "New Flyer",
-        "model": "C40LF",
-        "year": 2008,
-        "regex": "^3[0-9]{2}$",
-        "home": "KMD"
-    }
+	{
+		"type": "Trolley",
+		"manufacturer": "Siemens",
+		"model": "LRV",
+		"regex": "^0[0-9]{2}$",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/GAS15%20%2828%29.jpg",
+		"credit": "MTS photo",
+		"home": "SDTI"
+	},
+	{
+		"type": "Vintage Trolley",
+		"manufacturer": "St. Louis Car Company",
+		"model": "PCC",
+		"year": 1946,
+		"regex": "529|530",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/MTS-VT-AmericaPlaza%5B2%5D.jpg",
+		"credit": "MTS photo",
+		"home": "SDTI"
+	},
+	{
+		"type": "Vintage Trolley",
+		"manufacturer": "Siemens-Düwag",
+		"model": "U2",
+		"year": 1980,
+		"regex": "^1001$",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/vintage-streetcar.jpg",
+		"credit": "MTS photo",
+		"home": "SDTI"
+	},
+	{
+		"type": "Over-the-Road Coach",
+		"manufacturer": "MCI",
+		"model": "D4500",
+		"year": 2020,
+		"regex": "^85[0-9]{2}$",
+		"home": "ECD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "New Flyer",
+		"model": "C40LF",
+		"year": 2009,
+		"regex": "^28[0-9]{2}$|^73[0-9]{2}$",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "New Flyer",
+		"model": "C40LFR",
+		"year": 2012,
+		"regex": "^29[0-9]{2}$",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2013,
+		"regex": "^23[0-9]{2}$",
+		"image": "/vehicles/mts/2322.webp",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "SBD/ECD"
+	},
+	{
+		"type": "Minibus",
+		"manufacturer": "El Dorado Nat'l",
+		"model": "AeroElite 320",
+		"year": 2014,
+		"regex": "^30[0-9]{2}$",
+		"home": "CPD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2014,
+		"regex": "^24[0-9]{2}$",
+		"image": "/vehicles/mts/2411.webp",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2015,
+		"regex": "^20[0-9]{2}$",
+		"image": "/vehicles/mts/2008.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2015,
+		"regex": "^82[0-9]{2}$",
+		"image": "/vehicles/mts/8210.webp",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "ECD"
+	},
+	{
+		"type": "Minibus",
+		"manufacturer": "El Dorado Nat'l",
+		"model": "AeroElite 320",
+		"year": 2016,
+		"regex": "^31[0-9]{2}$",
+		"image": "/vehicles/mts/3108.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "CPD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2016,
+		"regex": "^831[0-9]$|^832[0-9]$|^833[0-9]$|^834[0-9]$",
+		"image": "/vehicles/mts/8317.jpg",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "ECD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2017,
+		"regex": "^21[0-9]{2}$",
+		"image": "/vehicles/mts/2133.webp",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Articulated Bus - Urban",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2017,
+		"regex": "^74[0-9]{2}$",
+		"home": "SBD"
+	},
+	{
+		"type": "Articulated Bus - Rapid Freeway",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2017,
+		"regex": "^750[0-9]$|^751[0-9]$|^752[0-9]$|^753[0-9]$|^754[0-9]$",
+		"image": "/vehicles/mts/7505.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Articulated Bus - Rapid Electric",
+		"manufacturer": "New Flyer",
+		"model": "XE60",
+		"year": 2023,
+		"regex": "^755[0-9]$|^756[0-9]$",
+		"image": "/vehicles/mts/7553.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Articulated Bus - Rapid Freeway",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2023,
+		"regex": "^19[0-9]{2}$",
+		"home": "SBD"
+	},
+	{
+		"type": "Minibus",
+		"manufacturer": "Starcraft",
+		"model": "Allstar XL",
+		"year": 2018,
+		"regex": "3506|3507|3508",
+		"home": "ECD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2018,
+		"regex": "^278[0-9]$",
+		"image": "/vehicles/mts/2785.jpg",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2022,
+		"regex": "^22[0-9]{2}$",
+		"image": "/vehicles/mts/2236.webp",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2021,
+		"regex": "^26[0-9]{2}$",
+		"image": "/vehicles/mts/2624.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "SBD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2019,
+		"regex": "^835[0-9]$",
+		"home": "ECD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2020,
+		"regex": "^279[0-9]$",
+		"home": "SBD"
+	},
+	{
+		"type": "ADA Minibus",
+		"manufacturer": "Starcraft",
+		"model": "AllStar",
+		"year": 2014,
+		"regex": "^390[0-9]$",
+		"home": "CPD"
+	},
+	{
+		"type": "ADA Minibus",
+		"manufacturer": "Starcraft",
+		"model": "AllStar",
+		"year": 2015,
+		"regex": "^397[0-9]$",
+		"home": "CPD"
+	},
+	{
+		"type": "ADA Minibus",
+		"manufacturer": "Starcraft",
+		"model": "AllStar",
+		"year": 2016,
+		"regex": "^33[0-9]{2}$",
+		"home": "CPD"
+	},
+	{
+		"type": "ADA Minibus",
+		"manufacturer": "Starcraft",
+		"model": "AllStar",
+		"year": 2017,
+		"regex": "^32[0-9]{2}$",
+		"home": "CPD"
+	},
+	{
+		"type": "ADA Minibus",
+		"manufacturer": "Starcraft",
+		"model": "AllStar",
+		"year": 2018,
+		"regex": "^363[0-9]$",
+		"home": "CPD"
+	},
+	{
+		"type": "Zero Emission Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2020,
+		"regex": "^16[0-9]{2}$",
+		"image": "/vehicles/mts/1603.webp",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "IAD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2020,
+		"regex": "^17[0-9]{2}$",
+		"image": "/vehicles/mts/1701.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "IAD/KMD"
+	},
+	{
+		"type": "Articulated Bus - Urban",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2020,
+		"regex": "^18[0-9]{2}$",
+		"image": "/vehicles/mts/1819.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "IAD"
+	},
+	{
+		"type": "Zero Emission Bus",
+		"manufacturer": "New Flyer",
+		"model": "XE40",
+		"year": 2019,
+		"regex": "^15[0-9]{2}$",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/zeb1.jpg",
+		"credit": "MTS photo",
+		"home": "ANY"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2017,
+		"regex": "^14[0-9]{2}$",
+		"home": "IAD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2015,
+		"regex": "^2[0-9]{2}$",
+		"home": "KMD"
+	},
+	{
+		"type": "Articulated Bus - Urban",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2015,
+		"regex": "^13[0-9]{2}$",
+		"image": "/vehicles/mts/1304.jpg",
+		"credit": "Myra Frame-Day for Catenary",
+		"home": "KMD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2014,
+		"regex": "^9[0-9]{2}$",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2839%29.jpg",
+		"credit": "MTS photo",
+		"home": "KMD"
+	},
+	{
+		"type": "Articulated Bus - Rapid",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2013,
+		"regex": "^12[0-9]{2}$",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2857%29.jpg",
+		"credit": "MTS photo",
+		"home": "IAD"
+	},
+	{
+		"type": "Articulated Bus - Rapid Freeway",
+		"manufacturer": "New Flyer",
+		"model": "XN60",
+		"year": 2013,
+		"regex": "^11[0-9]{2}$",
+		"image": "/vehicles/mts/1110.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "KMD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "Gillig",
+		"model": "Low-Floor",
+		"year": 2013,
+		"regex": "^8[0-9]{2}$",
+		"image": "https://www.sdmts.com/sites/default/files/attachments/DTW15%20%2844%29.jpg",
+		"credit": "MTS photo",
+		"home": "IAD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "New Flyer",
+		"model": "C40LFR",
+		"year": 2012,
+		"regex": "^7[0-9]{2}$",
+		"image": "/vehicles/mts/729.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "IAD"
+	},
+	{
+		"type": "Standard MTS Bus",
+		"manufacturer": "New Flyer",
+		"model": "C40LFR",
+		"year": 2011,
+		"regex": "^6[0-9]{2}$",
+		"image": "/vehicles/mts/612.jpg",
+		"credit": "Samuel Sharp for Catenary",
+		"home": "IAD"
+	},
+	{
+		"type": "Standard Rapid Bus",
+		"manufacturer": "New Flyer",
+		"model": "C40LF",
+		"year": 2008,
+		"regex": "^3[0-9]{2}$",
+		"home": "KMD"
+	}
 ]
