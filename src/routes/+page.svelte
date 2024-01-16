@@ -6,8 +6,14 @@
 	import { onMount } from 'svelte';
 	import { blur, fade } from 'svelte/transition';
 	import CloseButton from '../components/CloseButton.svelte';
+	import Layerbutton from '../components/layerbutton.svelte';
+	import MoreSelectionBox from '../components/MoreSelectionBox.svelte';
+	import Layerselectionbox from '../components/layerselectionbox.svelte';
+	import Realtimelabel from '../components/realtimelabel.svelte';
 	import { makeCircleLayers } from '../utils/addLayers/addLiveDots';
 	import { addStopsLayers } from '../utils/addLayers/addStops';
+	import { hexToRgb, hslToRgb, rgbToHsl } from '../utils/colour';
+	import { flatten } from '../utils/flatten';
 	import {
 		check_backend,
 		check_kactus,
@@ -15,22 +21,17 @@
 		what_kactus_to_use,
 		what_martin_to_use
 	} from '../utils/helper/distributed';
-	import Layerbutton from '../components/layerbutton.svelte';
-	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import { interpretLabelsToCode } from '../utils/helper/rtLabelsToMapboxStyle';
-	import { addGeoRadius, setUserCircles } from '../utils/helper/userradius';
 	import { componentToHex, createGeoJSONCircle } from '../utils/helper/geoMathsAssist';
 	import { determineFeeds } from '../utils/helper/maploaddata';
-	import Realtimelabel from '../components/realtimelabel.svelte';
-	import { hexToRgb, hslToRgb, rgbToHsl } from '../utils/colour';
-	import { flatten } from '../utils/flatten';
+	import { interpretLabelsToCode } from '../utils/helper/rtLabelsToMapboxStyle';
+	import { addGeoRadius, setUserCircles } from '../utils/helper/userradius';
 
 	import { makeBearingArrowPointers } from '../utils/addLayers/makebearingarrowpointers';
 
-	import { addShapes } from '../utils/addLayers/addShapes';
 	import Alertpopup from '../components/alertpopup.svelte';
-	import { playRandomSequence } from '../utils/helper/announcements';
 	import i18n from '../i18n/strings';
+	import { addShapes } from '../utils/addLayers/addShapes';
+	import { playRandomSequence } from '../utils/helper/announcements';
 
 	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
 	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
@@ -2146,6 +2147,9 @@
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2732,6 +2736,7 @@
 			/>
 		</div>
 	</div>
+
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		<Layerselectionbox
 			text={strings.headingIntercityRail}
@@ -2765,17 +2770,13 @@
 			cssclass={`${selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
 		/>
 
-		<div
-			on:click={() => {
+		<MoreSelectionBox
+			text={strings.headingMisc}
+			changesetting={() => {
 				selectedSettingsTab = 'more';
 			}}
-			on:keydown={() => {
-				selectedSettingsTab = 'more';
-			}}
-			class={`${selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
-		>
-			<p class="w-full align-center text-center">{strings.headingMisc}</p>
-		</div>
+			cssclass={`${selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle} w-1/2 py-1 px-1`}
+		/>
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
