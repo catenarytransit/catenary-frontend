@@ -119,26 +119,26 @@ export function addGeoRadius(map: any) {
 }
 
 export function setUserCircles(map: any, lng: number, lat: number) {
-	let onekmlayer = map.getSource('onekmsource');
+	const onekmlayer = map.getSource('onekmsource');
 	const numberofpoints: number = 256;
 
 	if (onekmlayer) {
-		let geojsondata = createGeoJSONCircle([lng, lat], 1, numberofpoints);
+		const geojsondata = createGeoJSONCircle([lng, lat], 1, numberofpoints);
 
 		onekmlayer.setData(geojsondata);
 	}
 
-	let twokmlayer = map.getSource('2km_source');
+	const twokmlayer = map.getSource('2km_source');
 
 	if (twokmlayer) {
-		let geojsondata_2km = createGeoJSONCircle([lng, lat], 2, numberofpoints);
+		const geojsondata_2km = createGeoJSONCircle([lng, lat], 2, numberofpoints);
 		twokmlayer.setData(geojsondata_2km);
 	}
 
-	let tenkmlayer = map.getSource('tenkmsource');
+	const tenkmlayer = map.getSource('tenkmsource');
 
 	if (tenkmlayer) {
-		let geojsondata_10km = createGeoJSONCircle([lng, lat], 10, numberofpoints);
+		const geojsondata_10km = createGeoJSONCircle([lng, lat], 10, numberofpoints);
 		tenkmlayer.setData(geojsondata_10km);
 	}
 }

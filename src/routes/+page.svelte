@@ -2,40 +2,40 @@
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry } from 'base65536';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
-	import mapboxgl, { GeoJSONSource, type LngLatLike } from 'mapbox-gl';
-	import { onMount } from 'svelte';
-	import { blur, fade } from 'svelte/transition';
-	import CloseButton from '../components/CloseButton.svelte';
-	import Layerbutton from '../components/layerbutton.svelte';
-	import MoreSelectionBox from '../components/MoreSelectionBox.svelte';
-	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import Realtimelabel from '../components/realtimelabel.svelte';
-	import { makeCircleLayers } from '../utils/addLayers/addLiveDots';
-	import { addStopsLayers } from '../utils/addLayers/addStops';
-	import { hexToRgb, hslToRgb, rgbToHsl } from '../utils/colour';
-	import { flatten } from '../utils/flatten';
+	import mapboxgl from 'mapbox-gl';
+	import CloseButton from 'src/components/CloseButton.svelte';
+	import MoreSelectionBox from 'src/components/MoreSelectionBox.svelte';
+	import Layerbutton from 'src/components/layerbutton.svelte';
+	import Layerselectionbox from 'src/components/layerselectionbox.svelte';
+	import Realtimelabel from 'src/components/realtimelabel.svelte';
+	import { makeCircleLayers } from 'src/utils/addLayers/addLiveDots';
+	import { addStopsLayers } from 'src/utils/addLayers/addStops';
+	import { hexToRgb, hslToRgb, rgbToHsl } from 'src/utils/colour';
+	import { flatten } from 'src/utils/flatten';
 	import {
 		check_backend,
 		check_kactus,
 		what_backend_to_use,
 		what_kactus_to_use,
 		what_martin_to_use
-	} from '../utils/helper/distributed';
-	import { componentToHex, createGeoJSONCircle } from '../utils/helper/geoMathsAssist';
-	import { determineFeeds } from '../utils/helper/maploaddata';
-	import { interpretLabelsToCode } from '../utils/helper/rtLabelsToMapboxStyle';
-	import { addGeoRadius, setUserCircles } from '../utils/helper/userradius';
+	} from 'src/utils/helper/distributed';
+	import { componentToHex, createGeoJSONCircle } from 'src/utils/helper/geoMathsAssist';
+	import { determineFeeds } from 'src/utils/helper/maploaddata';
+	import { interpretLabelsToCode } from 'src/utils/helper/rtLabelsToMapboxStyle';
+	import { addGeoRadius, setUserCircles } from 'src/utils/helper/userradius';
+	import { onMount } from 'svelte';
+	import { blur, fade } from 'svelte/transition';
 
-	import { makeBearingArrowPointers } from '../utils/addLayers/makebearingarrowpointers';
+	import { makeBearingArrowPointers } from 'src/utils/addLayers/makebearingarrowpointers';
 
-	import Alertpopup from '../components/alertpopup.svelte';
-	import i18n from '../i18n/strings';
-	import { addShapes } from '../utils/addLayers/addShapes';
-	import { playRandomSequence } from '../utils/helper/announcements';
+	import Alertpopup from 'src/components/alertpopup.svelte';
+	import i18n from 'src/i18n/strings';
+	import { addShapes } from 'src/utils/addLayers/addShapes';
+	import { playRandomSequence } from 'src/utils/helper/announcements';
 
-	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
-	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
-	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
+	import metroFleetData from 'src/data/fleet/f-metro~losangeles~rail~rt.json';
+	import mtsFleetData from 'src/data/fleet/f-mts~rt~onebusaway.json';
+	import nctdFleetData from 'src/data/fleet/f-northcountrytransitdistrict~rt.json';
 
 	type ExpandMetrolinkType = {
 		AV: string;
@@ -48,27 +48,27 @@
 	};
 
 	const expandMetrolink: ExpandMetrolinkType = {
-		AV: 'Antelope Valley',
+		AV  : 'Antelope Valley',
 		IEOC: 'Inland Empire-Orange County',
-		OC: 'Orange County',
-		SB: 'San Bernardino',
-		VC: 'Ventura County',
+		OC  : 'Orange County',
+		SB  : 'San Bernardino',
+		VC  : 'Ventura County',
 		'91': '91/Perris Valley',
-		RIV: 'Riverside'
+		RIV : 'Riverside'
 	};
 
 	let expandMetra = {
-		'MD-N': 'Milwaukee District North',
-		NCS: 'North Central Service',
-		'UP-N': 'Union Pacific North',
+		'MD-N' : 'Milwaukee District North',
+		NCS    : 'North Central Service',
+		'UP-N' : 'Union Pacific North',
 		'UP-NW': 'Union Pacific Northwest',
-		HC: 'Heritage Corridor',
-		ME: 'Metra Electric',
-		RI: 'Rock Island',
-		SWS: 'SouthWest Service',
-		BNSF: 'BNSF',
-		'MD-W': 'Milwaukee District West',
-		'UP-W': 'Union Pacific West'
+		HC     : 'Heritage Corridor',
+		ME     : 'Metra Electric',
+		RI     : 'Rock Island',
+		SWS    : 'SouthWest Service',
+		BNSF   : 'BNSF',
+		'MD-W' : 'Milwaukee District West',
+		'UP-W' : 'Union Pacific West'
 	};
 
 	let fleetData = {
@@ -2136,6 +2136,7 @@
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->

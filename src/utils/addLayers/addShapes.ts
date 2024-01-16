@@ -1,9 +1,9 @@
-import { removeWeekendStops } from './removeWeekendStops';
+import { removeWeekendStops } from 'src/utils/addLayers/removeWeekendStops';
 
 export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 	const urlParams = new URLSearchParams(window.location.search);
 
-	//BUS
+	// BUS
 
 	map.addLayer({
 		id: layerspercategory.bus.shapes,
