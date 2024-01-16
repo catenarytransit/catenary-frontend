@@ -20,6 +20,8 @@
 				runSettingsAdapt();
 				console.log(layersettings[selectedSettingsTab].label[change]);
 			}}
+			role="button"
+			tabindex="0"
 		>
 			<!--Toggle Routes-->
 			<div

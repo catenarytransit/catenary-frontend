@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry } from 'base65536';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
-	import mapboxgl from 'mapbox-gl';
+	import mapboxgl, { GeoJSONSource, type LngLatLike } from 'mapbox-gl';
 	import { onMount } from 'svelte';
 	import { blur, fade } from 'svelte/transition';
 	import CloseButton from '../components/CloseButton.svelte';
@@ -37,7 +37,17 @@
 	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
 	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
 
-	let expandMetrolink = {
+	type ExpandMetrolinkType = {
+		AV: string;
+		IEOC: string;
+		OC: string;
+		SB: string;
+		VC: string;
+		'91': string;
+		RIV: string;
+	};
+
+	const expandMetrolink: ExpandMetrolinkType = {
 		AV: 'Antelope Valley',
 		IEOC: 'Inland Empire-Orange County',
 		OC: 'Orange County',
@@ -81,41 +91,30 @@
 		strings = i18n[window.localStorage.language || 'en'];
 	}
 
-	//false means use metric, true means use us units
+	// false means use metric, true means use us units
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
-
 	let sidebarCollapsed = false;
 	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: Record<string, any> = {};
-	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
+	// stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj: Record<string, any> = {};
 	let lasttimeofnorth = 0;
-
 	let selectedVehicle: any = null;
-
 	const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 	let debugmode = !!urlParams.get('debug');
-
 	let fpsmode = !!urlParams.get('fps');
-
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
 	let avaliablerealtimealerts = new Set();
 	let fetchedavaliablekactus = false;
-
 	let static_feeds: any[] = [];
-
 	let current_map_heading = 0;
-
 	let operators: any[] = [];
-
 	let realtime_feeds: any[] = [];
-
 	let static_feeds_in_frame: Record<string, any> = {};
-
 	let operators_in_frame: Record<string, any> = {};
 	let realtime_feeds_in_frame: Record<string, any> = {};
 
@@ -269,7 +268,7 @@
 	let lastclipboardtime: number = 0;
 
 	// Save the JSON object to local storage
-	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
+	// localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
 
 	let layersettings: any = {
 		bus: {
@@ -404,7 +403,7 @@
 
 		console.log('processing', realtime_id, this_realtime_feed);
 
-		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
+		// console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
 
 		// console.log('139',this_realtime_feed)
 
@@ -421,7 +420,7 @@
 
 			console.log('operators_to_render', operators_to_render);
 
-			//console.log('operators for rerender', operators_to_render);
+			// console.log('operators for rerender', operators_to_render);
 			let big_table: any = {};
 			let trips_possible_agencies: any = {};
 
@@ -447,7 +446,7 @@
 								static_feed_ids = [...new Set(static_feed_ids)];
 							}
 
-							//this static feed
+							// this static feed
 							if (route_info_lookup[static_feed_id] == undefined) {
 								fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
 									.then((x) => x.json())
@@ -461,7 +460,7 @@
 										check_backend();
 									});
 							} else {
-								//console.log('already have results for this agency', static_feed_id)
+								// console.log('already have results for this agency', static_feed_id)
 
 								big_table[static_feed_id] = route_info_lookup[static_feed_id];
 								trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
@@ -471,7 +470,7 @@
 				}
 			});
 
-			//console.log('Object.keys(big_table)', Object.keys(big_table))
+			// console.log('Object.keys(big_table)', Object.keys(big_table))
 
 			if ([...new Set(Object.keys(big_table))].length > 0) {
 				//console.log('big table has data for ', realtime_id)
@@ -480,11 +479,9 @@
 
 				let mergetabletrips = Object.assign({}, ...Object.values(trips_possible_agencies));
 
-				//console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
-
-				//render each vehicle vehiclesData[realtime_id].entity
-
-				//console.log('mergetable', mergetable)
+				// console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
+				// render each vehicle vehiclesData[realtime_id].entity
+				// console.log('mergetable', mergetable)
 
 				let features = vehiclesData[realtime_id].entity
 					//.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
@@ -494,7 +491,7 @@
 					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
 					.map((entity: any) => {
 						const { id, vehicle } = entity;
-						//default to bus type
+						// default to bus type
 						let routeType = 3;
 
 						let colour = '#aaaaaa';
@@ -504,7 +501,7 @@
 						let routeId = vehicle?.trip?.routeId || '';
 
 						if (!routeId) {
-							//console.log('no route id', realtime_id, entity)
+							// console.log('no route id', realtime_id, entity)
 						}
 
 						let fetchTrip = false;
@@ -554,8 +551,8 @@
 
 						//this system sucks, honestly. Transition to batch trips info eventually
 						if (fetchTrip === true) {
-							//submit a tripsId requests
-							//console.log('submit trip',realtime_id)
+							// submit a tripsId requests
+							// console.log('submit trip',realtime_id)
 
 							if (realtime_id == 'f-横浜市-municipal-subway-rt') {
 								static_feed_ids = ['f-横浜市-municipal-subway'];
@@ -1072,12 +1069,11 @@
 
 	onMount(() => {
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
-
 		let rtFeedsTimestampsVehicles: any = new Object();
 		let rtFeedsHashVehicles: any = new Object();
 
-		// let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
-		// let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
+		let dark = 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539';
+		let light = 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779';
 		// does user have localstorage cachegeolocation
 
 		let centerinit = [-118, 33.9];
@@ -1086,17 +1082,17 @@
 
 		if (browser) {
 			if ('cachegeolocation' in localStorage) {
-				let cachegeolocation = localStorage.getItem('cachegeolocation').split(',');
-				console.log('cachegeolocation', cachegeolocation);
-				if (cachegeolocation.length > 1) {
-					centerinit = [cachegeolocation[0], cachegeolocation[1]];
-					//mimic Google and Transit App inital zoom
+				let cachegeolocation = localStorage.getItem('cachegeolocation')?.split(',');
+				console.log('cachegeolocation adsdsd', cachegeolocation);
+				if (cachegeolocation && cachegeolocation.length > 1) {
+					centerinit = [Number(cachegeolocation[0]), Number(cachegeolocation[1])];
+					// mimic Google and Transit App inital zoom
 					zoominit = 13.4;
 				}
 			}
 		}
 
-		//get url param "sat"
+		// get url param "sat"
 
 		let style = darkMode
 			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
@@ -1104,7 +1100,7 @@
 
 		if (browser) {
 			if (window.localStorage.mapStyle == '3d') {
-				style = undefined;
+				style = undefined as any; // we don't do 3d
 			}
 			if (window.localStorage.mapStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
@@ -1129,9 +1125,9 @@
 			//	antialias: true,
 			style, // stylesheet location
 			accessToken: decode('ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'),
-			center: centerinit, // starting position [lng, lat]
-			//keep the centre at Los Angeles, since that is our primary user base currently
-			//switch to IP geolocation and on the fly rendering for this soon
+			center: centerinit as any, // starting position [lng, lat]
+			// keep the centre at Los Angeles, since that is our primary user base currently
+			// switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
 			fadeDuration: 0
 		});
@@ -1661,7 +1657,7 @@
 			map.loadImage('/station-enter.png', (error, image) => {
 				if (error) throw error;
 
-				map.addImage('station-enter', image);
+				if (image) map.addImage('station-enter', image);
 
 				map.addLayer(
 					{
@@ -1858,7 +1854,7 @@
 				if (error) throw error;
 
 				// Add the image to the map style.
-				map.addImage('geocircle', image);
+				if (image) map.addImage('geocircle', image);
 
 				map.addLayer({
 					id: 'nobearing_position',
@@ -1882,8 +1878,9 @@
 
 			map.loadImage('/geo-nav.png', (error, image) => {
 				if (error) throw error;
+
 				// Add the image to the map style.
-				map.addImage('geonav', image);
+				if (image) map.addImage('geonav', image);
 
 				map.addLayer({
 					id: 'bearing_position',
@@ -1980,7 +1977,8 @@
 
 				geolocation = location;
 
-				let geolocationdata = map.getSource('geolocation');
+				// let geolocationdata = map.getSource('geolocation');
+				let geolocationdata: mapboxgl.GeoJSONSource = map.getSource('geolocation') as mapboxgl.GeoJSONSource;
 
 				if (geolocationdata) {
 					geolocationdata.setData({
@@ -2004,6 +2002,7 @@
 
 					if (location.coords.accuracy) {
 						let accuracyLayer = map.getSource('userpositionacc');
+						// let accuracyLayer: mapboxgl.GeoJSONSource = map.getSource('userpositionacc') as mapboxgl.GeoJSONSource;
 
 						if (accuracyLayer) {
 							let numberofpoints: number = 128;
@@ -2036,6 +2035,7 @@
 				let nobearingposlayer = map.getLayer('nobearing_position');
 				let bearingposlayer = map.getLayer('bearing_position');
 
+				// unreach :<
 				if (false) {
 					console.log('bearing is', location.coords.heading);
 
@@ -2140,16 +2140,6 @@
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2192,7 +2182,7 @@
 	<meta property="twitter:image" content="https://transitmap.kylerchin.com/screenshot1.png" />
 
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin={true} />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
 		rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
@@ -2224,13 +2214,15 @@
 {/key}
 
 <div
-	class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
+	class="fixed bottom-0 right-0 text-xs md:text-sm bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
 	on:click={() => {
 		saveCoordsToClipboard();
 	}}
 	on:keydown={() => {
 		saveCoordsToClipboard();
 	}}
+	role="button"
+	tabindex="0"
 >
 	<p>
 		{#if debugmode == true}
@@ -2270,7 +2262,7 @@
 
 {#if sidebarCollapsed == false}
 	<div
-		class="fixed bottom-0 left-0 pointer-events-none border-r-0 md:border-r-4 border-t-4 md:border-t-0 text-white pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
+		class="fixed bottom-0 left-0 border-r-0 md:border-r-4 border-t-4 md:border-t-0 text-white pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
 		style:background={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'}
 		style:color={`${darkMode ? 'white' : 'black'}`}
 		style:border-color="#42A7C5"
@@ -2451,22 +2443,40 @@
 						class="text-3xl"
 					>
 						{#if selectedVehicle.properties.maptag == 'Green'}
-							<img src="/lines/mts-green.svg" style:height="50px" style:float="left" style:margin-right="15px" />
+							<img
+								src="/lines/mts-green.svg"
+								alt="mts-green"
+								style:height="50px"
+								style:float="left"
+								style:margin-right="15px"
+							/>
 						{:else if selectedVehicle.properties.maptag == 'Orange'}
-							<img src="/lines/mts-orange.svg" style:height="50px" style:float="left" style:margin-right="15px" />
+							<img
+								src="/lines/mts-orange.svg"
+								alt="mts-orange"
+								style:height="50px"
+								style:float="left"
+								style:margin-right="15px"
+							/>
 						{:else if selectedVehicle.properties.maptag == 'Blue'}
-							<img src="/lines/mts-blue.svg" style:height="50px" style:float="left" style:margin-right="15px" />
+							<img
+								src="/lines/mts-blue.svg"
+								alt="mts-blue"
+								style:height="50px"
+								style:float="left"
+								style:margin-right="15px"
+							/>
 						{/if}
 						{selectedVehicle.properties.maptag}
 					</h1>
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-northcountrytransitdistrict~rt'}
 					{#if selectedVehicle.properties.maptag == 'COASTER'}
-						<img src="/lines/nctd-coaster.svg" style:height="30px" />
+						<img src="/lines/nctd-coaster.svg" alt="nctd-coaster" style:height="30px" />
 					{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
-						<img src="/lines/nctd-sprinter.svg" style:height="30px" />
+						<img src="/lines/nctd-sprinter.svg" alt="nctd-sprinter" style:height="30px" />
 					{:else if selectedVehicle.properties.maptag == '350'}
-						<img src="/lines/nctd-brt.svg" style:height="30px" />
+						<img src="/lines/nctd-brt.svg" alt="nctd-brt" style:height="30px" />
 						<h1
 							style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 							class="text-3xl"
@@ -2485,6 +2495,7 @@
 				{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
 					<img
 						src="/lines/metro.svg"
+						alt="metro"
 						style:height="50px"
 						style:float="left"
 						style:vertical-align="bottom"
@@ -2492,6 +2503,7 @@
 					/>
 					<img
 						src="/lines/metro-{selectedVehicle.properties.maptag.toLowerCase()}.svg"
+						alt="metro"
 						style:height="50px"
 						style:vertical-align="bottom"
 					/>
@@ -2501,7 +2513,13 @@
 						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
-						<img src={`/lines/metro.svg`} style:height="35px" style:float="left" style:vertical-align="middle" />
+						<img
+							src={`/lines/metro.svg`}
+							alt="metro"
+							style:height="35px"
+							style:float="left"
+							style:vertical-align="middle"
+						/>
 						&nbsp;
 						{selectedVehicle.properties.maptag}
 					</h1>
@@ -2511,18 +2529,18 @@
 						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
 						class="text-3xl"
 					>
-						<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" />
+						<img src="https://metrolinktrains.com/favicon.ico" alt="favicon" style:height="40px" style:float="left" />
 						&nbsp;
 						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
 						{expandMetrolink[selectedVehicle.properties.maptag]} Line
 					</h1>
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-octa~rt'}
-					<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
+					<img src="https://www.octa.net/dist/images/octa-logo.svg" alt="octa-logo" style:height="60px" />
 					<br />
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-metra~rt'}
-					<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
+					<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" alt="logo" style:height="40px" />
 					<br />
 					<h1
 						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
@@ -2536,6 +2554,7 @@
 										: 'rid'
 									: selectedVehicle.properties.maptag.replace('-', '').toLowerCase()
 							}.png`}
+							alt=""
 							style:height="35px"
 							style:float="left"
 						/>
@@ -2548,6 +2567,7 @@
 					<img
 						src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
 						style:height="30px"
+						alt="amtrak-logo"
 					/>
 					<h1
 						style:color={darkMode ? selectedVehicle.properties.contrastdarkmode : selectedVehicle.properties.color}
@@ -2618,7 +2638,7 @@
 			class="absolute right-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 rounded-lg pl-3 dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 			placeholder={strings.search}
 		/> -->
-		<a
+		<button
 			on:click={() => {
 				sidebarCollapsed = true;
 			}}
@@ -2626,8 +2646,8 @@
 			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="flex material-symbols-outlined margin-auto select-none"> close </span>
-		</a>
-		<a
+		</button>
+		<button
 			on:click={() => {
 				sidebarView = 0;
 			}}
@@ -2635,8 +2655,8 @@
 			class="absolute left-16 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> home </span>
-		</a>
-		<a
+		</button>
+		<button
 			on:click={() => {
 				sidebarView = 1;
 			}}
@@ -2644,7 +2664,7 @@
 			class="absolute left-28 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined margin-auto select-none"> settings </span>
-		</a>
+		</button>
 		<!-- <a
 			on:click={() => { sidebarView = 0 }}
 			style:cursor="pointer !important"
@@ -2655,18 +2675,19 @@
 	</div>
 {/if}
 
+<!-- Mobile view -->
 {#if sidebarCollapsed}
-	<a
+	<button
 		on:click={() => {
 			sidebarCollapsed = false;
 		}}
 		transition:fade
 		style:cursor="pointer !important"
-		class="fixed hidden lg:flex left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		class="fixed hidden lg:flex left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined margin-auto select-none"> left_panel_open </span>
-	</a>
-	<a
+	</button>
+	<button
 		on:click={() => {
 			sidebarCollapsed = false;
 		}}
@@ -2675,13 +2696,15 @@
 		class="fixed lg:hidden left-4 bottom-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
 		<span class="material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
-	</a>
+	</button>
 {/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
+		role="button"
+		tabindex="0"
 		class="!cursor-pointer bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
 		<span class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"> layers </span>
@@ -2691,6 +2714,8 @@
 		on:click={gonorth}
 		on:keypress={gonorth}
 		on:touchstart={gonorth}
+		role="button"
+		tabindex="0"
 		aria-label="Reset Map to North"
 		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
@@ -2702,6 +2727,7 @@
 				: '/icons/compass.svg'}
 			class="h-7"
 			style={`transform: rotate(${0 - current_map_heading}deg)`}
+			alt="compass"
 		/>
 	</div>
 
@@ -2709,6 +2735,8 @@
 		on:click={gpsbutton}
 		on:keydown={gpsbutton}
 		on:touchstart={gpsbutton}
+		role="button"
+		tabindex="0"
 		class="${lockongps
 			? ' text-blue-500 dark:text-blue-300'
 			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-8 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"

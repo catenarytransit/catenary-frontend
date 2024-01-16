@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="pointer-events-none text-white pointer-events-auto clickable w-[100%] mb-2 mt-2"
+	class="text-white pointer-events-auto clickable w-[100%] mb-2 mt-2"
 	style:padding="15px"
 	style:border-radius="10px"
 	style:background
@@ -14,7 +14,7 @@
 	in:fly
 >
 	{#if imageURL}
-		<img src={imageURL} style:height="70px" class="m-2" />
+		<img src={imageURL} style:height="70px" class="m-2" alt=""/>
 	{/if}
 	<slot />
 </div>

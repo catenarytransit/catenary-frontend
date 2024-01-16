@@ -5,17 +5,17 @@ export function determineFeeds(
 	realtimefeeds: any,
 	geolocation: GeolocationPosition
 ) {
-	//returns an array of keys for each of the 3 arrays
+	// returns an array of keys for each of the 3 arrays
 
-	//start by calculating the list of static feeds in frame
-
+	// start by calculating the list of static feeds in frame
+	// console.log('geolocation', geolocation);
 	const features = map.queryRenderedFeatures({ layers: ['static_hull_calc'] });
 
-	//console.log('statics_in_frame', features);
+	// console.log('statics_in_frame', features);
 
-	//  console.log('features static data', features)
+	// console.log('features static data', features)
 
-	//   console.log('first feature', features[0].properties.name)
+	//  console.log('first feature', features[0].properties.name)
 
 	const statics_in_frame = [...new Set(features.map((f: any) => f.properties.onestop_feed_id))];
 
@@ -53,23 +53,23 @@ export function determineFeeds(
 	}
 	//console.log('realtime_feeds_in_frame',realtime_feeds_in_frame)
 
-	let static_data_obj: any = {};
+	const static_data_obj: any = {};
 
 	static_data.forEach((x: any) => {
 		static_data_obj[x.onestop_feed_id] = x;
 	});
 
-	let operators_data_obj: any = {};
+	const operators_data_obj: any = {};
 
 	operators_data.forEach((x: any) => {
 		operators_data_obj[x.onestop_operator_id] = x;
 	});
 
-	let realtime_feeds_data_obj: any = {};
+	const realtime_feeds_data_obj: any = {};
 
 	// console.log('realtime_feeds_in_frame',realtime_feeds_in_frame)
 
-	let realtime_data = realtime_feeds_in_frame
+	const realtime_data = realtime_feeds_in_frame
 		.map((r: any) => realtimefeeds.find((rf: any) => r === rf.onestop_feed_id))
 		.filter((x) => x != undefined);
 
@@ -77,7 +77,7 @@ export function determineFeeds(
 		realtime_feeds_data_obj[x.onestop_feed_id] = x;
 	});
 
-	//  console.log('realtime_data',realtime_data);
+	// console.log('realtime_data',realtime_data);
 
 	//console.log('init data realtime', realtimefeeds)
 
