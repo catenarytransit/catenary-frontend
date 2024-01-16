@@ -18,7 +18,7 @@ const playSequence = (sounds: string[]) => {
 	}
 };
 
-let courtesySequences = [
+const courtesySequences = [
 	[
 		'LAMetro/P3010%20E%20Line/A,%20E,%20and%20Green/audio/12200.wav',
 		'LAMetro/P3010%20E%20Line/A,%20E,%20and%20Green/audio/12304.wav',

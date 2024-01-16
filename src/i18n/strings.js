@@ -268,8 +268,7 @@ const i18n = {
 		headingIntercityRail: '철도',
 		headingOther: '다른',
 		headingMisc: '기타 레이어',
-		styleclassic: 'Classic',
-
+		// styleclassic: 'Classic',
 		routes: '노선',
 		labels: '라벨',
 		stops: '정류장',

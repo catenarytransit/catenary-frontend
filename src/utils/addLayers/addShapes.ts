@@ -1,4 +1,4 @@
-import { removeWeekendStops } from '../removeWeekendStops';
+import { removeWeekendStops } from './removeWeekendStops';
 
 export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 	const urlParams = new URLSearchParams(window.location.search);

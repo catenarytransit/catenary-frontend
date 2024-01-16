@@ -6,30 +6,30 @@
 	import { onMount } from 'svelte';
 	import { blur, fade } from 'svelte/transition';
 	import CloseButton from '../components/CloseButton.svelte';
-	import { makeCircleLayers } from '../components/addLayers/addLiveDots';
-	import { addStopsLayers } from '../components/addLayers/addStops';
+	import { makeCircleLayers } from '../utils/addLayers/addLiveDots';
+	import { addStopsLayers } from '../utils/addLayers/addStops';
 	import {
 		check_backend,
 		check_kactus,
 		what_backend_to_use,
 		what_kactus_to_use,
 		what_martin_to_use
-	} from '../components/distributed';
+	} from '../utils/helper/distributed';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
-	import { addGeoRadius, setUserCircles } from '../components/userradius';
-	import { componentToHex, createGeoJSONCircle } from '../geoMathsAssist';
-	import { determineFeeds } from '../maploaddata';
-	import Realtimelabel from '../realtimelabel.svelte';
+	import { interpretLabelsToCode } from '../utils/helper/rtLabelsToMapboxStyle';
+	import { addGeoRadius, setUserCircles } from '../utils/helper/userradius';
+	import { componentToHex, createGeoJSONCircle } from '../utils/helper/geoMathsAssist';
+	import { determineFeeds } from '../utils/helper/maploaddata';
+	import Realtimelabel from '../components/realtimelabel.svelte';
 	import { hexToRgb, hslToRgb, rgbToHsl } from '../utils/colour';
 	import { flatten } from '../utils/flatten';
 
-	import { makeBearingArrowPointers } from '../components/addLayers/makebearingarrowpointers';
+	import { makeBearingArrowPointers } from '../utils/addLayers/makebearingarrowpointers';
 
-	import { addShapes } from '../components/addLayers/addShapes';
+	import { addShapes } from '../utils/addLayers/addShapes';
 	import Alertpopup from '../components/alertpopup.svelte';
-	import { playRandomSequence } from '../components/announcements';
+	import { playRandomSequence } from '../utils/helper/announcements';
 	import i18n from '../i18n/strings';
 
 	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
@@ -114,6 +114,7 @@
 	let realtime_feeds: any[] = [];
 
 	let static_feeds_in_frame: Record<string, any> = {};
+
 	let operators_in_frame: Record<string, any> = {};
 	let realtime_feeds_in_frame: Record<string, any> = {};
 
@@ -163,12 +164,11 @@
 			shapes: 'localrailshapes',
 			labelshapes: 'localraillabelshapes'
 		},
-
 		other: {
 			livedots: 'other',
 			labeldots: 'labelother',
 			pointing: 'otherpointing',
-			pointingshell: 'otherpointingshell',
+			pointingshell: 'otherpointingshell', // not-found
 			stops: 'otherstopscircle',
 			labelstops: 'otherstopslabel',
 			shapes: 'othershapes',
@@ -2135,6 +2135,7 @@
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->

@@ -1,5 +1,5 @@
 //import {Map} from 'mapbox-gl'
-import { createGeoJSONCircle } from '../geoMathsAssist';
+import { createGeoJSONCircle } from './geoMathsAssist';
 
 export function addGeoRadius(map: any) {
 	try {

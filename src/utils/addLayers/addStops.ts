@@ -1,4 +1,4 @@
-import { removeWeekendStops } from '../removeWeekendStops';
+import { removeWeekendStops } from './removeWeekendStops';
 
 export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: any) {
 	// BUS

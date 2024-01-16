@@ -3,15 +3,15 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview --port 16172",
-		"test": "playwright test",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"dev"        : "vite dev",
+		"build"      : "vite build",
+		"preview"    : "vite preview --port 16172",
+		"test"       : "playwright test",
+		"check"      : "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:unit": "vitest",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"test:unit"  : "vitest",
+		"lint"       : "prettier --plugin-search-dir . --check . && eslint .",
+		"format"     : "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.40.1",
