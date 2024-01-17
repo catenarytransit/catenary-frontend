@@ -359,7 +359,7 @@
 	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
-		let fetchitem = localStorage.getItem(layersettingsnamestorage);
+		let fetchitem = ((embedmode && urlParams.get('framework-layers')) ? atob(urlParams.get('framework-layers') as string) : null) || localStorage.getItem(layersettingsnamestorage);
 		if (fetchitem != null) {
 			let cachedJsonObject = JSON.parse(fetchitem);
 
