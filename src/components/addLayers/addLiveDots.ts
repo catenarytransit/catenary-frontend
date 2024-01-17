@@ -40,10 +40,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
             ],
 
-            'text-size':
-                window?.innerWidth >= 1023
-                    ? ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14]
-                    : ['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 12, 11, 13, 13, 15],
 
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
@@ -52,9 +49,9 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
             //'text-color': ['get', 'color'],
             //'text-halo-color': '#eaeaea',
             'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-            'text-halo-width': 2,
+            'text-halo-width': 1,
             'text-halo-blur': 100,
-            'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 11, 1]
+            'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 1]
         }
     });
 
@@ -99,7 +96,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 13,
                 ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
             ],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 12, 11, 13, 13, 15],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
@@ -144,8 +141,8 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 " | ",
                 ['get', 'vehicleId']
             ],*/
-            'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-            'text-radial-offset': 0.2,
+            'text-variable-anchor': ['top'],
+            'text-radial-offset': 0,
             'text-font': [
                 'step',
                 ['zoom'],
@@ -155,7 +152,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 13,
                 ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
             ],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 11, 13, 13, 17],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
@@ -200,7 +197,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 ['get', 'vehicleId']
             ],*/
             'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-            'text-radial-offset': 0.2,
+            'text-radial-offset': 0,
             'text-font': [
                 'step',
                 ['zoom'],
@@ -210,15 +207,15 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 13,
                 ['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
             ],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 16, 11, 18, 13, 22],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
             'text-color': textColorOfMapLabels(darkMode),
             //'text-halo-color': '#eaeaea',
             'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-            'text-halo-width': 2,
-            'text-halo-blur': 100,
+            'text-halo-width': 1,
+            'text-halo-blur': 10,
             'text-emissive-strength': 1,
             'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
         }
