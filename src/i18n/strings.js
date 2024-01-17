@@ -17,7 +17,7 @@ const i18n = {
         styledefault: 'Default',
         styleclassic: 'Classic',
         style3d: '3D (perfomance nightmare)',
-        stylesea: 'Deep Sea',
+        stylesea: 'Seaside',
         stylearchi: 'Archi',
         stylesat: 'Satellite',
         styleminimal: 'Minimal',

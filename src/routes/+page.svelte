@@ -104,6 +104,8 @@
 
 	let fpsmode = !!urlParams.get('fps');
 
+	let embedmode = urlParams.get('framework') == 'true';
+
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
 	let avaliablerealtimealerts = new Set();
@@ -236,6 +238,7 @@
 	if (browser) {
 		if (
 			localStorage.theme === 'light' ||
+			(urlParams.get('framework-colorway') == 'light' && embedmode) ||
 			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)
 		) {
 			console.log('dark mode triggered');
@@ -356,7 +359,7 @@
 	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
-		let fetchitem = localStorage.getItem(layersettingsnamestorage);
+		let fetchitem = ((embedmode && urlParams.get('framework-layers')) ? atob(urlParams.get('framework-layers') as string) : null) || localStorage.getItem(layersettingsnamestorage);
 		if (fetchitem != null) {
 			let cachedJsonObject = JSON.parse(fetchitem);
 
@@ -1148,24 +1151,31 @@
 
 		//get url param "sat"
 
-		let style = darkMode
+		let style: string | undefined = darkMode
 					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
 		if (browser) {
-			if (window.localStorage.mapStyle == '3d') {
+			let desiredStyle = embedmode ? urlParams.get('framework-style') || window.localStorage.mapStyle : window.localStorage.mapStyle;
+
+			if (desiredStyle == '3d') {
 				style = undefined;
 			}
-			if (window.localStorage.mapStyle == 'sat') {
+			if (desiredStyle == 'sat') {
 				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
 			}
-			if (window.localStorage.mapStyle == 'deepsea') {
-				style = 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o';
+			if (desiredStyle == 'rustic') {
+				style = 'mapbox://styles/kylerschin/clrgqjvqm005m01oo661z8v1e';
 			}
-			if (window.localStorage.mapStyle == 'archi') {
+			if (desiredStyle == 'deepsea') {
+				style = darkMode
+					? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
+					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+			}
+			if (desiredStyle == 'archi') {
 				style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
 			}
-			if (window.localStorage.mapStyle == 'minimal') {
+			if (desiredStyle == 'minimal') {
 				style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
 			}
 		}
@@ -1176,6 +1186,7 @@
 			hash: 'pos',
 			useWebGL2: true,
 			preserveDrawingBuffer: false,
+			attributionControl: false,
 			//	antialias: true,
 			style, // stylesheet location
 			accessToken: decode(
@@ -2333,7 +2344,7 @@
 	</p>
 </div>
 
-{#if sidebarCollapsed == false}
+{#if (sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode))}
 	<div
 		class="fixed bottom-0 left-0 pointer-events-none border-r-0 md:border-r-4 border-t-4 md:border-t-0 text-white pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
 		style:background={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'}
