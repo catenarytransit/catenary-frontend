@@ -3113,7 +3113,7 @@
 
 	* {
 		cursor: default;
-		font-family: 'Open Sans', sans-serif;
+		font-family: 'din-2014', sans-serif;
 	}
 
 	.material-symbols-outlined {
