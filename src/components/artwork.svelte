@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="pointer-events-none text-white pointer-events-auto clickable w-[100%] mb-2 mt-2 bg-[#0a233f]"
+	class="text-white pointer-events-auto clickable w-[100%] mb-2 mt-2 bg-[#0a233f]"
 	style:border-radius="20px"
 >
 	<img src={image} style:border-radius="20px 20px 0 0" alt={name} />
