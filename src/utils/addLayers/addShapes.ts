@@ -3,7 +3,7 @@ import { removeWeekendStops } from 'src/utils/addLayers/removeWeekendStops';
 export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 	const urlParams = new URLSearchParams(window.location.search);
 
-	// BUS
+	//BUS
 
 	map.addLayer({
 		id: layerspercategory.bus.shapes,
@@ -69,7 +69,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 				: ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 9, 7, 13, 11],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 			'text-allow-overlap': false,
 			'symbol-spacing':
@@ -81,7 +81,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 		paint: {
 			'text-color': ['concat', '#', ['get', 'text_color']],
 			'text-halo-color': ['concat', '#', ['get', 'color']],
-			'text-halo-width': 3,
+			'text-halo-width': 1,
 			'text-halo-blur': 0,
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1],
 			'line-emissive-strength': 1
@@ -128,7 +128,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 		paint: {
 			'text-color': ['concat', '#', ['get', 'text_color']],
 			'text-halo-color': ['concat', '#', ['get', 'color']],
-			'text-halo-width': 3,
+			'text-halo-width': 1,
 			'text-halo-blur': 1,
 			'line-emissive-strength': 1
 			//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
@@ -180,10 +180,9 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 			'symbol-placement': 'line',
 			'text-field': ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+			'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
-
 			'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
 			'text-allow-overlap': false,
 			visibility: 'none'
@@ -192,7 +191,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 			'text-color': ['concat', '#', ['get', 'text_color']],
 			'text-emissive-strength': 1,
 			'text-halo-color': ['concat', '#', ['get', 'color']],
-			'text-halo-width': 3,
+			'text-halo-width': 1,
 			'text-halo-blur': 1
 			//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
 		},
@@ -226,7 +225,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 			'symbol-placement': 'line',
 			'text-field': ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+			'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 
@@ -238,7 +237,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 			'text-color': ['concat', '#', ['get', 'text_color']],
 			'text-emissive-strength': 1,
 			'text-halo-color': ['concat', '#', ['get', 'color']],
-			'text-halo-width': 3,
+			'text-halo-width': 1,
 			'text-halo-blur': 1
 			//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
 		},

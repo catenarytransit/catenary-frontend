@@ -1,7 +1,7 @@
 import { removeWeekendStops } from 'src/utils/addLayers/removeWeekendStops';
 
 export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: any) {
-	// BUS
+	//BUS
 
 	map.addLayer({
 		id: layerspercategory.bus.stops,
@@ -43,13 +43,13 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-field': ['get', 'displayname'],
 			//'text-field': ['coalesce', ['get', 'route_types']],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 12, 6, 15, 8],
+			'text-size': 10,
 			'text-radial-offset': 0.7,
 			//'text-ignore-placement': false,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
+			'text-font': ['DIN Pro Regular', 'Arial Unicode MS Regular']
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
@@ -57,7 +57,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-halo-width': 0.4,
 			'text-emissive-strength': 1
 		},
-		minzoom: window?.innerWidth >= 768 ? 14.5 : 13
+		minzoom: 11
 	});
 
 	//LOCAL RAIL
@@ -74,7 +74,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': 0.1,
+			'circle-opacity': 1,
 			'circle-emissive-strength': 1
 		},
 		minzoom: 8,
@@ -103,19 +103,16 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		layout: {
 			'text-field': ['get', 'displayname'],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size':
-				window.innerWidth >= 1023
-					? ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12]
-					: ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
+			'text-size': 12,
 			'text-radial-offset': 1,
 			//'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
+			'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular']
 		},
 		paint: {
-			'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 1,
 			'text-emissive-strength': 1
@@ -149,7 +146,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': 0.1,
+			'circle-opacity': 1,
 			'circle-emissive-strength': 1
 		},
 		minzoom: 7,
@@ -171,19 +168,16 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		layout: {
 			'text-field': ['get', 'displayname'],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size':
-				window.innerWidth >= 1023
-					? ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 10, 15, 12, 17, 14]
-					: ['interpolate', ['linear'], ['zoom'], 9, 8, 15, 10, 17, 12],
+			'text-size': 12,
 			'text-radial-offset': 1,
 			//'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
+			'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular']
 		},
 		paint: {
-			'text-color': darkMode ? '#ddd6fe' : '#2a2a2a',
+			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 1,
 			'text-emissive-strength': 1
@@ -212,7 +206,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
+			'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular']
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
@@ -257,7 +251,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
+			'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular']
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',

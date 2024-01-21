@@ -14,7 +14,7 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
 			'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
 			'circle-stroke-width': 0.8,
 			'circle-emissive-strength': 1,
-			'circle-opacity': darkMode == true ? ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8.2, 0.7] : 0.5
+			'circle-opacity': 0.3
 		},
 		minzoom: 7
 	});
@@ -31,28 +31,23 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
 			'text-font': [
 				'step',
 				['zoom'],
-				['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-				12,
-				['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-				15,
-				['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
+				['literal', ['DIN Pro Regular', 'Arial Unicode MS Regular']],
+				9,
+				['literal', ['DIN Pro Bold', 'Arial Unicode MS Medium']]
 			],
 
-			'text-size':
-				window?.innerWidth >= 1023
-					? ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 10, 13, 14]
-					: ['interpolate', ['linear'], ['zoom'], 9, 8, 10, 8, 11, 10, 13, 12],
+			'text-size': 15
 
-			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
+			// 'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
 			//'text-color': ['get', 'color'],
 			//'text-halo-color': '#eaeaea',
 			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-			'text-halo-width': 2,
-			'text-halo-blur': 100,
-			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.8, 11, 1]
+			'text-halo-width': 2.4,
+			'text-halo-blur': 1,
+			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 1]
 		}
 	});
 
@@ -69,7 +64,7 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
 			'circle-stroke-color': '#fff',
 			'circle-emissive-strength': 1,
 			'circle-stroke-width': 1,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.2, 0.6, 8.2, 0.8]
+			'circle-opacity': 0.3
 		}
 	});
 
@@ -91,21 +86,19 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
 			'text-font': [
 				'step',
 				['zoom'],
-				['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-				11,
-				['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-				13,
-				['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
+				['literal', ['DIN Pro Regular', 'Arial Unicode MS Regular']],
+				9,
+				['literal', ['DIN Pro Bold', 'Arial Unicode MS Medium']]
 			],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 14, 11, 15, 13, 16],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
 			//'text-halo-color': '#eaeaea',
 			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-			'text-halo-width': 2,
-			'text-halo-blur': 100,
+			'text-halo-width': 2.4,
+			'text-halo-blur': 1,
 			'text-emissive-strength': 1,
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
 		}
@@ -119,26 +112,12 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
 		source: 'localrail',
 		minzoom: 2,
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
-			'circle-color': ['get', 'color'],
-			'circle-stroke-color': '#fff',
-			'circle-stroke-width': 1,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.2, 0.6, 8.2, 0.8]
-		}
-	});
-
-	map.addLayer({
-		id: layerspercategory.localrail.livedots,
-		type: 'circle',
-		source: 'localrail',
-		minzoom: 2,
-		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 7, 10, 8, 16, 12],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': '#fff',
 			'circle-stroke-width': 1,
 			'circle-emissive-strength': 1,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.2, 0.6, 8.2, 0.8]
+			'circle-opacity': 0.6
 		}
 	});
 
@@ -155,27 +134,19 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
                 " | ",
                 ['get', 'vehicleId']
             ],*/
-			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-radial-offset': 0.2,
-			'text-font': [
-				'step',
-				['zoom'],
-				['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-				11,
-				['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-				13,
-				['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
-			],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+			'text-variable-anchor': ['top'],
+			'text-radial-offset': 0,
+			'text-font': ['literal', ['DIN Pro Bold', 'Arial Unicode MS Bold']],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 14, 11, 16, 13, 18],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
 			//'text-halo-color': '#eaeaea',
 			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-			'text-halo-width': 2,
+			'text-halo-width': 2.4,
+			'text-halo-blur': 1,
 			'text-emissive-strength': 1,
-			'text-halo-blur': 100,
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
 		}
 	});
@@ -188,12 +159,12 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
 		source: 'intercityrail',
 		minzoom: 2,
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 10, 10, 11, 16, 13],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': '#fff',
 			'circle-stroke-width': 1,
 			'circle-emissive-strength': 1,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.2, 0.6, 8.2, 0.8]
+			'circle-opacity': 0.8
 		}
 	});
 
@@ -211,25 +182,16 @@ export function makeCircleLayers(map: any, darkMode: boolean, layerspercategory:
                 ['get', 'vehicleId']
             ],*/
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-radial-offset': 0.2,
-			'text-font': [
-				'step',
-				['zoom'],
-				['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-				11,
-				['literal', ['Open Sans Medium', 'Arial Unicode MS Medium']],
-				13,
-				['literal', ['Open Sans Bold', 'Arial Unicode MS Bold']]
-			],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 8, 10, 9, 11, 13, 15],
+			'text-radial-offset': 0,
+			'text-font': ['literal', ['DIN Pro Bold', 'Arial Unicode MS Bold']],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 16, 11, 17, 13, 19],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
-			//'text-halo-color': '#eaeaea',
 			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-			'text-halo-width': 2,
-			'text-halo-blur': 100,
+			'text-halo-width': 2.4,
+			'text-halo-blur': 1,
 			'text-emissive-strength': 1,
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
 		}
