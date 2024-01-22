@@ -2357,6 +2357,20 @@
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
 			<div in:fade>
+				{#if realtime_list.includes('f-mts~rt~onebusaway')}
+					<Alertpopup background="#C60C30">
+						<h1 class="text-lg">Inclement Weather: STAY HOME</h1>
+						<p class="text-sm">
+							Orange Line service is supended, the Green Line is only running between County Center/Little Italy and Alvarado, and the Blue Line is only running between Barrio Logan and San Ysidro and between County Center/Little Italy and UTC.
+						</p>
+						<a
+							style:cursor="pointer"
+							style:color="#f9e300"
+							href="https://www.sdmts.com"
+							>{strings.learnmore} &rarr;</a
+						>
+					</Alertpopup>
+				{/if}
 				<Alertpopup
 					background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black"
 				>
@@ -2379,21 +2393,6 @@
 							>{strings.learnmore} &rarr;</a
 						>
 						<br /><br /><br /><br /><br /><br />
-					</Alertpopup>
-				{/if}
-				{#if realtime_list.includes('f-mts~rt~onebusaway')}
-					<Alertpopup background="#E68357">
-						<h1 class="text-lg">January Service Changes</h1>
-						<p class="text-sm">
-							Frequency and schedule adjustments for MTS routes 215, 227, 894, 905, 955, 962, 964,
-							and 992 take effect January 28, 2024. New timetables will be orange.
-						</p>
-						<a
-							style:cursor="pointer"
-							style:color="#f9e300"
-							href="https://www.sdmts.com/sites/default/files/attachments/january-service-changes-2024.pdf"
-							>{strings.learnmore} &rarr;</a
-						>
 					</Alertpopup>
 				{/if}
 			</div>
