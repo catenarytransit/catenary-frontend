@@ -2361,7 +2361,7 @@
 					<Alertpopup background="#C60C30">
 						<h1 class="text-lg">Inclement Weather: STAY HOME</h1>
 						<p class="text-sm">
-							Orange Line service is supended, the Green Line is only running between County Center/Little Italy and Alvarado, and the Blue Line is only running between Barrio Logan and San Ysidro and between County Center/Little Italy and UTC.
+							Trolley lines are suspended or recovering from severe delays. Stay home if you can, and if you must travel please use the bus if possible.
 						</p>
 						<a
 							style:cursor="pointer"
