@@ -37,7 +37,7 @@
 	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
 	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
 
-	let expandMetrolink = {
+	const expandMetrolink = {
 		AV: 'Antelope Valley',
 		IEOC: 'Inland Empire-Orange County',
 		OC: 'Orange County',
@@ -47,7 +47,7 @@
 		RIV: 'Riverside'
 	};
 
-	let expandMetra = {
+	const expandMetra = {
 		'MD-N': 'Milwaukee District North',
 		NCS: 'North Central Service',
 		'UP-N': 'Union Pacific North',
@@ -61,15 +61,15 @@
 		'UP-W': 'Union Pacific West'
 	};
 
-	let fleetData = {
+	const fleetData = {
 		'f-mts~rt~onebusaway': mtsFleetData,
 		'f-metro~losangeles~rail~rt': metroFleetData,
 		'f-northcountrytransitdistrict~rt': nctdFleetData
 	};
 
-	let enabledlayerstyle =
+	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
-	let disabledlayerstyle =
+	const disabledlayerstyle =
 		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
 
 	let darkMode = true;
