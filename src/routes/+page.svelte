@@ -2357,6 +2357,20 @@
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
 			<div in:fade>
+				{#if realtime_list.includes('f-mts~rt~onebusaway')}
+					<Alertpopup background="#C60C30">
+						<h1 class="text-lg">Inclement Weather: STAY HOME</h1>
+						<p class="text-sm">
+							Trolley lines are suspended or recovering from severe delays. Stay home if you can, and if you must travel please use the bus if possible.
+						</p>
+						<a
+							style:cursor="pointer"
+							style:color="#f9e300"
+							href="https://www.sdmts.com"
+							>{strings.learnmore} &rarr;</a
+						>
+					</Alertpopup>
+				{/if}
 				<Alertpopup
 					background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black"
 				>
