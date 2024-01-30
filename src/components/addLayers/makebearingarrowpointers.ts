@@ -1,7 +1,7 @@
 export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercategory:any) {
     const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.25, 15, 0.4]
 
-			const busbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]]
+			const busbearingoffset = ['interpolate', ['linear'], ['zoom'],10, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]]
 
 			const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.3, 15, 0.5]
 
@@ -15,7 +15,6 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 					map.addImage('pointingshelllight', image);
 				}});
 
-			if (true) {
 				map.loadImage('./icons/pointing-filled.png', (error, image) => {
 				if (error) throw error;
 
@@ -132,9 +131,9 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 
 			})
 
-			}
+			
 
-			if (true) {
+			
 				map.loadImage('./icons/pointing-shell.png', (error, image) => {
 				if (error) throw error;
 
@@ -242,5 +241,5 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 				});
 				}
 			})
-			}
+			
 }
