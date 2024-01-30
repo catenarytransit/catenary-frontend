@@ -93,7 +93,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
             'text-halo-color': ['concat', '#', ['get', 'color']],
-            'text-halo-width': 1,
+            'text-halo-width': 2,
             'text-halo-blur': 0,
             'text-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0, 7, 0.8, 10, 1],
             'line-emissive-strength': 1
@@ -149,7 +149,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
             'text-halo-color': ['concat', '#', ['get', 'color']],
-            'text-halo-width': 1,
+            'text-halo-width': 2,
             'text-halo-blur': 1,
             'line-emissive-strength': 1,
             //'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]

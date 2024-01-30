@@ -56,7 +56,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'text-halo-width': 0.4,
             'text-emissive-strength': 1
         },
-        minzoom: window?.innerWidth >= 768 ? 13 : 12
+        minzoom: window?.innerWidth >= 768 ? 14 : 13
     });
    
     
@@ -77,7 +77,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
                 : '#333333',
             'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
             'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-            'circle-opacity': 1,
+            'circle-opacity': 0.9,
             'circle-emissive-strength': 1
         },
         minzoom: 8,
@@ -159,7 +159,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             : '#333333',
         'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
         'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-        'circle-opacity': 1,
+        'circle-opacity': 0.9,
         'circle-emissive-strength': 1
     },
     minzoom: 7,

@@ -2357,7 +2357,7 @@
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
 			<div in:fade>
-				{#if realtime_list.includes('f-mts~rt~onebusaway')}
+				<!--{#if realtime_list.includes('f-mts~rt~onebusaway')}
 					<Alertpopup background="#C60C30">
 						<h1 class="text-lg">Inclement Weather: STAY HOME</h1>
 						<p class="text-sm">
@@ -2370,7 +2370,7 @@
 							>{strings.learnmore} &rarr;</a
 						>
 					</Alertpopup>
-				{/if}
+				{/if}-->
 				<Alertpopup
 					background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black"
 				>
