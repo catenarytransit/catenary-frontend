@@ -56,7 +56,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'text-halo-width': 0.4,
             'text-emissive-strength': 1
         },
-        minzoom: 11
+        minzoom: window?.innerWidth >= 768 ? 13 : 12
     });
    
     
