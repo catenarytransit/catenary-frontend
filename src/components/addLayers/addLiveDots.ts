@@ -39,7 +39,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
 
             'text-size': 15,
 
-            // 'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
+            'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
             'text-color': textColorOfMapLabels(darkMode),
