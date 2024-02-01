@@ -44,7 +44,109 @@
 		SB: 'San Bernardino',
 		VC: 'Ventura County',
 		'91': '91/Perris Valley',
-		RIV: 'Riverside'
+		RIV: 'Riverside',
+
+		'AV LINE': 'Antelope Valley Line',
+		'IEOC LINE': 'Inland Empire-Orange County Line',
+		'OC LINE': 'Orange County Line',
+		'SB LINE': 'San Bernardino Line',
+		'VC LINE': 'Ventura County Line',
+		'91/PV Line': '91 Line',
+		'RVS LINE': 'Riverside Line',
+		'PAC SURF': 'Pacific Surfliner',
+		ARROW: 'Arrow Service'
+	};
+
+	const expandMetrolinkColors = {
+		'AV LINE': 'rgb(130, 216, 163)',
+		'IEOC LINE': 'rgb(243, 134, 181)',
+		'OC LINE': 'rgb(255, 157, 51)',
+		'SB LINE': 'rgb(205, 134, 145)',
+		'VC LINE': 'rgb(255, 191, 51)',
+		'91/PV Line': '#0071ce',
+		'RVS LINE': 'rgb(198, 177, 210)',
+		'PAC SURF': 'rgb(147, 200, 234)',
+		ARROW: '#B0DE3B'
+	};
+
+	const expandMetrolinkStops = {
+		'L. A. Union Metrolink': 'LAUS',
+		'Los Angeles': 'LAUS',
+		'Commerce Metrolink': 'COMMERCE',
+		'Norwalk/ Santa Fe Springs Metrolink': 'NORWALK-SANTAFESPRINGS',
+		'Buena Park Metrolink': 'BUENAPARK',
+		'Fullerton Metrolink': 'FULLERTON',
+		Fullerton: 'FULLERTON',
+		'Anaheim-ARTIC Metrolink': 'ARTIC',
+		Anaheim: 'ARTIC',
+		'Orange Metrolink': 'ORANGE',
+		'Santa Ana Metrolink': 'SANTA ANA',
+		'Santa Ana': 'SANTA ANA',
+		'Tustin Metrolink': 'TUSTIN',
+		'Irvine Metrolink': 'IRVINE',
+		Irvine: 'IRVINE',
+		'Laguna Niguel/ Mission Viejo Metrolink': 'LAGUNANIGUEL-MISSIONVIEJO',
+		'San Juan Capistrano Metrolink': 'SAN JUAN CAPISTRANO',
+		'San Juan Capistrano Amtrak': 'SAN JUAN CAPISTRANO',
+		// need to wait until tracks reopen
+		// 'San Clemente Metrolink': '',
+		// 'San Clemente Pier Metrolink': '',
+		// 'San Clemente Pier Amtrak': '',
+		// 'Oceanside Metrolink': '',
+		// 'Oceanside': '',
+		'Montebello/ Commerce Metrolink': 'MONTEBELLO',
+		'Industry Metrolink': 'INDUSTRY',
+		'Downtown Pomona Metrolink': 'POMONA-DOWNTOWN',
+		'East Ontario Metrolink': 'ONTARIO-EAST',
+		'Jurupa Valley/Pedley Metrolink': 'PEDLEY',
+		'Anaheim Canyon Metrolink': 'ANAHEIM-CANYON',
+		'West Corona Metrolink': 'CORONA-WEST',
+		'North Main Corona Metrolink': 'MAIN-CORONA-NORTH',
+		'Riverside-La Sierra Metrolink': 'RIVERSIDE-LA SIERRA',
+		'Riverside-Downtown Metrolink': 'RIVERSIDE-DOWNTOWN',
+		'Riverside-Hunter Park/Ucr': 'RIVERSIDE-HUNTERPARK',
+		'Moreno Valley/March Field': 'MORENO-VALLEY-MARCH-FIELD',
+		'Perris Downtown': 'PERRIS-DOWNTOWN',
+		'South Perris': 'PERRIS-SOUTH',
+		'San Bernardino Depot Metrolink': 'SAN BERNARDINO',
+		'San Bernardino - Downtown Metrolink': 'SANBERNARDINOTRAN',
+		'San Bernardino - Tippecanoe Metrolink': 'SANBERNARDINO-TIPPECANOE',
+		'Redlands - Esri Metrolink': 'REDLANDS-ESRI',
+		'Redlands - Downtown Metrolink': 'REDLANDS-DOWNTOWN-ARROW',
+		'Redlands - University Metrolink': 'REDLANDS-UNIVERSITY',
+		'Rialto Metrolink': 'RIALTO',
+		'Fontana Metrolink': 'FONTANA',
+		'Rancho Cucamonga Metrolink': 'RANCHO CUCAMONGA',
+		'Upland Metrolink': 'UPLAND',
+		'Montclair Metrolink': 'MONTCLAIR',
+		'Claremont Metrolink': 'CLAREMONT',
+		'Pomona (North) Metrolink': 'POMONA-NORTH',
+		'Covina Metrolink': 'COVINA',
+		'Baldwin Park Metrolink': 'BALDWINPARK',
+		'El Monte Metrolink': 'ELMONTE',
+		'Cal State LA Metrolink': 'CALSTATE',
+		'Lancaster Metrolink': 'LANCASTER',
+		'Palmdale Metrolink': 'PALMDALE',
+		'Vincent Grade/Acton Metrolink': 'VINCENT GRADE/ACTON',
+		'Vista Canyon Metrolink': 'VISTA-CANYON',
+		'Via Princessa Metrolink': 'VIA PRINCESSA',
+		'Santa Clarita Metrolink': 'SANTA CLARITA',
+		'Newhall Metrolink': 'NEWHALL',
+		'Sylmar/San Fernando Metrolink': 'SYLMAR/SAN FERNANDO',
+		'Sun Valley Metrolink': 'SUN VALLEY',
+		'Burbank Airport - North (Av Line) Metrolink': 'BURBANK-AIRPORT-NORTH',
+		'Downtown Burbank Metrolink': 'DOWNTOWN BURBANK',
+		'Glendale Metrolink': 'GLENDALE',
+		'Burbank Airport - South (Vc Line) Metrolink': 'BURBANK-AIRPORT-SOUTH',
+		'Burbank Amtrak': 'BURBANK-AIRPORT-SOUTH',
+		'Van Nuys Metrolink': 'VAN NUYS',
+		'Northridge Metrolink': 'NORTHRIDGE',
+		'Chatsworth Metrolink': 'CHATSWORTH',
+		'Simi Valley Metrolink': 'SIMIVALLEY',
+		'Moorpark Metrolink': 'MOORPARK',
+		'Camarillo Metrolink': 'CAMARILLO',
+		'Oxnard Metrolink': 'OXNARD',
+		'East Ventura Metrolink': 'VENTURA-EAST'
 	};
 
 	const expandMetra = {
@@ -95,6 +197,7 @@
 	let lasttimeofnorth = 0;
 
 	let selectedVehicle: any = null;
+	let selectedStop: any = null;
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -359,7 +462,10 @@
 	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
-		let fetchitem = ((embedmode && urlParams.get('framework-layers')) ? atob(urlParams.get('framework-layers') as string) : null) || localStorage.getItem(layersettingsnamestorage);
+		let fetchitem =
+			(embedmode && urlParams.get('framework-layers')
+				? atob(urlParams.get('framework-layers') as string)
+				: null) || localStorage.getItem(layersettingsnamestorage);
 		if (fetchitem != null) {
 			let cachedJsonObject = JSON.parse(fetchitem);
 
@@ -1152,11 +1258,13 @@
 		//get url param "sat"
 
 		let style: string | undefined = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+			: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
 		if (browser) {
-			let desiredStyle = embedmode ? urlParams.get('framework-style') || window.localStorage.mapStyle : window.localStorage.mapStyle;
+			let desiredStyle = embedmode
+				? urlParams.get('framework-style') || window.localStorage.mapStyle
+				: window.localStorage.mapStyle;
 
 			if (desiredStyle == '3d') {
 				style = undefined;
@@ -1196,15 +1304,15 @@
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
-			fadeDuration: 0,
+			fadeDuration: 0
 		});
 
 		if (darkMode) {
 			map.on('style.load', () => {
 				// @ts-expect-error
-    			map.setConfigProperty('basemap', 'lightPreset', 'night')
+				map.setConfigProperty('basemap', 'lightPreset', 'night');
 				// @ts-expect-error
-				map.setConfigProperty('basemap', 'showTransitLabels', false)
+				map.setConfigProperty('basemap', 'showTransitLabels', false);
 			});
 		}
 
@@ -1252,6 +1360,22 @@
 			}
 		});
 
+		map.on('click', 'intercityrailstopscircle', (events) => {
+			let displayname = events.features[0].properties.displayname
+			if (typeof events.features != 'undefined' && (displayname == 'L. A. Union Metrolink' || displayname == 'Los Angeles')) {
+				fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
+					.then((x) => x.json())
+					.then((arrivals) => {
+						selectedStop = {
+							displayname,
+							arrivals
+						};
+						sidebarCollapsed = false;
+						sidebarView = 9998;
+					});
+			}
+		});
+
 		map.on('mouseenter', 'localrail', () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
@@ -1273,6 +1397,14 @@
 		});
 
 		map.on('mouseleave', 'bus', () => {
+			map.getCanvas().style.cursor = '';
+		});
+
+		map.on('mouseenter', 'intercityrailstopscircle', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+
+		map.on('mouseleave', 'intercityrailstopscircle', () => {
 			map.getCanvas().style.cursor = '';
 		});
 
@@ -1675,31 +1807,31 @@
 			map.addLayer({
 				id: 'foamershapes',
 				type: 'raster',
-				source: 'foamertiles',
+				source: 'foamertiles'
 			});
 
 			map.addLayer({
 				id: 'maxspeedshapes',
 				type: 'raster',
-				source: 'maxspeedtiles',
+				source: 'maxspeedtiles'
 			});
 
 			map.addLayer({
 				id: 'signallingshapes',
 				type: 'raster',
-				source: 'signallingtiles',
+				source: 'signallingtiles'
 			});
 
 			map.addLayer({
 				id: 'electrificationshapes',
 				type: 'raster',
-				source: 'electrificationtiles',
+				source: 'electrificationtiles'
 			});
 
 			map.addLayer({
 				id: 'gaugeshapes',
 				type: 'raster',
-				source: 'gaugetiles',
+				source: 'gaugetiles'
 			});
 
 			map.addLayer({
@@ -1712,7 +1844,7 @@
 					'line-dasharray': [1, 2],
 					'line-color': ['concat', '#', ['get', 'color']],
 					'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
+					'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
 				},
 				minzoom: 3
 			});
@@ -2224,6 +2356,12 @@
 <svelte:head>
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2344,7 +2482,7 @@
 	</p>
 </div>
 
-{#if (sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode))}
+{#if sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode)}
 	<div
 		class="fixed bottom-0 left-0 pointer-events-none border-r-0 md:border-r-4 border-t-4 md:border-t-0 text-white pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
 		style:background={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'}
@@ -2538,6 +2676,50 @@
 					href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
 				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
 			</div>
+		{/if}
+		{#if sidebarView == 9998}
+			<h1 class="text-3xl">
+				{selectedStop.displayname
+					.replace('Burbank Amtrak', 'Burbank Airport South')
+					.replace('Burbank Airport - North (Av Line)', 'Burbank Airport North')
+					.replace('Burbank Airport - South (Vc Line)', 'Burbank Airport South')
+					.replace('-ARTIC', '')
+					.replace('Los Angeles', 'Union Station')
+					.replace('L. A. Union Metrolink', 'Union Station')
+					.replace('Metrolink', '')
+					.replace('Amtrak', '')}
+			</h1>
+			{#each selectedStop.arrivals as { RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
+				{#if PlatformName == expandMetrolinkStops[selectedStop.displayname]}
+					<div class="mb-4"></div>
+					<span class="text-xl" style:color={expandMetrolinkColors[RouteCode]}
+						><b>{TrainDesignation.replace('M', '')}</b> {expandMetrolink[RouteCode]}</span
+					>
+					<br />
+					<span class="text-lg">&rarr; {TrainDestination}</span>
+					<br />
+					<span class="text-md">
+						{#if FormattedCalcTrainMovementTime != FormattedTrainMovementTime}
+							<s>{FormattedTrainMovementTime}</s>
+						{/if}
+						<b
+							style:color={FormattedCalcTrainMovementTime != FormattedTrainMovementTime
+								? '#f9e300'
+								: 'unset'}>{FormattedCalcTrainMovementTime}</b
+						>
+						·
+						{FormattedTrackDesignation} ·
+						<span style:color={CalculatedStatus == 'ON TIME' ? 'green' : 'red'}
+							>{CalculatedStatus} {EventType}</span
+						>
+					</span>
+				{/if}
+			{/each}
+			<br /><br />
+			<i
+				>No further arrivals are available. Maybe we don't know about this stop yet, or no more
+				trains are leaving soon?</i
+			>
 		{/if}
 		{#if sidebarView == 9999}
 			<div in:fade>
