@@ -1285,7 +1285,7 @@
 
 		map.on('click', 'intercityrailstopscircle', (events) => {
 			let displayname = events.features[0].properties.displayname
-			if (typeof events.features != 'undefined' && (displayname == 'L. A. Union Metrolink' || displayname == 'Los Angeles')) {
+			if (typeof events.features != 'undefined') {
 				get_metrolink_board(displayname);
 					
 				setTimeout(() => {
