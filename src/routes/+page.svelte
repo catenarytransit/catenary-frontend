@@ -1269,7 +1269,7 @@
 			}
 		});
 
-		function get_metrolink_board() {
+		function get_metrolink_board(displayname) {
 			//side effect that returns nothing
 					fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
 					.then((x) => x.json())
@@ -1286,14 +1286,14 @@
 		map.on('click', 'intercityrailstopscircle', (events) => {
 			let displayname = events.features[0].properties.displayname
 			if (typeof events.features != 'undefined' && (displayname == 'L. A. Union Metrolink' || displayname == 'Los Angeles')) {
-				get_metrolink_board();
+				get_metrolink_board(displayname);
 					
 				setTimeout(() => {
 					if (sidebarCollapsed === true) {
 						//self destruct if the sidebar has been collapsed
 						clearTimeout(this.timeoutID);
 					} else {
-						get_metrolink_board();
+						get_metrolink_board(displayname);
 					}
 				}, 10_000);
 			}

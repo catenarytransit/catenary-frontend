@@ -1,6 +1,10 @@
 <script lang="ts">
     export let selectedStop:any;
 
+    function clockTo24() {
+        
+    }
+
     const expandMetrolinkColors:Record<string,string> = {
 		'AV LINE': 'rgb(130, 216, 163)',
 		'IEOC LINE': 'rgb(243, 134, 181)',
