@@ -1,8 +1,32 @@
 <script lang="ts">
     export let selectedStop:any;
 
-    function clockTo24() {
-        
+    function h_m_clock_to24(input:string) {
+        let time_and_suffix = input.split(" ");
+
+        let hour_and_min_original = time_and_suffix[0].split(":");
+
+        let hour = Number(hour_and_min_original[0]);
+        let min = Number(hour_and_min_original[1]);
+        let new_hour:number = 0;
+
+        if (time_and_suffix[1] == "PM") {
+            //is pm
+            if (hour == 12) {
+                new_hour = 12;
+            } else {
+                new_hour = hour + 12;
+            }
+        } else {
+            //is am
+            if (hour == 12) {
+                new_hour = 0;
+            } else {
+                new_hour = hour;
+            }
+        }
+
+        return(`${("0" + new_hour).slice(-2)}:${("0" + min).slice(-2)}`);
     }
 
     const expandMetrolinkColors:Record<string,string> = {
@@ -140,12 +164,12 @@
         <br />
         <span class="text-md">
             {#if FormattedCalcTrainMovementTime != FormattedTrainMovementTime}
-                <s>{FormattedTrainMovementTime}</s>
+                <s>{h_m_clock_to24(FormattedTrainMovementTime)}</s>
             {/if}
             <b
                 style:color={FormattedCalcTrainMovementTime != FormattedTrainMovementTime
                     ? '#f9e300'
-                    : 'unset'}>{FormattedCalcTrainMovementTime}</b
+                    : 'unset'}>{h_m_clock_to24(FormattedCalcTrainMovementTime)}</b
             >
             ·
             {FormattedTrackDesignation} ·
