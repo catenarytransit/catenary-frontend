@@ -1269,10 +1269,9 @@
 			}
 		});
 
-		map.on('click', 'intercityrailstopscircle', (events) => {
-			let displayname = events.features[0].properties.displayname
-			if (typeof events.features != 'undefined' && (displayname == 'L. A. Union Metrolink' || displayname == 'Los Angeles')) {
-				fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
+		function get_metrolink_board() {
+			//side effect that returns nothing
+					fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
 					.then((x) => x.json())
 					.then((arrivals) => {
 						selectedStop = {
@@ -1282,6 +1281,21 @@
 						sidebarCollapsed = false;
 						sidebarView = 9998;
 					});
+		}
+
+		map.on('click', 'intercityrailstopscircle', (events) => {
+			let displayname = events.features[0].properties.displayname
+			if (typeof events.features != 'undefined' && (displayname == 'L. A. Union Metrolink' || displayname == 'Los Angeles')) {
+				get_metrolink_board();
+					
+				setTimeout(() => {
+					if (sidebarCollapsed === true) {
+						//self destruct if the sidebar has been collapsed
+						clearTimeout(this.timeoutID);
+					} else {
+						get_metrolink_board();
+					}
+				}, 10_000);
 			}
 		});
 
