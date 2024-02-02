@@ -1,11 +1,11 @@
 export function makeBearingArrowPointers(map: any, darkMode: boolean, layerspercategory: any) {
-	const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.1, 12, 0.25, 15, 0.4];
+	const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.5, 15, 1];
 
 	const busbearingoffset = [
 		'interpolate',
 		['linear'],
 		['zoom'],
-		9,
+		10,
 		['literal', [0, -64]],
 		13,
 		['literal', [0, -45]],
@@ -41,13 +41,13 @@ export function makeBearingArrowPointers(map: any, darkMode: boolean, layersperc
 		['literal', [0, -50]]
 	];
 
-	map.loadImage('./icons/pointing-shell-light.png', (error: Error, image: HTMLImageElement | ImageBitmap) => {
+	map.loadImage('./icons/pointing-shell-light.png', (error: any, image: any) => {
 		if (image) {
 			map.addImage('pointingshelllight', image);
 		}
 	});
 
-	map.loadImage('./icons/pointing-filled.png', (error: Error, image: HTMLImageElement | ImageBitmap) => {
+	map.loadImage('./icons/pointing-filled.png', (error: any, image: any) => {
 		if (error) throw error;
 
 		if (image) {
@@ -135,7 +135,7 @@ export function makeBearingArrowPointers(map: any, darkMode: boolean, layersperc
 				}
 			});
 
-			// USER LOCATION
+			//USER LOCATION
 
 			map.addLayer({
 				id: 'geolocationheadingfill',
@@ -159,7 +159,7 @@ export function makeBearingArrowPointers(map: any, darkMode: boolean, layersperc
 		}
 	});
 
-	map.loadImage('./icons/pointing-shell.png', (error: Error, image: HTMLImageElement | ImageBitmap) => {
+	map.loadImage('./icons/pointing-shell.png', (error, image) => {
 		if (error) throw error;
 
 		if (image) {

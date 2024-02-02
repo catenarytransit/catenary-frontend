@@ -49,7 +49,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['DIN Pro Regular', 'Arial Unicode MS Regular']
+			'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular']
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
@@ -57,7 +57,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-halo-width': 0.4,
 			'text-emissive-strength': 1
 		},
-		minzoom: 11
+		minzoom: window?.innerWidth >= 768 ? 14 : 13
 	});
 
 	//LOCAL RAIL
@@ -74,7 +74,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': 1,
+			'circle-opacity': 0.9,
 			'circle-emissive-strength': 1
 		},
 		minzoom: 8,
@@ -146,7 +146,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': 1,
+			'circle-opacity': 0.9,
 			'circle-emissive-strength': 1
 		},
 		minzoom: 7,

@@ -1,17 +1,34 @@
 <script lang="ts">
+	/* libs */
 	import { browser } from '$app/environment';
 	import { decode as decodeToAry } from 'base65536';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import mapboxgl from 'mapbox-gl';
-	import CloseButton from 'src/components/CloseButton.svelte';
-	import MoreSelectionBox from 'src/components/MoreSelectionBox.svelte';
+
+	/* cmps */
+	import MetrolinkDepartureDemo from 'src/components/MetrolinkDepartureDemo.svelte';
+	import Alertpopup from 'src/components/alertpopup.svelte';
 	import Layerbutton from 'src/components/layerbutton.svelte';
 	import Layerselectionbox from 'src/components/layerselectionbox.svelte';
 	import Realtimelabel from 'src/components/realtimelabel.svelte';
+	// import Artwork from 'src/components/artwork.svelte';
+	import CloseButton from 'src/components/CloseButton.svelte';
+	import MoreSelectionBox from 'src/components/MoreSelectionBox.svelte';
+	
+	/* json */
+	import metroFleetData from 'src/data/fleet/f-metro~losangeles~rail~rt.json';
+	import mtsFleetData from 'src/data/fleet/f-mts~rt~onebusaway.json';
+	import nctdFleetData from 'src/data/fleet/f-northcountrytransitdistrict~rt.json';
+	import i18n from 'src/i18n/strings';
+
+	/* utils */
 	import { makeCircleLayers } from 'src/utils/addLayers/addLiveDots';
+	import { addShapes } from 'src/utils/addLayers/addShapes';
 	import { addStopsLayers } from 'src/utils/addLayers/addStops';
+	import { makeBearingArrowPointers } from 'src/utils/addLayers/makebearingarrowpointers';
 	import { hexToRgb, hslToRgb, rgbToHsl } from 'src/utils/colour';
 	import { flatten } from 'src/utils/flatten';
+	import { playRandomSequence } from 'src/utils/helper/announcements';
 	import {
 		check_backend,
 		check_kactus,
@@ -23,63 +40,53 @@
 	import { determineFeeds } from 'src/utils/helper/maploaddata';
 	import { interpretLabelsToCode } from 'src/utils/helper/rtLabelsToMapboxStyle';
 	import { addGeoRadius, setUserCircles } from 'src/utils/helper/userradius';
+/*  */
 	import { onMount } from 'svelte';
 	import { blur, fade } from 'svelte/transition';
 
-	import { makeBearingArrowPointers } from 'src/utils/addLayers/makebearingarrowpointers';
-
-	import Alertpopup from 'src/components/alertpopup.svelte';
-	import i18n from 'src/i18n/strings';
-	import { addShapes } from 'src/utils/addLayers/addShapes';
-	import { playRandomSequence } from 'src/utils/helper/announcements';
-
-	import metroFleetData from 'src/data/fleet/f-metro~losangeles~rail~rt.json';
-	import mtsFleetData from 'src/data/fleet/f-mts~rt~onebusaway.json';
-	import nctdFleetData from 'src/data/fleet/f-northcountrytransitdistrict~rt.json';
-
-	type ExpandMetrolinkType = {
-		AV: string;
-		IEOC: string;
-		OC: string;
-		SB: string;
-		VC: string;
-		'91': string;
-		RIV: string;
-	};
-
-	const expandMetrolink: ExpandMetrolinkType = {
-		AV  : 'Antelope Valley',
+	const expandMetrolink = {
+		AV: 'Antelope Valley',
 		IEOC: 'Inland Empire-Orange County',
-		OC  : 'Orange County',
-		SB  : 'San Bernardino',
-		VC  : 'Ventura County',
+		OC: 'Orange County',
+		SB: 'San Bernardino',
+		VC: 'Ventura County',
 		'91': '91/Perris Valley',
-		RIV : 'Riverside'
+		RIV: 'Riverside',
+
+		'AV LINE': 'Antelope Valley Line',
+		'IEOC LINE': 'Inland Empire-Orange County Line',
+		'OC LINE': 'Orange County Line',
+		'SB LINE': 'San Bernardino Line',
+		'VC LINE': 'Ventura County Line',
+		'91/PV Line': '91 Line',
+		'RVS LINE': 'Riverside Line',
+		'PAC SURF': 'Pacific Surfliner',
+		ARROW: 'Arrow Service'
 	};
 
-	let expandMetra = {
-		'MD-N' : 'Milwaukee District North',
-		NCS    : 'North Central Service',
-		'UP-N' : 'Union Pacific North',
+	const expandMetra = {
+		'MD-N': 'Milwaukee District North',
+		NCS: 'North Central Service',
+		'UP-N': 'Union Pacific North',
 		'UP-NW': 'Union Pacific Northwest',
-		HC     : 'Heritage Corridor',
-		ME     : 'Metra Electric',
-		RI     : 'Rock Island',
-		SWS    : 'SouthWest Service',
-		BNSF   : 'BNSF',
-		'MD-W' : 'Milwaukee District West',
-		'UP-W' : 'Union Pacific West'
+		HC: 'Heritage Corridor',
+		ME: 'Metra Electric',
+		RI: 'Rock Island',
+		SWS: 'SouthWest Service',
+		BNSF: 'BNSF',
+		'MD-W': 'Milwaukee District West',
+		'UP-W': 'Union Pacific West'
 	};
 
-	let fleetData = {
+	const fleetData = {
 		'f-mts~rt~onebusaway': mtsFleetData,
 		'f-metro~losangeles~rail~rt': metroFleetData,
 		'f-northcountrytransitdistrict~rt': nctdFleetData
 	};
 
-	let enabledlayerstyle =
+	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
-	let disabledlayerstyle =
+	const disabledlayerstyle =
 		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
 
 	let darkMode = true;
@@ -103,6 +110,8 @@
 	let geometryObj: Record<string, any> = {};
 	let lasttimeofnorth = 0;
 	let selectedVehicle: any = null;
+	let selectedStop: any = null;
+
 	const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 	let debugmode = !!urlParams.get('debug');
 	let fpsmode = !!urlParams.get('fps');
@@ -356,7 +365,9 @@
 	const layersettingsnamestorage = 'layersettingsv4';
 
 	if (browser) {
-		let fetchitem = ((embedmode && urlParams.get('framework-layers')) ? atob(urlParams.get('framework-layers') as string) : null) || localStorage.getItem(layersettingsnamestorage);
+		let fetchitem =
+			(embedmode && urlParams.get('framework-layers') ? atob(urlParams.get('framework-layers') as string) : null) ||
+			localStorage.getItem(layersettingsnamestorage);
 		if (fetchitem != null) {
 			let cachedJsonObject = JSON.parse(fetchitem);
 
@@ -1099,11 +1110,13 @@
 		// get url param "sat"
 
 		let style: string | undefined = darkMode
-					? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-					: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+			: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
 		if (browser) {
-			let desiredStyle = embedmode ? urlParams.get('framework-style') || window.localStorage.mapStyle : window.localStorage.mapStyle;
+			let desiredStyle = embedmode
+				? urlParams.get('framework-style') || window.localStorage.mapStyle
+				: window.localStorage.mapStyle;
 
 			if (desiredStyle == '3d') {
 				style = undefined;
@@ -1197,6 +1210,36 @@
 			}
 		});
 
+		function get_metrolink_board(displayname: any) {
+			//side effect that returns nothing
+			fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
+				.then((x) => x.json())
+				.then((arrivals) => {
+					selectedStop = {
+						displayname,
+						arrivals
+					};
+					sidebarCollapsed = false;
+					sidebarView = 9998;
+				});
+		}
+
+		map.on('click', 'intercityrailstopscircle', (events) => {
+			if (events.features && events.features.length > 0) {
+				let displayname = events.features[0].properties?.displayname;
+				get_metrolink_board(displayname);
+
+				setInterval(() => {
+					if (sidebarCollapsed === true) {
+						// self destruct if the sidebar has been collapsed
+						clearInterval(this.intervalID); 
+					} else {
+						get_metrolink_board(displayname);
+					}
+				}, 10_000);
+			}
+		});
+
 		map.on('mouseenter', 'localrail', () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
@@ -1218,6 +1261,14 @@
 		});
 
 		map.on('mouseleave', 'bus', () => {
+			map.getCanvas().style.cursor = '';
+		});
+
+		map.on('mouseenter', 'intercityrailstopscircle', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+
+		map.on('mouseleave', 'intercityrailstopscircle', () => {
 			map.getCanvas().style.cursor = '';
 		});
 
@@ -2153,6 +2204,9 @@
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2273,7 +2327,7 @@
 	</p>
 </div>
 
-{#if (sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode))}
+{#if sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode)}
 	<div
 		class="fixed bottom-0 left-0 border-r-0 md:border-r-4 border-t-4 md:border-t-0 text-white pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
 		style:background={darkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'}
@@ -2286,6 +2340,20 @@
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
 			<div in:fade>
+				<!--{#if realtime_list.includes('f-mts~rt~onebusaway')}
+					<Alertpopup background="#C60C30">
+						<h1 class="text-lg">Inclement Weather: STAY HOME</h1>
+						<p class="text-sm">
+							Trolley lines are suspended or recovering from severe delays. Stay home if you can, and if you must travel please use the bus if possible.
+						</p>
+						<a
+							style:cursor="pointer"
+							style:color="#f9e300"
+							href="https://www.sdmts.com"
+							>{strings.learnmore} &rarr;</a
+						>
+					</Alertpopup>
+				{/if}-->
 				<Alertpopup
 					background="linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://art.metro.net/wp-content/uploads/2022/12/Victoria-Fu-Matt-Rich-Untitled-DetailB.png) center center no-repeat, black"
 				>
@@ -2447,6 +2515,9 @@
 				>
 				<a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
 			</div>
+		{/if}
+		{#if sidebarView == 9998}
+			<MetrolinkDepartureDemo {selectedStop} />
 		{/if}
 		{#if sidebarView == 9999}
 			<div in:fade>
@@ -3011,7 +3082,7 @@
 
 	* {
 		cursor: default;
-		font-family: 'Open Sans', sans-serif;
+		font-family: 'din-2014', sans-serif;
 	}
 
 	.material-symbols-outlined {
