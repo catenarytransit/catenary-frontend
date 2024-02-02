@@ -1288,10 +1288,10 @@
 			if (typeof events.features != 'undefined' && (displayname == 'L. A. Union Metrolink' || displayname == 'Los Angeles')) {
 				get_metrolink_board(displayname);
 					
-				setTimeout(() => {
+				setInterval(() => {
 					if (sidebarCollapsed === true) {
 						//self destruct if the sidebar has been collapsed
-						clearTimeout(this.timeoutID);
+						clearInterval(this.intervalID);
 					} else {
 						get_metrolink_board(displayname);
 					}
