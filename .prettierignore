@@ -1,5 +1,9 @@
+# Dependencies
 .DS_Store
 node_modules
+.vscode-server
+.vscode
+
 /build
 /.svelte-kit
 /package
