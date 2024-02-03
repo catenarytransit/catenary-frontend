@@ -77,7 +77,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
                 : '#333333',
             'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
             'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-            'circle-opacity': 0.9,
+            'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
             'circle-emissive-strength': 1
         },
         minzoom: 8,
@@ -108,13 +108,13 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         layout: {
             'text-field': ['get', 'displayname'],
             'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-            'text-size': 12,
-            'text-radial-offset': 1,
+            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 10, 11, 10, 12, 12],
+            'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 12, 0.9],
             //'text-ignore-placement': true,
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular'],
+            'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
             
         },
         paint: {
@@ -140,7 +140,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             ],
             ['!',['in', 2, ['get', "children_route_types"]]]
         ],
-        minzoom: 10
+        minzoom: 11
     });
 
     //INTERCITY RAIL
@@ -159,7 +159,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             : '#333333',
         'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
         'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-        'circle-opacity': 0.9,
+        'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 12, 0.8],
         'circle-emissive-strength': 1
     },
     minzoom: 7,

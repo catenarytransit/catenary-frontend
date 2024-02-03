@@ -126,11 +126,11 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
         source: 'localrail',
         minzoom: 2,
         paint: {
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 7, 10, 8, 16, 12],
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 7, 10, 8, 16, 12],
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
             'circle-stroke-width': 1,
-            'circle-emissive-strength': 1,
+            'circle-emissive-strength': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 12, 0.8],
             'circle-opacity': 0.6
         }
     });
