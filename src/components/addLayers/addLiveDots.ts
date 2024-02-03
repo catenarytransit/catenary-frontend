@@ -37,7 +37,19 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
                 ['literal', ['DIN Pro Bold', 'Arial Unicode MS Medium']],
             ],
 
-            'text-size': 15,
+            'text-size': [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                8,
+                8,
+                11,
+                12,
+                13,
+                16,
+                15,
+                19
+              ],
 
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
