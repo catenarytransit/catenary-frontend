@@ -2,8 +2,7 @@ import type { Map } from "mapbox-gl";
 import { removeWeekendStops } from "../removeWeekendStops";
 
 const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 10, 10, 12];
-//const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
-const internationalIntercityLabelSize = 1;
+const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
 
 export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any) {
     console.log('change rail size out side na')

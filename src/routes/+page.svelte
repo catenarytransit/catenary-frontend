@@ -1245,18 +1245,6 @@
 			maplat = map.getCenter().lat;
 
 			current_map_heading = map.getBearing();
-
-			//if the current map is east of minus 52 lng
-			if (westOfMinus52 == true && maplng >= 52) {
-				westOfMinus52 = false
-				changeRailTextOutsideNorthAmerica(map, layerspercategory);
-			}
-
-			//if the current map is west of minus 52 lng
-			if (westOfMinus52 == false && maplng < 52) {
-				westOfMinus52 = true
-				changeRailTextOutsideNorthAmerica(map, layerspercategory);
-			}
 		}
 
 		map.on('click', 'localrail', (events) => {
@@ -2086,8 +2074,23 @@
 			}
 		}
 
+		function changeSizeBasedOnLocation() {
+			//if the current map is east of minus 52 lng
+			if (westOfMinus52 == true && maplng >= -52) {
+				westOfMinus52 = false
+				changeRailTextOutsideNorthAmerica(map, layerspercategory);
+			}
+
+			//if the current map is west of minus 52 lng
+			if (westOfMinus52 == false && maplng < -52) {
+				westOfMinus52 = true
+				changeRailTextOutsideNorthAmerica(map, layerspercategory);
+			}
+		}
+
 		map.on('move', () => {
 			updateData();
+			changeSizeBasedOnLocation();
 			if (performance.now() - lastrunmapcalc > 50) {
 				runBoxCalc();
 				lastrunmapcalc = performance.now();
