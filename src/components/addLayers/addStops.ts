@@ -1,4 +1,24 @@
+import type { Map } from "mapbox-gl";
 import { removeWeekendStops } from "../removeWeekendStops";
+
+const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 10, 10, 12];
+//const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
+const internationalIntercityLabelSize = 1;
+
+export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any) {
+    console.log('change rail size out side na')
+    const centre = map.getCenter();
+    if (centre.lng >= -52) {
+        console.log('set to international stop size')
+        map.setLayoutProperty(layerspercategory.intercityrail.labelstops,"text-size", 
+        internationalIntercityLabelSize);
+    } else {
+        console.log('set to na stop size')
+        map.setLayoutProperty(layerspercategory.intercityrail.labelstops,"text-size", 
+        northAmericaIntercityLabelSize);
+    }
+}
+
 
 export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any) {
       //BUS
@@ -187,7 +207,7 @@ map.addLayer({
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-        'text-size': 12,
+        'text-size': northAmericaIntercityLabelSize,
         'text-radial-offset': 1,
         //'text-ignore-placement': true,
         //'icon-ignore-placement': false,
@@ -318,5 +338,6 @@ map.addLayer({
 });
 
  
+changeRailTextOutsideNorthAmerica(map, layerspercategory);
 
 }

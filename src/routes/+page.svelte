@@ -15,7 +15,8 @@
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import MetrolinkDepartureDemo, {MetrolinkTrackArrivals} from '../components/MetrolinkDepartureDemo.svelte';
+	import MetrolinkDepartureDemo from '../components/MetrolinkDepartureDemo.svelte';
+	import type MetrolinkTrackArrivals from "../components/MetrolinkDepartureDemo.svelte";
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -23,7 +24,7 @@
 		check_kactus,
 		check_backend
 	} from '../components/distributed';
-	import { addStopsLayers } from '../components/addLayers/addStops';
+	import { addStopsLayers, changeRailTextOutsideNorthAmerica } from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
 
 	import { makeBearingArrowPointers } from '../components/addLayers/makebearingarrowpointers';
@@ -46,7 +47,6 @@
 		VC: 'Ventura County',
 		'91': '91/Perris Valley',
 		RIV: 'Riverside',
-
 		'AV LINE': 'Antelope Valley Line',
 		'IEOC LINE': 'Inland Empire-Orange County Line',
 		'OC LINE': 'Orange County Line',
@@ -109,6 +109,7 @@
 	let selectedStop: string | null = null;
 	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
 	let currentMetrolinkDemoInterval: number | null = null;
+	let westOfMinus52 = true;
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -1244,6 +1245,18 @@
 			maplat = map.getCenter().lat;
 
 			current_map_heading = map.getBearing();
+
+			//if the current map is east of minus 52 lng
+			if (westOfMinus52 == true && maplng >= 52) {
+				westOfMinus52 = false
+				changeRailTextOutsideNorthAmerica(map, layerspercategory);
+			}
+
+			//if the current map is west of minus 52 lng
+			if (westOfMinus52 == false && maplng < 52) {
+				westOfMinus52 = true
+				changeRailTextOutsideNorthAmerica(map, layerspercategory);
+			}
 		}
 
 		map.on('click', 'localrail', (events) => {
@@ -1291,15 +1304,15 @@
 				selectedStop = displayname;
 					
 				if (currentMetrolinkDemoInterval == null) {
-					setInterval(() => {
+					setInterval((metrolinkInterval) => {
 						//demorgan's law
 					if (sidebarCollapsed === true || sidebarView != 9998) {
 						//self destruct if the sidebar has been collapsed
-						clearInterval(this.intervalID);
+						clearInterval(metrolinkInterval.intervalID);
 						currentMetrolinkDemoInterval = null;
 					} else {
 						get_metrolink_board();
-						currentMetrolinkDemoInterval = this.intervalID;
+						currentMetrolinkDemoInterval = metrolinkInterval.intervalID;
 					}
 				}, 10_000);
 				}

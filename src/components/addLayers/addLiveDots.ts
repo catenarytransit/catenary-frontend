@@ -1,9 +1,10 @@
+import type { Map } from "mapbox-gl";
 
 function textColorOfMapLabels(darkMode:boolean) {
     return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
 }
 
-export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: any) {
+export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: any) {
     map.addLayer({
         id: layerspercategory.bus.livedots,
         type: 'circle',
@@ -130,7 +131,7 @@ export function makeCircleLayers(map:any, darkMode: boolean, layerspercategory: 
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
             'circle-stroke-width': 1,
-            'circle-emissive-strength': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 12, 0.8],
+            'circle-emissive-strength': 1,
             'circle-opacity': 0.6
         }
     });
