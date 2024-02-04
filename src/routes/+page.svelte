@@ -2626,6 +2626,7 @@
 								style:height="50px"
 								style:float="left"
 								style:margin-right="15px"
+								alt="MTS Green Line Palm Tree logo"
 							/>
 						{:else if selectedVehicle.properties.maptag == 'Orange'}
 							<img
@@ -2633,6 +2634,7 @@
 								style:height="50px"
 								style:float="left"
 								style:margin-right="15px"
+								alt="MTS Orange Line Sun logo"
 							/>
 						{:else if selectedVehicle.properties.maptag == 'Blue'}
 							<img
@@ -2640,6 +2642,7 @@
 								style:height="50px"
 								style:float="left"
 								style:margin-right="15px"
+								alt="MTS Blue Line Wave logo"
 							/>
 						{/if}
 						{selectedVehicle.properties.maptag}
@@ -2647,11 +2650,11 @@
 				{/if}
 				{#if selectedVehicle.properties.agency == 'f-northcountrytransitdistrict~rt'}
 					{#if selectedVehicle.properties.maptag == 'COASTER'}
-						<img src="/lines/nctd-coaster.svg" style:height="30px" />
+						<img src="/lines/nctd-coaster.svg" style:height="30px" alt="Coaster logo" />
 					{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
-						<img src="/lines/nctd-sprinter.svg" style:height="30px" />
+						<img src="/lines/nctd-sprinter.svg" style:height="30px" alt="Sprinter logo"/>
 					{:else if selectedVehicle.properties.maptag == '350'}
-						<img src="/lines/nctd-brt.svg" style:height="30px" />
+						<img src="/lines/nctd-brt.svg" style:height="30px" alt=""/>
 						<h1
 							style:color={darkMode
 								? selectedVehicle.properties.contrastdarkmode
