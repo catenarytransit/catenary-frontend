@@ -1277,8 +1277,8 @@
 					.then((x) => x.json())
 					.then((arrivals) => {
 						metrolinkDemoArrivals = arrivals;
-						sidebarCollapsed = false;
-						sidebarView = 9998;
+						//sidebarCollapsed = false;
+						//sidebarView = 9998;
 					});
 		}
 
@@ -1286,11 +1286,14 @@
 			let displayname = events.features[0].properties.displayname
 			if (typeof events.features != 'undefined') {
 				get_metrolink_board();
+				sidebarCollapsed = false;
+				sidebarView = 9998;
 				selectedStop = displayname;
 					
 				if (currentMetrolinkDemoInterval == null) {
 					setInterval(() => {
-					if (sidebarCollapsed === true) {
+						//demorgan's law
+					if (sidebarCollapsed === true || sidebarView != 9998) {
 						//self destruct if the sidebar has been collapsed
 						clearInterval(this.intervalID);
 						currentMetrolinkDemoInterval = null;
