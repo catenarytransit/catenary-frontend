@@ -15,7 +15,7 @@
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import MetrolinkDepartureDemo from '../components/MetrolinkDepartureDemo.svelte';
+	import MetrolinkDepartureDemo, {MetrolinkTrackArrivals} from '../components/MetrolinkDepartureDemo.svelte';
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -106,7 +106,8 @@
 	let lasttimeofnorth = 0;
 
 	let selectedVehicle: any = null;
-	let selectedStop: any = null;
+	let selectedStop: string | null = null;
+	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -1269,15 +1270,13 @@
 			}
 		});
 
-		function get_metrolink_board(displayname) {
+		function get_metrolink_board(displayname:string) {
 			//side effect that returns nothing
 					fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
 					.then((x) => x.json())
 					.then((arrivals) => {
-						selectedStop = {
-							displayname,
-							arrivals
-						};
+						selectedStop = displayname;
+						metrolinkDemoArrivals = arrivals;
 						sidebarCollapsed = false;
 						sidebarView = 9998;
 					});
@@ -2600,9 +2599,11 @@
 				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
 			</div>
 		{/if}
-		{#if sidebarView == 9998}
+		{#if sidebarView == 9998 && selectedStop != null && metrolinkDemoArrivals != null}
 			<MetrolinkDepartureDemo
 			selectedStop={selectedStop}
+			darkMode={darkMode}
+			metrolinkDemoArrivals={metrolinkDemoArrivals}
 			/>
 		{/if}
 		{#if sidebarView == 9999}

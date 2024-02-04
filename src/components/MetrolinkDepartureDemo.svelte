@@ -1,5 +1,25 @@
+<script lang="ts" context="module">
+	export interface MetrolinkTrackArrivals {
+		TrainDesignation: string;
+		RouteCode: string;
+		TrainDestination: string;
+		PlatformName: string;
+		EventType: string;
+		TrainMovementTime: string;
+		CalcTrainMovementTime: string;
+		FormattedTrainMovementTime: string;
+		FormattedTrackDesignation: string;
+		calculatedStatus: string;
+		PTCStatus: string;
+		isTBD: boolean | string;
+	}
+</script>
+
 <script lang="ts">
-    export let selectedStop:any;
+
+    export let selectedStop:string;
+	export let metrolinkDemoArrivals: MetrolinkTrackArrivals;
+	export let darkMode: boolean;
 
     function h_m_clock_to24(input:string) {
         let time_and_suffix = input.split(" ");
@@ -190,7 +210,7 @@
 </script>
 
 <h1 class="text-3xl">
-    {selectedStop.displayname
+    {selectedStop
         .replace('Burbank Amtrak', 'Burbank Airport South')
         .replace('Burbank Airport - North (Av Line)', 'Burbank Airport North')
         .replace('Burbank Airport - South (Vc Line)', 'Burbank Airport South')
@@ -200,8 +220,8 @@
         .replace('Metrolink', '')
         .replace('Amtrak', '')}
 </h1>
-{#each selectedStop.arrivals as { RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
-    {#if PlatformName == expandMetrolinkStops[selectedStop.displayname]}
+{#each metrolinkDemoArrivals as { RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
+    {#if PlatformName == expandMetrolinkStops[selectedStop]}
         <div class="mb-4"></div>
         <span class="text-xl" style:color={get_route_colour(RouteCode)}
             ><b>{TrainDesignation.replace('M', '')}</b> { expand_metrolink_route_lookup(RouteCode)}</span
@@ -214,9 +234,8 @@
                 <s>{h_m_clock_to24(FormattedTrainMovementTime)}</s>
             {/if}
             <b
-                style:color={FormattedCalcTrainMovementTime != FormattedTrainMovementTime
-                    ? '#f9e300'
-                    : 'unset'}>{h_m_clock_to24(FormattedCalcTrainMovementTime)}</b
+				class={FormattedCalcTrainMovementTime != FormattedTrainMovementTime ? "text-yellow-700 dark:text-[#f9e300]" : ""}
+                >{h_m_clock_to24(FormattedCalcTrainMovementTime)}</b
             >
             ·
             {FormattedTrackDesignation} ·
