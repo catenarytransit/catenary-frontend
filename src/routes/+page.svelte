@@ -1270,12 +1270,11 @@
 			}
 		});
 
-		function get_metrolink_board(displayname:string) {
+		function get_metrolink_board() {
 			//side effect that returns nothing
 					fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
 					.then((x) => x.json())
 					.then((arrivals) => {
-						selectedStop = displayname;
 						metrolinkDemoArrivals = arrivals;
 						sidebarCollapsed = false;
 						sidebarView = 9998;
@@ -1285,14 +1284,15 @@
 		map.on('click', 'intercityrailstopscircle', (events) => {
 			let displayname = events.features[0].properties.displayname
 			if (typeof events.features != 'undefined') {
-				get_metrolink_board(displayname);
+				get_metrolink_board();
+				selectedStop = displayname;
 					
 				setInterval(() => {
 					if (sidebarCollapsed === true) {
 						//self destruct if the sidebar has been collapsed
 						clearInterval(this.intervalID);
 					} else {
-						get_metrolink_board(displayname);
+						get_metrolink_board();
 					}
 				}, 10_000);
 			}
