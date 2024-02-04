@@ -108,7 +108,7 @@
 	let selectedVehicle: any = null;
 	let selectedStop: string | null = null;
 	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
-	let currentMetrolinkDemoInterval = number | null;
+	let currentMetrolinkDemoInterval: number | null = null;
 
 	const urlParams =
 		typeof window !== 'undefined'
