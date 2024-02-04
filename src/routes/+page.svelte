@@ -108,6 +108,7 @@
 	let selectedVehicle: any = null;
 	let selectedStop: string | null = null;
 	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
+	let currentMetrolinkDemoInterval = number | null;
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -1287,14 +1288,18 @@
 				get_metrolink_board();
 				selectedStop = displayname;
 					
-				setInterval(() => {
+				if (currentMetrolinkDemoInterval == null) {
+					setInterval(() => {
 					if (sidebarCollapsed === true) {
 						//self destruct if the sidebar has been collapsed
 						clearInterval(this.intervalID);
+						currentMetrolinkDemoInterval = null;
 					} else {
 						get_metrolink_board();
+						currentMetrolinkDemoInterval = this.intervalID;
 					}
 				}, 10_000);
+				}
 			}
 		});
 
