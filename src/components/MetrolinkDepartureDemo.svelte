@@ -29,7 +29,7 @@
         return(`${("0" + new_hour).slice(-2)}:${("0" + min).slice(-2)}`);
     }
 
-    const expandMetrolinkColors:Record<string,string> = {
+    const expandMetrolinkColorsDark:Record<string,string> = {
 		'AV LINE': 'rgb(130, 216, 163)',
 		'IEOC LINE': 'rgb(243, 134, 181)',
 		'OC LINE': 'rgb(255, 157, 51)',
@@ -38,10 +38,40 @@
 		'91/PV Line': '#0071ce',
 		'RVS LINE': 'rgb(198, 177, 210)',
 		'PAC SURF': 'rgb(147, 200, 234)',
+		'SUN LTD': 'rgb(147, 200, 234)',
 		ARROW: '#B0DE3B'
 	};
 
-    const expandMetrolink = {
+	const expandMetrolinkColorsLight:Record<string,string> = {
+		'AV LINE': '#1c9d03',
+		'IEOC LINE': '#bd295a',
+		'OC LINE': '#ff7600',
+		'SB LINE': '#a32136',
+		'VC LINE': '#f6a704',
+		'91/PV Line': '#0071ce',
+		'RVS LINE': '#682e86',
+		'PAC SURF': '#18567D',
+		'SUN LTD': '#18567D',
+		ARROW: '#B0DE3B'
+	};
+
+	function get_route_colour(route_id:string): string {
+	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+		if (expandMetrolinkColorsDark[route_id]) {
+			return expandMetrolinkColorsDark[route_id];
+		} else {
+			return "#ffffff";
+		}
+	}	else {
+		if (expandMetrolinkColorsLight[route_id]) {
+			return expandMetrolinkColorsLight[route_id];
+		} else {
+			return "#000000";
+		}
+	}
+	}
+
+	const expandMetrolink: Record<string, string> = {
 		AV: 'Antelope Valley',
 		IEOC: 'Inland Empire-Orange County',
 		OC: 'Orange County',
@@ -49,7 +79,7 @@
 		VC: 'Ventura County',
 		'91': '91/Perris Valley',
 		RIV: 'Riverside',
-
+		"SUN LTD": "Sunset Limited",
 		'AV LINE': 'Antelope Valley Line',
 		'IEOC LINE': 'Inland Empire-Orange County Line',
 		'OC LINE': 'Orange County Line',
@@ -60,6 +90,14 @@
 		'PAC SURF': 'Pacific Surfliner',
 		ARROW: 'Arrow Service'
 	};
+
+	function expand_metrolink_route_lookup(input: string):string {
+		if (typeof expandMetrolink[input] == "string") {
+			return expandMetrolink[input];
+		} else {
+			return input;
+		}
+	}
 
 	const expandMetrolinkStops:Record<string,string> = {
 		'L. A. Union Metrolink': 'LAUS',
@@ -165,8 +203,8 @@
 {#each selectedStop.arrivals as { RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
     {#if PlatformName == expandMetrolinkStops[selectedStop.displayname]}
         <div class="mb-4"></div>
-        <span class="text-xl" style:color={expandMetrolinkColors[RouteCode]}
-            ><b>{TrainDesignation.replace('M', '')}</b> {expandMetrolink[RouteCode]}</span
+        <span class="text-xl" style:color={get_route_colour(RouteCode)}
+            ><b>{TrainDesignation.replace('M', '')}</b> { expand_metrolink_route_lookup(RouteCode)}</span
         >
         <br />
         <span class="text-lg">&rarr; {TrainDestination}</span>
