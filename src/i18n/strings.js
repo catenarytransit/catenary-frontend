@@ -58,7 +58,7 @@ const i18n = {
         fleet: "Fleet",
         division: "Division",
         driver: "Driver",
-        timeoffset: "Delay"
+        delay: "Delay"
     },
     fr: {
         search: 'Rechercher',
