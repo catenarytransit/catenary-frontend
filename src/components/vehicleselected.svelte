@@ -203,7 +203,7 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.headsign}
-					<p>{swiftly.headsign}</p>
+					<p>{swiftly.headsign.replace("Uc Irvine", "UC Irvine")}</p>
 				{/if}
 			{/if}
 		{/if}
