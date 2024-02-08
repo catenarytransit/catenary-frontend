@@ -11,12 +11,10 @@ export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any
         console.log('set to international stop size')
         map.setLayoutProperty(layerspercategory.intercityrail.labelstops,"text-size", 
         internationalIntercityLabelSize);
-        map.setLayoutProperty(layerspercategory.intercityrail.labelstops, "text-radial-offset", 0.8);
     } else {
         console.log('set to na stop size')
         map.setLayoutProperty(layerspercategory.intercityrail.labelstops,"text-size", 
         northAmericaIntercityLabelSize);
-        map.setLayoutProperty(layerspercategory.intercityrail.labelstops, "text-radial-offset", 0.9);
     }
 }
 

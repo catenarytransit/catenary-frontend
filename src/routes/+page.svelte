@@ -2815,6 +2815,7 @@
 					{selectedVehicle.properties.bearing.toFixed(3)}°
 					<br />
 				{/if}
+				<p class='text-sm'>Realtime feed id: <span class="font-semibold">{selectedVehicle.properties.agency}</span></p>
 				{#if fleetData[selectedVehicle.properties.agency]}
 					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
 						{#if new RegExp(regex).test(selectedVehicle.properties.vehicleIdLabel || '')}
@@ -2839,6 +2840,7 @@
 						{/if}
 					{/each}
 				{/if}
+				
 			</div>
 		{/if}
 		<!-- <h1 class="text-3xl">{strings.art}</h1>

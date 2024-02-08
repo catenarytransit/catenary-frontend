@@ -16,10 +16,16 @@
 </script>
 
 <script lang="ts">
+	//delete anything older than 1 day
+	const METROLINK_TIMEOUT = 86_400_000;
 
     export let selectedStop:string;
 	export let metrolinkDemoArrivals: MetrolinkTrackArrivals;
 	export let darkMode: boolean;
+
+	function cleanupMetrolinkUnixMsTime(input:string) {
+		return Number(input.replace("/Date(","").replace("/",""))
+	}
 
     function h_m_clock_to24(input:string) {
         let time_and_suffix = input.split(" ");
@@ -220,16 +226,14 @@
         .replace('Metrolink', '')
         .replace('Amtrak', '')}
 </h1>
-{#each metrolinkDemoArrivals as { RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
-    {#if PlatformName == expandMetrolinkStops[selectedStop]}
+{#each metrolinkDemoArrivals as { TrainMovementTime, RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
+    {#if PlatformName == expandMetrolinkStops[selectedStop] && Date.now() - METROLINK_TIMEOUT <= cleanupMetrolinkUnixMsTime(TrainMovementTime)}
         <div class="mb-4"></div>
-        <span class="text-xl" style:color={get_route_colour(RouteCode)}
+        <span class="text-lg md:text-xl" style:color={get_route_colour(RouteCode)}
             ><b>{TrainDesignation.replace('M', '')}</b> { expand_metrolink_route_lookup(RouteCode)}</span
         >
-        <br />
-        <span class="text-lg">&rarr; {TrainDestination}</span>
-        <br />
-        <span class="text-md">
+        <p class="md:text-lg">&rarr; {TrainDestination}</p>
+        <span class="text-base md:text-md">
             {#if FormattedCalcTrainMovementTime != FormattedTrainMovementTime}
                 <s>{h_m_clock_to24(FormattedTrainMovementTime)}</s>
             {/if}
