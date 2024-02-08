@@ -17,6 +17,7 @@
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import MetrolinkDepartureDemo from '../components/MetrolinkDepartureDemo.svelte';
 	import type MetrolinkTrackArrivals from "../components/MetrolinkDepartureDemo.svelte";
+	import {durationToIsoElapsed} from "../utils/isoelapsed"
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -889,7 +890,8 @@
 								contrastdarkmodebearing,
 								routeId: routeId,
 								headsign: headsign,
-								agency: realtime_id
+								agency: realtime_id,
+								timestamp: vehicle?.timestamp
 							},
 							geometry: {
 								type: 'Point',
@@ -2815,6 +2817,8 @@
 					{selectedVehicle.properties.bearing.toFixed(3)}°
 					<br />
 				{/if}
+				<p class="text-sm">{new Date(Number(selectedVehicle.properties.timestamp) * 1000).toISOString()}</p>
+				<p class="text-sm">{durationToIsoElapsed((new Date() - new Date(Number(selectedVehicle.properties.timestamp) * 1000)))}</p>
 				<p class='text-sm'>Realtime feed id: <span class="font-semibold">{selectedVehicle.properties.agency}</span></p>
 				{#if fleetData[selectedVehicle.properties.agency]}
 					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
