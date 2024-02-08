@@ -1963,6 +1963,12 @@
 						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
 							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
 							delete vehiclesData[vehiclesDataCheckCleanUp];
+						}
+					});
+
+					Object.keys(vehiclesDataHashMap).forEach((vehiclesDataCheckCleanUp) => {
+						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
+							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
 							if (
 								selectedVehicleLookup == null ||
 								//de morgan's law
