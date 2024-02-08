@@ -56,9 +56,13 @@
 		fetchSwiftlyInformation();
 	});
 
+	//super jank, should replace with a backend api in Aspen soon
 	const SWIFTLY_KEYS: Record<string, string> = {
 		'f-octa~rt': 'octa',
-        "f-metro~losangeles~bus~rt": "lametro"
+		'f-metro~losangeles~bus~rt': 'lametro',
+		'f-metro~losangeles~rail~rt': 'lametro-rail',
+		'f-northcountrytransitdistrict~rt': 'nctd',
+		'f-bigbluebus~rt': 'big-blue-bus'
 	};
 
 	function fetchSwiftlyInformation(): void {
@@ -194,6 +198,16 @@
 {#if vehicleOnlyGtfsRt.vehicle}
 	<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
 	<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
+
+	{#if swiftly != null}
+		{#if swiftly_fetch_metadata != null}
+			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
+				{#if swiftly.headsign}
+					<p>{swiftly.headsign}</p>
+				{/if}
+			{/if}
+		{/if}
+	{/if}
 
 	<!--
     {#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
@@ -402,18 +416,19 @@
 
 	{#if swiftly != null}
 		{#if swiftly_fetch_metadata != null}
-        {#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
-        {#if swiftly.headsign}
-            <p>{swiftly.headsign}</p>
-            {/if}
-			{#if swiftly.driver}
-            <p><b class="text-lg">{strings.driver}</b>: {swiftly.driver}</p>
-            {/if}
-            {#if swiftly.schAdhSecs}
-            <p><b class="text-lg">{strings.delay}</b>: {durationToIsoElapsed(Number (swiftly.schAdhSecs))}</p>
-            {/if}
+			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
+				{#if swiftly.driver}
+					<p><b class="text-lg">{strings.driver}</b>: {swiftly.driver}</p>
+				{/if}
+				{#if swiftly.schAdhSecs}
+					<p>
+						<b class="text-lg">{strings.delay}</b>: {durationToIsoElapsed(
+							Number(swiftly.schAdhSecs)
+						)}
+					</p>
+				{/if}
+			{/if}
 		{/if}
-        {/if}
 	{/if}
 
 	<div>
