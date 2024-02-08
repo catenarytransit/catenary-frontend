@@ -16,6 +16,8 @@
     export let darkMode: boolean;
     export let vehicleOnlyGtfsRt: GtfsRealtimeBindings.transit_realtime.FeedEntity; // single row of gtfs rt entity data with VehiclePosition in it
 
+    let circleStyle: string = "";
+
     let current_time: Date = new Date();
 
     //Type safety has already been guranteed
@@ -29,9 +31,18 @@
     onMount(() => {
 		const interval = setInterval(() => {
 			current_time = new Date();
-            if (typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined") {
+            if (typeof vehicleOnlyGtfsRt != "null" && typeof vehicleOnlyGtfsRt != "undefined") {
+                if (typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined") {
                 ms_from_now_to_last_update = (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) -  Date.now();
+                
+                if (ms_from_now_to_last_update < -3000) {
+                circleStyle = `opacity: 0`;
+                } else {
+                let opacity = 1 - ((0 - ms_from_now_to_last_update) / 3000);
+                circleStyle = `background-opacity: ${opacity}`;
+                }
             }
+        }
 		}, 20);
 
 		return () => {
@@ -275,13 +286,18 @@
 				{/if}
                 {#if vehicleOnlyGtfsRt.vehicle.position != undefined}
 				{#if vehicleOnlyGtfsRt.vehicle.position.bearing !== null && vehicleOnlyGtfsRt.vehicle.position.bearing !== undefined && vehicleOnlyGtfsRt.vehicle.position.bearing !== 0}
-                <p><b class="text-lg">{strings.bearing}</b> {vehicleOnlyGtfsRt.vehicle.position.bearing.toFixed(2)}°</p>
+                <div class=''><p><b class="text-lg">{strings.bearing}</b> {vehicleOnlyGtfsRt.vehicle.position.bearing.toFixed(2)}°</p>
+                    </div>
             {/if}{/if}
 
 <div>
     {#if typeof vehicleOnlyGtfsRt.vehicle.timestamp == "number" && typeof ms_from_now_to_last_update == "number"}
-<p class="font-mono text-sm">{durationToIsoElapsed(ms_from_now_to_last_update)}</p>
-<p class="font-mono text-sm">{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toTimeString()}</p>
+<div class="flex flex-row gap-x-0.5 align-middle items-center">
+    <p class="font-mono text-sm"></p>{durationToIsoElapsed(ms_from_now_to_last_update)}
+    <span class="inline-block rounded-full bg-green-500 dark:bg-green-500 h-3 w-3 mr-1"
+    style={circleStyle}
+    ></span>
+</div><p class="font-mono text-sm">{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toTimeString()}</p>
 <p class="font-mono text-sm">{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toISOString()}</p>
 {/if}
 </div>{/if}

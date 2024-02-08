@@ -263,10 +263,10 @@
 	let layersettings: any = {
 		bus: {
 			visible: true,
-			labelshapes: false,
-			stops: false,
-			shapes: false,
-			stoplabels: false,
+			labelshapes: true,
+			stops: true,
+			shapes: true,
+			stoplabels: true,
 			label: {
 				route: true,
 				trip: false,
@@ -279,11 +279,11 @@
 		localrail: {
 			visible: true,
 			stops: true,
-			labelshapes: false,
-			stoplabels: false,
+			labelshapes: true,
+			stoplabels: true,
 			shapes: true,
 			label: {
-				route: false,
+				route: true,
 				trip: false,
 				vehicle: false,
 				headsign: false,
@@ -294,12 +294,12 @@
 		intercityrail: {
 			visible: true,
 			stops: true,
-			labelshapes: false,
-			stoplabels: false,
+			labelshapes: true,
+			stoplabels: true,
 			shapes: true,
 			label: {
-				route: false,
-				trip: false,
+				route: true,
+				trip: true,
 				vehicle: false,
 				headsign: false,
 				direction: false,
@@ -307,13 +307,13 @@
 			}
 		},
 		other: {
-			visible: false,
-			stops: false,
-			labelshapes: false,
-			stoplabels: false,
-			shapes: false,
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
 			label: {
-				route: false,
+				route: true,
 				trip: false,
 				vehicle: false,
 				headsign: false,
