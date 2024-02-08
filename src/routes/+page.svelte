@@ -16,8 +16,10 @@
 	import Realtimelabel from '../realtimelabel.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import MetrolinkDepartureDemo from '../components/MetrolinkDepartureDemo.svelte';
-	import type MetrolinkTrackArrivals from "../components/MetrolinkDepartureDemo.svelte";
-	import {durationToIsoElapsed} from "../utils/isoelapsed"
+	import type MetrolinkTrackArrivals from '../components/MetrolinkDepartureDemo.svelte';
+	import type SelectedVehicleKeyType from '../components/vehicleselected.svelte';
+	import VehicleSelected from '../components/vehicleselected.svelte';
+	import { durationToIsoElapsed } from '../utils/isoelapsed';
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -25,7 +27,10 @@
 		check_kactus,
 		check_backend
 	} from '../components/distributed';
-	import { addStopsLayers, changeRailTextOutsideNorthAmerica } from '../components/addLayers/addStops';
+	import {
+		addStopsLayers,
+		changeRailTextOutsideNorthAmerica
+	} from '../components/addLayers/addStops';
 	import CloseButton from '../components/CloseButton.svelte';
 
 	import { makeBearingArrowPointers } from '../components/addLayers/makebearingarrowpointers';
@@ -35,49 +40,6 @@
 	import Alertpopup from '../components/alertpopup.svelte';
 	import { addShapes } from '../components/addLayers/addShapes';
 	import Artwork from '../components/artwork.svelte';
-
-	import mtsFleetData from '../data/fleet/f-mts~rt~onebusaway.json';
-	import metroFleetData from '../data/fleet/f-metro~losangeles~rail~rt.json';
-	import nctdFleetData from '../data/fleet/f-northcountrytransitdistrict~rt.json';
-
-	const expandMetrolink = {
-		AV: 'Antelope Valley',
-		IEOC: 'Inland Empire-Orange County',
-		OC: 'Orange County',
-		SB: 'San Bernardino',
-		VC: 'Ventura County',
-		'91': '91/Perris Valley',
-		RIV: 'Riverside',
-		'AV LINE': 'Antelope Valley Line',
-		'IEOC LINE': 'Inland Empire-Orange County Line',
-		'OC LINE': 'Orange County Line',
-		'SB LINE': 'San Bernardino Line',
-		'VC LINE': 'Ventura County Line',
-		'91/PV Line': '91 Line',
-		'RVS LINE': 'Riverside Line',
-		'PAC SURF': 'Pacific Surfliner',
-		ARROW: 'Arrow Service'
-	};
-
-	const expandMetra = {
-		'MD-N': 'Milwaukee District North',
-		NCS: 'North Central Service',
-		'UP-N': 'Union Pacific North',
-		'UP-NW': 'Union Pacific Northwest',
-		HC: 'Heritage Corridor',
-		ME: 'Metra Electric',
-		RI: 'Rock Island',
-		SWS: 'SouthWest Service',
-		BNSF: 'BNSF',
-		'MD-W': 'Milwaukee District West',
-		'UP-W': 'Union Pacific West'
-	};
-
-	const fleetData = {
-		'f-mts~rt~onebusaway': mtsFleetData,
-		'f-metro~losangeles~rail~rt': metroFleetData,
-		'f-northcountrytransitdistrict~rt': nctdFleetData
-	};
 
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -89,6 +51,7 @@
 	let strings = i18n.en;
 
 	if (typeof window !== 'undefined') {
+		// this must be fixed to allow subvariants of languages
 		// @ts-expect-error
 		strings = i18n[window.localStorage.language || 'en'];
 	}
@@ -102,11 +65,15 @@
 	let announcermode = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: Record<string, any> = {};
+	// store the data in a hashmap so it allows O(1) lookup
+	let vehiclesDataHashMap: Record<
+		string,
+		Record<string, GtfsRealtimeBindings.transit_realtime.FeedEntity>
+	> = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj: Record<string, any> = {};
 	let lasttimeofnorth = 0;
-
-	let selectedVehicle: any = null;
+	let selectedVehicleLookup: SelectedVehicleKeyType | null = null;
 	let selectedStop: string | null = null;
 	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
 	let currentMetrolinkDemoInterval: number | null = null;
@@ -269,7 +236,7 @@
 	let maplat: number, maplng: number, mapzoom: number;
 	let route_info_lookup: any = {};
 	// trip data, indexed via static_feed_id then trip_id
-	let trips_per_agency: any = {};
+	let trips_per_agency: Record<string, any> = {};
 	let layersettingsBox = false;
 
 	const lockonconst = 14.5;
@@ -451,7 +418,7 @@
 				)
 			];
 
-			console.log('operators_to_render', operators_to_render);
+			//console.log('operators_to_render', operators_to_render);
 
 			//console.log('operators for rerender', operators_to_render);
 			let big_table: any = {};
@@ -472,7 +439,7 @@
 				if (operator.gtfs_static_feeds) {
 					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
 						if (!static_feed_ids.includes(static_feed_id)) {
-							console.log('this_realtime_feed', this_realtime_feed);
+							//console.log('this_realtime_feed', this_realtime_feed);
 
 							if (!this_realtime_feed.onestop_feed_id.includes('f-横浜市')) {
 								static_feed_ids.push(static_feed_id);
@@ -890,8 +857,9 @@
 								contrastdarkmodebearing,
 								routeId: routeId,
 								headsign: headsign,
-								agency: realtime_id,
-								timestamp: vehicle?.timestamp
+								realtime_feed_id: realtime_id,
+								timestamp: vehicle?.timestamp,
+								id: id
 							},
 							geometry: {
 								type: 'Point',
@@ -905,7 +873,7 @@
 				const getlocalrailsource = mapglobal.getSource('localrail');
 				const othersource = mapglobal.getSource('other');
 
-				console.log('made features of ', realtime_id, features);
+				//console.log('made features of ', realtime_id, features);
 
 				geometryObj[realtime_id] = features;
 
@@ -963,10 +931,6 @@
 			cLL = mapglobal.unproject([0, h]).toArray();
 
 		var coordinates = [cUL, cUR, cLR, cLL, cUL];
-
-		console.log('getBoundingBoxMap', performance.now() - start);
-
-		//console.log(coordinates);
 
 		return coordinates;
 	}
@@ -1249,62 +1213,96 @@
 			current_map_heading = map.getBearing();
 		}
 
-		map.on('click', 'localrail', (events) => {
-			sidebarCollapsed = false;
+		function vehicleClicked(
+			events: mapboxgl.MapMouseEvent & {
+				features?: mapboxgl.MapboxGeoJSONFeature[] | undefined;
+			} & mapboxgl.EventData
+		): void {
 			if (events.features) {
-				console.log(events.features[0]);
-				selectedVehicle = events.features[0];
-				sidebarView = 9999;
+				console.log('clicked on: ', events.features[0]);
+				if (events.features[0].properties != null) {
+					selectedVehicleLookup = {
+						realtime_feed_id: events.features[0].properties.realtime_feed_id,
+						id: events.features[0].properties.id
+					};
+					sidebarView = 9999;
+				}
 			}
+		}
+
+		map.on('click', layerspercategory.bus.livedots, (events) => {
+			sidebarCollapsed = false;
+			vehicleClicked(events);
 		});
 
-		map.on('click', 'intercityrail', (events) => {
+		map.on('click', layerspercategory.bus.labeldots, (events) => {
 			sidebarCollapsed = false;
-			if (events.features) {
-				selectedVehicle = events.features[0];
-				sidebarView = 9999;
-			}
+			vehicleClicked(events);
 		});
 
-		map.on('click', 'bus', (events) => {
+		map.on('click', layerspercategory.other.livedots, (events) => {
 			sidebarCollapsed = false;
-			if (events.features) {
-				selectedVehicle = events.features[0];
-				sidebarView = 9999;
-			}
+			vehicleClicked(events);
+		});
+
+		map.on('click', layerspercategory.other.labeldots, (events) => {
+			sidebarCollapsed = false;
+			vehicleClicked(events);
+		});
+
+		map.on('click', layerspercategory.localrail.labeldots, (events) => {
+			sidebarCollapsed = false;
+			vehicleClicked(events);
+		});
+
+		map.on('click', layerspercategory.localrail.livedots, (events) => {
+			sidebarCollapsed = false;
+			vehicleClicked(events);
+		});
+
+		map.on('click', layerspercategory.intercityrail.livedots, (events) => {
+			sidebarCollapsed = false;
+			vehicleClicked(events);
+		});
+
+		map.on('click', layerspercategory.intercityrail.labeldots, (events) => {
+			sidebarCollapsed = false;
+			vehicleClicked(events);
 		});
 
 		function get_metrolink_board() {
 			//side effect that returns nothing
-					fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
-					.then((x) => x.json())
-					.then((arrivals) => {
-						metrolinkDemoArrivals = arrivals;
-						//sidebarCollapsed = false;
-						//sidebarView = 9998;
-					});
+			fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
+				.then((x) => x.json())
+				.then((arrivals) => {
+					metrolinkDemoArrivals = arrivals;
+				});
 		}
 
 		map.on('click', 'intercityrailstopscircle', (events) => {
-			let displayname = events.features[0].properties.displayname
+			let displayname = events.features[0].properties.displayname;
 			if (typeof events.features != 'undefined') {
 				get_metrolink_board();
 				sidebarCollapsed = false;
 				sidebarView = 9998;
 				selectedStop = displayname;
-					
+
 				if (currentMetrolinkDemoInterval == null) {
 					setInterval((metrolinkInterval) => {
 						//demorgan's law
-					if (sidebarCollapsed === true || sidebarView != 9998) {
-						//self destruct if the sidebar has been collapsed
-						clearInterval(metrolinkInterval.intervalID);
-						currentMetrolinkDemoInterval = null;
-					} else {
-						get_metrolink_board();
-						currentMetrolinkDemoInterval = metrolinkInterval.intervalID;
-					}
-				}, 10_000);
+						if (sidebarCollapsed === true || sidebarView != 9998) {
+							if (metrolinkInterval !== undefined && metrolinkInterval !== null) {
+								//self destruct if the sidebar has been collapsed
+								clearInterval(metrolinkInterval.intervalID);
+								currentMetrolinkDemoInterval = null;
+							}
+						} else {
+							if (metrolinkInterval !== undefined && metrolinkInterval !== null) {
+								get_metrolink_board();
+								currentMetrolinkDemoInterval = metrolinkInterval.intervalID;
+							}
+						}
+					}, 10_000);
 				}
 			}
 		});
@@ -1939,6 +1937,18 @@
 										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
 										vehiclesData[realtime_id] = feed;
+
+										//save as O(1) lookup system
+										const initialValue = 0;
+										let vehiclesDataHashMapForThisFeed = feed.entity.reduce((acc, obj) => {
+											const id = obj.id;
+
+											acc[id] = obj;
+											return acc;
+										});
+
+										vehiclesDataHashMap[realtime_id] = vehiclesDataHashMapForThisFeed;
+
 										rerenders_request(realtime_id);
 									}
 								})
@@ -1953,6 +1963,17 @@
 						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
 							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
 							delete vehiclesData[vehiclesDataCheckCleanUp];
+							if (
+								selectedVehicleLookup == null ||
+								//de morgan's law
+								//the feed id is not the same as the current selected vehicle data
+								(selectedVehicleLookup.realtime_feed_id != vehiclesDataCheckCleanUp &&
+									//check only applies when side bar is open and is on the vehicle open screen
+									sidebarView === 9999 &&
+									sidebarCollapsed === false)
+							) {
+								delete vehiclesDataHashMap[vehiclesDataCheckCleanUp];
+							}
 						}
 					});
 				}
@@ -2079,13 +2100,13 @@
 		function changeSizeBasedOnLocation() {
 			//if the current map is east of minus 52 lng
 			if (westOfMinus52 == true && maplng >= -52) {
-				westOfMinus52 = false
+				westOfMinus52 = false;
 				changeRailTextOutsideNorthAmerica(map, layerspercategory);
 			}
 
 			//if the current map is west of minus 52 lng
 			if (westOfMinus52 == false && maplng < -52) {
-				westOfMinus52 = true
+				westOfMinus52 = true;
 				changeRailTextOutsideNorthAmerica(map, layerspercategory);
 			}
 		}
@@ -2302,6 +2323,7 @@
 </script>
 
 <svelte:head>
+	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
@@ -2626,226 +2648,18 @@
 			</div>
 		{/if}
 		{#if sidebarView == 9998 && selectedStop != null && metrolinkDemoArrivals != null}
-			<MetrolinkDepartureDemo
-			selectedStop={selectedStop}
-			darkMode={darkMode}
-			metrolinkDemoArrivals={metrolinkDemoArrivals}
-			/>
+			<MetrolinkDepartureDemo {selectedStop} {darkMode} {metrolinkDemoArrivals} />
 		{/if}
-		{#if sidebarView == 9999}
-			<div in:fade>
-				{#if selectedVehicle.properties.agency == 'f-mts~rt~onebusaway'}
-					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
-						class="text-3xl"
-					>
-						{#if selectedVehicle.properties.maptag == 'Green'}
-							<img
-								src="/lines/mts-green.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-								alt="MTS Green Line Palm Tree logo"
-							/>
-						{:else if selectedVehicle.properties.maptag == 'Orange'}
-							<img
-								src="/lines/mts-orange.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-								alt="MTS Orange Line Sun logo"
-							/>
-						{:else if selectedVehicle.properties.maptag == 'Blue'}
-							<img
-								src="/lines/mts-blue.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-								alt="MTS Blue Line Wave logo"
-							/>
-						{/if}
-						{selectedVehicle.properties.maptag}
-					</h1>
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-northcountrytransitdistrict~rt'}
-					{#if selectedVehicle.properties.maptag == 'COASTER'}
-						<img src="/lines/nctd-coaster.svg" style:height="30px" alt="Coaster logo" />
-					{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
-						<img src="/lines/nctd-sprinter.svg" style:height="30px" alt="Sprinter logo"/>
-					{:else if selectedVehicle.properties.maptag == '350'}
-						<img src="/lines/nctd-brt.svg" style:height="30px" alt=""/>
-						<h1
-							style:color={darkMode
-								? selectedVehicle.properties.contrastdarkmode
-								: selectedVehicle.properties.color}
-							class="text-3xl"
-						>
-							350
-						</h1>
-					{:else}
-						<h1
-							style:color={darkMode
-								? selectedVehicle.properties.contrastdarkmode
-								: selectedVehicle.properties.color}
-							class="text-3xl"
-						>
-							{selectedVehicle.properties.maptag}
-						</h1>
-					{/if}
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-metro~losangeles~rail~rt'}
-					<img
-						src="/lines/metro.svg"
-						style:height="50px"
-						style:float="left"
-						style:vertical-align="bottom"
-						style:padding-right="10px"
-					/>
-					<img
-						src="/lines/metro-{selectedVehicle.properties.maptag.toLowerCase()}.svg"
-						style:height="50px"
-						style:vertical-align="bottom"
-					/>
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-metro~losangeles~bus~rt'}
-					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
-						class="text-3xl"
-					>
-						<img
-							src={`/lines/metro.svg`}
-							style:height="35px"
-							style:float="left"
-							style:vertical-align="middle"
-						/>
-						&nbsp;
-						{selectedVehicle.properties.maptag}
-					</h1>
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-metrolinktrains~rt'}
-					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
-						class="text-3xl"
-					>
-						<img
-							src="https://metrolinktrains.com/favicon.ico"
-							style:height="40px"
-							style:float="left"
-						/>
-						&nbsp;
-						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
-						{expandMetrolink[selectedVehicle.properties.maptag]} Line
-					</h1>
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-octa~rt'}
-					<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
-					<br />
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-metra~rt'}
-					<img
-						src="https://metra.com/themes/custom/metrarail/images/logo.svg"
-						style:height="40px"
-					/>
-					<br />
-					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
-						class="text-3xl"
-					>
-						<img
-							src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
-								selectedVehicle.properties.maptag == 'ME' ||
-								selectedVehicle.properties.maptag == 'RI'
-									? selectedVehicle.properties.maptag == 'ME'
-										? 'med'
-										: 'rid'
-									: selectedVehicle.properties.maptag.replace('-', '').toLowerCase()
-							}.png`}
-							style:height="35px"
-							style:float="left"
-						/>
-						&nbsp;
-						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
-						{expandMetra[selectedVehicle.properties.maptag]}
-					</h1>
-				{/if}
-				{#if selectedVehicle.properties.agency == 'f-amtrak~rt'}
-					<img
-						src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
-						style:height="30px"
-					/>
-					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
-						class="text-3xl"
-					>
-						<span class="font-black text-4xl">{selectedVehicle.properties.tripIdLabel}</span>
-						{selectedVehicle.properties.maptag}
-					</h1>
-				{/if}
-				{#if selectedVehicle.properties.agency != 'f-mts~rt~onebusaway' && selectedVehicle.properties.agency != 'f-amtrak~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~rail~rt' && selectedVehicle.properties.agency != 'f-metrolinktrains~rt' && selectedVehicle.properties.agency != 'f-metra~rt' && selectedVehicle.properties.agency != 'f-metro~losangeles~bus~rt' && selectedVehicle.properties.agency != 'f-northcountrytransitdistrict~rt'}
-					<h1
-						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
-						class="text-3xl"
-					>
-						{selectedVehicle.properties.maptag}
-					</h1>
-				{/if}
-				<br />
-				{#if selectedVehicle.properties.vehicleIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
-					<b class="text-lg">{strings.vehicle}</b>
-					{selectedVehicle.properties.vehicleIdLabel}
-					<br />
-				{/if}
-				{#if selectedVehicle.properties.tripIdLabel && selectedVehicle.properties.agency != 'f-metrolinktrains~rt'}
-					<b class="text-lg">{strings.trip}</b>
-					{selectedVehicle.properties.tripIdLabel}
-					<br />
-				{/if}
-				{#if selectedVehicle.properties.bearing !== 0}
-					<b class="text-lg">{strings.bearing}</b>
-					{selectedVehicle.properties.bearing.toFixed(3)}°
-					<br />
-				{/if}
-				<p class="text-sm">{new Date(Number(selectedVehicle.properties.timestamp) * 1000).toISOString()}</p>
-				<p class="text-sm">{durationToIsoElapsed((new Date() - new Date(Number(selectedVehicle.properties.timestamp) * 1000)))}</p>
-				<p class='text-sm'>Realtime feed id: <span class="font-semibold">{selectedVehicle.properties.agency}</span></p>
-				{#if fleetData[selectedVehicle.properties.agency]}
-					{#each fleetData[selectedVehicle.properties.agency] as { type, manufacturer, model, year, regex, home, image, credit }}
-						{#if new RegExp(regex).test(selectedVehicle.properties.vehicleIdLabel || '')}
-							<b class="text-lg">{strings.type}</b>
-							{type}
-							<br />
-							<b class="text-lg">{strings.fleet}</b>
-							{year || ''}
-							{manufacturer}
-							{model}
-							<br />
-							{#if home}
-								<b class="text-lg">{strings.division}</b>
-								{home}
-								<br />
-							{/if}
-							<br />
-							{#if image}
-								<img src={image} alt={model} style:width="100%" />
-								<i>{credit}</i>
-							{/if}
-						{/if}
-					{/each}
-				{/if}
-				
-			</div>
+		{#if sidebarView == 9999 && selectedVehicleLookup != null}
+			<VehicleSelected
+				{strings}
+				{selectedVehicleLookup}
+				{darkMode}
+				vehicleOnlyGtfsRt={vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
+					selectedVehicleLookup.id
+				]}
+				map={mapglobal}
+			/>
 		{/if}
 		<!-- <h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />

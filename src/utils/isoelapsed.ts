@@ -17,7 +17,7 @@ export function durationToIsoElapsed(inputms: number):string {
         output = output + ` ${minutes}m`;
     }
 
-    output = output + ` ${remaining_seconds.toPrecision(2)}s`;
+    output = output + ` ${remaining_seconds.toFixed(2)}s`;
     
 
     return output.trim()
