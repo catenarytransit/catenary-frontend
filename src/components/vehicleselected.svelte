@@ -20,7 +20,7 @@
 
     //Type safety has already been guranteed
 	// @ts-expect-error
-    let ms_from_now_to_last_update: number | null = typeof vehicleOnlyGtfsRt.vehicle.timestamp === "number" ? (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) - Date.now() : null;
+    let ms_from_now_to_last_update: number | null = (typeof vehicleOnlyGtfsRt.vehicle.timestamp === "number") && typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined" ? (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) - Date.now() : null;
 
     afterUpdate(() => {
         console.log('selected vehicle data', vehicleOnlyGtfsRt);
@@ -29,7 +29,9 @@
     onMount(() => {
 		const interval = setInterval(() => {
 			current_time = new Date();
-            ms_from_now_to_last_update = (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) -  Date.now();
+            if (typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined") {
+                ms_from_now_to_last_update = (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) -  Date.now();
+            }
 		}, 20);
 
 		return () => {
