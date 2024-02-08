@@ -57,6 +57,8 @@ const i18n = {
         type: "Type",
         fleet: "Fleet",
         division: "Division",
+        driver: "Driver",
+        timeoffset: "Delay"
     },
     fr: {
         search: 'Rechercher',
@@ -116,6 +118,8 @@ const i18n = {
         type: "Type",
         fleet: "Flotte",
         division: "Division",
+        driver: "Conducteur",
+        delay: "Retard"
     },
     es: {
         search: 'Buscar',
@@ -175,6 +179,8 @@ const i18n = {
         type: "Tipo",
         fleet: "Flota",
         division: "División",
+        driver: "Conductor/Conductora",
+        delay: "Demora"
     },
     de: {
         search: 'Suche',
@@ -234,6 +240,8 @@ const i18n = {
         type: "Art",
         fleet: "Flotte",
         division: "Division",
+        driver: "Treiber",
+        delay: "Verzögerung"
     },
     ko: {
         search: '검색',
@@ -294,6 +302,8 @@ const i18n = {
         type: "유형",
         fleet: "함대",
         division: "분할",
+        driver: "기사 님",
+        delay:"지연"
     },
     zh_TW: {
         search: '查詢',
@@ -353,6 +363,8 @@ const i18n = {
         type: "類型",
         fleet: "車隊",
         division: "分隊",
+        driver: "司機",
+        delay: "延誤"
     },
     zh_CN: {
         search: '查询',
@@ -412,6 +424,8 @@ const i18n = {
         type: "类型",
         fleet: "车队",
         division: "分队",
+        driver: "司机",
+        delay: "延误"
     }
 }
 

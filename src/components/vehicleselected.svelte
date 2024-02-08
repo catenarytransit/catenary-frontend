@@ -13,28 +13,115 @@
 	export let strings: Record<string, string>;
 	export let selectedVehicleLookup: SelectedVehicleLookup;
 	export let map: mapboxgl.Map;
-    export let usunits: boolean;
+	export let usunits: boolean;
 	export let darkMode: boolean;
 	export let vehicleOnlyGtfsRt: GtfsRealtimeBindings.transit_realtime.FeedEntity; // single row of gtfs rt entity data with VehiclePosition in it
 
+	//tuple feed id, vehicle id, time
+	export let last_swiftly_fetch: Array<string | number> = [];
+
+	interface SwiftlyValues {
+		driver: string | null;
+		headsign: string | null;
+		schAdhSecs: number | null;
+		id: string;
+	}
+
+	let swiftly_fetch_metadata: SelectedVehicleLookup | null = null;
+	let swiftly: SwiftlyValues | null = null;
 	let circleStyle: string = '';
 
 	let current_time: Date = new Date();
 
 	//Type safety has already been guranteed
 	// @ts-expect-error
-	let ms_from_now_to_last_update: number | null =
-		typeof vehicleOnlyGtfsRt.vehicle.timestamp === 'number' &&
-		typeof vehicleOnlyGtfsRt.vehicle != 'null' &&
-		typeof vehicleOnlyGtfsRt.vehicle != 'undefined'
-			? vehicleOnlyGtfsRt.vehicle.timestamp * 1000 - Date.now()
-			: null;
+	let ms_from_now_to_last_update: number | null = default_ms_to_last_update();
+
+	function default_ms_to_last_update(): number | null {
+		if (
+			typeof vehicleOnlyGtfsRt.vehicle != 'null' &&
+			typeof vehicleOnlyGtfsRt.vehicle != 'undefined'
+		) {
+			if (typeof vehicleOnlyGtfsRt.vehicle.timestamp === 'number') {
+				return vehicleOnlyGtfsRt.vehicle.timestamp * 1000 - Date.now();
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
 
 	afterUpdate(() => {
-		console.log('selected vehicle data', vehicleOnlyGtfsRt);
+		fetchSwiftlyInformation();
 	});
 
+	const SWIFTLY_KEYS: Record<string, string> = {
+		'f-octa~rt': 'octa',
+        "f-metro~losangeles~bus~rt": "lametro"
+	};
+
+	function fetchSwiftlyInformation(): void {
+		//side effect change value swiftly
+		let allowed_to_fetch = true;
+
+		if (last_swiftly_fetch.length === 3) {
+			if (
+				last_swiftly_fetch[0] === selectedVehicleLookup.realtime_feed_id &&
+				last_swiftly_fetch[1] === selectedVehicleLookup.id &&
+				typeof last_swiftly_fetch[2] === 'number' &&
+				last_swiftly_fetch[2] > Date.now() - 20_000
+			) {
+				allowed_to_fetch = false;
+			}
+		}
+
+		if (SWIFTLY_KEYS[selectedVehicleLookup.realtime_feed_id]) {
+			//can update swiftly data
+
+			let swiftly_key = SWIFTLY_KEYS[selectedVehicleLookup.realtime_feed_id];
+
+			if (allowed_to_fetch === true) {
+				if (vehicleOnlyGtfsRt?.vehicle?.vehicle?.id) {
+					let vehicleId = vehicleOnlyGtfsRt.vehicle.vehicle.id;
+					let url = `https://transitime-api.goswift.ly/api/v1/key/81YENWXv/agency/${swiftly_key}/command/vehiclesDetails?v=${vehicleId}`;
+
+					fetch(url)
+						.then((res) => res.json())
+						.then((d) => {
+							last_swiftly_fetch = [
+								selectedVehicleLookup.realtime_feed_id,
+								selectedVehicleLookup.id,
+								Date.now()
+							];
+							console.log(d);
+
+							if (d.vehicles) {
+								if (d.vehicles[0]) {
+									swiftly_fetch_metadata = { ...selectedVehicleLookup };
+									swiftly = {
+										driver: d.vehicles[0].driver,
+										headsign: d.vehicles[0].headsign,
+										schAdhSecs: d.vehicles[0].schAdhSecs,
+										id: d.vehicles[0].id
+									};
+								}
+							}
+						});
+				}
+			}
+		}
+	}
+
 	onMount(() => {
+		console.log('selected vehicle data', vehicleOnlyGtfsRt);
+
+		fetchSwiftlyInformation();
+
+		const swiftlyinterval = setInterval(() => {
+			fetchSwiftlyInformation();
+		}, 20_000);
+
 		const interval = setInterval(() => {
 			current_time = new Date();
 			if (typeof vehicleOnlyGtfsRt != 'null' && typeof vehicleOnlyGtfsRt != 'undefined') {
@@ -56,6 +143,7 @@
 
 		return () => {
 			clearInterval(interval);
+			clearInterval(swiftlyinterval);
 		};
 	});
 
@@ -301,15 +389,31 @@
 			</div>
 		{/if}
 		{#if typeof vehicleOnlyGtfsRt.vehicle.position.speed === 'number'}
-        <p>
-        <b class="text-lg">{strings.speed}</b>
-			{#if usunits == false}
-            {(3.6 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} km/h
-			{:else}
-			{(2.23694 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} mph
-			{/if}
-        </p>
+			<p>
+				<b class="text-lg">{strings.speed}</b>
+				{#if usunits == false}
+					{(3.6 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} km/h
+				{:else}
+					{(2.23694 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} mph
+				{/if}
+			</p>
 		{/if}
+	{/if}
+
+	{#if swiftly != null}
+		{#if swiftly_fetch_metadata != null}
+        {#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
+        {#if swiftly.headsign}
+            <p>{swiftly.headsign}</p>
+            {/if}
+			{#if swiftly.driver}
+            <p><b class="text-lg">{strings.driver}</b>: {swiftly.driver}</p>
+            {/if}
+            {#if swiftly.schAdhSecs}
+            <p><b class="text-lg">{strings.delay}</b>: {durationToIsoElapsed(Number (swiftly.schAdhSecs))}</p>
+            {/if}
+		{/if}
+        {/if}
 	{/if}
 
 	<div>

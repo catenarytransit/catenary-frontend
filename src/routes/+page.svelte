@@ -2651,6 +2651,9 @@
 			<MetrolinkDepartureDemo {selectedStop} {darkMode} {metrolinkDemoArrivals} />
 		{/if}
 		{#if sidebarView == 9999 && selectedVehicleLookup != null}
+		{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
+			selectedVehicleLookup.id
+		]}
 			<VehicleSelected
 				{strings}
 				{selectedVehicleLookup}
@@ -2661,6 +2664,9 @@
 				]}
 				map={mapglobal}
 			/>
+			{:else}
+			<p>An error has occured searching for: <br/>{selectedVehicleLookup.realtime_feed_id} - {selectedVehicleLookup.id}</p>
+			{/if}
 		{/if}
 		<!-- <h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
