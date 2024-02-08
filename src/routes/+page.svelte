@@ -2655,6 +2655,7 @@
 				{strings}
 				{selectedVehicleLookup}
 				{darkMode}
+				{usunits}
 				vehicleOnlyGtfsRt={vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
 					selectedVehicleLookup.id
 				]}

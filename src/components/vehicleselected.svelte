@@ -1,48 +1,57 @@
 <script lang="ts" context="module">
 	export interface SelectedVehicleKeyType {
-		realtime_feed_id: string,
-		id: string
+		realtime_feed_id: string;
+		id: string;
 	}
 </script>
 
 <script lang="ts">
-    import mapboxgl from 'mapbox-gl';
+	import mapboxgl from 'mapbox-gl';
 	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
-    import {durationToIsoElapsed} from "../utils/isoelapsed";
-    import {afterUpdate, onMount} from "svelte";
-    export let strings: Record<string,string>;
-    export let selectedVehicleLookup: SelectedVehicleLookup;
-    export let map: mapboxgl.Map;
-    export let darkMode: boolean;
-    export let vehicleOnlyGtfsRt: GtfsRealtimeBindings.transit_realtime.FeedEntity; // single row of gtfs rt entity data with VehiclePosition in it
+	import { durationToIsoElapsed } from '../utils/isoelapsed';
+	import { afterUpdate, onMount } from 'svelte';
+	export let strings: Record<string, string>;
+	export let selectedVehicleLookup: SelectedVehicleLookup;
+	export let map: mapboxgl.Map;
+    export let usunits: boolean;
+	export let darkMode: boolean;
+	export let vehicleOnlyGtfsRt: GtfsRealtimeBindings.transit_realtime.FeedEntity; // single row of gtfs rt entity data with VehiclePosition in it
 
-    let circleStyle: string = "";
+	let circleStyle: string = '';
 
-    let current_time: Date = new Date();
+	let current_time: Date = new Date();
 
-    //Type safety has already been guranteed
+	//Type safety has already been guranteed
 	// @ts-expect-error
-    let ms_from_now_to_last_update: number | null = (typeof vehicleOnlyGtfsRt.vehicle.timestamp === "number") && typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined" ? (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) - Date.now() : null;
+	let ms_from_now_to_last_update: number | null =
+		typeof vehicleOnlyGtfsRt.vehicle.timestamp === 'number' &&
+		typeof vehicleOnlyGtfsRt.vehicle != 'null' &&
+		typeof vehicleOnlyGtfsRt.vehicle != 'undefined'
+			? vehicleOnlyGtfsRt.vehicle.timestamp * 1000 - Date.now()
+			: null;
 
-    afterUpdate(() => {
-        console.log('selected vehicle data', vehicleOnlyGtfsRt);
-    });
+	afterUpdate(() => {
+		console.log('selected vehicle data', vehicleOnlyGtfsRt);
+	});
 
-    onMount(() => {
+	onMount(() => {
 		const interval = setInterval(() => {
 			current_time = new Date();
-            if (typeof vehicleOnlyGtfsRt != "null" && typeof vehicleOnlyGtfsRt != "undefined") {
-                if (typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined") {
-                ms_from_now_to_last_update = (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) -  Date.now();
-                
-                if (ms_from_now_to_last_update < -5000) {
-                circleStyle = `opacity: 0`;
-                } else {
-                let opacity = 1 - ((0 - ms_from_now_to_last_update) / 5000);
-                circleStyle = `opacity: ${opacity}`;
-                }
-            }
-        }
+			if (typeof vehicleOnlyGtfsRt != 'null' && typeof vehicleOnlyGtfsRt != 'undefined') {
+				if (
+					typeof vehicleOnlyGtfsRt.vehicle != 'null' &&
+					typeof vehicleOnlyGtfsRt.vehicle != 'undefined'
+				) {
+					ms_from_now_to_last_update = vehicleOnlyGtfsRt.vehicle.timestamp * 1000 - Date.now();
+
+					if (ms_from_now_to_last_update < -5000) {
+						circleStyle = `opacity: 0`;
+					} else {
+						let opacity = 1 - (0 - ms_from_now_to_last_update) / 5000;
+						circleStyle = `opacity: ${opacity}`;
+					}
+				}
+			}
 		}, 20);
 
 		return () => {
@@ -95,12 +104,10 @@
 </script>
 
 {#if vehicleOnlyGtfsRt.vehicle}
+	<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
+	<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
 
-
-<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
-<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
-
-<!--
+	<!--
     {#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
 					<h1
 						style:color={darkMode
@@ -271,33 +278,55 @@
 				<br />
 				
                 -->
-                {#if vehicleOnlyGtfsRt.vehicle.vehicle !== undefined && vehicleOnlyGtfsRt.vehicle.vehicle !== null}
-					<b class="text-lg">{strings.vehicle}</b>
-                    {#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
-					{vehicleOnlyGtfsRt.vehicle.vehicle.id}
-                    {:else}
-					{vehicleOnlyGtfsRt.vehicle.vehicle.label}{/if}
-					<br />
-				{/if}
-				{#if vehicleOnlyGtfsRt.vehicle.trip}
-					<b class="text-lg">{strings.trip} ID</b>
-					{vehicleOnlyGtfsRt.vehicle.trip.tripId}
-					<br />
-				{/if}
-                {#if vehicleOnlyGtfsRt.vehicle.position != undefined}
-				{#if vehicleOnlyGtfsRt.vehicle.position.bearing !== null && vehicleOnlyGtfsRt.vehicle.position.bearing !== undefined && vehicleOnlyGtfsRt.vehicle.position.bearing !== 0}
-                <div class=''><p><b class="text-lg">{strings.bearing}</b> {vehicleOnlyGtfsRt.vehicle.position.bearing.toFixed(2)}°</p>
-                    </div>
-            {/if}{/if}
+	{#if vehicleOnlyGtfsRt.vehicle.vehicle !== undefined && vehicleOnlyGtfsRt.vehicle.vehicle !== null}
+		<b class="text-lg">{strings.vehicle}</b>
+		{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
+			{vehicleOnlyGtfsRt.vehicle.vehicle.id}
+		{:else}
+			{vehicleOnlyGtfsRt.vehicle.vehicle.label}{/if}
+		<br />
+	{/if}
+	{#if vehicleOnlyGtfsRt.vehicle.trip}
+		<b class="text-lg">{strings.trip} ID</b>
+		{vehicleOnlyGtfsRt.vehicle.trip.tripId}
+		<br />
+	{/if}
+	{#if vehicleOnlyGtfsRt.vehicle.position != undefined}
+		{#if vehicleOnlyGtfsRt.vehicle.position.bearing !== null && vehicleOnlyGtfsRt.vehicle.position.bearing !== undefined && vehicleOnlyGtfsRt.vehicle.position.bearing !== 0}
+			<div class="">
+				<p>
+					<b class="text-lg">{strings.bearing}</b>
+					{vehicleOnlyGtfsRt.vehicle.position.bearing.toFixed(2)}°
+				</p>
+			</div>
+		{/if}
+		{#if typeof vehicleOnlyGtfsRt.vehicle.position.speed === 'number'}
+        <p>
+        <b class="text-lg">{strings.speed}</b>
+			{#if usunits == false}
+            {(3.6 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} km/h
+			{:else}
+			{(2.23694 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} mph
+			{/if}
+        </p>
+		{/if}
+	{/if}
 
-<div>
-    {#if typeof vehicleOnlyGtfsRt.vehicle.timestamp == "number" && typeof ms_from_now_to_last_update == "number"}
-<div class="flex flex-row gap-x-0.5 align-middle items-center">
-    <p class="font-mono text-sm"></p>{durationToIsoElapsed(ms_from_now_to_last_update)}
-    <span class="inline-block rounded-full bg-green-500 dark:bg-green-500 h-3 w-3 mr-1"
-    style={circleStyle}
-    ></span>
-</div><p class="font-mono text-sm">{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toTimeString()}</p>
-<p class="font-mono text-sm">{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toISOString()}</p>
-{/if}
-</div>{/if}
+	<div>
+		{#if typeof vehicleOnlyGtfsRt.vehicle.timestamp == 'number' && typeof ms_from_now_to_last_update == 'number'}
+			<div class="flex flex-row gap-x-0.5 align-middle items-center">
+				<p class="font-mono text-sm"></p>
+				{durationToIsoElapsed(ms_from_now_to_last_update)}
+				<span
+					class="inline-block rounded-full bg-green-500 dark:bg-green-500 h-3 w-3 mr-1"
+					style={circleStyle}
+				></span>
+			</div>
+			<p class="font-mono text-sm">
+				{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toTimeString()}
+			</p>
+			<p class="font-mono text-sm">
+				{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toISOString()}
+			</p>
+		{/if}
+	</div>{/if}
