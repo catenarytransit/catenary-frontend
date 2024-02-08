@@ -35,11 +35,11 @@
                 if (typeof vehicleOnlyGtfsRt.vehicle != "null" && typeof vehicleOnlyGtfsRt.vehicle != "undefined") {
                 ms_from_now_to_last_update = (vehicleOnlyGtfsRt.vehicle.timestamp * 1000) -  Date.now();
                 
-                if (ms_from_now_to_last_update < -3000) {
+                if (ms_from_now_to_last_update < -5000) {
                 circleStyle = `opacity: 0`;
                 } else {
-                let opacity = 1 - ((0 - ms_from_now_to_last_update) / 3000);
-                circleStyle = `background-opacity: ${opacity}`;
+                let opacity = 1 - ((0 - ms_from_now_to_last_update) / 5000);
+                circleStyle = `opacity: ${opacity}`;
                 }
             }
         }
