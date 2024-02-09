@@ -62,7 +62,8 @@
 		'f-metro~losangeles~bus~rt': 'lametro',
 		'f-metro~losangeles~rail~rt': 'lametro-rail',
 		'f-northcountrytransitdistrict~rt': 'nctd',
-		'f-bigbluebus~rt': 'big-blue-bus'
+		'f-bigbluebus~rt': 'big-blue-bus',
+		'f-f25d-socitdetransportdemontral~rt': 'stm'
 	};
 
 	function fetchSwiftlyInformation(): void {
@@ -203,7 +204,7 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.headsign}
-					<p>{swiftly.headsign.replace("Uc Irvine", "UC Irvine")}</p>
+					<p>{swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
 				{/if}
 			{/if}
 		{/if}
