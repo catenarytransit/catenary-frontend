@@ -1939,7 +1939,6 @@
 										vehiclesData[realtime_id] = feed;
 
 										//save as O(1) lookup system
-										const initialValue = 0;
 										let vehiclesDataHashMapForThisFeed = feed.entity.reduce((acc, obj) => {
 											const id = obj.id;
 
@@ -2329,14 +2328,6 @@
 </script>
 
 <svelte:head>
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
-	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {

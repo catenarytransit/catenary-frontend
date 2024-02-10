@@ -6,12 +6,12 @@
 </script>
 
 <script lang="ts">
-	import mapboxgl from 'mapbox-gl';
-	import GtfsRealtimeBindings from 'gtfs-realtime-bindings';
+	import type mapboxgl from 'mapbox-gl';
+	import type GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { durationToIsoElapsed } from '../utils/isoelapsed';
 	import { afterUpdate, onMount } from 'svelte';
 	export let strings: Record<string, string>;
-	export let selectedVehicleLookup: SelectedVehicleLookup;
+	export let selectedVehicleLookup: SelectedVehicleKeyType;
 	export let map: mapboxgl.Map;
 	export let usunits: boolean;
 	export let darkMode: boolean;
@@ -27,20 +27,18 @@
 		id: string;
 	}
 
-	let swiftly_fetch_metadata: SelectedVehicleLookup | null = null;
+	let swiftly_fetch_metadata: SelectedVehicleKeyType | null = null;
 	let swiftly: SwiftlyValues | null = null;
 	let circleStyle: string = '';
 
 	let current_time: Date = new Date();
 
 	//Type safety has already been guranteed
-	// @ts-expect-error
 	let ms_from_now_to_last_update: number | null = default_ms_to_last_update();
 
 	function default_ms_to_last_update(): number | null {
 		if (
-			typeof vehicleOnlyGtfsRt.vehicle != 'null' &&
-			typeof vehicleOnlyGtfsRt.vehicle != 'undefined'
+			typeof vehicleOnlyGtfsRt.vehicle === "object"
 		) {
 			if (typeof vehicleOnlyGtfsRt.vehicle.timestamp === 'number') {
 				return vehicleOnlyGtfsRt.vehicle.timestamp * 1000 - Date.now();
