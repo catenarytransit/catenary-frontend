@@ -39,9 +39,7 @@
 	let ms_from_now_to_last_update: number | null = default_ms_to_last_update();
 
 	function default_ms_to_last_update(): number | null {
-		if (
-			typeof vehicleOnlyGtfsRt.vehicle === "object"
-		) {
+		if (typeof vehicleOnlyGtfsRt.vehicle === 'object') {
 			if (typeof vehicleOnlyGtfsRt.vehicle.timestamp === 'number') {
 				return vehicleOnlyGtfsRt.vehicle.timestamp * 1000 - Date.now();
 			} else {
@@ -197,206 +195,154 @@
 </script>
 
 {#if properties}
-
-{#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
-					<h1
-						style:color={darkMode
-							? properties.contrastdarkmode
-							: properties.color}
-						class="text-3xl"
-					>
-						{#if properties.maptag == 'Green'}
-							<img
-								src="/lines/mts-green.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-								alt="MTS Green Line Palm Tree logo"
-							/>
-						{:else if properties.maptag == 'Orange'}
-							<img
-								src="/lines/mts-orange.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-								alt="MTS Orange Line Sun logo"
-							/>
-						{:else if properties.maptag == 'Blue'}
-							<img
-								src="/lines/mts-blue.svg"
-								style:height="50px"
-								style:float="left"
-								style:margin-right="15px"
-								alt="MTS Blue Line Wave logo"
-							/>
-						{/if}
-						{properties.maptag}
-					</h1>
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-northcountrytransitdistrict~rt'}
-					{#if properties.maptag == 'COASTER'}
-						<img src="/lines/nctd-coaster.svg" style:height="30px" alt="Coaster logo" />
-					{:else if properties.maptag == 'SPRINTER'}
-						<img src="/lines/nctd-sprinter.svg" style:height="30px" alt="Sprinter logo"/>
-					{:else if properties.maptag == '350'}
-						<img src="/lines/nctd-brt.svg" style:height="30px" alt=""/>
-						<h1
-							style:color={darkMode
-								? properties.contrastdarkmode
-								: properties.color}
-							class="text-3xl"
-						>
-							350
-						</h1>
-					{:else}
-						<h1
-							style:color={darkMode
-								? properties.contrastdarkmode
-								: properties.color}
-							class="text-3xl"
-						>
-							{properties.maptag}
-						</h1>
-					{/if}
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
-					{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
-						<img src="/icons/la-hrv.png" />
-					{:else}
-						<img src="/icons/la-lrv.png" />
-					{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			{#if properties.maptag == 'Green'}
+				<img
+					src="/lines/mts-green.svg"
+					style:height="50px"
+					style:float="left"
+					style:margin-right="15px"
+					alt="MTS Green Line Palm Tree logo"
+				/>
+			{:else if properties.maptag == 'Orange'}
+				<img
+					src="/lines/mts-orange.svg"
+					style:height="50px"
+					style:float="left"
+					style:margin-right="15px"
+					alt="MTS Orange Line Sun logo"
+				/>
+			{:else if properties.maptag == 'Blue'}
+				<img
+					src="/lines/mts-blue.svg"
+					style:height="50px"
+					style:float="left"
+					style:margin-right="15px"
+					alt="MTS Blue Line Wave logo"
+				/>
+			{/if}
+			{properties.maptag}
+		</h1>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-northcountrytransitdistrict~rt'}
+		{#if properties.maptag == 'COASTER'}
+			<img src="/lines/nctd-coaster.svg" style:height="30px" alt="Coaster logo" />
+		{:else if properties.maptag == 'SPRINTER'}
+			<img src="/lines/nctd-sprinter.svg" style:height="30px" alt="Sprinter logo" />
+		{:else if properties.maptag == '350'}
+			<img src="/lines/nctd-brt.svg" style:height="30px" alt="" />
+			<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+				350
+			</h1>
+		{:else}
+			<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+				{properties.maptag}
+			</h1>
+		{/if}
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
+		{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
+			<img src="/icons/la-hrv.png" />
+		{:else}
+			<img src="/icons/la-lrv.png" />
+		{/if}
+		<br />
+		<img
+			src="/lines/metro.svg"
+			style:height="50px"
+			style:float="left"
+			style:vertical-align="bottom"
+			style:padding-right="10px"
+		/>
+		<img
+			src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
+			style:height="50px"
+			style:vertical-align="bottom"
+		/>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
+		<img src="/icons/la-metrobus.png" />
+		<br />
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			<img
+				src={`/lines/metro.svg`}
+				style:height="35px"
+				style:float="left"
+				style:vertical-align="middle"
+			/>
+			&nbsp;
+			{properties.maptag}
+		</h1>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
+		<img src="/icons/la-metrolink.png" />
+		<br />
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" />
+			&nbsp;
+			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
+			{expandMetrolink[properties.maptag]} Line
+		</h1>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
+		<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
+		<br />
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
+		<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
+		<br />
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			<img
+				src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
+					properties.maptag == 'ME' || properties.maptag == 'RI'
+						? properties.maptag == 'ME'
+							? 'med'
+							: 'rid'
+						: properties.maptag.replace('-', '').toLowerCase()
+				}.png`}
+				style:height="35px"
+				style:float="left"
+			/>
+			&nbsp;
+			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
+			{expandMetra[properties.maptag]}
+		</h1>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-amtrak~rt'}
+		<img
+			src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
+			style:height="30px"
+		/>
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			<span class="font-black text-4xl">{properties.tripIdLabel}</span>
+			{properties.maptag}
+		</h1>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id != 'f-mts~rt~onebusaway' && selectedVehicleLookup.realtime_feed_id != 'f-amtrak~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~rail~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metrolinktrains~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metra~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~bus~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt'}
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			{properties.maptag}
+		</h1>
+	{/if}
+	{#if swiftly != null}
+		{#if swiftly_fetch_metadata != null}
+			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
+				{#if swiftly.headsign}
 					<br />
-					<img
-						src="/lines/metro.svg"
-						style:height="50px"
-						style:float="left"
-						style:vertical-align="bottom"
-						style:padding-right="10px"
-					/>
-					<img
-						src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
-						style:height="50px"
-						style:vertical-align="bottom"
-					/>
+					<h2 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-2xl">&rarr; {swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</h2>
 				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
-					<img src="/icons/la-metrobus.png" />
-					<br />
-					<h1
-						style:color={darkMode
-							? properties.contrastdarkmode
-							: properties.color}
-						class="text-3xl"
-					>
-						<img
-							src={`/lines/metro.svg`}
-							style:height="35px"
-							style:float="left"
-							style:vertical-align="middle"
-						/>
-						&nbsp;
-						{properties.maptag}
-					</h1>
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
-					<img src="/icons/la-metrolink.png">
-					<br />
-					<h1
-						style:color={darkMode
-							? properties.contrastdarkmode
-							: properties.color}
-						class="text-3xl"
-					>
-						<img
-							src="https://metrolinktrains.com/favicon.ico"
-							style:height="40px"
-							style:float="left"
-						/>
-						&nbsp;
-						<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
-						{expandMetrolink[properties.maptag]} Line
-					</h1>
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
-					<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
-					<br />
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
-					<img
-						src="https://metra.com/themes/custom/metrarail/images/logo.svg"
-						style:height="40px"
-					/>
-					<br />
-					<h1
-						style:color={darkMode
-							? properties.contrastdarkmode
-							: properties.color}
-						class="text-3xl"
-					>
-						<img
-							src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
-								properties.maptag == 'ME' ||
-								properties.maptag == 'RI'
-									? properties.maptag == 'ME'
-										? 'med'
-										: 'rid'
-									: properties.maptag.replace('-', '').toLowerCase()
-							}.png`}
-							style:height="35px"
-							style:float="left"
-						/>
-						&nbsp;
-						<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
-						{expandMetra[properties.maptag]}
-					</h1>
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id == 'f-amtrak~rt'}
-					<img
-						src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
-						style:height="30px"
-					/>
-					<h1
-						style:color={darkMode
-							? properties.contrastdarkmode
-							: properties.color}
-						class="text-3xl"
-					>
-						<span class="font-black text-4xl">{properties.tripIdLabel}</span>
-						{properties.maptag}
-					</h1>
-				{/if}
-				{#if selectedVehicleLookup.realtime_feed_id != 'f-mts~rt~onebusaway' && selectedVehicleLookup.realtime_feed_id != 'f-amtrak~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~rail~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metrolinktrains~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metra~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~bus~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt'}
-					<h1
-						style:color={darkMode
-							? properties.contrastdarkmode
-							: properties.color}
-						class="text-3xl"
-					>
-						{properties.maptag}
-					</h1>
-				{/if}
-				<br />
-
+			{/if}
+		{/if}
+	{/if}
+	<br />
 {/if}
 
 {#if vehicleOnlyGtfsRt.vehicle}
 	<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
 	<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
 
-	{#if swiftly != null}
-		{#if swiftly_fetch_metadata != null}
-			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
-				{#if swiftly.headsign}
-					<p>{swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
-				{/if}
-			{/if}
-		{/if}
-	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}{/if}
 
-	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
-
-	{/if}
-	
 	{#if vehicleOnlyGtfsRt.vehicle.vehicle !== undefined && vehicleOnlyGtfsRt.vehicle.vehicle !== null}
 		<b class="text-lg">{strings.vehicle}</b>
 		{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
