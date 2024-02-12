@@ -314,12 +314,13 @@
 			src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
 			style:height="30px"
 		/>
+		<br />
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
 			<span class="font-black text-4xl">{properties.tripIdLabel}</span>
 			{properties.maptag}
 		</h1>
 	{/if}
-	{#if selectedVehicleLookup.realtime_feed_id != 'f-mts~rt~onebusaway' && selectedVehicleLookup.realtime_feed_id != 'f-amtrak~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~rail~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metrolinktrains~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metra~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~bus~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt'}
+	{#if selectedVehicleLookup.realtime_feed_id != 'f-mts~rt~onebusaway' && selectedVehicleLookup.realtime_feed_id != 'f-amtrak~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~rail~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metrolinktrains~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metra~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~bus~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt'}
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
 			{properties.maptag}
 		</h1>
@@ -338,19 +339,23 @@
 {/if}
 
 {#if vehicleOnlyGtfsRt.vehicle}
-	<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
-	<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
+	<b class="text-lg">{strings.provider}</b>
+	{selectedVehicleLookup.realtime_feed_id}
 
-	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}{/if}
+	<br />
 
-	{#if vehicleOnlyGtfsRt.vehicle.vehicle !== undefined && vehicleOnlyGtfsRt.vehicle.vehicle !== null}
+	{#if vehicleOnlyGtfsRt.vehicle.vehicle}
 		<b class="text-lg">{strings.vehicle}</b>
-		{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
-			{vehicleOnlyGtfsRt.vehicle.vehicle.id}
-		{:else}
-			{vehicleOnlyGtfsRt.vehicle.vehicle.label}{/if}
+		{vehicleOnlyGtfsRt.vehicle.vehicle.label}
 		<br />
+	{:else}
+		{#if properties.vehicleIdLabel}
+			<b class="text-lg">{strings.vehicle}</b>
+			{properties.vehicleIdLabel}
+			<br />
+		{/if}
 	{/if}
+
 	{#if vehicleOnlyGtfsRt.vehicle.trip}
 		<b class="text-lg">{strings.trip} ID</b>
 		{vehicleOnlyGtfsRt.vehicle.trip.tripId}
@@ -385,7 +390,7 @@
 				{/if}
 				{#if swiftly.schAdhSecs}
 					<p>
-						<b class="text-lg">{strings.delay}</b>: {durationToIsoElapsed(
+						<b class="text-lg">{strings.delay}</b> {durationToIsoElapsed(
 							Number(swiftly.schAdhSecs)
 						)}
 					</p>

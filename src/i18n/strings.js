@@ -3,8 +3,8 @@ const i18n = {
         search: 'Search',
         none: 'None',
         // special
-        appwidealert: 'Customize your Catenary experience!',
-        appwidesubtext: 'Want to see buses or additional information on the map? Select the Layers menu in the top right corner.',
+        appwidealert: 'Join us in Pasadena for SCALE 21X, March 14-17!',
+        appwidesubtext: 'We\'ll be presenting on Friday about how we built and scaled an international transit app - and the community making it possible.',
         learnmore: 'Learn more',
         // art
         art: 'Public Art',
@@ -58,7 +58,8 @@ const i18n = {
         fleet: "Fleet",
         division: "Division",
         driver: "Driver",
-        delay: "Delay"
+        delay: "Delay",
+        provider: "Data Provider"
     },
     fr: {
         search: 'Rechercher',
@@ -119,7 +120,8 @@ const i18n = {
         fleet: "Flotte",
         division: "Division",
         driver: "Conducteur",
-        delay: "Retard"
+        delay: "Retard",
+        provider: "Provideur de data"
     },
     es: {
         search: 'Buscar',
@@ -180,7 +182,8 @@ const i18n = {
         fleet: "Flota",
         division: "División",
         driver: "Conductor/Conductora",
-        delay: "Demora"
+        delay: "Demora",
+        provider: "Proveedor de datos"
     },
     de: {
         search: 'Suche',
@@ -241,7 +244,8 @@ const i18n = {
         fleet: "Flotte",
         division: "Division",
         driver: "Treiber",
-        delay: "Verzögerung"
+        delay: "Verzögerung",
+        provider: "Datenanbieter"
     },
     ko: {
         search: '검색',
@@ -303,7 +307,8 @@ const i18n = {
         fleet: "함대",
         division: "분할",
         driver: "기사 님",
-        delay:"지연"
+        delay:"지연",
+        provider: "데이터 제공자"
     },
     zh_TW: {
         search: '查詢',
@@ -364,7 +369,8 @@ const i18n = {
         fleet: "車隊",
         division: "分隊",
         driver: "司機",
-        delay: "延誤"
+        delay: "延誤",
+        provider: "數據提供者"
     },
     zh_CN: {
         search: '查询',
@@ -425,7 +431,8 @@ const i18n = {
         fleet: "车队",
         division: "分队",
         driver: "司机",
-        delay: "延误"
+        delay: "延误",
+        provider: "数据提供者"
     }
 }
 
