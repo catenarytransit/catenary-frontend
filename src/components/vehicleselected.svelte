@@ -303,6 +303,7 @@
 			{properties.maptag}
 		</h1>
 	{/if}
+	<br />
 	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway"].includes(selectedVehicleLookup.realtime_feed_id)))}
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
 			{properties.maptag}
@@ -312,7 +313,11 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.headsign}
-					{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
+					<h2
+						style:color={darkMode ? properties.contrastdarkmode : properties.color}
+						class="text-3xl"
+					>
+						{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 							<img
 								src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
 								style:height="40px"
@@ -324,12 +329,15 @@
 						{properties.maptag}
 						&rarr;&nbsp;
 						{/if}
-						<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-xl">&rarr; {swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
+						{swiftly.headsign.replace('Uc Irvine', 'UC Irvine').replace(' Station', '')}
+					</h2>
 				{/if}
 			{/if}
 		{/if}
 	{/if}
 {/if}
+
+<br />
 
 {#if vehicleOnlyGtfsRt.vehicle}
 	<b class="text-lg">{strings.provider}</b>
