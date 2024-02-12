@@ -16,7 +16,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
             'circle-stroke-width': 0.8,
             'circle-emissive-strength': 1,
-            'circle-opacity': 0.3
+            'circle-opacity': 0.7
         },
         minzoom: 7
     });
@@ -78,7 +78,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-stroke-color': '#fff',
             'circle-emissive-strength': 1,
             'circle-stroke-width': 1,
-            'circle-opacity': 0.3
+            'circle-opacity': 1
         }
     });
 
@@ -132,7 +132,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-stroke-color': '#fff',
             'circle-stroke-width': 1,
             'circle-emissive-strength': 1,
-            'circle-opacity': 0.6
+            'circle-opacity': 1
         }
     });
 
@@ -179,7 +179,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-stroke-color': '#fff',
             'circle-stroke-width': 1,
             'circle-emissive-strength': 1,
-            'circle-opacity': 0.8
+            'circle-opacity': 1
         }
     });
 

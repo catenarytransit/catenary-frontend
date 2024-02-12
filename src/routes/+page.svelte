@@ -1887,9 +1887,9 @@
 				}
 			});
 
-			makeBearingArrowPointers(map, darkMode, layerspercategory);
-
 			makeCircleLayers(map, darkMode, layerspercategory);
+
+			makeBearingArrowPointers(map, darkMode, layerspercategory);
 
 			runSettingsAdapt();
 
