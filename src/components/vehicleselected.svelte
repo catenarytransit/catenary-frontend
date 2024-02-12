@@ -197,13 +197,19 @@
 
 {#if properties}
 	{#if selectedVehicleLookup.realtime_feed_id == "f-translink~rt"}
-	<img src="https://www.translink.ca/-/media/translink/logos/translink_logo.svg" class='h-10 md:h-12'>
+	<img src="https://www.translink.ca/-/media/translink/logos/translink_logo.svg" class='h-10 md:h-12'
+	at="Translink"
+	>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == "f-calgarytransit~rt"}
-	<img src="https://www.calgarytransit.com/etc/clientlibs/transit/v3/transit/main/images/Calgary-Transit-Logo.svg" class="h-10 md:h-12"/>
+	<img src="https://www.calgarytransit.com/etc/clientlibs/transit/v3/transit/main/images/Calgary-Transit-Logo.svg" 
+	alt="Calgary Transit"
+	class="h-10 md:h-12"/>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == "f-f25d-socitdetransportdemontral~rt"}
-	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/STM_%28logo%2C_2010%29.svg/2560px-STM_%28logo%2C_2010%29.svg.png"  class='h-10 md:h-12' />
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/STM_%28logo%2C_2010%29.svg/2560px-STM_%28logo%2C_2010%29.svg.png" 
+	alt="Société de transport de Montréal"
+	class='h-10 md:h-12' />
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
 	<div class="flex flex-row align-middle">
@@ -237,26 +243,26 @@
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 		{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
-			<img src="/icons/la-hrv.png" />
+			<img src="/icons/la-hrv.png" alt=""/>
 		{:else}
-			<img src="/icons/la-lrv.png" />
+			<img src="/icons/la-lrv.png" alt=""/>
 		{/if}
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
-		<img src="/icons/la-metrobus.png" />
+		<img src="/icons/la-metrobus.png"  alt=""/>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
-		<img src="/icons/la-metrolink.png" />
+		<img src="/icons/la-metrolink.png"  alt=""/>
 		<br />
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
-			<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" />
+			<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" alt="Metrolink"/>
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
 			{expandMetrolink[properties.maptag]} Line
 		</h1>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
-		<img src="https://www.octa.net/dist/images/octa-logo.svg" class="h-14" />
+		<img src="https://www.octa.net/dist/images/octa-logo.svg" class="h-14" alt="Orange County Transportation Authority"/>
 		
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
@@ -273,6 +279,7 @@
 				}.png`}
 				style:height="35px"
 				style:float="left"
+				alt=""
 			/>
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
@@ -282,11 +289,12 @@
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-amtrak~rt'}
 		<img
 			src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
-
+			alt="Amtrak"
 			class="hidden dark:block h-8"
 		/>
 		<img
 			src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__blue.svg"
+			alt="Amtrak"
 			class="h-8 block dark:hidden"
 		/>
 		<br />
@@ -310,6 +318,7 @@
 								style:height="40px"
 								style:float="left"
 								style:margin-right="10px"
+								alt="{properties.maptag} Line"
 							/>
 						{:else}
 						{properties.maptag}
