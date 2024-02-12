@@ -235,55 +235,15 @@
 		</h1>
 	</div>
 	{/if}
-	{#if selectedVehicleLookup.realtime_feed_id == 'f-northcountrytransitdistrict~rt'}
-		{#if properties.maptag == 'COASTER'}
-			<img src="/lines/nctd-coaster.svg" style:height="30px" alt="Coaster logo" />
-		{:else if properties.maptag == 'SPRINTER'}
-			<img src="/lines/nctd-sprinter.svg" style:height="30px" alt="Sprinter logo" />
-		{:else if properties.maptag == '350'}
-			<img src="/lines/nctd-brt.svg" style:height="30px" alt="" />
-			<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
-				350
-			</h1>
-		{:else}
-			<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
-				{properties.maptag}
-			</h1>
-		{/if}
-	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 		{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
 			<img src="/icons/la-hrv.png" />
 		{:else}
 			<img src="/icons/la-lrv.png" />
 		{/if}
-		<br />
-		<img
-			src="/lines/metro.svg"
-			style:height="50px"
-			style:float="left"
-			style:vertical-align="bottom"
-			style:padding-right="10px"
-		/>
-		<img
-			src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
-			style:height="50px"
-			style:vertical-align="bottom"
-		/>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
 		<img src="/icons/la-metrobus.png" />
-		<br />
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
-			<img
-				src={`/lines/metro.svg`}
-				style:height="35px"
-				style:float="left"
-				style:vertical-align="middle"
-			/>
-			&nbsp;
-			{properties.maptag}
-		</h1>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
 		<img src="/icons/la-metrolink.png" />
@@ -296,7 +256,7 @@
 		</h1>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
-		<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
+		<img src="https://www.octa.net/dist/images/octa-logo.svg" class="h-14" />
 		
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
@@ -335,7 +295,7 @@
 			{properties.maptag}
 		</h1>
 	{/if}
-	{#if selectedVehicleLookup.realtime_feed_id != 'f-mts~rt~onebusaway' && selectedVehicleLookup.realtime_feed_id != 'f-amtrak~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~rail~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metrolinktrains~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metra~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~bus~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt'}
+	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway"].includes(selectedVehicleLookup.realtime_feed_id)))}
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
 			{properties.maptag}
 		</h1>
@@ -344,7 +304,18 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.headsign}
-					<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-xl">&rarr; {swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
+					{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
+							<img
+								src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
+								style:height="40px"
+								style:float="left"
+								style:margin-right="10px"
+							/>
+						{:else}
+						{properties.maptag}
+						&rarr;&nbsp;
+						{/if}
+						<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-xl">&rarr; {swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
 				{/if}
 			{/if}
 		{/if}
@@ -361,12 +332,10 @@
 		<b class="text-lg">{strings.vehicle}</b>
 		{vehicleOnlyGtfsRt.vehicle.vehicle.label}
 		<br />
-	{:else}
-		{#if properties.vehicleIdLabel}
-			<b class="text-lg">{strings.vehicle}</b>
-			{properties.vehicleIdLabel}
-			<br />
-		{/if}
+	{:else if properties.vehicleIdLabel}
+		<b class="text-lg">{strings.vehicle}</b>
+		{properties.vehicleIdLabel}
+		<br />
 	{/if}
 
 	{#if vehicleOnlyGtfsRt.vehicle.trip}
@@ -399,13 +368,12 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.driver}
-					<p><b class="text-lg">{strings.driver}</b>: {swiftly.driver}</p>
+					<p><b class="text-lg">{strings.driver}</b> {swiftly.driver}</p>
 				{/if}
 				{#if swiftly.schAdhSecs}
 					<p>
-						<b class="text-lg">{strings.delay}</b> {durationToIsoElapsed(
-							Number(swiftly.schAdhSecs)
-						)}
+						<b class="text-lg">{strings.delay}</b>
+						{durationToIsoElapsed(Number(swiftly.schAdhSecs))}
 					</p>
 				{/if}
 			{/if}

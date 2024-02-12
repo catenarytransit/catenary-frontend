@@ -1933,6 +1933,7 @@
 											new Uint8Array(buffer)
 										);
 
+										//this is a temporary fix, a permanant fix must be applied in the ingestion engine for realtime data (aspen)
 										if (realtime_id === "f-translink~rt") {
 											feed.entity = feed.entity.map((eachEntity) => {
 												eachEntity.id = eachEntity.id.split("_")[1]
@@ -2643,6 +2644,7 @@
 			<MetrolinkDepartureDemo {selectedStop} {darkMode} {metrolinkDemoArrivals} />
 		{/if}
 		{#if sidebarView == 9999 && selectedVehicleLookup != null}
+		{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id]}
 		{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
 			selectedVehicleLookup.id
 		]}
@@ -2660,7 +2662,11 @@
 			{:else}
 			<p>An error has occured searching for: <br/>{selectedVehicleLookup.realtime_feed_id} - {selectedVehicleLookup.id}</p>
 			{/if}
+		{:else}
+		<p>Feed {selectedVehicleLookup.realtime_feed_id} not found</p>
 		{/if}
+		{/if}
+		
 		<!-- <h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/07/Susan-Logoreci_Right-Of-Way.jpeg' name='Right Above The Right-Of-Way' artist='Susan Logoreci' description='Just as this aerial station provides views of the surrounding areas, the artworks present aerial views of local neighborhoods, depicted in an intricate series of colored pencil drawings. Drawn from photographs that were shot from a helicopter hovering above the city, the images present the structured landscape of the area punctuated with identifiable landmarks.' />
