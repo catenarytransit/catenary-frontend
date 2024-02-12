@@ -1223,7 +1223,8 @@
 				if (events.features[0].properties != null) {
 					selectedVehicleLookup = {
 						realtime_feed_id: events.features[0].properties.realtime_feed_id,
-						id: events.features[0].properties.id
+						id: events.features[0].properties.id,
+						properties: events.features[0].properties
 					};
 					sidebarView = 9999;
 				}
@@ -2660,6 +2661,7 @@
 					selectedVehicleLookup.id
 				]}
 				map={mapglobal}
+				properties={selectedVehicleLookup.properties}
 			/>
 			{:else}
 			<p>An error has occured searching for: <br/>{selectedVehicleLookup.realtime_feed_id} - {selectedVehicleLookup.id}</p>

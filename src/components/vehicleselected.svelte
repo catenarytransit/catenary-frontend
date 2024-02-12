@@ -2,6 +2,7 @@
 	export interface SelectedVehicleKeyType {
 		realtime_feed_id: string;
 		id: string;
+		properties: any;
 	}
 </script>
 
@@ -15,6 +16,7 @@
 	export let map: mapboxgl.Map;
 	export let usunits: boolean;
 	export let darkMode: boolean;
+	export let properties: any;
 	export let vehicleOnlyGtfsRt: GtfsRealtimeBindings.transit_realtime.FeedEntity; // single row of gtfs rt entity data with VehiclePosition in it
 
 	//tuple feed id, vehicle id, time
@@ -194,29 +196,16 @@
 	};
 </script>
 
-{#if vehicleOnlyGtfsRt.vehicle}
-	<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
-	<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
+{#if properties}
 
-	{#if swiftly != null}
-		{#if swiftly_fetch_metadata != null}
-			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
-				{#if swiftly.headsign}
-					<p>{swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
-				{/if}
-			{/if}
-		{/if}
-	{/if}
-
-	<!--
-    {#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
+{#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
 					<h1
 						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+							? properties.contrastdarkmode
+							: properties.color}
 						class="text-3xl"
 					>
-						{#if selectedVehicle.properties.maptag == 'Green'}
+						{#if properties.maptag == 'Green'}
 							<img
 								src="/lines/mts-green.svg"
 								style:height="50px"
@@ -224,7 +213,7 @@
 								style:margin-right="15px"
 								alt="MTS Green Line Palm Tree logo"
 							/>
-						{:else if selectedVehicle.properties.maptag == 'Orange'}
+						{:else if properties.maptag == 'Orange'}
 							<img
 								src="/lines/mts-orange.svg"
 								style:height="50px"
@@ -232,7 +221,7 @@
 								style:margin-right="15px"
 								alt="MTS Orange Line Sun logo"
 							/>
-						{:else if selectedVehicle.properties.maptag == 'Blue'}
+						{:else if properties.maptag == 'Blue'}
 							<img
 								src="/lines/mts-blue.svg"
 								style:height="50px"
@@ -241,20 +230,20 @@
 								alt="MTS Blue Line Wave logo"
 							/>
 						{/if}
-						{selectedVehicle.properties.maptag}
+						{properties.maptag}
 					</h1>
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id == 'f-northcountrytransitdistrict~rt'}
-					{#if selectedVehicle.properties.maptag == 'COASTER'}
+					{#if properties.maptag == 'COASTER'}
 						<img src="/lines/nctd-coaster.svg" style:height="30px" alt="Coaster logo" />
-					{:else if selectedVehicle.properties.maptag == 'SPRINTER'}
+					{:else if properties.maptag == 'SPRINTER'}
 						<img src="/lines/nctd-sprinter.svg" style:height="30px" alt="Sprinter logo"/>
-					{:else if selectedVehicle.properties.maptag == '350'}
+					{:else if properties.maptag == '350'}
 						<img src="/lines/nctd-brt.svg" style:height="30px" alt=""/>
 						<h1
 							style:color={darkMode
-								? selectedVehicle.properties.contrastdarkmode
-								: selectedVehicle.properties.color}
+								? properties.contrastdarkmode
+								: properties.color}
 							class="text-3xl"
 						>
 							350
@@ -262,15 +251,21 @@
 					{:else}
 						<h1
 							style:color={darkMode
-								? selectedVehicle.properties.contrastdarkmode
-								: selectedVehicle.properties.color}
+								? properties.contrastdarkmode
+								: properties.color}
 							class="text-3xl"
 						>
-							{selectedVehicle.properties.maptag}
+							{properties.maptag}
 						</h1>
 					{/if}
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
+					{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
+						<img src="/icons/la-hrv.png" />
+					{:else}
+						<img src="/icons/la-lrv.png" />
+					{/if}
+					<br />
 					<img
 						src="/lines/metro.svg"
 						style:height="50px"
@@ -279,16 +274,18 @@
 						style:padding-right="10px"
 					/>
 					<img
-						src="/lines/metro-{selectedVehicle.properties.maptag.toLowerCase()}.svg"
+						src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
 						style:height="50px"
 						style:vertical-align="bottom"
 					/>
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
+					<img src="/icons/la-metrobus.png" />
+					<br />
 					<h1
 						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+							? properties.contrastdarkmode
+							: properties.color}
 						class="text-3xl"
 					>
 						<img
@@ -298,14 +295,16 @@
 							style:vertical-align="middle"
 						/>
 						&nbsp;
-						{selectedVehicle.properties.maptag}
+						{properties.maptag}
 					</h1>
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
+					<img src="/icons/la-metrolink.png">
+					<br />
 					<h1
 						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+							? properties.contrastdarkmode
+							: properties.color}
 						class="text-3xl"
 					>
 						<img
@@ -314,8 +313,8 @@
 							style:float="left"
 						/>
 						&nbsp;
-						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
-						{expandMetrolink[selectedVehicle.properties.maptag]} Line
+						<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
+						{expandMetrolink[properties.maptag]} Line
 					</h1>
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
@@ -330,25 +329,25 @@
 					<br />
 					<h1
 						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+							? properties.contrastdarkmode
+							: properties.color}
 						class="text-3xl"
 					>
 						<img
 							src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
-								selectedVehicle.properties.maptag == 'ME' ||
-								selectedVehicle.properties.maptag == 'RI'
-									? selectedVehicle.properties.maptag == 'ME'
+								properties.maptag == 'ME' ||
+								properties.maptag == 'RI'
+									? properties.maptag == 'ME'
 										? 'med'
 										: 'rid'
-									: selectedVehicle.properties.maptag.replace('-', '').toLowerCase()
+									: properties.maptag.replace('-', '').toLowerCase()
 							}.png`}
 							style:height="35px"
 							style:float="left"
 						/>
 						&nbsp;
-						<span class="font-black text-4xl">{selectedVehicle.properties.vehicleIdLabel}</span>
-						{expandMetra[selectedVehicle.properties.maptag]}
+						<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
+						{expandMetra[properties.maptag]}
 					</h1>
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id == 'f-amtrak~rt'}
@@ -358,27 +357,46 @@
 					/>
 					<h1
 						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+							? properties.contrastdarkmode
+							: properties.color}
 						class="text-3xl"
 					>
-						<span class="font-black text-4xl">{selectedVehicle.properties.tripIdLabel}</span>
-						{selectedVehicle.properties.maptag}
+						<span class="font-black text-4xl">{properties.tripIdLabel}</span>
+						{properties.maptag}
 					</h1>
 				{/if}
 				{#if selectedVehicleLookup.realtime_feed_id != 'f-mts~rt~onebusaway' && selectedVehicleLookup.realtime_feed_id != 'f-amtrak~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~rail~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metrolinktrains~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metra~rt' && selectedVehicleLookup.realtime_feed_id != 'f-metro~losangeles~bus~rt' && selectedVehicleLookup.realtime_feed_id != 'f-northcountrytransitdistrict~rt'}
 					<h1
 						style:color={darkMode
-							? selectedVehicle.properties.contrastdarkmode
-							: selectedVehicle.properties.color}
+							? properties.contrastdarkmode
+							: properties.color}
 						class="text-3xl"
 					>
-						{selectedVehicle.properties.maptag}
+						{properties.maptag}
 					</h1>
 				{/if}
 				<br />
-				
-                -->
+
+{/if}
+
+{#if vehicleOnlyGtfsRt.vehicle}
+	<p class="font-mono text-sm">{selectedVehicleLookup.realtime_feed_id}</p>
+	<p class="font-mono text-sm">ID: {selectedVehicleLookup.id}</p>
+
+	{#if swiftly != null}
+		{#if swiftly_fetch_metadata != null}
+			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
+				{#if swiftly.headsign}
+					<p>{swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
+				{/if}
+			{/if}
+		{/if}
+	{/if}
+
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
+
+	{/if}
+	
 	{#if vehicleOnlyGtfsRt.vehicle.vehicle !== undefined && vehicleOnlyGtfsRt.vehicle.vehicle !== null}
 		<b class="text-lg">{strings.vehicle}</b>
 		{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
