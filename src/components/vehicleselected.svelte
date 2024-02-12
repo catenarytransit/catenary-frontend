@@ -61,7 +61,8 @@
 		'f-metro~losangeles~rail~rt': 'lametro-rail',
 		'f-northcountrytransitdistrict~rt': 'nctd',
 		'f-bigbluebus~rt': 'big-blue-bus',
-		'f-f25d-socitdetransportdemontral~rt': 'stm'
+		'f-f25d-socitdetransportdemontral~rt': 'stm',
+		"f-spokanetransitauthority~rt":"spokane-sta"
 	};
 
 	function fetchSwiftlyInformation(): void {
@@ -195,13 +196,21 @@
 </script>
 
 {#if properties}
+	{#if selectedVehicleLookup.realtime_feed_id == "f-translink~rt"}
+	<img src="https://www.translink.ca/-/media/translink/logos/translink_logo.svg" class='h-10 md:h-12'>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == "f-calgarytransit~rt"}
+	<img src="https://www.calgarytransit.com/etc/clientlibs/transit/v3/transit/main/images/Calgary-Transit-Logo.svg" class="h-10 md:h-12"/>
+	{/if}
+	{#if selectedVehicleLookup.realtime_feed_id == "f-f25d-socitdetransportdemontral~rt"}
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/STM_%28logo%2C_2010%29.svg/2560px-STM_%28logo%2C_2010%29.svg.png"  class='h-10 md:h-12' />
+	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
-			{#if properties.maptag == 'Green'}
+	<div class="flex flex-row align-middle">
+		{#if properties.maptag == 'Green'}
 				<img
 					src="/lines/mts-green.svg"
 					style:height="50px"
-					style:float="left"
 					style:margin-right="15px"
 					alt="MTS Green Line Palm Tree logo"
 				/>
@@ -209,7 +218,6 @@
 				<img
 					src="/lines/mts-orange.svg"
 					style:height="50px"
-					style:float="left"
 					style:margin-right="15px"
 					alt="MTS Orange Line Sun logo"
 				/>
@@ -217,13 +225,15 @@
 				<img
 					src="/lines/mts-blue.svg"
 					style:height="50px"
-					style:float="left"
 					style:margin-right="15px"
 					alt="MTS Blue Line Wave logo"
 				/>
 			{/if}
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
+			
 			{properties.maptag}
 		</h1>
+	</div>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-northcountrytransitdistrict~rt'}
 		{#if properties.maptag == 'COASTER'}
@@ -287,11 +297,11 @@
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
 		<img src="https://www.octa.net/dist/images/octa-logo.svg" style:height="60px" />
-		<br />
+		
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
 		<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
-		<br />
+	
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
 			<img
 				src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
@@ -312,7 +322,12 @@
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-amtrak~rt'}
 		<img
 			src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__white.svg"
-			style:height="30px"
+
+			class="hidden dark:block h-8"
+		/>
+		<img
+			src="https://www.amtrak.com/content/dam/projects/dotcom/english/public/images/logos/amtrak-logo__blue.svg"
+			class="h-8 block dark:hidden"
 		/>
 		<br />
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-3xl">
@@ -329,13 +344,11 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.headsign}
-					<br />
-					<h2 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-2xl">&rarr; {swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</h2>
+					<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-xl">&rarr; {swiftly.headsign.replace('Uc Irvine', 'UC Irvine')}</p>
 				{/if}
 			{/if}
 		{/if}
 	{/if}
-	<br />
 {/if}
 
 {#if vehicleOnlyGtfsRt.vehicle}

@@ -1929,9 +1929,17 @@
 								})
 								.then((buffer) => {
 									if (buffer != null) {
-										const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+										let feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
 											new Uint8Array(buffer)
 										);
+
+										if (realtime_id === "f-translink~rt") {
+											feed.entity = feed.entity.map((eachEntity) => {
+												eachEntity.id = eachEntity.id.split("_")[1]
+
+												return eachEntity;
+											})
+										}
 
 										console.log('buffer decoded for', realtime_id);
 
