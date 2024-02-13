@@ -254,7 +254,7 @@
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
 		<img src="/icons/la-metrolink.png"  alt=""/>
 		<br />
-		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text:lg md:text-2xl">
+		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" alt="Metrolink"/>
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
@@ -264,7 +264,7 @@
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
 		<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
 	
-		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text:lg md:text-2xl">
+		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			<img
 				src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
 					properties.maptag == 'ME' || properties.maptag == 'RI'
@@ -294,13 +294,13 @@
 			class="h-8 block dark:hidden"
 		/>
 		<br />
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text:lg md:text-2xl">
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			<span class="font-black text-4xl">{properties.tripIdLabel}</span>
 			{properties.maptag}
 		</h1>
 	{/if}
 	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway"].includes(selectedVehicleLookup.realtime_feed_id)))}
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text:lg md:text-2xl">
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			{properties.maptag}
 		</h1>
 	{/if}
@@ -310,7 +310,7 @@
 				{#if swiftly.headsign}
 					<p
 						style:color={darkMode ? properties.contrastdarkmode : properties.color}
-						class="text:lg md:text-2xl"
+						class="text-lg md:text-2xl"
 					>
 						{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 							<img
