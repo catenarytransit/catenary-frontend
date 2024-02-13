@@ -149,7 +149,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			type: 'symbol',
 			filter: ["!=", 0, ['get', 'bearing']],
 			paint: {
-				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.9, 5, 0.8, 9, 0.6, 11.5, 0.8]
+				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.4, 8, 0.5, 9, 0.6, 11.5, 0.8]
 			},
 			layout: {
 				'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
