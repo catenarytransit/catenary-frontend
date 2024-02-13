@@ -235,7 +235,7 @@
 					alt="MTS Blue Line Wave logo"
 				/>
 			{/if}
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text:lg md:text-2xl">
+		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			
 			{properties.maptag}
 		</h1>
