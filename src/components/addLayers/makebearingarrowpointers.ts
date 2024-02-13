@@ -52,7 +52,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			filter: ["!=", 0, ['get', 'bearing']],
 			paint: {
 				'icon-color': ['get', 'contrastdarkmodebearing'],
-				'icon-opacity': 0.6
+				'icon-opacity': 1
 			},
 			minZoom: 2,
 			layout: {

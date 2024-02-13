@@ -14,7 +14,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
             'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
-            'circle-stroke-width': 0.8,
+            'circle-stroke-width': 0.4,
             'circle-emissive-strength': 1,
             'circle-opacity': 0.7
         },
@@ -130,7 +130,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 7, 10, 8, 16, 12],
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
-            'circle-stroke-width': 1,
+            'circle-stroke-width': 2,
             'circle-emissive-strength': 1,
             'circle-opacity': 1
         }
@@ -177,7 +177,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 6, 8, 8, 10, 9, 16, 10],
             'circle-color': ['get', 'color'],
             'circle-stroke-color': '#fff',
-            'circle-stroke-width': 1,
+            'circle-stroke-width': 4,
             'circle-emissive-strength': 1,
             'circle-opacity': 1
         }

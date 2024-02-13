@@ -243,13 +243,13 @@
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 		{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
-			<img src="/icons/la-hrv.png" alt=""/>
+			<img src="/icons/la-hrv.png" style:width="60%" alt=""/>
 		{:else}
-			<img src="/icons/la-lrv.png" alt=""/>
+			<img src="/icons/la-lrv.png" style:width="50%" alt=""/>
 		{/if}
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
-		<img src="/icons/la-metrobus.png"  alt=""/>
+		<img src="/icons/la-metrobus.png" style:width="40%"  alt=""/>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
 		<img src="/icons/la-metrolink.png"  alt=""/>
@@ -259,11 +259,7 @@
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
 			{expandMetrolink[properties.maptag]} Line
-		</p>
-	{/if}
-	{#if selectedVehicleLookup.realtime_feed_id == 'f-octa~rt'}
-		<img src="https://www.octa.net/dist/images/octa-logo.svg" class="h-14" alt="Orange County Transportation Authority"/>
-		
+		</h1>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
 		<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
@@ -303,7 +299,6 @@
 			{properties.maptag}
 		</h1>
 	{/if}
-	<br />
 	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway"].includes(selectedVehicleLookup.realtime_feed_id)))}
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text:lg md:text-2xl">
 			{properties.maptag}
