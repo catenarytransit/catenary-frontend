@@ -259,7 +259,7 @@
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
 			{expandMetrolink[properties.maptag]} Line
-		</h1>
+		</p>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
 		<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
