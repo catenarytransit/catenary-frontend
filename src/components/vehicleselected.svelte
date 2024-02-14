@@ -74,7 +74,7 @@
 				last_swiftly_fetch[0] === selectedVehicleLookup.realtime_feed_id &&
 				last_swiftly_fetch[1] === selectedVehicleLookup.id &&
 				typeof last_swiftly_fetch[2] === 'number' &&
-				last_swiftly_fetch[2] > Date.now() - 20_000
+				last_swiftly_fetch[2] > Date.now() - 10_000
 			) {
 				allowed_to_fetch = false;
 			}
@@ -385,7 +385,7 @@
 				{#if swiftly.schAdhSecs}
 					<p>
 						<b class="text-lg">{strings.delay}</b>
-						{durationToIsoElapsed(Number(swiftly.schAdhSecs))}
+						{durationToIsoElapsed(Number(swiftly.schAdhSecs) * 1000)}
 					</p>
 				{/if}
 			{/if}
