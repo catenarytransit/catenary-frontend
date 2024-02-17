@@ -1,4 +1,6 @@
-export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercategory:any) {
+import type { Map } from "mapbox-gl";
+
+export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercategory:any) {
     const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.5, 15, 1];
 
 	const busbearingoffset = ['interpolate', ['linear'], ['zoom'],10, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]];
@@ -9,13 +11,13 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 
 	const geobearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]], 17, ['literal', [0, -50]]];
 
-	map.loadImage('./icons/pointing-shell-light.png', (error, image) => {
+	map.loadImage('/icons/pointing-shell-light.png', (error, image) => {
 		if (image) {
 			
 			map.addImage('pointingshelllight', image);
 		}});
 
-		map.loadImage('./icons/pointing-filled.png', (error, image) => {
+		map.loadImage('/icons/pointing-filled.png', (error, image) => {
 		if (error) throw error;
 
 		if (image) {
@@ -50,7 +52,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 			filter: ["!=", 0, ['get', 'bearing']],
 			paint: {
 				'icon-color': ['get', 'contrastdarkmodebearing'],
-				'icon-opacity': 0.6
+				'icon-opacity': 1
 			},
 			minZoom: 2,
 			layout: {
@@ -134,7 +136,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 	
 
 	
-		map.loadImage('./icons/pointing-shell.png', (error, image) => {
+		map.loadImage('/icons/pointing-shell.png', (error, image) => {
 		if (error) throw error;
 
 		if (image) {
@@ -147,7 +149,7 @@ export function makeBearingArrowPointers(map:any, darkMode:boolean,layerspercate
 			type: 'symbol',
 			filter: ["!=", 0, ['get', 'bearing']],
 			paint: {
-				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.9, 5, 0.8, 9, 0.6, 11.5, 0.8]
+				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.4, 8, 0.5, 9, 0.6, 11.5, 0.8]
 			},
 			layout: {
 				'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
