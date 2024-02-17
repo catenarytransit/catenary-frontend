@@ -1912,7 +1912,7 @@
 							listhas = false;
 						}
 
-						if (!realtime_id.includes('alerts') && listhas == true && realtime_id != "f-metrolinktrains~rt") {
+						if (!realtime_id.includes('alerts') && listhas == true) {
 							fetch(url)
 								.then(async (response) => {
 									if (response.status === 200) {
