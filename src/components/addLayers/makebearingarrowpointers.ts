@@ -1,13 +1,13 @@
 import type { Map } from "mapbox-gl";
 
 export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercategory:any) {
-    const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.05, 12, 0.4, 15, 0.3];
+    const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.5, 15, 1];
 
 	const busbearingoffset = ['interpolate', ['linear'], ['zoom'],10, ['literal', [0, -64]], 13, ['literal', [0, -45]], 15, ['literal', [0, -48]]];
 
-	const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.5, 12, 0.3, 15, 0.5];
+	const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.3, 15, 0.5];
 
-	const railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -20]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]];
+	const railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]];
 
 	const geobearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]], 17, ['literal', [0, -50]]];
 
