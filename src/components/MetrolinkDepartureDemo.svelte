@@ -242,10 +242,11 @@
             <span style:color={CalculatedStatus == 'ON TIME' ? 'green' : 'red'}
                 >{CalculatedStatus} {EventType}</span
             >
+			{#if expandMetrolink[RouteCode]}
 			{#if expandMetrolink[RouteCode].startsWith('Amtrak')}
 				<br />
 				<span style:color="#f9e300" class="text-sm">Amtrak fare {expandMetrolink[RouteCode].includes('Surfliner') ? 'or compatible Rail2Rail ticket': ''} required</span>
-			{/if}
+			{/if}{/if}
         </span>
     {/if}
 {/each}
