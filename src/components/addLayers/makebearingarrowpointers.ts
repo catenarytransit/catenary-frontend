@@ -7,7 +7,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 
 	const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.5, 12, 0.3, 15, 0.5];
 
-	const railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -20]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]];
+	const railbearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -35]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]]];
 
 	const geobearingoffset = ['interpolate', ['linear'], ['zoom'],9, ['literal', [0, -80]], 13, ['literal', [0, -60]], 15, ['literal', [0, -60]], 17, ['literal', [0, -50]]];
 

@@ -173,7 +173,7 @@
 		'UP-NW': 'Union Pacific Northwest',
 		HC: 'Heritage Corridor',
 		ME: 'Metra Electric',
-		RI: 'Rock Island',
+		RI: 'Rock Island District',
 		SWS: 'SouthWest Service',
 		BNSF: 'BNSF',
 		'MD-W': 'Milwaukee District West',
@@ -255,8 +255,6 @@
 		</p>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
-		<img src="https://metra.com/themes/custom/metrarail/images/logo.svg" style:height="40px" />
-	
 		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			<img
 				src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
@@ -292,7 +290,7 @@
 			{properties.maptag}
 		</h1>
 	{/if}
-	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway", "f-metrolinktrains~rt"].includes(selectedVehicleLookup.realtime_feed_id)))}
+	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway", "f-metrolinktrains~rt", "f-metra~rt"].includes(selectedVehicleLookup.realtime_feed_id)))}
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			{properties.maptag}
 		</h1>
