@@ -76,7 +76,7 @@
 	let selectedVehicleLookup: SelectedVehicleKeyType | null = null;
 	let selectedStop: string | null = null;
 	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
-	let currentMetrolinkDemoInterval: number | null = null;
+	let currentMetrolinkDemoInterval: Timeout | null = null;
 	let westOfMinus52 = true;
 
 	const urlParams =
@@ -877,7 +877,7 @@
 
 				geometryObj[realtime_id] = features;
 
-				console.log(geometryObj);
+				//console.log(geometryObj);
 
 				let flattenedarray = flatten(Object.values(geometryObj));
 
@@ -1288,23 +1288,22 @@
 				sidebarView = 9998;
 				selectedStop = displayname;
 
-				if (currentMetrolinkDemoInterval == null) {
-					setInterval((metrolinkInterval) => {
-						//demorgan's law
+				let metrolinkInterval = setInterval(() => {
+					//demorgan's law
+					if (currentMetrolinkDemoInterval == null) {
 						if (sidebarCollapsed === true || sidebarView != 9998) {
-							if (metrolinkInterval !== undefined && metrolinkInterval !== null) {
-								//self destruct if the sidebar has been collapsed
-								clearInterval(metrolinkInterval.intervalID);
-								currentMetrolinkDemoInterval = null;
-							}
+							console.warn('collapsed, unable to fetch metrolink board');
+							//self destruct if the sidebar has been collapsed
+							clearInterval(metrolinkInterval);
+							currentMetrolinkDemoInterval = null;
 						} else {
-							if (metrolinkInterval !== undefined && metrolinkInterval !== null) {
-								get_metrolink_board();
-								currentMetrolinkDemoInterval = metrolinkInterval.intervalID;
-							}
+							get_metrolink_board();
+							currentMetrolinkDemoInterval = metrolinkInterval;
 						}
-					}, 10_000);
-				}
+					} else {
+						console.warn('Unable to create metrolink fetch loop, already exists');
+					}
+				}, 5_000);
 			}
 		});
 
@@ -1934,12 +1933,12 @@
 										);
 
 										//this is a temporary fix, a permanant fix must be applied in the ingestion engine for realtime data (aspen)
-										if (realtime_id === "f-translink~rt") {
+										if (realtime_id === 'f-translink~rt') {
 											feed.entity = feed.entity.map((eachEntity) => {
-												eachEntity.id = eachEntity.id.split("_")[1]
+												eachEntity.id = eachEntity.id.split('_')[1];
 
 												return eachEntity;
-											})
+											});
 										}
 
 										console.log('buffer decoded for', realtime_id);
@@ -2339,6 +2338,7 @@
 
 <svelte:head>
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2642,29 +2642,29 @@
 			<MetrolinkDepartureDemo {selectedStop} {darkMode} {metrolinkDemoArrivals} />
 		{/if}
 		{#if sidebarView == 9999 && selectedVehicleLookup != null}
-		{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id]}
-		{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
-			selectedVehicleLookup.id
-		]}
-			<VehicleSelected
-				{strings}
-				{selectedVehicleLookup}
-				{darkMode}
-				{usunits}
-				vehicleOnlyGtfsRt={vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
-					selectedVehicleLookup.id
-				]}
-				map={mapglobal}
-				properties={selectedVehicleLookup.properties}
-			/>
+			{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id]}
+				{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][selectedVehicleLookup.id]}
+					<VehicleSelected
+						{strings}
+						{selectedVehicleLookup}
+						{darkMode}
+						{usunits}
+						vehicleOnlyGtfsRt={vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
+							selectedVehicleLookup.id
+						]}
+						map={mapglobal}
+						properties={selectedVehicleLookup.properties}
+					/>
+				{:else}
+					<p>
+						An error has occured searching for: <br />{selectedVehicleLookup.realtime_feed_id} - {selectedVehicleLookup.id}
+					</p>
+				{/if}
 			{:else}
-			<p>An error has occured searching for: <br/>{selectedVehicleLookup.realtime_feed_id} - {selectedVehicleLookup.id}</p>
+				<p>Feed {selectedVehicleLookup.realtime_feed_id} not found</p>
 			{/if}
-		{:else}
-		<p>Feed {selectedVehicleLookup.realtime_feed_id} not found</p>
 		{/if}
-		{/if}
-		
+
 		<!-- <h1 class="text-3xl">{strings.art}</h1>
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
 			<Artwork image='https://art.metro.net/wp-content/uploads/2021/07/Susan-Logoreci_Right-Of-Way.jpeg' name='Right Above The Right-Of-Way' artist='Susan Logoreci' description='Just as this aerial station provides views of the surrounding areas, the artworks present aerial views of local neighborhoods, depicted in an intricate series of colored pencil drawings. Drawn from photographs that were shot from a helicopter hovering above the city, the images present the structured landscape of the area punctuated with identifiable landmarks.' />
