@@ -226,7 +226,7 @@
     {#if PlatformName == expandMetrolinkStops[selectedStop]}
         <div class="mb-4"></div>
         <span class="text-lg md:text-xl" style:color={get_route_colour(RouteCode)}
-            ><span style:font-family="DotGothic16" class="font-bold">{TrainDesignation.replace('M', '')}</span> { expand_metrolink_route_lookup(RouteCode)}</span
+            ><span  class="font-bold">{TrainDesignation.replace('M', '')}</span> { expand_metrolink_route_lookup(RouteCode)}</span
         >
         <p class="md:text-lg">&rarr; {TrainDestination}</p>
         <span class="text-base md:text-md">
