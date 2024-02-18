@@ -395,8 +395,8 @@
 	<div>
 		{#if typeof vehicleOnlyGtfsRt.vehicle.timestamp == 'number' && typeof ms_from_now_to_last_update == 'number'}
 			<div class="flex flex-row gap-x-0.5 align-middle items-center">
-				<p class="font-mono text-sm"></p>
-				{durationToIsoElapsed(ms_from_now_to_last_update)}
+				<span class="font-bold">{strings.lastupdated}{" "}</span>
+				<span class="font-mono">{durationToIsoElapsed(ms_from_now_to_last_update)}</span>
 				<span
 					class="inline-block rounded-full bg-green-500 dark:bg-green-500 h-3 w-3 mr-1"
 					style={circleStyle}

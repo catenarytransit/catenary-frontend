@@ -9,7 +9,7 @@
 		CalcTrainMovementTime: string;
 		FormattedTrainMovementTime: string;
 		FormattedTrackDesignation: string;
-		calculatedStatus: string;
+		CalculatedStatus: string;
 		PTCStatus: string;
 		isTBD: boolean | string;
 	}
@@ -20,7 +20,7 @@
 	const METROLINK_TIMEOUT = 86_400_000;
 
     export let selectedStop:string;
-	export let metrolinkDemoArrivals: MetrolinkTrackArrivals;
+	export let metrolinkDemoArrivals: MetrolinkTrackArrivals[];
 	export let darkMode: boolean;
 
 	function cleanupMetrolinkUnixMsTime(input:string) {
@@ -227,7 +227,7 @@
         .replace('Amtrak', '')}
 </h1>
 {#each metrolinkDemoArrivals as { TrainMovementTime, RouteCode, CalculatedStatus, TrainDesignation, TrainDestination, PlatformName, EventType, FormattedTrainMovementTime, FormattedCalcTrainMovementTime, FormattedTrackDesignation }, i}
-    {#if PlatformName == expandMetrolinkStops[selectedStop] && Date.now() - METROLINK_TIMEOUT <= cleanupMetrolinkUnixMsTime(TrainMovementTime)}
+    {#if PlatformName == expandMetrolinkStops[selectedStop]}
         <div class="mb-4"></div>
         <span class="text-lg md:text-xl" style:color={get_route_colour(RouteCode)}
             ><b>{TrainDesignation.replace('M', '')}</b> { expand_metrolink_route_lookup(RouteCode)}</span

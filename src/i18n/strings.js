@@ -59,7 +59,8 @@ const i18n = {
         division: "Division",
         driver: "Driver",
         delay: "Delay",
-        provider: "Data Provider"
+        provider: "Data Provider",
+        lastupdated: "Last Updated"
     },
     fr: {
         search: 'Rechercher',
@@ -121,7 +122,8 @@ const i18n = {
         division: "Division",
         driver: "Conducteur",
         delay: "Retard",
-        provider: "Provideur de data"
+        provider: "Provideur de data",
+        lastupdated: "Dernière mise à jour"
     },
     es: {
         search: 'Buscar',
@@ -183,7 +185,8 @@ const i18n = {
         division: "División",
         driver: "Conductor/Conductora",
         delay: "Demora",
-        provider: "Proveedor de datos"
+        provider: "Proveedor de datos",
+        lastupdated: "Última actualización"
     },
     de: {
         search: 'Suche',
@@ -245,7 +248,8 @@ const i18n = {
         division: "Division",
         driver: "Treiber",
         delay: "Verzögerung",
-        provider: "Datenanbieter"
+        provider: "Datenanbieter",
+        lastupdated: "Letzte Aktualisierung"
     },
     ko: {
         search: '검색',
@@ -308,7 +312,8 @@ const i18n = {
         division: "분할",
         driver: "기사 님",
         delay:"지연",
-        provider: "데이터 제공자"
+        provider: "데이터 제공자",
+        lastupdated: "마지막 업데이트"
     },
     zh_TW: {
         search: '查詢',
@@ -370,7 +375,8 @@ const i18n = {
         division: "分隊",
         driver: "司機",
         delay: "延誤",
-        provider: "數據提供者"
+        provider: "數據提供者",
+        lastupdated: "最後更新時間"
     },
     zh_CN: {
         search: '查询',
@@ -432,7 +438,8 @@ const i18n = {
         division: "分队",
         driver: "司机",
         delay: "延误",
-        provider: "数据提供者"
+        provider: "数据提供者",
+        lastupdated: "最后更新时间"
     }
 }
 
