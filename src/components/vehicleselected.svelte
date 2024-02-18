@@ -168,7 +168,7 @@
 		'OC LINE': 'Orange County Line',
 		'SB LINE': 'San Bernardino Line',
 		'VC LINE': 'Ventura County Line',
-		'91/PV Line': '91 Line',
+		'91/PV Line': '91/Perris Valley Line',
 		'RVS LINE': 'Riverside Line',
 		'PAC SURF': 'Pacific Surfliner',
 		ARROW: 'Arrow Service'
@@ -247,6 +247,7 @@
 		{:else}
 			<img src="/icons/la-lrv.png" style:width="50%" alt=""/>
 		{/if}
+		<br />
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
 		<img src="/icons/la-metrobus.png" style:width="40%"  alt=""/>
@@ -258,7 +259,7 @@
 			<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" alt="Metrolink"/>
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
-			{expandMetrolink[properties.maptag]} Line
+			{expandMetrolink[properties.maptag]}
 		</p>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
@@ -315,7 +316,7 @@
 						{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 							<img
 								src="/lines/metro-{properties.maptag.toLowerCase()}.svg"
-								style:height="40px"
+								style:height="30px"
 								style:float="left"
 								style:margin-right="10px"
 								alt="{properties.maptag} Line"
