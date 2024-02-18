@@ -210,27 +210,28 @@
 					src="/lines/mts-green.svg"
 					class="h-14"
 					style:margin-right="15px"
-					alt="MTS Green Line Palm Tree logo"
+					alt="Green Line"
 				/>
 			{:else if properties.maptag == 'Orange'}
 				<img
 					src="/lines/mts-orange.svg"
 					class="h-14"
 					style:margin-right="15px"
-					alt="MTS Orange Line Sun logo"
+					alt="Orange Line"
 				/>
 			{:else if properties.maptag == 'Blue'}
 				<img
 					src="/lines/mts-blue.svg"
 					class="h-14"
 					style:margin-right="15px"
-					alt="MTS Blue Line Wave logo"
+					alt="UC San Diego Blue Line"
 				/>
+				{:else}
+				<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
+					{properties.maptag}
+				</h1>
+
 			{/if}
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
-			
-			{properties.maptag}
-		</h1>
 	</div>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
