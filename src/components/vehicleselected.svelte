@@ -333,7 +333,7 @@
 
 	{#if vehicleOnlyGtfsRt.vehicle.vehicle}
 		<b class="text-lg">{strings.vehicle}</b>
-		{vehicleOnlyGtfsRt.vehicle.vehicle.label}
+		{vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel}
 		<br />
 	{:else if properties.vehicleIdLabel}
 		<b class="text-lg">{strings.vehicle}</b>
@@ -386,13 +386,14 @@
 	<div>
 		{#if typeof vehicleOnlyGtfsRt.vehicle.timestamp == 'number' && typeof ms_from_now_to_last_update == 'number'}
 			<div class="flex flex-row gap-x-0.5 align-middle items-center">
-				<span class="font-bold">{strings.lastupdated}{" "}</span>
-				<span class="font-mono">{durationToIsoElapsed(ms_from_now_to_last_update)}</span>
+				<b class="text-lg">{strings.lastupdated}</b>
+				{durationToIsoElapsed(ms_from_now_to_last_update)}
 				<span
 					class="inline-block rounded-full bg-green-500 dark:bg-green-500 h-3 w-3 mr-1"
 					style={circleStyle}
 				></span>
 			</div>
+			<br />
 			<p class="font-mono text-sm">
 				{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toTimeString()}
 			</p>
