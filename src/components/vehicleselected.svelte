@@ -345,10 +345,10 @@
 	{#if Object.keys(fleetData).includes(selectedVehicleLookup.realtime_feed_id)}
 		{#each fleetData[selectedVehicleLookup.realtime_feed_id] as model}
 			{#if (vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel).match(model.regex)}
-				<b class="text-lg">{strings.type}</b>
+				<span class="text-lg font-bold">{strings.type}</span>
 				{model.type}
 				<br />
-				<b class="text-lg">{strings.fleet}</b>
+				<span class="text-lg font-bold">{strings.fleet}</span>
 				{model.year || ''} {model.manufacturer || ''} {model.model}
 				<br />
 			{/if}
@@ -356,7 +356,7 @@
 	{/if}
 
 	{#if vehicleOnlyGtfsRt.vehicle.trip}
-		<span  class=" font-bold text-lg">{strings.trip} ID</span>
+		<span class="font-bold text-lg">{strings.trip} ID</span>
 		{vehicleOnlyGtfsRt.vehicle.trip.tripId}
 		<br />
 	{/if}
