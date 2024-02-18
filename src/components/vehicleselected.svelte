@@ -327,23 +327,23 @@
 <div class='mt-2'></div>
 
 {#if vehicleOnlyGtfsRt.vehicle}
-	<b class="text-lg">{strings.provider}</b>
+	<span class="font-bold text-lg">{strings.provider}</span>
 	{selectedVehicleLookup.realtime_feed_id}
 
 	<br />
 
 	{#if vehicleOnlyGtfsRt.vehicle.vehicle}
-		<b class="text-lg">{strings.vehicle}</b>
+		<span class="font-bold text-lg">{strings.vehicle}</span>
 		{vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel}
 		<br />
 	{:else if properties.vehicleIdLabel}
-		<b class="text-lg">{strings.vehicle}</b>
+		<span  class="font-bold text-lg">{strings.vehicle}</span >
 		{properties.vehicleIdLabel}
 		<br />
 	{/if}
 
 	{#if vehicleOnlyGtfsRt.vehicle.trip}
-		<b class="text-lg">{strings.trip} ID</b>
+		<span  class=" font-bold text-lg">{strings.trip} ID</span>
 		{vehicleOnlyGtfsRt.vehicle.trip.tripId}
 		<br />
 	{/if}
@@ -351,14 +351,14 @@
 		{#if vehicleOnlyGtfsRt.vehicle.position.bearing !== null && vehicleOnlyGtfsRt.vehicle.position.bearing !== undefined && vehicleOnlyGtfsRt.vehicle.position.bearing !== 0}
 			<div class="">
 				<p>
-					<b class="text-lg">{strings.bearing}</b>
+					<span class="font-bold text-lg">{strings.bearing}</span>
 					{vehicleOnlyGtfsRt.vehicle.position.bearing.toFixed(2)}°
 				</p>
 			</div>
 		{/if}
 		{#if typeof vehicleOnlyGtfsRt.vehicle.position.speed === 'number'}
 			<p>
-				<b class="text-lg">{strings.speed}</b>
+				<span class="font-bold text-lg">{strings.speed}</span>
 				{#if usunits == false}
 					{(3.6 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} km/h
 				{:else}
@@ -372,11 +372,11 @@
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
 				{#if swiftly.driver}
-					<p><b class="text-lg">{strings.driver}</b> {swiftly.driver}</p>
+					<p><span class="text-lg font-bold">{strings.driver}</span> {swiftly.driver}</p>
 				{/if}
 				{#if swiftly.schAdhSecs}
 					<p>
-						<b class="text-lg">{strings.delay}</b>
+						<span class="text-lg font-bold">{strings.delay}</span>
 						{durationToIsoElapsed(Number(swiftly.schAdhSecs) * 1000)}
 					</p>
 				{/if}
@@ -387,7 +387,7 @@
 	<div>
 		{#if typeof vehicleOnlyGtfsRt.vehicle.timestamp == 'number' && typeof ms_from_now_to_last_update == 'number'}
 			<div class="flex flex-row gap-x-0.5 align-middle items-center">
-				<b class="text-lg">{strings.lastupdated}</b>
+				<span class="font-bold text-lg">{strings.lastupdated}</span>
 				{durationToIsoElapsed(ms_from_now_to_last_update)}
 				<span
 					class="inline-block rounded-full bg-green-500 dark:bg-green-500 h-3 w-3 mr-1"
