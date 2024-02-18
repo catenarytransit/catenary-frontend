@@ -342,6 +342,19 @@
 		<br />
 	{/if}
 
+	{#if Object.keys(fleetData).includes(selectedVehicleLookup.realtime_feed_id)}
+		{#each fleetData[selectedVehicleLookup.realtime_feed_id] as model}
+			{#if (vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel).match(model.regex)}
+				<b class="text-lg">{strings.type}</b>
+				{model.type}
+				<br />
+				<b class="text-lg">{strings.fleet}</b>
+				{model.year || ''} {model.manufacturer || ''} {model.model}
+				<br />
+			{/if}
+		{/each}
+	{/if}
+
 	{#if vehicleOnlyGtfsRt.vehicle.trip}
 		<span  class=" font-bold text-lg">{strings.trip} ID</span>
 		{vehicleOnlyGtfsRt.vehicle.trip.tripId}
@@ -394,6 +407,20 @@
 					style={circleStyle}
 				></span>
 			</div>
+
+			{#if Object.keys(fleetData).includes(selectedVehicleLookup.realtime_feed_id)}
+				{#each fleetData[selectedVehicleLookup.realtime_feed_id] as model}
+					{#if (vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel).match(model.regex)}
+						{#if model.image}
+							<br />
+							<img style:height="250px" src={model.image} alt={model.type}>
+							{model.credit}
+							<br />
+						{/if}
+					{/if}
+				{/each}
+			{/if}
+
 			<br />
 			<p class="font-mono text-sm">
 				{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toTimeString()}
@@ -402,4 +429,5 @@
 				{new Date(vehicleOnlyGtfsRt.vehicle.timestamp * 1000).toISOString()}
 			</p>
 		{/if}
-	</div>{/if}
+	</div>
+	{/if}
