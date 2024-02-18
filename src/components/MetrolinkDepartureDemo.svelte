@@ -65,6 +65,7 @@
 		'RVS LINE': 'rgb(198, 177, 210)',
 		'PAC SURF': 'rgb(147, 200, 234)',
 		'SUN LTD': 'rgb(147, 200, 234)',
+		'SW CHIEF': 'rgb(147, 200, 234)',
 		ARROW: '#B0DE3B'
 	};
 
@@ -78,6 +79,7 @@
 		'RVS LINE': '#682e86',
 		'PAC SURF': '#18567D',
 		'SUN LTD': '#18567D',
+		'SW CHIEF': '#18567D',
 		ARROW: '#B0DE3B'
 	};
 
@@ -98,14 +100,6 @@
 	}
 
 	const expandMetrolink: Record<string, string> = {
-		AV: 'Antelope Valley',
-		IEOC: 'Inland Empire-Orange County',
-		OC: 'Orange County',
-		SB: 'San Bernardino',
-		VC: 'Ventura County',
-		'91': '91/Perris Valley',
-		RIV: 'Riverside',
-		"SUN LTD": "Sunset Limited",
 		'AV LINE': 'Antelope Valley Line',
 		'IEOC LINE': 'Inland Empire-Orange County Line',
 		'OC LINE': 'Orange County Line',
@@ -113,8 +107,10 @@
 		'VC LINE': 'Ventura County Line',
 		'91/PV Line': '91 Line',
 		'RVS LINE': 'Riverside Line',
-		'PAC SURF': 'Pacific Surfliner',
-		ARROW: 'Arrow Service'
+		'PAC SURF': 'Amtrak\'s Surfliner',
+		'SW CHIEF': 'Amtrak\'s Southwest Chief',
+		"SUN LTD": "Amtrak\'s Sunset Limited",
+		'ARROW': 'Arrow Service'
 	};
 
 	function expand_metrolink_route_lookup(input: string):string {
@@ -230,7 +226,7 @@
     {#if PlatformName == expandMetrolinkStops[selectedStop]}
         <div class="mb-4"></div>
         <span class="text-lg md:text-xl" style:color={get_route_colour(RouteCode)}
-            ><b>{TrainDesignation.replace('M', '')}</b> { expand_metrolink_route_lookup(RouteCode)}</span
+            ><b style:font-family="DotGothic16">{TrainDesignation.replace('M', '')}</b> { expand_metrolink_route_lookup(RouteCode)}</span
         >
         <p class="md:text-lg">&rarr; {TrainDestination}</p>
         <span class="text-base md:text-md">
@@ -246,6 +242,10 @@
             <span style:color={CalculatedStatus == 'ON TIME' ? 'green' : 'red'}
                 >{CalculatedStatus} {EventType}</span
             >
+			{#if expandMetrolink[RouteCode].startsWith('Amtrak')}
+				<br />
+				<span style:color="#f9e300" class="text-sm">Amtrak fare {expandMetrolink[RouteCode].includes('Surfliner') ? 'or compatible Rail2Rail ticket': ''} required</span>
+			{/if}
         </span>
     {/if}
 {/each}

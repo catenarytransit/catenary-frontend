@@ -163,14 +163,6 @@
 		VC: 'Ventura County',
 		'91': '91/Perris Valley',
 		RIV: 'Riverside',
-		'AV LINE': 'Antelope Valley Line',
-		'IEOC LINE': 'Inland Empire-Orange County Line',
-		'OC LINE': 'Orange County Line',
-		'SB LINE': 'San Bernardino Line',
-		'VC LINE': 'Ventura County Line',
-		'91/PV Line': '91/Perris Valley Line',
-		'RVS LINE': 'Riverside Line',
-		'PAC SURF': 'Pacific Surfliner',
 		ARROW: 'Arrow Service'
 	};
 
