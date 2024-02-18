@@ -299,7 +299,7 @@
 			{properties.maptag}
 		</h1>
 	{/if}
-	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway"].includes(selectedVehicleLookup.realtime_feed_id)))}
+	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway", "f-metrolinktrains~rt"].includes(selectedVehicleLookup.realtime_feed_id)))}
 		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
 			{properties.maptag}
 		</h1>
