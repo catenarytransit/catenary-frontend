@@ -107,9 +107,9 @@
 		'VC LINE': 'Ventura County Line',
 		'91/PV Line': '91 Line',
 		'RVS LINE': 'Riverside Line',
-		'PAC SURF': 'Amtrak\'s Surfliner',
-		'SW CHIEF': 'Amtrak\'s Southwest Chief',
-		"SUN LTD": "Amtrak\'s Sunset Limited",
+		'PAC SURF': 'Amtrak Pacific Surfliner',
+		'SW CHIEF': 'Amtrak Southwest Chief',
+		"SUN LTD": "Amtrak Sunset Limited",
 		'ARROW': 'Arrow Service'
 	};
 
