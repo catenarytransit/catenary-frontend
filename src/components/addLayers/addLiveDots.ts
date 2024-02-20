@@ -125,7 +125,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         id: layerspercategory.localrail.livedots,
         type: 'circle',
         source: 'localrail',
-        minzoom: 2,
+        minzoom: 3,
         paint: {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 4, 8, 5.5, 10, 6, 11, 7, 16, 12],
             'circle-color': ['get', 'color'],
@@ -140,7 +140,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         id:  layerspercategory.localrail.labeldots,
         type: 'symbol',
         source: 'localrail',
-        minzoom: 2,
+        minzoom: 4,
         layout: {
             'text-field': ['get', 'maptag'],
             /*'text-field': [
