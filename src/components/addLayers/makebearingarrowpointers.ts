@@ -83,7 +83,8 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 				'icon-rotation-alignment': 'map',
 				'icon-offset': railbearingoffset,
 				'icon-size': railbearingiconsize
-			}
+			},
+			minzoom: 4.5
 		});
 
 		map.addLayer({
@@ -200,6 +201,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 				'icon-offset': railbearingoffset,
 				'icon-size': railbearingiconsize
 			},
+			minzoom: 4.5
 		});
 
 		map.addLayer({
