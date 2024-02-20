@@ -12,7 +12,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         paint: {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 10, 4, 16, 6],
             'circle-color': ['get', 'color'],
-            'circle-stroke-color': '#fff',
+            'circle-stroke-color': darkMode == true ? "#ffffff" : "#3a3a3a",
             'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
             'circle-stroke-width': 0.4,
             'circle-emissive-strength': 1,
@@ -75,7 +75,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         paint: {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 10, 6, 16, 10],
             'circle-color': ['get', 'color'],
-            'circle-stroke-color': '#fff',
+            'circle-stroke-color': darkMode == true ? "#ffffff" : "#3a3a3a",
             'circle-emissive-strength': 1,
             'circle-stroke-width': 1,
             'circle-opacity': 0.5
@@ -129,7 +129,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         paint: {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 7, 10, 8, 16, 12],
             'circle-color': ['get', 'color'],
-            'circle-stroke-color': '#fff',
+            'circle-stroke-color': darkMode == true ? "#ffffff" : "#3a3a3a",
             'circle-stroke-width': 1.2,
             'circle-emissive-strength': 1,
             'circle-opacity': 0.7
@@ -176,7 +176,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         paint: {
             'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 6, 8, 8, 10, 9, 16, 10],
             'circle-color': ['get', 'color'],
-            'circle-stroke-color': '#fff',
+            'circle-stroke-color': darkMode == true ? "#ffffff" : "#3a3a3a",
             'circle-stroke-width': 1.1,
             'circle-emissive-strength': 1,
             'circle-opacity': 0.8
