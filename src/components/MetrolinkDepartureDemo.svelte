@@ -245,7 +245,7 @@
 			{#if expandMetrolink[RouteCode]}
 			{#if expandMetrolink[RouteCode].startsWith('Amtrak')}
 				<br />
-				<span style:color="#f9e300" class="text-sm">Amtrak fare {expandMetrolink[RouteCode].includes('Surfliner') ? 'or compatible Rail2Rail ticket': ''} required</span>
+				<span class="text-sm text-amber-800 dark:text-[#f9e300]">Amtrak fare {expandMetrolink[RouteCode].includes('Surfliner') ? 'or compatible Rail2Rail ticket': ''} required</span>
 			{/if}{/if}
         </span>
     {/if}
