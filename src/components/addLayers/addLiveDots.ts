@@ -152,7 +152,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'text-variable-anchor': ['top'],
             'text-radial-offset': 0,
             'text-font': ['literal', ['DIN Pro Bold', 'Arial Unicode MS Bold']],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 9, 14, 11, 13, 13, 13],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 14, 11, 13, 13, 13],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
