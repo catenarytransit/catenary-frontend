@@ -2339,6 +2339,7 @@
 <svelte:head>
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2354,7 +2355,6 @@
 	<!-- End Google Tag Manager -->
 	<!-- Primary Meta Tags -->
 	<title>Catenary Maps</title>
-	<link rel="icon" href="/logo.png" />
 	<meta name="title" content="Catenary Maps" />
 	<meta
 		name="description"
@@ -2622,6 +2622,19 @@
 					<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
 				</div>
 				<br />
+				<button
+					on:click={() => {
+						sidebarView = 2;
+					}}
+					style:text-decoration="underline"
+					style:cursor="pointer">{strings.credits}</button
+				>
+			</div>
+		{/if}
+		{#if sidebarView == 2}
+			<div in:fade>
+				<h1 class="text-3xl">{strings.credits}</h1>
+				<br /><br />
 				Data:
 				<a
 					style="text-decoration:underline;cursor:pointer"

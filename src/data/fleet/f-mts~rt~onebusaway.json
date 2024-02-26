@@ -59,7 +59,7 @@
         "year": 2013,
         "regex": "^23[0-9]{2}$",
         "image": "/vehicles/mts/2322.webp",
-        "credit": "Myra Frame-Day for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD/ECD"
     },
     {
@@ -77,7 +77,7 @@
         "year": 2014,
         "regex": "^24[0-9]{2}$",
         "image": "/vehicles/mts/2411.webp",
-        "credit": "Myra Frame-Day for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -87,7 +87,7 @@
         "year": 2015,
         "regex": "^20[0-9]{2}$",
         "image": "/vehicles/mts/2008.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -97,7 +97,7 @@
         "year": 2015,
         "regex": "^82[0-9]{2}$",
         "image": "/vehicles/mts/8210.webp",
-        "credit": "Myra Frame-Day for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "ECD"
     },
     {
@@ -107,7 +107,7 @@
         "year": 2016,
         "regex": "^31[0-9]{2}$",
         "image": "/vehicles/mts/3108.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "CPD"
     },
     {
@@ -117,7 +117,7 @@
         "year": 2016,
         "regex": "^831[0-9]$|^832[0-9]$|^833[0-9]$|^834[0-9]$",
         "image": "/vehicles/mts/8317.jpg",
-        "credit":"Myra Frame-Day for Catenary",
+        "credit":"Used with permission of BuildSD",
         "home": "ECD"
     },
     {
@@ -127,7 +127,7 @@
         "year": 2017,
         "regex": "^21[0-9]{2}$",
         "image": "/vehicles/mts/2133.webp",
-        "credit": "Myra Frame-Day for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -145,7 +145,7 @@
         "year": 2017,
         "regex": "^750[0-9]$|^751[0-9]$|^752[0-9]$|^753[0-9]$|^754[0-9]$",
         "image": "/vehicles/mts/7505.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -155,7 +155,7 @@
         "year": 2023,
         "regex": "^755[0-9]$|^756[0-9]$",
         "image": "/vehicles/mts/7553.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -181,7 +181,7 @@
         "year": 2018,
         "regex": "^278[0-9]$",
         "image": "/vehicles/mts/2785.jpg",
-        "credit":"Myra Frame-Day for Catenary",
+        "credit":"Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -191,7 +191,7 @@
         "year": 2022,
         "regex": "^22[0-9]{2}$",
         "image": "/vehicles/mts/2236.webp",
-        "credit": "Myra Frame-Day for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -201,7 +201,7 @@
         "year": 2021,
         "regex": "^26[0-9]{2}$",
         "image": "/vehicles/mts/2624.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "SBD"
     },
     {
@@ -267,7 +267,7 @@
         "year": 2020,
         "regex": "^16[0-9]{2}$",
         "image": "/vehicles/mts/1603.webp",
-        "credit": "Myra Frame-Day for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "IAD"
     },
     {
@@ -277,7 +277,7 @@
         "year": 2020,
         "regex": "^17[0-9]{2}$",
         "image": "/vehicles/mts/1701.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "IAD/KMD"
     },
     {
@@ -287,7 +287,7 @@
         "year": 2020,
         "regex": "^18[0-9]{2}$",
         "image": "/vehicles/mts/1819.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "IAD"
     },
     {
@@ -323,7 +323,7 @@
         "year": 2015,
         "regex": "^13[0-9]{2}$",
         "image": "/vehicles/mts/1304.jpg",
-        "credit":"Myra Frame-Day for Catenary",
+        "credit":"Used with permission of BuildSD",
         "home": "KMD"
     },
     {
@@ -353,7 +353,7 @@
         "year": 2013,
         "regex": "^11[0-9]{2}$",
         "image": "/vehicles/mts/1110.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "KMD"
     },
     {
@@ -373,7 +373,7 @@
         "year": 2012,
         "regex": "^7[0-9]{2}$",
         "image": "/vehicles/mts/729.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "IAD"
     },
     {
@@ -383,7 +383,7 @@
         "year": 2011,
         "regex": "^6[0-9]{2}$",
         "image": "/vehicles/mts/612.jpg",
-        "credit": "Samuel Sharp for Catenary",
+        "credit": "Used with permission of BuildSD",
         "home": "IAD"
     },
     {

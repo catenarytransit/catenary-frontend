@@ -21,6 +21,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: 'Satellite',
         styleminimal: 'Minimal',
+        credits: 'Attribution and Credits',
         // layers
         headingRail: 'Rail',
         headingLocalRail: 'Metro/Tram',
@@ -84,6 +85,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: 'Satellite',
         styleminimal: 'Minimal',
+        credits: 'Attribution et Crédits',
         // layers
         headingRail: 'Rail/Autres',
         headingLocalRail: 'Metro/Tram',
@@ -147,6 +149,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: 'Satélite',
         styleminimal: 'Minimal',
+        credits: 'Attribution and Credits',
         // layers
         headingRail: 'Ferrocarril/Otros',
         headingBus: 'Autobuses',
@@ -210,6 +213,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: 'Satellit',
         styleminimal: 'Minimal',
+        credits: 'Attribution and Credits',
         // layers
         headingRail: 'Schienen/Sonstiges',
         headingBus: 'Busse',
@@ -273,6 +277,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: '위성',
         styleminimal: '최소한의',
+        credits: 'Attribution and Credits',
         // layers
         headingRail: '철도/기타',
         headingBus: '버스',
@@ -337,6 +342,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: '衛星',
         styleminimal: '最小',
+        credits: 'Attribution and Credits',
         // layers
         headingRail: '鐵路',
         headingLocalRail: '捷運 (MRT)',
@@ -400,6 +406,7 @@ const i18n = {
         stylearchi: 'Archi',
         stylesat: '卫星',
         styleminimal: '最小',
+        credits: 'Attribution and Credits',
         // layers
         headingRail: '铁路',
         headingLocalRail: '捷运 (MRT)',
