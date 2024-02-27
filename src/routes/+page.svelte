@@ -36,7 +36,6 @@
 	import { makeBearingArrowPointers } from '../components/addLayers/makebearingarrowpointers';
 
 	import i18n from '../i18n/strings';
-	import { playRandomSequence } from '../components/announcements';
 	import Alertpopup from '../components/alertpopup.svelte';
 	import { addShapes } from '../components/addLayers/addShapes';
 	import Artwork from '../components/artwork.svelte';
@@ -165,22 +164,6 @@
 		}
 	};
 
-	setTimeout(() => {
-		if (announcermode) {
-			try {
-				playRandomSequence();
-			} catch {}
-		}
-	}, 6000);
-
-	setInterval(() => {
-		if (announcermode) {
-			try {
-				playRandomSequence();
-			} catch {}
-		}
-	}, 60000);
-
 	const decode = (textToDecode: string) => {
 		try {
 			return new TextDecoder().decode(decodeToAry(textToDecode));
@@ -216,6 +199,13 @@
 		} else {
 			fpsmode = false;
 		}
+		
+		if (localStorage.getItem('audibleArrivals') === 'true') {
+			announcermode = true;
+		} else {
+			announcermode = false;
+		}
+
 	}
 
 	if (browser) {

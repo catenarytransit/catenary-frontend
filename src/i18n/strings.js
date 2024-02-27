@@ -45,7 +45,7 @@ const i18n = {
         ormelectrification: 'Power',
         ormgauge: 'Gauge',
         // announcements
-        announcements: 'Courtesy Reminders',
+        announcements: 'Audible Arrivals',
         coordsview: "View",
         coordscopied: "Coords copied to clipboard",
         showFPS: "Show FPS",

@@ -323,7 +323,7 @@
 		}
 	}
 
-	if (window.localStorage.audibleArrivals) {
+	if (window.localStorage.audibleArrivals == 'true') {
 		setInterval(() => {
 			triggerCourtesy()
 		}, 60000);
