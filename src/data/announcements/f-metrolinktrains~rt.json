@@ -1,38 +1,30 @@
 {
     "arrival": {
-        "OC LINE": {
-            "Laguna Niguel/Mission Viejo": {
-                "audio-en": "/announcements/metrolink/arrival/ocl/lnmv-en.mp3",
-                "text-en": "The Orange County Line train to Laguna Niguel/Mission Viejo is now arriving. Please step back and allow customers to exit the train before boarding.",
-                "audio-es": "/announcements/metrolink/arrival/ocl/lnmv-es.mp3",
-                "text-es": "El tren rumbo a Laguna Niguel/Mission Viejo esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar.",
-                "audio-fr": "/announcements/metrolink/arrival/ocl/lnmv-fr.mp3",
-                "text-fr": "Le train pour Laguna Niguel/Mission Viejo arrive. Veuillez rester à l'écart du bord de la plate-forme. Laissez les passagers sortir avant d’embarquer."
-            },
-            "Irvine": {
-                "audio-en": "/announcements/metrolink/arrival/ocl/irv-en.mp3",
-                "text-en": "The Orange County Line train to Irvine is now arriving. Please step back and allow customers to exit the train before boarding.",
-                "audio-es": "/announcements/metrolink/arrival/ocl/irv-es.mp3",
-                "text-es": "El tren rumbo a Irvine esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar.",
-                "audio-fr": "/announcements/metrolink/arrival/ocl/irv-fr.mp3",
-                "text-fr": "Le train pour Irvine arrive. Veuillez rester à l'écart du bord de la plate-forme. Laissez les passagers sortir avant d’embarquer."
-            },
-            "Oceanside": {
-                "audio-en": "/announcements/metrolink/arrival/ocl/osd-en.mp3",
-                "text-en": "The Orange County Line train to Oceanside is now arriving. Please step back and allow customers to exit the train before boarding.",
-                "audio-es": "/announcements/metrolink/arrival/ocl/osd-es.mp3",
-                "text-es": "El tren rumbo a Oceanside esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar.",
-                "audio-fr": "/announcements/metrolink/arrival/ocl/osd-fr.mp3",
-                "text-fr": "Le train pour Oceanside arrive. Veuillez rester à l'écart du bord de la plate-forme. Laissez les passagers sortir avant d’embarquer."
-            },
-            "LA Union Station": {
-                "audio-en": "/announcements/metrolink/arrival/laus-en.mp3",
-                "text-en": "The train to L.A. Union Station is now arriving. Please step back and allow customers to exit the train before boarding.",
-                "audio-es": "/announcements/metrolink/arrival/laus-es.mp3",
-                "text-es": "El tren rumbo a Los Angeles esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar.",
-                "audio-fr": "/announcements/metrolink/arrival/laus-fr.mp3",
-                "text-fr": "Le train pour Los Angeles arrive. Veuillez rester à l'écart du bord de la plate-forme. Laissez les passagers sortir avant d’embarquer."
-            }
+        "Laguna Niguel/Mission Viejo": {
+            "audio": ["metrolink/arrival/ocl/lnmv-en.mp3", "metrolink/arrival/ocl/lnmv-es.mp3"],
+            "text": "The Orange County Line train to Laguna Niguel/Mission Viejo is now arriving. Please step back and allow customers to exit the train before boarding. El tren rumbo a Laguna Niguel/Mission Viejo esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar."
+        },
+        "Irvine": {
+            "audio": ["metrolink/arrival/ocl/irv-en.mp3", "metrolink/arrival/ocl/irv-es.mp3"],
+            "text": "The Orange County Line train to Irvine is now arriving. Please step back and allow customers to exit the train before boarding. El tren rumbo a Irvine esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar."
+        },
+        "Oceanside": {
+            "audio": ["metrolink/arrival/ocl/oce-en.mp3", "metrolink/arrival/ocl/oce-es.mp3"],
+            "text": "The Orange County Line train to Oceanside is now arriving. Please step back and allow customers to exit the train before boarding. El tren rumbo a Oceanside esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar."
+        },
+        "LA Union Station": {
+            "audio": ["metrolink/arrival/laus-en.mp3", "metrolink/arrival/laus-es.mp3"],
+            "text": "The train to LA Union Station is now arriving. Please step back and allow customers to exit the train before boarding. El tren rumbo a Los Angeles esta llegando. Por favor mantengase alejado del borde de la plataform. Permita a los pasajeros salir antes de abordar."
+        }
+    },
+    "courtesy": {
+        "safety": {
+            "audio": ["courtesy/safety.wav"],
+            "text": "For your personal safety, please keep aisles clear of personal items. If you see a suspicious package onboard the train, report it to the conductor immediately. Safety is everyone's concern."
+        },
+        "litterbug": {
+            "audio": ["courtesy/litterbug.wav"],
+            "text": "No one likes a litterbug, so remember to please throw away all your unwanted trash before leaving the train."
         }
     }
 }
