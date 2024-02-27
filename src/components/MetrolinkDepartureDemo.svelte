@@ -292,50 +292,55 @@
 		tickerDisplayUpperText = tickerDisplayUpperText == 0 ? 1 : 0;
 	}, 1500);
 
-	// setInterval(() => {
-	// 	triggerCourtesy()
-	// }, 60000);
+	function triggerCourtesy() {
+		if (activeAnnouncement.text == '') {
+			let courtesyAnnouncementVariant = Math.random() < 0.5 ? 'litterbug' : 'safety';
 
-	// function triggerCourtesy() {
-	// 	if (activeAnnouncement.text == '') {
-	// 		let courtesyAnnouncementVariant = Math.random() < 0.5 ? 'litterbug' : 'safety';
+			let chimeAudio = new Audio('/announcements/chime.mp3');
+			chimeAudio.play();
+			announcementHeader = true;
+			setTimeout(() => {
+				announcementHeader = false;
+				clearTimeout(hideAnnouncementTextTimeout);
+				hideAnnouncementTextTimeout = setTimeout(() => {
+					activeAnnouncement = {
+						text: '',
+						bgcolor: '',
+						TrainDestination: '',
+						RouteCode: ''
+					};
+				}, 20000);
+				activeAnnouncement = {
+					// @ts-ignore
+					text: metrolinkAnnouncementData.courtesy[courtesyAnnouncementVariant].text,
+					bgcolor: 'white',
+					TrainDestination: 'Announcement',
+					RouteCode: 'Announcement'
+				};
+				// @ts-ignore
+				playSequence(metrolinkAnnouncementData.courtesy[courtesyAnnouncementVariant].audio);
+			}, 2000);
+		}
+	}
 
-	// 		let chimeAudio = new Audio('/announcements/chime.mp3');
-	// 		chimeAudio.play();
-	// 		announcementHeader = true;
-	// 		setTimeout(() => {
-	// 			announcementHeader = false;
-	// 			clearTimeout(hideAnnouncementTextTimeout);
-	// 			hideAnnouncementTextTimeout = setTimeout(() => {
-	// 				activeAnnouncement = {
-	// 					text: '',
-	// 					bgcolor: '',
-	// 					TrainDestination: '',
-	// 					RouteCode: ''
-	// 				};
-	// 			}, 20000);
-	// 			activeAnnouncement = {
-	// 				// @ts-ignore
-	// 				text: metrolinkAnnouncementData.courtesy[courtesyAnnouncementVariant].text,
-	// 				bgcolor: 'white',
-	// 				TrainDestination: 'Announcement',
-	// 				RouteCode: 'Announcement'
-	// 			};
-	// 			// @ts-ignore
-	// 			playSequence(metrolinkAnnouncementData.courtesy[courtesyAnnouncementVariant].audio);
-	// 		}, 2000);
-	// 	}
-	// }
+	if (window.localStorage.audibleArrivals) {
+		setInterval(() => {
+			triggerCourtesy()
+		}, 60000);
 
-	setInterval(() => {
-		metrolinkDemoArrivals.forEach(arrival => {
-			if (arrival.PlatformName == expandMetrolinkStops[selectedStop]) {
-				if (arrival.FormattedCalcTrainMovementTime == new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })) {
-					playAnnouncement(arrival.RouteCode, arrival.TrainDestination);
+		setInterval(() => {
+			metrolinkDemoArrivals.forEach((arrival) => {
+				if (arrival.PlatformName == expandMetrolinkStops[selectedStop]) {
+					if (
+						arrival.FormattedCalcTrainMovementTime ==
+						new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+					) {
+						playAnnouncement(arrival.RouteCode, arrival.TrainDestination);
+					}
 				}
-			}
-		})
-	}, 60000)
+			});
+		}, 60000);
+	}
 </script>
 
 {#if activeAnnouncement.text !== ''}

@@ -199,7 +199,7 @@
 
 	function handleAnnouncerModeSwitch() {
 		announcermode = !announcermode;
-		localStorage.setItem('announcermode', announcermode ? 'true' : 'false');
+		localStorage.setItem('audibleArrivals', announcermode ? 'true' : 'false');
 	}
 
 	let showzombiebuses = false;
