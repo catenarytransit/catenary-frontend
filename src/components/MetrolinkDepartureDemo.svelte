@@ -326,7 +326,7 @@
 	if (window.localStorage.audibleArrivals == 'true') {
 		setInterval(() => {
 			triggerCourtesy()
-		}, 60000);
+		}, 100000);
 
 		setInterval(() => {
 			metrolinkDemoArrivals.forEach((arrival) => {
