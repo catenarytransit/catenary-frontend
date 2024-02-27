@@ -399,13 +399,6 @@
 			<span style:color={CalculatedStatus == 'ON TIME' ? 'green' : 'red'}
 				>{CalculatedStatus} {EventType}</span
 			>
-			<br />
-			<a
-				href="#"
-				on:click={() => {
-					playAnnouncement(RouteCode, TrainDestination);
-				}}>Test Announce</a
-			>
 			{#if expandMetrolink[RouteCode]}
 				{#if expandMetrolink[RouteCode].startsWith('Amtrak')}
 					<br />
