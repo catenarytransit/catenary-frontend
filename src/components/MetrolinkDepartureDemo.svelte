@@ -330,7 +330,7 @@
 
 		setInterval(() => {
 			metrolinkDemoArrivals.forEach((arrival) => {
-				if (arrival.PlatformName == expandMetrolinkStops[selectedStop] && arrival.EventType == 'ARRIVAL') {
+				if (arrival.PlatformName == expandMetrolinkStops[selectedStop] && arrival.EventType == 'Arrival') {
 					if (
 						arrival.FormattedCalcTrainMovementTime ==
 						new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
