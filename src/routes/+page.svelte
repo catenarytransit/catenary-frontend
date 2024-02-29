@@ -2978,7 +2978,7 @@
 				bind:selectedSettingsTab
 				change="stoplabels"
 				name={strings.stopnames}
-				urlicon="/stoplabels.svg"
+				urlicon={darkMode ? "/dark-stop-name.png" : "/light-stop-name.png"}
 				{runSettingsAdapt}
 			/>
 
