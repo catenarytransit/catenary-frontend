@@ -325,20 +325,31 @@
 
 	if (window.localStorage.audibleArrivals == 'true') {
 		setInterval(() => {
-			triggerCourtesy()
-		}, 60000);
+			if (window.localStorage.audibleArrivals == 'true') {
+				triggerCourtesy();
+			}
+		}, 100000);
 
 		setInterval(() => {
-			metrolinkDemoArrivals.forEach((arrival) => {
-				if (arrival.PlatformName == expandMetrolinkStops[selectedStop]) {
+			if (window.localStorage.audibleArrivals == 'true') {
+				metrolinkDemoArrivals.forEach((arrival) => {
 					if (
-						arrival.FormattedCalcTrainMovementTime ==
-						new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+						arrival.PlatformName == expandMetrolinkStops[selectedStop] &&
+						arrival.EventType == 'Arrival'
 					) {
-						playAnnouncement(arrival.RouteCode, arrival.TrainDestination);
+						if (
+							arrival.FormattedCalcTrainMovementTime ==
+							new Date().toLocaleString('en-US', {
+								hour: 'numeric',
+								minute: 'numeric',
+								hour12: true
+							})
+						) {
+							playAnnouncement(arrival.RouteCode, arrival.TrainDestination);
+						}
 					}
-				}
-			});
+				});
+			}
 		}, 60000);
 	}
 </script>
