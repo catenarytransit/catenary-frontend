@@ -62,7 +62,9 @@
 		'f-northcountrytransitdistrict~rt': 'nctd',
 		'f-bigbluebus~rt': 'big-blue-bus',
 		'f-f25d-socitdetransportdemontral~rt': 'stm',
-		"f-spokanetransitauthority~rt":"spokane-sta"
+		"f-spokanetransitauthority~rt":"spokane-sta",
+		"f-santa~clarita~rt": "vta",
+		"f-wmata~bus~rt": "wmata"
 	};
 
 	function fetchSwiftlyInformation(): void {
@@ -124,7 +126,7 @@
 
 		const swiftlyinterval = setInterval(() => {
 			fetchSwiftlyInformation();
-		}, 20_000);
+		}, 3_000);
 
 		const interval = setInterval(() => {
 			current_time = new Date();
