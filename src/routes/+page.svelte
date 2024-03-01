@@ -1931,6 +1931,10 @@
 							url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
 						}
 
+						if (realtime_id == "f-octa~rt") {
+							url = "https://kylerchin.com/octavehicleproxy"
+						}
+
 						let listhas = true;
 
 						if (fetchedavaliablekactus == true && !avaliablerealtimevehicles.has(realtime_id)) {
