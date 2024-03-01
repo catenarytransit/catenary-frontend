@@ -386,9 +386,6 @@
 	{#if swiftly != null}
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
-				{#if swiftly.driver}
-					<p><span class="text-lg font-bold">{strings.driver}</span> {swiftly.driver}</p>
-				{/if}
 				{#if swiftly.schAdhSecs}
 					<p>
 						<span class="text-lg font-bold">{strings.delay}</span>
