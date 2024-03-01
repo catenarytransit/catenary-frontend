@@ -11,6 +11,7 @@
 	import type GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { durationToIsoElapsed } from '../utils/isoelapsed';
 	import { afterUpdate, onMount } from 'svelte';
+	import {new_jeans_buses} from "./addLayers/customIcons"
 	export let strings: Record<string, string>;
 	export let selectedVehicleLookup: SelectedVehicleKeyType;
 	export let map: mapboxgl.Map;
@@ -298,6 +299,12 @@
 			{properties.maptag}
 		</h1>
 	{/if}
+
+    {#if new_jeans_buses[selectedVehicleLookup.realtime_feed_id]}
+	{#if new_jeans_buses[selectedVehicleLookup.realtime_feed_id].has(properties.vehicleIdLabel)}
+	<img alt="New Jeans" src="/icons/newjeanslogo.png" class="h-8"/>
+	{/if}{/if}
+
 	{#if swiftly != null}
 		{#if swiftly_fetch_metadata != null}
 			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}

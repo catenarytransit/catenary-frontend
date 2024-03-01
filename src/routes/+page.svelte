@@ -20,6 +20,7 @@
 	import type SelectedVehicleKeyType from '../components/vehicleselected.svelte';
 	import VehicleSelected from '../components/vehicleselected.svelte';
 	import { durationToIsoElapsed } from '../utils/isoelapsed';
+	import {add_bunny_layer, make_custom_icon_source, new_jeans_buses} from "../components/addLayers/customIcons"
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -863,6 +864,9 @@
 				const getlocalrailsource = mapglobal.getSource('localrail');
 				const othersource = mapglobal.getSource('other');
 
+				//tokki data
+				const gettokkisource = mapglobal.getSource('tokkibussource');
+
 				//console.log('made features of ', realtime_id, features);
 
 				geometryObj[realtime_id] = features;
@@ -872,6 +876,36 @@
 				let flattenedarray = flatten(Object.values(geometryObj));
 
 				if (typeof getbussource != 'undefined') {
+					getbussource.setData({
+						type: 'FeatureCollection',
+						features: flattenedarray.filter(
+							(x: any) => x.properties.routeType === 3 || x.properties.routeType === 11
+						)
+					});
+
+					//set tokki data
+                    const tokkidata = {
+						type: "FeatureCollection",
+						features: flattenedarray.filter(
+							(x:any) => {
+								if (new_jeans_buses[x.properties["realtime_feed_id"]]) {
+									let bus_label = x.properties.vehicleIdLabel;
+									if (bus_label) {
+										if (new_jeans_buses[x.properties["realtime_feed_id"]].has(bus_label)) {
+										return true;
+									}
+									}
+								}
+
+								return false;
+							}
+						)
+					};
+
+					console.log(tokkidata);
+
+					gettokkisource.setData(tokkidata);
+
 					getbussource.setData({
 						type: 'FeatureCollection',
 						features: flattenedarray.filter(
@@ -1875,10 +1909,12 @@
 					features: []
 				}
 			});
-
+			
+			add_bunny_layer(map, layerspercategory);
 			makeCircleLayers(map, darkMode, layerspercategory);
-
 			makeBearingArrowPointers(map, darkMode, layerspercategory);
+
+			make_custom_icon_source(map);
 
 			runSettingsAdapt();
 
