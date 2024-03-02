@@ -483,8 +483,8 @@
 						(entity: any) =>
 							entity.vehicle?.position !== null && entity.vehicle?.position !== undefined
 					)
-					//no vehicles older than 10 min
-					//	.filter((entity: any) => entity.vehicle?.timestamp < Date.now() / 1000 - 600)
+					//no vehicles older than 1 hour
+					.filter((entity: any) => entity.vehicle?.timestamp < (Date.now() / 1000) - 3600)
 					.map((entity: any) => {
 						const { id, vehicle } = entity;
 						//default to bus type
