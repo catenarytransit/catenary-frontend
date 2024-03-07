@@ -1922,7 +1922,7 @@
 						let url = `${what_kactus_to_use()}/gtfsrt/?feed=${realtime_id}&category=vehicles`;
 
 						if (realtime_id == "f-octa~rt") {
-							url = "https://kylerchin.com/octavehicleproxy";
+							url = "https://kylerchin.com/octavehicleproxy?";
 						}
 
 						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
