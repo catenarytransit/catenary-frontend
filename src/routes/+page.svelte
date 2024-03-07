@@ -887,7 +887,7 @@
 						features: flattenedarray.filter(
 							(x:any) => {
 								if (new_jeans_buses[x.properties["realtime_feed_id"]]) {
-									let bus_label = x.properties.vehicleIdLabel;
+									let bus_label = x.properties.vehicleIdLabel.replace("VEH","");
 									if (bus_label) {
 										if (new_jeans_buses[x.properties["realtime_feed_id"]].has(bus_label)) {
 										return true;
