@@ -77,6 +77,7 @@
 	let selectedStop: string | null = null;
 	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
 	let currentMetrolinkDemoInterval: Timeout | null = null;
+	let last_seen_octa_feed: number | null = null;
 	let westOfMinus52 = true;
 
 	const urlParams =
@@ -1960,6 +1961,20 @@
 											new Uint8Array(buffer)
 										);
 
+										let allow_processing = true;
+
+										if (realtime_id == "f-octa~rt") {
+											console.log("octa time: ",feed.header.timestamp);
+
+											if (last_seen_octa_feed != null) {
+												if (last_seen_octa_feed < feed.header.timestamp) {
+													last_seen_octa_feed = feed.header.timestamp;
+												} else {
+													allow_processing = false;
+												}
+											}
+										}
+
 										//this is a temporary fix, a permanant fix must be applied in the ingestion engine for realtime data (aspen)
 										if (realtime_id === 'f-translink~rt') {
 											feed.entity = feed.entity.map((eachEntity) => {
@@ -1971,8 +1986,6 @@
 
 										console.log('buffer decoded for', realtime_id);
 
-										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
-
 										vehiclesData[realtime_id] = feed;
 
 										//save as O(1) lookup system
@@ -1983,9 +1996,12 @@
 											return acc;
 										});
 
+										if (allow_processing == true) {
 										vehiclesDataHashMap[realtime_id] = vehiclesDataHashMapForThisFeed;
+										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
 										rerenders_request(realtime_id);
+										}
 									}
 								})
 								.catch((e) => {
