@@ -827,8 +827,6 @@
 							vehiclelabel = vehiclelabel.replace(/mta( )?/i, '');
 						}
 
-						//go here https://github.com/kylerchin/catenary-frontend/blob/075f1a0cc355303c02a4ccda62e0eece494ad03e/src/routes/%2Bpage.svelte
-						//line 1000
 						return {
 							type: 'Feature',
 							properties: {
@@ -1922,6 +1920,10 @@
 				if (map.getZoom() >= 8) {
 					realtime_list.forEach((realtime_id: string) => {
 						let url = `${what_kactus_to_use()}/gtfsrt/?feed=${realtime_id}&category=vehicles`;
+
+						if (realtime_id == "f-octa~rt") {
+							url = "https://kylerchin.com/octavehicleproxy";
+						}
 
 						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
 							url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
