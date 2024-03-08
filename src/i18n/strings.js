@@ -3,8 +3,8 @@ const i18n = {
         search: 'Search',
         none: 'None',
         // special
-        appwidealert: 'Join us in Pasadena for SCALE 21X, March 14-17!',
-        appwidesubtext: 'We\'ll be presenting on Friday about how we built and scaled an international transit app - and the community making it possible.',
+        appwidealert: 'Personalize your Catenary experience!',
+        appwidesubtext: 'Want to see buses or additional information on the map? Select the Layers menu in the upper right corner.',
         learnmore: 'Learn more',
         // art
         art: 'Public Art',

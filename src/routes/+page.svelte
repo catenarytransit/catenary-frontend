@@ -1967,10 +1967,11 @@
 											console.log("octa time: ",feed.header.timestamp);
 
 											if (last_seen_octa_feed != null) {
-												if (last_seen_octa_feed < feed.header.timestamp) {
-													last_seen_octa_feed = feed.header.timestamp;
+												if (last_seen_octa_feed < Number(feed.header.timestamp)) {
+													last_seen_octa_feed = Number(feed.header.timestamp);
 												} else {
 													allow_processing = false;
+													console.log("cancel old octa feed");
 												}
 											}
 										}
@@ -2529,7 +2530,7 @@
 					</Alertpopup>
 				{/if}-->
 				<Alertpopup
-					background="linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 40%), url(https://art.metro.net/wp-content/uploads/2021/08/feature-pasadena-1200x800-1.jpeg) center center no-repeat, black"
+					background="linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 40%), url(/img/feature-pasadena-1200x800-1.jpeg) center center no-repeat, black"
 				>
 					<h1 class="text-xl text-bold">{strings.appwidealert}</h1>
 					<br />
@@ -2537,7 +2538,7 @@
 				</Alertpopup>
 				{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
 					<Alertpopup
-						background="linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7)), url(https://art.metro.net/wp-content/uploads/2023/03/Edith-Waddell-Glendale-copy-scaled.jpg) bottom center no-repeat, black"
+						background="linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7)), url(/img/Edith-Waddell-Glendale-copy.jpg) bottom center no-repeat, black"
 					>
 						<br /><br /><br /><br /><br /><br />
 						<h1 class="text-lg">Your community, through the eyes of artists</h1>
