@@ -1985,6 +1985,14 @@
 											});
 										}
 
+										if (realtime_id === 'f-octa~rt') {
+											feed.entity = feed.entity.map((eachEntity) => {
+												eachEntity.id = eachEntity.id.split('_')[2];
+
+												return eachEntity;
+											});
+										}
+
 										console.log('buffer decoded for', realtime_id);
 
 										vehiclesData[realtime_id] = feed;
