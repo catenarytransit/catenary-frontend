@@ -1922,9 +1922,9 @@
 					realtime_list.forEach((realtime_id: string) => {
 						let url = `${what_kactus_to_use()}/gtfsrt/?feed=${realtime_id}&category=vehicles`;
 
-						if (realtime_id == "f-octa~rt") {
-							url = "https://kylerchin.com/octavehicleproxy?";
-						}
+						//if (realtime_id == "f-octa~rt") {
+						//	url = "https://kylerchin.com/octavehicleproxy?";
+						//}
 
 						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
 							url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
@@ -1983,15 +1983,15 @@
 
 												return eachEntity;
 											});
-										}
-
-										if (realtime_id === 'f-octa~rt') {
+										} else {
+											if (realtime_id === 'f-octa~rt') {
 											feed.entity = feed.entity.map((eachEntity) => {
 												eachEntity.id = eachEntity.id.split('_')[2];
 
 												return eachEntity;
 											});
 										}
+										}										
 
 										console.log('buffer decoded for', realtime_id);
 
