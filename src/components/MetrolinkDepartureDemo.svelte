@@ -264,23 +264,25 @@
 			try {
 				activeAnnouncement = {
 					// @ts-ignore
-					text: metrolinkAnnouncementData.arrival[TrainDestination].text,
+					text: `The ${expand_metrolink_route_lookup(RouteCode)} train to ${TrainDestination} is now arriving. Please step back and allow riders to exit the train before boarding.`,
 					bgcolor: expandMetrolinkColorsLight[RouteCode],
 					TrainDestination,
 					RouteCode: expand_metrolink_route_lookup(RouteCode)
 				};
 				// @ts-ignore
-				playSequence(metrolinkAnnouncementData.arrival[TrainDestination].audio);
+				let sequence = metrolinkAnnouncementData.arrival.pattern.map((sound) => sound.replace('[[ROUTE]]', RouteCode.toUpperCase().replace('/', '')).replace('[[DESTINATION]]', TrainDestination));
+				console.log(sequence);
+				playSequence(sequence);
 			} catch (error) {
 				activeAnnouncement = {
-					text: `The ${expand_metrolink_route_lookup(RouteCode)} train to ${TrainDestination} is now arriving. Please step back and allow customers to exit the train before boarding.`,
+					text: `The ${expand_metrolink_route_lookup(RouteCode)} train to ${TrainDestination} is now arriving. Please step back and allow riders to exit the train before boarding.`,
 					bgcolor: expandMetrolinkColorsLight[RouteCode],
 					TrainDestination,
 					RouteCode: expand_metrolink_route_lookup(RouteCode)
 				};
 				window.speechSynthesis.speak(
 					new SpeechSynthesisUtterance(
-						`The ${expand_metrolink_route_lookup(RouteCode)} train to ${TrainDestination} is now arriving. Please step back and allow customers to exit the train before boarding.`
+						`The ${expand_metrolink_route_lookup(RouteCode)} train to ${TrainDestination} is now arriving. Please step back and allow riders to exit the train before boarding.`
 					)
 				);
 			}
@@ -415,6 +417,9 @@
 			<span style:color={CalculatedStatus == 'ON TIME' ? 'green' : 'red'}
 				>{CalculatedStatus} {EventType}</span
 			>
+			<a href="#" on:click={() => {
+				playAnnouncement(RouteCode, TrainDestination);
+			}}><span class="material-symbols-outlined">volume_up</span></a>
 			{#if expandMetrolink[RouteCode]}
 				{#if expandMetrolink[RouteCode].startsWith('Amtrak')}
 					<br />
