@@ -417,9 +417,9 @@
 			<span style:color={CalculatedStatus == 'ON TIME' ? 'green' : 'red'}
 				>{CalculatedStatus} {EventType}</span
 			>
-			<a href="#" on:click={() => {
+			<!-- <a href="#" on:click={() => {
 				playAnnouncement(RouteCode, TrainDestination);
-			}}><span class="material-symbols-outlined">volume_up</span></a>
+			}}><span class="material-symbols-outlined">volume_up</span></a> -->
 			{#if expandMetrolink[RouteCode]}
 				{#if expandMetrolink[RouteCode].startsWith('Amtrak')}
 					<br />
