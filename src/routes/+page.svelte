@@ -2514,7 +2514,7 @@
 
 {#if sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode)}
 	<div
-		class="fixed bottom-0 left-0 pointer-events-none bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-50 text-black dark:text-white border-r-0 md:border-r-4 border-t-4 md:border-t-0 pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
+		class="sidebar fixed bottom-0 left-0 pointer-events-none bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-50 text-black dark:text-white border-r-0 md:border-r-4 border-t-4 md:border-t-0 pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
 		style:border-color="#42A7C5"
 		style:padding="20px"
 		style:overflow="auto"
@@ -3132,6 +3132,10 @@
 
 	.lineLogo {
 		margin-bottom: 15px;
+	}
+
+	.sidebar {
+		overflow-y: hidden;
 	}
 
 	.material-symbols-outlined-big {
