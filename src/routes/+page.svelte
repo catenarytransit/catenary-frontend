@@ -49,11 +49,13 @@
 	let darkMode = true;
 
 	let strings = i18n.en;
+	let locale = 'en';
 
 	if (typeof window !== 'undefined') {
 		// this must be fixed to allow subvariants of languages
 		// @ts-expect-error
 		strings = i18n[window.localStorage.language || 'en'];
+		locale = window.localStorage.language || 'en';
 	}
 
 	//false means use metric, true means use us units
@@ -1128,7 +1130,16 @@
 
 	let lastknownheading: number;
 
+	let alerts: any[] = [];
+
 	onMount(() => {
+		fetch('https://catenarytransit.github.io/ping/pong.json')
+			.then((x) => x.json())
+			.then((x) => {
+				console.log('ping', x);
+				alerts = x.alerts;
+			})
+
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
 		let rtFeedsTimestampsVehicles: any = new Object();
@@ -2523,45 +2534,22 @@
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
 			<div in:fade>
-				<!--{#if realtime_list.includes('f-mts~rt~onebusaway')}
-					<Alertpopup background="#C60C30">
-						<h1 class="text-lg">Inclement Weather: STAY HOME</h1>
-						<p class="text-sm">
-							Trolley lines are suspended or recovering from severe delays. Stay home if you can, and if you must travel please use the bus if possible.
-						</p>
-						<a
-							style:cursor="pointer"
-							style:color="#f9e300"
-							href="https://www.sdmts.com"
-							>{strings.learnmore} &rarr;</a
-						>
-					</Alertpopup>
-				{/if}-->
-				<Alertpopup
-					background="linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) 40%), url(/img/feature-pasadena-1200x800-1.jpeg) center center no-repeat, black"
-				>
-					<h1 class="text-xl text-bold">{strings.appwidealert}</h1>
-					<br />
-					<p class="text-md">{strings.appwidesubtext}</p>
-				</Alertpopup>
-				{#if realtime_list.includes('f-metro~losangeles~bus~rt')}
-					<Alertpopup
-						background="linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7)), url(/img/Edith-Waddell-Glendale-copy.jpg) bottom center no-repeat, black"
-					>
-						<br /><br /><br /><br /><br /><br />
-						<h1 class="text-lg">Your community, through the eyes of artists</h1>
-						<p class="text-sm">
-							For 20 years, Metro Art has commissioned artists to capture the magic of LA&apos;s
-							vibrant neighborhoods.
-						</p>
-						<a
-							style:cursor="pointer"
-							style:color="#f9e300"
-							href="https://art.metro.net/category/artworks/exhibitions/tteoa/"
-							>{strings.learnmore} &rarr;</a
-						>
-					</Alertpopup>
-				{/if}
+				{#each alerts as alert}
+					{#if alert.agency == 'any' || realtime_list.includes(alert.agency)}
+						<Alertpopup background={alert.background}>
+							<h1 class="text-lg">{alert.headline[locale]}</h1>
+							<p class="text-sm">
+								{alert.content[locale]}
+							</p>
+							<a
+								style:cursor="pointer"
+								style:color="#f9e300"
+								href={alert.href}
+								>{strings.learnmore} &rarr;</a
+							>
+						</Alertpopup>
+					{/if}
+				{/each}
 			</div>
 		{/if}
 		{#if sidebarView == 1}

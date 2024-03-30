@@ -296,7 +296,7 @@
 		if (activeAnnouncement.text == '') {
 			let courtesyAnnouncementVariant = Math.random() < 0.5 ? 'litterbug' : 'safety';
 
-			let chimeAudio = new Audio('/announcements/chime.mp3');
+			let chimeAudio = new Audio('/announcements/chime.wav');
 			chimeAudio.play();
 			announcementHeader = true;
 			setTimeout(() => {
