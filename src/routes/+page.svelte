@@ -1596,7 +1596,7 @@
 					source: 'graticule_sub',
 					paint: {
 						'line-color': '#888',
-						'line-width': 1
+						'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 1]
 					},
 					minzoom: 7
 				});
