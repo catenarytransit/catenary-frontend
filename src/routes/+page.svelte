@@ -1483,6 +1483,58 @@
 				runSettingsAdapt();
 			}
 
+			map.addSource("chateaus", {
+					type: 'geojson',
+					data: "https://birch.catenarymaps.org/getchateaus"
+				});
+
+				map.addLayer({
+				id: 'chateaus_calc',
+				type: 'fill',
+				source: 'chateaus',
+				paint: {
+					'fill-color': '#ffffff',
+					'fill-opacity': 0
+				}
+			});
+
+			map.addLayer({
+					id: 'chateau_lines',
+					type: 'line',
+				source: 'chateaus',
+
+					paint: {
+						'line-color': '#10aa99',
+						'line-opacity': 1
+					}
+				});
+
+				map.addLayer({
+					id: 'chateau_names',
+					type: 'symbol',
+				source: 'chateaus',
+					layout: {
+						'text-field': ['get', 'chateau'],
+						'text-size': 10,
+						//'text-allow-overlap': true,
+						//'text-ignore-placement': true,
+						'text-justify': 'center',
+						'text-anchor': 'center',
+						'text-padding': 0,
+						'text-line-height': 1.2,
+						'text-letter-spacing': 0.01,
+						'text-max-width': 10,
+						'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+						'text-offset': [0, 0]
+					},
+					paint: {
+						'text-color': '#ffffff',
+						'text-halo-color': '#003311',
+						'text-halo-width': 1,
+						'text-halo-blur': 1
+					}
+				});
+
 			addGeoRadius(map);
 			if (debugmode) {
 				const graticule: any = {
