@@ -52,7 +52,7 @@
 	}
 
 	afterUpdate(() => {
-		fetchSwiftlyInformation();
+		//fetchSwiftlyInformation();
 	});
 
 	//super jank, should replace with a backend api in Aspen soon
@@ -68,66 +68,8 @@
 		"f-wmata~bus~rt": "wmata"
 	};
 
-	function fetchSwiftlyInformation(): void {
-		//side effect change value swiftly
-		let allowed_to_fetch = true;
-
-		if (last_swiftly_fetch.length === 3) {
-			if (
-				last_swiftly_fetch[0] === selectedVehicleLookup.realtime_feed_id &&
-				last_swiftly_fetch[1] === selectedVehicleLookup.id &&
-				typeof last_swiftly_fetch[2] === 'number' &&
-				last_swiftly_fetch[2] > Date.now() - 10_000
-			) {
-				allowed_to_fetch = false;
-			}
-		}
-
-		if (SWIFTLY_KEYS[selectedVehicleLookup.realtime_feed_id]) {
-			//can update swiftly data
-
-			let swiftly_key = SWIFTLY_KEYS[selectedVehicleLookup.realtime_feed_id];
-
-			if (allowed_to_fetch === true) {
-				if (vehicleOnlyGtfsRt?.vehicle?.vehicle?.id) {
-					let vehicleId = vehicleOnlyGtfsRt.vehicle.vehicle.id;
-					let url = `https://transitime-api.goswift.ly/api/v1/key/81YENWXv/agency/${swiftly_key}/command/vehiclesDetails?v=${vehicleId}`;
-
-					fetch(url)
-						.then((res) => res.json())
-						.then((d) => {
-							last_swiftly_fetch = [
-								selectedVehicleLookup.realtime_feed_id,
-								selectedVehicleLookup.id,
-								Date.now()
-							];
-							console.log(d);
-
-							if (d.vehicles) {
-								if (d.vehicles[0]) {
-									swiftly_fetch_metadata = { ...selectedVehicleLookup };
-									swiftly = {
-										driver: d.vehicles[0].driver,
-										headsign: d.vehicles[0].headsign,
-										schAdhSecs: d.vehicles[0].schAdhSecs,
-										id: d.vehicles[0].id
-									};
-								}
-							}
-						});
-				}
-			}
-		}
-	}
-
 	onMount(() => {
 		console.log('selected vehicle data', vehicleOnlyGtfsRt);
-
-		fetchSwiftlyInformation();
-
-		const swiftlyinterval = setInterval(() => {
-			fetchSwiftlyInformation();
-		}, 3_000);
 
 		const interval = setInterval(() => {
 			current_time = new Date();
@@ -426,6 +368,10 @@
 					{/if}
 				{/each}
 			{/if}
+
+			<p class="font-mono text-sm">
+				Château: {properties.chateau}
+			</p>
 
 			<br />
 			<p class="font-mono text-sm">

@@ -10,7 +10,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.bus.shapes,
         type: 'line',
         source: 'busshapes',
-        'source-layer': 'busonly',
+        'source-layer': 'data',
         filter:
             [
                 'all',
@@ -50,7 +50,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.bus.labelshapes,
         type: 'symbol',
         source: 'busshapes',
-        'source-layer': 'busonly',
+        'source-layer': 'data',
         filter:
             [
                 'all',
@@ -106,7 +106,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.other.shapes,
         type: 'line',
         source: 'notbusshapes',
-        'source-layer': 'notbus',
+        'source-layer': 'data',
         filter: ['all',
             ['any',
             ['==', 6, ['get', 'route_type']],
@@ -126,7 +126,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.other.labelshapes,
         type: 'symbol',
         source: 'notbusshapes',
-        'source-layer': 'notbus',
+        'source-layer': 'data',
         filter: ['all',
             ['any',
                 ['==', 4, ['get', 'route_type']],
@@ -162,7 +162,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.localrail.shapes,
         type: 'line',
         source: 'notbusshapes',
-        'source-layer': 'notbus',
+        'source-layer': 'data',
         filter: ['all',
             ['any',
                 ['==', 0, ['get', 'route_type']],
@@ -185,7 +185,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.localrail.labelshapes,
         type: 'symbol',
         source: 'notbusshapes',
-        'source-layer': 'notbus',
+        'source-layer': 'data',
         filter: ['all',
             ['any',
                 ['==', 0, ['get', 'route_type']],
@@ -222,7 +222,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         id: layerspercategory.intercityrail.shapes,
         type: 'line',
         source: 'notbusshapes',
-        'source-layer': 'notbus',
+        'source-layer': 'data',
         filter: ['all',
             ['any',
                 ['==', 2, ['get', 'route_type']],
@@ -235,14 +235,14 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
             'line-opacity': 1,
             'line-emissive-strength': 1,
         },
-        minzoom: 3
+        minzoom: 2
     });
 
     map.addLayer({
         id:  layerspercategory.intercityrail.labelshapes,
         type: 'symbol',
         source: 'notbusshapes',
-        'source-layer': 'notbus',
+        'source-layer': 'data',
         filter: ['==', 2, ['get', 'route_type']],
         layout: {
             'symbol-placement': 'line',

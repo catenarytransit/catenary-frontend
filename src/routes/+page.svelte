@@ -10,7 +10,7 @@
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
-	import { determineFeeds } from '../maploaddata';
+	import { determineFeeds , determineFeedsUsingChateaus} from '../maploaddata';
 	import { makeCircleLayers } from '../components/addLayers/addLiveDots';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
@@ -81,6 +81,8 @@
 	let currentMetrolinkDemoInterval: Timeout | null = null;
 	let last_seen_octa_feed: number | null = null;
 	let westOfMinus52 = true;
+	let chateau_routes: Record<string, Record<string, any>> = {};
+	let feed_id_to_chateau_lookup: Record<string, string> ={}; 
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -114,6 +116,11 @@
 		[0, 0],
 		[0, 0],
 		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
 		[0, 0]
 	];
 	let mapboundingboxstring: String = '';
@@ -123,6 +130,8 @@
 	let frame_render_duration = 0;
 	let fps = 0;
 	let fps_array: number[] = [];
+
+	let chateaus:any = null;
 
 	const layerspercategory = {
 		bus: {
@@ -228,9 +237,8 @@
 	}
 
 	let maplat: number, maplng: number, mapzoom: number;
-	let route_info_lookup: any = {};
 	// trip data, indexed via static_feed_id then trip_id
-	let trips_per_agency: Record<string, any> = {};
+	let trips_per_chateau: Record<string, Record<string, any>> = {};
 	let layersettingsBox = false;
 
 	const lockonconst = 14.5;
@@ -391,94 +399,33 @@
 
 	function rerenders_request(realtime_id: string) {
 		//step 1, get the list of routes if it doesnt exist
-		let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
+		//let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
 
-		console.log('processing', realtime_id, this_realtime_feed);
+		console.log('processing', realtime_id);
 
-		//console.log('feed', realtime_id, realtime_feeds_in_frame[realtime_id])
+			let chateau_id = feed_id_to_chateau_lookup[realtime_id];
 
-		// console.log('139',this_realtime_feed)
+			if (chateau_id) {
+				let routes_table:Record<string, any> = {};
 
-		if (this_realtime_feed) {
-			// console.log('this_realtime_feed',this_realtime_feed)
+				if (chateau_routes[chateau_id] == null || chateau_routes[chateau_id] == undefined) {
+					console.log("Fetching routes for", chateau_id),
+					fetch("https://birch.catenarymaps.org/getroutesofchateau/" + chateau_id)
+					.then(function(response) { return response.json(); })
+					.then(function(json) {
+						let routes_table_to_set:Record<string, any> = {};
 
-			let operators_for_this_realtime = this_realtime_feed.operators;
+						json.forEach((route:any) => {
+							routes_table_to_set[route.route_id] = route;
+						});
 
-			let operators_to_render = [
-				...new Set(
-					operators_for_this_realtime
-						.map((x: any) => operators_in_frame[x])
-						.filter((x: any) => x != undefined)
-				)
-			];
-
-			//console.log('operators_to_render', operators_to_render);
-
-			//console.log('operators for rerender', operators_to_render);
-			let big_table: any = {};
-			let trips_possible_agencies: any = {};
-
-			let static_feed_ids: Array<string> = [];
-
-			if (this_realtime_feed === 'f-横浜市-municipal-bus-rt') {
-				static_feed_ids = ['f-横浜市-municipal-bus'];
-			}
-
-			if (this_realtime_feed === 'f-横浜市-municipal-subway-rt') {
-				static_feed_ids = ['f-横浜市-municipal-subway'];
-			}
-
-			Object.values(operators_to_render).forEach((operator: any) => {
-				//attempt to pull the routes for this operator
-				if (operator.gtfs_static_feeds) {
-					operator.gtfs_static_feeds.forEach((static_feed_id: string) => {
-						if (!static_feed_ids.includes(static_feed_id)) {
-							//console.log('this_realtime_feed', this_realtime_feed);
-
-							if (!this_realtime_feed.onestop_feed_id.includes('f-横浜市')) {
-								static_feed_ids.push(static_feed_id);
-								static_feed_ids = [...new Set(static_feed_ids)];
-							}
-
-							//this static feed
-							if (route_info_lookup[static_feed_id] == undefined) {
-								fetch(what_backend_to_use() + '/getroutesperagency?feed_id=' + static_feed_id)
-									.then((x) => x.json())
-									.then((x) => {
-										route_info_lookup[static_feed_id] = convertArrayToObject(x, 'route_id');
-										rerenders_request(realtime_id);
-										// console.log('saved results for this agency', static_feed_id)
-									})
-									.catch((e) => {
-										console.error(e);
-										check_backend();
-									});
-							} else {
-								//console.log('already have results for this agency', static_feed_id)
-
-								big_table[static_feed_id] = route_info_lookup[static_feed_id];
-								trips_possible_agencies[static_feed_id] = trips_per_agency[static_feed_id];
-							}
-						}
-					});
+						chateau_routes[chateau_id] = routes_table_to_set;						
+					})
+					.catch((err) => console.error(err))
+				} else {
+					routes_table = chateau_routes[chateau_id];
 				}
-			});
-
-			//console.log('Object.keys(big_table)', Object.keys(big_table))
-
-			if ([...new Set(Object.keys(big_table))].length > 0) {
-				//console.log('big table has data for ', realtime_id)
-
-				let mergetable = Object.assign({}, ...Object.values(big_table));
-
-				let mergetabletrips = Object.assign({}, ...Object.values(trips_possible_agencies));
-
-				//console.log('vehicle data', realtime_id, vehiclesData[realtime_id])
-
-				//render each vehicle vehiclesData[realtime_id].entity
-
-				//console.log('mergetable', mergetable)
-
+				
 				let features = vehiclesData[realtime_id].entity
 					//.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
@@ -501,26 +448,28 @@
 
 						if (!routeId) {
 							//console.log('no route id', realtime_id, entity)
+
+							//trips_per_chateau[chateau_id][trip_id] 
+							if (trips_per_chateau[chateau_id]) {
+								if (vehicle?.trip?.tripId) {
+									
+								let trip_id = vehicle?.trip?.tripId;
+								if (trips_per_chateau[chateau_id][trip_id]) {
+									
+									routeId = trips_per_chateau[chateau_id][trip_id].route_id
+								}
+								}
+							}
 						}
 
-						let fetchTrip = false;
+						let useTrip = false;
 
 						if (routeId) {
-							if (mergetable[routeId]) {
-								routeType = mergetable[routeId].route_type;
-								colour = mergetable[routeId].color;
+							if (routes_table[routeId]) {
+								routeType = routes_table[routeId].route_type;
 
-								if (mergetable[routeId].color) {
-									let splitInts = mergetable[routeId].color
-										.replace('rgb(', '')
-										.replace(')', '')
-										.split(',');
-
-									colour = rgbToHex(
-										Number(splitInts[0]),
-										Number(splitInts[1]),
-										Number(splitInts[2])
-									);
+								if (routes_table[routeId].color) {
+									colour = routes_table[routeId].color;
 								}
 							}
 
@@ -533,7 +482,7 @@
 								colour = '#e16710';
 							}
 
-							fetchTrip = true;
+							useTrip = true;
 						}
 
 						if (
@@ -554,108 +503,48 @@
 
 						if (routeType === 2) {
 							//get trip id for intercity rail
-							fetchTrip = true;
+							useTrip = true;
 						}
-
-						//fetchTrip = true;
 
 						//this system sucks, honestly. Transition to batch trips info eventually
-						if (fetchTrip === true) {
-							//submit a tripsId requests
-							//console.log('submit trip',realtime_id)
-
-							if (realtime_id == 'f-横浜市-municipal-subway-rt') {
-								static_feed_ids = ['f-横浜市-municipal-subway'];
-								routeType = 1;
-							}
-
-							if (realtime_id == 'f-横浜市-municipal-bus-rt') {
-								static_feed_ids = ['f-横浜市-municipal-bus'];
-							}
-
-							if (static_feed_ids.length === 1) {
-								let static_feed_id_to_use = static_feed_ids[0];
-
-								if (trips_per_agency[static_feed_id_to_use] == undefined) {
-									trips_per_agency[static_feed_id_to_use] = {};
-								}
-
-								if (vehicle?.trip?.tripId) {
-									if (
-										trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] != undefined &&
-										trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] != null
-									) {
-										//render
-										if (trips_per_agency[static_feed_id_to_use][vehicle?.trip?.tripId] === null) {
-											//console.log('no trip info', vehicle?.trip?.tripId)
-										} else {
-											//get routeId from the trips table
-
-											if (trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id) {
-												headsign =
-													trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId]
-														.trip_headsign;
-
-												if (vehicle.trip.routeId) {
-													routeId = vehicle.trip.routeId;
-												} else {
-													routeId =
-														trips_per_agency[static_feed_id_to_use][vehicle.trip.tripId].route_id;
-												}
-
-												if (mergetable[routeId]) {
-													routeType = mergetable[routeId].route_type;
-
-													if (mergetable[routeId].color) {
-														let splitInts = mergetable[routeId].color
-															.replace('rgb(', '')
-															.replace(')', '')
-															.split(',');
-
-														colour = rgbToHex(
-															Number(splitInts[0]),
-															Number(splitInts[1]),
-															Number(splitInts[2])
-														);
-													}
-												}
-											}
-										}
-									} else {
-										//console.log('okay fetch then!')
-										if (vehicle.trip.tripId) {
-											fetch(
-												`${what_backend_to_use()}/gettrip?feed_id=${static_feed_id_to_use}&trip_id=${
-													vehicle.trip.tripId
-												}`
-											)
-												.then((x) => x.json())
-												.then((data) => {
-													if (data.length > 0) {
-														if (typeof trips_per_agency[static_feed_ids[0]] === 'undefined') {
-															trips_per_agency[static_feed_ids[0]] = {};
-														}
-
-														trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = data[0];
-														//rerenders request
-														if (!rerenders_requested.includes(realtime_id)) {
-															rerenders_requested.push(realtime_id);
-														}
-													} else {
-														trips_per_agency[static_feed_ids[0]][vehicle?.trip?.tripId] = null;
-													}
-												})
-												.catch((e) => {
-													console.error(e);
-													check_backend();
-												});
-										}
-									}
-								}
-							}
-						}
+						
 
 						//colour section
+
+						let fetchTrip = false;	
+					
+						if (useTrip == true) {
+							if (vehicle?.trip?.tripId) {
+								let trip_id = vehicle?.trip?.tripId;
+								if (trips_per_chateau[chateau_id] === undefined) {
+									fetchTrip = true;
+								} else {
+									if (trips_per_chateau[chateau_id][trip_id] === undefined) {
+									fetchTrip = true;
+								}
+								}
+								
+							if (fetchTrip == true) {
+									fetch("https://birch.catenarymaps.org/barebones_trip/" + chateau_id + "/" + trip_id)
+									.then(function(response) { return response.json(); })
+									.then(function(bare_bones_json) {
+										if (trips_per_chateau[chateau_id] === undefined) {
+											trips_per_chateau[chateau_id] = {}
+										}
+
+										if (bare_bones_json.length >= 1) {
+											trips_per_chateau[chateau_id][trip_id] = bare_bones_json[0];
+											rerenders_requested.push(realtime_id);
+										} else {
+											trips_per_chateau[chateau_id][trip_id] = null;
+										}
+
+										
+									}).catch((err) => console.error(err));
+							}
+							}
+
+						}
 
 						let contrastdarkmode = colour;
 						let contrastdarkmodebearing = colour;
@@ -722,22 +611,28 @@
 						}
 
 						if (realtime_id === 'f-ucla~bruinbus~rt') {
-							if (mergetable[routeId]) {
-								maptag = mergetable[routeId].long_name;
+							if (routes_table[routeId]) {
+								maptag = routes_table[routeId].long_name;
 							} else {
 								maptag = 'Bruin-No Route';
 							}
 						}
 
 						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
-							if (mergetable[routeId]) {
-								maptag = mergetable[routeId].long_name.replace('　→　', '→');
+							if (routes_table[routeId]) {
+								maptag = routes_table[routeId].long_name.replace('　→　', '→');
 							}
 						}
 
 						if (realtime_id === 'f-avalon~ca~rt') {
-							if (mergetable[routeId]) {
-								maptag = mergetable[routeId].long_name;
+							if (routes_table[routeId]) {
+								maptag = routes_table[routeId].long_name;
+							}
+						}
+
+						if (chateau_id === "irvine~california~usa") {
+							if (routes_table[routeId]) {
+								maptag = routes_table[routeId].long_name;
 							}
 						}
 
@@ -782,11 +677,12 @@
 
 						let tripIdLabel = vehicle?.trip?.tripId || '';
 
+						/*
 						if (vehicle?.trip?.tripId) {
 							if (mergetabletrips[vehicle?.trip?.tripId]) {
 								tripIdLabel = mergetabletrips[vehicle?.trip?.tripId].trip_short_name;
 							}
-						}
+						}*/
 
 						if (realtime_id === 'f-mta~nyc~rt~lirr') {
 							let temp1 = tripIdLabel.split('_');
@@ -799,22 +695,22 @@
 							}
 						}
 
-						if (mergetable[routeId]) {
-							if (mergetable[routeId].short_name) {
-								maptag = mergetable[routeId].short_name;
+						if (routes_table[routeId]) {
+							if (routes_table[routeId].short_name) {
+								maptag = routes_table[routeId].short_name;
 							} else {
-								if (mergetable[routeId.long_name]) {
-									maptag = mergetable[routeId].long_name;
+								if (routes_table[routeId.long_name]) {
+									maptag = routes_table[routeId].long_name;
 									console.log('overruled as long name', maptag);
 								}
 							}
 
 							if (realtime_id === 'f-mta~nyc~rt~mnr' || realtime_id === 'f-mta~nyc~rt~lirr') {
-								maptag = mergetable[routeId].long_name.replace(/branch/gi, '').trim();
+								maptag = routes_table[routeId].long_name.replace(/branch/gi, '').trim();
 							}
 
 							if (realtime_id === 'f-amtrak~rt') {
-								maptag = mergetable[routeId].long_name;
+								maptag = routes_table[routeId].long_name;
 							}
 						}
 
@@ -838,6 +734,7 @@
 								//maintain metres per second, do conversion in label
 								speed: vehicle?.position?.speed,
 								color: colour,
+								chateau: chateau_id,
 								//int representing enum
 								routeType: routeType,
 								//keep to gtfs lookup
@@ -940,22 +837,26 @@
 					}
 				}
 			}
+
+			
 		}
-	}
+	
 
 	function getBoundingBoxMap(): number[][] {
-		let start = performance.now();
-
 		const canvas = mapglobal.getCanvas(),
 			w: number = canvas.width,
 			h: number = canvas.height;
 
 		const cUL = mapglobal.unproject([0, 0]).toArray(),
+			top = mapglobal.unproject([w/2, 0]).toArray(),
 			cUR = mapglobal.unproject([w, 0]).toArray(),
+			right = mapglobal.unproject([w, h/2]).toArray(),
 			cLR = mapglobal.unproject([w, h]).toArray(),
-			cLL = mapglobal.unproject([0, h]).toArray();
+			bottom = mapglobal.unproject([w/2, h]).toArray(),
+			cLL = mapglobal.unproject([0, h]).toArray(),
+			left = mapglobal.unproject([0, h/2]).toArray();
 
-		var coordinates = [cUL, cUR, cLR, cLL, cUL];
+		var coordinates = [cUL, top, cUR, right, cLR, bottom, cLL, left, cUL];
 
 		return coordinates;
 	}
@@ -1133,6 +1034,21 @@
 	let alerts: any[] = [];
 
 	onMount(() => {
+		fetch("https://birch.catenarymaps.org/getchateaus")
+	.then(function(response) { return response.json(); })
+.then(function(json) {
+	chateaus = json;
+
+	json.features.forEach((feature:any) => {
+        const this_realtime_feeds_list:string[] = feature.properties.realtime_feeds;
+        const this_schedule_feeds_list:string[] = feature.properties.schedule_feeds;
+
+        this_realtime_feeds_list.forEach((realtime) => feed_id_to_chateau_lookup[realtime] = feature.properties.chateau);
+        this_schedule_feeds_list.forEach((sched) =>  feed_id_to_chateau_lookup[sched] = feature.properties.chateau);
+    });
+})
+					.catch((err) => console.error(err));
+
 		fetch('https://catenarytransit.github.io/ping/pong.json')
 			.then((x) => x.json())
 			.then((x) => {
@@ -1374,13 +1290,9 @@
 		});
 
 		map.on('moveend', (events) => {
-			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
-			//	console.log('feedresults', feedresults)
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
 
-			static_feeds_in_frame = feedresults.static_data_obj;
-			operators_in_frame = feedresults.operators_data_obj;
-			realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
-			realtime_list = feedresults.r;
+			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
 		});
 
 		map.on('touchmove', (events) => {
@@ -1410,14 +1322,10 @@
 		});
 
 		map.on('zoomend', (events) => {
-			let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
+			
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
 
-			//console.log('feedresults', feedresults)
-
-			static_feeds_in_frame = feedresults.static_data_obj;
-			operators_in_frame = feedresults.operators_data_obj;
-			realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
-			realtime_list = feedresults.r;
+			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
 		});
 
 		function fetchKactus() {
@@ -1509,6 +1417,7 @@
 				}
 			});
 
+			/*
 			map.addLayer({
 					id: 'chateau_lines',
 					type: 'line',
@@ -1544,7 +1453,7 @@
 						'text-halo-width': 1,
 						'text-halo-blur': 1
 					}
-				});
+				});*/
 
 			addGeoRadius(map);
 			if (debugmode) {
@@ -1714,47 +1623,6 @@
 				}
 			});
 
-			if (urlParams.get('debug')) {
-				map.addLayer({
-					id: 'static_hull_calc_line',
-					type: 'line',
-					'source-layer': 'static_feeds',
-
-					source: 'static_feeds_hull',
-					paint: {
-						'line-color': '#22aaaa',
-						'line-opacity': 1
-					}
-				});
-
-				map.addLayer({
-					id: 'static_feed_calc_names',
-					type: 'symbol',
-					source: 'static_feeds_hull',
-					'source-layer': 'static_feeds',
-					layout: {
-						'text-field': ['get', 'onestop_feed_id'],
-						'text-size': 8,
-						//'text-allow-overlap': true,
-						//'text-ignore-placement': true,
-						'text-justify': 'center',
-						'text-anchor': 'center',
-						'text-padding': 0,
-						'text-line-height': 1.2,
-						'text-letter-spacing': 0.01,
-						'text-max-width': 10,
-						'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-						'text-offset': [0, 0]
-					},
-					paint: {
-						'text-color': '#ffffff',
-						'text-halo-color': '#0000aa',
-						'text-halo-width': 1,
-						'text-halo-blur': 1
-					}
-				});
-			}
-
 			/*
 			map.addSource('shapes', {
 				type: 'vector',
@@ -1763,12 +1631,12 @@
 
 			map.addSource('notbusshapes', {
 				type: 'vector',
-				url: what_martin_to_use() + '/notbus'
+				url: "https://birch.catenarymaps.org/shapes_not_bus"
 			});
 
 			map.addSource('busshapes', {
 				type: 'vector',
-				url: what_martin_to_use() + '/busonly'
+				url: 'https://birch.catenarymaps.org/shapes_bus'
 			});
 
 			map.addSource('busstops', {
@@ -1997,13 +1865,14 @@
 							url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
 						}
 
-						let listhas = true;
-
-						if (fetchedavaliablekactus == true && !avaliablerealtimevehicles.has(realtime_id)) {
-							listhas = false;
+						if (realtime_id == "f-irvine~california~usa~rt") {
+							url = "https://birch.catenarymaps.org/irvinevehproxy";
+							console.log("downloading irvine feed");
 						}
 
-						if (!realtime_id.includes('alerts') && listhas == true) {
+						let listhas = true;
+
+						if (!realtime_id.includes('alerts')) {
 							fetch(url)
 								.then(async (response) => {
 									if (response.status === 200) {
@@ -2020,6 +1889,12 @@
 								})
 								.then((buffer) => {
 									if (buffer != null) {
+
+										if (realtime_id == "f-irvine~california~usa~rt") {
+							
+							console.log("received irvine feed");
+						}
+
 										let feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
 											new Uint8Array(buffer)
 										);
@@ -2205,13 +2080,10 @@
 			})*/
 
 			setTimeout(() => {
-				let feedresults = determineFeeds(map, static_feeds, operators, realtime_feeds, geolocation);
-				//	console.log('feedresults', feedresults)
 
-				static_feeds_in_frame = feedresults.static_data_obj;
-				operators_in_frame = feedresults.operators_data_obj;
-				realtime_feeds_in_frame = feedresults.realtime_feeds_data_obj;
-				realtime_list = feedresults.r;
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
+
+			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
 			}, 1000);
 		});
 
@@ -2538,11 +2410,6 @@
 	}}
 >
 	<p>
-		{#if debugmode == true}
-			{mapboundingboxstring}
-			<span class="inline md:hidden"><br /></span>
-		{/if}
-
 		{#if fpsmode == true}
 			<span class="inline text-yellow-800 dark:text-yellow-200"
 				>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span
