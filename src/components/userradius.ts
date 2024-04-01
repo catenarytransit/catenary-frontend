@@ -1,9 +1,9 @@
 //import {Map} from 'mapbox-gl'
-import { createGeoJSONCircle } from '../geoMathsAssist';
+import { createGeoJSONCircle, createGeoJSONCircleFeature } from '../geoMathsAssist';
 
 export function addGeoRadius(map: any) {
     try {
-        map.addSource('2km_source', {
+        map.addSource('km_source', {
             type: 'geojson',
             data: {
                 type: 'FeatureCollection',
@@ -12,9 +12,9 @@ export function addGeoRadius(map: any) {
         });
     
         map.addLayer({
-            id: "2km_line",
+            id: "km_line",
             type: 'line',
-                    source: '2km_source',
+                    source: 'km_source',
                     paint: {
                         'line-color': '#aaaaaa',
                         'line-width': 1.2,
@@ -22,14 +22,14 @@ export function addGeoRadius(map: any) {
         });
 
         map.addLayer({
-            id: "2km_text",
+            id: "km_text",
             type: 'symbol',
-                    source: '2km_source',
+                    source: 'km_source',
                     layout: {
-                        "text-field": "2km",
+                        "text-field": ["get", "label"],
                         "symbol-placement": "line",
-                        "text-size": 10,
-                        'symbol-spacing': 100,
+                        "text-size": 8,
+                        'symbol-spacing': 150,
                         'text-ignore-placement': true,
 					'text-allow-overlap': true,
                     },
@@ -37,108 +37,29 @@ export function addGeoRadius(map: any) {
 						'text-color': '#eee',
 						'text-halo-color': '#003',
 						'text-halo-width': 2,
-					},
-        });
-
-        map.addSource('onekmsource', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: []
-            }
-        });
-    
-        map.addLayer({
-            id: "onekm",
-            type: 'line',
-                    source: 'onekmsource',
-                    paint: {
-                        'line-color': '#aaaaaa',
-                        'line-width': 1.2,
-                    }
-        });
-
-        map.addLayer({
-            id: "onekmtext",
-            type: 'symbol',
-                    source: 'onekmsource',
-                    layout: {
-                        "text-field": "1km",
-                        "symbol-placement": "line",
-                        "text-size": 10,
-                        'symbol-spacing': 100,
-                        'text-ignore-placement': true,
-					'text-allow-overlap': true,
-                    },
-                    paint: {
-						'text-color': '#eee',
-						'text-halo-color': '#003',
-						'text-halo-width': 2,
-					},
-        });
-
-        map.addSource('tenkmsource', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: []
-            }
-        });
-    
-        map.addLayer({
-            id: "tenkm",
-            type: 'line',
-                    source: 'tenkmsource',
-                    paint: {
-                        'line-color': '#aaaaaa',
-                        'line-width': 1.2,
-                    }
-        });
-
-        map.addLayer({
-            id: "tenkmtext",
-            type: 'symbol',
-                    source: 'tenkmsource',
-                    layout: {
-                        "text-field": "10km",
-                        "symbol-placement": "line",
-                        "text-size": 10,
-                        'symbol-spacing': 100,
-                        'text-ignore-placement': true,
-					'text-allow-overlap': true,
-                    },
-                    paint: {
-						'text-color': '#eee',
-						'text-halo-color': '#003',
-						'text-halo-width': 2
 					},
         });
     } catch (err) {console.error(err);}
 }
 
 export function setUserCircles(map: any, lng: number, lat: number) {
-    let onekmlayer = map.getSource('onekmsource');
+    const km_source = map.getSource("km_source");
     const numberofpoints: number = 256;
 
-    if (onekmlayer) {
+    const distances = [1,2,5,10,20,50];
 
-        let geojsondata = createGeoJSONCircle([lng, lat], 1, numberofpoints);
+    const feature_list = distances.map((dist) =>  createGeoJSONCircleFeature([lng, lat], dist, numberofpoints))
 
-        onekmlayer.setData(geojsondata);
-    }
-
-    let twokmlayer = map.getSource('2km_source');
-
-    if (twokmlayer) {
-        let geojsondata_2km = createGeoJSONCircle([lng, lat], 2, numberofpoints);
-        twokmlayer.setData(geojsondata_2km);
-    }
-
-    let tenkmlayer = map.getSource('tenkmsource');
-
-    if (tenkmlayer) {
-        let geojsondata_10km = createGeoJSONCircle([lng, lat], 10, numberofpoints);
-        tenkmlayer.setData(geojsondata_10km);
+    if(km_source) {
+        km_source.setData(
+            {
+                "type": "FeatureCollection",
+                "features": 
+                    feature_list
+                
+            
+        }
+        )
     }
                        
 }

@@ -54,3 +54,38 @@ export function componentToHex(c:number) {
     var hex = Math.round(c).toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
+
+  
+export 	function  createGeoJSONCircleFeature(center:number[], radiusInKm:number, points:number) {
+
+    const coords = {
+        latitude: center[1],
+        longitude: center[0]
+    };
+
+    const ret = [];
+    const distanceX = radiusInKm/(111.320*Math.cos(coords.latitude*Math.PI/180));
+    const distanceY = radiusInKm/110.574;
+
+    let theta, x, y;
+    for(let i=0; i<points; i++) {
+        theta = (i/points)*(2*Math.PI);
+        x = distanceX*Math.cos(theta);
+        y = distanceY*Math.sin(theta);
+
+        ret.push([coords.longitude+x, coords.latitude+y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [ret]
+                },
+                "properties": {
+                    "label": `${radiusInKm} km`
+                }
+            }
+        
+    }

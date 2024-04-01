@@ -405,6 +405,9 @@
 
 			let chateau_id = feed_id_to_chateau_lookup[realtime_id];
 
+			if (vehiclesData[realtime_id].entity) {
+
+			
 			if (chateau_id) {
 				let routes_table:Record<string, any> = {};
 
@@ -836,7 +839,7 @@
 						});
 					}
 				}
-			}
+			}}
 
 			
 		}
