@@ -76,8 +76,6 @@
 		'91/PV Line': '#0071ce',
 		'RVS LINE': 'rgb(198, 177, 210)',
 		'PAC SURF': 'rgb(147, 200, 234)',
-		'SUN LTD': 'rgb(147, 200, 234)',
-		'SW CHIEF': 'rgb(147, 200, 234)',
 		ARROW: '#B0DE3B'
 	};
 
@@ -90,8 +88,6 @@
 		'91/PV Line': '#0071ce',
 		'RVS LINE': '#682e86',
 		'PAC SURF': '#18567D',
-		'SUN LTD': '#18567D',
-		'SW CHIEF': '#18567D',
 		ARROW: '#B0DE3B'
 	};
 
@@ -119,9 +115,10 @@
 		'VC LINE': 'Ventura County Line',
 		'91/PV Line': '91 Line',
 		'RVS LINE': 'Riverside Line',
-		'PAC SURF': 'Amtrak Pacific Surfliner',
-		'SW CHIEF': 'Amtrak Southwest Chief',
-		'SUN LTD': 'Amtrak Sunset Limited',
+		'PAC SURF': 'Pacific Surfliner',
+		'CST STRLT': 'Coast Starlight',
+		'SW CHIEF': 'Southwest Chief',
+		'SUN LTD': 'Sunset Limited',
 		ARROW: 'Arrow Service'
 	};
 
@@ -136,20 +133,20 @@
 	const expandMetrolinkStops: Record<string, string> = {
 		'L. A. Union Metrolink': 'LAUS',
 		'Los Angeles': 'LAUS',
-		// 'Commerce Metrolink': 'COMMERCE',
-		// 'Norwalk/ Santa Fe Springs Metrolink': 'NORWALK-SANTAFESPRINGS',
-		// 'Buena Park Metrolink': 'BUENAPARK',
+		'Commerce Metrolink': 'COMMERCE',
+		'Norwalk/ Santa Fe Springs Metrolink': 'NORWALK-SANTAFESPRINGS',
+		'Buena Park Metrolink': 'BUENAPARK',
 		'Fullerton Metrolink': 'FULLERTON',
 		'Fullerton Amtrak': 'FULLERTON',
 		'Anaheim-ARTIC Metrolink': 'ARTIC',
 		Anaheim: 'ARTIC',
-		// 'Orange Metrolink': 'ORANGE',
+		'Orange Metrolink': 'ORANGE',
 		'Santa Ana Metrolink': 'SANTA ANA',
 		'Santa Ana': 'SANTA ANA',
-		// 'Tustin Metrolink': 'TUSTIN',
+		'Tustin Metrolink': 'TUSTIN',
 		'Irvine Metrolink': 'IRVINE',
 		Irvine: 'IRVINE',
-		// 'Laguna Niguel/ Mission Viejo Metrolink': 'LAGUNANIGUEL-MISSIONVIEJO',
+		'Laguna Niguel/ Mission Viejo Metrolink': 'LAGUNANIGUEL-MISSIONVIEJO',
 		'San Juan Capistrano Metrolink': 'SAN JUAN CAPISTRANO',
 		'San Juan Capistrano Amtrak': 'SAN JUAN CAPISTRANO',
 		// need to wait until tracks reopen
@@ -242,7 +239,8 @@
 		}
 	};
 
-	function playAnnouncement(RouteCode: string, TrainDestination: string) {
+	function playAnnouncement(RouteCode: string, TrainDestinationUntrimmed: string) {
+		let TrainDestination = TrainDestinationUntrimmed.split('-')[0].trim();
 		let chimeAudio = new Audio(
 			TrainDestination == 'LA Union Station'
 				? '/announcements/chime-inbound.mp3'
@@ -270,7 +268,7 @@
 					RouteCode: expand_metrolink_route_lookup(RouteCode)
 				};
 				// @ts-ignore
-				let sequence = metrolinkAnnouncementData.arrival.pattern.map((sound) => sound.replace('[[ROUTE]]', RouteCode.toUpperCase().replace('/', '')).replace('[[DESTINATION]]', TrainDestination));
+				let sequence = metrolinkAnnouncementData.arrival.pattern.map((sound) => sound.replace('[[ROUTE]]', RouteCode.toUpperCase().replace('/', '')).replace('[[DESTINATION]]', TrainDestination.replace('/', ' ')));
 				console.log(sequence);
 				playSequence(sequence);
 			} catch (error) {
@@ -298,7 +296,7 @@
 		if (activeAnnouncement.text == '') {
 			let courtesyAnnouncementVariant = Math.random() < 0.5 ? 'litterbug' : 'safety';
 
-			let chimeAudio = new Audio('/announcements/chime.mp3');
+			let chimeAudio = new Audio('/announcements/chime.wav');
 			chimeAudio.play();
 			announcementHeader = true;
 			setTimeout(() => {
@@ -402,7 +400,7 @@
 			><span class="font-bold">{TrainDesignation.replace('M', '')}</span>
 			{expand_metrolink_route_lookup(RouteCode)}</span
 		>
-		<p class="md:text-lg">&rarr; {TrainDestination}</p>
+		<p class="md:text-lg">&rarr; {TrainDestination.split('-')[0].trim()}</p>
 		<span class="text-base md:text-md">
 			{#if FormattedCalcTrainMovementTime != FormattedTrainMovementTime}
 				<s>{h_m_clock_to24(FormattedTrainMovementTime)}</s>

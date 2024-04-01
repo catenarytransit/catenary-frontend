@@ -2,9 +2,6 @@ const i18n = {
     en: {
         search: 'Search',
         none: 'None',
-        // special
-        appwidealert: 'Personalize your Catenary experience!',
-        appwidesubtext: 'Want to see buses or additional information on the map? Select the Layers menu in the upper right corner.',
         learnmore: 'Learn more',
         // art
         art: 'Public Art',
@@ -66,9 +63,6 @@ const i18n = {
     fr: {
         search: 'Rechercher',
         none: 'Aucun',
-        // special
-        appwidealert: 'Personnalisez votre expérience Catenary!',
-        appwidesubtext: 'Vous voulez voir des bus ou des informations supplémentaires sur la carte? Sélectionnez le menu Layers dans le coin supérieur droit.',
         learnmore: 'En savoir plus',
         // art
         art: 'Art public',
@@ -130,9 +124,6 @@ const i18n = {
     es: {
         search: 'Buscar',
         none: 'Ninguno',
-        // special
-        appwidealert: '¡Personaliza tu experiencia Catenary!',
-        appwidesubtext: '¿Quieres ver autobuses o información adicional en el mapa? Seleccione el menú Capas en la esquina superior derecha.',
         learnmore: 'Aprende mas',
         // art
         art: 'Arte público',
@@ -194,9 +185,6 @@ const i18n = {
     de: {
         search: 'Suche',
         none: 'Keine',
-        // special
-        appwidealert: 'Passen Sie Ihr Catenary-Erlebnis an!',
-        appwidesubtext: 'Möchten Sie Busse oder zusätzliche Informationen auf der Karte sehen? Wählen Sie das Menü Ebenen in der oberen rechten Ecke.',
         learnmore: 'Erfahren Sie mehr',
         // art
         art: 'Öffentliche Kunst',
@@ -258,9 +246,6 @@ const i18n = {
     ko: {
         search: '검색',
         none: '없음',
-        // special
-        appwidealert: 'Catenary 경험을 사용자 정의하십시오!',
-        appwidesubtext: '지도에서 버스 또는 추가 정보를 보고 싶습니까? 오른쪽 상단 모서리에있는 레이어 메뉴를 선택하십시오.',
         learnmore: '더 알아보기',
         // art
         art: '공공 예술',
@@ -323,9 +308,6 @@ const i18n = {
     zh_TW: {
         search: '查詢',
         none: '無',
-        // special
-        appwidealert: '自訂您的 Catenary 體驗！',
-        appwidesubtext: '想在地圖上看到巴士或其他資訊？請選擇右上角的圖層選單。',
         learnmore: '跟多資料',
         // art
         art: '公共藝術',
@@ -387,9 +369,6 @@ const i18n = {
     zh_CN: {
         search: '查询',
         none: '无',
-        // special
-        appwidealert: '自定义您的 Catenary 体验！',
-        appwidesubtext: '想在地图上看到巴士或其他信息？请选择右上角的图层选单。',
         learnmore: '跟多资料',
         // art
         art: '公共艺术',
