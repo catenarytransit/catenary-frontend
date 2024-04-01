@@ -2452,6 +2452,9 @@
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
+		<h1 class="text-xl md:text-2xl">Catenary Home</h1>
+		
+		<p>Click on any vehicle to get started.</p>
 			<div in:fade>
 				{#each alerts as alert}
 					{#if alert.agency == 'any' || realtime_list.includes(alert.agency)}
@@ -2469,11 +2472,17 @@
 						</Alertpopup>
 					{/if}
 				{/each}
+
+				{#if alerts.length == 0}
+				<p>No alerts. Have a great day!</p>
+				{/if}
+
+				<br/>
 			</div>
 		{/if}
 		{#if sidebarView == 1}
 			<div in:fade>
-				<h1 class="text-3xl">{strings.settings}</h1>
+				<h1 class="text-xl md:text-3xl">{strings.settings}</h1>
 				<div>
 					<input
 						on:click={(x) => {
