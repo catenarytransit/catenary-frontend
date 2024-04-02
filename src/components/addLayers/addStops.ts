@@ -26,7 +26,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         id: layerspercategory.bus.stops,
         type: 'circle',
         source: 'busstops',
-        'source-layer': 'busstops',
+        'source-layer': 'data',
         layout: {},
         paint: {
             'circle-color': '#1c2636',
@@ -51,7 +51,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         id: layerspercategory.bus.labelstops,
         type: 'symbol',
         source: 'busstops',
-        'source-layer': 'busstops',
+        'source-layer': 'data',
         filter: removeWeekendStops(['all', 
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],

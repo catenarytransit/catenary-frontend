@@ -1644,7 +1644,7 @@
 
 			map.addSource('busstops', {
 				type: 'vector',
-				url: what_martin_to_use() + '/busstops'
+				url: 'https://birch.catenarymaps.org/busstops'
 			});
 
 			map.addSource('stationfeatures', {
