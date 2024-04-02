@@ -92,7 +92,7 @@
 
 		return () => {
 			clearInterval(interval);
-			clearInterval(swiftlyinterval);
+		//	clearInterval(swiftlyinterval);
 		};
 	});
 
@@ -329,19 +329,6 @@
 					{(2.23694 * vehicleOnlyGtfsRt.vehicle.position.speed).toFixed(2)} mph
 				{/if}
 			</p>
-		{/if}
-	{/if}
-
-	{#if swiftly != null}
-		{#if swiftly_fetch_metadata != null}
-			{#if swiftly_fetch_metadata.id === selectedVehicleLookup.id && swiftly_fetch_metadata.realtime_feed_id === selectedVehicleLookup.realtime_feed_id}
-				{#if swiftly.schAdhSecs}
-					<p>
-						<span class="text-lg font-bold">{strings.delay}</span>
-						{durationToIsoElapsed(Number(swiftly.schAdhSecs) * 1000)}
-					</p>
-				{/if}
-			{/if}
 		{/if}
 	{/if}
 
