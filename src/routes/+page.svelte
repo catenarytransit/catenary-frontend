@@ -420,10 +420,22 @@
 						let routes_table_to_set:Record<string, any> = {};
 
 						json.forEach((route:any) => {
+							if (route.onestop_feed_id === "f-dr5-mtanyclirr") {
+								if (!route.route_id.includes("lirr")) {
+									route.route_id = "lirr" + route.route_id;
+								}
+							}
+
+							if (route.onestop_feed_id === "f-dr7-mtanyc~metro~north") {
+								if (!route.route_id.includes("metronorth")) {
+									route.route_id = "metronorth" + route.route_id;
+								}
+							}
+
 							routes_table_to_set[route.route_id] = route;
 						});
 
-						chateau_routes[chateau_id] = routes_table_to_set;						
+						chateau_routes[chateau_id] = routes_table_to_set;
 					})
 					.catch((err) => console.error(err))
 				} else {
@@ -450,6 +462,16 @@
 
 						let routeId = vehicle?.trip?.routeId || '';
 
+						if (routeId) {
+							if (realtime_id === "f-mta~nyc~rt~lirr") {
+										routeId = "lirr" + routeId;
+									}
+
+									if (realtime_id === "f-mta~nyc~rt~mnr") {
+										routeId = "metronorth" + routeId;
+									}
+						}
+
 						if (!routeId) {
 							//console.log('no route id', realtime_id, entity)
 
@@ -461,6 +483,14 @@
 								if (trips_per_chateau[chateau_id][trip_id]) {
 									
 									routeId = trips_per_chateau[chateau_id][trip_id].route_id
+
+												if (realtime_id === "f-mta~nyc~rt~lirr") {
+										routeId = "lirr" + routeId;
+									}
+
+									if (realtime_id === "f-mta~nyc~rt~mnr") {
+										routeId = "metronorth" + routeId;
+									}
 								}
 								}
 							}
