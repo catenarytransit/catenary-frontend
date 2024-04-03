@@ -86,7 +86,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         id: layerspercategory.localrail.stops,
         type: 'circle',
         source: 'railstops',
-        'source-layer': 'railstops',
+        'source-layer': 'data',
         layout: {},
         paint: {
             'circle-color': '#1c2636',
@@ -123,7 +123,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         id: layerspercategory.localrail.labelstops,
         type: 'symbol',
         source: 'railstops',
-        'source-layer': 'railstops',
+        'source-layer': 'data',
         layout: {
             'text-field': ['get', 'displayname'],
             'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
