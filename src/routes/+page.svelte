@@ -1726,7 +1726,7 @@
 				id: 'ferryshapes',
 				type: 'line',
 				source: 'notbusshapes',
-				'source-layer': 'notbus',
+				'source-layer': 'data',
 				filter: ['all', ['==', 4, ['get', 'route_type']]],
 				paint: {
 					'line-dasharray': [1, 2],
