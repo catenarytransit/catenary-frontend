@@ -1972,7 +1972,7 @@
 
 					//garbage collect list of routes
 					Object.keys(chateau_routes).forEach((each_chateau) => {
-						if (!realtime_list.includes(each_chateau)) {
+						if (!chateaus_in_frame.includes(each_chateau)) {
 							delete chateau_routes[each_chateau];
 						}
 					});
