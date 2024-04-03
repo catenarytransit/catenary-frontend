@@ -132,6 +132,7 @@
 	let fps_array: number[] = [];
 
 	let chateaus:any = null;
+	let chateaus_in_frame: string[] = [];
 
 	const layerspercategory = {
 		bus: {
@@ -1296,6 +1297,7 @@
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 
 			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
+			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
 		});
 
 		map.on('touchmove', (events) => {
@@ -1965,6 +1967,13 @@
 						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
 							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
 							delete vehiclesData[vehiclesDataCheckCleanUp];
+						}
+					});
+
+					//garbage collect list of routes
+					Object.keys(chateau_routes).forEach((each_chateau) => {
+						if (!realtime_list.includes(each_chateau)) {
+							delete chateau_routes[each_chateau];
 						}
 					});
 
