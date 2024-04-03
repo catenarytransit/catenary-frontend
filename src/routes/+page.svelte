@@ -1658,12 +1658,6 @@
 				}
 			});
 
-			/*
-			map.addSource('shapes', {
-				type: 'vector',
-				url: 'https://martin.catenarymaps.org/shapes'
-			});*/
-
 			map.addSource('notbusshapes', {
 				type: 'vector',
 				url: "https://birch.catenarymaps.org/shapes_not_bus"
@@ -1686,12 +1680,12 @@
 
 			map.addSource('railstops', {
 				type: 'vector',
-				url: what_martin_to_use() + '/railstops'
+				url: 'https://birch.catenarymaps.org/railstops'
 			});
 
 			map.addSource('otherstops', {
 				type: 'vector',
-				url: what_martin_to_use() + '/otherstops'
+				url: "https://birch.catenarymaps.org/otherstops"
 			});
 
 			map.addSource('foamertiles', {
