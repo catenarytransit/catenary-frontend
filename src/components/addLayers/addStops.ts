@@ -168,7 +168,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
     id: layerspercategory.intercityrail.stops,
     type: 'circle',
     source: 'railstops',
-    'source-layer': 'railstops',
+    'source-layer': 'data',
     layout: {},
     paint: {
         'circle-color': '#1c2636',
@@ -202,7 +202,7 @@ map.addLayer({
     id: layerspercategory.intercityrail.labelstops,
     type: 'symbol',
     source: 'railstops',
-    'source-layer': 'railstops',
+    'source-layer': 'data',
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
@@ -244,7 +244,7 @@ map.addLayer({
     id: layerspercategory.other.stops,
     type: 'symbol',
     source: 'railstops',
-    'source-layer': 'railstops',
+    'source-layer': 'data',
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
@@ -294,7 +294,7 @@ map.addLayer({
     id: layerspercategory.other.labelstops,
     type: 'symbol',
     source: 'railstops',
-    'source-layer': 'railstops',
+    'source-layer': 'data',
     layout: {
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
