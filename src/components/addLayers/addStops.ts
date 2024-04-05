@@ -39,9 +39,9 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'circle-opacity': 0.1,
             'circle-emissive-strength': 1
         },
-        minzoom: window?.innerWidth >= 768 ? 13 : 12,
         filter: removeWeekendStops(['all',
-    
+       // ['==', ['get', 'chateau'], 'irvine~california~usa'],
+       ['==', ['get', 'onestop_feed_id'], "f-9mu-irvine~california~usa"],
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],
         ['!', ['in', 2, ['get', 'route_types']]]])
@@ -53,6 +53,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         source: 'busstops',
         'source-layer': 'data',
         filter: removeWeekendStops(['all', 
+  //      ['==', ['get', 'chateau'], 'irvine~california~usa'],
+        ['==', ['get', 'onestop_feed_id'], "f-9mu-irvine~california~usa"],
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],
         ['!', ['in', 2, ['get', 'route_types']]]
@@ -75,7 +77,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'text-halo-width': 0.4,
             'text-emissive-strength': 1
         },
-        minzoom: window?.innerWidth >= 768 ? 14 : 13
+        minzoom: 1
     });
    
     
