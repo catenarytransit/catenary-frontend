@@ -10,7 +10,7 @@
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { flatten } from '../utils/flatten';
-	import { determineFeeds , determineFeedsUsingChateaus} from '../maploaddata';
+	import { determineFeeds, determineFeedsUsingChateaus } from '../maploaddata';
 	import { makeCircleLayers } from '../components/addLayers/addLiveDots';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import Realtimelabel from '../realtimelabel.svelte';
@@ -20,7 +20,11 @@
 	import type SelectedVehicleKeyType from '../components/vehicleselected.svelte';
 	import VehicleSelected from '../components/vehicleselected.svelte';
 	import { durationToIsoElapsed } from '../utils/isoelapsed';
-	import {add_bunny_layer, make_custom_icon_source, new_jeans_buses} from "../components/addLayers/customIcons"
+	import {
+		add_bunny_layer,
+		make_custom_icon_source,
+		new_jeans_buses
+	} from '../components/addLayers/customIcons';
 	import {
 		what_kactus_to_use,
 		what_martin_to_use,
@@ -82,7 +86,7 @@
 	let last_seen_octa_feed: number | null = null;
 	let westOfMinus52 = true;
 	let chateau_routes: Record<string, Record<string, any>> = {};
-	let feed_id_to_chateau_lookup: Record<string, string> ={}; 
+	let feed_id_to_chateau_lookup: Record<string, string> = {};
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -131,7 +135,7 @@
 	let fps = 0;
 	let fps_array: number[] = [];
 
-	let chateaus:any = null;
+	let chateaus: any = null;
 	let chateaus_in_frame: string[] = [];
 
 	const layerspercategory = {
@@ -213,13 +217,12 @@
 		} else {
 			fpsmode = false;
 		}
-		
+
 		if (localStorage.getItem('audibleArrivals') === 'true') {
 			announcermode = true;
 		} else {
 			announcermode = false;
 		}
-
 	}
 
 	if (browser) {
@@ -404,44 +407,44 @@
 
 		console.log('processing', realtime_id);
 
-			let chateau_id = feed_id_to_chateau_lookup[realtime_id];
+		let chateau_id = feed_id_to_chateau_lookup[realtime_id];
 
-			if (vehiclesData[realtime_id].entity) {
-
-			
+		if (vehiclesData[realtime_id].entity) {
 			if (chateau_id) {
-				let routes_table:Record<string, any> = {};
+				let routes_table: Record<string, any> = {};
 
 				if (chateau_routes[chateau_id] == null || chateau_routes[chateau_id] == undefined) {
-					console.log("Fetching routes for", chateau_id),
-					fetch("https://birch.catenarymaps.org/getroutesofchateau/" + chateau_id)
-					.then(function(response) { return response.json(); })
-					.then(function(json) {
-						let routes_table_to_set:Record<string, any> = {};
+					console.log('Fetching routes for', chateau_id),
+						fetch('https://birch.catenarymaps.org/getroutesofchateau/' + chateau_id)
+							.then(function (response) {
+								return response.json();
+							})
+							.then(function (json) {
+								let routes_table_to_set: Record<string, any> = {};
 
-						json.forEach((route:any) => {
-							if (route.onestop_feed_id === "f-dr5-mtanyclirr") {
-								if (!route.route_id.includes("lirr")) {
-									route.route_id = "lirr" + route.route_id;
-								}
-							}
+								json.forEach((route: any) => {
+									if (route.onestop_feed_id === 'f-dr5-mtanyclirr') {
+										if (!route.route_id.includes('lirr')) {
+											route.route_id = 'lirr' + route.route_id;
+										}
+									}
 
-							if (route.onestop_feed_id === "f-dr7-mtanyc~metro~north") {
-								if (!route.route_id.includes("metronorth")) {
-									route.route_id = "metronorth" + route.route_id;
-								}
-							}
+									if (route.onestop_feed_id === 'f-dr7-mtanyc~metro~north') {
+										if (!route.route_id.includes('metronorth')) {
+											route.route_id = 'metronorth' + route.route_id;
+										}
+									}
 
-							routes_table_to_set[route.route_id] = route;
-						});
+									routes_table_to_set[route.route_id] = route;
+								});
 
-						chateau_routes[chateau_id] = routes_table_to_set;
-					})
-					.catch((err) => console.error(err))
+								chateau_routes[chateau_id] = routes_table_to_set;
+							})
+							.catch((err) => console.error(err));
 				} else {
 					routes_table = chateau_routes[chateau_id];
 				}
-				
+
 				let features = vehiclesData[realtime_id].entity
 					//.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
 					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
@@ -450,7 +453,7 @@
 							entity.vehicle?.position !== null && entity.vehicle?.position !== undefined
 					)
 					//no vehicles older than 1 hour
-					.filter((entity: any) => entity.vehicle?.timestamp > (Date.now() / 1000) - 900)
+					.filter((entity: any) => entity.vehicle?.timestamp > Date.now() / 1000 - 900)
 					.map((entity: any) => {
 						const { id, vehicle } = entity;
 						//default to bus type
@@ -463,35 +466,33 @@
 						let routeId = vehicle?.trip?.routeId || '';
 
 						if (routeId) {
-							if (realtime_id === "f-mta~nyc~rt~lirr") {
-										routeId = "lirr" + routeId;
-									}
+							if (realtime_id === 'f-mta~nyc~rt~lirr') {
+								routeId = 'lirr' + routeId;
+							}
 
-									if (realtime_id === "f-mta~nyc~rt~mnr") {
-										routeId = "metronorth" + routeId;
-									}
+							if (realtime_id === 'f-mta~nyc~rt~mnr') {
+								routeId = 'metronorth' + routeId;
+							}
 						}
 
 						if (!routeId) {
 							//console.log('no route id', realtime_id, entity)
 
-							//trips_per_chateau[chateau_id][trip_id] 
+							//trips_per_chateau[chateau_id][trip_id]
 							if (trips_per_chateau[chateau_id]) {
 								if (vehicle?.trip?.tripId) {
-									
-								let trip_id = vehicle?.trip?.tripId;
-								if (trips_per_chateau[chateau_id][trip_id]) {
-									
-									routeId = trips_per_chateau[chateau_id][trip_id].route_id
+									let trip_id = vehicle?.trip?.tripId;
+									if (trips_per_chateau[chateau_id][trip_id]) {
+										routeId = trips_per_chateau[chateau_id][trip_id].route_id;
 
-												if (realtime_id === "f-mta~nyc~rt~lirr") {
-										routeId = "lirr" + routeId;
-									}
+										if (realtime_id === 'f-mta~nyc~rt~lirr') {
+											routeId = 'lirr' + routeId;
+										}
 
-									if (realtime_id === "f-mta~nyc~rt~mnr") {
-										routeId = "metronorth" + routeId;
+										if (realtime_id === 'f-mta~nyc~rt~mnr') {
+											routeId = 'metronorth' + routeId;
+										}
 									}
-								}
 								}
 							}
 						}
@@ -541,12 +542,11 @@
 						}
 
 						//this system sucks, honestly. Transition to batch trips info eventually
-						
 
 						//colour section
 
-						let fetchTrip = false;	
-					
+						let fetchTrip = false;
+
 						if (useTrip == true) {
 							if (vehicle?.trip?.tripId) {
 								let trip_id = vehicle?.trip?.tripId;
@@ -554,30 +554,32 @@
 									fetchTrip = true;
 								} else {
 									if (trips_per_chateau[chateau_id][trip_id] === undefined) {
-									fetchTrip = true;
+										fetchTrip = true;
+									}
 								}
+
+								if (fetchTrip == true) {
+									fetch(
+										'https://birch.catenarymaps.org/barebones_trip/' + chateau_id + '/' + trip_id
+									)
+										.then(function (response) {
+											return response.json();
+										})
+										.then(function (bare_bones_json) {
+											if (trips_per_chateau[chateau_id] === undefined) {
+												trips_per_chateau[chateau_id] = {};
+											}
+
+											if (bare_bones_json.length >= 1) {
+												trips_per_chateau[chateau_id][trip_id] = bare_bones_json[0];
+												rerenders_requested.push(realtime_id);
+											} else {
+												trips_per_chateau[chateau_id][trip_id] = null;
+											}
+										})
+										.catch((err) => console.error(err));
 								}
-								
-							if (fetchTrip == true) {
-									fetch("https://birch.catenarymaps.org/barebones_trip/" + chateau_id + "/" + trip_id)
-									.then(function(response) { return response.json(); })
-									.then(function(bare_bones_json) {
-										if (trips_per_chateau[chateau_id] === undefined) {
-											trips_per_chateau[chateau_id] = {}
-										}
-
-										if (bare_bones_json.length >= 1) {
-											trips_per_chateau[chateau_id][trip_id] = bare_bones_json[0];
-											rerenders_requested.push(realtime_id);
-										} else {
-											trips_per_chateau[chateau_id][trip_id] = null;
-										}
-
-										
-									}).catch((err) => console.error(err));
 							}
-							}
-
 						}
 
 						let contrastdarkmode = colour;
@@ -664,7 +666,7 @@
 							}
 						}
 
-						if (chateau_id === "irvine~california~usa") {
+						if (chateau_id === 'irvine~california~usa') {
 							if (routes_table[routeId]) {
 								maptag = routes_table[routeId].long_name;
 							}
@@ -816,22 +818,20 @@
 					});
 
 					//set tokki data
-                    const tokkidata = {
-						type: "FeatureCollection",
-						features: flattenedarray.filter(
-							(x:any) => {
-								if (new_jeans_buses[x.properties["realtime_feed_id"]]) {
-									let bus_label = x.properties.vehicleIdLabel.replace("VEH","");
-									if (bus_label) {
-										if (new_jeans_buses[x.properties["realtime_feed_id"]].has(bus_label)) {
+					const tokkidata = {
+						type: 'FeatureCollection',
+						features: flattenedarray.filter((x: any) => {
+							if (new_jeans_buses[x.properties['realtime_feed_id']]) {
+								let bus_label = x.properties.vehicleIdLabel.replace('VEH', '');
+								if (bus_label) {
+									if (new_jeans_buses[x.properties['realtime_feed_id']].has(bus_label)) {
 										return true;
 									}
-									}
 								}
-
-								return false;
 							}
-						)
+
+							return false;
+						})
 					};
 
 					console.log(tokkidata);
@@ -870,11 +870,9 @@
 						});
 					}
 				}
-			}}
-
-			
+			}
 		}
-	
+	}
 
 	function getBoundingBoxMap(): number[][] {
 		const canvas = mapglobal.getCanvas(),
@@ -882,13 +880,13 @@
 			h: number = canvas.height;
 
 		const cUL = mapglobal.unproject([0, 0]).toArray(),
-			top = mapglobal.unproject([w/2, 0]).toArray(),
+			top = mapglobal.unproject([w / 2, 0]).toArray(),
 			cUR = mapglobal.unproject([w, 0]).toArray(),
-			right = mapglobal.unproject([w, h/2]).toArray(),
+			right = mapglobal.unproject([w, h / 2]).toArray(),
 			cLR = mapglobal.unproject([w, h]).toArray(),
-			bottom = mapglobal.unproject([w/2, h]).toArray(),
+			bottom = mapglobal.unproject([w / 2, h]).toArray(),
 			cLL = mapglobal.unproject([0, h]).toArray(),
-			left = mapglobal.unproject([0, h/2]).toArray();
+			left = mapglobal.unproject([0, h / 2]).toArray();
 
 		var coordinates = [cUL, top, cUR, right, cLR, bottom, cLL, left, cUL];
 
@@ -1068,27 +1066,33 @@
 	let alerts: any[] = [];
 
 	onMount(() => {
-		fetch("https://birch.catenarymaps.org/getchateaus")
-	.then(function(response) { return response.json(); })
-.then(function(json) {
-	chateaus = json;
+		fetch('https://birch.catenarymaps.org/getchateaus')
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (json) {
+				chateaus = json;
 
-	json.features.forEach((feature:any) => {
-        const this_realtime_feeds_list:string[] = feature.properties.realtime_feeds;
-        const this_schedule_feeds_list:string[] = feature.properties.schedule_feeds;
+				json.features.forEach((feature: any) => {
+					const this_realtime_feeds_list: string[] = feature.properties.realtime_feeds;
+					const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
 
-        this_realtime_feeds_list.forEach((realtime) => feed_id_to_chateau_lookup[realtime] = feature.properties.chateau);
-        this_schedule_feeds_list.forEach((sched) =>  feed_id_to_chateau_lookup[sched] = feature.properties.chateau);
-    });
-})
-					.catch((err) => console.error(err));
+					this_realtime_feeds_list.forEach(
+						(realtime) => (feed_id_to_chateau_lookup[realtime] = feature.properties.chateau)
+					);
+					this_schedule_feeds_list.forEach(
+						(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
+					);
+				});
+			})
+			.catch((err) => console.error(err));
 
 		fetch('https://catenarytransit.github.io/ping/pong.json')
 			.then((x) => x.json())
 			.then((x) => {
 				console.log('ping', x);
 				alerts = x.alerts;
-			})
+			});
 
 		const API_KEY = 'tf30gb2F4vIsBW5k9Msd';
 
@@ -1357,7 +1361,6 @@
 		});
 
 		map.on('zoomend', (events) => {
-			
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 
 			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
@@ -1437,12 +1440,12 @@
 				runSettingsAdapt();
 			}
 
-			map.addSource("chateaus", {
-					type: 'geojson',
-					data: "https://birch.catenarymaps.org/getchateaus"
-				});
+			map.addSource('chateaus', {
+				type: 'geojson',
+				data: 'https://birch.catenarymaps.org/getchateaus'
+			});
 
-				map.addLayer({
+			map.addLayer({
 				id: 'chateaus_calc',
 				type: 'fill',
 				source: 'chateaus',
@@ -1660,7 +1663,7 @@
 
 			map.addSource('notbusshapes', {
 				type: 'vector',
-				url: "https://birch.catenarymaps.org/shapes_not_bus"
+				url: 'https://birch.catenarymaps.org/shapes_not_bus'
 			});
 
 			map.addSource('busshapes', {
@@ -1685,7 +1688,7 @@
 
 			map.addSource('otherstops', {
 				type: 'vector',
-				url: "https://birch.catenarymaps.org/otherstops"
+				url: 'https://birch.catenarymaps.org/otherstops'
 			});
 
 			map.addSource('foamertiles', {
@@ -1868,7 +1871,7 @@
 					features: []
 				}
 			});
-			
+
 			add_bunny_layer(map, layerspercategory);
 			makeCircleLayers(map, darkMode, layerspercategory);
 			makeBearingArrowPointers(map, darkMode, layerspercategory);
@@ -1894,9 +1897,9 @@
 							url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
 						}
 
-						if (realtime_id == "f-irvine~california~usa~rt") {
-							url = "https://birch.catenarymaps.org/irvinevehproxy";
-							console.log("downloading irvine feed");
+						if (realtime_id == 'f-irvine~california~usa~rt') {
+							url = 'https://birch.catenarymaps.org/irvinevehproxy';
+							console.log('downloading irvine feed');
 						}
 
 						let listhas = true;
@@ -1918,11 +1921,9 @@
 								})
 								.then((buffer) => {
 									if (buffer != null) {
-
-										if (realtime_id == "f-irvine~california~usa~rt") {
-							
-							console.log("received irvine feed");
-						}
+										if (realtime_id == 'f-irvine~california~usa~rt') {
+											console.log('received irvine feed');
+										}
 
 										let feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
 											new Uint8Array(buffer)
@@ -1930,15 +1931,15 @@
 
 										let allow_processing = true;
 
-										if (realtime_id == "f-octa~rt") {
-											console.log("octa time: ",feed.header.timestamp);
+										if (realtime_id == 'f-octa~rt') {
+											console.log('octa time: ', feed.header.timestamp);
 
 											if (last_seen_octa_feed != null) {
 												if (last_seen_octa_feed < Number(feed.header.timestamp)) {
 													last_seen_octa_feed = Number(feed.header.timestamp);
 												} else {
 													allow_processing = false;
-													console.log("cancel old octa feed");
+													console.log('cancel old octa feed');
 												}
 											}
 										}
@@ -1952,13 +1953,13 @@
 											});
 										} else {
 											if (realtime_id === 'f-octa~rt') {
-											feed.entity = feed.entity.map((eachEntity) => {
-												eachEntity.id = eachEntity.id.split('_')[2];
+												feed.entity = feed.entity.map((eachEntity) => {
+													eachEntity.id = eachEntity.id.split('_')[2];
 
-												return eachEntity;
-											});
+													return eachEntity;
+												});
+											}
 										}
-										}										
 
 										console.log('buffer decoded for', realtime_id);
 
@@ -1973,10 +1974,10 @@
 										});
 
 										if (allow_processing == true) {
-										vehiclesDataHashMap[realtime_id] = vehiclesDataHashMapForThisFeed;
-										rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
+											vehiclesDataHashMap[realtime_id] = vehiclesDataHashMapForThisFeed;
+											rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
 
-										rerenders_request(realtime_id);
+											rerenders_request(realtime_id);
 										}
 									}
 								})
@@ -2116,10 +2117,9 @@
 			})*/
 
 			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
 
-			let chateau_feed_results = determineFeedsUsingChateaus(map);
-
-			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
+				realtime_list = Array.from(chateau_feed_results.realtime_feeds);
 			}, 1000);
 		});
 
@@ -2488,9 +2488,9 @@
 	>
 		<div class="mt-16"></div>
 		{#if sidebarView == 0}
-		<h1 class="text-xl md:text-2xl">Catenary Home</h1>
-		
-		<p>Click on any vehicle to get started.</p>
+			<h1 class="text-xl md:text-2xl">Catenary Home</h1>
+
+			<p>Click on any vehicle to get started.</p>
 			<div in:fade>
 				{#each alerts as alert}
 					{#if alert.agency == 'any' || realtime_list.includes(alert.agency)}
@@ -2499,10 +2499,7 @@
 							<p class="text-sm">
 								{alert.content[locale]}
 							</p>
-							<a
-								style:cursor="pointer"
-								style:color="#f9e300"
-								href={alert.href}
+							<a style:cursor="pointer" style:color="#f9e300" href={alert.href}
 								>{strings.learnmore} &rarr;</a
 							>
 						</Alertpopup>
@@ -2510,10 +2507,10 @@
 				{/each}
 
 				{#if alerts.length == 0}
-				<p>No alerts. Have a great day!</p>
+					<p>No alerts. Have a great day!</p>
 				{/if}
 
-				<br/>
+				<br />
 			</div>
 		{/if}
 		{#if sidebarView == 1}
@@ -2634,6 +2631,15 @@
 					style:text-decoration="underline"
 					style:cursor="pointer">{strings.credits}</button
 				>
+				<br />
+				<a
+					href="https://catenarymaps.org/privacy"
+					style:text-decoration="underline"
+					style:cursor="pointer"
+					target="_blank">Privacy Policy</a
+				>
+				<br />
+				contact@catenarymaps.org
 			</div>
 		{/if}
 		{#if sidebarView == 2}
@@ -2993,7 +2999,7 @@
 				bind:selectedSettingsTab
 				change="stoplabels"
 				name={strings.stopnames}
-				urlicon={darkMode ? "/dark-stop-name.png" : "/light-stop-name.png"}
+				urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
 				{runSettingsAdapt}
 			/>
 
