@@ -7,6 +7,10 @@ export default {
       animation: {
         fade: 'fadeOut 1s ease-in-out',
       },
+      colors: {
+        darksky: '#0a233f',
+        seashore: '#42a7c5'
+      },
     },
   },
   plugins: [],

@@ -66,8 +66,6 @@
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 
-	let sidebarCollapsed = false;
-	let sidebarView = 0;
 	let announcermode = false;
 	let realtime_list: string[] = [];
 	let vehiclesData: Record<string, any> = {};
@@ -97,6 +95,12 @@
 	let fpsmode = !!urlParams.get('fps');
 
 	let embedmode = urlParams.get('framework') == 'true';
+
+	let desktopapp = urlParams.get('desktop') == 'true';
+	let mobileapp = urlParams.get('utm_source') == 'pwa';
+
+	let sidebarCollapsed = desktopapp;
+	let sidebarView = 0;
 
 	let avaliablerealtimevehicles = new Set();
 	let avaliablerealtimetrips = new Set();
@@ -2480,16 +2484,41 @@
 
 {#if sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode)}
 	<div
-		class="sidebar fixed bottom-0 left-0 pointer-events-none bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-50 text-black dark:text-white border-r-0 md:border-r-4 border-t-4 md:border-t-0 pointer-events-auto z-50 clickable md:w-[45vw] lg:w-[30vw] w-[100vw] md:h-[100vh] h-[50vh] backdrop-blur-xl"
-		style:border-color="#42A7C5"
+		class="sidebar fixed bottom-0 left-0 pointer-events-none bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-50 text-black dark:text-white border-t-4 md:border-r-4 md:border-t-0 border-r-0 border-seashore pointer-events-auto z-50 clickable md:w-[35vw] w-[100vw] md:h-[100vh] h-[40vh] backdrop-blur-xl"
 		style:padding="20px"
 		style:overflow="auto"
 		transition:blur
 	>
-		<div class="mt-16"></div>
+		<div class="mb-2" style="-webkit-app-region:drag;">
+			<button
+				on:click={() => {
+					sidebarCollapsed = true;
+				}}
+				style="-webkit-app-region: no-drag"
+				class=""
+			>
+				<span class="flex material-symbols-outlined margin-auto select-none"> close </span>
+			</button>
+			<button
+				on:click={() => {
+					sidebarView = 0;
+				}}
+				style="-webkit-app-region: no-drag"
+				class="m-2"
+			>
+				<span class="material-symbols-outlined margin-auto select-none"> home </span>
+			</button>
+			<button
+				on:click={() => {
+					sidebarView = 1;
+				}}
+				style="-webkit-app-region: no-drag"
+				class=""
+			>
+				<span class="material-symbols-outlined margin-auto select-none"> settings </span>
+			</button>
+		</div>
 		{#if sidebarView == 0}
-			<h1 class="text-xl md:text-2xl">Catenary Home</h1>
-
 			<p>Click on any vehicle to get started.</p>
 			<div in:fade>
 				{#each alerts as alert}
@@ -2700,40 +2729,6 @@
 			class="absolute right-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 rounded-lg pl-3 dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 			placeholder={strings.search}
 		/> -->
-		<a
-			on:click={() => {
-				sidebarCollapsed = true;
-			}}
-			style:cursor="pointer !important"
-			class="fixed left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-		>
-			<span class="flex material-symbols-outlined margin-auto select-none"> close </span>
-		</a>
-		<a
-			on:click={() => {
-				sidebarView = 0;
-			}}
-			style:cursor="pointer !important"
-			class="absolute left-16 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> home </span>
-		</a>
-		<a
-			on:click={() => {
-				sidebarView = 1;
-			}}
-			style:cursor="pointer !important"
-			class="absolute left-28 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> settings </span>
-		</a>
-		<!-- <a
-			on:click={() => { sidebarView = 0 }}
-			style:cursor="pointer !important"
-			class="absolute left-28 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-		>
-			<span class="material-symbols-outlined margin-auto select-none"> layers </span>
-		</a> -->
 	</div>
 {/if}
 
@@ -2743,20 +2738,10 @@
 			sidebarCollapsed = false;
 		}}
 		transition:fade
-		style:cursor="pointer !important"
-		class="fixed hidden lg:flex left-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		class="fixed left-4 bottom-10 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 	>
-		<span class="material-symbols-outlined margin-auto select-none"> left_panel_open </span>
-	</a>
-	<a
-		on:click={() => {
-			sidebarCollapsed = false;
-		}}
-		transition:fade
-		style:cursor="pointer !important"
-		class="fixed lg:hidden left-4 bottom-4 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-	>
-		<span class="material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
+		<span class="hidden md:inline material-symbols-outlined margin-auto select-none"> left_panel_open </span>
+		<span class="inline md:hidden material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
 	</a>
 {/if}
 
@@ -2791,18 +2776,20 @@
 		/>
 	</div>
 
-	<div
-		on:click={gpsbutton}
-		on:keydown={gpsbutton}
-		on:touchstart={gpsbutton}
-		class="${lockongps
-			? ' text-blue-500 dark:text-blue-300'
-			: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-8 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-	>
-		<span class="material-symbols-outlined align-middle text-lg select-none">
-			{#if lockongps == true}my_location{:else}location_searching{/if}
-		</span>
-	</div>
+	{#if !desktopapp}
+		<div
+			on:click={gpsbutton}
+			on:keydown={gpsbutton}
+			on:touchstart={gpsbutton}
+			class="${lockongps
+				? ' text-blue-500 dark:text-blue-300'
+				: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-8 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+		>
+			<span class="material-symbols-outlined align-middle text-lg select-none">
+				{#if lockongps == true}my_location{:else}location_searching{/if}
+			</span>
+		</div>
+	{/if}
 </div>
 
 <div
@@ -3062,7 +3049,7 @@
 <style>
 	:root {
 		--background: #0a233f;
-		--primary: #79bd43;
+		--primary: #42a7c5;
 		--radius: 8px;
 		--glow: 0;
 	}
@@ -3070,6 +3057,7 @@
 	* {
 		cursor: default;
 		font-family: 'din-2014', sans-serif;
+		user-select: none;
 	}
 
 	.material-symbols-outlined {
@@ -3079,6 +3067,10 @@
 	#map {
 		width: 100%;
 		height: 100%;
+	}
+
+	:global(.mapboxgl-canvas) {
+    	outline: none;
 	}
 
 	.lineNumber {
@@ -3094,6 +3086,10 @@
 
 	.sidebar {
 		overflow-y: hidden;
+	}
+
+	.sidebar * {
+		cursor: default !important;
 	}
 
 	.material-symbols-outlined-big {
