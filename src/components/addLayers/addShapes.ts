@@ -81,7 +81,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
                 ['concat', ['get', 'onestop_feed_id'], "|", ['get', 'shape_id'], "|", ['coalesce', ['get', 'route_label']]] : ['coalesce', ['get', 'route_label']],
             //'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
             'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 5, 7, 9, 8, 13, 11],
             'text-ignore-placement': false,
             'text-allow-overlap': false,
             'symbol-spacing':
