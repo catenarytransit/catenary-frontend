@@ -797,12 +797,14 @@
 
 			let source = map.getSource(source_name);
 
+			console.log('source', category, source);
+
 			let features = [];
 
 			for (const chateau_id in realtime_vehicle_locations[category]) {
 				let chateau_vehicles_list = realtime_vehicle_locations[category][chateau_id];
 				
-			//console.log('chateau_vehicles_list ',chateau_vehicles_list)
+				//console.log('chateau_vehicles_list ', chateau_id, category, chateau_vehicles_list)
 
 				let chateau_route_cache = realtime_vehicle_route_cache[chateau_id];
 
@@ -933,13 +935,13 @@
 
 			console.log('setting data for ', category, features);
 
-			if (source) {
+			
 
 				source.setData({
 					type: 'FeatureCollection',
 					features: features
 				});
-			}
+			
 		}
 
 		function garbageCollectNotInView() {
@@ -1324,7 +1326,7 @@
 
 			map.addSource('otherstops', {
 				type: 'vector',
-				url: 'https://birch.catenarymaps.org/otherstops'
+				url: what_martin_to_use() + '/otherstops'
 			});
 
 			map.addSource('foamertiles', {
