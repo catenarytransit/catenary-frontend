@@ -1078,6 +1078,8 @@
 						}
 
 						
+					} else {
+						console.log('no rt feeds for ', chateauId);
 					}
 
 					
