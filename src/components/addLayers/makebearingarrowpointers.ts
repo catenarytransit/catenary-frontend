@@ -30,7 +30,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id:  layerspercategory.bus.pointing,
 			source: 'buses',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-color': ['get', 'contrastdarkmodebearing'],
 				'icon-opacity': 0.4
@@ -51,7 +51,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.intercityrail.pointing,
 			source: 'intercityrail',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-color': ['get', 'contrastdarkmodebearing'],
 				'icon-opacity': 1
@@ -72,7 +72,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.localrail.pointing,
 			source: 'localrail',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-color': ['get', 'contrastdarkmodebearing'],
 				'icon-opacity': 0.6
@@ -93,7 +93,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.other.pointing,
 			source: 'other',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-color': ['get', 'contrastdarkmodebearing'],
 				'icon-opacity': 0.6
@@ -115,7 +115,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: 'geolocationheadingfill',
 			source: 'geolocation',
 			type: 'symbol',
-			filter: ["!=", null, ['get', 'heading']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-color': "#2563EB",
 				'icon-opacity': 0.8
@@ -150,7 +150,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.bus.pointingshell,
 			source: 'buses',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.3, 8, 0.4, 9, 0.4, 11, 0.8]
 			},
@@ -170,7 +170,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.intercityrail.pointingshell,
 			source: 'intercityrail',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 			},
@@ -190,7 +190,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.localrail.pointingshell,
 			source: 'localrail',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 			},
@@ -210,7 +210,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: layerspercategory.other.pointingshell,
 			source: 'other',
 			type: 'symbol',
-			filter: ["!=", 0, ['get', 'bearing']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 			},
@@ -231,7 +231,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: "geolocationheadingshell",
 			source: 'geolocation',
 			type: 'symbol',
-			filter: ["!=", null, ['get', 'heading']],
+			filter: ["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 			},

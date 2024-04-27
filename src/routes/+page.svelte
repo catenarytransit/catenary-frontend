@@ -73,6 +73,7 @@
 	let westOfMinus52 = true;
 	let feed_id_to_chateau_lookup: Record<string, string> = {};
 	let chateau_to_realtime_feed_lookup: Record<string, string[]> = {};
+	let pending_chateau_rt_request: Record<string, number> = {};
 
 	let data_stack: Array<any> = [];
 
@@ -798,14 +799,15 @@
 
 			let features = [];
 
-			Object.entries(realtime_vehicle_locations[category])
-			.forEach(([chateau_id,chateau_vehicles_list]) => {
-				//console.log('chateau_vehicles_list ',chateau_vehicles_list)
+			for (const chateau_id in realtime_vehicle_locations[category]) {
+				let chateau_vehicles_list = realtime_vehicle_locations[category][chateau_id];
+				
+			//console.log('chateau_vehicles_list ',chateau_vehicles_list)
 
 				let chateau_route_cache = realtime_vehicle_route_cache[chateau_id];
 
-				Object.entries(chateau_vehicles_list)
-				.forEach(([rt_id, vehicle_data]) => {
+				for (const vehicle_entry in chateau_vehicles_list) {
+					let vehicle_data = chateau_vehicles_list[vehicle_entry];
 					let vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
 					let colour = '#aaaaaa';
 
@@ -825,8 +827,6 @@
 					}
 
 					let routeId = vehicle_data.trip?.route_id;
-
-					
 					let maptag = "";
 
 					if (routeId) {
@@ -840,6 +840,8 @@
 								maptag = route.route_long_name;
 							}
 							colour = route.route_colour;
+						} else {
+							console.log("Could not find route for ", chateau_id, routeId);
 						}
 					}
 
@@ -879,11 +881,7 @@
 								}
 
 								hsl.l = Math.min(100, hsl.l);
-
-								//console.log('newdarkhsl',newdarkhsl)
-
 								let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
-								//console.log('newdarkrgb',newdarkrgb)
 
 								let newdarkbearingline = hslToRgb(
 									newdarkhsl.h,
@@ -916,23 +914,27 @@
 								tripIdLabel: tripIdLabel,
 								//keep to degrees as gtfs specs
 								bearing: vehicle_data?.position?.bearing,
+								has_bearing: vehicle_data?.position?.bearing != null,
 								maptag: maptag,
 								contrastdarkmode: contrastdarkmode,
 								contrastdarkmodebearing,
 								routeId: routeId,
 								headsign: headsign,
 								timestamp: vehicle_data.timestamp,
-								id: rt_id
+								id: vehicle_entry
 							},
 							geometry: {
 								type: 'Point',
 								coordinates: [vehicle_data.position.longitude, vehicle_data.position.latitude]
 							}
 						});
-				})
-			});
+				}
+			}
+
+			console.log('setting data for ', category, features);
 
 			if (source) {
+
 				source.setData({
 					type: 'FeatureCollection',
 					features: features
@@ -997,8 +999,10 @@
 			}
 
 			if (response_from_birch_vehicles.vehicle_route_cache) {
-				console.log('updating route cache', chateau_id, response_from_birch_vehicles.vehicle_route_cache);
-				realtime_vehicle_route_cache[chateau_id] = response_from_birch_vehicles.vehicle_route_cache;
+					if (Object.keys(response_from_birch_vehicles.vehicle_route_cache).length != 0) {
+				//	console.log('updating route cache', chateau_id, response_from_birch_vehicles.vehicle_route_cache);
+					realtime_vehicle_route_cache[chateau_id] = response_from_birch_vehicles.vehicle_route_cache;
+				}
 			}
 
 			
@@ -1006,7 +1010,7 @@
 				realtime_vehicle_locations_last_updated[chateau_id] = response_from_birch_vehicles.last_updated_time_ms;
 			
 			rerender_category_live_dots(category);
-			console.log('brand new vehicle data!', realtime_vehicle_locations);
+			//console.log('brand new vehicle data!', realtime_vehicle_locations);
 		}
 
 		function fetch_realtime_vehicle_locations() {
@@ -1037,12 +1041,30 @@
 
 					let url = `https://birch.catenarymaps.org/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/${existing_fasthash}`;
 
+	//	let url = `https://birch.catenarymaps.org/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/0`;
+
 					if (chateau_to_realtime_feed_lookup[chateauId]) {
-						fetch(url)
+						let pending_chateau_rt_request_for_chateau = pending_chateau_rt_request[chateauId];
+
+						let allowed_to_fetch = true;
+
+						if (typeof pending_chateau_rt_request_for_chateau == 'number') {
+							if (Date.now() - pending_chateau_rt_request_for_chateau > 20000) {
+								allowed_to_fetch = true;
+							} else {
+								allowed_to_fetch = false;
+							}
+						}
+
+						pending_chateau_rt_request[chateauId] = Date.now();
+
+						if (allowed_to_fetch == true) {
+							fetch(url)
 						.then(async (response) => 
 						{
 							let response_from_birch_vehicles_text = await response.text();
 							try {
+								delete pending_chateau_rt_request[chateauId];
 								let response_from_birch_vehicles = JSON.parse(response_from_birch_vehicles_text);
 								process_realtime_vehicle_locations(chateauId, category, response_from_birch_vehicles);
 							} catch (e) {
@@ -1050,7 +1072,12 @@
 							}
 						}
 					)
-						.catch((err) => {});
+						.catch((err) => {
+							delete pending_chateau_rt_request[chateauId];
+						});
+						}
+
+						
 					}
 
 					
@@ -1584,9 +1611,14 @@
 				}			
 			})*/
 
-			setTimeout(() => {
-				let chateau_feed_results = determineFeedsUsingChateaus(map);
-			}, 1000);
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
+
+			//setTimeout(() => {
+			//	let chateau_feed_results = determineFeedsUsingChateaus(map);
+			//}, 1000);
+
+			fetch_realtime_vehicle_locations();
 		});
 
 		function runBoxCalc() {
