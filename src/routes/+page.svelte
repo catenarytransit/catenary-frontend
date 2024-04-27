@@ -1038,6 +1038,9 @@
 			chateaus_in_frame.forEach((chateauId) => {
 				categories_to_request.forEach((category) => {
 
+					if (chateau_to_realtime_feed_lookup[chateauId]) {
+
+					
 					let last_updated_time_ms: number = realtime_vehicle_locations_last_updated[chateauId] || 0;
 					let existing_fasthash: number = realtime_vehicle_route_cache_hash[chateauId] || 0;
 
@@ -1092,7 +1095,7 @@
 
 						
 					}
-
+				}
 					
 				})
 			});
