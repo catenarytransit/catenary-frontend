@@ -1052,13 +1052,24 @@
 
 						if (typeof pending_chateau_rt_request_for_chateau == 'number') {
 							if (Date.now() - pending_chateau_rt_request_for_chateau > 20000) {
-								allowed_to_fetch = true;
+							//	allowed_to_fetch = true;
 							} else {
 								allowed_to_fetch = false;
 							}
 						}
 
+						if (map.getZoom() < 3) {
+							allowed_to_fetch = false;
+						}
+
+						if (map.getZoom() < 7 && category == 'bus') {
+							allowed_to_fetch = false;
+
+						}
+
 						pending_chateau_rt_request[chateauId] = Date.now();
+
+
 
 						if (allowed_to_fetch == true) {
 							fetch(url)
