@@ -1,9 +1,11 @@
 import type { Map } from "mapbox-gl";
 
 export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercategory:any) {
-    const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.18, 10.5, 0.25, 12, 0.47, 15, 1];
+   // const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.18, 10.5, 0.25, 12, 0.47, 15, 1];
 
 	const busbearingoffset = ['interpolate', ['linear'], ['zoom'],10, ['literal', [0, -64]], 12, ['literal', [0, -40]], 13, ['literal', [0, -40]], 15, ['literal', [0, -48]]];
+
+	const busbearingsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.3, 15, 0.5];
 
 	const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.2, 12, 0.3, 15, 0.5];
 
@@ -40,7 +42,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 				'icon-rotate': ['get', 'bearing'],
 				'icon-rotation-alignment': 'map',
 				'icon-offset': busbearingoffset,
-				'icon-size': busbearingiconsize
+				'icon-size': busbearingsize
 			},
 			minzoom: 8
 		});
@@ -159,7 +161,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 				'icon-rotate': ['get', 'bearing'],
 				'icon-rotation-alignment': 'map',
 				'icon-offset': busbearingoffset,
-				'icon-size': busbearingiconsize
+				'icon-size': busbearingsize
 			},
 			minzoom: 8
 		});

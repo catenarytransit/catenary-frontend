@@ -67,24 +67,14 @@
 	let usunits = false;
 
 	let announcermode = false;
-	let realtime_list: string[] = [];
-	let vehiclesData: Record<string, any> = {};
-	// store the data in a hashmap so it allows O(1) lookup
-	let vehiclesDataHashMap: Record<
-		string,
-		Record<string, GtfsRealtimeBindings.transit_realtime.FeedEntity>
-	> = {};
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj: Record<string, any> = {};
 	let lasttimeofnorth = 0;
-	let selectedVehicleLookup: SelectedVehicleKeyType | null = null;
-	let selectedStop: string | null = null;
-	let metrolinkDemoArrivals: Array<MetrolinkTrackArrivals> | null = null;
-	let currentMetrolinkDemoInterval: Timeout | null = null;
-	let last_seen_octa_feed: number | null = null;
 	let westOfMinus52 = true;
-	let chateau_routes: Record<string, Record<string, any>> = {};
 	let feed_id_to_chateau_lookup: Record<string, string> = {};
+	let chateau_to_realtime_feed_lookup: Record<string, string[]> = {};
+
+	let data_stack: Array<any> = [];
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -102,22 +92,21 @@
 	let sidebarCollapsed = desktopapp;
 	let sidebarView = 0;
 
-	let avaliablerealtimevehicles = new Set();
-	let avaliablerealtimetrips = new Set();
-	let avaliablerealtimealerts = new Set();
-	let fetchedavaliablekactus = false;
-
-	let static_feeds: any[] = [];
-
 	let current_map_heading = 0;
-
-	let operators: any[] = [];
-
-	let realtime_feeds: any[] = [];
 
 	let static_feeds_in_frame: Record<string, any> = {};
 	let operators_in_frame: Record<string, any> = {};
 	let realtime_feeds_in_frame: Record<string, any> = {};
+
+	//order by route type, then by chateau, then by rt id
+	let realtime_vehicle_locations: Record<string, Record<string, Record<string, any>>> = {};
+	//order by chateau, then by route id
+	let realtime_vehicle_route_cache: Record<string, Record<string, any>> = {};
+	//order by chateau
+	let realtime_vehicle_route_cache_hash: Record<string, number> = {};
+	//order by chateau
+	let realtime_vehicle_locations_last_updated: Record<string, number> = {};
+	
 
 	let lastrunmapcalc = 0;
 	let mapboundingbox: number[][] = [
@@ -262,8 +251,6 @@
 	maplat = 0;
 	mapzoom = 0;
 
-	let rerenders_requested: string[] = [];
-
 	let showclipboardalert = false;
 	let lastclipboardtime: number = 0;
 
@@ -404,479 +391,6 @@
 
 	const interleave = (arr: any, thing: any) =>
 		[].concat(...arr.map((n: any) => [n, thing])).slice(0, -1);
-
-	function rerenders_request(realtime_id: string) {
-		//step 1, get the list of routes if it doesnt exist
-		//let this_realtime_feed = realtime_feeds_in_frame[realtime_id];
-
-		console.log('processing', realtime_id);
-
-		let chateau_id = feed_id_to_chateau_lookup[realtime_id];
-
-		if (vehiclesData[realtime_id].entity) {
-			if (chateau_id) {
-				let routes_table: Record<string, any> = {};
-
-				if (chateau_routes[chateau_id] == null || chateau_routes[chateau_id] == undefined) {
-					console.log('Fetching routes for', chateau_id),
-						fetch('https://birch.catenarymaps.org/getroutesofchateau/' + chateau_id)
-							.then(function (response) {
-								return response.json();
-							})
-							.then(function (json) {
-								let routes_table_to_set: Record<string, any> = {};
-
-								json.forEach((route: any) => {
-									if (route.onestop_feed_id === 'f-dr5-mtanyclirr') {
-										if (!route.route_id.includes('lirr')) {
-											route.route_id = 'lirr' + route.route_id;
-										}
-									}
-
-									if (route.onestop_feed_id === 'f-dr7-mtanyc~metro~north') {
-										if (!route.route_id.includes('metronorth')) {
-											route.route_id = 'metronorth' + route.route_id;
-										}
-									}
-
-									routes_table_to_set[route.route_id] = route;
-								});
-
-								chateau_routes[chateau_id] = routes_table_to_set;
-							})
-							.catch((err) => console.error(err));
-				} else {
-					routes_table = chateau_routes[chateau_id];
-				}
-
-				let features = vehiclesData[realtime_id].entity
-					//.filter((entity: any) => entity.vehicle.timestamp > (Date.now() / 1000) - 300 || realtime_id === "f-amtrak~rt" || realtime_id === "f-横浜市-municipal-subway-rt" || realtime_id === "f-metrolinktrains~rt")
-					.filter((entity: any) => entity.vehicle !== null && entity.vehicle !== undefined)
-					.filter(
-						(entity: any) =>
-							entity.vehicle?.position !== null && entity.vehicle?.position !== undefined
-					)
-					//no vehicles older than 1 hour
-					.filter((entity: any) => entity.vehicle?.timestamp > Date.now() / 1000 - 900)
-					.map((entity: any) => {
-						const { id, vehicle } = entity;
-						//default to bus type
-						let routeType = 3;
-
-						let colour = '#aaaaaa';
-
-						let headsign = '';
-
-						let routeId = vehicle?.trip?.routeId || '';
-
-						if (routeId) {
-							if (realtime_id === 'f-mta~nyc~rt~lirr') {
-								routeId = 'lirr' + routeId;
-							}
-
-							if (realtime_id === 'f-mta~nyc~rt~mnr') {
-								routeId = 'metronorth' + routeId;
-							}
-						}
-
-						if (!routeId) {
-							//console.log('no route id', realtime_id, entity)
-
-							//trips_per_chateau[chateau_id][trip_id]
-							if (trips_per_chateau[chateau_id]) {
-								if (vehicle?.trip?.tripId) {
-									let trip_id = vehicle?.trip?.tripId;
-									if (trips_per_chateau[chateau_id][trip_id]) {
-										routeId = trips_per_chateau[chateau_id][trip_id].route_id;
-
-										if (realtime_id === 'f-mta~nyc~rt~lirr') {
-											routeId = 'lirr' + routeId;
-										}
-
-										if (realtime_id === 'f-mta~nyc~rt~mnr') {
-											routeId = 'metronorth' + routeId;
-										}
-									}
-								}
-							}
-						}
-
-						let useTrip = false;
-
-						if (routeId) {
-							if (routes_table[routeId]) {
-								routeType = routes_table[routeId].route_type;
-
-								if (routes_table[routeId].color) {
-									colour = routes_table[routeId].color;
-								}
-							}
-
-							if (realtime_id === 'f-metro~losangeles~bus~rt') {
-								let trimmedRouteId = routeId.replace('-13172', '');
-							}
-						} else {
-							//console.log('no route id', entity)
-							if (realtime_id === 'f-metro~losangeles~bus~rt') {
-								colour = '#e16710';
-							}
-
-							useTrip = true;
-						}
-
-						if (
-							['f-mta~nyc~rt~mnr', 'f-metrolink~rt', 'f-mta~nyc~rt~lirr', 'f-amtrak~rt'].includes(
-								realtime_id
-							)
-						) {
-							routeType = 2;
-						}
-
-						if (realtime_id === 'f-amtrak~rt') {
-							colour = '#18567d';
-						}
-
-						if (realtime_id == 'f-metrolinktrains~rt') {
-							routeType = 2;
-						}
-
-						if (routeType === 2) {
-							//get trip id for intercity rail
-							useTrip = true;
-						}
-
-						//this system sucks, honestly. Transition to batch trips info eventually
-
-						//colour section
-
-						let fetchTrip = false;
-
-						if (useTrip == true) {
-							if (vehicle?.trip?.tripId) {
-								let trip_id = vehicle?.trip?.tripId;
-								if (trips_per_chateau[chateau_id] === undefined) {
-									fetchTrip = true;
-								} else {
-									if (trips_per_chateau[chateau_id][trip_id] === undefined) {
-										fetchTrip = true;
-									}
-								}
-
-								if (fetchTrip == true) {
-									fetch(
-										'https://birch.catenarymaps.org/barebones_trip/' + chateau_id + '/' + trip_id
-									)
-										.then(function (response) {
-											return response.json();
-										})
-										.then(function (bare_bones_json) {
-											if (trips_per_chateau[chateau_id] === undefined) {
-												trips_per_chateau[chateau_id] = {};
-											}
-
-											if (bare_bones_json.length >= 1) {
-												trips_per_chateau[chateau_id][trip_id] = bare_bones_json[0];
-												rerenders_requested.push(realtime_id);
-											} else {
-												trips_per_chateau[chateau_id][trip_id] = null;
-											}
-										})
-										.catch((err) => console.error(err));
-								}
-							}
-						}
-
-						let contrastdarkmode = colour;
-						let contrastdarkmodebearing = colour;
-
-						if (colour && darkMode === true) {
-							//convert hex colour to array of 3 numbers
-
-							let rgb = hexToRgb(colour);
-
-							// console.log('rgb', rgb)
-
-							if (rgb != null) {
-								let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-								// console.log('hsl', hsl)
-
-								let newdarkhsl = hsl;
-
-								let blueoffset = 0;
-
-								if (rgb.b > 40) {
-									blueoffset = 30 * (rgb.b / 255);
-								}
-
-								if (hsl.l < 60) {
-									newdarkhsl.l = hsl.l + 10 + (25 * ((100 - hsl.s) / 100) + blueoffset);
-
-									if (hsl.l > 60) {
-										if (blueoffset === 0) {
-											hsl.l = 60;
-										} else {
-											hsl.l = 60 + blueoffset;
-										}
-									}
-								}
-
-								hsl.l = Math.min(100, hsl.l);
-
-								//console.log('newdarkhsl',newdarkhsl)
-
-								let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
-								//console.log('newdarkrgb',newdarkrgb)
-
-								let newdarkbearingline = hslToRgb(
-									newdarkhsl.h,
-									newdarkhsl.s,
-									(newdarkhsl.l + hsl.l) / 2
-								);
-
-								contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(
-									newdarkrgb.g
-								)}${componentToHex(newdarkrgb.b)}`;
-								contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(
-									newdarkbearingline.g
-								)}${componentToHex(newdarkbearingline.b)}`;
-								//  console.log('rgbtohex',contrastdarkmode)
-							}
-						}
-
-						let maptag = routeId;
-
-						if (realtime_id === 'f-metro~losangeles~bus~rt') {
-							maptag = maptag.replace('-13172', '').replace('901', 'G');
-						}
-
-						if (realtime_id === 'f-ucla~bruinbus~rt') {
-							if (routes_table[routeId]) {
-								maptag = routes_table[routeId].long_name;
-							} else {
-								maptag = 'Bruin-No Route';
-							}
-						}
-
-						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
-							if (routes_table[routeId]) {
-								maptag = routes_table[routeId].long_name.replace('　→　', '→');
-							}
-						}
-
-						if (realtime_id === 'f-avalon~ca~rt') {
-							if (routes_table[routeId]) {
-								maptag = routes_table[routeId].long_name;
-							}
-						}
-
-						if (chateau_id === 'irvine~california~usa') {
-							if (routes_table[routeId]) {
-								maptag = routes_table[routeId].long_name;
-							}
-						}
-
-						let railletters: any = {};
-						if (
-							realtime_id === 'f-metro~losangeles~rail~rt' ||
-							realtime_id === 'f-metrolinktrains~rt'
-						) {
-							railletters = {
-								'801': 'A',
-								'802': 'B',
-								'803': 'C',
-								'804': 'E',
-								'805': 'D',
-								'807': 'K',
-								'Orange County Line': 'OC',
-								'San Bernardino Line': 'SB',
-								'Antelope Valley Line': 'AV',
-								'Inland Emp.-Orange Co. Line': 'IEOC',
-								'Ventura County Line': 'VC',
-								'91/Perris Valley Line': '91',
-								'Riverside Line': 'RIV'
-							};
-						}
-
-						if (
-							realtime_id === 'f-northcountrytransitdistrict~rt' ||
-							realtime_id === 'f-mts~rt~onebusaway'
-						) {
-							railletters = {
-								'398': 'COASTER',
-								'399': 'SPRINTER',
-								'510': 'BLU',
-								'520': 'ORG',
-								'530': 'GRN'
-							};
-						}
-
-						if (Object.keys(railletters).includes(routeId)) {
-							maptag = railletters[routeId];
-						}
-
-						let tripIdLabel = vehicle?.trip?.tripId || '';
-
-						/*
-						if (vehicle?.trip?.tripId) {
-							if (mergetabletrips[vehicle?.trip?.tripId]) {
-								tripIdLabel = mergetabletrips[vehicle?.trip?.tripId].trip_short_name;
-							}
-						}*/
-
-						if (realtime_id === 'f-mta~nyc~rt~lirr') {
-							let temp1 = tripIdLabel.split('_');
-							tripIdLabel = temp1[temp1.length - 1];
-						}
-
-						if (realtime_id === 'f-横浜市-municipal-subway-rt') {
-							if (vehicle?.trip?.tripId) {
-								tripIdLabel = vehicle?.trip?.tripId.slice(2).toUpperCase();
-							}
-						}
-
-						if (routes_table[routeId]) {
-							if (routes_table[routeId].short_name) {
-								maptag = routes_table[routeId].short_name;
-							} else {
-								if (routes_table[routeId.long_name]) {
-									maptag = routes_table[routeId].long_name;
-									console.log('overruled as long name', maptag);
-								}
-							}
-
-							if (realtime_id === 'f-mta~nyc~rt~mnr' || realtime_id === 'f-mta~nyc~rt~lirr') {
-								maptag = routes_table[routeId].long_name.replace(/branch/gi, '').trim();
-							}
-
-							if (realtime_id === 'f-amtrak~rt') {
-								maptag = routes_table[routeId].long_name;
-							}
-						}
-
-						maptag = maptag.replace(/( )?Line/, '');
-
-						maptag = maptag.replace(/counterclockwise/i, '-ACW').replace(/clockwise/i, '-CW');
-
-						//let tripIdLabel = vehicle?.trip?.tripId;
-
-						let vehiclelabel = vehicle?.vehicle?.label || vehicle?.vehicle?.id || '';
-
-						if (realtime_id === 'f-mta~nyc~rt~bustime') {
-							vehiclelabel = vehiclelabel.replace(/mta( )?/i, '');
-						}
-
-						return {
-							type: 'Feature',
-							properties: {
-								//shown to user directly?
-								vehicleIdLabel: vehiclelabel,
-								//maintain metres per second, do conversion in label
-								speed: vehicle?.position?.speed,
-								color: colour,
-								chateau: chateau_id,
-								//int representing enum
-								routeType: routeType,
-								//keep to gtfs lookup
-								tripIdLabel: tripIdLabel,
-								//keep to degrees as gtfs specs
-								bearing: vehicle?.position?.bearing,
-								maptag: maptag,
-								contrastdarkmode: contrastdarkmode,
-								contrastdarkmodebearing,
-								routeId: routeId,
-								headsign: headsign,
-								realtime_feed_id: realtime_id,
-								timestamp: vehicle?.timestamp,
-								id: id
-							},
-							geometry: {
-								type: 'Point',
-								coordinates: [vehicle.position.longitude, vehicle.position.latitude]
-							}
-						};
-					});
-
-				const getbussource = mapglobal.getSource('buses');
-				const getintercityrailsource = mapglobal.getSource('intercityrail');
-				const getlocalrailsource = mapglobal.getSource('localrail');
-				const othersource = mapglobal.getSource('other');
-
-				//tokki data
-				const gettokkisource = mapglobal.getSource('tokkibussource');
-
-				//console.log('made features of ', realtime_id, features);
-
-				geometryObj[realtime_id] = features;
-
-				//console.log(geometryObj);
-
-				let flattenedarray = flatten(Object.values(geometryObj));
-
-				if (typeof getbussource != 'undefined') {
-					getbussource.setData({
-						type: 'FeatureCollection',
-						features: flattenedarray.filter(
-							(x: any) => x.properties.routeType === 3 || x.properties.routeType === 11
-						)
-					});
-
-					//set tokki data
-					const tokkidata = {
-						type: 'FeatureCollection',
-						features: flattenedarray.filter((x: any) => {
-							if (new_jeans_buses[x.properties['realtime_feed_id']]) {
-								let bus_label = x.properties.vehicleIdLabel.replace('VEH', '');
-								if (bus_label) {
-									if (new_jeans_buses[x.properties['realtime_feed_id']].has(bus_label)) {
-										return true;
-									}
-								}
-							}
-
-							return false;
-						})
-					};
-
-					console.log(tokkidata);
-
-					gettokkisource.setData(tokkidata);
-
-					getbussource.setData({
-						type: 'FeatureCollection',
-						features: flattenedarray.filter(
-							(x: any) => x.properties.routeType === 3 || x.properties.routeType === 11
-						)
-					});
-
-					if (typeof getintercityrailsource != 'undefined') {
-						getintercityrailsource.setData({
-							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) => x.properties.routeType == 2)
-						});
-					}
-
-					if (typeof getlocalrailsource != 'undefined') {
-						getlocalrailsource.setData({
-							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) =>
-								[0, 1, 5, 12].includes(x.properties.routeType)
-							)
-						});
-					}
-
-					if (typeof othersource != 'undefined') {
-						othersource.setData({
-							type: 'FeatureCollection',
-							features: flattenedarray.filter((x: any) =>
-								[4, 6, 7].includes(x.properties.routeType)
-							)
-						});
-					}
-				}
-			}
-		}
-	}
 
 	function getBoundingBoxMap(): number[][] {
 		const canvas = mapglobal.getCanvas(),
@@ -1082,8 +596,13 @@
 					const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
 
 					this_realtime_feeds_list.forEach(
-						(realtime) => (feed_id_to_chateau_lookup[realtime] = feature.properties.chateau)
+						(realtime) => {
+							feed_id_to_chateau_lookup[realtime] = feature.properties.chateau;
+						}
 					);
+
+					chateau_to_realtime_feed_lookup[feature.properties.chateau] = this_realtime_feeds_list;
+
 					this_schedule_feeds_list.forEach(
 						(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
 					);
@@ -1205,136 +724,27 @@
 			current_map_heading = map.getBearing();
 		}
 
-		function vehicleClicked(
-			events: mapboxgl.MapMouseEvent & {
-				features?: mapboxgl.MapboxGeoJSONFeature[] | undefined;
-			} & mapboxgl.EventData
-		): void {
-			if (events.features) {
-				console.log('clicked on: ', events.features[0]);
-				if (events.features[0].properties != null) {
-					selectedVehicleLookup = {
-						realtime_feed_id: events.features[0].properties.realtime_feed_id,
-						id: events.features[0].properties.id,
-						properties: events.features[0].properties
-					};
-					sidebarView = 9999;
-				}
+		map.on('click', (e) => {
+			console.log('clicked on ', e);
+
+			const click_bbox :[mapboxgl.PointLike, mapboxgl.PointLike]  = [
+                [e.point.x - 3, e.point.y - 3],
+                [e.point.x + 3, e.point.y + 3]
+            ];
+
+			try {
+				const selectedFeatures = map.queryRenderedFeatures(click_bbox, {
+                layers: Object.values(layerspercategory).map((x) => Object.values(x)).flat()
+            });
+
+			console.log('selectedFeatures', selectedFeatures);
+			} catch (e) {
+				console.error(e);
 			}
-		}
-
-		map.on('click', layerspercategory.bus.livedots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.bus.labeldots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.other.livedots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.other.labeldots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.localrail.labeldots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.localrail.livedots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.intercityrail.livedots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		map.on('click', layerspercategory.intercityrail.labeldots, (events) => {
-			sidebarCollapsed = false;
-			vehicleClicked(events);
-		});
-
-		function get_metrolink_board() {
-			//side effect that returns nothing
-			fetch('https://backend.catenarymaps.org/metrolinktrackproxy')
-				.then((x) => x.json())
-				.then((arrivals) => {
-					metrolinkDemoArrivals = arrivals;
-				});
-		}
-
-		map.on('click', 'intercityrailstopscircle', (events) => {
-			let displayname = events.features[0].properties.displayname;
-			if (typeof events.features != 'undefined') {
-				get_metrolink_board();
-				sidebarCollapsed = false;
-				sidebarView = 9998;
-				selectedStop = displayname;
-
-				let metrolinkInterval = setInterval(() => {
-					//demorgan's law
-					if (currentMetrolinkDemoInterval == null) {
-						if (sidebarCollapsed === true || sidebarView != 9998) {
-							console.warn('collapsed, unable to fetch metrolink board');
-							//self destruct if the sidebar has been collapsed
-							clearInterval(metrolinkInterval);
-							currentMetrolinkDemoInterval = null;
-						} else {
-							get_metrolink_board();
-							currentMetrolinkDemoInterval = metrolinkInterval;
-						}
-					} else {
-						console.warn('Unable to create metrolink fetch loop, already exists');
-					}
-				}, 5_000);
-			}
-		});
-
-		map.on('mouseenter', 'localrail', () => {
-			map.getCanvas().style.cursor = 'pointer';
-		});
-
-		map.on('mouseleave', 'localrail', () => {
-			map.getCanvas().style.cursor = '';
-		});
-
-		map.on('mouseenter', 'intercityrail', () => {
-			map.getCanvas().style.cursor = 'pointer';
-		});
-
-		map.on('mouseleave', 'intercityrail', () => {
-			map.getCanvas().style.cursor = '';
-		});
-
-		map.on('mouseenter', 'bus', () => {
-			map.getCanvas().style.cursor = 'pointer';
-		});
-
-		map.on('mouseleave', 'bus', () => {
-			map.getCanvas().style.cursor = '';
-		});
-
-		map.on('mouseenter', 'intercityrailstopscircle', () => {
-			map.getCanvas().style.cursor = 'pointer';
-		});
-
-		map.on('mouseleave', 'intercityrailstopscircle', () => {
-			map.getCanvas().style.cursor = '';
 		});
 
 		map.on('moveend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
-
-			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
 			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
 		});
 
@@ -1366,45 +776,290 @@
 
 		map.on('zoomend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
-
-			realtime_list = Array.from(chateau_feed_results.realtime_feeds);
+			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
 		});
 
-		function fetchKactus() {
-			let avaliablerealtimevehicles_temp = new Set();
-			let avaliablerealtimetrips_temp = new Set();
-			let avaliablerealtimealerts_temp = new Set();
+		function category_name_to_source_name(category: string):string {
+			switch (category) {
+				case 'bus': return 'buses';
+				case 'rail': return 'intercityrail';
+				case 'metro': return 'localrail';
+				case 'other': return 'other';
+			};
 
-			if (fetchedavaliablekactus === false) {
-				fetch(what_kactus_to_use() + '/gtfsrttimes')
-					.then((x) => x.json())
-					.then((feeds: any) => {
-						feeds.forEach((feed: any) => {
-							if (feed.vehicles != null) {
-								avaliablerealtimevehicles_temp.add(feed.feed);
+			//lets just pretend this will never happen
+			return "";
+		}
+
+		function rerender_category_live_dots(category: string) {
+			let source_name:string = category_name_to_source_name(category);
+
+			let source = map.getSource(source_name);
+
+			let features = [];
+
+			Object.entries(realtime_vehicle_locations[category])
+			.forEach(([chateau_id,chateau_vehicles_list]) => {
+				//console.log('chateau_vehicles_list ',chateau_vehicles_list)
+
+				let chateau_route_cache = realtime_vehicle_route_cache[chateau_id];
+
+				Object.entries(chateau_vehicles_list)
+				.forEach(([rt_id, vehicle_data]) => {
+					let vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
+					let colour = '#aaaaaa';
+
+					let tripIdLabel = "";
+					let headsign = "";
+
+					if (vehicle_data.trip) {
+						if (vehicle_data.trip.trip_short_name) {
+							tripIdLabel = vehicle_data.trip.trip_short_name;
+						} else {
+							tripIdLabel = vehicle_data.trip.trip_id;
+						}
+
+						if (vehicle_data.trip.trip_headsign) {
+							headsign = vehicle_data.trip.trip_headsign;
+						}
+					}
+
+					let routeId = vehicle_data.trip?.route_id;
+
+					
+					let maptag = "";
+
+					if (routeId) {
+						let route = chateau_route_cache[routeId];
+
+						if (route) {
+							
+							if (route.route_short_name != "" && route.route_short_name != null) {
+								maptag = route.route_short_name;
+							} else {
+								maptag = route.route_long_name;
 							}
-							if (feed.trips != null) {
-								avaliablerealtimetrips_temp.add(feed.feed);
+							colour = route.route_colour;
+						}
+					}
+
+					let contrastdarkmode = colour;
+						let contrastdarkmodebearing = colour;
+
+						if (colour && darkMode === true) {
+							//convert hex colour to array of 3 numbers
+
+							let rgb = hexToRgb(colour);
+
+							// console.log('rgb', rgb)
+
+							if (rgb != null) {
+								let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+								// console.log('hsl', hsl)
+
+								let newdarkhsl = hsl;
+
+								let blueoffset = 0;
+
+								if (rgb.b > 40) {
+									blueoffset = 30 * (rgb.b / 255);
+								}
+
+								if (hsl.l < 60) {
+									newdarkhsl.l = hsl.l + 10 + (25 * ((100 - hsl.s) / 100) + blueoffset);
+
+									if (hsl.l > 60) {
+										if (blueoffset === 0) {
+											hsl.l = 60;
+										} else {
+											hsl.l = 60 + blueoffset;
+										}
+									}
+								}
+
+								hsl.l = Math.min(100, hsl.l);
+
+								//console.log('newdarkhsl',newdarkhsl)
+
+								let newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
+								//console.log('newdarkrgb',newdarkrgb)
+
+								let newdarkbearingline = hslToRgb(
+									newdarkhsl.h,
+									newdarkhsl.s,
+									(newdarkhsl.l + hsl.l) / 2
+								);
+
+								contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(
+									newdarkrgb.g
+								)}${componentToHex(newdarkrgb.b)}`;
+								contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(
+									newdarkbearingline.g
+								)}${componentToHex(newdarkbearingline.b)}`;
+								//  console.log('rgbtohex',contrastdarkmode)
 							}
-							if (feed.alerts != null) {
-								avaliablerealtimealerts_temp.add(feed.feed);
+						}
+
+					features.push({
+							type: 'Feature',
+							properties: {
+								//shown to user directly?
+								vehicleIdLabel: vehiclelabel,
+								//maintain metres per second, do conversion in label
+								speed: vehicle_data?.position?.speed,
+								color: colour,
+								chateau: chateau_id,
+								//int representing enum
+								routeType: vehicle_data.route_type,
+								//keep to gtfs lookup
+								tripIdLabel: tripIdLabel,
+								//keep to degrees as gtfs specs
+								bearing: vehicle_data?.position?.bearing,
+								maptag: maptag,
+								contrastdarkmode: contrastdarkmode,
+								contrastdarkmodebearing,
+								routeId: routeId,
+								headsign: headsign,
+								timestamp: vehicle_data.timestamp,
+								id: rt_id
+							},
+							geometry: {
+								type: 'Point',
+								coordinates: [vehicle_data.position.longitude, vehicle_data.position.latitude]
 							}
 						});
+				})
+			});
 
-						avaliablerealtimevehicles = avaliablerealtimevehicles_temp;
-						avaliablerealtimetrips = avaliablerealtimetrips_temp;
-						avaliablerealtimealerts = avaliablerealtimealerts_temp;
-						fetchedavaliablekactus = true;
-					})
-					.catch((error) => {
-						console.error(error);
-
-						check_kactus();
-					});
+			if (source) {
+				source.setData({
+					type: 'FeatureCollection',
+					features: features
+				});
 			}
 		}
 
-		fetchKactus();
+		function garbageCollectNotInView() {
+			//chateaus_in_frame
+
+			let chateaus_in_frame_set = new Set(chateaus_in_frame);
+
+			Object.values(realtime_vehicle_locations)
+			.forEach((category) => {
+				Object.keys(category)
+				.forEach((chateau_id) => {
+					if (!chateaus_in_frame_set.has(chateau_id)) {
+						delete category[chateau_id];
+					}
+				})
+			});
+
+			Object.keys(realtime_vehicle_route_cache)
+			.forEach((chateau_id) => {
+				if (!chateaus_in_frame_set.has(chateau_id)) {
+					delete realtime_vehicle_route_cache[chateau_id];
+				}
+			});
+
+			Object.keys(realtime_vehicle_route_cache_hash)
+			.forEach((chateau_id) => {
+				if (!chateaus_in_frame_set.has(chateau_id)) {
+					delete realtime_vehicle_route_cache_hash[chateau_id];
+				}
+			});
+
+			Object.keys(realtime_vehicle_locations_last_updated)
+			.forEach((chateau_id) => {
+				if (!chateaus_in_frame_set.has(chateau_id)) {
+					delete realtime_vehicle_locations_last_updated[chateau_id];
+				}
+			});
+		}
+
+		function process_realtime_vehicle_locations(
+			chateau_id: string,
+			category: string,
+			response_from_birch_vehicles: any
+		) {
+			if (realtime_vehicle_locations[category] === undefined) {
+				realtime_vehicle_locations[category] = {};
+			}
+
+			if (realtime_vehicle_locations[category][chateau_id] === undefined) {
+				realtime_vehicle_locations[category][chateau_id] = {};
+			}
+
+			realtime_vehicle_locations[category][chateau_id] = response_from_birch_vehicles.vehicle_positions;
+
+			if (realtime_vehicle_route_cache[chateau_id] === undefined) {
+				realtime_vehicle_route_cache[chateau_id] = {};
+			}
+
+			if (response_from_birch_vehicles.vehicle_route_cache) {
+				console.log('updating route cache', chateau_id, response_from_birch_vehicles.vehicle_route_cache);
+				realtime_vehicle_route_cache[chateau_id] = response_from_birch_vehicles.vehicle_route_cache;
+			}
+
+			
+				realtime_vehicle_route_cache_hash[chateau_id] = response_from_birch_vehicles.hash_of_routes;
+				realtime_vehicle_locations_last_updated[chateau_id] = response_from_birch_vehicles.last_updated_time_ms;
+			
+			rerender_category_live_dots(category);
+			console.log('brand new vehicle data!', realtime_vehicle_locations);
+		}
+
+		function fetch_realtime_vehicle_locations() {
+			
+			let categories_to_request:string[] = [];
+
+			if (layersettings.bus.visible) {
+				categories_to_request.push('bus');
+			}
+
+			if (layersettings.intercityrail.visible) {
+				categories_to_request.push('rail');
+			}
+
+			if (layersettings.localrail.visible) {
+				categories_to_request.push('metro');
+			}
+
+			if (layersettings.other.visible) {
+				categories_to_request.push('other');
+			}
+
+			chateaus_in_frame.forEach((chateauId) => {
+				categories_to_request.forEach((category) => {
+
+					let last_updated_time_ms: number = realtime_vehicle_locations_last_updated[chateauId] || 0;
+					let existing_fasthash: number = realtime_vehicle_route_cache_hash[chateauId] || 0;
+
+					let url = `https://birch.catenarymaps.org/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/${existing_fasthash}`;
+
+					if (chateau_to_realtime_feed_lookup[chateauId]) {
+						fetch(url)
+						.then(async (response) => 
+						{
+							let response_from_birch_vehicles_text = await response.text();
+							try {
+								let response_from_birch_vehicles = JSON.parse(response_from_birch_vehicles_text);
+								process_realtime_vehicle_locations(chateauId, category, response_from_birch_vehicles);
+							} catch (e) {
+								return false;
+							}
+						}
+					)
+						.catch((err) => {});
+					}
+
+					
+				})
+			});
+
+			garbageCollectNotInView();
+		}
+		fetch_realtime_vehicle_locations();
 
 		function clearbottomright() {
 			let bottomright = document.getElementsByClassName('mapboxgl-ctrl-bottom-right');
@@ -1418,15 +1073,11 @@
 			//console.log('requested rerender of ', rerenders_requested)
 		}
 
-		function process_request_for_rerender() {
-			if (rerenders_requested.length > 0) {
-				[...new Set(rerenders_requested)].forEach((x) => {
-					console.log('rerender automatic', x);
-					rerenders_request(x);
-				});
-				rerenders_requested = [];
-			}
-		}
+		fetch_realtime_vehicle_locations();
+
+			setInterval(() => {
+				fetch_realtime_vehicle_locations();
+			}, 1000);
 
 		map.on('load', () => {
 			//screen.orientation.unlock();
@@ -1459,8 +1110,9 @@
 				}
 			});
 
-			/*
-			map.addLayer({
+			addGeoRadius(map);
+			if (debugmode) {
+				map.addLayer({
 					id: 'chateau_lines',
 					type: 'line',
 				source: 'chateaus',
@@ -1495,10 +1147,10 @@
 						'text-halo-width': 1,
 						'text-halo-blur': 1
 					}
-				});*/
+				});
 
-			addGeoRadius(map);
-			if (debugmode) {
+				map.showTileBoundaries = true;
+
 				const graticule: any = {
 					type: 'FeatureCollection',
 					features: []
@@ -1616,54 +1268,7 @@
 				});
 			}
 
-			fetchKactus();
-
-			map.addSource('static_feeds', {
-				type: 'geojson',
-				data: {
-					type: 'FeatureCollection',
-					features: []
-				}
-			});
-
-			fetch(what_backend_to_use() + '/getinitdata')
-				.then(async (x) => await x.json())
-				.then((x) => {
-					static_feeds = x.s;
-					operators = x.o;
-					let temp_rt = x.r;
-					temp_rt.push({
-						onestop_feed_id: 'f-amtrak~rt',
-						operators: [
-							'o-9q-amtrakcalifornia',
-							'o-9-amtrak',
-							'o-9-amtrak~amtrakcalifornia~amtrakcharteredvehicle-southeastareatransit'
-						]
-					});
-					realtime_feeds = temp_rt;
-				})
-				.catch((e) => {
-					console.error(e);
-					check_backend();
-				});
-
-			updateData();
-
-			map.addSource('static_feeds_hull', {
-				type: 'vector',
-				url: `${what_martin_to_use()}/static_feeds`
-			});
-
-			map.addLayer({
-				id: 'static_hull_calc',
-				type: 'fill',
-				source: 'static_feeds_hull',
-				'source-layer': 'static_feeds',
-				paint: {
-					'fill-color': '#0055aa',
-					'fill-opacity': 0
-				}
-			});
+			
 
 			map.addSource('notbusshapes', {
 				type: 'vector',
@@ -1884,147 +1489,6 @@
 
 			runSettingsAdapt();
 
-			setInterval(() => {
-				if (map.getZoom() >= 8) {
-					realtime_list.forEach((realtime_id: string) => {
-						let url = `${what_kactus_to_use()}/gtfsrt/?feed=${realtime_id}&category=vehicles`;
-
-						//if (realtime_id == "f-octa~rt") {
-						//	url = "https://kylerchin.com/octavehicleproxy?";
-						//}
-
-						if (rtFeedsTimestampsVehicles[realtime_id] != undefined) {
-							url = url + '&timeofcache=' + rtFeedsTimestampsVehicles[realtime_id];
-						}
-
-						if (rtFeedsHashVehicles[realtime_id] != undefined) {
-							url = url + '&bodyhash=' + rtFeedsHashVehicles[realtime_id];
-						}
-
-						if (realtime_id == 'f-irvine~california~usa~rt') {
-							url = 'https://birch.catenarymaps.org/irvinevehproxy';
-							console.log('downloading irvine feed');
-						}
-
-						let listhas = true;
-
-						if (!realtime_id.includes('alerts')) {
-							fetch(url)
-								.then(async (response) => {
-									if (response.status === 200) {
-										//console.log('hash for', agency_obj.feed_id, " is ",  response.headers.get('hash'))
-
-										//console.log(response.headers)
-
-										rtFeedsHashVehicles[realtime_id] = response.headers.get('hash');
-
-										return await response.arrayBuffer();
-									} else {
-										return null;
-									}
-								})
-								.then((buffer) => {
-									if (buffer != null) {
-										if (realtime_id == 'f-irvine~california~usa~rt') {
-											console.log('received irvine feed');
-										}
-
-										let feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-											new Uint8Array(buffer)
-										);
-
-										let allow_processing = true;
-
-										if (realtime_id == 'f-octa~rt') {
-											console.log('octa time: ', feed.header.timestamp);
-
-											if (last_seen_octa_feed != null) {
-												if (last_seen_octa_feed < Number(feed.header.timestamp)) {
-													last_seen_octa_feed = Number(feed.header.timestamp);
-												} else {
-													allow_processing = false;
-													console.log('cancel old octa feed');
-												}
-											}
-										}
-
-										//this is a temporary fix, a permanant fix must be applied in the ingestion engine for realtime data (aspen)
-										if (realtime_id === 'f-translink~rt') {
-											feed.entity = feed.entity.map((eachEntity) => {
-												eachEntity.id = eachEntity.id.split('_')[1];
-
-												return eachEntity;
-											});
-										} else {
-											if (realtime_id === 'f-octa~rt') {
-												feed.entity = feed.entity.map((eachEntity) => {
-													eachEntity.id = eachEntity.id.split('_')[2];
-
-													return eachEntity;
-												});
-											}
-										}
-
-										console.log('buffer decoded for', realtime_id);
-
-										vehiclesData[realtime_id] = feed;
-
-										//save as O(1) lookup system
-										let vehiclesDataHashMapForThisFeed = feed.entity.reduce((acc, obj) => {
-											const id = obj.id;
-
-											acc[id] = obj;
-											return acc;
-										});
-
-										if (allow_processing == true) {
-											vehiclesDataHashMap[realtime_id] = vehiclesDataHashMapForThisFeed;
-											rtFeedsTimestampsVehicles[realtime_id] = feed.header.timestamp;
-
-											rerenders_request(realtime_id);
-										}
-									}
-								})
-								.catch((e) => {
-									check_kactus();
-									check_backend();
-								});
-						}
-					});
-
-					Object.keys(vehiclesData).forEach((vehiclesDataCheckCleanUp) => {
-						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
-							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
-							delete vehiclesData[vehiclesDataCheckCleanUp];
-						}
-					});
-
-					//garbage collect list of routes
-					Object.keys(chateau_routes).forEach((each_chateau) => {
-						if (!chateaus_in_frame.includes(each_chateau)) {
-							delete chateau_routes[each_chateau];
-						}
-					});
-
-					Object.keys(vehiclesDataHashMap).forEach((vehiclesDataCheckCleanUp) => {
-						if (!realtime_list.includes(vehiclesDataCheckCleanUp)) {
-							//console.log('delete gtfsrt', vehiclesDataCheckCleanUp);
-							if (
-								selectedVehicleLookup == null ||
-								//de morgan's law
-								//the feed id is not the same as the current selected vehicle data
-								(selectedVehicleLookup.realtime_feed_id != vehiclesDataCheckCleanUp &&
-									//check only applies when side bar is open and is on the vehicle open screen
-									sidebarView === 9999 &&
-									sidebarCollapsed === false)
-							) {
-								delete vehiclesDataHashMap[vehiclesDataCheckCleanUp];
-							}
-						}
-					});
-				}
-			}, 600);
-
 			map.addSource('geolocation', {
 				type: 'geojson',
 				data: {
@@ -2122,8 +1586,6 @@
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
-
-				realtime_list = Array.from(chateau_feed_results.realtime_feeds);
 			}, 1000);
 		});
 
@@ -2184,8 +1646,6 @@
 
 				runSettingsAdapt();
 			}
-
-			process_request_for_rerender();
 		});
 
 		const successCallback = (position: any) => {
@@ -2429,321 +1889,11 @@
 
 <div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 
-{#key showclipboardalert}
-	<div
-		out:fade={{ duration: 400 }}
-		class={`fixed bottom-10 left-4 md:right-20 md:left-auto rounded-full px-3 py-1 text-sm ${
-			showclipboardalert === true ? '' : 'hidden'
-		}  pointer-events-none bg-blue-200 text-black dark:bg-blue-900 dark:text-white bg-opacity-80 dark:bg-opacity-80`}
-	>
-		{strings.coordscopied}
-	</div>
-{/key}
-
-<div
-	class="fixed bottom-0 right-0 text-xs md:text-sm pointer-events-none bg-gray-50 text-gray-900 dark:bg-zinc-900 bg-opacity-70 dark:bg-opacity-70 dark:text-gray-50 pointer-events-auto select-none clickable"
-	on:click={() => {
-		saveCoordsToClipboard();
-	}}
-	on:keydown={() => {
-		saveCoordsToClipboard();
-	}}
+<div id="catenary-sidebar "
+	class="lg:h-full lg:w-[408px] bg-white dark:bg-slate-900 lg:fixed lg:left-0 lg:top-0 lg:bottom-0"
 >
-	<p>
-		{#if fpsmode == true}
-			<span class="inline text-yellow-800 dark:text-yellow-200"
-				>FPS: {fps.toFixed(0)} | render time: {frame_render_duration.toFixed(2)} ms</span
-			>
-			<span class="inline md:hidden"><br /></span>
-		{/if}
-		{strings.coordsview}: {maplat.toFixed(5)}, {maplng.toFixed(5)} Z: {mapzoom.toFixed(2)}
-		<span><br class="inline md:hidden" /></span>
-		{#if typeof geolocation === 'object'}
-			<span class="text-blue-700 dark:text-green-300"
-				>GPS: {geolocation.coords.latitude.toFixed(5)},
-				{geolocation.coords.longitude.toFixed(5)}
-				{#if typeof geolocation.coords.heading === 'number'}
-					{geolocation.coords.heading.toFixed(0)}°
-				{/if}
-				{#if typeof geolocation.coords.altitude === 'number'}
-					| {geolocation.coords.altitude.toFixed(0)} m
-				{/if}
-				{#if typeof geolocation.coords.speed === 'number'}
-					{#if usunits == false}
-						| {geolocation.coords.speed.toFixed(2)} m/s ({(3.6 * geolocation.coords.speed).toFixed(
-							2
-						)} km/h)
-					{:else}
-						| {(2.23694 * geolocation.coords.speed).toFixed(2)} mph
-					{/if}
-				{/if}
-			</span>
-		{/if}
-	</p>
+	a
 </div>
-
-{#if sidebarCollapsed == false && (!urlParams.get('framework-sidebar') || !embedmode)}
-	<div
-		class="sidebar fixed bottom-0 left-0 pointer-events-none bg-white dark:bg-black bg-opacity-80 dark:bg-opacity-50 text-black dark:text-white border-t-4 md:border-r-4 md:border-t-0 border-r-0 border-seashore pointer-events-auto z-50 clickable md:w-[35vw] w-[100vw] md:h-[100vh] h-[40vh] backdrop-blur-xl"
-		style:padding="20px"
-		style:overflow="auto"
-		transition:blur
-	>
-		<div class="mb-2" style="-webkit-app-region:drag;">
-			<button
-				on:click={() => {
-					sidebarCollapsed = true;
-				}}
-				style="-webkit-app-region: no-drag"
-				class=""
-			>
-				<span class="flex material-symbols-outlined margin-auto select-none"> close </span>
-			</button>
-			<button
-				on:click={() => {
-					sidebarView = 0;
-				}}
-				style="-webkit-app-region: no-drag"
-				class="m-2"
-			>
-				<span class="material-symbols-outlined margin-auto select-none"> home </span>
-			</button>
-			<button
-				on:click={() => {
-					sidebarView = 1;
-				}}
-				style="-webkit-app-region: no-drag"
-				class=""
-			>
-				<span class="material-symbols-outlined margin-auto select-none"> settings </span>
-			</button>
-		</div>
-		{#if sidebarView == 0}
-			<p>Click on any vehicle to get started.</p>
-			<div in:fade>
-				{#each alerts as alert}
-					{#if alert.agency == 'any' || realtime_list.includes(alert.agency)}
-						<Alertpopup background={alert.background}>
-							<h1 class="text-lg">{alert.headline[locale]}</h1>
-							<p class="text-sm">
-								{alert.content[locale]}
-							</p>
-							<a style:cursor="pointer" style:color="#f9e300" href={alert.href}
-								>{strings.learnmore} &rarr;</a
-							>
-						</Alertpopup>
-					{/if}
-				{/each}
-
-				{#if alerts.length == 0}
-					<p>No alerts. Have a great day!</p>
-				{/if}
-
-				<br />
-			</div>
-		{/if}
-		{#if sidebarView == 1}
-			<div in:fade>
-				<h1 class="text-xl md:text-3xl">{strings.settings}</h1>
-				<div>
-					<input
-						on:click={(x) => {
-							handleUsUnitsSwitch();
-
-							runSettingsAdapt();
-						}}
-						on:keydown={(x) => {
-							handleUsUnitsSwitch();
-							runSettingsAdapt();
-						}}
-						checked={usunits}
-						id="us-units"
-						type="checkbox"
-						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-					/>
-					<label for="us-units" class="ml-2">{strings.useUSunits}</label>
-				</div>
-
-				<div>
-					<input
-						on:click={(x) => {
-							fpsmode = !fpsmode;
-							localStorage.setItem('fpsmode', String(fpsmode));
-						}}
-						on:keydown={(x) => {
-							fpsmode = !fpsmode;
-							localStorage.setItem('fpsmode', String(fpsmode));
-						}}
-						checked={fpsmode}
-						id="FPS"
-						type="checkbox"
-						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-					/>
-					<label for="FPS" class="ml-2">{strings.showFPS}</label>
-				</div>
-
-				<div>
-					<input
-						on:click={(x) => {
-							handleAnnouncerModeSwitch();
-							runSettingsAdapt();
-						}}
-						on:keydown={(x) => {
-							handleAnnouncerModeSwitch();
-							runSettingsAdapt();
-						}}
-						checked={announcermode}
-						id="announcements"
-						type="checkbox"
-						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-					/>
-					<label for="announcements" class="ml-2">{strings.announcements}</label>
-				</div>
-
-				<div>
-					<select
-						id="languageSelect"
-						name="languageSelect"
-						style="color: black;"
-						on:change={() => {
-							// @ts-expect-error
-							let language = document.querySelector('#languageSelect').value;
-							if (language !== 'none') {
-								document.querySelector('html')?.setAttribute('lang', language);
-								// @ts-expect-error
-								strings = i18n[language];
-								window.localStorage.setItem('language', language);
-							}
-						}}
-					>
-						<option value="none">--</option>
-						<option value="en">English</option>
-						<option value="fr">Français</option>
-						<option value="es">Español</option>
-						<option value="de">Deutsch</option>
-						<option value="ko">한국어</option>
-						<option value="zh_CN">简体中文</option>
-						<option value="zh_TW">繁體中文</option>
-					</select>
-					<label for="languageSelect" class="ml-2">{strings.language}</label>
-				</div>
-
-				<div>
-					<select
-						id="styleSelect"
-						name="styleSelect"
-						style="color: black;"
-						on:change={() => {
-							// @ts-expect-error
-							let mapStyle = document.querySelector('#styleSelect').value;
-							if (mapStyle !== 'none') {
-								window.localStorage.setItem('mapStyle', mapStyle);
-								window.location.reload();
-							}
-						}}
-					>
-						<option value="none">--</option>
-						<option value="default">{strings.styledefault}</option>
-						<option value="3d">{strings.style3d}</option>
-						<option value="deepsea">{strings.stylesea}</option>
-						<option value="sat">{strings.stylesat}</option>
-						<option value="minimal">{strings.styleminimal}</option>
-						<option value="archi">{strings.stylearchi}</option>
-					</select>
-					<label for="styleSelect" class="ml-2">{strings.mapstyle}</label>
-				</div>
-				<br />
-				<button
-					on:click={() => {
-						sidebarView = 2;
-					}}
-					style:text-decoration="underline"
-					style:cursor="pointer">{strings.credits}</button
-				>
-				<br />
-				<a
-					href="https://catenarymaps.org/privacy"
-					style:text-decoration="underline"
-					style:cursor="pointer"
-					target="_blank">Privacy Policy</a
-				>
-				<br />
-				contact@catenarymaps.org
-			</div>
-		{/if}
-		{#if sidebarView == 2}
-			<div in:fade>
-				<h1 class="text-3xl">{strings.credits}</h1>
-				<br /><br />
-				Data:
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a
-				>
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="https://www.mapbox.com/about/maps/">© Mapbox</a
-				>
-				<br />Style:
-				<a
-					style="text-decoration:underline;cursor:pointer"
-					href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a
-				> <a href="http://www.openrailwaymap.org/">OpenRailwayMap</a>
-			</div>
-		{/if}
-		{#if sidebarView == 9998 && selectedStop != null && metrolinkDemoArrivals != null}
-			<MetrolinkDepartureDemo {selectedStop} {darkMode} {metrolinkDemoArrivals} />
-		{/if}
-		{#if sidebarView == 9999 && selectedVehicleLookup != null}
-			{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id]}
-				{#if vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][selectedVehicleLookup.id]}
-					<VehicleSelected
-						{strings}
-						{selectedVehicleLookup}
-						{darkMode}
-						{usunits}
-						vehicleOnlyGtfsRt={vehiclesDataHashMap[selectedVehicleLookup.realtime_feed_id][
-							selectedVehicleLookup.id
-						]}
-						map={mapglobal}
-						properties={selectedVehicleLookup.properties}
-					/>
-				{:else}
-					<p>
-						An error has occured searching for: <br />{selectedVehicleLookup.realtime_feed_id} - {selectedVehicleLookup.id}
-					</p>
-				{/if}
-			{:else}
-				<p>Feed {selectedVehicleLookup.realtime_feed_id} not found</p>
-			{/if}
-		{/if}
-
-		<!-- <h1 class="text-3xl">{strings.art}</h1>
-			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/LongBeach-I-105.jpeg' name='Celestial Chance' artist='Sally Weber' description='Artist Sally Weber designed “Celestial Chance” for Long Beach Blvd. Station to explore traditional and contemporary visions of the sky.' />
-			<Artwork image='https://art.metro.net/wp-content/uploads/2021/07/Susan-Logoreci_Right-Of-Way.jpeg' name='Right Above The Right-Of-Way' artist='Susan Logoreci' description='Just as this aerial station provides views of the surrounding areas, the artworks present aerial views of local neighborhoods, depicted in an intricate series of colored pencil drawings. Drawn from photographs that were shot from a helicopter hovering above the city, the images present the structured landscape of the area punctuated with identifiable landmarks.' />
-			<Artwork image='https://art.metro.net/wp-content/uploads/2021/08/feature-tree-califas-1200x800-1.jpg' name='Tree of Califas' artist='Margaret Garcia' description='Adjacent to the historic site of the Campo de Cahuenga where in 1847 Mexico relinquished control of California to the United States in the Treaty of Cahuenga, Tree of Califas draws its title from the the mythological black Amazon queen Califas who was said to have ruled a tribe of women warriors and after whom the Spaniards named California.' />
-			<Artwork image='https://art.metro.net/wp-content/uploads/2022/12/Phung-Huynh-Allegorical-Portal-to-the-City-Within-a-City-A.png' name='Allegorical Portal to the City Within a City' artist='Phung Huynh' description='Phung Huynh explores the origin story of Century City through her unique approach of urban folklore and community voices. The artwork will include portraits of recognizable actors from the area’s early history as a film studio back lot and renowned architects who built Century City, as well as everyday people who work and own businesses in the area.' /> -->
-		<!-- <input
-			type="text"
-			style:cursor="pointer !important"
-			class="absolute right-4 top-4 !cursor-pointer bg-white select-none z-50 h-10 rounded-lg pl-3 dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-			placeholder={strings.search}
-		/> -->
-	</div>
-{/if}
-
-{#if sidebarCollapsed}
-	<a
-		on:click={() => {
-			sidebarCollapsed = false;
-		}}
-		transition:fade
-		class="fixed left-4 bottom-10 !cursor-pointer bg-white select-none z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-	>
-		<span class="hidden md:inline material-symbols-outlined margin-auto select-none"> left_panel_open </span>
-		<span class="inline md:hidden material-symbols-outlined margin-auto select-none"> bottom_panel_open </span>
-	</a>
-{/if}
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
@@ -2793,7 +1943,7 @@
 </div>
 
 <div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-yellow-50 dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
 		: 'hidden'}"
 >
@@ -3024,7 +2174,7 @@
 				symbol="train"
 				{runSettingsAdapt}
 			/>
-			<!--
+			
 			<Realtimelabel
 			bind:layersettings
 			bind:selectedSettingsTab
@@ -3032,7 +2182,7 @@
 			name="Headsign"
 			symbol="sports_score"
 			{runSettingsAdapt}
-		/>-->
+		/>
 
 			<Realtimelabel
 				bind:layersettings
