@@ -797,12 +797,14 @@
 
 			let source = map.getSource(source_name);
 
+			console.log('source', category, source);
+
 			let features = [];
 
 			for (const chateau_id in realtime_vehicle_locations[category]) {
 				let chateau_vehicles_list = realtime_vehicle_locations[category][chateau_id];
 				
-			//console.log('chateau_vehicles_list ',chateau_vehicles_list)
+				//console.log('chateau_vehicles_list ', chateau_id, category, chateau_vehicles_list)
 
 				let chateau_route_cache = realtime_vehicle_route_cache[chateau_id];
 
@@ -933,13 +935,13 @@
 
 			console.log('setting data for ', category, features);
 
-			if (source) {
+			
 
 				source.setData({
 					type: 'FeatureCollection',
 					features: features
 				});
-			}
+			
 		}
 
 		function garbageCollectNotInView() {
@@ -1036,6 +1038,9 @@
 			chateaus_in_frame.forEach((chateauId) => {
 				categories_to_request.forEach((category) => {
 
+					if (chateau_to_realtime_feed_lookup[chateauId]) {
+
+					
 					let last_updated_time_ms: number = realtime_vehicle_locations_last_updated[chateauId] || 0;
 					let existing_fasthash: number = realtime_vehicle_route_cache_hash[chateauId] || 0;
 
@@ -1050,13 +1055,24 @@
 
 						if (typeof pending_chateau_rt_request_for_chateau == 'number') {
 							if (Date.now() - pending_chateau_rt_request_for_chateau > 20000) {
-								allowed_to_fetch = true;
+							//	allowed_to_fetch = true;
 							} else {
 								allowed_to_fetch = false;
 							}
 						}
 
+						if (map.getZoom() < 3) {
+							allowed_to_fetch = false;
+						}
+
+						if (map.getZoom() < 7 && category == 'bus') {
+							allowed_to_fetch = false;
+
+						}
+
 						pending_chateau_rt_request[chateauId] = Date.now();
+
+
 
 						if (allowed_to_fetch == true) {
 							fetch(url)
@@ -1081,7 +1097,7 @@
 					} else {
 						console.log('no rt feeds for ', chateauId);
 					}
-
+				}
 					
 				})
 			});
@@ -1326,7 +1342,7 @@
 
 			map.addSource('otherstops', {
 				type: 'vector',
-				url: 'https://birch.catenarymaps.org/otherstops'
+				url: what_martin_to_use() + '/otherstops'
 			});
 
 			map.addSource('foamertiles', {
