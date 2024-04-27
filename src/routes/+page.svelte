@@ -1630,9 +1630,10 @@
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
 
-			//setTimeout(() => {
-			//	let chateau_feed_results = determineFeedsUsingChateaus(map);
-			//}, 1000);
+			setInterval(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
+			}, 1000);
 
 			fetch_realtime_vehicle_locations();
 		});
