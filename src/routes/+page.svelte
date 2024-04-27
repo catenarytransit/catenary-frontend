@@ -797,19 +797,11 @@
 
 			let source = map.getSource(source_name);
 
-			console.log('source', category, source);
-
-			let features = [];
-
-			for (const chateau_id in realtime_vehicle_locations[category]) {
-				let chateau_vehicles_list = realtime_vehicle_locations[category][chateau_id];
-				
-				//console.log('chateau_vehicles_list ', chateau_id, category, chateau_vehicles_list)
-
-				let chateau_route_cache = realtime_vehicle_route_cache[chateau_id];
-
-				for (const vehicle_entry in chateau_vehicles_list) {
-					let vehicle_data = chateau_vehicles_list[vehicle_entry];
+			let features = Object.entries(realtime_vehicle_locations[category]).map(
+				([chateau_id, chateau_vehicles_list]) => Object.entries(chateau_vehicles_list)
+				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
+				.map(([rt_id, vehicle_data]) => {
+					
 					let vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
 					let colour = '#aaaaaa';
 
@@ -831,6 +823,10 @@
 					let routeId = vehicle_data.trip?.route_id;
 					let maptag = "";
 
+					let chateau_route_cache = realtime_vehicle_route_cache[chateau_id];
+
+					if (chateau_route_cache) {
+						
 					if (routeId) {
 						let route = chateau_route_cache[routeId];
 
@@ -845,6 +841,7 @@
 						} else {
 							console.log("Could not find route for ", chateau_id, routeId);
 						}
+					}
 					}
 
 					let contrastdarkmode = colour;
@@ -901,7 +898,7 @@
 							}
 						}
 
-					features.push({
+					return{
 							type: 'Feature',
 							properties: {
 								//shown to user directly?
@@ -923,19 +920,19 @@
 								routeId: routeId,
 								headsign: headsign,
 								timestamp: vehicle_data.timestamp,
-								id: vehicle_entry
+								id: rt_id
 							},
 							geometry: {
 								type: 'Point',
 								coordinates: [vehicle_data.position.longitude, vehicle_data.position.latitude]
 							}
-						});
-				}
-			}
+						};
+				})
+			).flat();
 
 			console.log('setting data for ', category, features);
 
-			
+			//console.log("rerender category", category, features);
 
 				source.setData({
 					type: 'FeatureCollection',
@@ -1078,13 +1075,18 @@
 							fetch(url)
 						.then(async (response) => 
 						{
-							let response_from_birch_vehicles_text = await response.text();
 							try {
+								
 								delete pending_chateau_rt_request[chateauId];
+								//if response is 200
+								if (response.status == 200) {
+								let response_from_birch_vehicles_text = await response.text();
 								let response_from_birch_vehicles = JSON.parse(response_from_birch_vehicles_text);
 								process_realtime_vehicle_locations(chateauId, category, response_from_birch_vehicles);
+								}
 							} catch (e) {
-								return false;
+								console.error(chateauId,category, e);
+								//return false;
 							}
 						}
 					)
@@ -1094,6 +1096,8 @@
 						}
 
 						
+					} else {
+						console.log('no rt feeds for ', chateauId);
 					}
 				}
 					
