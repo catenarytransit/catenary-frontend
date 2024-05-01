@@ -534,11 +534,12 @@
 
 				let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
 
-				let regularpointers = ['!=', 0, ['get', 'bearing']];
+				let regularpointers = ['all', ['!=', 0, ['get', 'bearing']], ['==', true, ['get', 'has_bearing']]];
 				let hidevehiclecommandpointers = [
 					'all',
 					['!=', '', ['get', 'tripIdLabel']],
-					['!=', 0, ['get', 'bearing']]
+					['!=', 0, ['get', 'bearing']],
+					['==', true, ['get', 'has_bearing']]
 				];
 
 				if (dotcirclelayer) {
@@ -1032,52 +1033,51 @@
 				categories_to_request.push('other');
 			}
 
+			let realtime_chateaus_in_frame = chateaus_in_frame.filter((chateau_id) => chateau_to_realtime_feed_lookup[chateau_id] != undefined);
+
+			console.log('realtime_chateaus_in_frame', realtime_chateaus_in_frame);
+
 			chateaus_in_frame.forEach((chateauId) => {
 				categories_to_request.forEach((category) => {
-
-					if (chateau_to_realtime_feed_lookup[chateauId]) {
-
-					
+					let pending_key = `${chateauId}-${category}`
 					let last_updated_time_ms: number = realtime_vehicle_locations_last_updated[chateauId] || 0;
 					let existing_fasthash: number = realtime_vehicle_route_cache_hash[chateauId] || 0;
 
 					let url = `https://birch.catenarymaps.org/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/${existing_fasthash}`;
 
-	//	let url = `https://birch.catenarymaps.org/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/0`;
-
 					if (chateau_to_realtime_feed_lookup[chateauId]) {
-						let pending_chateau_rt_request_for_chateau = pending_chateau_rt_request[chateauId];
+						let pending_chateau_rt_request_for_chateau = pending_chateau_rt_request[pending_key];
 
 						let allowed_to_fetch = true;
 
-						if (typeof pending_chateau_rt_request_for_chateau == 'number') {
-							if (Date.now() - pending_chateau_rt_request_for_chateau > 20000) {
-							//	allowed_to_fetch = true;
-							} else {
-								allowed_to_fetch = false;
+						
+						if (pending_chateau_rt_request[pending_key] != undefined) {
+							if (Date.now() - pending_chateau_rt_request_for_chateau < 20000) {
+							allowed_to_fetch = false;
+							console.log('blocking, fetch in progress');
 							}
 						}
 
-						if (map.getZoom() < 3) {
+						if (map.getZoom() < 4) {
 							allowed_to_fetch = false;
 						}
 
 						if (map.getZoom() < 7 && category == 'bus') {
 							allowed_to_fetch = false;
-
 						}
 
-						pending_chateau_rt_request[chateauId] = Date.now();
+						if (map.getZoom() < 5 && category == "metro") {
+							allowed_to_fetch = false;
+						}
 
-
+						pending_chateau_rt_request[pending_key] = Date.now();
 
 						if (allowed_to_fetch == true) {
 							fetch(url)
 						.then(async (response) => 
 						{
+							delete pending_chateau_rt_request[pending_key];
 							try {
-								
-								delete pending_chateau_rt_request[chateauId];
 								//if response is 200
 								if (response.status == 200) {
 								let response_from_birch_vehicles_text = await response.text();
@@ -1091,16 +1091,12 @@
 						}
 					)
 						.catch((err) => {
-							delete pending_chateau_rt_request[chateauId];
+							delete pending_chateau_rt_request[pending_key];
 						});
+						} else {
+							//console.log('not allowed to fetch', chateauId, category);
 						}
-
-						
-					} else {
-						console.log('no rt feeds for ', chateauId);
-					}
-				}
-					
+					}	
 				})
 			});
 
@@ -1635,6 +1631,7 @@
 			setInterval(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame = Array.from(chateau_feed_results.chateaus);
+				console.log("fetching realtime locations now")
 				fetch_realtime_vehicle_locations();
 				garbageCollectNotInView()
 			}, 1000);
