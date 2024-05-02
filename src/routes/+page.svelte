@@ -79,7 +79,7 @@
 	let sidebarOpen:string = "middle";
 	let sidebar_height_output: string = "100vh";
 	//percentage
-	let sidebar_height_number: number | null = 40;
+	let sidebar_height_number: number = 40;
 	//percentage
 	let sidebar_height_target: number = 40;
 	let previous_form_factor: string = "mobile";
@@ -88,7 +88,7 @@
 	let last_sidebar_release: number | null = null;
 	let last_sidebar_interval_id: Timeout | null = null;
 	let map_padding: Record<string, number> = {};
-	let previous_click_on_sidebar_dragger: PointerEvent | null = null;
+	let previous_click_on_sidebar_dragger: number | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
 
 	let currently_holding_sidebar_grabber: boolean = false;
@@ -116,68 +116,84 @@
 	const dragger = 24;
 
 
-	function mousemovesidebar(e:PointerEvent) {
+	function mousemovesidebar(e:TouchEvent | MouseEvent) {
 		clearInterval(last_sidebar_interval_id);
-		e.preventDefault();
-		console.log('mouse move' ,e)
+		console.log('sidebar mouse move' ,e)
 		//console.log('mousemovesidebar', Date.now(), e);
 
 		//calculate y velocity
 
 		let y_velocity = 0;
 
+		let clientY = 0;
+		if (e instanceof MouseEvent) {
+			clientY = e.clientY;
+		} else {
+			clientY = e.touches[0].clientY;
+		}
+
 		if (previous_click_on_sidebar_dragger != null) {
-			y_velocity = e.clientY - previous_click_on_sidebar_dragger.clientY;
+			y_velocity = clientY - previous_click_on_sidebar_dragger;
 			previous_y_velocity_sidebar = y_velocity;
 		}
 
-		previous_click_on_sidebar_dragger = e;
+		previous_click_on_sidebar_dragger = clientY;
 
-		console.log("previous_y_velocity_sidebar", previous_y_velocity_sidebar);
+	//	console.log("previous_y_velocity_sidebar", previous_y_velocity_sidebar);
 
 		if (window.innerWidth < 768) {
-			if (e.pressure > 0) {
 				if (start_of_move_pointer_height != null && start_of_move_sidebar_height != null) {
 					let y_velocity = previous_y_velocity_sidebar || 0;
-					console.log('difference and velocity', start_of_move_pointer_height - e.clientY, y_velocity)
-					let difference = (start_of_move_pointer_height - e.clientY);
+				//	console.log('difference and velocity', start_of_move_pointer_height - clientY, y_velocity)
+					let difference = (start_of_move_pointer_height - clientY) - y_velocity;
+					console.log('sidebar new difference', difference);
 					sidebar_height_number = start_of_move_sidebar_height + difference;
+					console.log('sidebar new height', sidebar_height_number);
 
-					if (e.clientY < dragger) {
+					sidebar_height_output = sidebar_height_number + "px";
+
+					/*
+					if (clientY < dragger) {
 						sidebar_height_number = window.innerHeight - dragger;
 					sidebar_height_output = window.innerHeight - dragger + "px";
 					} else {
-						console.log('below top bound')
+					//	console.log('below top bound')
 						//sidebar_height_output = sidebar_height_number + "px";
-						if (e.clientY > window.innerHeight - dragger) {
-							console.log('at bottom bound')
+						if (clientY > window.innerHeight - dragger) {
+						//	console.log('at bottom bound')
 							sidebar_height_number = dragger;
 							sidebar_height_output = dragger + "px";
 						} else {
-							console.log('nominal')
+						//	console.log('nominal')
 							sidebar_height_number = sidebar_height_number;
-					sidebar_height_output = sidebar_height_number + "px";
+							sidebar_height_output = sidebar_height_number + "px";
 						}
-					}
+					}*/
 
-					if ((e.clientY + (10 * y_velocity)) > 0.7 * window.innerHeight) {
+					if ((clientY + (10 * y_velocity)) > 0.7 * window.innerHeight) {
 						sidebarOpen = "none";
 					} else {
-						if (e.clientY + (10 * y_velocity) < 0.3 * window.innerHeight) {
+						if (clientY + (10 * y_velocity) < 0.3 * window.innerHeight) {
 							sidebarOpen = "full";
 						} else {
 							sidebarOpen = "middle";
 						}
 					}
 				}
-			}
 		}
+
+		console.log('sidebar new target', sidebarOpen, clientY);
 	}
 
-	function startmovesidebar(e:PointerEvent) {
+	function startmovesidebar(e:TouchEvent | MouseEvent) {
 		currently_holding_sidebar_grabber=true;
-		start_of_move_pointer_height = e.clientY;
+		if (e instanceof MouseEvent) {
+			start_of_move_pointer_height = e.clientY;
+		} else {
+			start_of_move_pointer_height = e.touches[0].clientY;
+		}
 		start_of_move_sidebar_height = document.getElementById('catenary-sidebar').offsetHeight;
+		console.log('start moving sidebar')
 	}
 
 	function setSidebarOpen() {
@@ -192,12 +208,6 @@
 
 	function moveToPos(values:any) {
 		console.log("let go sidebar")
-
-		let imaginary_sidebar_height_modifier=0;
-
-		if (values.e) {
-			console.log('e sidebar', values.e);
-		}
 
 		last_sidebar_release = performance.now();
 
@@ -232,7 +242,7 @@
 		}, 1);
 	}
 
-	function letgosidebar(e:PointerEvent) {
+	function letgosidebar(e:Event) {
 		moveToPos({event: e});
 		change_map_padding();
 	}
@@ -290,16 +300,42 @@
 			}
 		});
 
-		addEventListener('pointermove', (e) => {
+		addEventListener('touchmove', (e) => {
+		//	console.log('pointermove', e)
 			if (currently_holding_sidebar_grabber) {
+				console.log('sidebar pointermove', e)
 				mousemovesidebar(e);
+			}
+		});
+
+		addEventListener('mousemove', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				console.log('sidebar mousemove', e)
+				mousemovesidebar(e);
+			}
+		});
+
+		addEventListener('touchup', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				
+				currently_holding_sidebar_grabber = false;
+				letgosidebar(e);
 			}
 		});
 
 		addEventListener('pointerup', (e) => {
 			if (currently_holding_sidebar_grabber) {
-				letgosidebar(e);
+				
 				currently_holding_sidebar_grabber = false;
+				letgosidebar(e);
+			}
+		});
+
+		addEventListener('mouseup', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				
+				currently_holding_sidebar_grabber = false;
+				letgosidebar(e);
 			}
 		});
 	}
@@ -505,7 +541,9 @@
 	let lastclipboardtime: number = 0;
 
 	function change_map_padding() {
-		if (window.innerWidth >= 768) {
+		if (mapglobal) {
+			if (document.getElementById('catenary-sidebar')) {
+				if (window.innerWidth >= 768) {
 			if (sidebarOpen == "full") {
 				mapglobal.setPadding({
 					padding: {left: document.getElementById("catenary-sidebar")?.offsetWidth, right: 0, top: 0, bottom: 0},
@@ -527,6 +565,10 @@
 				});
 			}
 		}
+			}
+			
+		}
+		
 	}
 
 	// Save the JSON object to local storage
@@ -2459,7 +2501,10 @@
 >
 	{#key on_sidebar_trigger}
 		<div class="block md:hidden py-2 flex flex-row"
-		on:pointerdown={startmovesidebar}
+		on:mousedown={startmovesidebar}
+		on:touchstart={startmovesidebar}
+		aria-label="Move sidebar"
+		role="none"
 		>
 			<div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
 		</div>
