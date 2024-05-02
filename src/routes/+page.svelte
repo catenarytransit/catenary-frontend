@@ -87,8 +87,9 @@
 	let start_of_move_sidebar_height: number | null = null;
 	let last_sidebar_release: number | null = null;
 	let last_sidebar_interval_id: Timeout | null = null;
-	let last_y_pointer_velocity_sidebar: number | null = null;
 	let map_padding: Record<string, number> = {};
+	let previous_click_on_sidebar_dragger: PointerEvent | null = null;
+	let previous_y_velocity_sidebar: number | null = null;
 
 	function getSidebarOpenPercentage() {
 		if (window.innerWidth >= 640) {
@@ -171,11 +172,25 @@
 		console.log('mouse move' ,e)
 		//console.log('mousemovesidebar', Date.now(), e);
 
+		//calculate y velocity
+
+		let y_velocity = 0;
+
+		if (previous_click_on_sidebar_dragger != null) {
+			y_velocity = e.clientY - previous_click_on_sidebar_dragger.clientY;
+			previous_y_velocity_sidebar = y_velocity;
+		}
+
+		previous_click_on_sidebar_dragger = e;
+
+		console.log("previous_y_velocity_sidebar", previous_y_velocity_sidebar);
+
 		if (window.innerWidth < 768) {
 			if (e.pressure > 0) {
 				if (start_of_move_pointer_height != null && start_of_move_sidebar_height != null) {
-					
-					let difference = start_of_move_pointer_height - e.clientY;
+					let y_velocity = previous_y_velocity_sidebar || 0;
+					console.log('difference and velocity', start_of_move_pointer_height - e.clientY, y_velocity)
+					let difference = (start_of_move_pointer_height - e.clientY);
 					sidebar_height_number = start_of_move_sidebar_height + difference;
 
 					if (e.clientY < dragger) {
@@ -195,10 +210,10 @@
 						}
 					}
 
-					if (e.clientY > 0.9 * window.innerHeight) {
+					if ((e.clientY + (10 * y_velocity)) > 0.7 * window.innerHeight) {
 						sidebarOpen = "none";
 					} else {
-						if (e.clientY < 0.3 * window.innerHeight) {
+						if (e.clientY + (10 * y_velocity) < 0.4 * window.innerHeight) {
 							sidebarOpen = "full";
 						} else {
 							sidebarOpen = "middle";
@@ -221,11 +236,17 @@
 			sidebarOpen = "full";
 		}
 		
-		moveToPos();
+		moveToPos({});
 	}
 
-	function moveToPos() {
+	function moveToPos(values:any) {
 		console.log("let go sidebar")
+
+		let imaginary_sidebar_height_modifier=0;
+
+		if (values.e) {
+			console.log('e sidebar', values.e);
+		}
 
 		last_sidebar_release = performance.now();
 
@@ -261,7 +282,7 @@
 	}
 
 	function letgosidebar(e:PointerEvent) {
-		moveToPos();
+		moveToPos({event: e});
 		change_map_padding();
 	}
 
@@ -2422,7 +2443,6 @@
 		on:pointerdown={startmovesidebar}
 		on:pointerup={letgosidebar}
 		on:pointerleave={letgosidebar}
-		on:mouseleave={letgosidebar}
 		>
 			<div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
 		</div>
