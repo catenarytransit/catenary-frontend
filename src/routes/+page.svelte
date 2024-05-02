@@ -76,8 +76,8 @@
 
 	//sidebar current open parameters
 	// middle | full | none
-	let sidebarOpen:string = "middle";
-	let sidebar_height_output: string = "100vh";
+	let sidebarOpen:string = "none";
+	let sidebar_height_output: string = "24px";
 	//percentage
 	let sidebar_height_number: number = 40;
 	//percentage
@@ -2511,7 +2511,7 @@
 		{#key latest_item_on_stack}
 			{#if latest_item_on_stack != null}
 				{#if latest_item_on_stack.data instanceof MapSelectionScreen}
-					<div class="px-4 py-2 flex flex-col h-full">
+					<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
 						<h1 class="text-lg md:text-2xl font-semibold">
 							{latest_item_on_stack.data.arrayofoptions.length} items selected
 						</h1>
