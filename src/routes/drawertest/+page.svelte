@@ -63,7 +63,7 @@
 
 	function mousemovesidebar(e:TouchEvent | MouseEvent) {
 		clearInterval(last_sidebar_interval_id);
-		console.log('sidebar mouse move' ,e)
+	//	console.log('sidebar mouse move' ,e)
 		//console.log('mousemovesidebar', Date.now(), e);
 
 		//calculate y velocity
@@ -91,9 +91,9 @@
 					let y_velocity = previous_y_velocity_sidebar || 0;
 				//	console.log('difference and velocity', start_of_move_pointer_height - clientY, y_velocity)
 					let difference = (start_of_move_pointer_height - clientY) - y_velocity;
-					console.log('sidebar new difference', difference);
+					//console.log('sidebar new difference', difference);
 					sidebar_height_number = start_of_move_sidebar_height + difference;
-					console.log('sidebar new height', sidebar_height_number);
+					//console.log('sidebar new height', sidebar_height_number);
 
 					sidebar_height_output = sidebar_height_number + "px";
 
@@ -127,7 +127,7 @@
 				}
 		}
 
-		console.log('sidebar new target', sidebarOpen, clientY);
+		//console.log('sidebar new target', sidebarOpen, clientY);
 	}
 
 	function startmovesidebar(e:TouchEvent | MouseEvent) {
@@ -248,11 +248,12 @@
 		addEventListener('touchmove', (e) => {
 		//	console.log('pointermove', e)
 			if (currently_holding_sidebar_grabber) {
-				console.log('sidebar pointermove', e)
+				console.log('sidebar touchmove', e)
 				mousemovesidebar(e);
 			}
 		});
 
+        
 		addEventListener('mousemove', (e) => {
 			if (currently_holding_sidebar_grabber) {
 				console.log('sidebar mousemove', e)
@@ -260,17 +261,19 @@
 			}
 		});
 
+        let sidebar_grabber = document.getElementById('catenary-sidebar');
+
+        sidebar_grabber.addEventListener('touchstart', (e) => {
+            startmovesidebar(e);
+        });
+
+        sidebar_grabber.addEventListener('mousedown', (e) => {
+           startmovesidebar(e);
+        });
+
 		addEventListener('touchup', (e) => {
 			if (currently_holding_sidebar_grabber) {
-				
-				currently_holding_sidebar_grabber = false;
-				letgosidebar(e);
-			}
-		});
-
-		addEventListener('pointerup', (e) => {
-			if (currently_holding_sidebar_grabber) {
-				
+				console.log("Let go")
 				currently_holding_sidebar_grabber = false;
 				letgosidebar(e);
 			}
@@ -286,7 +289,8 @@
 	}
 </script>
 
-<div
+<div class="h-100vh w-100vw">
+    <div
 	id="catenary-sidebar"
 	style={`height: ${sidebar_height_output}`}
 	class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-gray-800 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
@@ -307,4 +311,5 @@
             <p>This is the sidebar</p>
             <p>This is the sidebar</p>
         </div>
+</div>
 </div>

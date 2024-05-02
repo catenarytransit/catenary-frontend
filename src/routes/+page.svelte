@@ -2500,9 +2500,7 @@
 	class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-gray-800 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 >
 	{#key on_sidebar_trigger}
-		<div class="block md:hidden py-2 flex flex-row"
-		on:mousedown={startmovesidebar}
-		on:touchstart={startmovesidebar}
+		<div id='sidebar-grabber' class="block md:hidden py-2 flex flex-row"
 		aria-label="Move sidebar"
 		role="none"
 		>
