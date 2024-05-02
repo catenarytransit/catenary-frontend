@@ -196,19 +196,7 @@
 		console.log('start moving sidebar')
 	}
 
-	let sidebar_grabber = document.getElementById('catenary-sidebar');
-
-       if (sidebar_grabber != null) {
-        sidebar_grabber.addEventListener('touchstart', (e) => {
-            startmovesidebar(e);
-        });
-
-        sidebar_grabber.addEventListener('mousedown', (e) => {
-           startmovesidebar(e);
-        });
-       } else {
-              console.log('sidebar grabber not found')
-       }
+	
 
 	function setSidebarOpen() {
 		if (window.innerWidth < 768) {
@@ -262,6 +250,9 @@
 	}
 
 	if (typeof window != 'undefined') {
+
+		
+
 		if (window.innerWidth < 768) {
 			sidebarOpen = "middle";
 			sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
@@ -344,6 +335,20 @@
 				letgosidebar(e);
 			}
 		});
+
+		let sidebar_grabber = document.getElementById('catenary-sidebar');
+
+       if (sidebar_grabber != null) {
+        sidebar_grabber.addEventListener('touchstart', (e) => {
+            startmovesidebar(e);
+        });
+
+        sidebar_grabber.addEventListener('mousedown', (e) => {
+           startmovesidebar(e);
+        });
+       } else {
+              console.log('sidebar grabber not found')
+       }
 	}
 
 	
@@ -1444,8 +1449,6 @@
 				)
 				.flat();
 
-			console.log('setting data for ', category, features);
-
 			if (category == 'bus') {
 				let tokki_source = map.getSource('tokkibussource');
 
@@ -1464,7 +1467,6 @@
 					features: tokki_features
 				});
 			}
-			//console.log("rerender category", category, features);
 
 			source.setData({
 				type: 'FeatureCollection',
