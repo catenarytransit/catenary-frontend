@@ -1,8 +1,8 @@
 import type { Map } from "mapbox-gl";
 
 export const new_jeans_buses = {
-    "f-octa~rt": new Set(["5855"]),
-    "f-metro~losangeles~bus~rt": new Set(["5832"])
+    "orangecountytransportationauthority": new Set(["5855"]),
+    "metro~losangeles": new Set(["5832"])
 }
 
 export function make_custom_icon_source(map: Map) {

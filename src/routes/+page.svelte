@@ -54,6 +54,15 @@
 		StopStack,
 		RouteMapSelector
 	} from '../components/stackenum';
+	import { lightenColour } from '../components/lightenDarkColour';
+
+	function titleCase(str: string) {
+		str = str.toLowerCase().split(' ');
+		for (var i = 0; i < str.length; i++) {
+			str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+		}
+		return str.join(' ').replace('Uc Irvine', 'UC Irvine').replace('Ucla', 'UCLA');
+	}
 
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -805,7 +814,7 @@
 
 				let selected_routes = selected_routes_raw
 					.map((x: any) => {
-						let key = x.properties.routeId + x.properties.chateau;
+						let key = x.properties.chateau + x.properties.route_label;
 
 						if (selected_routes_key_unique.has(key)) {
 							return null;
@@ -813,26 +822,24 @@
 
 						if (x.properties) {
 							if (x.properties.routes) {
-							
-							if (!x.properties.routes.replace('{', '').replace('}', '')) {
-								return null;
+								if (!x.properties.routes.replace('{', '').replace('}', '')) {
+									return null;
+								}
+
+								selected_routes_key_unique.add(key);
+
+								return new MapSelectionOption(
+									new RouteMapSelector(
+										x.properties.chateau,
+										x.properties.routes.replace('{', '').replace('}', '').split(',')[0],
+										`#${x.properties.color}`,
+										x.properties.route_label
+									)
+								);
 							}
-	
-							selected_routes_key_unique.add(key);
-	
-							return new MapSelectionOption(
-								new RouteMapSelector(
-									x.properties.chateau,
-									x.properties.routes.replace('{', '').replace('}', '').split(',')[0],
-									`#${x.properties.color}`,
-									x.properties.route_label
-								)
-							);
-							}
-						}	
-						
+						}
+
 						return null;
-						
 					})
 					.filter((x: MapSelectionOption | null) => x != null);
 
@@ -843,16 +850,18 @@
 				MapSelectionOptions = MapSelectionOptions.concat(selected_vehicles);
 				MapSelectionOptions = MapSelectionOptions.concat(selected_routes);
 
-				data_stack.push(new StackInterface(new MapSelectionScreen(MapSelectionOptions)));
-				latest_item_on_stack = data_stack[data_stack.length - 1];
+				if (MapSelectionOptions.length > 0) {
+					data_stack.push(new StackInterface(new MapSelectionScreen(MapSelectionOptions)));
+					latest_item_on_stack = data_stack[data_stack.length - 1];
 
-				if (data_stack.length > 25) {
-					//only use latest 25 entries
-					data_stack = data_stack.slice(data_stack.length - 25);
+					if (data_stack.length > 25) {
+						//only use latest 25 entries
+						data_stack = data_stack.slice(data_stack.length - 25);
+					}
+
+					console.log('data stack now', data_stack);
+					on_sidebar_trigger = on_sidebar_trigger + 1;
 				}
-
-				console.log('data stack now', data_stack);
-				on_sidebar_trigger = on_sidebar_trigger + 1;
 			} catch (e) {
 				console.error(e);
 			}
@@ -938,6 +947,11 @@
 
 								if (vehicle_data.trip.trip_headsign) {
 									headsign = vehicle_data.trip.trip_headsign;
+
+									//if headsign is all caps, use title case
+									if (headsign === headsign.toUpperCase()) {
+										headsign = titleCase(headsign);
+									}
 								}
 							}
 
@@ -1130,6 +1144,24 @@
 
 			console.log('setting data for ', category, features);
 
+			if (category == 'bus') {
+				let tokki_source = map.getSource('tokkibussource');
+
+				let tokki_features = features.filter((x) => {
+					if (new_jeans_buses[x.properties.chateau]) {
+						if (new_jeans_buses[x.properties.chateau][x.properties.vehicleIdLabel]) {
+							return true;
+						}
+					}
+
+					return false;
+				});
+
+				tokki_source.setData({
+					type: 'FeatureCollection',
+					features: tokki_features
+				});
+			}
 			//console.log("rerender category", category, features);
 
 			source.setData({
@@ -1298,14 +1330,19 @@
 										//if response is 200
 										if (response.status == 200) {
 											let response_from_birch_vehicles_text = await response.text();
-											let response_from_birch_vehicles = JSON.parse(
-												response_from_birch_vehicles_text
-											);
-											process_realtime_vehicle_locations(
-												chateauId,
-												category,
-												response_from_birch_vehicles
-											);
+
+											let no_data_answer = 'No assigned node found for this chateau';
+
+											if (response_from_birch_vehicles_text != no_data_answer) {
+												let response_from_birch_vehicles = JSON.parse(
+													response_from_birch_vehicles_text
+												);
+												process_realtime_vehicle_locations(
+													chateauId,
+													category,
+													response_from_birch_vehicles
+												);
+											}
 										}
 									} catch (e) {
 										//console.error(chateauId, category, e);
@@ -2099,6 +2136,7 @@
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
 	<!-- Google Tag Manager -->
+	<!-- Google Tag Manager -->
 	<script>
 		(function (w, d, s, l, i) {
 			w[l] = w[l] || [];
@@ -2165,61 +2203,87 @@
 	class="md:h-full md:w-[408px] bg-white dark:bg-slate-900 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 >
 	{#key on_sidebar_trigger}
-	{#key latest_item_on_stack}
-		{#if latest_item_on_stack != null}
-			{#if latest_item_on_stack.data instanceof MapSelectionScreen}
-				<div class="px-4 py-2 flex flex-col">
-					<h1 class="text-2xl font-semibold">
-						{latest_item_on_stack.data.arrayofoptions.length} items selected
-					</h1>
-					<p>Click on any item from this list</p>
-
-					<div class='flex-grow-0'>
-						<div class=" overflow-y-auto">
-							<h3 class="text-lg">Vehicles</h3>
-							<div class="flex flex-col gap-y-3">
-								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector) as option}
-									<div
-										
-										class="px-2 py-2 bg-gray-50 dark:bg-slate-800 shadow-sm"
-									>
-								{#if option.data.trip_short_name}
-								<span style={`color: ${option.data.colour}`} class='font-bold'>{option.data.trip_short_name}</span>
-								{/if}
-										{#if option.data.route_short_name}
-											<span style={`color: ${option.data.colour}`}>{option.data.route_short_name}</span>
-										{/if}
-										{#if option.data.route_long_name}
-										<span style={`color: ${option.data.colour}`}>{option.data.route_long_name}</span>
-										
-										
-										
-										{/if}
-										
-								{#if option.data.headsign}
+		{#key latest_item_on_stack}
+			{#if latest_item_on_stack != null}
+				{#if latest_item_on_stack.data instanceof MapSelectionScreen}
+					<div class="px-4 py-2 flex flex-col h-full">
+						<h1 class="text-2xl font-semibold">
+							{latest_item_on_stack.data.arrayofoptions.length} items selected
+						</h1>
+						<p>Click on any item from this list</p>
+						<p class='italic text-sm'>Selecting a route is coming soon, currently doesn't do anything</p>
+						<div class="flex-grow-0 h-full">
+							<div class=" overflow-y-auto h-full">
+								{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
 								
-								<br/>
-									<span>{option.data.headsign}</span>
-							
+								<h3 class="text-lg">Vehicles</h3>
+								<div class="flex flex-col gap-y-3">
+									{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector) as option}
+										<div class="px-2 py-2 bg-gray-50 dark:bg-slate-800 shadow-sm">
+											{#if option.data.triplabel}
+												{#if option.data.trip_short_name}
+													<span
+														style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+														class="font-bold">{option.data.trip_short_name}</span
+													>
+												{/if}
+												{#if option.data.route_short_name}
+													<span
+														style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+														>{option.data.route_short_name}</span
+													>
+												{/if}
+												{#if option.data.route_long_name}
+													<span
+														style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+														>{option.data.route_long_name}</span
+													>
+												{/if}
+											{:else}
+												<p>No Trip</p>
+											{/if}
+
+											{#if option.data.headsign}
+												<p>{option.data.headsign}</p>
+											{/if}
+											{#if option.data.vehicle_id}
+												<p>Vehicle {option.data.vehicle_id}</p>
+											{/if}
+										</div>
+									{/each}
+								</div>
+
 								{/if}
-										{#if option.data.vehicle_id}
-							<br/>
-											<span>Vehicle {option.data.vehicle_id}</span>
-										{/if}
-									</div>
-								{/each}
+								
+								{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
+								
+								<h3 class="text-lg">Routes</h3>
+								<div class="flex flex-col gap-y-3">
+									{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
+										<div class="px-2 py-2 bg-gray-50 dark:bg-slate-800 shadow-sm">
+											<p>{option.data.chateau_id}</p>
+											{#if option.data.name}
+												<span
+													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+													>{option.data.name}</span
+												>
+											{/if}
+										</div>
+									{/each}
+								</div>
+
+								{/if}
+								
 							</div>
 						</div>
 					</div>
-				</div>
-				
+				{:else}
+					<p>Not map selection screen</p>
+				{/if}
 			{:else}
-				<p>Not map selection screen</p>
+				<p>Nothing in the stack</p>
 			{/if}
-		{:else}
-			<p>Nothing in the stack</p>
-		{/if}
-	{/key}
+		{/key}
 	{/key}
 </div>
 
