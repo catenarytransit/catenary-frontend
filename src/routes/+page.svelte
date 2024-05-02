@@ -196,6 +196,20 @@
 		console.log('start moving sidebar')
 	}
 
+	let sidebar_grabber = document.getElementById('catenary-sidebar');
+
+       if (sidebar_grabber != null) {
+        sidebar_grabber.addEventListener('touchstart', (e) => {
+            startmovesidebar(e);
+        });
+
+        sidebar_grabber.addEventListener('mousedown', (e) => {
+           startmovesidebar(e);
+        });
+       } else {
+              console.log('sidebar grabber not found')
+       }
+
 	function setSidebarOpen() {
 		if (window.innerWidth < 768) {
 			sidebarOpen = "middle";
@@ -315,15 +329,7 @@
 			}
 		});
 
-		addEventListener('touchup', (e) => {
-			if (currently_holding_sidebar_grabber) {
-				
-				currently_holding_sidebar_grabber = false;
-				letgosidebar(e);
-			}
-		});
-
-		addEventListener('pointerup', (e) => {
+		addEventListener('touchend', (e) => {
 			if (currently_holding_sidebar_grabber) {
 				
 				currently_holding_sidebar_grabber = false;
