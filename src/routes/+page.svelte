@@ -117,17 +117,17 @@
 			sidebarOpen = "middle";
 			sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
 			//px from bottom
-			sidebar_height_number = 40;
+			sidebar_height_number = dragger;
 			//px from bottom
-			sidebar_height_target = 40;
+			sidebar_height_target = dragger;
 			previous_form_factor = "mobile";
 		} else {
 			sidebarOpen = "full";
 			sidebar_height_output = "100vh";
 			//px from bottom
-			sidebar_height_number = 100;
+			sidebar_height_number = window.innerHeight - dragger;
 			//px from bottom
-			sidebar_height_target = 100;
+			sidebar_height_target = window.innerHeight - dragger;
 			previous_form_factor = "desktop";
 		}
 
