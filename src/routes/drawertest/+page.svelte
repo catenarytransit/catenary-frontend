@@ -263,6 +263,7 @@
 
         let sidebar_grabber = document.getElementById('catenary-sidebar');
 
+       if (sidebar_grabber != null) {
         sidebar_grabber.addEventListener('touchstart', (e) => {
             startmovesidebar(e);
         });
@@ -270,8 +271,11 @@
         sidebar_grabber.addEventListener('mousedown', (e) => {
            startmovesidebar(e);
         });
+       } else {
+              console.log('sidebar grabber not found')
+       }
 
-		addEventListener('touchup', (e) => {
+		addEventListener('touchend', (e) => {
 			if (currently_holding_sidebar_grabber) {
 				console.log("Let go")
 				currently_holding_sidebar_grabber = false;
