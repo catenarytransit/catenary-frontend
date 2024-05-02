@@ -1629,7 +1629,7 @@
 
 											let no_data_answer = 'No assigned node found for this chateau';
 
-											if (response_from_birch_vehicles_text != no_data_answer) {
+											if (response_from_birch_vehicles_text != no_data_answer && response_from_birch_vehicles_text != "No realtime data found for this chateau") {
 												let response_from_birch_vehicles = JSON.parse(
 													response_from_birch_vehicles_text
 												);
