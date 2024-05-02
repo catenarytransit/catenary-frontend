@@ -75,7 +75,195 @@
 	let locale = 'en';
 
 	//sidebar current open parameters
-	let sidebarOpen = false;
+	// middle | full | none
+	let sidebarOpen:string = "middle";
+	let sidebar_height_output: string = "100vh";
+	//percentage
+	let sidebar_height_number: number | null = 40;
+	//percentage
+	let sidebar_height_target: number = 40;
+	let previous_form_factor: string = "mobile";
+	let start_of_move_pointer_height: number | null = null;
+	let start_of_move_sidebar_height: number | null = null;
+	let last_sidebar_release: number | null = null;
+	let last_sidebar_interval_id: Timeout | null = null;
+	let last_y_pointer_velocity_sidebar: number | null = null;
+	let map_padding: Record<string, number> = {};
+
+	function getSidebarOpenPercentage() {
+		if (window.innerWidth >= 640) {
+			return 0.55
+		} else {
+			return 0.4
+		}
+	}
+
+	function gpsbutton_bottom_offset_calc() {
+		if (typeof window != "undefined") {
+			if (window.innerWidth >= 640) {
+			return "32px"
+		} else {
+			return `${(32 - dragger) + document.getElementById('catenary-sidebar')?.offsetHeight}px`
+		}
+		} else {
+			return "32px";
+		}
+	}
+
+	const dragger = 24;
+	if (typeof window != 'undefined') {
+		if (window.innerWidth < 768) {
+			sidebarOpen = "middle";
+			sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
+			//px from bottom
+			sidebar_height_number = 40;
+			//px from bottom
+			sidebar_height_target = 40;
+			previous_form_factor = "mobile";
+		} else {
+			sidebarOpen = "full";
+			sidebar_height_output = "100vh";
+			//px from bottom
+			sidebar_height_number = 100;
+			//px from bottom
+			sidebar_height_target = 100;
+			previous_form_factor = "desktop";
+		}
+
+
+		addEventListener('resize', (e) => {
+			console.log('resize', window.innerWidth);
+
+			if (previous_form_factor == "mobile") {
+				if (sidebarOpen = "full") {
+					sidebarOpen = "middle";
+				}
+			}
+
+			if (previous_form_factor == "desktop") {
+				if (sidebarOpen == "middle") {
+					sidebarOpen = "full";
+				}
+			}
+
+			if (window.innerWidth < 768) {
+				previous_form_factor = "mobile";
+				if (sidebarOpen == "full") {
+					sidebar_height_output = window.innerHeight + "px";
+				}
+				if (sidebarOpen == "middle") {
+					sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
+				} else {
+					if (sidebarOpen == "none") {
+						sidebar_height_output = "20px";
+					}
+				}
+			} else {
+				previous_form_factor = "desktop";
+				sidebar_height_output = "100vh";
+			}
+		});
+	}
+
+	function mousemovesidebar(e:PointerEvent) {
+		clearInterval(last_sidebar_interval_id);
+		e.preventDefault();
+		console.log('mouse move' ,e)
+		//console.log('mousemovesidebar', Date.now(), e);
+
+		if (window.innerWidth < 768) {
+			if (e.pressure > 0) {
+				if (start_of_move_pointer_height != null && start_of_move_sidebar_height != null) {
+					
+					let difference = start_of_move_pointer_height - e.clientY;
+					sidebar_height_number = start_of_move_sidebar_height + difference;
+
+					if (e.clientY < dragger) {
+						sidebar_height_number = window.innerHeight - dragger;
+					sidebar_height_output = window.innerHeight - dragger + "px";
+					} else {
+						console.log('below top bound')
+						//sidebar_height_output = sidebar_height_number + "px";
+						if (e.clientY > window.innerHeight - dragger) {
+							console.log('at bottom bound')
+							sidebar_height_number = dragger;
+							sidebar_height_output = dragger + "px";
+						} else {
+							console.log('nominal')
+							sidebar_height_number = sidebar_height_number;
+					sidebar_height_output = sidebar_height_number + "px";
+						}
+					}
+
+					if (e.clientY > 0.9 * window.innerHeight) {
+						sidebarOpen = "none";
+					} else {
+						if (e.clientY < 0.3 * window.innerHeight) {
+							sidebarOpen = "full";
+						} else {
+							sidebarOpen = "middle";
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function startmovesidebar(e:PointerEvent) {
+		start_of_move_pointer_height = e.clientY;
+		start_of_move_sidebar_height = document.getElementById('catenary-sidebar').offsetHeight;
+	}
+
+	function setSidebarOpen() {
+		if (window.innerWidth < 768) {
+			sidebarOpen = "middle";
+		} else {
+			sidebarOpen = "full";
+		}
+		
+		moveToPos();
+	}
+
+	function moveToPos() {
+		console.log("let go sidebar")
+
+		last_sidebar_release = performance.now();
+
+		if (last_sidebar_interval_id != null) {
+			clearInterval(last_sidebar_interval_id);
+		}
+
+		last_sidebar_interval_id = setInterval(() => {
+			if (window.innerWidth < 768) {
+				let target = 0.55 * window.innerHeight;
+
+				if (sidebarOpen == "full") {
+					target = window.innerHeight - dragger;
+				} else {
+					if (sidebarOpen == "none") {
+						target = dragger;
+					}
+				}
+
+				if (sidebar_height_number < target) {
+					sidebar_height_number += 0.1 * (target - sidebar_height_number);
+					sidebar_height_output = sidebar_height_number + "px";
+				} else {
+					if (sidebar_height_number > target) {
+						sidebar_height_number -= 0.1 * (sidebar_height_number - target);
+						sidebar_height_output = sidebar_height_number + "px";
+					} else {
+						clearInterval(last_sidebar_interval_id);
+					}
+				}
+			}
+		}, 1);
+	}
+
+	function letgosidebar(e:PointerEvent) {
+		moveToPos();
+		change_map_padding();
+	}
 
 	if (typeof window !== 'undefined') {
 		// this must be fixed to allow subvariants of languages
@@ -274,6 +462,31 @@
 
 	let showclipboardalert = false;
 	let lastclipboardtime: number = 0;
+
+	function change_map_padding() {
+		if (window.innerWidth >= 768) {
+			if (sidebarOpen == "full") {
+				mapglobal.setPadding({
+					padding: {left: document.getElementById("catenary-sidebar")?.offsetWidth, right: 0, top: 0, bottom: 0},
+					duration: 500
+				});
+			}
+		} else {
+			if (window.innerWidth >= 640) {
+				if (sidebarOpen == "middle") {
+					mapglobal.setPadding({
+						padding: {left: document.getElementById("catenary-sidebar")?.offsetWidth, right: 0, top: 0, bottom: 0},
+						duration: 500
+					});
+				}
+			} else {
+				mapglobal.setPadding({
+					padding: {left: 0, right: 0, top: 0, bottom: document.getElementById("catenary-sidebar")?.offsetHeight},
+					duration: 500
+				});
+			}
+		}
+	}
 
 	// Save the JSON object to local storage
 	//localStorage.setItem("myJsonObject", JSON.stringify(jsonObject));
@@ -805,9 +1018,7 @@
 				let selected_routes_raw = selectedFeatures.filter(
 					(x: any) =>
 						x.source === 'busshapes' ||
-						x.source === 'localrailshapes' ||
-						x.source === 'intercityrailshapes' ||
-						x.source === 'othershapes'
+						x.source === 'notbusshapes'
 				);
 
 				let selected_routes_key_unique = new Set();
@@ -861,6 +1072,8 @@
 
 					console.log('data stack now', data_stack);
 					on_sidebar_trigger = on_sidebar_trigger + 1;
+
+					setSidebarOpen();
 				}
 			} catch (e) {
 				console.error(e);
@@ -2197,39 +2410,50 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
-
+{#key sidebar_height_output} 
 <div
-	id="catenary-sidebar "
-	class="md:h-full md:w-[408px] bg-white dark:bg-slate-900 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+	id="catenary-sidebar"
+	style={`height: ${sidebar_height_output}`}
+	class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-gray-800 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 >
 	{#key on_sidebar_trigger}
+		<div class="block md:hidden py-2 flex flex-row"
+		on:pointermove={mousemovesidebar}
+		on:pointerdown={startmovesidebar}
+		on:pointerup={letgosidebar}
+		on:pointerleave={letgosidebar}
+		on:mouseleave={letgosidebar}
+		>
+			<div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
+		</div>
 		{#key latest_item_on_stack}
 			{#if latest_item_on_stack != null}
 				{#if latest_item_on_stack.data instanceof MapSelectionScreen}
 					<div class="px-4 py-2 flex flex-col h-full">
-						<h1 class="text-2xl font-semibold">
+						<h1 class="text-lg md:text-2xl font-semibold">
 							{latest_item_on_stack.data.arrayofoptions.length} items selected
 						</h1>
-						<p>Click on any item from this list</p>
-						<p class='italic text-sm'>Selecting a route is coming soon, currently doesn't do anything</p>
+						<p class="text-sm md:text-base">Click on any item from this list</p>
+						<p class='italic text-xs sm:text-sm'>Selecting a route is coming soon, currently doesn't do anything</p>
 						<div class="flex-grow-0 h-full">
 							<div class=" overflow-y-auto h-full">
 								{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
 								
-								<h3 class="text-lg">Vehicles</h3>
-								<div class="flex flex-col gap-y-3">
+								<h3 class="text-base sm:text-lg">Vehicles</h3>
+								<div class="flex flex-col gap-y-1 md:gap-y-2">
 									{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector) as option}
-										<div class="px-2 py-2 bg-gray-50 dark:bg-slate-800 shadow-sm">
+										<div class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-sm text-sm md:text-base">
 											{#if option.data.triplabel}
 												{#if option.data.trip_short_name}
 													<span
 														style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-														class="font-bold">{option.data.trip_short_name}</span
+														class="font-bold font-mono">{option.data.trip_short_name}</span
 													>
 												{/if}
 												{#if option.data.route_short_name}
 													<span
 														style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+														class="font-semibold"
 														>{option.data.route_short_name}</span
 													>
 												{/if}
@@ -2239,6 +2463,11 @@
 														>{option.data.route_long_name}</span
 													>
 												{/if}
+												{#if (option.data.chateau_id == "san-diego-mts" && option.data.route_type == 0)}
+													<span class="">
+														#{option.data.vehicle_id}
+													</span>
+												{/if}
 											{:else}
 												<p>No Trip</p>
 											{/if}
@@ -2246,7 +2475,7 @@
 											{#if option.data.headsign}
 												<p>{option.data.headsign}</p>
 											{/if}
-											{#if option.data.vehicle_id}
+											{#if option.data.vehicle_id && !(option.data.chateau_id == "san-diego-mts" && option.data.route_type == 0)}
 												<p>Vehicle {option.data.vehicle_id}</p>
 											{/if}
 										</div>
@@ -2257,10 +2486,10 @@
 								
 								{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
 								
-								<h3 class="text-lg">Routes</h3>
-								<div class="flex flex-col gap-y-3">
+								<h3 class="text-base sm:text-lg">Routes</h3>
+								<div class="flex flex-col gap-y-1 md:gap-y-2">
 									{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
-										<div class="px-2 py-2 bg-gray-50 dark:bg-slate-800 shadow-sm">
+										<div class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-sm text-sm md:text-base">
 											<p>{option.data.chateau_id}</p>
 											{#if option.data.name}
 												<span
@@ -2273,7 +2502,9 @@
 								</div>
 
 								{/if}
-								
+								<br/>
+								<br/>
+								<br/>
 							</div>
 						</div>
 					</div>
@@ -2286,12 +2517,15 @@
 		{/key}
 	{/key}
 </div>
+{/key}
+
+
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
 		on:click={togglelayerfeature}
 		on:keypress={togglelayerfeature}
-		class="!cursor-pointer bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
 		<span
 			class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
@@ -2305,7 +2539,7 @@
 		on:keypress={gonorth}
 		on:touchstart={gonorth}
 		aria-label="Reset Map to North"
-		class="bg-white z-50 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 	>
 		<img
 			src={current_map_heading < 7 && current_map_heading > -7
@@ -2319,23 +2553,28 @@
 	</div>
 
 	{#if !desktopapp}
+		{#key sidebar_height_output}
+		
 		<div
 			on:click={gpsbutton}
 			on:keydown={gpsbutton}
 			on:touchstart={gpsbutton}
-			class="${lockongps
+			style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+			class="{lockongps
 				? ' text-blue-500 dark:text-blue-300'
-				: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed bottom-8 right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+				: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed  right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
 		>
 			<span class="material-symbols-outlined align-middle text-lg select-none">
 				{#if lockongps == true}my_location{:else}location_searching{/if}
 			</span>
 		</div>
+		
+		{/key}
 	{/if}
 </div>
 
 <div
-	class="fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+	class="z-50  dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
 		: 'hidden'}"
 >
