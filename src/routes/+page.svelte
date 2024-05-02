@@ -163,7 +163,7 @@
 					if ((e.clientY + (10 * y_velocity)) > 0.7 * window.innerHeight) {
 						sidebarOpen = "none";
 					} else {
-						if (e.clientY + (10 * y_velocity) < 0.4 * window.innerHeight) {
+						if (e.clientY + (10 * y_velocity) < 0.3 * window.innerHeight) {
 							sidebarOpen = "full";
 						} else {
 							sidebarOpen = "middle";
@@ -2459,7 +2459,6 @@
 >
 	{#key on_sidebar_trigger}
 		<div class="block md:hidden py-2 flex flex-row"
-		on:pointermove={mousemovesidebar}
 		on:pointerdown={startmovesidebar}
 		>
 			<div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
