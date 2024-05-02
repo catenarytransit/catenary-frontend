@@ -55,6 +55,7 @@
 		RouteMapSelector
 	} from '../components/stackenum';
 	import { lightenColour } from '../components/lightenDarkColour';
+	import { e } from 'vitest/dist/reporters-1evA5lom';
 
 	function titleCase(str: string) {
 		str = str.toLowerCase().split(' ');
@@ -90,6 +91,8 @@
 	let map_padding: Record<string, number> = {};
 	let previous_click_on_sidebar_dragger: PointerEvent | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
+
+	let currently_holding_sidebar_grabber: boolean = false;
 
 	function getSidebarOpenPercentage() {
 		if (window.innerWidth >= 640) {
@@ -164,6 +167,19 @@
 				sidebar_height_output = "100vh";
 			}
 		});
+
+		addEventListener('pointermove', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				mousemovesidebar(e);
+			}
+		});
+
+		addEventListener('pointerup', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				letgosidebar(e);
+				currently_holding_sidebar_grabber = false;
+			}
+		});
 	}
 
 	function mousemovesidebar(e:PointerEvent) {
@@ -225,6 +241,7 @@
 	}
 
 	function startmovesidebar(e:PointerEvent) {
+		currently_holding_sidebar_grabber=true;
 		start_of_move_pointer_height = e.clientY;
 		start_of_move_sidebar_height = document.getElementById('catenary-sidebar').offsetHeight;
 	}
@@ -2441,8 +2458,6 @@
 		<div class="block md:hidden py-2 flex flex-row"
 		on:pointermove={mousemovesidebar}
 		on:pointerdown={startmovesidebar}
-		on:pointerup={letgosidebar}
-		on:pointerleave={letgosidebar}
 		>
 			<div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
 		</div>
