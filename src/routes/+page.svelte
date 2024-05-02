@@ -55,7 +55,6 @@
 		RouteMapSelector
 	} from '../components/stackenum';
 	import { lightenColour } from '../components/lightenDarkColour';
-	import { e } from 'vitest/dist/reporters-1evA5lom';
 
 	function titleCase(str: string) {
 		str = str.toLowerCase().split(' ');
@@ -115,72 +114,7 @@
 	}
 
 	const dragger = 24;
-	if (typeof window != 'undefined') {
-		if (window.innerWidth < 768) {
-			sidebarOpen = "middle";
-			sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
-			//px from bottom
-			sidebar_height_number = dragger;
-			//px from bottom
-			sidebar_height_target = dragger;
-			previous_form_factor = "mobile";
-		} else {
-			sidebarOpen = "full";
-			sidebar_height_output = "100vh";
-			//px from bottom
-			sidebar_height_number = window.innerHeight - dragger;
-			//px from bottom
-			sidebar_height_target = window.innerHeight - dragger;
-			previous_form_factor = "desktop";
-		}
 
-
-		addEventListener('resize', (e) => {
-			console.log('resize', window.innerWidth);
-
-			if (previous_form_factor == "mobile") {
-				if (sidebarOpen = "full") {
-					sidebarOpen = "middle";
-				}
-			}
-
-			if (previous_form_factor == "desktop") {
-				if (sidebarOpen == "middle") {
-					sidebarOpen = "full";
-				}
-			}
-
-			if (window.innerWidth < 768) {
-				previous_form_factor = "mobile";
-				if (sidebarOpen == "full") {
-					sidebar_height_output = window.innerHeight + "px";
-				}
-				if (sidebarOpen == "middle") {
-					sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
-				} else {
-					if (sidebarOpen == "none") {
-						sidebar_height_output = "20px";
-					}
-				}
-			} else {
-				previous_form_factor = "desktop";
-				sidebar_height_output = "100vh";
-			}
-		});
-
-		addEventListener('pointermove', (e) => {
-			if (currently_holding_sidebar_grabber) {
-				mousemovesidebar(e);
-			}
-		});
-
-		addEventListener('pointerup', (e) => {
-			if (currently_holding_sidebar_grabber) {
-				letgosidebar(e);
-				currently_holding_sidebar_grabber = false;
-			}
-		});
-	}
 
 	function mousemovesidebar(e:PointerEvent) {
 		clearInterval(last_sidebar_interval_id);
@@ -302,6 +236,75 @@
 		moveToPos({event: e});
 		change_map_padding();
 	}
+
+	if (typeof window != 'undefined') {
+		if (window.innerWidth < 768) {
+			sidebarOpen = "middle";
+			sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
+			//px from bottom
+			sidebar_height_number = dragger;
+			//px from bottom
+			sidebar_height_target = dragger;
+			previous_form_factor = "mobile";
+		} else {
+			sidebarOpen = "full";
+			sidebar_height_output = "100vh";
+			//px from bottom
+			sidebar_height_number = window.innerHeight - dragger;
+			//px from bottom
+			sidebar_height_target = window.innerHeight - dragger;
+			previous_form_factor = "desktop";
+		}
+
+
+		addEventListener('resize', (e) => {
+			console.log('resize', window.innerWidth);
+
+			if (previous_form_factor == "mobile") {
+				if (sidebarOpen = "full") {
+					sidebarOpen = "middle";
+				}
+			}
+
+			if (previous_form_factor == "desktop") {
+				if (sidebarOpen == "middle") {
+					sidebarOpen = "full";
+				}
+			}
+
+			if (window.innerWidth < 768) {
+				previous_form_factor = "mobile";
+				if (sidebarOpen == "full") {
+					sidebar_height_output = window.innerHeight + "px";
+				}
+				if (sidebarOpen == "middle") {
+					sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
+				} else {
+					if (sidebarOpen == "none") {
+						sidebar_height_output = "20px";
+					}
+				}
+			} else {
+				previous_form_factor = "desktop";
+				sidebar_height_output = "100vh";
+			}
+		});
+
+		addEventListener('pointermove', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				mousemovesidebar(e);
+			}
+		});
+
+		addEventListener('pointerup', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				letgosidebar(e);
+				currently_holding_sidebar_grabber = false;
+			}
+		});
+	}
+
+	
 
 	if (typeof window !== 'undefined') {
 		// this must be fixed to allow subvariants of languages
