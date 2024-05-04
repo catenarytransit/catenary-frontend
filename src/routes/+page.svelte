@@ -1259,31 +1259,31 @@
 		{#if typeof geolocation.coords == 'object'}
 		{#if typeof geolocation.coords.speed == 'number'}
 		<div
-		class='leading-tight text-sm  md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5'
-		style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+		class='leading-tight   md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5'
+		style={`font-size: 0px;bottom: ${gpsbutton_bottom_offset_calc()}`}
 		>
 			<p class='leading-none'>
 				{#if geolocation}
 			{#if usunits}
-			<span class='text-semibold'>{(
+			<span class='font-semibold text-sm'>{(
 				2.23694 * geolocation.coords.speed
-			).toFixed(2).split(".")[0]}</span>
+			).toFixed(1).split(".")[0]}</span>
 			{:else}
-			<span  class='text-semibold'>{(
+			<span  class='font-semibold text-sm'>{(
 				3.6 * geolocation.coords.speed
-			).toFixed(2).split(".")[0]}</span>
+			).toFixed(1).split(".")[0]}</span>
 			{/if}
 			{#if ["fr", "de", "it", "es", "se"].includes(locale.split("-")[0])}
-			<span>,</span>
+			<span  class="text-sm">,</span>
 			{:else}
-			<span>.</span>
+			<span  class="text-sm">.</span>
 			{/if}
 			{#if usunits}
-			<span>{(
+			<span  class="text-sm">{(
 				2.23694 * geolocation.coords.speed
 			).toFixed(1).split(".")[1]}</span>
 			{:else}
-			<span>{(
+			<span class="text-sm">{(
 				3.6 * geolocation.coords.speed
 			).toFixed(1).split(".")[1]}</span>
 			{/if}
