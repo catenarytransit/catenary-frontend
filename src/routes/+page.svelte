@@ -91,7 +91,7 @@
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
-	let geolocation: Writable<GeolocationPosition>;
+	let geolocation: GeolocationPosition;
 
 	if (typeof window !== 'undefined') {
 		// this must be fixed to allow subvariants of languages
@@ -1255,6 +1255,49 @@
 
 	{#if !desktopapp}
 		{#key sidebar_height_output}
+		{#if typeof geolocation == 'object'}
+		{#if typeof geolocation.coords == 'object'}
+		{#if typeof geolocation.coords.speed == 'number'}
+		<div
+		class='leading-tight text-sm  md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5'
+		style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+		>
+			<p class='leading-none'>
+				{#if geolocation}
+			{#if usunits}
+			<span class='text-semibold'>{(
+				2.23694 * geolocation.coords.speed
+			).toFixed(2).split(".")[0]}</span>
+			{:else}
+			<span  class='text-semibold'>{(
+				3.6 * geolocation.coords.speed
+			).toFixed(2).split(".")[0]}</span>
+			{/if}
+			{#if ["fr", "de", "it", "es", "se"].includes(locale.split("-")[0])}
+			<span>,</span>
+			{:else}
+			<span>.</span>
+			{/if}
+			{#if usunits}
+			<span>{(
+				2.23694 * geolocation.coords.speed
+			).toFixed(1).split(".")[1]}</span>
+			{:else}
+			<span>{(
+				3.6 * geolocation.coords.speed
+			).toFixed(1).split(".")[1]}</span>
+			{/if}
+			{#if usunits}<br/>
+			<span class="text-xs">mph</span>
+			{:else}<br/>
+			<span class="text-xs">km/h</span>
+			{/if}
+			{/if}
+			</p>
+		</div>
+		{/if}
+		{/if}
+		{/if}
 			<div
 				on:click={gpsbutton}
 				on:keydown={gpsbutton}
