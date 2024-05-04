@@ -79,6 +79,9 @@ let strings = i18n.en;
 let locale = 'en';
 let lockongps = false;
 
+let firstmove = false;
+	let secondrequestlockgps = false;
+
 let geolocation: Writable<GeolocationPosition>;
 
 if (typeof window !== 'undefined') {
