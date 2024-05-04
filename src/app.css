@@ -29,3 +29,5 @@ body {
                        var(--sb-track-color);
     }
   }
+
+  html, body { overscroll-behavior: none; } 
