@@ -302,14 +302,14 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 							//keep to degrees as gtfs specs
 							bearing: vehicle_data?.position?.bearing,
 							has_bearing: vehicle_data?.position?.bearing != null,
-							maptag: maptag,
+							maptag: maptag.replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							trip_short_name: trip_short_name,
 							route_short_name: route_short_name,
 							route_long_name: route_long_name,
 							contrastdarkmode: contrastdarkmode,
 							contrastdarkmodebearing,
 							routeId: routeId,
-							headsign: headsign,
+							headsign: headsign.replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							timestamp: vehicle_data.timestamp,
 							id: rt_id
 						},
