@@ -2,6 +2,8 @@ import type { Writable } from "svelte/store";
 import { writable } from "svelte/store";
 import { get } from 'svelte/store';
 
+import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
+
 import {
     realtime_vehicle_locations_store,
     realtime_vehicle_route_cache_store,
@@ -9,7 +11,7 @@ import {
     realtime_vehicle_locations_last_updated_store
 } from "../globalstores";
 
-export function garbageCollectNotInView(chateaus_in_frame: Writable<string[]>, realtime_vehicle_locations: Record<string, Record<string, any>>, realtime_vehicle_route_cache: Record<string, any>, realtime_vehicle_route_cache_hash: Record<string, any>, realtime_vehicle_locations_last_updated: Record<string, number>) {
+export function garbageCollectNotInView(chateaus_in_frame: Writable<string[]>) {
     //chateaus_in_frame
 
     const chateaus_in_frame_set = new Set(get(chateaus_in_frame));

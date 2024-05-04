@@ -28,7 +28,7 @@ import {
 } from './addLayers/customIcons';
 import { makeCircleLayers } from './addLayers/addLiveDots';
 import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
-
+import {makeGpsLayer} from './makeGpsLayer';
 
 export function setup_load_map(
 	map: mapboxgl.Map,
@@ -39,9 +39,11 @@ export function setup_load_map(
 	chateaus_in_frame: Writable<string[]>,
 	layersettings: Record<string, any>,
 	chateau_to_realtime_feed_lookup: Record<string, any>,
-	pending_chateau_rt_request: Record<string, number>
+	pending_chateau_rt_request: Record<string, number>,
+	recompute_map_padding: () => void
 ) {
 	map.on('load', () => {
+		recompute_map_padding();
 		clearbottomright();
 		// Add new sources and layers
 		const removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
@@ -389,5 +391,13 @@ export function setup_load_map(
 			pending_chateau_rt_request,
 			map
 		);
+
+		makeGpsLayer(map);
+
+		recompute_map_padding();
+
+		setTimeout(() => {
+			recompute_map_padding()
+		}, 1);
 	});
 }

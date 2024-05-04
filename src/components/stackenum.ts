@@ -5,7 +5,8 @@ export class StackInterface {
 		| RouteStack
 		| StopStack
 		| NearbyDeparturesStack
-		| MapSelectionScreen;
+		| MapSelectionScreen
+		| SettingsStack;
 
 	constructor(
 		data:
@@ -15,6 +16,7 @@ export class StackInterface {
 			| StopStack
 			| NearbyDeparturesStack
 			| MapSelectionScreen
+			| SettingsStack
 	) {
 		this.data = data;
 	}
@@ -169,5 +171,12 @@ export class VehicleSelectedStack {
 	constructor(chateau_id: string, vehicle_id: string) {
 		this.chateau_id = chateau_id;
 		this.vehicle_id = vehicle_id;
+	}
+}
+
+export class SettingsStack {
+	
+	constructor() {
+
 	}
 }

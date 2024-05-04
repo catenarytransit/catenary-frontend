@@ -5,6 +5,7 @@
 	import type { Writable } from 'svelte/store';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
+	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
 	import SidebarInternals from '../components/sidebarInternals.svelte';
 	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import {
@@ -64,13 +65,16 @@
 	let start_of_move_sidebar_height: number | null = null;
 	let last_sidebar_release: number | null = null;
 	let last_sidebar_interval_id: number | null = null;
-	let map_padding: Record<string, number> = {};
 	let previous_click_on_sidebar_dragger: number | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
 	let layersettingsBox = false;
 	const layersettingsnamestorage = 'layersettingsv4';
 	let currently_holding_sidebar_grabber: boolean = false;
 	let maplat: number, maplng: number, mapzoom: number;
+	let translate_x_sidebar: string = '0px';
+	let translate_x_sidebar_number: number = 0;
+	let collapser_left_offset_number: number = 408;
+	let collapser_left_offset: string = '408px';
 
 	let darkMode = true;
 
@@ -516,6 +520,26 @@
 		}
 	}
 
+	function recompute_map_padding() {
+		if (innerWidth < 640) {
+			let padding = {"bottom": document.getElementById('catenary-sidebar')?.offsetHeight};
+			mapglobal.easeTo({padding: padding, duration: 200});
+		} else {
+			if (innerWidth < 768) {
+				let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth};
+				mapglobal.easeTo({padding: padding, duration: 200});
+			} else {
+				if (sidebarOpen == 'full') {
+					let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth};
+					mapglobal.easeTo({padding: padding, duration: 200});
+				} else {
+					let padding = {"left": 0};
+					mapglobal.easeTo({padding: padding, duration: 200});
+				}
+			}
+		}
+	}
+
 	function mousemovesidebar(e: TouchEvent | MouseEvent) {
 		clearInterval(last_sidebar_interval_id);
 		//	console.log('sidebar mouse move' ,e)
@@ -597,26 +621,34 @@
 	}
 
 	function setSidebarOpen() {
-		if (window.innerWidth < 768) {
+		if (sidebarOpen == "full") {
+			sidebarOpen = "full";
+		} else {
+			if (window.innerWidth < 768) {
 			sidebarOpen = 'middle';
 		} else {
 			sidebarOpen = 'full';
+		}
 		}
 
 		moveToPos({});
 	}
 
 	function moveToPos(values: any) {
-		console.log('let go sidebar');
-
 		last_sidebar_release = performance.now();
+
+		let sidebar_width = document.getElementById('catenary-sidebar')?.offsetWidth || 0;
 
 		if (last_sidebar_interval_id != null) {
 			clearInterval(last_sidebar_interval_id);
 		}
 
+		recompute_map_padding();
+
 		last_sidebar_interval_id = setInterval(() => {
 			if (window.innerWidth < 768) {
+				translate_x_sidebar_number = 0;
+				translate_x_sidebar = '0px';
 				let target = 0.55 * window.innerHeight;
 
 				if (sidebarOpen == 'full') {
@@ -646,13 +678,42 @@
 						clearInterval(last_sidebar_interval_id);
 					}
 				}
+			} else {
+				console.log('desktop sidebar action')
+				if (sidebarOpen == "full") {
+					if (translate_x_sidebar_number < -0.001) {
+							translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
+							console.log('grow to ', translate_x_sidebar_number)
+							translate_x_sidebar = `${translate_x_sidebar_number}px`;
+							
+							collapser_left_offset_number = sidebar_width - Math.abs(translate_x_sidebar_number);
+							collapser_left_offset = `${collapser_left_offset_number}px`;
+					} else {
+						clearInterval(last_sidebar_interval_id);
+					}
+				}
+
+				if (sidebarOpen == "none") {
+					if (translate_x_sidebar_number > 0 - sidebar_width) {
+							translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
+							
+						console.log('shrink to ', translate_x_sidebar_number, 'target', 0 - sidebar_width);
+
+							translate_x_sidebar = `${translate_x_sidebar_number}px`;
+							
+							collapser_left_offset_number -= 0.1 * Math.abs(sidebar_width);
+							collapser_left_offset = `${collapser_left_offset_number}px`;
+					} else {
+						clearInterval(last_sidebar_interval_id);
+					}
+				}
 			}
 		}, 1);
 	}
 
 	function letgosidebar(e: Event) {
 		moveToPos({ event: e });
-		//change_map_padding();
+		recompute_map_padding();
 	}
 
 	function gonorth() {
@@ -763,6 +824,8 @@
 				previous_form_factor = 'desktop';
 				sidebar_height_output = '100vh';
 			}
+
+			recompute_map_padding();
 		});
 
 		addEventListener('touchmove', (e) => {
@@ -1041,7 +1104,8 @@
 			chateaus_in_frame,
 			layersettings,
 			chateau_to_realtime_feed_lookup,
-			pending_chateau_rt_request
+			pending_chateau_rt_request,
+			recompute_map_padding
 		);
 	});
 </script>
@@ -1096,11 +1160,46 @@
 </svelte:head>
 <div class="w-full">
 	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
+	
+	<div class="fixed shadow-sm dark:shadow-gray-600 hidden lg:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
+	on:click={() => {
+		if (sidebarOpen == "full") {
+			sidebarOpen = "none";
+			moveToPos({});
+		} else {
+			sidebarOpen = "full";
+			moveToPos({});
+		}
+	}}
+	on:keydown={() => {
+		if (sidebarOpen == "full") {
+			sidebarOpen = "none";
+			moveToPos({});
+		} else {
+			sidebarOpen = "full";
+			moveToPos({});
+		}
+	}}
+	style={`left: ${collapser_left_offset}; top: ${typeof window != "undefined" ? (window.innerHeight /2) - 15 : 0}px;`}
+	>{#if sidebarOpen == "none"}
+	<span class="material-symbols-outlined block my-auto">
+		arrow_right
+		</span>
+	{/if}
+	{#if sidebarOpen == "full"}
+	<span class="material-symbols-outlined block my-auto">
+		arrow_left
+		</span>
+	{/if}
+</div>
+
+	{#key translate_x_sidebar}
 	<div
 		id="catenary-sidebar"
-		style={`height: ${sidebar_height_output}`}
-		class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-gray-800 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+		style={`height: ${sidebar_height_output}; transform: translateX(${translate_x_sidebar});`}
+		class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 	>
+
 		<div
 			class="block md:hidden py-2 flex flex-row"
 			on:mousedown={startmovesidebar}
@@ -1114,6 +1213,7 @@
 			<SidebarInternals {latest_item_on_stack} {darkMode} />
 		{/key}
 	</div>
+	{/key}
 </div>
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
