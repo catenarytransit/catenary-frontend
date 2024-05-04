@@ -1,23 +1,23 @@
 <script lang="ts">
-    import mapboxgl from 'mapbox-gl';
-import { onMount } from 'svelte';
-import { writable } from 'svelte/store';
-import type { Writable } from "svelte/store";
-import Realtimelabel from '../realtimelabel.svelte';
-import { decode as decodeToAry, encode as encodeAry } from 'base65536';
-import SidebarInternals from '../components/sidebarInternals.svelte';
-import {
-	dark_mode_store,
-    data_stack_store,
-    on_sidebar_trigger_store,
-	realtime_vehicle_locations_last_updated_store,
-	realtime_vehicle_locations_store,
-	realtime_vehicle_route_cache_hash_store,
-	realtime_vehicle_route_cache_store,
-	usunits_store
-} from "../globalstores";
-import Layerbutton from '../components/layerbutton.svelte';
-import {
+	import mapboxgl from 'mapbox-gl';
+	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
+	import type { Writable } from 'svelte/store';
+	import Realtimelabel from '../realtimelabel.svelte';
+	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
+	import SidebarInternals from '../components/sidebarInternals.svelte';
+	import {
+		dark_mode_store,
+		data_stack_store,
+		on_sidebar_trigger_store,
+		realtime_vehicle_locations_last_updated_store,
+		realtime_vehicle_locations_store,
+		realtime_vehicle_route_cache_hash_store,
+		realtime_vehicle_route_cache_store,
+		usunits_store
+	} from '../globalstores';
+	import Layerbutton from '../components/layerbutton.svelte';
+	import {
 		MapSelectionScreen,
 		StackInterface,
 		MapSelectionOption,
@@ -27,64 +27,63 @@ import {
 		StopStack,
 		RouteMapSelector
 	} from '../components/stackenum';
-    import {setup_click_handler} from '../components/mapClickHandler';
+	import { setup_click_handler } from '../components/mapClickHandler';
 	import i18n from '../i18n/strings';
-    import {setup_load_map} from '../components/setup_load_map';
+	import { setup_load_map } from '../components/setup_load_map';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { determineFeedsUsingChateaus } from '../maploaddata';
 	import CloseButton from '../components/CloseButton.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 
-    const enabledlayerstyle =
+	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
 	const disabledlayerstyle =
 		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
 
+	let centerinit = [-118, 33.9];
 
-let centerinit = [-118, 33.9];
+	let zoominit = 8.1;
 
-let zoominit = 8.1;
+	const decode = (textToDecode: string) => {
+		try {
+			return new TextDecoder().decode(decodeToAry(textToDecode));
+		} catch (e) {
+			return 'Decode failed: Invalid input';
+		}
+	};
 
-const decode = (textToDecode: string) => {
-    try {
-        return new TextDecoder().decode(decodeToAry(textToDecode));
-    } catch (e) {
-        return 'Decode failed: Invalid input';
-    }
-};
+	let sidebarOpen: string = 'middle';
+	let sidebar_height_output: string = '100vh';
+	//percentage
+	let sidebar_height_number: number = 40;
+	//percentage
+	let sidebar_height_target: number = 40;
+	let previous_form_factor: string = 'mobile';
+	let start_of_move_pointer_height: number | null = null;
+	let start_of_move_sidebar_height: number | null = null;
+	let last_sidebar_release: number | null = null;
+	let last_sidebar_interval_id: number | null = null;
+	let map_padding: Record<string, number> = {};
+	let previous_click_on_sidebar_dragger: number | null = null;
+	let previous_y_velocity_sidebar: number | null = null;
+	let layersettingsBox = false;
+	const layersettingsnamestorage = 'layersettingsv4';
+	let currently_holding_sidebar_grabber: boolean = false;
+	let maplat: number, maplng: number, mapzoom: number;
 
+	let darkMode = true;
 
-    let sidebarOpen:string = "middle";
-let sidebar_height_output: string = "100vh";
-//percentage
-let sidebar_height_number: number = 40;
-//percentage
-let sidebar_height_target: number = 40;
-let previous_form_factor: string = "mobile";
-let start_of_move_pointer_height: number | null = null;
-let start_of_move_sidebar_height: number | null = null;
-let last_sidebar_release: number | null = null;
-let last_sidebar_interval_id: number | null = null;
-let map_padding: Record<string, number> = {};
-let previous_click_on_sidebar_dragger: number | null = null;
-let previous_y_velocity_sidebar: number | null = null;
-let layersettingsBox = false;
-const layersettingsnamestorage = 'layersettingsv4';
-let currently_holding_sidebar_grabber: boolean = false;
-let maplat: number, maplng: number, mapzoom: number;
+	let strings = i18n.en;
+	let locale = 'en';
+	let lockongps = false;
 
-let darkMode = true;
-
-let strings = i18n.en;
-let locale = 'en';
-let lockongps = false;
-
-let firstmove = false;
+	const lockonconst = 14.5;
+	let firstmove = false;
 	let secondrequestlockgps = false;
 
-let geolocation: Writable<GeolocationPosition>;
+	let geolocation: Writable<GeolocationPosition>;
 
-if (typeof window !== 'undefined') {
+	if (typeof window !== 'undefined') {
 		// this must be fixed to allow subvariants of languages
 		// @ts-expect-error
 		strings = i18n[window.localStorage.language || 'en'];
@@ -109,19 +108,19 @@ if (typeof window !== 'undefined') {
 	let pending_chateau_rt_request: Record<string, number> = {};
 	let on_sidebar_trigger = 0;
 
-    on_sidebar_trigger_store.subscribe((value) => {
-        on_sidebar_trigger = value;
-    });
+	on_sidebar_trigger_store.subscribe((value) => {
+		on_sidebar_trigger = value;
+	});
 
 	let data_stack: StackInterface[] = [];
 	let latest_item_on_stack: StackInterface | null = null;
 
-    data_stack_store.subscribe((value) => {
-        data_stack = value;
+	data_stack_store.subscribe((value) => {
+		data_stack = value;
 		latest_item_on_stack = data_stack[data_stack.length - 1];
-    });
+	});
 
-    let mapglobal: mapboxgl.Map | null = null;
+	let mapglobal: mapboxgl.Map | null = null;
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -142,7 +141,7 @@ if (typeof window !== 'undefined') {
 	let operators_in_frame: Record<string, any> = {};
 	let realtime_feeds_in_frame: Record<string, any> = {};
 
-    let lastrunmapcalc = 0;
+	let lastrunmapcalc = 0;
 	let mapboundingbox: number[][] = [
 		[0, 0],
 		[0, 0],
@@ -164,9 +163,9 @@ if (typeof window !== 'undefined') {
 
 	let chateaus: any = null;
 	let chateaus_in_frame: Writable<string[]> = writable([]);
-    let showzombiebuses = writable(false);
+	let showzombiebuses = writable(false);
 
-    const layerspercategory = {
+	const layerspercategory = {
 		bus: {
 			livedots: 'bus',
 			labeldots: 'labelbuses',
@@ -210,7 +209,7 @@ if (typeof window !== 'undefined') {
 		}
 	};
 
-    let layersettings: Record<string, any> = {
+	let layersettings: Record<string, any> = {
 		bus: {
 			visible: true,
 			labelshapes: true,
@@ -287,11 +286,11 @@ if (typeof window !== 'undefined') {
 		}
 	};
 
-    function togglelayerfeature() {
+	function togglelayerfeature() {
 		layersettingsBox = !layersettingsBox;
 	}
 
-    function runSettingsAdapt() {
+	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
 			if (layersettings.more.foamermode.infra) {
@@ -446,114 +445,113 @@ if (typeof window !== 'undefined') {
 		}
 	}
 
-if (typeof window != "undefined") {
-  
-    if (
-        localStorage.theme === 'light' ||
-        (urlParams.get('framework-colorway') == 'light' && embedmode) ||
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)
-    ) {
-        console.log('dark mode triggered');
-        document.documentElement.classList.remove('dark');
-        darkMode = false;
-		dark_mode_store.set(false);
-    } else {
-        document.documentElement.classList.add('dark');
-        darkMode = true;
-		dark_mode_store.set(true);
-    }
-}
+	if (typeof window != 'undefined') {
+		if (
+			localStorage.theme === 'light' ||
+			(urlParams.get('framework-colorway') == 'light' && embedmode) ||
+			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)
+		) {
+			console.log('dark mode triggered');
+			document.documentElement.classList.remove('dark');
+			darkMode = false;
+			dark_mode_store.set(false);
+		} else {
+			document.documentElement.classList.add('dark');
+			darkMode = true;
+			dark_mode_store.set(true);
+		}
+	}
 
-function getSidebarOpenPercentage() {
-    if (window.innerWidth >= 640) {
-        return 0.55
-    } else {
-        return 0.33
-    }
-}
+	function getSidebarOpenPercentage() {
+		if (window.innerWidth >= 640) {
+			return 0.55;
+		} else {
+			return 0.33;
+		}
+	}
 
-function gpsbutton_bottom_offset_calc() {
-    if (typeof window != "undefined") {
-        if (window.innerWidth >= 640) {
-        return "32px"
-    } else {
-        return `${(32 - dragger) + document.getElementById('catenary-sidebar')?.offsetHeight}px`
-    }
-    } else {
-        return "32px";
-    }
-}
+	function gpsbutton_bottom_offset_calc() {
+		if (typeof window != 'undefined') {
+			if (window.innerWidth >= 640) {
+				return '32px';
+			} else {
+				return `${32 - dragger + document.getElementById('catenary-sidebar')?.offsetHeight}px`;
+			}
+		} else {
+			return '32px';
+		}
+	}
 
-const dragger = 24;
+	const dragger = 24;
 
-let style: string | undefined = darkMode
-			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
-			: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+	let style: string | undefined = darkMode
+		? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+		: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
-            if (typeof window != 'undefined') {
-			let desiredStyle = embedmode
-				? urlParams.get('framework-style') || window.localStorage.mapStyle
-				: window.localStorage.mapStyle;
+	if (typeof window != 'undefined') {
+		let desiredStyle = embedmode
+			? urlParams.get('framework-style') || window.localStorage.mapStyle
+			: window.localStorage.mapStyle;
 
-			if (desiredStyle == '3d') {
-				style = undefined;
-			}
-			if (desiredStyle == 'sat') {
-				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
-			}
-			if (desiredStyle == 'rustic') {
-				style = 'mapbox://styles/kylerschin/clrgqjvqm005m01oo661z8v1e';
-			}
-			if (desiredStyle == 'deepsea') {
-				style = darkMode
-					? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
-					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
-			}
-			if (desiredStyle == 'archi') {
-				style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
-			}
-			if (desiredStyle == 'minimal') {
-				style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
-			}
+		if (desiredStyle == '3d') {
+			style = undefined;
+		}
+		if (desiredStyle == 'sat') {
+			style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
+		}
+		if (desiredStyle == 'rustic') {
+			style = 'mapbox://styles/kylerschin/clrgqjvqm005m01oo661z8v1e';
+		}
+		if (desiredStyle == 'deepsea') {
+			style = darkMode
+				? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
+				: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+		}
+		if (desiredStyle == 'archi') {
+			style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
+		}
+		if (desiredStyle == 'minimal') {
+			style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
+		}
+	}
+
+	function mousemovesidebar(e: TouchEvent | MouseEvent) {
+		clearInterval(last_sidebar_interval_id);
+		//	console.log('sidebar mouse move' ,e)
+		//console.log('mousemovesidebar', Date.now(), e);
+
+		//calculate y velocity
+
+		let y_velocity = 0;
+
+		let clientY = 0;
+		if (e instanceof MouseEvent) {
+			clientY = e.clientY;
+		} else {
+			clientY = e.touches[0].clientY;
 		}
 
-function mousemovesidebar(e:TouchEvent | MouseEvent) {
-    clearInterval(last_sidebar_interval_id);
-//	console.log('sidebar mouse move' ,e)
-    //console.log('mousemovesidebar', Date.now(), e);
+		if (previous_click_on_sidebar_dragger != null) {
+			y_velocity = clientY - previous_click_on_sidebar_dragger;
+			previous_y_velocity_sidebar = y_velocity;
+		}
 
-    //calculate y velocity
+		previous_click_on_sidebar_dragger = clientY;
 
-    let y_velocity = 0;
+		//	console.log("previous_y_velocity_sidebar", previous_y_velocity_sidebar);
 
-    let clientY = 0;
-    if (e instanceof MouseEvent) {
-        clientY = e.clientY;
-    } else {
-        clientY = e.touches[0].clientY;
-    }
+		if (window.innerWidth < 768) {
+			if (start_of_move_pointer_height != null && start_of_move_sidebar_height != null) {
+				let y_velocity = previous_y_velocity_sidebar || 0;
+				//	console.log('difference and velocity', start_of_move_pointer_height - clientY, y_velocity)
+				let difference = start_of_move_pointer_height - clientY - y_velocity;
+				//console.log('sidebar new difference', difference);
+				sidebar_height_number = start_of_move_sidebar_height + difference;
+				//console.log('sidebar new height', sidebar_height_number);
 
-    if (previous_click_on_sidebar_dragger != null) {
-        y_velocity = clientY - previous_click_on_sidebar_dragger;
-        previous_y_velocity_sidebar = y_velocity;
-    }
+				sidebar_height_output = sidebar_height_number + 'px';
 
-    previous_click_on_sidebar_dragger = clientY;
-
-//	console.log("previous_y_velocity_sidebar", previous_y_velocity_sidebar);
-
-    if (window.innerWidth < 768) {
-            if (start_of_move_pointer_height != null && start_of_move_sidebar_height != null) {
-                let y_velocity = previous_y_velocity_sidebar || 0;
-            //	console.log('difference and velocity', start_of_move_pointer_height - clientY, y_velocity)
-                let difference = (start_of_move_pointer_height - clientY) - y_velocity;
-                //console.log('sidebar new difference', difference);
-                sidebar_height_number = start_of_move_sidebar_height + difference;
-                //console.log('sidebar new height', sidebar_height_number);
-
-                sidebar_height_output = sidebar_height_number + "px";
-
-                /*
+				/*
                 if (clientY < dragger) {
                     sidebar_height_number = window.innerHeight - dragger;
                 sidebar_height_output = window.innerHeight - dragger + "px";
@@ -571,93 +569,92 @@ function mousemovesidebar(e:TouchEvent | MouseEvent) {
                     }
                 }*/
 
-                if ((clientY + (10 * y_velocity)) > 0.7 * window.innerHeight) {
-                    sidebarOpen = "none";
-                } else {
-                    if (clientY + (10 * y_velocity) < 0.3 * window.innerHeight) {
-                        sidebarOpen = "full";
-                    } else {
-                        sidebarOpen = "middle";
-                    }
-                }
-            }
-    }
+				if (clientY + 10 * y_velocity > 0.7 * window.innerHeight) {
+					sidebarOpen = 'none';
+				} else {
+					if (clientY + 10 * y_velocity < 0.3 * window.innerHeight) {
+						sidebarOpen = 'full';
+					} else {
+						sidebarOpen = 'middle';
+					}
+				}
+			}
+		}
 
-    //console.log('sidebar new target', sidebarOpen, clientY);
-}
+		//console.log('sidebar new target', sidebarOpen, clientY);
+	}
 
-function startmovesidebar(e:TouchEvent | MouseEvent) {
-    currently_holding_sidebar_grabber=true;
-    if (e instanceof MouseEvent) {
-        start_of_move_pointer_height = e.clientY;
-    } else {
-        start_of_move_pointer_height = e.touches[0].clientY;
-    }
-    start_of_move_sidebar_height = document.getElementById('catenary-sidebar').offsetHeight;
-    console.log('start moving sidebar')
-}
+	function startmovesidebar(e: TouchEvent | MouseEvent) {
+		currently_holding_sidebar_grabber = true;
+		if (e instanceof MouseEvent) {
+			start_of_move_pointer_height = e.clientY;
+		} else {
+			start_of_move_pointer_height = e.touches[0].clientY;
+		}
+		start_of_move_sidebar_height = document.getElementById('catenary-sidebar').offsetHeight;
+		console.log('start moving sidebar');
+	}
 
-function setSidebarOpen() {
-    if (window.innerWidth < 768) {
-        sidebarOpen = "middle";
-    } else {
-        sidebarOpen = "full";
-    }
-    
-    moveToPos({});
-}
+	function setSidebarOpen() {
+		if (window.innerWidth < 768) {
+			sidebarOpen = 'middle';
+		} else {
+			sidebarOpen = 'full';
+		}
 
-function moveToPos(values:any) {
-    console.log("let go sidebar")
+		moveToPos({});
+	}
 
-    last_sidebar_release = performance.now();
+	function moveToPos(values: any) {
+		console.log('let go sidebar');
 
-    if (last_sidebar_interval_id != null) {
-        clearInterval(last_sidebar_interval_id);
-    }
+		last_sidebar_release = performance.now();
 
-    last_sidebar_interval_id = setInterval(() => {
-        if (window.innerWidth < 768) {
-            let target = 0.55 * window.innerHeight;
+		if (last_sidebar_interval_id != null) {
+			clearInterval(last_sidebar_interval_id);
+		}
 
-            if (sidebarOpen == "full") {
-                target = window.innerHeight - dragger;
-            } else {
-                if (sidebarOpen == "none") {
-                    target = dragger;
-                }
-            }
+		last_sidebar_interval_id = setInterval(() => {
+			if (window.innerWidth < 768) {
+				let target = 0.55 * window.innerHeight;
 
-            if (sidebar_height_number > innerHeight) {
-                sidebar_height_number = innerHeight;
-            }
+				if (sidebarOpen == 'full') {
+					target = window.innerHeight - dragger;
+				} else {
+					if (sidebarOpen == 'none') {
+						target = dragger;
+					}
+				}
 
-            if (sidebar_height_number < dragger) {
-                sidebar_height_number = dragger;
-            }
+				if (sidebar_height_number > innerHeight) {
+					sidebar_height_number = innerHeight;
+				}
 
-            if (sidebar_height_number < target) {
-                sidebar_height_number += 0.1 * (target - sidebar_height_number);
-                sidebar_height_output = sidebar_height_number + "px";
-            } else {
-                if (sidebar_height_number > target) {
-                    sidebar_height_number -= 0.1 * (sidebar_height_number - target);
-                    sidebar_height_output = sidebar_height_number + "px";
-                } else {
-                    clearInterval(last_sidebar_interval_id);
-                }
-            }
-        }
-    }, 1);
-}
+				if (sidebar_height_number < dragger) {
+					sidebar_height_number = dragger;
+				}
 
-function letgosidebar(e:Event) {
-    moveToPos({event: e});
-    //change_map_padding();
-}
+				if (sidebar_height_number < target) {
+					sidebar_height_number += 0.1 * (target - sidebar_height_number);
+					sidebar_height_output = sidebar_height_number + 'px';
+				} else {
+					if (sidebar_height_number > target) {
+						sidebar_height_number -= 0.1 * (sidebar_height_number - target);
+						sidebar_height_output = sidebar_height_number + 'px';
+					} else {
+						clearInterval(last_sidebar_interval_id);
+					}
+				}
+			}
+		}, 1);
+	}
 
+	function letgosidebar(e: Event) {
+		moveToPos({ event: e });
+		//change_map_padding();
+	}
 
-function gonorth() {
+	function gonorth() {
 		if (mapglobal) {
 			lasttimeofnorth = performance.now();
 			mapglobal.resetNorth();
@@ -715,108 +712,105 @@ function gonorth() {
 		}
 	}
 
-if (typeof window != 'undefined') {
-    if (window.innerWidth < 768) {
-        sidebarOpen = "middle";
-        sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
-        //px from bottom
-        sidebar_height_number = dragger;
-        //px from bottom
-        sidebar_height_target = dragger;
-        previous_form_factor = "mobile";
-    } else {
-        sidebarOpen = "full";
-        sidebar_height_output = "100vh";
-        //px from bottom
-        sidebar_height_number = window.innerHeight - dragger;
-        //px from bottom
-        sidebar_height_target = window.innerHeight - dragger;
-        previous_form_factor = "desktop";
-    }
+	if (typeof window != 'undefined') {
+		if (window.innerWidth < 768) {
+			sidebarOpen = 'middle';
+			sidebar_height_output = getSidebarOpenPercentage() * window.innerHeight + 'px';
+			//px from bottom
+			sidebar_height_number = dragger;
+			//px from bottom
+			sidebar_height_target = dragger;
+			previous_form_factor = 'mobile';
+		} else {
+			sidebarOpen = 'full';
+			sidebar_height_output = '100vh';
+			//px from bottom
+			sidebar_height_number = window.innerHeight - dragger;
+			//px from bottom
+			sidebar_height_target = window.innerHeight - dragger;
+			previous_form_factor = 'desktop';
+		}
 
+		addEventListener('resize', (e) => {
+			console.log('resize', window.innerWidth);
 
-    addEventListener('resize', (e) => {
-        console.log('resize', window.innerWidth);
+			if (previous_form_factor == 'mobile') {
+				if ((sidebarOpen = 'full')) {
+					sidebarOpen = 'middle';
+				}
+			}
 
-        if (previous_form_factor == "mobile") {
-            if (sidebarOpen = "full") {
-                sidebarOpen = "middle";
-            }
-        }
+			if (previous_form_factor == 'desktop') {
+				if (sidebarOpen == 'middle') {
+					sidebarOpen = 'full';
+				}
+			}
 
-        if (previous_form_factor == "desktop") {
-            if (sidebarOpen == "middle") {
-                sidebarOpen = "full";
-            }
-        }
+			if (window.innerWidth < 768) {
+				previous_form_factor = 'mobile';
+				if (sidebarOpen == 'full') {
+					sidebar_height_output = window.innerHeight + 'px';
+				}
+				if (sidebarOpen == 'middle') {
+					sidebar_height_output = getSidebarOpenPercentage() * window.innerHeight + 'px';
+				} else {
+					if (sidebarOpen == 'none') {
+						sidebar_height_output = '20px';
+					}
+				}
+			} else {
+				previous_form_factor = 'desktop';
+				sidebar_height_output = '100vh';
+			}
+		});
 
-        if (window.innerWidth < 768) {
-            previous_form_factor = "mobile";
-            if (sidebarOpen == "full") {
-                sidebar_height_output = window.innerHeight + "px";
-            }
-            if (sidebarOpen == "middle") {
-                sidebar_height_output = (getSidebarOpenPercentage() * window.innerHeight) + "px";
-            } else {
-                if (sidebarOpen == "none") {
-                    sidebar_height_output = "20px";
-                }
-            }
-        } else {
-            previous_form_factor = "desktop";
-            sidebar_height_output = "100vh";
-        }
-    });
+		addEventListener('touchmove', (e) => {
+			console.log('touchmove', e);
+			if (currently_holding_sidebar_grabber) {
+				console.log('sidebar touchmove', e);
+				mousemovesidebar(e);
+			}
+		});
 
-    addEventListener('touchmove', (e) => {
-    console.log('touchmove', e)
-        if (currently_holding_sidebar_grabber) {
-            console.log('sidebar touchmove', e)
-            mousemovesidebar(e);
-        }
-    });
+		addEventListener('mousemove', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				console.log('sidebar mousemove', e);
+				mousemovesidebar(e);
+			}
+		});
 
-    
-    addEventListener('mousemove', (e) => {
-        if (currently_holding_sidebar_grabber) {
-            console.log('sidebar mousemove', e)
-            mousemovesidebar(e);
-        }
-    });
+		let sidebar_grabber = document.getElementById('catenary-grabber');
 
-    let sidebar_grabber = document.getElementById('catenary-grabber');
+		if (sidebar_grabber != null) {
+			sidebar_grabber.addEventListener('touchstart', (e) => {
+				startmovesidebar(e);
+			});
 
-   if (sidebar_grabber != null) {
-    sidebar_grabber.addEventListener('touchstart', (e) => {
-        startmovesidebar(e);
-    });
+			sidebar_grabber.addEventListener('mousedown', (e) => {
+				startmovesidebar(e);
+			});
+		} else {
+			console.log('sidebar grabber not found');
+		}
 
-    sidebar_grabber.addEventListener('mousedown', (e) => {
-       startmovesidebar(e);
-    });
-   } else {
-          console.log('sidebar grabber not found')
-   }
+		addEventListener('touchend', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				console.log('Let go');
+				currently_holding_sidebar_grabber = false;
+				letgosidebar(e);
+			}
+		});
 
-    addEventListener('touchend', (e) => {
-        if (currently_holding_sidebar_grabber) {
-            console.log("Let go")
-            currently_holding_sidebar_grabber = false;
-            letgosidebar(e);
-        }
-    });
+		addEventListener('mouseup', (e) => {
+			if (currently_holding_sidebar_grabber) {
+				currently_holding_sidebar_grabber = false;
+				letgosidebar(e);
+			}
+		});
+	}
 
-    addEventListener('mouseup', (e) => {
-        if (currently_holding_sidebar_grabber) {
-            
-            currently_holding_sidebar_grabber = false;
-            letgosidebar(e);
-        }
-    });
-}
-
-onMount(() => {
-    fetch('https://birch.catenarymaps.org/getchateaus')
+	onMount(() => {
+		fetch('https://birch.catenarymaps.org/getchateaus')
 			.then(function (response) {
 				return response.json();
 			})
@@ -840,26 +834,26 @@ onMount(() => {
 			})
 			.catch((err) => console.error(err));
 
-    const map = new mapboxgl.Map({
-        container: 'map',
-        crossSourceCollisions: true,
-        hash: 'pos',
-        useWebGL2: true,
-        preserveDrawingBuffer: false,
-        attributionControl: false,
-        //	antialias: true,
-        style: "", // stylesheet location
-        accessToken: decode(
-            'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
-        ),
-        center: centerinit, // starting position [lng, lat]
-        //keep the centre at Los Angeles, since that is our primary user base currently
-        //switch to IP geolocation and on the fly rendering for this soon
-        zoom: zoominit, // starting zoom (must be greater than 8.1)
-        fadeDuration: 0
-    });
+		const map = new mapboxgl.Map({
+			container: 'map',
+			crossSourceCollisions: true,
+			hash: 'pos',
+			useWebGL2: true,
+			preserveDrawingBuffer: false,
+			attributionControl: false,
+			//	antialias: true,
+			style: '', // stylesheet location
+			accessToken: decode(
+				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
+			),
+			center: centerinit, // starting position [lng, lat]
+			//keep the centre at Los Angeles, since that is our primary user base currently
+			//switch to IP geolocation and on the fly rendering for this soon
+			zoom: zoominit, // starting zoom (must be greater than 8.1)
+			fadeDuration: 0
+		});
 
-    if (darkMode) {
+		if (darkMode) {
 			map.on('style.load', () => {
 				// @ts-expect-error
 				map.setConfigProperty('basemap', 'lightPreset', 'night');
@@ -868,7 +862,7 @@ onMount(() => {
 			});
 		}
 
-        mapboxgl.setRTLTextPlugin(
+		mapboxgl.setRTLTextPlugin(
 			'/mapbox-gl-rtl-text.min.js',
 			(err) => {
 				console.error(err);
@@ -878,7 +872,7 @@ onMount(() => {
 
 		mapglobal = map;
 
-        //updates the debug window with the current map lng and lat
+		//updates the debug window with the current map lng and lat
 		function updateData() {
 			mapzoom = map.getZoom();
 			maplng = map.getCenter().lng;
@@ -887,17 +881,13 @@ onMount(() => {
 			current_map_heading = map.getBearing();
 		}
 
-        setup_click_handler(
-            map,
-            layerspercategory,
-            setSidebarOpen,
-        );
+		setup_click_handler(map, layerspercategory, setSidebarOpen);
 
 		map.on('move', (events) => {
-			updateData()
+			updateData();
 		});
 
-        map.on('moveend', (events) => {
+		map.on('moveend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 		});
@@ -933,18 +923,18 @@ onMount(() => {
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 		});
 
-        setup_load_map(
-            map,
-            runSettingsAdapt,
-            showzombiebuses,
-            darkMode,
-            layerspercategory,
-            chateaus_in_frame,
-            layersettings,
-            chateau_to_realtime_feed_lookup,
-            pending_chateau_rt_request
-        );
-});
+		setup_load_map(
+			map,
+			runSettingsAdapt,
+			showzombiebuses,
+			darkMode,
+			layerspercategory,
+			chateaus_in_frame,
+			layersettings,
+			chateau_to_realtime_feed_lookup,
+			pending_chateau_rt_request
+		);
+	});
 </script>
 
 <svelte:head>
@@ -995,65 +985,27 @@ onMount(() => {
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 	/>
 </svelte:head>
-<div class="w-full" >
-<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
-<div
-id="catenary-sidebar"
-style={`height: ${sidebar_height_output}`}
-class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-gray-800 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
->
-<div class="block md:hidden py-2 flex flex-row"
-    on:mousedown={startmovesidebar}
-    on:touchstart={startmovesidebar}
-    aria-label="Move sidebar"
-    role="none"
-    >
-        <div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
-    </div>
-    {#key on_sidebar_trigger} 
-        <SidebarInternals
-        latest_item_on_stack={latest_item_on_stack}
-		darkMode={darkMode}
-    />
-     {/key}
-    
+<div class="w-full">
+	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
+	<div
+		id="catenary-sidebar"
+		style={`height: ${sidebar_height_output}`}
+		class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-gray-800 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+	>
+		<div
+			class="block md:hidden py-2 flex flex-row"
+			on:mousedown={startmovesidebar}
+			on:touchstart={startmovesidebar}
+			aria-label="Move sidebar"
+			role="none"
+		>
+			<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
+		</div>
+		{#key on_sidebar_trigger}
+			<SidebarInternals {latest_item_on_stack} {darkMode} />
+		{/key}
+	</div>
 </div>
-</div>
-
-<style>
-* {
-    cursor: default;
-    font-family: 'din-2014', sans-serif;
-    user-select: none;
-}
-
-.material-symbols-outlined {
-    font-family: 'Material Symbols Outlined', sans-serif;
-}
-
-:global(.mapboxgl-canvas) {
-    outline: none;
-}
-
-.lineNumber {
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: 5px;
-    border-radius: var(--radius);
-}
-
-.lineLogo {
-    margin-bottom: 15px;
-}
-
-.material-symbols-outlined-big {
-    font-variation-settings:
-        'FILL' 0,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 64;
-}
-</style>
 
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
@@ -1087,24 +1039,23 @@ class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-g
 	</div>
 
 	{#if !desktopapp}
-    {#key sidebar_height_output}
-        <div
-            on:click={gpsbutton}
-            on:keydown={gpsbutton}
-            on:touchstart={gpsbutton}
-            style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
-            class="{lockongps
-                ? ' text-blue-500 dark:text-blue-300'
-                : ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-        >
-            <span class="material-symbols-outlined align-middle text-lg select-none">
-                {#if lockongps == true}my_location{:else}location_searching{/if}
-            </span>
-        </div>
-    {/key}
-{/if}
+		{#key sidebar_height_output}
+			<div
+				on:click={gpsbutton}
+				on:keydown={gpsbutton}
+				on:touchstart={gpsbutton}
+				style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+				class="{lockongps
+					? ' text-blue-500 dark:text-blue-300'
+					: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+			>
+				<span class="material-symbols-outlined align-middle text-lg select-none">
+					{#if lockongps == true}my_location{:else}location_searching{/if}
+				</span>
+			</div>
+		{/key}
+	{/if}
 </div>
-
 
 <div
 	class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
@@ -1359,3 +1310,38 @@ class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-g
 		</div>
 	{/if}
 </div>
+
+<style>
+	* {
+		cursor: default;
+		font-family: 'din-2014', sans-serif;
+		user-select: none;
+	}
+
+	.material-symbols-outlined {
+		font-family: 'Material Symbols Outlined', sans-serif;
+	}
+
+	:global(.mapboxgl-canvas) {
+		outline: none;
+	}
+
+	.lineNumber {
+		font-size: 1.2rem;
+		font-weight: 600;
+		padding: 5px;
+		border-radius: var(--radius);
+	}
+
+	.lineLogo {
+		margin-bottom: 15px;
+	}
+
+	.material-symbols-outlined-big {
+		font-variation-settings:
+			'FILL' 0,
+			'wght' 400,
+			'GRAD' 0,
+			'opsz' 64;
+	}
+</style>
