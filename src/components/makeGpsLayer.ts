@@ -1,3 +1,4 @@
+
 export function makeGpsLayer(map: mapboxgl.Map) {
     map.addSource('geolocation', {
         type: 'geojson',

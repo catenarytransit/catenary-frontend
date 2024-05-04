@@ -1,6 +1,7 @@
 //import {Map} from 'mapbox-gl'
+import { get } from 'svelte/store';
 import { createGeoJSONCircle, createGeoJSONCircleFeature } from '../geoMathsAssist';
-
+import { dark_mode_store } from '../globalstores';
 export function addGeoRadius(map: any) {
     try {
         map.addSource('km_source', {
@@ -16,8 +17,9 @@ export function addGeoRadius(map: any) {
             type: 'line',
                     source: 'km_source',
                     paint: {
-                        'line-color': '#aaaaaa',
+                        'line-color': get(dark_mode_store) ? '#dddddd' : '#121212',
                         'line-width': 1.2,
+                        'line-emissive-strength': 1,
                     }
         });
 
@@ -34,8 +36,8 @@ export function addGeoRadius(map: any) {
 					'text-allow-overlap': true,
                     },
                     paint: {
-						'text-color': '#eee',
-						'text-halo-color': '#003',
+						'text-color': get(dark_mode_store) ? '#ffffff' : '#121212',
+						'text-halo-color': get(dark_mode_store) ? '#000030' : '#eeeeee',
 						'text-halo-width': 2,
 					},
         });

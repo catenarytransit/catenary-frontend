@@ -10,6 +10,7 @@
 		StopStack,
 		RouteMapSelector
 	} from '../components/stackenum';
+	import HomeButton from './SidebarParts/home_button.svelte';
  
     export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
@@ -20,6 +21,9 @@
 				{#if latest_item_on_stack != null}
 					{#if latest_item_on_stack.data instanceof MapSelectionScreen}
 						<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
+							<div class="flex flex-row gap-x-2">
+								<HomeButton />
+							</div>
 							<h1 class="text-lg md:text-2xl font-semibold">
 								{latest_item_on_stack.data.arrayofoptions.length} items selected
 							</h1>
@@ -110,11 +114,11 @@
 								window.location.reload();
 							}}
 							aria-label="Refresh"
-							><div class='m-auto'><span class="material-symbols-outlined block">
+							><div class='m-auto block'><span class="material-symbols-outlined block">
 								refresh
 								</span></div></button></div>
 						<p  class='text-sm md:text-base'>Click on any vehicle or route to get started.</p>
-						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-04 07:42 Z</p>
+						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-04 08:01 Z</p>
 						
 						<div></div>
 

@@ -6,13 +6,13 @@
         "window-controls-overlay"
     ],
     "display": "standalone",
-    "scope": ".https://maps.catenarymaps.org",
+    "scope": "https://maps.catenarymaps.org",
     "categories": [
         "utilities",
         "travel",
         "navigation"
     ],
-    "orientation": "any",
+    "orientation": "natural",
     "icons": [
         {
             "src": "/appimages/default.png",
