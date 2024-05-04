@@ -21,8 +21,8 @@ export function setup_click_handler(map:mapboxgl.Map, layerspercategory:Record<s
         console.log('clicked on ', e);
 
         const click_bbox: [mapboxgl.PointLike, mapboxgl.PointLike] = [
-            [e.point.x - 3, e.point.y - 3],
-            [e.point.x + 3, e.point.y + 3]
+            [e.point.x - 5, e.point.y - 5],
+            [e.point.x + 5, e.point.y + 5]
         ];
 
         try {
