@@ -24,11 +24,11 @@
 							<div class="flex flex-row gap-x-2">
 								<HomeButton />
 							</div>
-							<h1 class="text-lg md:text-2xl font-semibold">
+							<h1 class="text-lg md:text-2xl font-semibold leading-tight">
 								{latest_item_on_stack.data.arrayofoptions.length} items selected
 							</h1>
-							<p class="text-sm md:text-base">Click on any item from this list</p>
-							<p class="italic text-xs sm:text-sm">
+							<p class="text-sm md:text-base leading-tight">Click on any item from this list</p>
+							<p class="italic text-xs sm:text-sm leading-tight">
 								Selecting doesn't do anything yet, will probably be finished around 2024 May 6
 							</p>
 							<div class="flex-grow-0 h-full">
