@@ -114,7 +114,7 @@
 								refresh
 								</span></div></button></div>
 						<p  class='text-sm md:text-base'>Click on any vehicle or route to get started.</p>
-						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-03 22:22 PT</p>
+						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-04 07:42 Z</p>
 						
 						<div></div>
 
