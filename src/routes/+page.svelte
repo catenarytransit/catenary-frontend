@@ -6,6 +6,7 @@
 	import Realtimelabel from '../realtimelabel.svelte';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import SidebarInternals from '../components/sidebarInternals.svelte';
+	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import {
 		dark_mode_store,
 		data_stack_store,
