@@ -34,7 +34,7 @@
 										<div class="flex flex-col gap-y-1 md:gap-y-2">
 											{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector) as option}
 												<div
-													class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-sm text-sm md:text-base"
+													class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-lg shadow-black dark:shadow-slate-500 text-sm md:text-base"
 												>
 													{#if option.data.triplabel}
 														{#if option.data.trip_short_name}
@@ -80,7 +80,7 @@
 										<div class="flex flex-col gap-y-1 md:gap-y-2">
 											{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
 												<div
-													class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-sm text-sm md:text-base"
+													class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-lg shadow-black dark:shadow-slate-500 text-sm md:text-base"
 												>
 													<p>{option.data.chateau_id}</p>
 													{#if option.data.name}
@@ -103,6 +103,7 @@
 						<p>Not map selection screen</p>
 					{/if}
 				{:else}
-					<p>Nothing in the stack</p>
+					<p  class='text-sm md:text-base'>Click on any vehicle or route to get started.</p>
+					<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-03 18:30 PT</p>
 				{/if}
 			{/key}
