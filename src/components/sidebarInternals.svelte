@@ -104,7 +104,7 @@
 					{/if}
 				{:else}
 					<div class="px-4 sm:px-2 lg:px-4 py-2"><p  class='text-sm md:text-base'>Click on any vehicle or route to get started.</p>
-						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-03 18:30 PT</p></div>
+						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-03 22:22 PT</p></div>
 						<button 
 						class="px-1 py-2 text-white bg-blue-500 hover:bg-blue-700 rounded-md shadow-md"
 						on:click={() => {
