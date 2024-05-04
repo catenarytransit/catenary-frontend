@@ -1,9 +1,22 @@
 <script lang="ts">
     import mapboxgl from 'mapbox-gl';
 import { onMount } from 'svelte';
-
+import { writable } from 'svelte/store';
+import type { Writable } from "svelte/store";
+import Realtimelabel from '../realtimelabel.svelte';
 import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 import SidebarInternals from '../components/sidebarInternals.svelte';
+import {
+	dark_mode_store,
+    data_stack_store,
+    on_sidebar_trigger_store,
+	realtime_vehicle_locations_last_updated_store,
+	realtime_vehicle_locations_store,
+	realtime_vehicle_route_cache_hash_store,
+	realtime_vehicle_route_cache_store,
+	usunits_store
+} from "../globalstores";
+import Layerbutton from '../components/layerbutton.svelte';
 import {
 		MapSelectionScreen,
 		StackInterface,
@@ -14,8 +27,19 @@ import {
 		StopStack,
 		RouteMapSelector
 	} from '../components/stackenum';
-    
+    import {setup_click_handler} from '../components/mapClickHandler';
 	import i18n from '../i18n/strings';
+    import {setup_load_map} from '../components/setup_load_map';
+	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
+	import { determineFeedsUsingChateaus } from '../maploaddata';
+	import CloseButton from '../components/CloseButton.svelte';
+	import Layerselectionbox from '../components/layerselectionbox.svelte';
+
+    const enabledlayerstyle =
+		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
+	const disabledlayerstyle =
+		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
+
 
 let centerinit = [-118, 33.9];
 
@@ -44,13 +68,17 @@ let last_sidebar_interval_id: number | null = null;
 let map_padding: Record<string, number> = {};
 let previous_click_on_sidebar_dragger: number | null = null;
 let previous_y_velocity_sidebar: number | null = null;
-
+let layersettingsBox = false;
+const layersettingsnamestorage = 'layersettingsv4';
 let currently_holding_sidebar_grabber: boolean = false;
 
 let darkMode = true;
 
 let strings = i18n.en;
 let locale = 'en';
+let lockongps = false;
+
+let geolocation: Writable<GeolocationPosition>;
 
 if (typeof window !== 'undefined') {
 		// this must be fixed to allow subvariants of languages
@@ -63,6 +91,10 @@ if (typeof window !== 'undefined') {
 	let selectedSettingsTab = 'localrail';
 	let usunits = false;
 
+	usunits_store.subscribe((value) => {
+		usunits = value;
+	});
+
 	let announcermode = false;
 	//stores geojson data for currently rendered GeoJSON realtime vehicles data, indexed by realtime feed id
 	let geometryObj: Record<string, any> = {};
@@ -73,14 +105,342 @@ if (typeof window !== 'undefined') {
 	let pending_chateau_rt_request: Record<string, number> = {};
 	let on_sidebar_trigger = 0;
 
+    on_sidebar_trigger_store.subscribe((value) => {
+        on_sidebar_trigger = value;
+    });
+
 	let data_stack: StackInterface[] = [];
 	let latest_item_on_stack: StackInterface | null = null;
 
+    data_stack_store.subscribe((value) => {
+        data_stack = value;
+		latest_item_on_stack = data_stack[data_stack.length - 1];
+    });
 
-const urlParams =
-    typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search)
-        : new URLSearchParams();
+    let mapglobal: mapboxgl.Map | null = null;
+
+	const urlParams =
+		typeof window !== 'undefined'
+			? new URLSearchParams(window.location.search)
+			: new URLSearchParams();
+	let debugmode = !!urlParams.get('debug');
+
+	let fpsmode = !!urlParams.get('fps');
+
+	let embedmode = urlParams.get('framework') == 'true';
+
+	let desktopapp = urlParams.get('desktop') == 'true';
+	let mobileapp = urlParams.get('utm_source') == 'pwa';
+
+	let current_map_heading = 0;
+
+	let static_feeds_in_frame: Record<string, any> = {};
+	let operators_in_frame: Record<string, any> = {};
+	let realtime_feeds_in_frame: Record<string, any> = {};
+
+    let lastrunmapcalc = 0;
+	let mapboundingbox: number[][] = [
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[0, 0]
+	];
+	let mapboundingboxstring: String = '';
+
+	//frame render duration in ms
+	let last_render_start: number = 0;
+	let frame_render_duration = 0;
+	let fps = 0;
+	let fps_array: number[] = [];
+
+	let chateaus: any = null;
+	let chateaus_in_frame: Writable<string[]> = writable([]);
+    let showzombiebuses = writable(false);
+
+    const layerspercategory = {
+		bus: {
+			livedots: 'bus',
+			labeldots: 'labelbuses',
+			pointing: 'busespointing',
+			pointingshell: 'busespointingshell',
+			stops: 'busstopscircle',
+			labelstops: 'busstopslabel',
+			shapes: 'busshapes',
+			labelshapes: 'labelbusshapes'
+		},
+		intercityrail: {
+			livedots: 'intercityrail',
+			labeldots: 'labelintercityrail',
+			pointing: 'intercityrailpointing',
+			pointingshell: 'intercityrailpointingshell',
+			stops: 'intercityrailstopscircle',
+			labelstops: 'intercityrailstopslabel',
+			shapes: 'intercityrailshapes',
+			labelshapes: 'intercityraillabelshapes'
+		},
+		localrail: {
+			livedots: 'localrail',
+			labeldots: 'labellocalrail',
+			pointing: 'localrailpointing',
+			pointingshell: 'localrailpointingshell',
+			stops: 'localrailstopscircle',
+			labelstops: 'localrailstopslabel',
+			shapes: 'localrailshapes',
+			labelshapes: 'localraillabelshapes'
+		},
+
+		other: {
+			livedots: 'other',
+			labeldots: 'labelother',
+			pointing: 'otherpointing',
+			pointingshell: 'otherpointingshell',
+			stops: 'otherstopscircle',
+			labelstops: 'otherstopslabel',
+			shapes: 'othershapes',
+			labelshapes: 'otherlabelshapes'
+		}
+	};
+
+    let layersettings: Record<string, any> = {
+		bus: {
+			visible: true,
+			labelshapes: true,
+			stops: true,
+			shapes: true,
+			stoplabels: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		localrail: {
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		intercityrail: {
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
+			label: {
+				route: true,
+				trip: true,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		other: {
+			visible: true,
+			stops: true,
+			labelshapes: true,
+			stoplabels: true,
+			shapes: true,
+			label: {
+				route: true,
+				trip: false,
+				vehicle: false,
+				headsign: false,
+				direction: false,
+				speed: false
+			}
+		},
+		more: {
+			foamermode: {
+				infra: false,
+				maxspeed: false,
+				signalling: false,
+				electrification: false,
+				gauge: false,
+				dummy: true
+			},
+			showstationentrances: true,
+			showstationart: false,
+			showbikelanes: false,
+			showcoords: false
+		}
+	};
+
+    function togglelayerfeature() {
+		layersettingsBox = !layersettingsBox;
+	}
+
+    function runSettingsAdapt() {
+		console.log('run settings adapt', layersettings);
+		if (mapglobal) {
+			if (layersettings.more.foamermode.infra) {
+				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.maxspeed) {
+				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.signalling) {
+				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.electrification) {
+				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'none');
+			}
+
+			if (layersettings.more.foamermode.gauge) {
+				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
+			}
+
+			Object.entries(layerspercategory).map((eachcategory) => {
+				let category = eachcategory[0];
+				let categoryvalues = eachcategory[1];
+
+				let shape = mapglobal.getLayer(categoryvalues.shapes);
+
+				let this_layer_settings = layersettings[category];
+
+				//console.log('processing settings',eachcategory, this_layer_settings)
+
+				if (shape) {
+					if (this_layer_settings.shapes) {
+						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
+					}
+
+					if (this_layer_settings.labelshapes) {
+						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
+					}
+
+					if (category === 'other') {
+						if (this_layer_settings.shapes) {
+							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
+						} else {
+							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'none');
+						}
+					}
+				} else {
+					console.log('could not fetch shapes layer', category);
+				}
+
+				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
+				if (stoplayer) {
+					if (this_layer_settings.stops) {
+						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
+					}
+				} else {
+					console.log('no stop layer found for', category);
+				}
+
+				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
+				if (stopslabellayer) {
+					if (this_layer_settings.stoplabels) {
+						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
+					}
+				} else {
+					console.log('no stops label layer found for ', category);
+				}
+
+				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
+				let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
+
+				if (dotcirclelayer && dotlabel) {
+					if (this_layer_settings.visible) {
+						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
+						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
+						mapglobal.setLayoutProperty(
+							categoryvalues.labeldots,
+							'text-field',
+							interpretLabelsToCode(this_layer_settings.label, usunits)
+						);
+						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
+							mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+						});
+					} else {
+						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'none');
+						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'none');
+						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
+							mapglobal.setLayoutProperty(x, 'visibility', 'none');
+						});
+					}
+				} else {
+					if (dotcirclelayer == null) {
+						console.log('could not fetch dotcirclelayer', category);
+					}
+					if (dotlabel == null) {
+						console.log('could not fetch dotlabel', category);
+					}
+				}
+
+				let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
+
+				let regularpointers = [
+					'all',
+					['!=', 0, ['get', 'bearing']],
+					['==', true, ['get', 'has_bearing']]
+				];
+				let hidevehiclecommandpointers = [
+					'all',
+					['!=', '', ['get', 'tripIdLabel']],
+					['!=', 0, ['get', 'bearing']],
+					['==', true, ['get', 'has_bearing']]
+				];
+
+				if (dotcirclelayer) {
+					if (showzombiebuses === true) {
+						mapglobal.setFilter(categoryvalues.livedots, undefined);
+						mapglobal.setFilter(categoryvalues.labeldots, undefined);
+						mapglobal.setFilter(categoryvalues.pointing, regularpointers);
+						mapglobal.setFilter(categoryvalues.pointingshell, regularpointers);
+					} else {
+						mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
+						mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
+						mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
+						mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers);
+					}
+				}
+			});
+
+			localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
+
+			true;
+		}
+	}
 
 if (typeof window != "undefined") {
   
@@ -92,9 +452,11 @@ if (typeof window != "undefined") {
         console.log('dark mode triggered');
         document.documentElement.classList.remove('dark');
         darkMode = false;
+		dark_mode_store.set(false);
     } else {
         document.documentElement.classList.add('dark');
         darkMode = true;
+		dark_mode_store.set(true);
     }
 }
 
@@ -123,6 +485,33 @@ const dragger = 24;
 let style: string | undefined = darkMode
 			? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
 			: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
+
+            if (typeof window != 'undefined') {
+			let desiredStyle = embedmode
+				? urlParams.get('framework-style') || window.localStorage.mapStyle
+				: window.localStorage.mapStyle;
+
+			if (desiredStyle == '3d') {
+				style = undefined;
+			}
+			if (desiredStyle == 'sat') {
+				style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
+			}
+			if (desiredStyle == 'rustic') {
+				style = 'mapbox://styles/kylerschin/clrgqjvqm005m01oo661z8v1e';
+			}
+			if (desiredStyle == 'deepsea') {
+				style = darkMode
+					? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
+					: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
+			}
+			if (desiredStyle == 'archi') {
+				style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
+			}
+			if (desiredStyle == 'minimal') {
+				style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
+			}
+		}
 
 function mousemovesidebar(e:TouchEvent | MouseEvent) {
     clearInterval(last_sidebar_interval_id);
@@ -263,6 +652,65 @@ function letgosidebar(e:Event) {
     //change_map_padding();
 }
 
+
+function gonorth() {
+		if (mapglobal) {
+			lasttimeofnorth = performance.now();
+			mapglobal.resetNorth();
+		}
+	}
+
+	function gpsbutton() {
+		if (geolocation) {
+			if (mapglobal) {
+				let target: any = {
+					center: [geolocation.coords.longitude, geolocation.coords.latitude],
+					essential: true // this animation is considered essential with respect to prefers-reduced-motion
+				};
+
+				if (firstmove === false || lockongps === true) {
+					target.zoom = lockonconst;
+					secondrequestlockgps = true;
+				}
+
+				lockongps = true;
+
+				mapglobal.flyTo(target);
+			}
+		}
+	}
+
+	function gpsupdate() {
+		if (geolocation) {
+			if (mapglobal) {
+				//get url param pos
+				let emptyhash = !window.location.hash.includes('pos');
+
+				if (lockongps === true || (firstmove === false && emptyhash === true)) {
+					let target: any = {
+						center: [geolocation.coords.longitude, geolocation.coords.latitude],
+						essential: true // this animation is considered essential with respect to prefers-reduced-motion
+					};
+
+					if (lasttimeofnorth > performance.now() - 6000) {
+						target.bearing = 0;
+					}
+
+					if (secondrequestlockgps === true || firstmove === false) {
+						target.zoom = lockonconst;
+					}
+
+					if (firstmove === false) {
+						lockongps = true;
+						secondrequestlockgps = true;
+					}
+
+					mapglobal.easeTo(target, { duration: 500 });
+				}
+			}
+		}
+	}
+
 if (typeof window != 'undefined') {
     if (window.innerWidth < 768) {
         sidebarOpen = "middle";
@@ -364,6 +812,30 @@ if (typeof window != 'undefined') {
 }
 
 onMount(() => {
+    fetch('https://birch.catenarymaps.org/getchateaus')
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (json) {
+				chateaus = json;
+
+				json.features.forEach((feature: any) => {
+					const this_realtime_feeds_list: string[] = feature.properties.realtime_feeds;
+					const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
+
+					this_realtime_feeds_list.forEach((realtime) => {
+						feed_id_to_chateau_lookup[realtime] = feature.properties.chateau;
+					});
+
+					chateau_to_realtime_feed_lookup[feature.properties.chateau] = this_realtime_feeds_list;
+
+					this_schedule_feeds_list.forEach(
+						(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
+					);
+				});
+			})
+			.catch((err) => console.error(err));
+
     const map = new mapboxgl.Map({
         container: 'map',
         crossSourceCollisions: true,
@@ -382,6 +854,88 @@ onMount(() => {
         zoom: zoominit, // starting zoom (must be greater than 8.1)
         fadeDuration: 0
     });
+
+    if (darkMode) {
+			map.on('style.load', () => {
+				// @ts-expect-error
+				map.setConfigProperty('basemap', 'lightPreset', 'night');
+				// @ts-expect-error
+				map.setConfigProperty('basemap', 'showTransitLabels', false);
+			});
+		}
+
+        mapboxgl.setRTLTextPlugin(
+			'/mapbox-gl-rtl-text.min.js',
+			(err) => {
+				console.error(err);
+			},
+			true // Lazy load the plugin
+		);
+
+		mapglobal = map;
+
+        //updates the debug window with the current map lng and lat
+		function updateData() {
+			mapzoom = map.getZoom();
+			maplng = map.getCenter().lng;
+			maplat = map.getCenter().lat;
+
+			current_map_heading = map.getBearing();
+		}
+
+        setup_click_handler(
+            map,
+            layerspercategory,
+            setSidebarOpen,
+        );
+
+        map.on('moveend', (events) => {
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+		});
+
+		map.on('touchmove', (events) => {
+			lasttimeofnorth = 0;
+		});
+
+		map.on('mousemove', (events) => {
+			lasttimeofnorth = 0;
+		});
+
+		map.on('renderstart', (event) => {
+			last_render_start = performance.now();
+		});
+
+		map.on('render', (event) => {
+			frame_render_duration = performance.now() - last_render_start;
+
+			fps_array.push(performance.now());
+
+			fps_array = fps_array.filter((x) => x > performance.now() - 1000);
+
+			if (fps_array.length > 2) {
+				fps = fps_array.length / ((fps_array[fps_array.length - 1] - fps_array[0]) / 1000);
+			} else {
+				fps = 0;
+			}
+		});
+
+		map.on('zoomend', (events) => {
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+		});
+
+        setup_load_map(
+            map,
+            runSettingsAdapt,
+            showzombiebuses,
+            darkMode,
+            layerspercategory,
+            chateaus_in_frame,
+            layersettings,
+            chateau_to_realtime_feed_lookup,
+            pending_chateau_rt_request
+        );
 });
 </script>
 
@@ -448,9 +1002,13 @@ class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-g
     >
         <div class='mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400'></div>
     </div>
-    <SidebarInternals
-        latest_item_on_stack={null}
+    {#key on_sidebar_trigger} 
+        <SidebarInternals
+        latest_item_on_stack={latest_item_on_stack}
+		darkMode={darkMode}
     />
+     {/key}
+    
 </div>
 </div>
 
@@ -488,3 +1046,308 @@ class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-lg dark:shadow-g
         'opsz' 64;
 }
 </style>
+
+<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
+	<div
+		on:click={togglelayerfeature}
+		on:keypress={togglelayerfeature}
+		class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+	>
+		<span
+			class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
+		>
+			layers
+		</span>
+	</div>
+
+	<div
+		on:click={gonorth}
+		on:keypress={gonorth}
+		on:touchstart={gonorth}
+		aria-label="Reset Map to North"
+		class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+	>
+		<img
+			src={current_map_heading < 7 && current_map_heading > -7
+				? darkMode === true
+					? '/icons/north.svg'
+					: '/icons/light_north.svg'
+				: '/icons/compass.svg'}
+			class="h-7"
+			style={`transform: rotate(${0 - current_map_heading}deg)`}
+		/>
+	</div>
+
+	{#if !desktopapp}
+    {#key sidebar_height_output}
+        <div
+            on:click={gpsbutton}
+            on:keydown={gpsbutton}
+            on:touchstart={gpsbutton}
+            style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+            class="{lockongps
+                ? ' text-blue-500 dark:text-blue-300'
+                : ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+        >
+            <span class="material-symbols-outlined align-middle text-lg select-none">
+                {#if lockongps == true}my_location{:else}location_searching{/if}
+            </span>
+        </div>
+    {/key}
+{/if}
+</div>
+
+
+<div
+	class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+		? ''
+		: 'hidden'}"
+>
+	<div class="flex flex-row align-middle">
+		<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
+		<div class="ml-auto">
+			<CloseButton
+				onclose={() => {
+					layersettingsBox = false;
+				}}
+				moreclasses=""
+				parentclass=""
+			/>
+		</div>
+	</div>
+	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
+		<Layerselectionbox
+			text={strings.headingIntercityRail}
+			changesetting={() => {
+				selectedSettingsTab = 'intercityrail';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
+		/>
+
+		<Layerselectionbox
+			text={strings.headingLocalRail}
+			changesetting={() => {
+				selectedSettingsTab = 'localrail';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
+		/>
+
+		<Layerselectionbox
+			text={strings.headingBus}
+			changesetting={() => {
+				selectedSettingsTab = 'bus';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
+		/>
+
+		<Layerselectionbox
+			text={strings.headingOther}
+			changesetting={() => {
+				selectedSettingsTab = 'other';
+			}}
+			cssclass={`${
+				selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
+		/>
+
+		<div
+			on:click={() => {
+				selectedSettingsTab = 'more';
+			}}
+			on:keydown={() => {
+				selectedSettingsTab = 'more';
+			}}
+			class={`${
+				selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
+			} w-1/2 py-1 px-1`}
+		>
+			<p class="w-full align-center text-center">{strings.headingMisc}</p>
+		</div>
+	</div>
+
+	{#if selectedSettingsTab === 'more'}
+		<div class="flex flex-row gap-x-1">
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="infra"
+				name={strings.orminfra}
+				urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="maxspeed"
+				name={strings.ormspeeds}
+				urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="signalling"
+				name={strings.ormsignalling}
+				urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="electrification"
+				name={strings.ormelectrification}
+				urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="gauge"
+				name={strings.ormgauge}
+				urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
+				{runSettingsAdapt}
+			/>
+			<Layerbutton
+				bind:layersettings
+				selectedSettingsTab="more"
+				change="foamermode"
+				nestedchange="dummy"
+				name={strings.none}
+				urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
+				{runSettingsAdapt}
+			/>
+		</div>
+
+		<div>
+			<input
+				on:click={(x) => {
+					showzombiebuses = !showzombiebuses;
+
+					localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+					runSettingsAdapt();
+				}}
+				on:keydown={(x) => {
+					showzombiebuses = !showzombiebuses;
+
+					localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+					runSettingsAdapt();
+				}}
+				checked={showzombiebuses}
+				id="show-zombie-buses"
+				type="checkbox"
+				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+			/>
+			<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
+		</div>
+	{/if}
+
+	{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
+		<div class="flex flex-row gap-x-1">
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="shapes"
+				name={strings.routes}
+				urlicon="/routesicon.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="labelshapes"
+				name={strings.labels}
+				urlicon="/labelsicon.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="stops"
+				name={strings.stops}
+				urlicon="/stopsicon.svg"
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="stoplabels"
+				name={strings.stopnames}
+				urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
+				{runSettingsAdapt}
+			/>
+
+			<Layerbutton
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="visible"
+				name={strings.vehicles}
+				urlicon="/vehiclesicon.svg"
+				{runSettingsAdapt}
+			/>
+		</div>
+		<div class="flex flex-row gap-x-1">
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="route"
+				name={strings.showroute}
+				symbol="route"
+				{runSettingsAdapt}
+			/>
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="trip"
+				name={strings.showtrip}
+				symbol="mode_of_travel"
+				{runSettingsAdapt}
+			/>
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="vehicle"
+				name={strings.showvehicle}
+				symbol="train"
+				{runSettingsAdapt}
+			/>
+
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="headsign"
+				name="Headsign"
+				symbol="sports_score"
+				{runSettingsAdapt}
+			/>
+
+			<Realtimelabel
+				bind:layersettings
+				bind:selectedSettingsTab
+				change="speed"
+				name={strings.showspeed}
+				symbol="speed"
+				{runSettingsAdapt}
+			/>
+		</div>
+	{/if}
+</div>

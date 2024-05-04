@@ -1,12 +1,21 @@
 <script lang="ts">
  	import { lightenColour } from './lightenDarkColour';
+     import {
+		MapSelectionScreen,
+		StackInterface,
+		MapSelectionOption,
+		SingleTrip,
+		VehicleMapSelector,
+		RouteStack,
+		StopStack,
+		RouteMapSelector
+	} from '../components/stackenum';
  
- export let startmovesidebar: (event: MouseEvent | TouchEvent) => void;
     export let latest_item_on_stack: StackInterface | null;
+	export let darkMode: boolean;
  
     </script>
 
-{#key on_sidebar_trigger}
 			{#key latest_item_on_stack}
 				{#if latest_item_on_stack != null}
 					{#if latest_item_on_stack.data instanceof MapSelectionScreen}
@@ -16,7 +25,7 @@
 							</h1>
 							<p class="text-sm md:text-base">Click on any item from this list</p>
 							<p class="italic text-xs sm:text-sm">
-								Selecting a route is coming soon, currently doesn't do anything
+								Selecting doesn't do anything yet, will probably be finished around 2024 May 6
 							</p>
 							<div class="flex-grow-0 h-full">
 								<div class=" overflow-y-auto h-full">
@@ -97,4 +106,3 @@
 					<p>Nothing in the stack</p>
 				{/if}
 			{/key}
-		{/key}
