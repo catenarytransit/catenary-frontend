@@ -1259,7 +1259,10 @@
 		{#if typeof geolocation.coords == 'object'}
 		{#if typeof geolocation.coords.speed == 'number'}
 		<div
-		class='leading-tight   md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5'
+		on:click={(e) => {
+			e.preventDefault();
+		}}
+		class='leading-tight  md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5'
 		style={`font-size: 0px;bottom: ${gpsbutton_bottom_offset_calc()}`}
 		>
 			<p class='leading-none'>
