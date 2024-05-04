@@ -34,13 +34,13 @@
 										<div class="flex flex-col gap-y-1 md:gap-y-2">
 											{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector) as option}
 												<div
-													class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-md shadow-gray-500 dark:shadow-slate-700 text-sm md:text-base"
+													class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-md shadow-gray-500 dark:shadow-slate-700 text-sm md:text-base leading-snug"
 												>
 													{#if option.data.triplabel}
 														{#if option.data.trip_short_name}
 															<span
-																style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-																class="font-bold font-mono">{option.data.trip_short_name}</span
+																style={`background-color: ${option.data.colour}; color: ${option.data.text_colour};`}
+																class="font-bold font-mono px-1 py-0.5 rounded-sm">{option.data.trip_short_name}</span
 															>
 														{/if}
 														{#if option.data.route_short_name}

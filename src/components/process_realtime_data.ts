@@ -111,6 +111,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 				.map(([rt_id, vehicle_data]) => {
 					const vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
 					let colour = '#aaaaaa';
+                    let text_colour: string = '#000000';
 
 					let tripIdLabel = '';
 					let trip_short_name = null;
@@ -157,10 +158,11 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 									maptag = route.route_long_name;
 								}
 								colour = route.route_colour;
+                                text_colour = route.route_text_colour;
 							} else {
 								console.log('Could not find route for ', chateau_id, routeId);
 							}
-
+text_colour
 							switch (maptag) {
 								case '':
 									break;
@@ -311,7 +313,8 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 							routeId: routeId,
 							headsign: headsign.replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							timestamp: vehicle_data.timestamp,
-							id: rt_id
+							id: rt_id,
+                            text_color: text_colour
 						},
 						geometry: {
 							type: 'Point',

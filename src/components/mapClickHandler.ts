@@ -65,7 +65,8 @@ export function setup_click_handler(map:mapboxgl.Map, layerspercategory:Record<s
                             x.properties.route_short_name,
                             x.properties.route_long_name,
                             x.properties.routeType,
-                            x.properties.trip_short_name
+                            x.properties.trip_short_name,
+                            x.properties.text_color
                         )
                     );
                 })
