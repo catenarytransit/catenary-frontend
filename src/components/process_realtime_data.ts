@@ -198,7 +198,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 
 									break;
 								case 'Metrolink San Bernardino Line':
-									maptag = 'San Bern';
+									maptag = 'SB';
 
 									break;
 								case 'Metrolink Riverside Line':
