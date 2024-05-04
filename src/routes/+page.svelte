@@ -16,6 +16,7 @@
 		realtime_vehicle_locations_store,
 		realtime_vehicle_route_cache_hash_store,
 		realtime_vehicle_route_cache_store,
+		lock_on_gps_store,
 		usunits_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
@@ -81,6 +82,10 @@
 	let strings = i18n.en;
 	let locale = 'en';
 	let lockongps = false;
+
+	lock_on_gps_store.subscribe((value) => {
+		lockongps = value;
+	});
 
 	const lockonconst = 14.5;
 	let firstmove = false;
@@ -712,8 +717,8 @@
 	}
 
 	function letgosidebar(e: Event) {
-		moveToPos({ event: e });
 		recompute_map_padding();
+		moveToPos({ event: e });
 	}
 
 	function gonorth() {
@@ -736,7 +741,7 @@
 					secondrequestlockgps = true;
 				}
 
-				lockongps = true;
+				lock_on_gps_store.set(true);
 
 				mapglobal.flyTo(target);
 			}
@@ -764,7 +769,7 @@
 					}
 
 					if (firstmove === false) {
-						lockongps = true;
+						lock_on_gps_store.set(true);
 						secondrequestlockgps = true;
 					}
 
@@ -949,6 +954,7 @@
 
 		map.on('move', (events) => {
 			updateData();
+			lock_on_gps_store.set(false);
 		});
 
 		map.on('moveend', (events) => {
