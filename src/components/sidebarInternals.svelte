@@ -32,7 +32,7 @@
 								Selecting doesn't do anything yet, will probably be finished around 2024 May 6
 							</p>
 							<div class="flex-grow-0 h-full">
-								<div class=" overflow-y-auto h-full">
+								<div class=" overflow-y-auto h-full pb-16">
 									{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
 										<h3 class="text-base sm:text-lg">Vehicles</h3>
 										<div class="flex flex-col gap-y-1 md:gap-y-2">
