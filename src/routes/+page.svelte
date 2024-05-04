@@ -71,6 +71,7 @@ let previous_y_velocity_sidebar: number | null = null;
 let layersettingsBox = false;
 const layersettingsnamestorage = 'layersettingsv4';
 let currently_holding_sidebar_grabber: boolean = false;
+let maplat: number, maplng: number, mapzoom: number;
 
 let darkMode = true;
 
@@ -888,6 +889,10 @@ onMount(() => {
             layerspercategory,
             setSidebarOpen,
         );
+
+		map.on('move', (events) => {
+			updateData()
+		});
 
         map.on('moveend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
