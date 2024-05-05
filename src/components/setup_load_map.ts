@@ -12,7 +12,8 @@ import {
 	realtime_vehicle_locations_last_updated_store,
 	realtime_vehicle_locations_store,
 	realtime_vehicle_route_cache_hash_store,
-	realtime_vehicle_route_cache_store
+	realtime_vehicle_route_cache_store,
+	show_zombie_buses_store
 } from '../globalstores';
 import { clearbottomright } from './clearbottomright';
 import { determineFeedsUsingChateaus } from '../maploaddata';
@@ -33,7 +34,6 @@ import {makeGpsLayer} from './makeGpsLayer';
 export function setup_load_map(
 	map: mapboxgl.Map,
 	runSettingsAdapt: () => void,
-	showzombiebuses: Writable<boolean>,
 	darkMode: boolean,
 	layerspercategory: Record<string, any>,
 	chateaus_in_frame: Writable<string[]>,
@@ -53,7 +53,7 @@ export function setup_load_map(
 		}
 
 		if (localStorage.getItem('showzombiebuses') === 'true') {
-			showzombiebuses.set(true);
+			show_zombie_buses_store.set(true);
 			runSettingsAdapt();
 		}
 

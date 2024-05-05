@@ -17,7 +17,10 @@
 		realtime_vehicle_route_cache_hash_store,
 		realtime_vehicle_route_cache_store,
 		lock_on_gps_store,
-		usunits_store
+		usunits_store,
+
+		show_zombie_buses_store
+
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -173,7 +176,11 @@
 
 	let chateaus: any = null;
 	let chateaus_in_frame: Writable<string[]> = writable([]);
-	let showzombiebuses = writable(false);
+	let showzombiebuses = false;
+
+	show_zombie_buses_store.subscribe((value) => {
+		showzombiebuses = value;
+	});
 
 	const layerspercategory = {
 		bus: {
@@ -456,6 +463,18 @@
 	}
 
 	if (typeof window != 'undefined') {
+		let fetchitem =
+			(embedmode && urlParams.get('framework-layers')
+				? atob(urlParams.get('framework-layers') as string)
+				: null) || localStorage.getItem(layersettingsnamestorage);
+		if (fetchitem != null) {
+			let cachedJsonObject = JSON.parse(fetchitem);
+
+			if (cachedJsonObject != null) {
+				layersettings = cachedJsonObject;
+			}
+		}
+	
 		if (
 			localStorage.theme === 'light' ||
 			(urlParams.get('framework-colorway') == 'light' && embedmode) ||
@@ -1104,7 +1123,6 @@
 		setup_load_map(
 			map,
 			runSettingsAdapt,
-			showzombiebuses,
 			darkMode,
 			layerspercategory,
 			chateaus_in_frame,
@@ -1456,14 +1474,14 @@
 		<div>
 			<input
 				on:click={(x) => {
-					showzombiebuses = !showzombiebuses;
+					show_zombie_buses_store.update((value) => !value) ;
 
 					localStorage.setItem('showzombiebuses', String(showzombiebuses));
 
 					runSettingsAdapt();
 				}}
 				on:keydown={(x) => {
-					showzombiebuses = !showzombiebuses;
+					show_zombie_buses_store.update((value) => !value) ;
 
 					localStorage.setItem('showzombiebuses', String(showzombiebuses));
 

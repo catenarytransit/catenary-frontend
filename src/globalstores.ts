@@ -23,4 +23,6 @@ export const lock_on_gps_store = writable(false);
 
 export const dark_mode_store = writable(false);
 
+export const show_zombie_buses_store = writable(false);
+
 export const usunits_store = writable(false);
