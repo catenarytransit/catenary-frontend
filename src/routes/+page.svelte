@@ -527,15 +527,15 @@
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
-			let padding = {"bottom": document.getElementById('catenary-sidebar')?.offsetHeight};
+			let padding = {"bottom": document.getElementById('catenary-sidebar')?.offsetHeight, "left": 0};
 			mapglobal.easeTo({padding: padding, duration: 200});
 		} else {
 			if (innerWidth < 768) {
-				let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth};
+				let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth, "bottom": 0};
 				mapglobal.easeTo({padding: padding, duration: 200});
 			} else {
 				if (sidebarOpen == 'full') {
-					let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth};
+					let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth, "bottom": 0};
 					mapglobal.easeTo({padding: padding, duration: 200});
 				} else {
 					let padding = {"left": 0};
