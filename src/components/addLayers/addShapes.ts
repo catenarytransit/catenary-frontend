@@ -117,7 +117,8 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
             'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
-            'line-opacity': 1
+            'line-opacity': 1,
+            'line-emissive-strength': 1
         },
         minzoom: 3
     });

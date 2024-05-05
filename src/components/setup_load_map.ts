@@ -137,31 +137,46 @@ export function setup_load_map(
 		map.addLayer({
 			id: 'foamershapes',
 			type: 'raster',
-			source: 'foamertiles'
+			source: 'foamertiles',
+			paint: {
+				'raster-emissive-strength': 0.8
+			}
 		});
 
 		map.addLayer({
 			id: 'maxspeedshapes',
 			type: 'raster',
-			source: 'maxspeedtiles'
+			source: 'maxspeedtiles',
+			paint: {
+				'raster-emissive-strength': 0.8
+			}
 		});
 
 		map.addLayer({
 			id: 'signallingshapes',
 			type: 'raster',
-			source: 'signallingtiles'
+			source: 'signallingtiles',
+			paint: {
+				'raster-emissive-strength': 0.8
+			}
 		});
 
 		map.addLayer({
 			id: 'electrificationshapes',
 			type: 'raster',
-			source: 'electrificationtiles'
+			source: 'electrificationtiles',
+			paint: {
+				'raster-emissive-strength': 0.8
+			}
 		});
 
 		map.addLayer({
 			id: 'gaugeshapes',
 			type: 'raster',
-			source: 'gaugetiles'
+			source: 'gaugetiles',
+			paint: {
+				'raster-emissive-strength': 0.8
+			}
 		});
 
 		map.addLayer({
@@ -174,7 +189,9 @@ export function setup_load_map(
 				'line-dasharray': [1, 2],
 				'line-color': ['concat', '#', ['get', 'color']],
 				'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-				'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9]
+				'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
+				'line-emissive-strength': 1
+				
 			},
 			minzoom: 3
 		});
