@@ -1,11 +1,7 @@
 # catenary-frontend
 ## Install Dependenices
 ```bash
-sudo apt install vite
-npm install vite
-npm install -D tailwindcss
-npx tailwindcss init
-npm update @sveltejs/kit
+bun install
 ```
 ## Build and Run catenary-frontend
 ```bash
