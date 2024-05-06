@@ -81,13 +81,13 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
                 ['concat', ['get', 'onestop_feed_id'], "|", ['get', 'shape_id'], "|", ['coalesce', ['get', 'route_label']]] : ['coalesce', ['get', 'route_label']],
             //'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
             'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 5, 7, 9, 8, 13, 11],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 5, 7, 9, 8, 11, 8, 13, 10],
             'text-ignore-placement': false,
             'text-allow-overlap': false,
             'symbol-spacing':
                 window?.innerWidth > 750
-                    ? ['step', ['zoom'], 200, 12, 120, 13, 130, 15, 130, 20, 200]
-                    : ['step', ['zoom'], 200, 12, 100, 13, 110, 15, 100, 20, 200],
+                    ? ['step', ['zoom'], 200, 12, 100, 13, 100, 15, 120, 20, 150]
+                    : ['step', ['zoom'], 200, 12, 80, 13, 100, 15, 100, 20, 150],
             visibility: 'none'
         },
         paint: {

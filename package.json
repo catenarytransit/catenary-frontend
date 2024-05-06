@@ -39,6 +39,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@esbuild/linux-x64": "^0.20.2",
     "@mapbox/mapbox-gl-framerate": "github:mapbox/mapbox-gl-framerate",
     "@zerodevx/svelte-toast": "^0.9.5",
     "base65536": "^4.0.3",
