@@ -51,5 +51,10 @@
     "driver": "司機",
     "delay": "延誤",
     "provider": "數據提供者",
-    "lastupdated": "最後更新時間"
+    "lastupdated": "最後更新時間",
+    "nearbydepartures": "附近出發",
+    "clickonanyvehicleorroutegetstarted": "點擊任何車輛或路線即可開始。",
+    "clickonanyitemfromthislist": "點擊此列表中的任何項目",
+    "comingsoon": "即將推出",
+    "softwareversion": "軟體版本"
 }

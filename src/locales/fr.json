@@ -52,5 +52,10 @@
     "delay": "Retard",
     "provider": "Provideur de data",
     "lastupdated": "Dernière mise à jour",
-    "comingsoon": "À venir"
+    "comingsoon": "À venir",
+    "nearbydepartures": "Départs à proximité",
+    "clickonanyvehicleorroutegetstarted":"Cliquez sur n’importe quel véhicule ou itinéraire pour commencer.",
+    "clickonanyitemfromthislist": "Cliquez sur n'importe quel élément de cette liste.",
+    "softwareversion": "version du logiciel",
+    "itemsselected": "articles sélectionnés"
 }

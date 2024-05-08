@@ -51,5 +51,11 @@
     "driver": "기사 님",
     "delay": "지연",
     "provider": "데이터 제공자",
-    "lastupdated": "마지막 업데이트"
+    "lastupdated": "마지막 업데이트",
+    "version": "버전",
+    "nearbydepartures": "인근 출발",
+    "clickonanyvehicleorroutegetstarted": "시작하려면 차량이나 경로를 클릭하세요.",
+    "clickonanyitemfromthislist": "이 목록에서 항목을 클릭하세요.",
+    "comingsoon": "곧 온다",
+    "softwareversion": "소프트웨어 버전"
 }

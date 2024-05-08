@@ -106,11 +106,6 @@
 	let geolocation: GeolocationPosition;
 
 	if (typeof window !== 'undefined') {
-		// this must be fixed to allow subvariants of languages
-		// @ts-expect-error
-		strings = i18n[window.localStorage.language || 'en'];
-		locale = window.localStorage.language || 'en';
-
 		top_margin_collapser_sidebar = `${(window.innerHeight /2) - 15}px`;
 	}
 

@@ -63,16 +63,15 @@
 					<HomeButton />
 				</div>
 				<h1 class="text-lg md:text-2xl font-semibold leading-tight">
-					{latest_item_on_stack.data.arrayofoptions.length} items selected
+					{latest_item_on_stack.data.arrayofoptions.length} {$_("itemsselected")}
 				</h1>
-				<p class="text-sm md:text-base leading-tight">Click on any item from this list</p>
-				<p class="italic text-xs sm:text-sm leading-tight">
-					Selecting doesn't do anything yet, will probably be finished around 2024 May 10
-				</p>
+				{#if !isLoading}
+				<p class="text-sm md:text-base leading-tight">{$_("clickonanyitemfromthislist")}</p>
+{/if}
 				<div class="flex-grow-0 h-full">
 					<div class=" overflow-y-auto h-full pb-16">
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
-							<h3 class="text-base sm:text-lg">Vehicles</h3>
+							<h3 class="text-base sm:text-lg">{$_("vehicles")}</h3>
 							<div class="flex flex-col gap-y-1 md:gap-y-2">
 								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector) as option}
 									<div
@@ -119,7 +118,7 @@
 						{/if}
 
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
-							<h3 class="text-base sm:text-lg">Routes</h3>
+							<h3 class="text-base sm:text-lg">{$_("routes")}</h3>
 							<div class="flex flex-col gap-y-1 md:gap-y-2">
 								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
 									<div
@@ -179,6 +178,11 @@
 			</div>
 		{/if}
 	{:else}
+		{#if false}
+		
+		<p>Loading home page</p>
+		
+		{:else}
 		<div class="px-4 sm:px-2 lg:px-4 py-2">
 			<div class="flex flex-row gap-x-2">
 				<button
@@ -207,13 +211,14 @@
 					>
 				</div>
 			</div>
-			<p class="text-sm md:text-base">Click on any vehicle or route to get started.</p>
-			<p class="text-xs md:text-sm">Catenary Maps version 2024-05-08 04:16Z</p>
+			<p class="text-sm md:text-base">{$_("clickonanyvehicleorroutegetstarted")}</p>
+			<p class="text-xs md:text-sm">Catenary Maps {$_("softwareversion")} 2024-05-08 04:16Z</p>
 
 			<div></div>
 
-			<h2 class="text-base md:text-lg">Nearby Departures</h2>
-			<p>Coming soon!</p>
+			<h2 class="text-base md:text-lg">{$_("nearbydepartures")}</h2>
+			<p>{$_("comingsoon")}</p>
 		</div>
+		{/if}
 	{/if}
 {/key}

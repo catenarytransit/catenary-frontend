@@ -51,5 +51,10 @@
     "driver": "司机",
     "delay": "延误",
     "provider": "数据提供者",
-    "lastupdated": "最后更新时间"
+    "lastupdated": "最后更新时间",
+    "nearbydepartures": "附近出发",
+    "clickonanyvehicleorroutegetstarted": "单击任何车辆或路线即可开始。",
+    "clickonanyitemfromthislist": "单击此列表中的任何项目",
+    "comingsoon": "即将推出",
+    "softwareversion": "软件版本"
 }

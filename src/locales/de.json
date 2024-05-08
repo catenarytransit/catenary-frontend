@@ -51,5 +51,8 @@
     "driver": "Treiber",
     "delay": "Verzögerung",
     "provider": "Datenanbieter",
-    "lastupdated": "Letzte Aktualisierung"
+    "lastupdated": "Letzte Aktualisierung",
+    "nearbydepartures": "Abflüge in der Nähe",
+    "clickonanyvehicleorroutegetstarted": "Klicken Sie auf ein beliebiges Fahrzeug oder eine Route, um loszulegen.",
+    "comingsoon": "Demnächst"
 }

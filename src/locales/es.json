@@ -51,5 +51,8 @@
     "driver": "Conductor/Conductora",
     "delay": "Demora",
     "provider": "Proveedor de datos",
-    "lastupdated": "Última actualización"
+    "lastupdated": "Última actualización",
+    "nearbydepartures": "Salidas cercanas",
+    "clickonanyvehicleorroutegetstarted": "Haga clic en cualquier vehículo o ruta para comenzar.",
+    "comingsoon": "Muy Pronto"
 }

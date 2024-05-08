@@ -53,5 +53,10 @@
     "provider": "Data Provider",
     "lastupdated": "Last Updated",
     "headsign": "Headsign",
-    "comingsoon": "Coming soon"
+    "comingsoon": "Coming soon",
+    "nearbydepartures": "Nearby Departures",
+    "clickonanyvehicleorroutegetstarted": "Click on any vehicle or route to get started.",
+    "clickonanyitemfromthislist": "Click on any item from this list",
+    "softwareversion": "Software version",
+    "itemsselected": "items selected"
   }
