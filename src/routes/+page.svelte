@@ -79,6 +79,7 @@
 	let translate_x_sidebar_number: number = 0;
 	let collapser_left_offset_number: number = 408;
 	let collapser_left_offset: string = '408px';
+	let top_margin_collapser_sidebar: string = '0px';
 
 	let darkMode = true;
 
@@ -101,6 +102,8 @@
 		// @ts-expect-error
 		strings = i18n[window.localStorage.language || 'en'];
 		locale = window.localStorage.language || 'en';
+
+		top_margin_collapser_sidebar = `${(window.innerHeight /2) - 15}px`;
 	}
 
 	//false means use metric, true means use us units
@@ -819,6 +822,7 @@
 
 		addEventListener('resize', (e) => {
 			console.log('resize', window.innerWidth);
+			top_margin_collapser_sidebar = `${(window.innerHeight /2) - 15}px`;
 
 			if (previous_form_factor == 'mobile') {
 				if ((sidebarOpen = 'full')) {
@@ -1185,6 +1189,7 @@
 <div class="w-full">
 	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 	
+	{#key top_margin_collapser_sidebar} 
 	<div class="fixed shadow-sm dark:shadow-gray-600 hidden lg:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
 	on:click={() => {
 		if (sidebarOpen == "full") {
@@ -1204,7 +1209,7 @@
 			moveToPos({});
 		}
 	}}
-	style={`left: ${collapser_left_offset}; top: ${typeof window != "undefined" ? (window.innerHeight /2) - 15 : 0}px;`}
+	style={`left: ${collapser_left_offset}; top: ${top_margin_collapser_sidebar};`}
 	>{#if sidebarOpen == "none"}
 	<span class="material-symbols-outlined block my-auto">
 		arrow_right
@@ -1216,6 +1221,7 @@
 		</span>
 	{/if}
 </div>
+{/key}
 
 	{#key translate_x_sidebar}
 	<div
