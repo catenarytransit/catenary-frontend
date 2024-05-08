@@ -62,6 +62,7 @@ export class VehicleMapSelector {
 	public route_type: number;
     public trip_short_name: string | null;
 	public text_colour: string;
+	public gtfs_id: string;
 
 	constructor(
 		chateau_id: string,
@@ -74,7 +75,8 @@ export class VehicleMapSelector {
 		route_long_name: string | null,
 		route_type: number,
         trip_short_name: string | null,
-		text_colour: string
+		text_colour: string,
+		gtfs_id: string
 	) {
 		this.chateau_id = chateau_id;
 		this.vehicle_id = vehicle_id;
@@ -87,6 +89,7 @@ export class VehicleMapSelector {
 		this.route_type = route_type;
         this.trip_short_name = trip_short_name;
 		this.text_colour = text_colour;
+		this.gtfs_id = gtfs_id;
 	}
 }
 

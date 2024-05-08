@@ -88,13 +88,13 @@
 											{#if option.data.route_short_name}
 												<span
 													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-													class="font-semibold">{option.data.route_short_name}</span
+													class="font-semibold">{option.data.route_short_name.replace("Counterclockwise", "Anticlockwise")}</span
 												>
 											{/if}
 											{#if option.data.route_long_name}
 												<span
 													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-													>{option.data.route_long_name}</span
+													>{option.data.route_long_name.replace("Counterclockwise", "Anticlockwise")}</span
 												>
 											{/if}
 											{#if option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0}
@@ -119,6 +119,7 @@
 
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
 							<h3 class="text-base sm:text-lg">{$_("routes")}</h3>
+							<p>Selecting routes doesn't do anything yet!</p>
 							<div class="flex flex-col gap-y-1 md:gap-y-2">
 								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
 									<div
