@@ -67,7 +67,7 @@
 				</h1>
 				<p class="text-sm md:text-base leading-tight">Click on any item from this list</p>
 				<p class="italic text-xs sm:text-sm leading-tight">
-					Selecting doesn't do anything yet, will probably be finished around 2024 May 6
+					Selecting doesn't do anything yet, will probably be finished around 2024 May 10
 				</p>
 				<div class="flex-grow-0 h-full">
 					<div class=" overflow-y-auto h-full pb-16">
@@ -152,7 +152,7 @@
 				<br />
 				<div class="flex flex-row gap-x-3 w-full">
 					<p class="flex-grow-0 min-w-1/3">{$_('language')}</p>
-					<select bind:value={$locale} class="text-black bg-white dark:bg-slate-900 text-white flex-grow">
+					<select bind:value={$locale} class="text-black bg-white dark:bg-slate-900 text-white flex-grow border border-slate-500">
 						{#each $locales as locale}
 							<option value={locale} class="text-black bg-white dark:bg-slate-900 text-white"
 								>{locale_code_to_name(locale)}</option
@@ -208,7 +208,7 @@
 				</div>
 			</div>
 			<p class="text-sm md:text-base">Click on any vehicle or route to get started.</p>
-			<p class="text-xs md:text-sm">Catenary Maps version 2024-05-05 21:27Z</p>
+			<p class="text-xs md:text-sm">Catenary Maps version 2024-05-08 04:16Z</p>
 
 			<div></div>
 

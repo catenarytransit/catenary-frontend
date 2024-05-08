@@ -71,9 +71,13 @@
 	let start_of_move_pointer_height: number | null = null;
 	let start_of_move_sidebar_height: number | null = null;
 	let last_sidebar_release: number | null = null;
-	let current_locale = "";
+	let current_locale: string= "default";
 	locale.subscribe((value) => {
-		current_locale = value;
+		if (typeof value === 'string') {
+			current_locale = value;
+		} else {
+			current_locale = "default";
+		}
 	});
 	let last_sidebar_interval_id: number | null = null;
 	let previous_click_on_sidebar_dragger: number | null = null;
