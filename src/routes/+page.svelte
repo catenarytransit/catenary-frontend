@@ -71,6 +71,10 @@
 	let start_of_move_pointer_height: number | null = null;
 	let start_of_move_sidebar_height: number | null = null;
 	let last_sidebar_release: number | null = null;
+	let current_locale = "";
+	locale.subscribe((value) => {
+		current_locale = value;
+	});
 	let last_sidebar_interval_id: number | null = null;
 	let previous_click_on_sidebar_dragger: number | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
@@ -1288,7 +1292,7 @@
 				3.6 * geolocation.coords.speed
 			).toFixed(1).split(".")[0]}</span>
 			{/if}
-			{#if ["fr", "de", "it", "es", "se"].includes((locale || "en").split("-")[0])}
+			{#if ["fr", "de", "it", "es", "se"].includes(current_locale.split("-")[0])}
 			<span  class="text-sm">,</span>
 			{:else}
 			<span  class="text-sm">.</span>
