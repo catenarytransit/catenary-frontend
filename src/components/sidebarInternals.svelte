@@ -11,6 +11,9 @@
 		RouteMapSelector
 	} from '../components/stackenum';
 	import HomeButton from './SidebarParts/home_button.svelte';
+import {SettingsStack} from '../components/stackenum';
+	import { writable } from 'svelte/store';
+	import {data_stack_store} from '../globalstores'
  
     export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
@@ -103,12 +106,19 @@
 								</div>
 							</div>
 						</div>
-					{:else}
-						<p>Not map selection screen</p>
+					{/if}
+					{#if latest_item_on_stack.data instanceof SettingsStack}
+					<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
+						<div class="flex flex-row gap-x-2">
+							<HomeButton />
+						</div>
+						<h1 class="text-3xl"></h1>
+						</div>
 					{/if}
 				{:else}
 					<div class="px-4 sm:px-2 lg:px-4 py-2">
-						<div class="flex flex-row gap-x-2"><button 
+						<div class="flex flex-row gap-x-2">
+							<button 
 							class="h-8 w-8 text-black dark:text-white bg-sky-400 dark:bg-sky-700 rounded-full flex flex-col shadow-md"
 							on:click={() => {
 								window.location.reload();
@@ -116,7 +126,20 @@
 							aria-label="Refresh"
 							><div class='m-auto block'><span class="material-symbols-outlined block">
 								refresh
-								</span></div></button></div>
+								</span></div></button>
+								<div class="ml-auto"><button 
+									class="h-8 w-8 text-black dark:text-white bg-sky-400 dark:bg-sky-700 rounded-full flex flex-col shadow-md"
+									on:click={() => {
+										data_stack_store.update((x) => {
+											x.push(new StackInterface(new SettingsStack()));
+											return x;
+										});
+									}}
+									aria-label="Refresh"
+									><div class='m-auto block'><span class="material-symbols-outlined block">
+										settings
+										</span></div></button></div>
+							</div>
 						<p  class='text-sm md:text-base'>Click on any vehicle or route to get started.</p>
 						<p class='text-xs md:text-sm'>Catenary Maps version 2024-05-05 21:27Z</p>
 						

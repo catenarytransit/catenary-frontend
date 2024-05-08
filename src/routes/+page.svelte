@@ -8,6 +8,9 @@
 	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
 	import SidebarInternals from '../components/sidebarInternals.svelte';
 	import { addGeoRadius, setUserCircles } from '../components/userradius';
+	import {init_locales} from '../i18n'
+	import { _ } from 'svelte-i18n'
+	import { isLoading } from 'svelte-i18n'
 	import {
 		dark_mode_store,
 		data_stack_store,
@@ -34,7 +37,6 @@
 		RouteMapSelector
 	} from '../components/stackenum';
 	import { setup_click_handler } from '../components/mapClickHandler';
-	import i18n from '../i18n/strings';
 	import { setup_load_map } from '../components/setup_load_map';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
 	import { determineFeedsUsingChateaus } from '../maploaddata';
@@ -57,7 +59,7 @@
 			return 'Decode failed: Invalid input';
 		}
 	};
-
+	init_locales();
 	let sidebarOpen: string = 'middle';
 	let sidebar_height_output: string = '100vh';
 	//percentage
@@ -81,8 +83,6 @@
 	let collapser_left_offset: string = '408px';
 
 	let darkMode = true;
-
-	let strings = i18n.en;
 	let locale = 'en';
 	let lockongps = false;
 
@@ -95,13 +95,6 @@
 	let secondrequestlockgps = false;
 
 	let geolocation: GeolocationPosition;
-
-	if (typeof window !== 'undefined') {
-		// this must be fixed to allow subvariants of languages
-		// @ts-expect-error
-		strings = i18n[window.localStorage.language || 'en'];
-		locale = window.localStorage.language || 'en';
-	}
 
 	//false means use metric, true means use us units
 	let selectedSettingsTab = 'localrail';
@@ -1184,7 +1177,6 @@
 </svelte:head>
 <div class="w-full">
 	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
-	
 	<div class="fixed shadow-sm dark:shadow-gray-600 hidden lg:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
 	on:click={() => {
 		if (sidebarOpen == "full") {
@@ -1217,6 +1209,7 @@
 	{/if}
 </div>
 
+	{#if !$isLoading}
 	{#key translate_x_sidebar}
 	<div
 		id="catenary-sidebar"
@@ -1238,8 +1231,9 @@
 		{/key}
 	</div>
 	{/key}
+	{/if}
 </div>
-
+{#if !$isLoading}
 <div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 	<div
 		on:click={togglelayerfeature}
@@ -1335,7 +1329,9 @@
 		{/key}
 	{/if}
 </div>
+{/if}
 
+{#if !$isLoading}
 <div
 	class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
 		? ''
@@ -1355,7 +1351,7 @@
 	</div>
 	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
 		<Layerselectionbox
-			text={strings.headingIntercityRail}
+			text={$_('headingIntercityRail')}
 			changesetting={() => {
 				selectedSettingsTab = 'intercityrail';
 			}}
@@ -1365,7 +1361,7 @@
 		/>
 
 		<Layerselectionbox
-			text={strings.headingLocalRail}
+			text={$_('headingLocalRail')}
 			changesetting={() => {
 				selectedSettingsTab = 'localrail';
 			}}
@@ -1375,7 +1371,7 @@
 		/>
 
 		<Layerselectionbox
-			text={strings.headingBus}
+			text={$_("headingBus")}
 			changesetting={() => {
 				selectedSettingsTab = 'bus';
 			}}
@@ -1385,7 +1381,7 @@
 		/>
 
 		<Layerselectionbox
-			text={strings.headingOther}
+			text={$_("headingOther")}
 			changesetting={() => {
 				selectedSettingsTab = 'other';
 			}}
@@ -1405,7 +1401,7 @@
 				selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
 			} w-1/2 py-1 px-1`}
 		>
-			<p class="w-full align-center text-center">{strings.headingMisc}</p>
+			<p class="w-full align-center text-center">{$_("headingMisc")}</p>
 		</div>
 	</div>
 
@@ -1416,7 +1412,7 @@
 				selectedSettingsTab="more"
 				change="foamermode"
 				nestedchange="infra"
-				name={strings.orminfra}
+				name={$_("orminfra")}
 				urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
 				{runSettingsAdapt}
 			/>
@@ -1426,7 +1422,7 @@
 				selectedSettingsTab="more"
 				change="foamermode"
 				nestedchange="maxspeed"
-				name={strings.ormspeeds}
+				name={$_("ormspeeds")}
 				urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
 				{runSettingsAdapt}
 			/>
@@ -1436,7 +1432,7 @@
 				selectedSettingsTab="more"
 				change="foamermode"
 				nestedchange="signalling"
-				name={strings.ormsignalling}
+				name={$_("ormsignalling")}
 				urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
 				{runSettingsAdapt}
 			/>
@@ -1446,7 +1442,7 @@
 				selectedSettingsTab="more"
 				change="foamermode"
 				nestedchange="electrification"
-				name={strings.ormelectrification}
+				name={$_("ormelectrification")}
 				urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
 				{runSettingsAdapt}
 			/>
@@ -1456,7 +1452,7 @@
 				selectedSettingsTab="more"
 				change="foamermode"
 				nestedchange="gauge"
-				name={strings.ormgauge}
+				name={$_("ormgauge")}
 				urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
 				{runSettingsAdapt}
 			/>
@@ -1465,7 +1461,7 @@
 				selectedSettingsTab="more"
 				change="foamermode"
 				nestedchange="dummy"
-				name={strings.none}
+				name={$_("none")}
 				urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
 				{runSettingsAdapt}
 			/>
@@ -1492,7 +1488,7 @@
 				type="checkbox"
 				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 			/>
-			<label for="show-zombie-buses" class="ml-2">{strings.showtripless}</label>
+			<label for="show-zombie-buses" class="ml-2">{$_("showtripless")}</label>
 		</div>
 	{/if}
 
@@ -1502,7 +1498,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="shapes"
-				name={strings.routes}
+				name={$_("routes")}
 				urlicon="/routesicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -1511,7 +1507,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="labelshapes"
-				name={strings.labels}
+				name={$_("labels")}
 				urlicon="/labelsicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -1520,7 +1516,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="stops"
-				name={strings.stops}
+				name={$_("stops")}
 				urlicon="/stopsicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -1529,7 +1525,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="stoplabels"
-				name={strings.stopnames}
+				name={$_("stopnames")}
 				urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
 				{runSettingsAdapt}
 			/>
@@ -1538,7 +1534,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="visible"
-				name={strings.vehicles}
+				name={$_("vehicles")}
 				urlicon="/vehiclesicon.svg"
 				{runSettingsAdapt}
 			/>
@@ -1548,7 +1544,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="route"
-				name={strings.showroute}
+				name={$_("showroute")}
 				symbol="route"
 				{runSettingsAdapt}
 			/>
@@ -1556,7 +1552,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="trip"
-				name={strings.showtrip}
+				name={$_("showtrip")}
 				symbol="mode_of_travel"
 				{runSettingsAdapt}
 			/>
@@ -1564,7 +1560,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="vehicle"
-				name={strings.showvehicle}
+				name={$_("showvehicle")}
 				symbol="train"
 				{runSettingsAdapt}
 			/>
@@ -1573,7 +1569,7 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="headsign"
-				name="Headsign"
+				name={$_("headsign")}
 				symbol="sports_score"
 				{runSettingsAdapt}
 			/>
@@ -1582,14 +1578,14 @@
 				bind:layersettings
 				bind:selectedSettingsTab
 				change="speed"
-				name={strings.showspeed}
+				name={$_("showspeed")}
 				symbol="speed"
 				{runSettingsAdapt}
 			/>
 		</div>
 	{/if}
 </div>
-
+{/if}
 <style>
 	* {
 		cursor: default;
