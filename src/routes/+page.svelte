@@ -39,6 +39,7 @@
 	import { setup_click_handler } from '../components/mapClickHandler';
 	import { setup_load_map } from '../components/setup_load_map';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
+	import { locale, locales } from 'svelte-i18n';
 	import { determineFeedsUsingChateaus } from '../maploaddata';
 	import CloseButton from '../components/CloseButton.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
@@ -83,7 +84,6 @@
 	let collapser_left_offset: string = '408px';
 
 	let darkMode = true;
-	let locale = 'en';
 	let lockongps = false;
 
 	lock_on_gps_store.subscribe((value) => {
@@ -1288,7 +1288,7 @@
 				3.6 * geolocation.coords.speed
 			).toFixed(1).split(".")[0]}</span>
 			{/if}
-			{#if ["fr", "de", "it", "es", "se"].includes(locale.split("-")[0])}
+			{#if ["fr", "de", "it", "es", "se"].includes((locale || "en").split("-")[0])}
 			<span  class="text-sm">,</span>
 			{:else}
 			<span  class="text-sm">.</span>

@@ -51,5 +51,6 @@
     "driver": "Conducteur",
     "delay": "Retard",
     "provider": "Provideur de data",
-    "lastupdated": "Dernière mise à jour"
+    "lastupdated": "Dernière mise à jour",
+    "comingsoon": "À venir"
 }
