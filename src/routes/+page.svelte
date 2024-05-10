@@ -698,11 +698,11 @@
 				}
 
 				if (sidebar_height_number < target) {
-					sidebar_height_number += 0.1 * (target - sidebar_height_number);
+					sidebar_height_number += 0.15 * (target - sidebar_height_number);
 					sidebar_height_output = sidebar_height_number + 'px';
 				} else {
 					if (sidebar_height_number > target) {
-						sidebar_height_number -= 0.1 * (sidebar_height_number - target);
+						sidebar_height_number -= 0.15 * (sidebar_height_number - target);
 						sidebar_height_output = sidebar_height_number + 'px';
 					} else {
 						clearInterval(last_sidebar_interval_id);
@@ -738,7 +738,7 @@
 					}
 				}
 			}
-		}, 1);
+		}, 0.5);
 	}
 
 	function letgosidebar(e: Event) {

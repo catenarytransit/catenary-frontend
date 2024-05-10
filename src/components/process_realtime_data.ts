@@ -314,7 +314,10 @@ text_colour
 							headsign: headsign.replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							timestamp: vehicle_data.timestamp,
 							id: rt_id,
-                            text_color: text_colour
+                            text_color: text_colour,
+							trip_id: vehicle_data.trip?.trip_id,
+							start_time: vehicle_data.trip?.start_time,
+							start_date: vehicle_data.trip?.start_date,
 						},
 						geometry: {
 							type: 'Point',
@@ -344,7 +347,7 @@ text_colour
 		});
 	}
 
-	console.log('rerendering', category, 'with', features);
+	//console.log('rerendering', category, 'with', features);
 
 	source.setData({
 		type: 'FeatureCollection',

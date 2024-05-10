@@ -39,7 +39,7 @@ export function fetch_realtime_vehicle_locations(
 				(chateau_id) => chateau_to_realtime_feed_lookup[chateau_id] != undefined
 			);
 
-			console.log('realtime_chateaus_in_frame', realtime_chateaus_in_frame);
+			//console.log('realtime_chateaus_in_frame', realtime_chateaus_in_frame);
 
 			get(chateaus_in_frame).forEach((chateauId) => {
 				categories_to_request.forEach((category) => {

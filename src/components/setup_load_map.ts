@@ -388,8 +388,8 @@ export function setup_load_map(
 		chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 
 		setInterval(() => {
-			const chateau_feed_results = determineFeedsUsingChateaus(map);
-			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			//const chateau_feed_results = determineFeedsUsingChateaus(map);
+			//chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 			console.log('fetching realtime locations now');
 			fetch_realtime_vehicle_locations(
 				layersettings,

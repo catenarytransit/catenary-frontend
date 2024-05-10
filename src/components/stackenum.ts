@@ -53,7 +53,7 @@ export class StopMapSelector {
 export class VehicleMapSelector {
 	public chateau_id: string;
 	public vehicle_id: string;
-	public route_id: string;
+	public route_id: string | null;
 	public headsign: string;
 	public triplabel: string;
 	public colour: string;
@@ -63,11 +63,14 @@ export class VehicleMapSelector {
     public trip_short_name: string | null;
 	public text_colour: string;
 	public gtfs_id: string;
+	public trip_id: string | null;
+	public start_time: string | null;
+	public start_date: string | null;
 
 	constructor(
 		chateau_id: string,
 		vehicle_id: string,
-		route_id: string,
+		route_id: string | null,
 		headsign: string,
 		triplabel: string,
 		colour: string,
@@ -76,7 +79,10 @@ export class VehicleMapSelector {
 		route_type: number,
         trip_short_name: string | null,
 		text_colour: string,
-		gtfs_id: string
+		gtfs_id: string,
+		trip_id: string | null,
+		start_time: string | null,
+		start_date: string | null
 	) {
 		this.chateau_id = chateau_id;
 		this.vehicle_id = vehicle_id;
@@ -90,6 +96,9 @@ export class VehicleMapSelector {
         this.trip_short_name = trip_short_name;
 		this.text_colour = text_colour;
 		this.gtfs_id = gtfs_id;
+		this.trip_id = trip_id;
+		this.start_time = start_time;
+		this.start_date = start_date;
 	}
 }
 
@@ -111,7 +120,6 @@ export class SingleTrip {
 	public chateau_id: string;
 	public trip_id: string | null;
 	public route_id: string | null;
-	public direction_id: string | null;
 	public start_time: string | null;
 	public start_date: string | null;
 	public vehicle_id: string | null;
@@ -120,7 +128,6 @@ export class SingleTrip {
 		chateau_id: string,
 		trip_id: string | null,
 		route_id: string | null,
-		direction_id: string | null,
 		start_time: string | null,
 		start_date: string | null,
 		vehicle_id: string | null
@@ -128,7 +135,6 @@ export class SingleTrip {
 		this.chateau_id = chateau_id;
 		this.trip_id = trip_id;
 		this.route_id = route_id;
-		this.direction_id = direction_id;
 		this.start_time = start_time;
 		this.start_date = start_date;
 		this.vehicle_id = vehicle_id;
@@ -169,11 +175,13 @@ export class NearbyDeparturesStack {
 
 export class VehicleSelectedStack {
 	public chateau_id: string;
-	public vehicle_id: string;
+	public vehicle_id: string | null;
+	public gtfs_id: string;
 
-	constructor(chateau_id: string, vehicle_id: string) {
+	constructor(chateau_id: string, vehicle_id: string|null, gtfs_id: string) {
 		this.chateau_id = chateau_id;
 		this.vehicle_id = vehicle_id;
+		this.gtfs_id = gtfs_id;
 	}
 }
 

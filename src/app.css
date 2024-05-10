@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 body {
-    --sb-track-color: #0b2a38;
-    --sb-thumb-color: #4ed2da;
+    --sb-track-color: #0A233F;
+    --sb-thumb-color: #42A7C5;
     --sb-size: 16px;
   }
   
@@ -28,6 +28,26 @@ body {
         scrollbar-color: var(--sb-thumb-color)
                        var(--sb-track-color);
     }
+  }
+
+  .catenary-scroll {
+    scrollbar-color: var(--sb-thumb-color)
+    var(--sb-track-color);
+  }
+
+  .catenary-scroll::-webkit-scrollbar {
+    width: var(--sb-size);
+  }
+  
+  .catenary-scroll::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 1px;
+  }
+  
+  .catenary-scroll::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 1px;
+    border: 2px solid #232e33;
   }
 
   html, body { overscroll-behavior: none; } 
