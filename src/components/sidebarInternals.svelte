@@ -19,6 +19,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
+	import { fixRouteName, fixRunNumber, fixStationName } from './agencyspecific';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 
@@ -145,46 +146,34 @@
 										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-md shadow-gray-500 dark:shadow-slate-700 text-sm md:text-base leading-snug"
 									>
 										{#if option.data.triplabel}
-											{#if option.data.trip_short_name}
+											{#if fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id, option.data.trip_short_name, option.data.vehicle_id)}
 												<span
 													style={`background-color: ${option.data.colour}; color: ${option.data.text_colour};`}
-													class="font-bold font-mono px-1 py-0.5 rounded-sm"
-													>{option.data.trip_short_name}</span
+													class="font-bold text-lg px-1 py-0.5 mr-1 rounded-sm"
+													>{fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id, option.data.trip_short_name, option.data.vehicle_id)}</span
 												>
 											{/if}
-											{#if option.data.route_short_name}
+											{#if (option.data.route_long_name || option.data.route_short_name)}
 												<span
+													class="font-bold !text-lg"
 													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-													class="font-semibold"
-													>{option.data.route_short_name.replace(
+													>{fixRouteName(option.data.chateau_id, (option.data.route_long_name || option.data.route_short_name)).replace(
 														'Counterclockwise',
 														'Anticlockwise'
 													)}</span
 												>
-											{/if}
-											{#if option.data.route_long_name}
-												<span
-													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-													>{option.data.route_long_name.replace(
-														'Counterclockwise',
-														'Anticlockwise'
-													)}</span
-												>
-											{/if}
-											{#if option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0}
-												<span class="">
-													#{option.data.vehicle_id}
-												</span>
 											{/if}
 										{:else}
 											<p>No Trip</p>
 										{/if}
 
+										<div class="my-1"></div>
+
 										{#if option.data.headsign}
-											<p>{option.data.headsign}</p>
+											<p class="font-semibold text-md">&rarr; {fixStationName(option.data.headsign)}</p>
 										{/if}
 										{#if option.data.vehicle_id && !(option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0)}
-											<p>{$_('vehicle')} {option.data.vehicle_id}</p>
+											<p class="text-sm">{$_('vehicle')} {option.data.vehicle_id}</p>
 										{/if}
 									</div>
 								{/each}
