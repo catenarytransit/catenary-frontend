@@ -2,6 +2,9 @@
 	import { json } from '@sveltejs/kit';
 	import { SingleTrip } from '../components/stackenum';
 	import { onMount } from 'svelte';
+    import { locale, locales } from 'svelte-i18n';
+	import { isLoading } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -113,11 +116,14 @@
                     {#if trip_data.block_id != null}
                     <p class="">Block {trip_data.block_id}</p>
                     {/if}
+                    {#if trip_data.vehicle != null}
+                    <p class="">{$_("vehicle")} {trip_data.vehicle.label}</p>
+                    {/if}
 					<p>
 						{#if timezones.length == 1}
-							Timezone: {timezones[0]}
+							{$_("timezone")}: {timezones[0]}
 						{:else}
-							Timezones: {timezones.join(', ')}
+                            {$_("timezone")}: {timezones.join(',')}
 						{/if}
 					</p>
 					{#each stoptimes_cleaned_dataset as stoptime, i}
@@ -141,7 +147,7 @@
 								<p class=""><span class="font-bold">{stoptime.name}</span></p>
                                
 									<div class="flex flex-row">
-										<p class="text-sm">Arrival</p>
+										<p class="text-sm">{$_("arrival")}</p>
 										<div class="ml-auto text-sm">
 											<div class="text-sm">
                                                 {#if stoptime.scheduled_arrival_time_unix_seconds}
@@ -167,7 +173,7 @@
 								
 								{#if stoptime.scheduled_departure_time_unix_seconds}
 									<div class="flex flex-row">
-										<div><p class="text-sm">Departure</p></div>
+										<div><p class="text-sm">{$_("departure")}</p></div>
 										<div class="ml-auto text-sm">
 											<p class={`${stoptime.has_rt_departure_time == true ? "text-slate-600 dark:text-gray-400 line-through" : ""}`}>
 												{new Date(

@@ -54,5 +54,8 @@
     "lastupdated": "Última actualización",
     "nearbydepartures": "Salidas cercanas",
     "clickonanyvehicleorroutegetstarted": "Haga clic en cualquier vehículo o ruta para comenzar.",
-    "comingsoon": "Muy Pronto"
+    "comingsoon": "Muy Pronto",
+    "timezone": "Huso horario",
+    "arrival": "Llegada",
+    "Departure": "Partida"
 }
