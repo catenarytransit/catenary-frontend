@@ -65,11 +65,10 @@ export function fixRouteName(agency: string, route: string): string {
     }
 }
 
-// option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0
-
-export function fixRunNumber(agency: string, route_type: number): boolean {
+export function fixRunNumber(agency: string, route_type: number, route_id: number): boolean {
     if (agency == 'san-diego-mts' && route_type == 0) return true
     if (agency == 'metrolinktrains' || agency == 'amtrak') return true
+    if (agency == 'northcountytransitdistrict' && route_id == 398) return true
     return false
 }
 

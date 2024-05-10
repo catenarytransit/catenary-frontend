@@ -149,7 +149,7 @@
 													style={`background-color: ${option.data.colour}; color: ${option.data.text_colour};`}
 													class="font-bold px-1 py-0.5 rounded-sm mr-1 text-md"
 												>
-													{fixRouteName(option.data.chateau_id, option.data.route_short_name || option.data.route_long_name)}{option.data.headsign.startsWith('A ') ? 'A' : '' }{#if fixRunNumber(option.data.chateau_id, option.data.route_type)}&nbsp;<span class="font-light font-mono">#{option.data.trip_short_name || option.data.block_id || option.data.vehicle_id}</span>{/if}
+													{fixRouteName(option.data.chateau_id, option.data.route_short_name || option.data.route_long_name)}{option.data.headsign.startsWith('A ') ? 'A' : '' }{#if fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id)}&nbsp;<span class="font-light font-mono">#{option.data.trip_short_name || option.data.block_id || option.data.vehicle_id}</span>{/if}
 												</span>
 											{/if}
 											{#if option.data.headsign}
@@ -172,9 +172,9 @@
 										<span class="mt-1 block text-sm">
 											{#if option.data.route_short_name && option.data.route_long_name}
 												{option.data.route_long_name}
+												<br />
 											{/if}
 											{#if option.data.vehicle_id && !(fixRunNumber(option.data.chateau_id, option.data.route_type))}
-												<br />
 												{$_('vehicle')} {option.data.vehicle_id}
 											{/if}
 										</span>
