@@ -19,6 +19,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
+	import { fixHeadsignIcon, fixRouteName, fixRunNumber, fixStationName } from './agencyspecific';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 
@@ -93,8 +94,6 @@
 															)
 														)
 													);
-
-													
 												} else {
 													data_stack.push(
 														new StackInterface(
@@ -145,24 +144,28 @@
 										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-md shadow-gray-500 dark:shadow-slate-700 text-sm md:text-base leading-snug"
 									>
 										{#if option.data.triplabel}
-											{#if option.data.trip_short_name}
+											{#if option.data.route_short_name || option.data.route_long_name}
 												<span
 													style={`background-color: ${option.data.colour}; color: ${option.data.text_colour};`}
-													class="font-bold font-mono px-1 py-0.5 rounded-sm"
-													>{option.data.trip_short_name}</span
+													class="font-bold px-1 py-0.5 rounded-sm mr-1 text-md"
 												>
+													{fixRouteName(option.data.chateau_id, option.data.route_short_name || option.data.route_long_name)}{option.data.headsign.startsWith('A ') ? 'A' : '' }{#if fixRunNumber(option.data.chateau_id, option.data.route_type)}&nbsp;<span class="font-light font-mono">#{option.data.trip_short_name || option.data.block_id || option.data.vehicle_id}</span>{/if}
+												</span>
 											{/if}
-											{#if option.data.route_short_name}
+											{#if option.data.headsign}
 												<span
-													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
 													class="font-semibold"
-													>{option.data.route_short_name.replace(
-														'Counterclockwise',
-														'Anticlockwise'
-													)}</span
+													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
 												>
+													{option.data.headsign.startsWith('A ') ? fixStationName(option.data.headsign).slice(1) : fixStationName(option.data.headsign)}
+													{#if fixHeadsignIcon(option.data.headsign)}
+														<span class="material-symbols-outlined text-sm"
+															>{fixHeadsignIcon(option.data.headsign)}</span
+														>
+													{/if}
+												</span>
 											{/if}
-											{#if option.data.route_long_name}
+											<!-- {#if option.data.route_long_name}
 												<span
 													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
 													>{option.data.route_long_name.replace(
@@ -170,22 +173,20 @@
 														'Anticlockwise'
 													)}</span
 												>
-											{/if}
-											{#if option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0}
-												<span class="">
-													#{option.data.vehicle_id}
-												</span>
-											{/if}
+											{/if} -->
 										{:else}
 											<p>No Trip</p>
 										{/if}
 
-										{#if option.data.headsign}
-											<p>{option.data.headsign}</p>
-										{/if}
-										{#if option.data.vehicle_id && !(option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0)}
-											<p>{$_('vehicle')} {option.data.vehicle_id}</p>
-										{/if}
+										<span class="mt-1 block text-sm">
+											{#if option.data.route_short_name && option.data.route_long_name}
+												{option.data.route_long_name}
+											{/if}
+											{#if option.data.vehicle_id && !(fixRunNumber(option.data.chateau_id, option.data.route_type))}
+												<br />
+												{$_('vehicle')} {option.data.vehicle_id}
+											{/if}
+										</span>
 									</div>
 								{/each}
 							</div>
@@ -256,22 +257,24 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
-		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
-			<div class="flex flex-row gap-x-2">
-				<HomeButton />
-			</div>
-			<p>Vehicle selected {latest_item_on_stack.data.chateau_id} {latest_item_on_stack.data.vehicle_id} {latest_item_on_stack.data.gtfs_id}</p>
+			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
+				<div class="flex flex-row gap-x-2">
+					<HomeButton />
+				</div>
+				<p>
+					Vehicle selected {latest_item_on_stack.data.chateau_id}
+					{latest_item_on_stack.data.vehicle_id}
+					{latest_item_on_stack.data.gtfs_id}
+				</p>
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof SingleTrip}
-		<div class=" flex flex-col h-full">
-			<div class="flex flex-row gap-x-2 px-4 sm:px-2 lg:px-4 pt-2">
-				<HomeButton />
-			</div>
-			
-			<SingleTripInfo
-				trip_selected={latest_item_on_stack.data}
-				/>
+			<div class=" flex flex-col h-full">
+				<div class="flex flex-row gap-x-2 px-4 sm:px-2 lg:px-4 pt-2">
+					<HomeButton />
+				</div>
+
+				<SingleTripInfo trip_selected={latest_item_on_stack.data} />
 			</div>
 		{/if}
 	{:else if false}

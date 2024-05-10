@@ -102,8 +102,8 @@
 			<div class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32">
 				{#if trip_data != null}
                     <p>
-                    {#if trip_data.trip_short_name != null}
-                    <span class="text-lg rounded-lg py-[0.7px] px-1" style={`background: ${trip_data.color}; color: ${trip_data.text_color}`}>{trip_data.trip_short_name}</span>
+                    {#if (trip_data.trip_short_name != null || trip_data.block_id != null || trip_data.vehicle != null)}
+                    <span class="text-lg rounded-lg py-[0.7px] px-1" style={`background: ${trip_data.color}; color: ${trip_data.text_color}`}>{trip_data.trip_short_name || trip_data.block_id || trip_data.vehicle}</span>
                     {/if}
                     {#if trip_data.route_short_name != null}
                     <span class="text-lg font-bold" style={`color: ${trip_data.color};`}>{trip_data.route_short_name}</span>
@@ -121,9 +121,9 @@
                     {/if}
 					<p>
 						{#if timezones.length == 1}
-							{$_("timezone")}: {timezones[0]}
+							{$_("timezone")} {timezones[0]}
 						{:else}
-                            {$_("timezone")}: {timezones.join(',')}
+                            {$_("timezone")} {timezones.join(',')}
 						{/if}
 					</p>
 					{#each stoptimes_cleaned_dataset as stoptime, i}
