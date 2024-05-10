@@ -51,20 +51,33 @@
 						if (stoptime_to_use.rt_arrival?.time) {
 							stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_arrival?.time;
 							stoptime_to_use.strike_arrival = true;
-						}
 
-						if (stoptime_to_use.rt_departure?.time) {
-							stoptime_to_use.rt_departure_time = stoptime_to_use.rt_departure?.time;
-							stoptime_to_use.strike_departure = true;
-
-							if (stoptime_to_use.rt_arrival?.time) {
-								if (stoptime_to_use.rt_arrival?.time > stoptime_to_use.rt_departure?.time) {
+							if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
+								if (stoptime_to_use.scheduled_arrival_time_unix_seconds > stoptime_to_use.rt_departure?.time) {
 									stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_departure?.time;
 
 									stoptime_to_use.strike_arrival = true;
 								}
 							}
 						}
+
+						if (stoptime_to_use.rt_departure?.time) {
+							stoptime_to_use.rt_departure_time = stoptime_to_use.rt_departure?.time;
+							stoptime_to_use.strike_departure = true;
+						}
+
+						
+
+						if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
+							if (stoptime_to_use.rt_arrival?.time) {
+								if ( 
+									stoptime_to_use.scheduled_departure_time_unix_seconds < stoptime_to_use.rt_arrival?.time) {
+									stoptime_to_use.rt_departure_time = stoptime_to_use.rt_arrival?.time;
+
+									stoptime_to_use.strike_departure = true;
+								}
+							}
+							}
 
 						stoptimes_cleaned.push(stoptime_to_use);
 						index = index + 1;
@@ -101,13 +114,13 @@
 					class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
 				>
 					<div
-						class="h-5 w-1/2 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+						class="h-5 w-1/2 rounded-full bg-slate-400 dark:bg-slate-500 rounded-lg animate-pulse"
 					></div>
 					<div
-						class="h-3 w-1/4 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+						class="h-3 w-1/4 rounded-full bg-slate-400 dark:bg-slate-500 rounded-lg animate-pulse"
 					></div>
 					<div
-						class="h-3 w-2/5 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+						class="h-3 w-2/5 rounded-full bg-slate-400 dark:bg-slate-500 rounded-lg animate-pulse"
 					></div>
 				</div>
 			{/each}
