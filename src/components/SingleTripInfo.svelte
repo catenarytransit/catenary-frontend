@@ -2,16 +2,21 @@
 	import { json } from '@sveltejs/kit';
 	import { SingleTrip } from '../components/stackenum';
 	import { onMount } from 'svelte';
-    import { locale, locales } from 'svelte-i18n';
+	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
+	import { fixHeadsignIcon, fixRouteName, fixRunNumber, fixStationName, fixStationNameLong } from './agencyspecific';
+	import { lightenColour } from './lightenDarkColour';
+	import TimeDisplay from './TimeDisplay.svelte';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
 	let timezones: string[] = [];
 	let error: string | null = '';
-    let stoptimes_cleaned_dataset:Array<Record<string, any>> = [];
+	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
 	export let trip_selected: SingleTrip;
+
+	export let darkMode: boolean = false;
 
 	async function fetch_trip_selected() {
 		let url = new URL(
@@ -19,6 +24,7 @@
 		);
 
 		if (trip_selected.trip_id != null) {
+			console.log('trip_id', trip_selected.trip_id);
 			url.searchParams.append('trip_id', trip_selected.trip_id);
 		}
 		if (trip_selected.start_date != null) {
@@ -38,36 +44,35 @@
 					is_loading_trip_data = false;
 					trip_data = data;
 
-                    let stoptimes_cleaned:any[] = [];
+					let stoptimes_cleaned: any[] = [];
 
-                    let index = 0;
-                    data.stoptimes.forEach((stoptime:any) => {
-                        if (timezones.indexOf(stoptime.timezone) === -1) {
-								timezones.push(stoptime.timezone);
-							}
+					let index = 0;
+					data.stoptimes.forEach((stoptime: any) => {
+						if (timezones.indexOf(stoptime.timezone) === -1) {
+							timezones.push(stoptime.timezone);
+						}
 
-                            let stoptime_to_use = {...stoptime};
+						let stoptime_to_use = { ...stoptime };
 
-                            if (stoptime_to_use.rt_departure?.time) {
-                            stoptime_to_use.has_rt_departure_time = true;
-                        } else {
-                            stoptime_to_use.has_rt_departure_time = false;
-                        }
+						if (stoptime_to_use.rt_departure?.time) {
+							stoptime_to_use.has_rt_departure_time = true;
+						} else {
+							stoptime_to_use.has_rt_departure_time = false;
+						}
 
-                        if (stoptime_to_use.rt_arrival?.time) {
-                            stoptime_to_use.has_rt_arrival_time = true;
-                        } else {
-                            stoptime_to_use.has_rt_arrival_time = false;
-                        }
+						if (stoptime_to_use.rt_arrival?.time) {
+							stoptime_to_use.has_rt_arrival_time = true;
+						} else {
+							stoptime_to_use.has_rt_arrival_time = false;
+						}
 
-                        stoptimes_cleaned.push(stoptime_to_use);
-                        index = index + 1;
-                    });
+						stoptimes_cleaned.push(stoptime_to_use);
+						index = index + 1;
+					});
 
+					stoptimes_cleaned_dataset = stoptimes_cleaned;
 
-                    stoptimes_cleaned_dataset = stoptimes_cleaned;
-                    
-                    console.log('stoptimes_cleaned_dataset',stoptimes_cleaned_dataset);
+					console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
 					init_loaded = Date.now();
 					console.log('refresh component');
 				} catch (e: any) {
@@ -84,6 +89,13 @@
 		error = null;
 		fetch_trip_selected();
 	}
+
+	function timesEqualToMinute(time1: number, time2: number) {
+		let date1 = new Date(time1 * 1000);
+		let date2 = new Date(time2 * 1000);
+
+		return date1.getMinutes() == date2.getMinutes() && date1.getHours() == date2.getHours();
+	}
 </script>
 
 <div class="pl-4 sm:pl-2 lg:pl-4 pt-2 h-full">
@@ -91,39 +103,70 @@
 		{#if error != null}
 			{error}
 		{:else if is_loading_trip_data}
-			{#each [0,1,2,3,4,5,6,7,8] as it}
-            <div class='border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2'>
-                <div class='h-5 w-1/2 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse'></div>
-                <div class='h-3 w-1/4 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse'></div>
-                <div class='h-3 w-2/5 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse'></div>
-            </div>
-            {/each}
+			{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
+				<div
+					class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
+				>
+					<div
+						class="h-5 w-1/2 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+					></div>
+					<div
+						class="h-3 w-1/4 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+					></div>
+					<div
+						class="h-3 w-2/5 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+					></div>
+				</div>
+			{/each}
 		{:else}
 			<div class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32">
 				{#if trip_data != null}
-                    <p>
-                    {#if (trip_data.trip_short_name != null || trip_data.block_id != null || trip_data.vehicle != null)}
-                    <span class="text-lg rounded-lg py-[0.7px] px-1" style={`background: ${trip_data.color}; color: ${trip_data.text_color}`}>{trip_data.trip_short_name || trip_data.block_id || trip_data.vehicle}</span>
-                    {/if}
-                    {#if trip_data.route_short_name != null}
-                    <span class="text-lg font-bold" style={`color: ${trip_data.color};`}>{trip_data.route_short_name}</span>
-                    {/if}
-                    {#if trip_data.route_long_name != null}
-                    <span class="text-lg"  style={`color: ${trip_data.color};`}>{trip_data.route_long_name}</span>
-                    {/if}
-                    </p>
-                    <p class="">Trip ID {trip_selected.trip_id}</p>
-                    {#if trip_data.block_id != null}
-                    <p class="">Block {trip_data.block_id}</p>
-                    {/if}
-                    {#if trip_data.vehicle != null}
-                    <p class="">{$_("vehicle")} {trip_data.vehicle.label}</p>
-                    {/if}
+					{#if trip_data.route_short_name || trip_data.route_long_name}
+						<div
+							style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
+							class="font-bold px-1 py-0.5 rounded-sm mr-1 text-md"
+						>
+							{fixRouteName(
+								trip_selected.chateau_id,
+								trip_data.route_short_name || trip_data.route_long_name
+							)}{trip_data.trip_headsign.startsWith('A ')
+								? 'A'
+								: ''}{#if fixRunNumber(trip_selected.chateau_id, trip_data.route_type)}&nbsp;<span
+									class="font-light font-mono"
+									>#{trip_data.trip_short_name ||
+										trip_data.block_id ||
+										trip_data.vehicle_id}</span
+								>{/if}
+						</div>
+					{/if}
+					{#if trip_data.trip_headsign}
+						<span
+							class="font-semibold"
+							style={`color: ${darkMode ? lightenColour(trip_data.colour) : trip_data.colour}`}
+						>
+							{trip_data.trip_headsign.startsWith('A ')
+								? fixStationName(trip_data.trip_headsign).slice(1)
+								: fixStationName(trip_data.trip_headsign)}
+							{#if fixHeadsignIcon(trip_data.trip_headsign)}
+								<span class="material-symbols-outlined text-sm"
+									>{fixHeadsignIcon(trip_data.trip_headsign)}</span
+								>
+							{/if}
+						</span>
+					{/if}
+
+					<p class="">Trip ID {trip_selected.trip_id}</p>
+					{#if trip_data.block_id != null}
+						<p class="">Block {trip_data.block_id}</p>
+					{/if}
+					{#if trip_data.vehicle != null}
+						<p class="">{$_('vehicle')} {trip_data.vehicle.label}</p>
+					{/if}
 					<p>
 						{#if timezones.length == 1}
-							{$_("timezone")} {timezones[0]}
+							{$_('timezone')} {timezones[0]}
 						{:else}
-                            {$_("timezone")} {timezones.join(',')}
+							{$_('timezone')} {timezones.join(',')}
 						{/if}
 					</p>
 					{#each stoptimes_cleaned_dataset as stoptime, i}
@@ -143,57 +186,27 @@
 							</div>
 							<div class="mr-2"></div>
 
-							<div class="w-full border-t border-slate-500 py-2 pr-1 lg:pr-2">
-								<p class=""><span class="font-bold">{stoptime.name}</span></p>
-                               
+							<div class="w-full py-3 pr-1 lg:pr-2">
+								<div class="flex flex-row">
+									<p class=""><span class="font-bold">{fixStationNameLong(stoptime.name)}</span></p>
+									{#if timesEqualToMinute(stoptime.scheduled_arrival_time_unix_seconds, stoptime.scheduled_departure_time_unix_seconds)}
+										<TimeDisplay scheduled={stoptime.scheduled_arrival_time_unix_seconds} actual={stoptime.rt_arrival?.time} timezone={stoptime.timezone || trip_data.timezone} />
+									{/if}
+								</div>
+
+
+								{#if !timesEqualToMinute(stoptime.scheduled_arrival_time_unix_seconds, stoptime.scheduled_departure_time_unix_seconds)}
 									<div class="flex flex-row">
-										<p class="text-sm">{$_("arrival")}</p>
-										<div class="ml-auto text-sm">
-											<div class="text-sm">
-                                                {#if stoptime.scheduled_arrival_time_unix_seconds}
-												<p class={`${stoptime.has_rt_arrival_time == true ? "text-slate-600 dark:text-gray-400 line-through" : ""}`}>
-                                                    {new Date(
-                                                        stoptime.scheduled_arrival_time_unix_seconds * 1000
-                                                    ).toLocaleTimeString('en-UK', {
-                                                        timeZone: stoptime.timezone || trip_data.timezone
-                                                    })}
-                                                </p>
-                                                {/if}
-                                                {#if stoptime.rt_arrival?.time}
-                                                    <p>
-                                                        {new Date(stoptime.rt_arrival?.time * 1000).toLocaleTimeString(
-                                                            'en-UK',
-                                                            { timeZone: stoptime.timezone || trip_data.timezone }
-                                                        )}
-                                                    </p>
-                                                {/if}
-                                                </div>
-										</div>
+										<p class="text-sm">{$_('arrival')}</p>
+										<TimeDisplay scheduled={stoptime.scheduled_arrival_time_unix_seconds} actual={stoptime.rt_arrival?.time} timezone={stoptime.timezone || trip_data.timezone} />
 									</div>
-								
-								{#if stoptime.scheduled_departure_time_unix_seconds}
+
 									<div class="flex flex-row">
-										<div><p class="text-sm">{$_("departure")}</p></div>
-										<div class="ml-auto text-sm">
-											<p class={`${stoptime.has_rt_departure_time == true ? "text-slate-600 dark:text-gray-400 line-through" : ""}`}>
-												{new Date(
-													stoptime.scheduled_departure_time_unix_seconds * 1000
-												).toLocaleTimeString('en-UK', {
-													timeZone: stoptime.timezone || trip_data.timezone
-												})}
-											</p>
-											{#if stoptime.rt_departure?.time}
-												<p>
-													{new Date(stoptime.rt_departure?.time * 1000).toLocaleTimeString(
-														'en-UK',
-														{ timeZone: stoptime.timezone || trip_data.timezone }
-													)}
-												</p>
-											{/if}
-										</div>
+										<p class="text-sm">{$_('departure')}</p>
+										<TimeDisplay scheduled={stoptime.scheduled_departure_time_unix_seconds} actual={stoptime.rt_departure?.time} timezone={stoptime.timezone || trip_data.timezone} />
 									</div>
 								{/if}
-								
+
 								{#if timezones.length > 1}
 									<p class="text-sm">
 										Tz: {stoptime.timezone || trip_data.timezone}

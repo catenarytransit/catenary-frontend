@@ -165,15 +165,6 @@
 													{/if}
 												</span>
 											{/if}
-											<!-- {#if option.data.route_long_name}
-												<span
-													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-													>{option.data.route_long_name.replace(
-														'Counterclockwise',
-														'Anticlockwise'
-													)}</span
-												>
-											{/if} -->
 										{:else}
 											<p>No Trip</p>
 										{/if}
@@ -274,7 +265,7 @@
 					<HomeButton />
 				</div>
 
-				<SingleTripInfo trip_selected={latest_item_on_stack.data} />
+				<SingleTripInfo {darkMode} trip_selected={latest_item_on_stack.data} />
 			</div>
 		{/if}
 	{:else if false}

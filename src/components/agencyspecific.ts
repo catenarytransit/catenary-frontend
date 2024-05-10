@@ -100,6 +100,7 @@ export function fixStationName(name: string) {
         ['South Bellevue', 'S Bellevue'],
         ['Downtown SD', 'Downtown'],
         ['Ucsd', 'UCSD'],
+        ['Sdsu', 'SDSU'],
         ['Utc', 'UTC'],
         ['Va / Ucsd', 'UTC'],
         ['UTC/VA Med Ctr', 'UTC'],
@@ -112,5 +113,31 @@ export function fixStationName(name: string) {
         }
     }
 
-    return name.split('Station')[0].replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Street', 'St').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').split('-')[0].trim()
+    return fixStationNameLong(name)
+}
+
+export function fixStationNameLong(name: string) {
+    let fixPatterns = [
+        ['Union Station', 'Union Station'],
+        ['APU / Citrus College Station', 'APU/Citrus'],
+        ['Atlantic Station', 'East Los Angeles'],
+        ['Wilshire / Western Station', 'Wilshire/Western'],
+        ['Wilshire / Vermont Station', 'Wilshire/Vermont'],
+        ['12th & Imperial', '12th & Imperial'],
+        ['North Hollywood Station G - Line', 'North Hollywood'],
+        ['Old Town to Airport Shuttle', 'Airport'],
+        ['Sabre Springs & Penasquitos Transit Station', 'Sabre Springs/Peñasquitos'],
+        ['Clairemont Mesa Bl & Complex Dr', 'Kearny Mesa'],
+        ['I-15 Centerline Sta & University Av', 'City Heights'],
+        ['I-15 Centerline Sta & El Cajon Bl', 'Boulevard'],
+        ['A Pacific Beach', 'Pacific Beach - 9A'],
+    ]
+
+    for (let i = 0; i < fixPatterns.length; i++) {
+        if (name == (fixPatterns[i][0])) {
+            return fixPatterns[i][1]
+        }
+    }
+
+    return name.replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
 }
