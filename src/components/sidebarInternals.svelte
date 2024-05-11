@@ -345,7 +345,7 @@
 				</div>
 			</div>
 			<p class="text-sm md:text-base">{$_('clickonanyvehicleorroutegetstarted')}</p>
-			<p class="text-xs md:text-sm">Catenary Maps {$_('softwareversion')} 2024-05-11 01:02Z</p>
+			<p class="text-xs md:text-sm">Catenary Maps {$_('softwareversion')} 2024-05-11 22:56Z</p>
 
 			<div></div>
 
