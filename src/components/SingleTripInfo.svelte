@@ -210,7 +210,7 @@
                                 {/if}				
 							{/if}-->
 						<p class="text-lg font-semibold mt-0 lg:mt-1">
-							{"→"} {fixHeadsignText(trip_data.trip_headsign)}
+							{"→"} {fixHeadsignText(trip_data.trip_headsign, trip_data.route_short_name || trip_data.route_long_name)}
 							{#if fixHeadsignIcon(trip_data.trip_headsign)}
 								<span class="material-symbols-outlined text-lg align-bottom"
 									>{fixHeadsignIcon(trip_data.trip_headsign)}</span

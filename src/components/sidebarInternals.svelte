@@ -212,7 +212,7 @@
 										<p class="text-sm lg:text-base mt-0">
 											{#if option.data.headsign && option.data.headsign != option.data.route_long_name && option.data.headsign != option.data.route_short_name}
 												{"→"}
-												<span class="">{fixHeadsignText(option.data.headsign)}</span>
+												<span class="">{fixHeadsignText(option.data.headsign, option.data.route_short_name || option.data.route_long_name)}</span>
 											{/if}
 											{#if fixHeadsignIcon(option.data.headsign)}
 												<span class="material-symbols-outlined text-sm align-middle"

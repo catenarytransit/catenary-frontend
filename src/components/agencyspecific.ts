@@ -93,7 +93,12 @@ export function fixRunNumber(chateau: string, type: number, route: number, tripn
     return tripname
 }
 
-export function fixHeadsignText(name: string) {
+export function fixHeadsignText(name: string, route: string) {
+
+    if (name.startsWith(route)) {
+        name = name.replace(route + ' - ', '').trim()
+    }
+
     const fixPatterns:Record<string, string> = {
         'L.A. Union Station': 'Los Angeles',
         '12th & Imperial': '12th/Imp\'l',
