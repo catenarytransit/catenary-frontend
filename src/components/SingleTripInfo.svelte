@@ -5,6 +5,17 @@
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
+	import RouteIcon from './RouteIcon.svelte';
+	import { lightenColour } from './lightenDarkColour';
+	import {
+		fixHeadsignIcon,
+		fixHeadsignText,
+		fixRouteIcon,
+		fixRouteName,
+		fixRouteNameLong,
+		fixRunNumber,
+		fixStationName
+	} from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -13,7 +24,11 @@
 	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
 	export let trip_selected: SingleTrip;
 
+	export let darkMode: boolean = false;
+
 	async function fetch_trip_selected() {
+		console.log('t-s', trip_selected)
+
 		let url = new URL(
 			`https://birch.catenarymaps.org/get_trip_information/${trip_selected.chateau_id}/`
 		);
@@ -114,41 +129,96 @@
 					class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
 				>
 					<div
-						class="h-5 w-1/2 rounded-full bg-slate-400 dark:bg-slate-500 rounded-lg animate-pulse"
+						class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
 					></div>
 					<div
-						class="h-3 w-1/4 rounded-full bg-slate-400 dark:bg-slate-500 rounded-lg animate-pulse"
+						class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
 					></div>
 					<div
-						class="h-3 w-2/5 rounded-full bg-slate-400 dark:bg-slate-500 rounded-lg animate-pulse"
+						class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
 					></div>
 				</div>
 			{/each}
 		{:else}
 			<div class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32">
 				{#if trip_data != null}
-					<p>
-						{#if trip_data.trip_short_name != null}
-							<span
-								class="text-lg rounded-lg py-[0.7px] px-1"
-								style={`background: ${trip_data.color}; color: ${trip_data.text_color}`}
-								>{trip_data.trip_short_name}</span
-							>
-						{/if}
-						{#if trip_data.route_short_name != null}
-							<span class="text-lg font-bold" style={`color: ${trip_data.color};`}
-								>{trip_data.route_short_name}</span
-							>
-						{/if}
-						{#if trip_data.route_long_name != null}
-							<span class="text-lg" style={`color: ${trip_data.color};`}
-								>{trip_data.route_long_name}</span
-							>
-						{/if}
-					</p>
-					{#if trip_data.trip_headsign}
-						<p class="text-lg">{trip_data.trip_headsign}</p>
+					{#if trip_data.route_long_name || trip_data.route_short_name}
+						<span
+							style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
+							class="text-xl mt-0"
+						>
+							{#if fixRunNumber(trip_selected.chateau_id, trip_selected.route_type || 3, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
+								<span
+									style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
+									class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min"
+									>{fixRunNumber(
+										trip_selected.chateau_id,
+										trip_selected.route_type || 3,
+										trip_data.route_id,
+										trip_data.trip_short_name,
+										trip_data.vehicle_id
+									)}</span
+								>
+							{/if}
+							{#if trip_data.route_long_name && trip_data.route_short_name && !trip_data.route_long_name.includes(trip_data.route_short_name)}
+								<span class="font-bold"
+									>{fixRouteName(
+										trip_selected.chateau_id,
+										trip_data.route_short_name,
+										trip_data.route_id
+									)}</span
+								>
+								<span class="font-normal ml-1"
+									>{fixRouteNameLong(
+										trip_selected.chateau_id,
+										trip_data.route_long_name,
+										trip_data.route_id
+									)}</span
+								>
+							{:else}
+								<span class="font-semibold"
+									>{trip_data.route_long_name
+										? fixRouteNameLong(
+												trip_selected.chateau_id,
+												trip_data.route_long_name,
+												trip_data.route_id
+											)
+										: fixRouteName(
+												trip_selected.chateau_id,
+												trip_data.route_short_name,
+												trip_data.route_id
+											)}</span
+								>
+							{/if}
+						</span>
 					{/if}
+                    {#if trip_data.trip_headsign}
+                    <!--{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								<img
+									alt={trip_data.route_id}
+									class="inline w-5 h-auto mr-0.5 align-middle"
+									style={!darkMode ? 'filter: invert(1)' : ''}
+									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								/>
+							{:else}
+                                {#if trip_selected.route_type != null}
+								<span class="align-middle text-sm">
+                                    <RouteIcon
+                                route_type={trip_selected.route_type}
+                                />
+                                </span>
+                                {/if}				
+							{/if}-->
+						<p class="text-lg font-semibold mt-0 lg:mt-1">
+							{"→"} {fixHeadsignText(trip_data.trip_headsign)}
+							{#if fixHeadsignIcon(trip_data.trip_headsign)}
+								<span class="material-symbols-outlined text-lg align-bottom"
+									>{fixHeadsignIcon(trip_data.trip_headsign)}</span
+								>
+							{/if}
+						</p>
+					{/if}
+					<span class="block mt-0 mt-1" />
 					<p class="text-sm">Trip ID {trip_selected.trip_id}</p>
 					{#if trip_data.block_id != null}
 						<p class="text-sm">Block {trip_data.block_id}</p>
@@ -181,7 +251,7 @@
 							<div class="mr-2"></div>
 
 							<div class="w-full border-t border-slate-500 py-2 pr-1 lg:pr-2">
-								<p class=""><span class="font-bold">{stoptime.name}</span></p>
+								<p class=""><span class="font-bold">{fixStationName(stoptime.name)}</span></p>
 
 								<div class="flex flex-row">
 									<p class="text-sm">{$_('arrival')}</p>
@@ -201,11 +271,10 @@
 												{/if}
 
 												{#if stoptime.rt_arrival_time}
-													<span class="text-sky-500">
-														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString(
-															'en-UK',
-															{ timeZone: stoptime.timezone || trip_data.timezone }
-														)}
+													<span class="text-sky-700 dark:text-sky-300">
+														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString('en-UK', {
+															timeZone: stoptime.timezone || trip_data.timezone
+														})}
 													</span>
 												{/if}
 											</p>
@@ -231,7 +300,7 @@
 												{/if}
 
 												{#if stoptime.rt_departure_time}
-													<span class="text-sky-500">
+													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
 															'en-UK',
 															{ timeZone: stoptime.timezone || trip_data.timezone }

@@ -61,5 +61,9 @@
     "itemsselected": "items selected",
     "timezone": "Timezone",
     "departure": "Departure",
-    "arrival": "Arrival"
+    "arrival": "Arrival",
+    "cancelled": "Cancelled",
+    "early": "Early",
+    "late": "Late",
+    "skipped": "Skipped"
   }

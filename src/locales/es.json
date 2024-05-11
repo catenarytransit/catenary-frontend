@@ -57,5 +57,10 @@
     "comingsoon": "Muy Pronto",
     "timezone": "Huso horario",
     "arrival": "Llegada",
-    "Departure": "Partida"
+    "Departure": "Partida",
+    "itemsselected": "artículos seleccionados",
+    "cancelled": "Cancelado",
+    "skipped": "Iginoré",
+    "early": "Temprano",
+    "late": "Tarde"
 }

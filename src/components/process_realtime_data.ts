@@ -12,6 +12,7 @@ import {
 import { add_bunny_layer, make_custom_icon_source, new_jeans_buses } from './addLayers/customIcons';
 import mapboxgl from 'mapbox-gl';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
+import { fixHeadsignText, fixRouteName } from './agencyspecific';
 function category_name_to_source_name(category: string): string {
 	switch (category) {
 		case 'bus':
@@ -304,14 +305,14 @@ text_colour
 							//keep to degrees as gtfs specs
 							bearing: vehicle_data?.position?.bearing,
 							has_bearing: vehicle_data?.position?.bearing != null,
-							maptag: maptag.replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
+							maptag: fixRouteName(chateau_id, maptag, routeId).replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							trip_short_name: trip_short_name,
 							route_short_name: route_short_name,
 							route_long_name: route_long_name,
 							contrastdarkmode: contrastdarkmode,
 							contrastdarkmodebearing,
 							routeId: routeId,
-							headsign: headsign.replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
+							headsign: fixHeadsignText(headsign).replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							timestamp: vehicle_data.timestamp,
 							id: rt_id,
                             text_color: text_colour,

@@ -123,6 +123,7 @@ export class SingleTrip {
 	public start_time: string | null;
 	public start_date: string | null;
 	public vehicle_id: string | null;
+	public route_type: number | null;
 
 	constructor(
 		chateau_id: string,
@@ -130,7 +131,8 @@ export class SingleTrip {
 		route_id: string | null,
 		start_time: string | null,
 		start_date: string | null,
-		vehicle_id: string | null
+		vehicle_id: string | null,
+		route_type: number | null
 	) {
 		this.chateau_id = chateau_id;
 		this.trip_id = trip_id;
@@ -138,6 +140,7 @@ export class SingleTrip {
 		this.start_time = start_time;
 		this.start_date = start_date;
 		this.vehicle_id = vehicle_id;
+		this.route_type = route_type;
 	}
 }
 
