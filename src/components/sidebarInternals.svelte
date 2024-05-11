@@ -16,7 +16,7 @@
 	import { SettingsStack } from '../components/stackenum';
 	import { writable } from 'svelte/store';
 	import { data_stack_store, usunits_store } from '../globalstores';
-	import { locale, locales } from 'svelte-i18n';
+	import { getLocaleFromNavigator, locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
@@ -29,8 +29,12 @@
 		fixRouteIcon
 	} from './agencyspecific';
 	import RouteIcon from './RouteIcon.svelte';
+	import { getLocaleStorageOrNav } from '../i18n';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
+	let this_locale: string | undefined | null;
+
+	locale.subscribe((newval) => this_locale = newval);
 
 	let locales_options: Record<string, string> = {
 		en: 'English',
@@ -263,12 +267,14 @@
 				<br />
 				<div class="flex flex-row gap-x-3 w-full">
 					<p class="flex-grow-0 min-w-1/3">{$_('language')}</p>
+					<p>{this_locale}</p>
 					<select
 						bind:value={$locale}
 						class="text-black bg-white dark:bg-slate-900 text-white flex-grow border border-slate-500"
 					>
 						{#each $locales as locale}
-							<option value={locale} class="text-black bg-white dark:bg-slate-900 text-white"
+							<option value={locale}
+							class="text-black bg-white dark:bg-slate-900 text-white"
 								>{locale_code_to_name(locale)}</option
 							>
 						{/each}

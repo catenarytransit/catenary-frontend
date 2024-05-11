@@ -8,9 +8,21 @@ register('ko', () => import('./locales/ko.json'));
 register('zh', () => import('./locales/zh.json'));
 register('zh-TW', () => import('./locales/zh.json'));
 
+export function getLocaleStorageOrNav() {
+  if (typeof window != "undefined") {
+    if ( window.localStorage.language &&  window.localStorage.language  !== "undefined") {
+        return window.localStorage.language;
+    } else {
+      return getLocaleFromNavigator();
+    }
+  } else {
+    return getLocaleFromNavigator();
+  }
+}
+
 export function init_locales() {
     init({
         fallbackLocale: 'en',
-        initialLocale: getLocaleFromNavigator(),
+        initialLocale: getLocaleStorageOrNav(),
       });
 }

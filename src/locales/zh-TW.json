@@ -65,5 +65,6 @@
     "arrival": "抵達",
     "departure": "離站",
     "itemsselected": "選定項目",
-    "ontime": "準時"
+    "ontime": "準時",
+    "defaultlang": "預設語言"
 }

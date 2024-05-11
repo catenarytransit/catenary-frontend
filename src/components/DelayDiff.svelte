@@ -69,7 +69,7 @@
 		}
 
 		if (diff > 60) {
-			textclass = 'text-red-700 text-red-400';
+			textclass = 'text-red-700 dark:text-red-500';
 		}
 
 		let remainder = Math.abs(diff);

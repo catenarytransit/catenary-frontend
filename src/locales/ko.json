@@ -66,5 +66,6 @@
     "skipped": "건너뛰",
     "early": "초반",
     "late": "늦게",
-    "ontime": "정시에"
+    "ontime": "정시에",
+    "defaultlang": "기본 설정 언어"
 }

@@ -65,5 +65,6 @@
     "skipped": "Iginoré",
     "early": "Tôt",
     "late": "Tard",
-    "ontime": "À temps"
+    "ontime": "À temps",
+    "defaultlang": "Langage par défaut"
 }

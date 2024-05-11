@@ -107,6 +107,10 @@
 
 	if (typeof window !== 'undefined') {
 		top_margin_collapser_sidebar = `${(window.innerHeight /2) - 15}px`;
+
+		if (window.localStorage.language) {
+		locale.set(window.localStorage.language)
+		}
 	}
 
 	//false means use metric, true means use us units

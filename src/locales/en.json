@@ -66,5 +66,6 @@
     "early": "Early",
     "late": "Late",
     "skipped": "Skipped",
-    "ontime": "On time"
+    "ontime": "On time",
+    "defaultlang": "Default language"
   }

@@ -64,5 +64,6 @@
     "skipped": "Überspringen",
     "early": "Anfang",
     "late": "Späte",
-    "ontime": "Pünktlich"
+    "ontime": "Pünktlich",
+    "defaultlang": "Standardsprache"
 }
