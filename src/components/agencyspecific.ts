@@ -35,13 +35,13 @@ export function fixRouteIcon(chateau: string, rid: string): string | null {
     console.log(chateau, rid)
     let fixPatterns = {
         'san-diego-mts': {
-            '510': 'https://buildsd.org/img/transit/BLU.svg',
-            '520': 'https://buildsd.org/img/transit/ORG.svg',
-            '530': 'https://buildsd.org/img/transit/GRN.svg',
+            '510': '/lines/san-diego-mts/BLU.svg',
+            '520': '/lines/san-diego-mts/ORG.svg',
+            '530': '/lines/san-diego-mts/GRN.svg',
         },
         'northcountytransitdistrict': {
-            '398': 'https://buildsd.org/img/transit/CST.svg',
-            '399': 'https://buildsd.org/img/transit/SPR.svg',
+            '398': '/lines/san-diego-mts/CST.svg',
+            '399': '/lines/san-diego-mts/SPR.svg',
         }
     }
 
