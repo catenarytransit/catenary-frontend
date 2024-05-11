@@ -72,32 +72,32 @@ export function fixRouteNameLong(agency: string, route: string, rid: string): st
     }
 }
 
-export function fixRunNumber(agency: string, type: number, route: number, tripname: string, vehicle: string): string | null {
-    if (agency == 'san-diego-mts' && type == 0) return vehicle
-    if (agency == 'northcountytransitdistrict' && route != 398) return null
+export function fixRunNumber(chateau: string, type: number, route: string | null, tripname: string | null, vehicle: string | null): string | null {
+    if (chateau == 'san-diego-mts' && type == 0) return vehicle
+    if (chateau == 'northcountytransitdistrict' && route != "398") return null
     return tripname
 }
 
 export function fixStationName(name: string) {
     console.log(name)
     let fixPatterns = [
-        ['L.A. Union Station', 'Los Angeles'],
-        ['North Hollywood Station', 'NoHo'],
-        ['North Hollywood Station G - Line', 'NoHo'],
+      //  ['L.A. Union Station', 'Los Angeles'],
+      //  ['North Hollywood Station', 'NoHo'],
+    //    ['North Hollywood Station G - Line', 'NoHo'],
         ['Chatsworth Station G - Line', 'Chatsworth'],
-        ['Union Station', 'UnionSta'],
-        ['Wilshire / Western Station', 'Wil/Wstrn'],
-        ['Wilshire / Vermont Station', 'Wilshire Ctr'],
-        ['Downtown Long Beach Station', 'Long Bch'],
-        ['APU / Citrus College Station', 'Azusa'],
-        ['Redondo Beach Station', 'Redondo Bch'],
-        ['Norwalk Station', 'Norwalk'],
-        ['Downtown Santa Monica Station', 'S Monica'],
-        ['Atlantic Station', 'East LA'],
-        ['Expo / Crenshaw Station', 'Expo/Crnshw'],
-        ['Westchester / Veterans Station', 'Westchester'],
+      //  ['Union Station', 'UnionSta'],
+     //   ['Wilshire / Western Station', 'Wil/Wstrn'],
+     //   ['Wilshire / Vermont Station', 'Wilshire Ctr'],
+     //   ['Downtown Long Beach Station', 'Long Bch'],
+     //   ['APU / Citrus College Station', 'Azusa'],
+     //   ['Redondo Beach Station', 'Redondo Bch'],
+     //   ['Norwalk Station', 'Norwalk'],
+    //    ['Downtown Santa Monica Station', 'S Monica'],
+     //   ['Atlantic Station', 'East LA'],
+      //  ['Expo / Crenshaw Station', 'Expo/Crnshw'],
+      //  ['Westchester / Veterans Station', 'Westchester'],
         ['University & College', 'City Heights'],
-        ['12th & Imperial', '12th/Imp\'l'],
+      //  ['12th & Imperial', '12th/Imp\'l'],
         ['El Cajon / Arnele', 'El Cajon'],
         ['Crenshaw C-Line Station', 'Crenshaw'],
         ['Otay Mesa Transit Center', 'Otay Mesa'],
@@ -124,8 +124,8 @@ export function fixStationName(name: string) {
 export function fixStationNameLong(name: string) {
     let fixPatterns = [
         ['Union Station', 'Union Station'],
-        ['APU / Citrus College Station', 'APU/Citrus'],
-        ['Atlantic Station', 'East Los Angeles'],
+      //  ['APU / Citrus College Station', 'APU/Citrus'],
+     //   ['Atlantic Station', 'East Los Angeles'],
         ['Wilshire / Western Station', 'Wilshire/Western'],
         ['Wilshire / Vermont Station', 'Wilshire/Vermont'],
         ['12th & Imperial', '12th & Imperial'],
@@ -144,5 +144,5 @@ export function fixStationNameLong(name: string) {
         }
     }
 
-    return name.replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
+    return name.replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
 }
