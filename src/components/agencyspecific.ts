@@ -45,6 +45,7 @@ export function fixRouteNameLong(agency: string, route: string, rid: string): st
             'Metrolink Ventura County Line': 'Ventura County Line',
         },
         'san-diego-mts': {
+            '3': 'Ocean View Boulevard/Hillcrest',
             '5': 'Market Street',
             '215': 'Mid-City Rapid',
             '225': 'South Bay Rapid',
@@ -67,13 +68,13 @@ export function fixRouteNameLong(agency: string, route: string, rid: string): st
         // @ts-ignore
         return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
     } else {
-        return route
+        return route.replace('Transit Station', 'Sta').replace('Station', 'Sta').replace('Transportation Center', 'TC').replace('Transit Center', 'TC').replace('Transit Ctr', 'TC').trim()
     }
 }
 
 export function fixRunNumber(agency: string, type: number, route: number, tripname: string, vehicle: string): string | null {
     if (agency == 'san-diego-mts' && type == 0) return vehicle
-    if (agency == 'northcountytransitdistrict' && route == 399) return null
+    if (agency == 'northcountytransitdistrict' && route != 398) return null
     return tripname
 }
 

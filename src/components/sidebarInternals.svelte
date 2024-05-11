@@ -171,18 +171,19 @@
 											<p>No Trip</p>
 										{/if}
 
-										<div class="my-1"></div>
+										<div class="my-2"></div>
 
 										{#if (option.data.headsign && option.data.headsign != option.data.route_long_name && option.data.headsign != option.data.route_short_name)}
-											<p class="font-semibold text-md">
-												{fixStationName(option.data.headsign)}
+											<p class="text-sm">
+												Towards
+												<span class="font-semibold">{fixStationName(option.data.headsign)}</span>
 												{#if fixHeadsignIcon(option.data.headsign)}
 													<span class="material-symbols-outlined text-md align-bottom">{fixHeadsignIcon(option.data.headsign)}</span>
 												{/if}
 											</p>
 										{/if}
 										{#if option.data.vehicle_id && !(option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0)}
-											<p class="text-sm">{$_('vehicle')} {option.data.vehicle_id}</p>
+											<p class="text-xs">{$_('vehicle')} {option.data.vehicle_id}</p>
 										{/if}
 									</div>
 								{/each}
