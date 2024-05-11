@@ -1193,7 +1193,7 @@
 	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 	
 	{#key top_margin_collapser_sidebar} 
-	<div class="fixed shadow-sm dark:shadow-gray-600 hidden lg:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
+	<div class="fixed shadow-sm dark:shadow-gray-600 hidden md:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
 	on:click={() => {
 		if (sidebarOpen == "full") {
 			sidebarOpen = "none";
