@@ -13,7 +13,27 @@ export function fixHeadsignIcon(headsign: string): string | null {
     return null
 }
 
-export function fixRouteName(agency: string, route: string): string {
+export function fixRouteName(agency: string, route: string, rid: string): string {
+    let fixPatterns = {
+        'san-diego-mts': {
+            '510': 'Blue Line',
+            '520': 'Orange Line',
+            '530': 'Green Line',
+            '398': 'COASTER',
+            '399': 'SPRINTER',
+        }
+    }
+
+    // @ts-ignore
+    if (fixPatterns[agency]) {
+        // @ts-ignore
+        return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
+    } else {
+        return route
+    }
+}
+
+export function fixRouteNameLong(agency: string, route: string, rid: string): string {
     let fixPatterns = {
         'metrolinktrains': {
             'Metrolink 91/Perris Valley Line': '91/Perris Valley Line',
@@ -24,32 +44,18 @@ export function fixRouteName(agency: string, route: string): string {
             'Metrolink San Bernardino Line': 'San Bernardino Line',
             'Metrolink Ventura County Line': 'Ventura County Line',
         },
-        'lametro-rail': {
-            'Metro A Line': 'A Line',
-            'Metro B Line': 'B Line',
-            'Metro C Line': 'C Line',
-            'Metro D Line': 'D Line',
-            'Metro E Line': 'E Line',
-            'Metro K Line': 'K Line'
-        },
-        'lametro': {
-            'Metro G Line 901': 'G Line',
-            'Metro J Line 910/950': 'J Line',
-        },
         'san-diego-mts': {
-            'Blue': 'Blue Line',
-            'Orange': 'Orange Line',
-            'Green': 'Green Line',
-            '215': 'Rapid 215',
-            '225': 'Rapid 225',
-            '235': 'Rapid 235',
-            '201': 'SuperLoop 201',
-            '202': 'SuperLoop 202',
-            '204': 'SuperLoop 204',
-            '227': 'Rapid 227',
-            '237': 'Rapid 237',
-            '280': 'Rapid Express 280',
-            '290': 'Rapid Express 290',
+            '5': 'Market Street',
+            '215': 'Mid-City Rapid',
+            '225': 'South Bay Rapid',
+            '235': 'I-15 Rapid',
+            '201': 'SuperLoop',
+            '202': 'SuperLoop',
+            '204': 'SuperLoop',
+            '227': 'Iris Rapid',
+            '237': 'Mira Mesa Rapid',
+            '280': 'Rapid Express',
+            '290': 'Rapid Express',
             '398': 'COASTER',
             '399': 'SPRINTER',
             'AIR': 'Flyer'
@@ -59,7 +65,7 @@ export function fixRouteName(agency: string, route: string): string {
     // @ts-ignore
     if (fixPatterns[agency]) {
         // @ts-ignore
-        return fixPatterns[agency][route] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
+        return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
     } else {
         return route
     }
