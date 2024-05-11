@@ -81,8 +81,7 @@
 							stoptime_to_use.strike_departure = true;
 						}
 
-						
-
+                        //prevents departure prior to arrival
 						if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
 							if (stoptime_to_use.rt_arrival?.time) {
 								if ( 
@@ -252,6 +251,10 @@
 
 							<div class="w-full border-t border-slate-500 py-2 pr-1 lg:pr-2">
 								<p class=""><span class="font-bold">{fixStationName(stoptime.name)}</span></p>
+
+                                {#if stoptime.schedule_relationship == 1}
+                                <p class='text-red-700 dark:text-red-300'>{$_("cancelled")}</p>
+                                {/if}
 
 								<div class="flex flex-row">
 									<p class="text-sm">{$_('arrival')}</p>
