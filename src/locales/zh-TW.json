@@ -57,12 +57,12 @@
     "clickonanyitemfromthislist": "點擊此列表中的任何項目",
     "comingsoon": "即將推出",
     "softwareversion": "軟體版本",
-    "timezone": "时区",
-    "arrival": "到達",
-    "departure": "離開",
-    "itemsselected": "項目",
     "cancelled": "取消",
     "skipped": "跳過",
     "early": "早",
     "late": "晚"
+    "timezone": "時區"
+    "arrival": "抵達",
+    "departure": "離站",
+    "itemsselected": "選項"
 }
