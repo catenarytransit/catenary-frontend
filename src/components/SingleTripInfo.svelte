@@ -6,7 +6,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import { lightenColour } from './lightenDarkColour';
-	import { fixRouteName, fixRouteNameLong, fixRunNumber } from './agencyspecific';
+	import { fixRouteName, fixRouteNameLong, fixRunNumber, fixStationName, fixStationNameLong } from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -205,7 +205,7 @@
 							<div class="mr-2"></div>
 
 							<div class="w-full border-t border-slate-500 py-2 pr-1 lg:pr-2">
-								<p class=""><span class="font-bold">{stoptime.name}</span></p>
+								<p class=""><span class="font-bold">{fixStationNameLong(stoptime.name)}</span></p>
 
 								<div class="flex flex-row">
 									<p class="text-sm">{$_('arrival')}</p>
