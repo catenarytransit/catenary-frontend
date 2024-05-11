@@ -6,7 +6,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import { lightenColour } from './lightenDarkColour';
-	import { fixRouteName, fixRouteNameLong, fixRunNumber, fixStationName, fixStationNameLong } from './agencyspecific';
+	import { fixHeadsignIcon, fixHeadsignText, fixRouteIcon, fixRouteName, fixRouteNameLong, fixRunNumber, fixStationName } from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -136,6 +136,8 @@
 									)}</span
 								>
 							{/if}
+							<!-- <img alt={trip_data.route_id} src={fixRouteIcon(trip_data.chateau_id, trip_data.route_id)} /> -->
+							<!-- {trip_data.chateau_id} -->
 							{#if trip_data.route_long_name && trip_data.route_short_name && !trip_data.route_long_name.includes(trip_data.route_short_name)}
 								<span class="font-bold"
 									>{fixRouteName(
@@ -170,7 +172,12 @@
 					{/if}
 
 					{#if trip_data.trip_headsign}
-						<p class="text-lg font-semibold">&rarr; {trip_data.trip_headsign}</p>
+						<p class="text-lg font-semibold">
+							&rarr; {fixHeadsignText(trip_data.trip_headsign)}
+							{#if fixHeadsignIcon(trip_data.trip_headsign)}
+								<span class="material-symbols-outlined text-lg align-bottom">{fixHeadsignIcon(trip_data.trip_headsign)}</span>
+							{/if}
+						</p>
 					{/if}
 					<span class="block my-1" />
 					<p class="text-sm">Trip ID {trip_selected.trip_id}</p>
@@ -205,7 +212,7 @@
 							<div class="mr-2"></div>
 
 							<div class="w-full border-t border-slate-500 py-2 pr-1 lg:pr-2">
-								<p class=""><span class="font-bold">{fixStationNameLong(stoptime.name)}</span></p>
+								<p class=""><span class="font-bold">{fixStationName(stoptime.name)}</span></p>
 
 								<div class="flex flex-row">
 									<p class="text-sm">{$_('arrival')}</p>
