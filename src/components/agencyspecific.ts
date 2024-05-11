@@ -133,5 +133,5 @@ export function fixStationName(name: string) {
     }
 
     // @ts-ignore
-    return fixPatterns[name] || name.split('Platform')[0].split('Stall')[0].replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
+    return fixPatterns[name] || name.replace(' Transit Station', '').replace('Transit Sta', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').replace(' Station', '').replace(' Metrolink', '').replace(' Amtrak', '').trim()
 }

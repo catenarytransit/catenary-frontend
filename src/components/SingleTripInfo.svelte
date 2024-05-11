@@ -144,13 +144,6 @@
 									)}</span
 								>
 							{/if}
-							{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
-								<img
-									alt={trip_data.route_id}
-									class="inline h-8 w-8 mr-1 align-middle mb-1"
-									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
-								/>
-							{/if}
 							{#if trip_data.route_long_name && trip_data.route_short_name && !trip_data.route_long_name.includes(trip_data.route_short_name)}
 								<span class="font-bold"
 									>{fixRouteName(
@@ -186,6 +179,14 @@
 
 					{#if trip_data.trip_headsign}
 						<p class="text-lg font-semibold">
+							{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								<img
+									alt={trip_data.route_id}
+									class="inline h-6 w-auto mr-1 align-middle my-1"
+									style={!darkMode ? "filter: invert(1)" : ""}
+									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								/>
+							{/if}
 							&rarr; {fixHeadsignText(trip_data.trip_headsign)}
 							{#if fixHeadsignIcon(trip_data.trip_headsign)}
 								<span class="material-symbols-outlined text-lg align-bottom"
