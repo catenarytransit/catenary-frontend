@@ -7,6 +7,7 @@
 	import { _ } from 'svelte-i18n';
 	import RouteIcon from './RouteIcon.svelte';
 	import { lightenColour } from './lightenDarkColour';
+	import DelayDiff from './DelayDiff.svelte';
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
@@ -27,7 +28,7 @@
 	export let darkMode: boolean = false;
 
 	async function fetch_trip_selected() {
-		console.log('t-s', trip_selected)
+		console.log('t-s', trip_selected);
 
 		let url = new URL(
 			`https://birch.catenarymaps.org/get_trip_information/${trip_selected.chateau_id}/`
@@ -61,14 +62,23 @@
 							timezones.push(stoptime.timezone);
 						}
 
-						let stoptime_to_use = { ...stoptime, strike_departure: false, strike_arrival: false };
+						let stoptime_to_use = {
+							...stoptime,
+							strike_departure: false,
+							strike_arrival: false,
+							rt_arrival_diff: null,
+							rt_departure_diff: null
+						};
 
 						if (stoptime_to_use.rt_arrival?.time) {
 							stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_arrival?.time;
 							stoptime_to_use.strike_arrival = true;
 
 							if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
-								if (stoptime_to_use.scheduled_arrival_time_unix_seconds > stoptime_to_use.rt_departure?.time) {
+								if (
+									stoptime_to_use.scheduled_arrival_time_unix_seconds >
+									stoptime_to_use.rt_departure?.time
+								) {
 									stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_departure?.time;
 
 									stoptime_to_use.strike_arrival = true;
@@ -81,21 +91,43 @@
 							stoptime_to_use.strike_departure = true;
 						}
 
-                        //prevents departure prior to arrival
+						//prevents departure prior to arrival
 						if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
 							if (stoptime_to_use.rt_arrival?.time) {
-								if ( 
-									stoptime_to_use.scheduled_departure_time_unix_seconds < stoptime_to_use.rt_arrival?.time) {
+								if (
+									stoptime_to_use.scheduled_departure_time_unix_seconds <
+									stoptime_to_use.rt_arrival?.time
+								) {
 									stoptime_to_use.rt_departure_time = stoptime_to_use.rt_arrival?.time;
 
 									stoptime_to_use.strike_departure = true;
 								}
 							}
+						}
+
+						if (typeof stoptime_to_use.rt_departure_time == 'number') {
+							if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
+								stoptime_to_use.rt_departure_diff =
+									stoptime_to_use.rt_departure_time -
+									stoptime_to_use.scheduled_departure_time_unix_seconds;
 							}
+						}
+
+						if (typeof stoptime_to_use.rt_arrival_time == 'number') {
+							if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
+								stoptime_to_use.rt_arrival_diff =
+									stoptime_to_use.rt_arrival_time -
+									stoptime_to_use.scheduled_arrival_time_unix_seconds;
+							}
+						}
 
 						stoptimes_cleaned.push(stoptime_to_use);
 						index = index + 1;
 					});
+
+					if (trip_selected.chateau_id == 'irvine~ca~us') {
+						stoptimes_cleaned.sort((a, b) => a.rt_arrival_time - b.rt_arrival_time);
+					}
 
 					stoptimes_cleaned_dataset = stoptimes_cleaned;
 
@@ -127,15 +159,9 @@
 				<div
 					class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
 				>
-					<div
-						class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
-					></div>
-					<div
-						class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
-					></div>
-					<div
-						class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
-					></div>
+					<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+					<div class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+					<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
 				</div>
 			{/each}
 		{:else}
@@ -191,8 +217,8 @@
 							{/if}
 						</span>
 					{/if}
-                    {#if trip_data.trip_headsign}
-                    <!--{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+					{#if trip_data.trip_headsign}
+						<!--{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
 								<img
 									alt={trip_data.route_id}
 									class="inline w-5 h-auto mr-0.5 align-middle"
@@ -209,7 +235,11 @@
                                 {/if}				
 							{/if}-->
 						<p class="text-lg font-semibold mt-0 lg:mt-1">
-							{"→"} {fixHeadsignText(trip_data.trip_headsign, trip_data.route_short_name || trip_data.route_long_name)}
+							{'→'}
+							{fixHeadsignText(
+								trip_data.trip_headsign,
+								trip_data.route_short_name || trip_data.route_long_name
+							)}
 							{#if fixHeadsignIcon(trip_data.trip_headsign)}
 								<span class="material-symbols-outlined text-lg align-bottom"
 									>{fixHeadsignIcon(trip_data.trip_headsign)}</span
@@ -249,15 +279,21 @@
 							</div>
 							<div class="mr-2"></div>
 
-							<div class="w-full border-t border-slate-500 py-2 pr-1 lg:pr-2">
-								<p class=""><span class="font-bold">{fixStationName(stoptime.name)}</span></p>
+							<div class="w-full border-t border-slate-500 py-1 pr-1 lg:pr-2">
+								<p class=""><span class="font-bold dark:text-gray-100">{fixStationName(stoptime.name)}</span></p>
 
-                                {#if stoptime.schedule_relationship == 1}
-                                <p class='text-red-700 dark:text-red-300'>{$_("cancelled")}</p>
-                                {/if}
+								{#if stoptime.schedule_relationship == 1}
+									<p class="text-red-700 dark:text-red-300">{$_('cancelled')}</p>
+								{/if}
 
 								<div class="flex flex-row">
-									<p class="text-sm">{$_('arrival')}</p>
+									<p class="text-sm text-gray-900 dark:text-gray-200">{$_('arrival')}</p>
+
+									{#if stoptime.rt_arrival_diff != null}
+										<span class="text-sm ml-1  text-gray-900 dark:text-gray-200">
+											<DelayDiff diff={stoptime.rt_arrival_diff} />
+										</span>
+									{/if}
 									<div class="ml-auto text-sm">
 										<div class="text-sm">
 											<p>
@@ -286,7 +322,12 @@
 								</div>
 
 								<div class="flex flex-row">
-									<p class="text-sm">{$_('departure')}</p>
+									<p class="text-sm  text-gray-900 dark:text-gray-200">{$_('departure')}</p>
+									{#if stoptime.rt_departure_diff != null}
+										<span class="text-sm ml-1  text-gray-900 dark:text-gray-200">
+											<DelayDiff diff={stoptime.rt_departure_diff} /></span
+										>
+									{/if}
 									<div class="ml-auto text-sm">
 										<div class="text-sm">
 											<p>
@@ -314,12 +355,9 @@
 										</div>
 									</div>
 								</div>
-
-								{#if timezones.length > 1}
-									<p class="text-sm">
-										Tz: {stoptime.timezone || trip_data.timezone}
-									</p>
-								{/if}
+								<!--<p class="text-sm">
+										index of stop seq: {stoptime.gtfs_stop_sequence}
+									</p>-->
 							</div>
 						</div>
 					{/each}

@@ -62,5 +62,6 @@
     "cancelled": "Cancelado",
     "skipped": "Iginoré",
     "early": "Temprano",
-    "late": "Tarde"
+    "late": "Tarde",
+    "ontime": "A tiempo"
 }

@@ -60,9 +60,10 @@
     "cancelled": "取消",
     "skipped": "跳過",
     "early": "早",
-    "late": "晚"
-    "timezone": "時區"
+    "late": "晚",
+    "timezone": "時區",
     "arrival": "抵達",
     "departure": "離站",
-    "itemsselected": "選定項目"
+    "itemsselected": "選定項目",
+    "ontime": "準時"
 }

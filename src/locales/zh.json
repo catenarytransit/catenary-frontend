@@ -64,5 +64,6 @@
     "cancelled": "取消",
     "skipped": "跳过",
     "early": "早",
-    "late": "晚"
+    "late": "晚",
+    "ontime": "准时"
 }

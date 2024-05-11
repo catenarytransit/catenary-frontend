@@ -65,5 +65,6 @@
     "cancelled": "Cancelled",
     "early": "Early",
     "late": "Late",
-    "skipped": "Skipped"
+    "skipped": "Skipped",
+    "ontime": "On time"
   }

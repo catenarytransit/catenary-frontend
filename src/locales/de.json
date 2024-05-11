@@ -63,5 +63,6 @@
     "cancelled": "Abgesagt",
     "skipped": "Überspringen",
     "early": "Anfang",
-    "late": "Späte"
+    "late": "Späte",
+    "ontime": "Pünktlich"
 }
