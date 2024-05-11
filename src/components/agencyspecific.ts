@@ -133,9 +133,12 @@ export function fixStationNameLong(name: string) {
         ['Old Town to Airport Shuttle', 'Airport'],
         ['Sabre Springs & Penasquitos Transit Station', 'Sabre Springs/Peñasquitos'],
         ['Clairemont Mesa Bl & Complex Dr', 'Kearny Mesa'],
+        ['32nd/Commercial St Station', '32nd & Commercial'],
+        ['25th & Commercial St Station', '25th & Commercial'],
         ['I-15 Centerline Sta & University Av', 'City Heights'],
         ['I-15 Centerline Sta & El Cajon Bl', 'Boulevard'],
-        ['A Pacific Beach', 'Pacific Beach - 9A'],
+        ['San Diego - Santa Fe Depot', 'Santa Fe Depot'],
+        ['San Diego - Old Town', 'Old Town'],
     ]
 
     for (let i = 0; i < fixPatterns.length; i++) {
@@ -144,5 +147,5 @@ export function fixStationNameLong(name: string) {
         }
     }
 
-    return name.replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
+    return name.split('Platform')[0].split('Stall')[0].replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
 }
