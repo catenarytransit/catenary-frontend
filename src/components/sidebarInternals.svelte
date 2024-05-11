@@ -156,13 +156,14 @@
 											{/if}
 											{#if (option.data.route_long_name || option.data.route_short_name)}
 												<span
+													class="text-md"
 													style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
 													>
 													{#if (option.data.route_long_name && option.data.route_short_name) && !(option.data.route_long_name.includes(option.data.route_short_name))}
-														<span class="text-md font-bold">{fixRouteName(option.data.chateau_id, option.data.route_short_name, option.data.route_id)}</span>
-														<span class="text-md font-normal ml-1">{fixRouteNameLong(option.data.chateau_id, option.data.route_long_name, option.data.route_id)}</span>
+														<span class="font-bold">{fixRouteName(option.data.chateau_id, option.data.route_short_name, option.data.route_id)}</span>
+														<span class="font-normal ml-1">{fixRouteNameLong(option.data.chateau_id, option.data.route_long_name, option.data.route_id)}</span>
 													{:else}
-														<span class="text-md font-semibold">{option.data.route_long_name ? fixRouteNameLong(option.data.chateau_id, option.data.route_long_name, option.data.route_id) : fixRouteName(option.data.chateau_id, option.data.route_short_name, option.data.route_id)}</span>
+														<span class="font-semibold">{option.data.route_long_name ? fixRouteNameLong(option.data.chateau_id, option.data.route_long_name, option.data.route_id) : fixRouteName(option.data.chateau_id, option.data.route_short_name, option.data.route_id)}</span>
 													{/if}
 
 												</span>
@@ -269,6 +270,7 @@
 			</div>
 			
 			<SingleTripInfo
+				{darkMode}
 				trip_selected={latest_item_on_stack.data}
 				/>
 			</div>

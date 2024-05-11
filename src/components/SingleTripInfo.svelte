@@ -5,6 +5,8 @@
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
+	import { lightenColour } from './lightenDarkColour';
+	import { fixRouteName, fixRouteNameLong, fixRunNumber } from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -12,6 +14,8 @@
 	let error: string | null = '';
 	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
 	export let trip_selected: SingleTrip;
+
+	export let darkMode: boolean = false;
 
 	async function fetch_trip_selected() {
 		let url = new URL(
@@ -114,28 +118,61 @@
 		{:else}
 			<div class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32">
 				{#if trip_data != null}
-					<p>
-						{#if trip_data.trip_short_name != null}
-							<span
-								class="text-lg rounded-lg py-[0.7px] px-1"
-								style={`background: ${trip_data.color}; color: ${trip_data.text_color}`}
-								>{trip_data.trip_short_name}</span
-							>
-						{/if}
-						{#if trip_data.route_short_name != null}
-							<span class="text-lg font-bold" style={`color: ${trip_data.color};`}
-								>{trip_data.route_short_name}</span
-							>
-						{/if}
-						{#if trip_data.route_long_name != null}
-							<span class="text-lg" style={`color: ${trip_data.color};`}
-								>{trip_data.route_long_name}</span
-							>
-						{/if}
-					</p>
-					{#if trip_data.trip_headsign}
-						<p class="text-lg">{trip_data.trip_headsign}</p>
+					{#if trip_data.route_long_name || trip_data.route_short_name}
+						<span
+							style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
+							class="text-xl mt-1"
+						>
+							{#if fixRunNumber(trip_data.chateau_id, trip_data.route_type, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
+								<span
+									style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
+									class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min"
+									>{fixRunNumber(
+										trip_data.chateau_id,
+										trip_data.route_type,
+										trip_data.route_id,
+										trip_data.trip_short_name,
+										trip_data.vehicle_id
+									)}</span
+								>
+							{/if}
+							{#if trip_data.route_long_name && trip_data.route_short_name && !trip_data.route_long_name.includes(trip_data.route_short_name)}
+								<span class="font-bold"
+									>{fixRouteName(
+										trip_data.chateau_id,
+										trip_data.route_short_name,
+										trip_data.route_id
+									)}</span
+								>
+								<span class="font-normal ml-1"
+									>{fixRouteNameLong(
+										trip_data.chateau_id,
+										trip_data.route_long_name,
+										trip_data.route_id
+									)}</span
+								>
+							{:else}
+								<span class="font-semibold"
+									>{trip_data.route_long_name
+										? fixRouteNameLong(
+												trip_data.chateau_id,
+												trip_data.route_long_name,
+												trip_data.route_id
+											)
+										: fixRouteName(
+												trip_data.chateau_id,
+												trip_data.route_short_name,
+												trip_data.route_id
+											)}</span
+								>
+							{/if}
+						</span>
 					{/if}
+
+					{#if trip_data.trip_headsign}
+						<p class="text-lg font-semibold">&rarr; {trip_data.trip_headsign}</p>
+					{/if}
+					<span class="block my-1" />
 					<p class="text-sm">Trip ID {trip_selected.trip_id}</p>
 					{#if trip_data.block_id != null}
 						<p class="text-sm">Block {trip_data.block_id}</p>
@@ -189,10 +226,9 @@
 
 												{#if stoptime.rt_arrival_time}
 													<span class="text-sky-500">
-														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString(
-															'en-UK',
-															{ timeZone: stoptime.timezone || trip_data.timezone }
-														)}
+														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString('en-UK', {
+															timeZone: stoptime.timezone || trip_data.timezone
+														})}
 													</span>
 												{/if}
 											</p>
