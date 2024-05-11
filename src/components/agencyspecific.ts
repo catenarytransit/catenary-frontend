@@ -37,7 +37,7 @@ export function fixRouteIcon(chateau: string, rid: string): string | null {
         'san-diego-mts': {
             '510': '/lines/san-diego-mts/BLU.svg',
             '520': '/lines/san-diego-mts/ORG.svg',
-            '530': '/lines/san-diego-mts/GRN.svg',
+            '530': '/lines/san-diego-mts/GRN.svg'
         },
         'northcountytransitdistrict': {
             '398': '/lines/san-diego-mts/CST.svg',
@@ -100,56 +100,38 @@ export function fixRunNumber(chateau: string, type: number, route: number, tripn
 }
 
 export function fixHeadsignText(name: string) {
-    let fixPatterns = [
-        ['L.A. Union Station', 'Los Angeles'],
-        ['12th & Imperial', '12th/Imp\'l'],
-        ['El Cajon / Arnele', 'El Cajon'],
-        ['Downtown SD', 'Downtown'],
-        ['Ucsd', 'UCSD'],
-        ['Sdsu', 'SDSU'],
-        ['Utc', 'UTC'],
-        ['Va / Ucsd', 'UTC'],
-        ['UTC/VA Med Ctr', 'UTC'],
-        ['Old Town to Airport Shuttle', 'Airport'],
-    ]
-
-    for (let i = 0; i < fixPatterns.length; i++) {
-        if (name == (fixPatterns[i][0])) {
-            return fixPatterns[i][1]
-        }
+    let fixPatterns = {
+        'L.A. Union Station': 'Los Angeles',
+        '12th & Imperial': '12th/Imp\'l',
+        'El Cajon / Arnele': 'El Cajon',
+        'Downtown SD': 'Downtown',
+        'Ucsd': 'UCSD',
+        'Sdsu': 'SDSU',
+        'Utc': 'UTC',
+        'Va / Ucsd': 'UTC',
+        'UTC/VA Med Ctr': 'UTC',
+        'Old Town to Airport Shuttle': 'Airport',
     }
 
-    return fixStationName(name)
+    // @ts-ignore
+    return fixPatterns[name] || fixStationName(name)
 }
 
 export function fixStationName(name: string) {
-    let fixPatterns = [
-        ['L.A. Union Station', 'Union Station'],
-        ['Union Station', 'Union Station'],
-      //  ['APU / Citrus College Station', 'APU/Citrus'],
-     //   ['Atlantic Station', 'East Los Angeles'],
-        ['Wilshire / Western Station', 'Wilshire/Western'],
-        ['Wilshire / Vermont Station', 'Wilshire/Vermont'],
-        ['12th & Imperial', '12th & Imperial'],
-        ['Crenshaw C-Line Station', 'Crenshaw'],
-        ['Old Town to Airport Shuttle', 'Airport'],
-        ['Sabre Springs & Penasquitos Transit Station', 'Sabre Springs/Peñasquitos'],
-        ['Clairemont Mesa Bl & Complex Dr', 'Kearny Mesa'],
-        ['32nd/Commercial St Station', '32nd & Commercial'],
-        ['25th & Commercial St Station', '25th & Commercial'],
-        ['I-15 Centerline Sta & University Av', 'City Heights'],
-        ['I-15 Centerline Sta & El Cajon Bl', 'Boulevard'],
-        ['San Diego - Santa Fe Depot', 'Santa Fe Depot'],
-        ['San Diego - Old Town', 'Old Town'],
-        ['Burbank Airport - North (Av Line) Metrolink Station', 'Burbank Airport North'],
-        ['Burbank Airport - South (Vc Line) Metrolink Station', 'Burbank Airport South'],
-    ]
-
-    for (let i = 0; i < fixPatterns.length; i++) {
-        if (name == (fixPatterns[i][0])) {
-            return fixPatterns[i][1]
-        }
+    let fixPatterns = {
+        'L.A. Union Station': 'Los Angeles',
+        'Sabre Springs & Penasquitos Transit Station': 'Sabre Springs/Peñasquitos',
+        'Clairemont Mesa Bl & Complex Dr': 'Kearny Mesa',
+        '32nd/Commercial St Station': '32nd & Commercial',
+        '25th/Commercial St Station': '25th & Commercial',
+        'I-15 Centerline Sta & University Av': 'City Heights',
+        'I-15 Centerline Sta & El Cajon Bl': 'Boulevard',
+        'San Diego - Santa Fe Depot': 'Santa Fe Depot',
+        'San Diego - Old Town': 'Old Town',
+        'Burbank Airport - North (Av Line) Metrolink Station': 'Burbank Airport North',
+        'Burbank Airport - South (Vc Line) Metrolink Station': 'Burbank Airport South',
     }
 
-    return name.split('Platform')[0].split('Stall')[0].replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
+    // @ts-ignore
+    return fixPatterns[name] || name.split('Platform')[0].split('Stall')[0].replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
 }
