@@ -6,7 +6,15 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import { lightenColour } from './lightenDarkColour';
-	import { fixHeadsignIcon, fixHeadsignText, fixRouteIcon, fixRouteName, fixRouteNameLong, fixRunNumber, fixStationName } from './agencyspecific';
+	import {
+		fixHeadsignIcon,
+		fixHeadsignText,
+		fixRouteIcon,
+		fixRouteName,
+		fixRouteNameLong,
+		fixRunNumber,
+		fixStationName
+	} from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -123,12 +131,12 @@
 							style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
 							class="text-xl mt-1"
 						>
-							{#if fixRunNumber(trip_data.chateau_id, trip_data.route_type, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
+							{#if fixRunNumber(trip_selected.chateau_id, trip_data.route_type, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
 								<span
 									style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
 									class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min"
 									>{fixRunNumber(
-										trip_data.chateau_id,
+										trip_selected.chateau_id,
 										trip_data.route_type,
 										trip_data.route_id,
 										trip_data.trip_short_name,
@@ -136,19 +144,24 @@
 									)}</span
 								>
 							{/if}
-							<!-- <img alt={trip_data.route_id} src={fixRouteIcon(trip_data.chateau_id, trip_data.route_id)} /> -->
-							<!-- {trip_data.chateau_id} -->
+							{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								<img
+									alt={trip_data.route_id}
+									class="inline h-8 w-8 mr-1 align-middle mb-1"
+									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								/>
+							{/if}
 							{#if trip_data.route_long_name && trip_data.route_short_name && !trip_data.route_long_name.includes(trip_data.route_short_name)}
 								<span class="font-bold"
 									>{fixRouteName(
-										trip_data.chateau_id,
+										trip_selected.chateau_id,
 										trip_data.route_short_name,
 										trip_data.route_id
 									)}</span
 								>
 								<span class="font-normal ml-1"
 									>{fixRouteNameLong(
-										trip_data.chateau_id,
+										trip_selected.chateau_id,
 										trip_data.route_long_name,
 										trip_data.route_id
 									)}</span
@@ -157,12 +170,12 @@
 								<span class="font-semibold"
 									>{trip_data.route_long_name
 										? fixRouteNameLong(
-												trip_data.chateau_id,
+												trip_selected.chateau_id,
 												trip_data.route_long_name,
 												trip_data.route_id
 											)
 										: fixRouteName(
-												trip_data.chateau_id,
+												trip_selected.chateau_id,
 												trip_data.route_short_name,
 												trip_data.route_id
 											)}</span
@@ -175,7 +188,9 @@
 						<p class="text-lg font-semibold">
 							&rarr; {fixHeadsignText(trip_data.trip_headsign)}
 							{#if fixHeadsignIcon(trip_data.trip_headsign)}
-								<span class="material-symbols-outlined text-lg align-bottom">{fixHeadsignIcon(trip_data.trip_headsign)}</span>
+								<span class="material-symbols-outlined text-lg align-bottom"
+									>{fixHeadsignIcon(trip_data.trip_headsign)}</span
+								>
 							{/if}
 						</p>
 					{/if}

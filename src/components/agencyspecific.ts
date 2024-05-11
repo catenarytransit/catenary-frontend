@@ -13,7 +13,7 @@ export function fixHeadsignIcon(headsign: string): string | null {
     return null
 }
 
-export function fixRouteName(agency: string, route: string, rid: string): string {
+export function fixRouteName(chateau: string, route: string, rid: string): string {
     let fixPatterns = {
         'san-diego-mts': {
             '510': 'Blue Line',
@@ -23,16 +23,16 @@ export function fixRouteName(agency: string, route: string, rid: string): string
     }
 
     // @ts-ignore
-    if (fixPatterns[agency]) {
+    if (fixPatterns[chateau]) {
         // @ts-ignore
-        return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
+        return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
     } else {
         return route
     }
 }
 
-export function fixRouteIcon(agency: string, rid: string): string | null {
-    console.log(agency, rid)
+export function fixRouteIcon(chateau: string, rid: string): string | null {
+    console.log(chateau, rid)
     let fixPatterns = {
         'san-diego-mts': {
             '510': 'https://buildsd.org/img/transit/BLU.svg',
@@ -46,15 +46,15 @@ export function fixRouteIcon(agency: string, rid: string): string | null {
     }
 
     // @ts-ignore
-    if (fixPatterns[agency]) {
+    if (fixPatterns[chateau]) {
         // @ts-ignore
-        return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || null
+        return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || null
     } else {
         return null
     }
 }
 
-export function fixRouteNameLong(agency: string, route: string, rid: string): string {
+export function fixRouteNameLong(chateau: string, route: string, rid: string): string {
     let fixPatterns = {
         'metrolinktrains': {
             'Metrolink 91/Perris Valley Line': '91/Perris Valley Line',
@@ -85,17 +85,17 @@ export function fixRouteNameLong(agency: string, route: string, rid: string): st
     }
 
     // @ts-ignore
-    if (fixPatterns[agency]) {
+    if (fixPatterns[chateau]) {
         // @ts-ignore
-        return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
+        return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
     } else {
         return route.replace('Transit Station', 'Sta').replace('Station', 'Sta').replace('Transportation Center', 'TC').replace('Transit Center', 'TC').replace('Transit Ctr', 'TC').trim()
     }
 }
 
-export function fixRunNumber(chateau: string, type: number, route: string | null, tripname: string | null, vehicle: string | null): string | null {
+export function fixRunNumber(chateau: string, type: number, route: number, tripname: string, vehicle: string): string | null {
     if (chateau == 'san-diego-mts' && type == 0) return vehicle
-    if (chateau == 'northcountytransitdistrict' && route != "398") return null
+    if (chateau == 'northcountytransitdistrict' && route != 398) return null
     return tripname
 }
 
