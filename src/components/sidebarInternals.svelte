@@ -34,7 +34,10 @@
 	export let darkMode: boolean;
 	let this_locale: string | undefined | null;
 
-	locale.subscribe((newval) => this_locale = newval);
+	locale.subscribe((newval) => {
+		window.localStorage.language = newval;
+		this_locale = newval;
+	});
 
 	let locales_options: Record<string, string> = {
 		en: 'English',

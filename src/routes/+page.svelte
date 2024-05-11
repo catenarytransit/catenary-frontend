@@ -73,11 +73,7 @@
 	let last_sidebar_release: number | null = null;
 	let current_locale: string= "default";
 	locale.subscribe((value) => {
-		if (typeof value === 'string') {
-			current_locale = value;
-		} else {
-			current_locale = "default";
-		}
+		window.localStorage.language = value;
 	});
 	let last_sidebar_interval_id: number | null = null;
 	let previous_click_on_sidebar_dragger: number | null = null;
