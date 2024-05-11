@@ -20,7 +20,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
-	import { fixHeadsignIcon, fixRouteName, fixRouteNameLong, fixRunNumber, fixStationName } from './agencyspecific';
+	import { fixHeadsignIcon, fixRouteName, fixRouteNameLong, fixRunNumber, fixHeadsignText } from './agencyspecific';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 
@@ -173,12 +173,11 @@
 										{/if}
 
 										{#if (option.data.headsign && option.data.headsign != option.data.route_long_name && option.data.headsign != option.data.route_short_name)}
-											<p class="text-sm lg:text-base">
-												<span>{"→"}	
-												</span>
-												<span class="font-semibold">{fixStationName(option.data.headsign)}</span>
+											<p class="text-sm">
+												&rarr;
+												<span class="font-semibold">{fixHeadsignText(option.data.headsign)}</span>
 												{#if fixHeadsignIcon(option.data.headsign)}
-													<span class="material-symbols-outlined text-md align-bottom">{fixHeadsignIcon(option.data.headsign)}</span>
+													<span class="material-symbols-outlined text-sm align-bottom">{fixHeadsignIcon(option.data.headsign)}</span>
 												{/if}
 											</p>
 										{/if}

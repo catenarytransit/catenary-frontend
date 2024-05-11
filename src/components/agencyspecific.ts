@@ -19,8 +19,6 @@ export function fixRouteName(agency: string, route: string, rid: string): string
             '510': 'Blue Line',
             '520': 'Orange Line',
             '530': 'Green Line',
-            '398': 'COASTER',
-            '399': 'SPRINTER',
         }
     }
 
@@ -30,6 +28,29 @@ export function fixRouteName(agency: string, route: string, rid: string): string
         return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
     } else {
         return route
+    }
+}
+
+export function fixRouteIcon(agency: string, rid: string): string | null {
+    console.log(agency, rid)
+    let fixPatterns = {
+        'san-diego-mts': {
+            '510': 'https://buildsd.org/img/transit/BLU.svg',
+            '520': 'https://buildsd.org/img/transit/ORG.svg',
+            '530': 'https://buildsd.org/img/transit/GRN.svg',
+        },
+        'northcountytransitdistrict': {
+            '398': 'https://buildsd.org/img/transit/CST.svg',
+            '399': 'https://buildsd.org/img/transit/SPR.svg',
+        }
+    }
+
+    // @ts-ignore
+    if (fixPatterns[agency]) {
+        // @ts-ignore
+        return fixPatterns[agency][rid] || fixPatterns[agency]['*'] || null
+    } else {
+        return null
     }
 }
 
@@ -78,31 +99,11 @@ export function fixRunNumber(chateau: string, type: number, route: string | null
     return tripname
 }
 
-export function fixStationName(name: string) {
-    console.log(name)
+export function fixHeadsignText(name: string) {
     let fixPatterns = [
-      //  ['L.A. Union Station', 'Los Angeles'],
-      //  ['North Hollywood Station', 'NoHo'],
-    //    ['North Hollywood Station G - Line', 'NoHo'],
-        ['Chatsworth Station G - Line', 'Chatsworth'],
-      //  ['Union Station', 'UnionSta'],
-     //   ['Wilshire / Western Station', 'Wil/Wstrn'],
-     //   ['Wilshire / Vermont Station', 'Wilshire Ctr'],
-     //   ['Downtown Long Beach Station', 'Long Bch'],
-     //   ['APU / Citrus College Station', 'Azusa'],
-     //   ['Redondo Beach Station', 'Redondo Bch'],
-     //   ['Norwalk Station', 'Norwalk'],
-    //    ['Downtown Santa Monica Station', 'S Monica'],
-     //   ['Atlantic Station', 'East LA'],
-      //  ['Expo / Crenshaw Station', 'Expo/Crnshw'],
-      //  ['Westchester / Veterans Station', 'Westchester'],
-        ['University & College', 'City Heights'],
-      //  ['12th & Imperial', '12th/Imp\'l'],
+        ['L.A. Union Station', 'Los Angeles'],
+        ['12th & Imperial', '12th/Imp\'l'],
         ['El Cajon / Arnele', 'El Cajon'],
-        ['Crenshaw C-Line Station', 'Crenshaw'],
-        ['Otay Mesa Transit Center', 'Otay Mesa'],
-        ['Redmond Technology', 'Redmond Tech'],
-        ['South Bellevue', 'S Bellevue'],
         ['Downtown SD', 'Downtown'],
         ['Ucsd', 'UCSD'],
         ['Sdsu', 'SDSU'],
@@ -118,18 +119,19 @@ export function fixStationName(name: string) {
         }
     }
 
-    return fixStationNameLong(name)
+    return fixStationName(name)
 }
 
-export function fixStationNameLong(name: string) {
+export function fixStationName(name: string) {
     let fixPatterns = [
+        ['L.A. Union Station', 'Union Station'],
         ['Union Station', 'Union Station'],
       //  ['APU / Citrus College Station', 'APU/Citrus'],
      //   ['Atlantic Station', 'East Los Angeles'],
         ['Wilshire / Western Station', 'Wilshire/Western'],
         ['Wilshire / Vermont Station', 'Wilshire/Vermont'],
         ['12th & Imperial', '12th & Imperial'],
-        ['North Hollywood Station G - Line', 'North Hollywood'],
+        ['Crenshaw C-Line Station', 'Crenshaw'],
         ['Old Town to Airport Shuttle', 'Airport'],
         ['Sabre Springs & Penasquitos Transit Station', 'Sabre Springs/Peñasquitos'],
         ['Clairemont Mesa Bl & Complex Dr', 'Kearny Mesa'],
@@ -139,6 +141,8 @@ export function fixStationNameLong(name: string) {
         ['I-15 Centerline Sta & El Cajon Bl', 'Boulevard'],
         ['San Diego - Santa Fe Depot', 'Santa Fe Depot'],
         ['San Diego - Old Town', 'Old Town'],
+        ['Burbank Airport - North (Av Line) Metrolink Station', 'Burbank Airport North'],
+        ['Burbank Airport - South (Vc Line) Metrolink Station', 'Burbank Airport South'],
     ]
 
     for (let i = 0; i < fixPatterns.length; i++) {
@@ -147,5 +151,5 @@ export function fixStationNameLong(name: string) {
         }
     }
 
-    return name.split('Platform')[0].split('Stall')[0].replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
+    return name.split('Platform')[0].split('Stall')[0].replace(' Transit Station', '').replace(' Station', '').replace(' Metrolink', '').replace('Rapid ', '').replace(' Amtrak', '').replace(' Sta', '').replace('Local', '').replace('Express', '').replace('Downtown ', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').trim()
 }
