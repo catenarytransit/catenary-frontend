@@ -60,5 +60,9 @@
     "itemsselected": "articles sélectionnés",
     "timezone": "Fuseau horaire",
     "departure": "Départ",
-    "arrival": "Arrivée"
+    "arrival": "Arrivée",
+    "cancelled": "Annulé",
+    "skipped": "Iginoré",
+    "early": "Tôt",
+    "late": "Tard"
 }

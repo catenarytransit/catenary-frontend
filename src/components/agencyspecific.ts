@@ -51,7 +51,7 @@ export function fixRouteIcon(chateau: string, rid: string): string | null {
 }
 
 export function fixRouteNameLong(chateau: string, route: string, rid: string): string {
-    let fixPatterns = {
+    const fixPatterns:Record<string, Record<string, string>> = {
         'metrolinktrains': {
             'Metrolink 91/Perris Valley Line': '91/Perris Valley Line',
             'Metrolink Antelope Valley Line': 'Antelope Valley Line',
@@ -80,9 +80,7 @@ export function fixRouteNameLong(chateau: string, route: string, rid: string): s
         }
     }
 
-    // @ts-ignore
     if (fixPatterns[chateau]) {
-        // @ts-ignore
         return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
     } else {
         return route.replace('Transit Station', 'Sta').replace('Station', 'Sta').replace('Transportation Center', 'TC').replace('Transit Center', 'TC').replace('Transit Ctr', 'TC').trim()
@@ -96,7 +94,7 @@ export function fixRunNumber(chateau: string, type: number, route: number, tripn
 }
 
 export function fixHeadsignText(name: string) {
-    let fixPatterns = {
+    const fixPatterns:Record<string, string> = {
         'L.A. Union Station': 'Los Angeles',
         '12th & Imperial': '12th/Imp\'l',
         'El Cajon / Arnele': 'El Cajon',
@@ -109,12 +107,11 @@ export function fixHeadsignText(name: string) {
         'Old Town to Airport Shuttle': 'Airport',
     }
 
-    // @ts-ignore
     return fixPatterns[name] || fixStationName(name)
 }
 
 export function fixStationName(name: string) {
-    let fixPatterns = {
+    const fixPatterns:Record<string,string> = {
         'L.A. Union Station': 'Los Angeles',
         'Sabre Springs & Penasquitos Transit Station': 'Sabre Springs/Peñasquitos',
         'Clairemont Mesa Bl & Complex Dr': 'Kearny Mesa',
@@ -128,6 +125,5 @@ export function fixStationName(name: string) {
         'Burbank Airport - South (Vc Line) Metrolink Station': 'Burbank Airport South',
     }
 
-    // @ts-ignore
     return fixPatterns[name] || name.replace(' Transit Station', '').replace('Transit Sta', '').replace('Transportation Center', '').replace('Transit Center', '').replace('Transit Ctr', '').replace(' Station', '').replace(' Metrolink', '').replace(' Amtrak', '').trim()
 }

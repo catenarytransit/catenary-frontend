@@ -28,6 +28,7 @@
 		fixHeadsignText,
 		fixRouteIcon
 	} from './agencyspecific';
+	import RouteIcon from './RouteIcon.svelte';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 
@@ -151,7 +152,7 @@
 										}}
 										role="menuitem"
 										tabindex="0"
-										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-[#0a233f] text-sm md:text-base leading-snug rounded-lg"
+										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-[#0a233f] text-sm md:text-base leading-snug rounded-lg"
 									>
 										{#if option.data.triplabel}
 											{#if fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id, option.data.trip_short_name, option.data.vehicle_id)}
@@ -208,36 +209,13 @@
 											<p>No Trip</p>
 										{/if}
 
-										<p class="text-sm mt-2">
-											{#if fixRouteIcon(option.data.chateau_id, option.data.route_id)}
-												<img
-													alt={option.data.route_id}
-													class="inline w-4 h-auto mr-1 align-middle"
-													style={!darkMode ? 'filter: invert(1)' : ''}
-													src={fixRouteIcon(option.data.chateau_id, option.data.route_id)}
-												/>
-											{:else}
-												<img
-													alt="Generic vehicle"
-													class="inline h-4 w-auto mr-0.5 align-top"
-													style={!darkMode ? 'filter: invert(1)' : ''}
-													src={option.data.route_type == 0
-														? '/lines/generic-lrt.svg'
-														: option.data.route_type == 1
-															? '/lines/generic-metro.svg'
-															: option.data.route_type == 2
-																? '/lines/generic-rail.svg'
-																: '/lines/generic-bus.svg'}
-												/>
-											{/if}
+										<p class="text-sm lg:text-base mt-0">
 											{#if option.data.headsign && option.data.headsign != option.data.route_long_name && option.data.headsign != option.data.route_short_name}
-												&rarr;
-												<span class="font-semibold">{fixHeadsignText(option.data.headsign)}</span>
-											{:else}
-												<span class="font-light">Unknown destination</span>
+												{"→"}
+												<span class="">{fixHeadsignText(option.data.headsign)}</span>
 											{/if}
 											{#if fixHeadsignIcon(option.data.headsign)}
-												<span class="material-symbols-outlined text-sm align-bottom"
+												<span class="material-symbols-outlined text-sm align-middle"
 													>{fixHeadsignIcon(option.data.headsign)}</span
 												>
 											{/if}

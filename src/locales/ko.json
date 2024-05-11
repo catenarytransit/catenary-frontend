@@ -60,5 +60,10 @@
     "softwareversion": "소프트웨어 버전",
     "timezone": "시간대",
     "arrival": "도착",
-    "departure": "출발"
+    "departure": "출발",
+    "itemsselected": "개 항목이 선택됨",
+    "cancelled": "취소된",
+    "skipped": "건너뛰",
+    "early": "초반",
+    "late": "늦게"
 }

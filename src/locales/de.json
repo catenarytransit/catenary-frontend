@@ -56,5 +56,12 @@
     "clickonanyvehicleorroutegetstarted": "Klicken Sie auf ein beliebiges Fahrzeug oder eine Route, um loszulegen.",
     "comingsoon": "Demnächst",
     "softwareversion": "Softwareversion",
-    "timezone": "Zeitzone"
+    "timezone": "Zeitzone",
+    "departure": "Abfahrt",
+    "arrival": "Ankunft",
+    "itemsselected": "artikel ausgewählt",
+    "cancelled": "Abgesagt",
+    "skipped": "Überspringen",
+    "early": "Anfang",
+    "late": "Späte"
 }

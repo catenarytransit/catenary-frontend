@@ -3,11 +3,18 @@
 @tailwind utilities;
 
 body {
-    --sb-track-color: #0A233F;
-    --sb-thumb-color: #42A7C5;
+    --sb-track-color: #e1ecfb;
+    --sb-thumb-color: #16a4d0;
     --sb-size: 16px;
   }
   
+  @media (prefers-color-scheme: dark) {
+   body {
+    --sb-track-color: #0A233F;
+    --sb-thumb-color: #42A7C5;
+   }
+  }
+
   body::-webkit-scrollbar {
     width: var(--sb-size);
   }
@@ -33,6 +40,7 @@ body {
   .catenary-scroll {
     scrollbar-color: var(--sb-thumb-color)
     var(--sb-track-color);
+    scrollbar-width: thin;
   }
 
   .catenary-scroll::-webkit-scrollbar {

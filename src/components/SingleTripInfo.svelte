@@ -5,6 +5,7 @@
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
+	import RouteIcon from './RouteIcon.svelte';
 	import { lightenColour } from './lightenDarkColour';
 	import {
 		fixHeadsignIcon,
@@ -115,13 +116,13 @@
 					class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
 				>
 					<div
-						class="h-5 w-1/2 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+						class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
 					></div>
 					<div
-						class="h-3 w-1/4 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+						class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
 					></div>
 					<div
-						class="h-3 w-2/5 rounded-full bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
+						class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"
 					></div>
 				</div>
 			{/each}
@@ -131,7 +132,7 @@
 					{#if trip_data.route_long_name || trip_data.route_short_name}
 						<span
 							style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
-							class="text-xl mt-1"
+							class="text-xl mt-0"
 						>
 							{#if fixRunNumber(trip_selected.chateau_id, trip_selected.route_type || 3, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
 								<span
@@ -178,10 +179,8 @@
 							{/if}
 						</span>
 					{/if}
-
-					{#if trip_data.trip_headsign}
-						<p class="text-lg font-semibold mt-2">
-							{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+                    {#if trip_data.trip_headsign}
+                    <!--{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
 								<img
 									alt={trip_data.route_id}
 									class="inline w-5 h-auto mr-0.5 align-middle"
@@ -189,20 +188,16 @@
 									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
 								/>
 							{:else}
-								<img
-									alt="Generic vehicle"
-									class="inline h-5 w-auto mr-0.5 align-middle"
-									style={!darkMode ? 'filter: invert(1)' : ''}
-									src={trip_selected.route_type == 0
-										? '/lines/generic-lrt.svg'
-										: trip_selected.route_type == 1
-											? '/lines/generic-metro.svg'
-											: trip_selected.route_type == 2
-												? '/lines/generic-rail.svg'
-												: '/lines/generic-bus.svg'}
-								/>
-							{/if}
-							&rarr; {fixHeadsignText(trip_data.trip_headsign)}
+                                {#if trip_selected.route_type != null}
+								<span class="align-middle text-sm">
+                                    <RouteIcon
+                                route_type={trip_selected.route_type}
+                                />
+                                </span>
+                                {/if}				
+							{/if}-->
+						<p class="text-lg font-semibold mt-0 lg:mt-1">
+							{"→"} {fixHeadsignText(trip_data.trip_headsign)}
 							{#if fixHeadsignIcon(trip_data.trip_headsign)}
 								<span class="material-symbols-outlined text-lg align-bottom"
 									>{fixHeadsignIcon(trip_data.trip_headsign)}</span
@@ -210,7 +205,7 @@
 							{/if}
 						</p>
 					{/if}
-					<span class="block my-1" />
+					<span class="block mt-0 mt-1" />
 					<p class="text-sm">Trip ID {trip_selected.trip_id}</p>
 					{#if trip_data.block_id != null}
 						<p class="text-sm">Block {trip_data.block_id}</p>
@@ -263,7 +258,7 @@
 												{/if}
 
 												{#if stoptime.rt_arrival_time}
-													<span class="text-sky-500">
+													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString('en-UK', {
 															timeZone: stoptime.timezone || trip_data.timezone
 														})}
@@ -292,7 +287,7 @@
 												{/if}
 
 												{#if stoptime.rt_departure_time}
-													<span class="text-sky-500">
+													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
 															'en-UK',
 															{ timeZone: stoptime.timezone || trip_data.timezone }
