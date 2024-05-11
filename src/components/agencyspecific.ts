@@ -37,11 +37,7 @@ export function fixRouteIcon(chateau: string, rid: string): string | null {
         'san-diego-mts': {
             '510': '/lines/san-diego-mts/BLU.svg',
             '520': '/lines/san-diego-mts/ORG.svg',
-            '530': '/lines/san-diego-mts/GRN.svg'
-        },
-        'northcountytransitdistrict': {
-            '398': '/lines/san-diego-mts/CST.svg',
-            '399': '/lines/san-diego-mts/SPR.svg',
+            '530': '/lines/san-diego-mts/GRN.svg',
         }
     }
 

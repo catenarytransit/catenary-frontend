@@ -26,6 +26,8 @@
 	export let darkMode: boolean = false;
 
 	async function fetch_trip_selected() {
+		console.log('t-s', trip_selected)
+
 		let url = new URL(
 			`https://birch.catenarymaps.org/get_trip_information/${trip_selected.chateau_id}/`
 		);
@@ -131,13 +133,13 @@
 							style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
 							class="text-xl mt-1"
 						>
-							{#if fixRunNumber(trip_selected.chateau_id, trip_data.route_type, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
+							{#if fixRunNumber(trip_selected.chateau_id, trip_selected.route_type || 3, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
 								<span
 									style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
 									class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min"
 									>{fixRunNumber(
 										trip_selected.chateau_id,
-										trip_data.route_type,
+										trip_selected.route_type || 3,
 										trip_data.route_id,
 										trip_data.trip_short_name,
 										trip_data.vehicle_id
@@ -178,13 +180,26 @@
 					{/if}
 
 					{#if trip_data.trip_headsign}
-						<p class="text-lg font-semibold">
+						<p class="text-lg font-semibold mt-2">
 							{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
 								<img
 									alt={trip_data.route_id}
-									class="inline h-6 w-auto mr-1 align-middle my-1"
-									style={!darkMode ? "filter: invert(1)" : ""}
+									class="inline w-5 h-auto mr-0.5 align-middle"
+									style={!darkMode ? 'filter: invert(1)' : ''}
 									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
+								/>
+							{:else}
+								<img
+									alt="Generic vehicle"
+									class="inline h-5 w-auto mr-0.5 align-middle"
+									style={!darkMode ? 'filter: invert(1)' : ''}
+									src={trip_selected.route_type == 0
+										? '/lines/generic-lrt.svg'
+										: trip_selected.route_type == 1
+											? '/lines/generic-metro.svg'
+											: trip_selected.route_type == 2
+												? '/lines/generic-rail.svg'
+												: '/lines/generic-bus.svg'}
 								/>
 							{/if}
 							&rarr; {fixHeadsignText(trip_data.trip_headsign)}
