@@ -35,7 +35,6 @@
 	let this_locale: string | undefined | null;
 
 	locale.subscribe((newval) => {
-		window.localStorage.language = newval;
 		this_locale = newval;
 	});
 
