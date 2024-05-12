@@ -73,7 +73,9 @@
 	let last_sidebar_release: number | null = null;
 	let current_locale: string= "default";
 	locale.subscribe((value) => {
-		window.localStorage.language = value;
+		if (typeof window != "undefined") {
+			window.localStorage.language = value;
+		}
 	});
 	let last_sidebar_interval_id: number | null = null;
 	let previous_click_on_sidebar_dragger: number | null = null;
@@ -519,10 +521,10 @@
 
 	const dragger = 24;
 
-	let style: string | undefined = darkMode
-		? 'mapbox://styles/kylerschin/clm2i6cmg00fw01of2vp5h9p5'
+	let style: string = darkMode
+		? 'mapbox://styles/kylerschin/clw2s5gsn01du01rdbjlf0nhr'
 		: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
-
+/*
 	if (typeof window != 'undefined') {
 		let desiredStyle = embedmode
 			? urlParams.get('framework-style') || window.localStorage.mapStyle
@@ -548,7 +550,7 @@
 		if (desiredStyle == 'minimal') {
 			style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
 		}
-	}
+	}*/
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
@@ -937,7 +939,7 @@
 			preserveDrawingBuffer: false,
 			attributionControl: false,
 			//	antialias: true,
-			style: '', // stylesheet location
+			style: style, // stylesheet location
 			accessToken: decode(
 				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
 			),
@@ -945,7 +947,7 @@
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
-			fadeDuration: 0
+			fadeDuration: 0,
 		});
 
 		if (darkMode) {
