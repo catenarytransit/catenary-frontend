@@ -352,13 +352,38 @@
 					>
 				</div>
 			</div>
-			<p class="text-sm md:text-base">{$_('clickonanyvehicleorroutegetstarted')}</p>
-			<p class="text-xs md:text-sm">Catenary Maps {$_('softwareversion')} 2024-05-11 22:56Z</p>
+	
+		
 
-			<div></div>
+			
+		</div>
+		{
+			#if this_locale?.startsWith("en")
+		}
+		<div class=" py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15">
+			<h2 class="text-lg font-semibold">Join our community!</h2>
+			<p>Catenary is a public transport computer science research non-profit founded by students at <span class="bg-gradient-to-r from-[#0064a4] dark:from-sky-400 via-sky-600 dark:via-sky-500 to-[#ffd200] dark:to-[#ffd200] inline-block text-transparent bg-clip-text font-semibold">UC Irvine</span>!</p>
+			<p>We add features every day to our maps! Chat with us & give us suggestions on our Discord server!</p>
+			<div class="mt-2 flex flex-row gap-x-2">
+				<a target="_blank" href="https://discord.gg/yVV6dguwtq"><button class="bg-blue-600 font-bold text-white rounded-md px-2 py-1">Join our Discord</button></a>
+			<a target="_blank" href="https://discord.gg/yVV6dguwtq"><button class="bg-white dark:bg-gray-950 font-bold  rounded-md px-2 py-1 flex flex-row gap-x-1 text-[#42A7C5]"><img  src="https://catenarymaps.org/logo.svg" class="inline mr-1 h-5 my-auto text-[#42A7C5]"/>Catenary Website</button></a>
+			</div>
+		</div>
+		{/if}
+		<div  class="px-4 sm:px-2 lg:px-4 py-2">
 
-			<h2 class="text-base md:text-lg">{$_('nearbydepartures')}</h2>
-			<p>{$_('comingsoon')}</p>
+			<p class="text-sm md:text-base lg:text-lg font-semibold">{$_('clickonanyvehicleorroutegetstarted')}</p>
+			{
+				#if this_locale?.startsWith("en")
+			}
+			<p>Clicking on stops coming soon....</p>
+			{/if}
+
+			<h2 class="text-base md:text-lg  text-gray-800 dark:text-gray-300">{$_('nearbydepartures')}</h2>
+			<p class="text-gray-800 dark:text-gray-300">{$_('comingsoon')}</p>
+
+			
+			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-05-11 22:56Z</p>
 		</div>
 	{/if}
 {/key}
