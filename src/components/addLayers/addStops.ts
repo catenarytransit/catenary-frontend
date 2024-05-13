@@ -67,7 +67,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular']
+            'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
         },
         paint: {
             'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
@@ -133,7 +133,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
             //'symbol-avoid-edges': false,
-            'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+            'text-font': ['Barlow Medium', 'Arial Unicode MS Regular'],
             
         },
         paint: {
@@ -212,7 +212,7 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Barlow Bold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
@@ -254,7 +254,7 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Barlow Bold', 'Arial Unicode MS Regular'],
         
     },
     paint: {
@@ -304,7 +304,7 @@ map.addLayer({
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
-        'text-font': ['DIN Pro Bold', 'Arial Unicode MS Regular'],
+        'text-font': ['Barlow Bold', 'Arial Unicode MS Regular'],
         
     },
     paint: {

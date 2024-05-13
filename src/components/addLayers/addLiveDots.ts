@@ -33,9 +33,9 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'text-font': [
                 'step',
                 ['zoom'],
-                ['literal', ['DIN Pro Regular', 'Arial Unicode MS Regular']],
+                ['literal', ['Barlow Regular', 'Arial Unicode MS Regular']],
                 9,
-                ['literal', ['DIN Pro Bold', 'Arial Unicode MS Medium']],
+                ['literal', ['Barlow Bold', 'Arial Unicode MS Medium']],
             ],
 
             'text-size': [
@@ -100,9 +100,9 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'text-font': [
                 'step',
                 ['zoom'],
-                ['literal', ['DIN Pro Regular', 'Arial Unicode MS Regular']],
+                ['literal', ['Barlow Regular', 'Arial Unicode MS Regular']],
                 9,
-                ['literal', ['DIN Pro Bold', 'Arial Unicode MS Medium']],
+                ['literal', ['Barlow Bold', 'Arial Unicode MS Medium']],
             ],
             'text-size': ['interpolate', ['linear'], ['zoom'], 9, 14, 11, 15, 13, 16],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
@@ -151,8 +151,8 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             ],*/
             'text-variable-anchor': ['top'],
             'text-radial-offset': 0,
-            'text-font': ['literal', ['DIN Pro Bold', 'Arial Unicode MS Bold']],
-            'text-size': ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 12, 11, 13, 13, 13],
+            'text-font': ['literal', ['Barlow Bold', 'Arial Unicode MS Bold']],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 6, 7, 9, 10, 10, 11, 11, 13, 13, 13],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
@@ -198,7 +198,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             ],*/
             'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
             'text-radial-offset': 0,
-            'text-font': ['literal', ['DIN Pro Medium', 'Arial Unicode MS Bold']],
+            'text-font': ['literal', ['Barlow Medium', 'Arial Unicode MS Bold']],
             'text-size': ['interpolate', ['linear'], ['zoom'], 6, 10, 9, 12, 11, 14, 13, 15],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
