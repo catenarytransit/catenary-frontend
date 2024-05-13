@@ -16,6 +16,26 @@
 "@babel/parser@^7.20.15":
   version "7.24.5"
 
+"@datadog/browser-core@5.17.1":
+  version "5.17.1"
+  resolved "https://registry.npmjs.org/@datadog/browser-core/-/browser-core-5.17.1.tgz"
+  integrity sha512-OsdjeRCCT1U9+ddygqg3PkqHOkkk7Vr2tI3U8xgZQyiqCzCuooDHebq/40UMP6mf9OVETDkqlSWQ/ouqvFKjUQ==
+
+"@datadog/browser-rum-core@5.17.1":
+  version "5.17.1"
+  resolved "https://registry.npmjs.org/@datadog/browser-rum-core/-/browser-rum-core-5.17.1.tgz"
+  integrity sha512-tb+kzIR5C5EHeCXLiTW5bQTm4T1KsuBUE+Xdf1MJJlpcPKtiqnNKS2gJ1OJQpfuOHWwWrGsH2tIO7fZUtALqAg==
+  dependencies:
+    "@datadog/browser-core" "5.17.1"
+
+"@datadog/browser-rum@^5.17.1":
+  version "5.17.1"
+  resolved "https://registry.npmjs.org/@datadog/browser-rum/-/browser-rum-5.17.1.tgz"
+  integrity sha512-BiXA47pBTCjifQxseEVDsrKzLByMdhcp223z8LpyJfjAjMsJad0qxJV5EC+sXANN6yXvpCiC0IjMWNpNHRqpIA==
+  dependencies:
+    "@datadog/browser-core" "5.17.1"
+    "@datadog/browser-rum-core" "5.17.1"
+
 "@esbuild/linux-x64@^0.20.2", "@esbuild/linux-x64@0.20.2":
   version "0.20.2"
   resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.20.2.tgz"

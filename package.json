@@ -39,6 +39,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@datadog/browser-rum": "^5.17.1",
     "@esbuild/linux-x64": "^0.20.2",
     "@mapbox/mapbox-gl-framerate": "github:mapbox/mapbox-gl-framerate",
     "@zerodevx/svelte-toast": "^0.9.5",

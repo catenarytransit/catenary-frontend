@@ -11,6 +11,8 @@
 	import {init_locales} from '../i18n'
 	import { _ } from 'svelte-i18n'
 	import { isLoading } from 'svelte-i18n'
+	import { datadogRum } from '@datadog/browser-rum';
+
 	import {
 		dark_mode_store,
 		data_stack_store,
@@ -906,7 +908,25 @@
 		});
 	}
 
-	onMount(() => {
+	onMount(() => {	
+datadogRum.init({
+    applicationId: '5201846b-e68a-4388-a47c-a9508e3f3dc2',
+    clientToken: 'pub6a98d8da258f8b43df56ceb1c6203a16',
+    // `site` refers to the Datadog site parameter of your organization
+    // see https://docs.datadoghq.com/getting_started/site/
+    site: 'datadoghq.com',
+    service: 'catenary-maps',
+    env: 'prod',
+    // Specify a version number to identify the deployed version of your application in Datadog
+    // version: '1.0.0', 
+    sessionSampleRate: 100,
+    sessionReplaySampleRate: 100,
+    trackUserInteractions: true,
+    trackResources: true,
+    trackLongTasks: true,
+    defaultPrivacyLevel: 'allow',
+});
+
 		fetch('https://birch.catenarymaps.org/getchateaus')
 			.then(function (response) {
 				return response.json();
