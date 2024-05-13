@@ -360,7 +360,7 @@
 		{
 			#if this_locale?.startsWith("en")
 		}
-		<div class="leading-tight py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15">
+		<div class="text-sm lg:text-base py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15">
 			<h2 class="text-lg font-semibold">Join our community!</h2>
 			<p>Catenary is a public transport computer science research non-profit founded by students at <span class="bg-gradient-to-r from-[#0064a4] dark:from-sky-400 via-sky-600 dark:via-sky-500 to-[#ffd200] dark:to-[#ffd200] inline-block text-transparent bg-clip-text font-semibold">UC Irvine</span>!</p>
 			<p>We add features every day to our map! Chat with us & give us suggestions on our Discord server!</p>
