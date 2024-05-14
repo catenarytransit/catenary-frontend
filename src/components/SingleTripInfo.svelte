@@ -8,6 +8,7 @@
 	import RouteIcon from './RouteIcon.svelte';
 	import { lightenColour } from './lightenDarkColour';
 	import DelayDiff from './DelayDiff.svelte';
+	import TimeDiff from './TimeDiff.svelte';
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
@@ -23,6 +24,11 @@
 	let timezones: string[] = [];
 	let error: string | null = '';
 	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
+	let current_time: number = Date.now();
+
+	setInterval(() => {
+		current_time = Date.now();
+	}, 100);
 	export let trip_selected: SingleTrip;
 
 	export let darkMode: boolean = false;
@@ -316,6 +322,13 @@
 														})}
 													</span>
 												{/if}
+
+												{#if stoptime.rt_arrival_time != null || stoptime.scheduled_arrival_time_unix_seconds != null}
+													
+														<TimeDiff diff={((stoptime.scheduled_arrival_time_unix_seconds || stoptime.rt_arrival_time) - (current_time / 1000))}
+														/>
+													
+												{/if}
 											</p>
 										</div>
 									</div>
@@ -350,6 +363,13 @@
 															{ timeZone: stoptime.timezone || trip_data.timezone }
 														)}
 													</span>
+												{/if}
+
+												{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
+													
+														<TimeDiff diff={(stoptime.scheduled_departure_time_unix_seconds || stoptime.rt_departure_time) - (current_time / 1000)}
+														/>
+													
 												{/if}
 											</p>
 										</div>
