@@ -87,6 +87,7 @@
         {#if diff < 0}<span class="text-sm">{$_('early')}</span>
 		{/if}{#if diff > 0}<span class="text-sm">{$_('late')}</span>
 		{/if}{#if diff == 0}<span class="text-sm">{$_('ontime')}</span>{/if}
+        <span class="text-sm">{" "}</span>
 	</span>
 
 	{#if h > 0}
