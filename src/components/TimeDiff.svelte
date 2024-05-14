@@ -76,12 +76,22 @@
 	}
 </script>
 
-<span class={textclass}>
-	<span>
+<span class="text-[0px]">
+	<span class="text-sm">
 		{'['}{#if diff < 0}-{/if}{#if diff > 0}+{/if}
 	</span>
 
-	{#if h > 0}{h}{locale_hour_marking(this_locale)}{/if}
-	{#if h > 0 || m > 0}{m}{locale_min_marking(this_locale)}{/if}
-	{#if Math.abs(diff) > 0}{s.toFixed(0)}{locale_s_marking(this_locale)}{/if}{']'}
+	{#if h > 0}
+    <span class="text-sm">{h}</span>
+    <span class="text-xs">{locale_hour_marking(this_locale)}</span>
+    {/if}
+	{#if h > 0 || m > 0}
+    <span class="text-sm">{m}</span>
+    <span class="text-xs">{locale_min_marking(this_locale)}</span>
+    {/if}
+	{#if Math.abs(diff) > 0}
+    <span class="text-sm">{s.toFixed(0)}</span>
+    <span class="text-xs">{locale_s_marking(this_locale)}</span>
+    {/if}
+    <span class="text-sm">{']'}</span>
 </span>
