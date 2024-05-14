@@ -355,6 +355,14 @@
 										</div>
 									</div>
 								</div>
+
+								{
+									#if timezones.length > 1
+								}
+								<p>{$_('timezone')}: {stoptime.timezone || trip_data.timezone}</p>
+								{
+									/if
+								}
 								<!--<p class="text-sm">
 										index of stop seq: {stoptime.gtfs_stop_sequence}
 									</p>-->
