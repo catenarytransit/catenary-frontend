@@ -26,6 +26,43 @@
 
 	export let darkMode: boolean = false;
 
+	async function update_realtime_data() {
+		let url = new URL(
+			`https://birch.catenarymaps.org/get_trip_information_rt_update/${trip_selected.chateau_id}/`
+		);
+
+		if (trip_selected.trip_id != null) {
+			url.searchParams.append('trip_id', trip_selected.trip_id);
+		}
+
+		if (trip_selected.start_date != null) {
+			url.searchParams.append('start_date', trip_selected.start_date);
+		}
+
+		if (trip_selected.start_time != null) {
+			url.searchParams.append('start_time', trip_selected.start_time);
+		}
+
+		await fetch(url.toString())
+			.then(async (response) => {
+				let text = await response.text();
+				try {
+					const data = JSON.parse(text);
+					console.log('rt trip data', data);
+
+					if (data.found_data === true) {
+						
+					}
+				} catch (e: any) {
+					//error = text;
+				}
+			})
+	}
+
+	setInterval(() => {
+		update_realtime_data();
+	}, 15000);
+
 	async function fetch_trip_selected() {
 		console.log('t-s', trip_selected)
 
