@@ -323,10 +323,13 @@
 													</span>
 												{/if}
 
+												
+											</p>
+											<p class="ml-auto text-right">
 												{#if stoptime.rt_arrival_time != null || stoptime.scheduled_arrival_time_unix_seconds != null}
-													
-														<TimeDiff diff={((stoptime.scheduled_arrival_time_unix_seconds || stoptime.rt_arrival_time) - (current_time / 1000))}
-														/>
+												
+												<TimeDiff diff={((stoptime.scheduled_arrival_time_unix_seconds || stoptime.rt_arrival_time) - (current_time / 1000))}
+												/>
 													
 												{/if}
 											</p>
@@ -365,8 +368,11 @@
 													</span>
 												{/if}
 
+												
+											</p>
+											<p class="ml-auto text-right">
 												{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
-													
+												
 														<TimeDiff diff={(stoptime.scheduled_departure_time_unix_seconds || stoptime.rt_departure_time) - (current_time / 1000)}
 														/>
 													
