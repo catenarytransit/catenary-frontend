@@ -30,6 +30,7 @@
 	let show_previous_stops: boolean = false;
 
 	let last_inactive_stop_idx = 0;
+	let last_arrived_stop_idx = -1;
 
 	async function update_realtime_data() {
 		let url = new URL(
@@ -287,6 +288,7 @@
 		current_time = Date.now();
 
 		let temp_last_inactive_stop_idx = 0;
+		let temp_last_arrived_stop_idx = -1;
 
 		let i = 0;
 		stoptimes_cleaned_dataset.forEach((stoptime: any) => {
@@ -297,6 +299,26 @@
 			} else {
 				if (stoptime.scheduled_departure_time_unix_seconds < (current_time / 1000)) {
 					temp_last_inactive_stop_idx = i;
+				} else {
+					if (stoptime.rt_arrival_time != null) {
+						if (stoptime.rt_arrival_time < (current_time / 1000)) {
+							temp_last_inactive_stop_idx = i;
+						}
+					} else {
+						if (stoptime.scheduled_arrival_time_unix_seconds < (current_time / 1000)) {
+							temp_last_inactive_stop_idx = i;
+						}
+					}
+				}
+			}
+
+			if (stoptime.rt_arrival_time != null) {
+				if (stoptime.rt_arrival_time < (current_time / 1000)) {
+					temp_last_arrived_stop_idx = i;
+				}
+			} else {
+				if (stoptime.scheduled_arrival_time_unix_seconds < (current_time / 1000)) {
+					temp_last_arrived_stop_idx = i;
 				}
 			}
 
@@ -304,6 +326,7 @@
 		});
 
 		last_inactive_stop_idx =  temp_last_inactive_stop_idx;
+		last_arrived_stop_idx = temp_last_arrived_stop_idx;
 	}, 100);
 	});
 </script>
@@ -496,11 +519,11 @@
 					<div class="flex flex-row">
 						<div class="flex flex-col w-2 relative justify-center" style={``}>
 							<div
-								style={`background-color: ${i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i ? 0.5 : 1};`}
+								style={`background-color: ${i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_arrived_stop_idx >= i ? 0.5 : 1};`}
 								class={`h-1/2 ${i == trip_data.stoptimes.length - 1 ? 'rounded-b-full' : ''}`}
 							></div>
 							<div
-								style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_inactive_stop_idx >= i + 1 ? 0.5 : 1};`}
+								style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_arrived_stop_idx >= i + 1 ? 0.5 : 1};`}
 								class={`h-1/2 ${i == 0 ? 'rounded-t-full' : ''}`}
 							></div>
 							<div
