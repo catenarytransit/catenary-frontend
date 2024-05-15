@@ -26,6 +26,44 @@
 	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
 	let current_time: number = Date.now();
 
+	
+	async function update_realtime_data() {
+		let url = new URL(
+			`https://birch.catenarymaps.org/get_trip_information_rt_update/${trip_selected.chateau_id}/`
+		);
+
+		if (trip_selected.trip_id != null) {
+			url.searchParams.append('trip_id', trip_selected.trip_id);
+		}
+
+		if (trip_selected.start_date != null) {
+			url.searchParams.append('start_date', trip_selected.start_date);
+		}
+
+		if (trip_selected.start_time != null) {
+			url.searchParams.append('start_time', trip_selected.start_time);
+		}
+
+		await fetch(url.toString())
+			.then(async (response) => {
+				let text = await response.text();
+				try {
+					const data = JSON.parse(text);
+					console.log('rt trip data', data);
+
+					if (data.found_data === true) {
+						
+					}
+				} catch (e: any) {
+					//error = text;
+				}
+			})
+	}
+
+	setInterval(() => {
+		update_realtime_data();
+	}, 15000);
+
 	setInterval(() => {
 		current_time = Date.now();
 	}, 100);
@@ -61,6 +99,13 @@
 					trip_data = data;
 
 					let stoptimes_cleaned: any[] = [];
+
+					if (trip_data.tz != null) {
+						if (timezones.indexOf(trip_data.tz) === -1) {
+							timezones.push(trip_data.tz);
+						}
+					}
+					
 
 					let index = 0;
 					data.stoptimes.forEach((stoptime: any) => {
@@ -301,8 +346,8 @@
 										</span>
 									{/if}
 									<div class="ml-auto text-sm">
-										<div class="text-sm">
-											<p>
+										<div class="text-sm text-right">
+											<p class="text-right">
 												{#if stoptime.scheduled_arrival_time_unix_seconds}
 													<span
 														class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
@@ -310,7 +355,7 @@
 														{new Date(
 															stoptime.scheduled_arrival_time_unix_seconds * 1000
 														).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.timezone
+															timeZone: stoptime.timezone || trip_data.tz
 														})}
 													</span>
 												{/if}
@@ -318,7 +363,7 @@
 												{#if stoptime.rt_arrival_time}
 													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.timezone
+															timeZone: stoptime.timezone || trip_data.tz
 														})}
 													</span>
 												{/if}
@@ -328,7 +373,7 @@
 											<p class="ml-auto text-right">
 												{#if stoptime.rt_arrival_time != null || stoptime.scheduled_arrival_time_unix_seconds != null}
 												
-												<TimeDiff diff={((stoptime.scheduled_arrival_time_unix_seconds || stoptime.rt_arrival_time) - (current_time / 1000))}
+												<TimeDiff diff={((stoptime.rt_arrival_time || stoptime.scheduled_arrival_time_unix_seconds) - (current_time / 1000))}
 												/>
 													
 												{/if}
@@ -345,8 +390,8 @@
 										>
 									{/if}
 									<div class="ml-auto text-sm">
-										<div class="text-sm">
-											<p>
+										<div class="text-sm text-right">
+											<p class="text-right">
 												{#if stoptime.scheduled_departure_time_unix_seconds}
 													<span
 														class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
@@ -354,7 +399,7 @@
 														{new Date(
 															stoptime.scheduled_departure_time_unix_seconds * 1000
 														).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.timezone
+															timeZone: stoptime.timezone || trip_data.tz
 														})}
 													</span>
 												{/if}
@@ -363,7 +408,7 @@
 													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
 															'en-UK',
-															{ timeZone: stoptime.timezone || trip_data.timezone }
+															{ timeZone: stoptime.timezone || trip_data.tz }
 														)}
 													</span>
 												{/if}
@@ -373,7 +418,7 @@
 											<p class="ml-auto text-right">
 												{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
 												
-														<TimeDiff diff={(stoptime.scheduled_departure_time_unix_seconds || stoptime.rt_departure_time) - (current_time / 1000)}
+														<TimeDiff diff={(stoptime.rt_departure_time || stoptime.scheduled_departure_time_unix_seconds) - (current_time / 1000)}
 														/>
 													
 												{/if}
@@ -382,13 +427,7 @@
 									</div>
 								</div>
 
-								{
-									#if timezones.length > 1
-								}
-								<p>{$_('timezone')}: {stoptime.timezone || trip_data.timezone}</p>
-								{
-									/if
-								}
+								
 								<!--<p class="text-sm">
 										index of stop seq: {stoptime.gtfs_stop_sequence}
 									</p>-->
