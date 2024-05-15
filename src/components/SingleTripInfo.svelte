@@ -28,6 +28,8 @@
 	let fetchtimeout:NodeJS.Timeout |null= null;
 	let updatetimecounter :NodeJS.Timeout |null= null;
 	let show_previous_stops: boolean = false;
+	let scrollTop = 0;
+	let bind_scrolling_div: null | HTMLElement = null;
 
 	let last_inactive_stop_idx = 0;
 	let last_arrived_stop_idx = -1;
@@ -118,6 +120,8 @@
 					stoptimes_cleaned_dataset = next_stoptimes_cleaned;
 					init_loaded = Date.now();
 					console.log('single trip rt update', stoptimes_cleaned_dataset);
+
+					bind_scrolling_div.scrollTop = scrollTop;
 				}
 			} catch (e: any) {
 				console.error(e);
@@ -325,14 +329,16 @@
 			i = i + 1;
 		});
 
-		last_inactive_stop_idx =  temp_last_inactive_stop_idx;
+		
+		bind_scrolling_div.scrollTop = scrollTop;
+		last_inactive_stop_idx = temp_last_inactive_stop_idx;
 		last_arrived_stop_idx = temp_last_arrived_stop_idx;
+		bind_scrolling_div.scrollTop = scrollTop;
 	}, 100);
 	});
 </script>
 
 <div class="pl-4 sm:pl-2 lg:pl-4 pt-2 h-full">
-	{#key init_loaded}
 		{#if error != null}
 			{error}
 		{:else if is_loading_trip_data}
@@ -346,7 +352,17 @@
 				</div>
 			{/each}
 		{:else}
-			<div class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32">
+			<div
+			
+			on:scroll={(e) => {
+				if (e!=null) {
+					scrollTop = e.target.scrollTop;
+					console.log('print scrolltop', scrollTop);
+				}
+			}}
+
+			bind:this={bind_scrolling_div}
+			class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32">
 				{#if trip_data != null}
 					{#if trip_data.route_long_name || trip_data.route_short_name}
 						<span
@@ -640,5 +656,4 @@
 				{/if}
 			</div>
 		{/if}
-	{/key}
 </div>
