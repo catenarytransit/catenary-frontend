@@ -100,6 +100,13 @@
 
 					let stoptimes_cleaned: any[] = [];
 
+					if (trip_data.tz != null) {
+						if (timezones.indexOf(trip_data.tz) === -1) {
+							timezones.push(trip_data.tz);
+						}
+					}
+					
+
 					let index = 0;
 					data.stoptimes.forEach((stoptime: any) => {
 						if (timezones.indexOf(stoptime.timezone) === -1) {
@@ -348,7 +355,7 @@
 														{new Date(
 															stoptime.scheduled_arrival_time_unix_seconds * 1000
 														).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.timezone
+															timeZone: stoptime.timezone || trip_data.tz
 														})}
 													</span>
 												{/if}
@@ -356,7 +363,7 @@
 												{#if stoptime.rt_arrival_time}
 													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.timezone
+															timeZone: stoptime.timezone || trip_data.tz
 														})}
 													</span>
 												{/if}
@@ -392,7 +399,7 @@
 														{new Date(
 															stoptime.scheduled_departure_time_unix_seconds * 1000
 														).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.timezone
+															timeZone: stoptime.timezone || trip_data.tz
 														})}
 													</span>
 												{/if}
@@ -401,7 +408,7 @@
 													<span class="text-sky-700 dark:text-sky-300">
 														{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
 															'en-UK',
-															{ timeZone: stoptime.timezone || trip_data.timezone }
+															{ timeZone: stoptime.timezone || trip_data.tz }
 														)}
 													</span>
 												{/if}
@@ -420,13 +427,7 @@
 									</div>
 								</div>
 
-								{
-									#if timezones.length > 1
-								}
-								<p>{$_('timezone')}: {stoptime.timezone || trip_data.timezone}</p>
-								{
-									/if
-								}
+								
 								<!--<p class="text-sm">
 										index of stop seq: {stoptime.gtfs_stop_sequence}
 									</p>-->
