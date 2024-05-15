@@ -3,6 +3,7 @@
     
 	import { locale, locales } from 'svelte-i18n';
 	export let diff: number;
+    export let show_brackets: boolean = true;
 
 	let textclass: string = 'slashed-zero tabular-nums';
 
@@ -78,7 +79,7 @@
 
 <span class="text-[0px]">
 	<span class="text-sm">
-		{'['}{#if diff < 0}-{/if}{#if diff > 0}+{/if}
+		{#if show_brackets}{'['}{/if}{#if diff < 0}-{/if}{#if diff > 0}+{/if}
 	</span>
 
 	{#if h > 0}
@@ -93,5 +94,7 @@
     <span class="text-sm">{s.toFixed(0)}</span>
     <span class="text-xs">{locale_s_marking(this_locale)}</span>
     {/if}
+    {#if show_brackets} 
     <span class="text-sm">{']'}</span>
+    {/if}
 </span>
