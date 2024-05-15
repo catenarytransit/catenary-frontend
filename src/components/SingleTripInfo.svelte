@@ -26,6 +26,44 @@
 	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
 	let current_time: number = Date.now();
 
+	
+	async function update_realtime_data() {
+		let url = new URL(
+			`https://birch.catenarymaps.org/get_trip_information_rt_update/${trip_selected.chateau_id}/`
+		);
+
+		if (trip_selected.trip_id != null) {
+			url.searchParams.append('trip_id', trip_selected.trip_id);
+		}
+
+		if (trip_selected.start_date != null) {
+			url.searchParams.append('start_date', trip_selected.start_date);
+		}
+
+		if (trip_selected.start_time != null) {
+			url.searchParams.append('start_time', trip_selected.start_time);
+		}
+
+		await fetch(url.toString())
+			.then(async (response) => {
+				let text = await response.text();
+				try {
+					const data = JSON.parse(text);
+					console.log('rt trip data', data);
+
+					if (data.found_data === true) {
+						
+					}
+				} catch (e: any) {
+					//error = text;
+				}
+			})
+	}
+
+	setInterval(() => {
+		update_realtime_data();
+	}, 15000);
+
 	setInterval(() => {
 		current_time = Date.now();
 	}, 100);
@@ -301,8 +339,8 @@
 										</span>
 									{/if}
 									<div class="ml-auto text-sm">
-										<div class="text-sm">
-											<p>
+										<div class="text-sm text-right">
+											<p class="text-right">
 												{#if stoptime.scheduled_arrival_time_unix_seconds}
 													<span
 														class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
@@ -328,7 +366,7 @@
 											<p class="ml-auto text-right">
 												{#if stoptime.rt_arrival_time != null || stoptime.scheduled_arrival_time_unix_seconds != null}
 												
-												<TimeDiff diff={((stoptime.scheduled_arrival_time_unix_seconds || stoptime.rt_arrival_time) - (current_time / 1000))}
+												<TimeDiff diff={((stoptime.rt_arrival_time || stoptime.scheduled_arrival_time_unix_seconds) - (current_time / 1000))}
 												/>
 													
 												{/if}
@@ -345,8 +383,8 @@
 										>
 									{/if}
 									<div class="ml-auto text-sm">
-										<div class="text-sm">
-											<p>
+										<div class="text-sm text-right">
+											<p class="text-right">
 												{#if stoptime.scheduled_departure_time_unix_seconds}
 													<span
 														class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
@@ -373,7 +411,7 @@
 											<p class="ml-auto text-right">
 												{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
 												
-														<TimeDiff diff={(stoptime.scheduled_departure_time_unix_seconds || stoptime.rt_departure_time) - (current_time / 1000)}
+														<TimeDiff diff={(stoptime.rt_departure_time || stoptime.scheduled_departure_time_unix_seconds) - (current_time / 1000)}
 														/>
 													
 												{/if}
