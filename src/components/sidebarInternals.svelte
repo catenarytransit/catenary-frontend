@@ -382,7 +382,7 @@
 			<p class="text-gray-800 dark:text-gray-300">{$_('comingsoon')}</p>
 
 			
-			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-05-15 01:02Z</p>
+			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-05-15 11:36Z</p>
 		</div>
 	{/if}
 {/key}
