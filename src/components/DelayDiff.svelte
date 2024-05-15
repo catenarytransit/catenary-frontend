@@ -65,11 +65,11 @@
 
 	$: if (diff) {
 		if (diff < 60) {
-			textclass = 'text-[0px] text-yellow-600 text-yellow-400';
+			textclass = 'text-[0px] text-yellow-600 dark:text-yellow-400';
 		}
 
 		if (diff > 60) {
-			textclass = 'text-[0px] text-red-700 dark:text-red-500';
+			textclass = 'text-[0px] text-red-700 dark:text-red-400';
 		}
 
 		let remainder = Math.abs(diff);
