@@ -224,12 +224,18 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         type: 'line',
         source: 'notbusshapes',
         'source-layer': 'data',
-        filter: ['all',
-            ['any',
-                ['==', 2, ['get', 'route_type']],
-            ]
-
+        filter:  ['all',
+        ['any',
+            ['==', 2, ['get', 'route_type']],
         ],
+        [
+            "!", ['all',
+                ['==', ['get', 'chateau'], "gotransit"],
+                ['==', ['get', 'shape_id'], "UNGL"]
+            ]
+        ]
+
+    ],
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
             'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
@@ -244,7 +250,19 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         type: 'symbol',
         source: 'notbusshapes',
         'source-layer': 'data',
-        filter: ['==', 2, ['get', 'route_type']],
+        filter: 
+        ['all',
+            ['any',
+                ['==', 2, ['get', 'route_type']],
+            ],
+            [
+                "!", ['all',
+                    ['==', ['get', 'chateau'], "gotransit"],
+                    ['==', ['get', 'shape_id'], "UNGL"]
+                ]
+            ]
+
+        ],
         layout: {
             'symbol-placement': 'line',
             'text-field': ['coalesce', ['get', 'route_label']],
