@@ -90,7 +90,7 @@
 							);
 							let new_stop_time_data_to_use = new_stop_time_to_use_arr[0];
 
-							if (new_stop_time_data_to_use.rt_arrival?.time != null) {
+							if (typeof new_stop_time_data_to_use.rt_arrival?.time == 'number') {
 								existing_stop_time.rt_arrival_time = new_stop_time_data_to_use.rt_arrival?.time;
 								existing_stop_time.strike_arrival = true;
 							} else {
@@ -99,7 +99,7 @@
 								existing_stop_time.rt_departure_diff = null;
 							}
 
-							if (new_stop_time_data_to_use.rt_departure?.time != null) {
+							if (typeof new_stop_time_data_to_use.rt_departure?.time == 'number') {
 								existing_stop_time.rt_departure_time = new_stop_time_data_to_use.rt_departure?.time;
 								existing_stop_time.strike_departure = true;
 							} else {
