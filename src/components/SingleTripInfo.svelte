@@ -95,6 +95,7 @@
 							} else {
 								existing_stop_time.rt_arrival_time = null;
 								existing_stop_time.strike_arrival = false;
+								existing_stop_time.rt_departure_diff = null;
 							}
 
 							if (new_stop_time_data_to_use.rt_departure?.time != null) {
@@ -102,6 +103,7 @@
 							} else {
 								existing_stop_time.rt_departure_time = null;
 								existing_stop_time.strike_departure = false;
+								existing_stop_time.rt_arrival_diff = null;
 							}
 
 							if (typeof existing_stop_time.rt_departure_time == 'number') {
