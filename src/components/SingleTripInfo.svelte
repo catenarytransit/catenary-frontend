@@ -16,7 +16,7 @@
 		fixRouteName,
 		fixRouteNameLong,
 		fixRunNumber,
-		fixStationNam
+		fixStationName
 	} from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
@@ -118,7 +118,7 @@
 										existing_stop_time.rt_arrival_time -
 										existing_stop_time.scheduled_arrival_time_unix_seconds;
 								}
-							}
+							}n
 						}
 					});
 
