@@ -16,7 +16,7 @@
 		fixRouteName,
 		fixRouteNameLong,
 		fixRunNumber,
-		fixStationName
+		fixStationNam
 	} from './agencyspecific';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
@@ -92,10 +92,16 @@
 
 							if (new_stop_time_data_to_use.rt_arrival?.time != null) {
 								existing_stop_time.rt_arrival_time = new_stop_time_data_to_use.rt_arrival?.time;
+							} else {
+								existing_stop_time.rt_arrival_time = null;
+								existing_stop_time.strike_arrival = false;
 							}
 
 							if (new_stop_time_data_to_use.rt_departure?.time != null) {
 								existing_stop_time.rt_departure_time = new_stop_time_data_to_use.rt_departure?.time;
+							} else {
+								existing_stop_time.rt_departure_time = null;
+								existing_stop_time.strike_departure = false;
 							}
 
 							if (typeof existing_stop_time.rt_departure_time == 'number') {
