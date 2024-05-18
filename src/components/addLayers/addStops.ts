@@ -3,6 +3,8 @@ import { removeWeekendStops } from "../removeWeekendStops";
 
 const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 10, 10, 12];
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
+const northAmericaIntercityCircleSize = ['interpolate', ['linear'], ['zoom'], 7, 4, 12, 6, 15, 8];
+const internationalIntercityCircleSize = ['interpolate', ['linear'], ['zoom'], 7, 2.8, 12, 5, 15, 8];
 
 export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any) {
     console.log('change rail size out side na')
@@ -11,10 +13,18 @@ export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any
         console.log('set to international stop size')
         map.setLayoutProperty(layerspercategory.intercityrail.labelstops,"text-size", 
         internationalIntercityLabelSize);
+
+        map.setPaintProperty(layerspercategory.intercityrail.stops,"circle-radius",
+            internationalIntercityCircleSize
+        )
     } else {
         console.log('set to na stop size')
         map.setLayoutProperty(layerspercategory.intercityrail.labelstops,"text-size", 
         northAmericaIntercityLabelSize);
+
+        map.setPaintProperty(layerspercategory.intercityrail.stops,"circle-radius",
+            northAmericaIntercityCircleSize
+        )
     }
 }
 
@@ -128,7 +138,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'text-field': ['get', 'displayname'],
             'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
             'text-size': ['interpolate', ['linear'], ['zoom'], 9, 10, 11, 10, 12, 12],
-            'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 12, 0.9],
+            'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.5, 12, 0.7],
             //'text-ignore-placement': true,
             //'icon-ignore-placement': false,
             //'text-allow-overlap': true,
@@ -172,7 +182,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
     layout: {},
     paint: {
         'circle-color': '#1c2636',
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 4, 12, 6, 15, 8],
+        'circle-radius': northAmericaIntercityCircleSize,
         'circle-stroke-color': darkMode
             ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
             : '#333333',
@@ -213,10 +223,8 @@ map.addLayer({
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
         'text-font': ['Barlow Bold', 'Arial Unicode MS Regular'],
-        
     },
     paint: {
-        
         'text-color': darkMode ? '#ffffff' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
         'text-halo-width': 1,
