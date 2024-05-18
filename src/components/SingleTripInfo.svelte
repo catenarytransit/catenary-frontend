@@ -445,10 +445,10 @@
 						</p>
 					{/if}
 					<span class="block mt-0 mt-1" />
-					<p class="text-sm">Trip ID {trip_selected.trip_id}</p>
-					{#if trip_data.block_id != null}
-						<p class="text-sm">Block {trip_data.block_id}</p>
-					{/if}
+					<p class="text-sm">Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
+						<span class="text-sm">{" | Block "}{trip_data.block_id}</span>
+					{/if}</p>
+					
 					{#if trip_data.vehicle != null}
 						<p class="text-sm">{$_('vehicle')} {trip_data.vehicle.label || trip_data.vehicle.id}</p>
 					{/if}
@@ -456,7 +456,7 @@
 						{#if timezones.filter((x) => x!= null).length == 1}
 							{$_('timezone')}: {timezones[0]}
 						{:else}
-							{$_('timezone')}: {timezones.filter((x) => x!=null).join(',')}
+							{$_('timezone')}: {timezones.filter((x) => x!=null).join(', ')}
 						{/if}
 					</p>
 					{#if init_loaded != 0}
@@ -644,6 +644,9 @@
 									</div>
 								</div>
 							</div>
+							{#if timezones.filter((x) => x!= null).length > 1}
+							<p class="text-sm text-gray-900 dark:text-gray-100">{$_("timezone")}: {stoptime.timezone || trip_data.tz }</p>
+							{/if}
 
 							<!--<p class="text-sm">
 									index of stop seq: {stoptime.gtfs_stop_sequence}

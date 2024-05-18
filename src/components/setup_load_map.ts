@@ -138,8 +138,11 @@ export function setup_load_map(
 			id: 'foamershapes',
 			type: 'raster',
 			source: 'foamertiles',
+			layout: {
+				'visibility': 'none'
+			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				'raster-emissive-strength': 0.8,
 			}
 		});
 
@@ -147,8 +150,11 @@ export function setup_load_map(
 			id: 'maxspeedshapes',
 			type: 'raster',
 			source: 'maxspeedtiles',
+			layout: {
+				'visibility': 'none'
+			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				'raster-emissive-strength': 0.8,
 			}
 		});
 
@@ -156,8 +162,11 @@ export function setup_load_map(
 			id: 'signallingshapes',
 			type: 'raster',
 			source: 'signallingtiles',
+			layout: {
+				'visibility': 'none'
+			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				'raster-emissive-strength': 0.8,
 			}
 		});
 
@@ -165,8 +174,11 @@ export function setup_load_map(
 			id: 'electrificationshapes',
 			type: 'raster',
 			source: 'electrificationtiles',
+			layout: {
+				'visibility': 'none'
+			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				'raster-emissive-strength': 0.8,
 			}
 		});
 
@@ -174,8 +186,11 @@ export function setup_load_map(
 			id: 'gaugeshapes',
 			type: 'raster',
 			source: 'gaugetiles',
+			layout: {
+				'visibility': 'none'
+			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				'raster-emissive-strength': 0.8,
 			}
 		});
 
@@ -412,6 +427,10 @@ export function setup_load_map(
 		makeGpsLayer(map);
 
 		recompute_map_padding();
+		
+		changeRailTextOutsideNorthAmerica(map, layerspercategory);
+
+		runSettingsAdapt();
 
 		setTimeout(() => {
 			recompute_map_padding()
