@@ -24,7 +24,7 @@ export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any
 
         map.setPaintProperty(layerspercategory.intercityrail.stops,"circle-radius",
             northAmericaIntercityCircleSize
-        )
+        );
     }
 }
 
@@ -217,7 +217,7 @@ map.addLayer({
         'text-field': ['get', 'displayname'],
         'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
         'text-size': northAmericaIntercityLabelSize,
-        'text-radial-offset': 1,
+        'text-radial-offset': 0.2,
         //'text-ignore-placement': true,
         //'icon-ignore-placement': false,
         //'text-allow-overlap': true,
