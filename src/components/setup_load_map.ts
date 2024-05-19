@@ -226,7 +226,7 @@ export function setup_load_map(
 					type: 'symbol',
 					source: 'stationfeatures',
 					filter: ['all', ['==', 2, ['get', 'location_type']]],
-					'source-layer': 'stationfeatures',
+					'source-layer': 'data',
 					paint: {
 						'symbol-emissive-strength': 1
 					},
@@ -248,7 +248,7 @@ export function setup_load_map(
 					filter: ['all', ['==', 2, ['get', 'location_type']]],
 					type: 'symbol',
 					source: 'stationfeatures',
-					'source-layer': 'stationfeatures',
+					'source-layer': 'data',
 
 					layout: {
 						'text-field': ['get', 'name'],
