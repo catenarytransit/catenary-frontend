@@ -91,7 +91,7 @@ export function setup_load_map(
 
 		map.addSource('stationfeatures', {
 			type: 'vector',
-			url: what_martin_to_use() + '/stationfeatures'
+			url: 'https://birch.catenarymaps.org/station_features'
 		});
 
 		map.addSource('railstops', {
@@ -101,7 +101,7 @@ export function setup_load_map(
 
 		map.addSource('otherstops', {
 			type: 'vector',
-			url: what_martin_to_use() + '/otherstops'
+			url: 'https://birch.catenarymaps.org/otherstops'
 		});
 
 		map.addSource('foamertiles', {
