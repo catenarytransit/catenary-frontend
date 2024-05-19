@@ -132,7 +132,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'circle-stroke-color': darkMode == true ? "#ffffff" : "#3a3a3a",
             'circle-stroke-width': 1.2,
             'circle-emissive-strength': 1,
-            'circle-opacity': 0.7
+            'circle-opacity':  ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.7],
         }
     });
 
