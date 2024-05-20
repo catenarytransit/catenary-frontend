@@ -312,7 +312,7 @@ text_colour
 							contrastdarkmode: contrastdarkmode,
 							contrastdarkmodebearing,
 							routeId: routeId,
-							headsign: fixHeadsignText(headsign).replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
+							headsign: fixHeadsignText(headsign, maptag).replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
 							timestamp: vehicle_data.timestamp,
 							id: rt_id,
                             text_color: text_colour,
@@ -334,7 +334,7 @@ text_colour
 
 		const tokki_features = features.filter((x) => {
 			if (new_jeans_buses[x.properties.chateau]) {
-				if (new_jeans_buses[x.properties.chateau][x.properties.vehicleIdLabel]) {
+				if (new_jeans_buses[x.properties.chateau].has(x.properties.vehicleIdLabel)) {
 					return true;
 				}
 			}
