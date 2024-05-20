@@ -67,5 +67,6 @@
     "late": "Late",
     "skipped": "Skipped",
     "ontime": "On time",
-    "defaultlang": "Default language"
+    "defaultlang": "Default language",
+    "showmylocation": "Show my location"
   }
