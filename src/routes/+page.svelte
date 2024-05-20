@@ -330,6 +330,18 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
+			if (show_my_location) {
+				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+				mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
+				mapglobal.setLayoutProperty('km_text', 'visibility', 'visible');
+				mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
+			} else {
+				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
+				mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
+				mapglobal.setLayoutProperty('km_text', 'visibility', 'none');
+				mapglobal.setLayoutProperty('km_line', 'visibility', 'none');
+			}
+
 			if (layersettings.more.foamermode.infra) {
 				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
 			} else {

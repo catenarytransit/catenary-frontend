@@ -135,6 +135,8 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 				'icon-color': "#2563EB",
 				'icon-opacity': 0.8
 			},
+			filter: 
+			["==", true, ['get', 'has_bearing']],
 			layout: {
 				'icon-image': 'pointingcoloured',
 				'icon-allow-overlap': true,
@@ -262,6 +264,8 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 			id: "geolocationheadingshell",
 			source: 'geolocation',
 			type: 'symbol',
+			filter: 
+			["==", true, ['get', 'has_bearing']],
 			paint: {
 				'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 			},
