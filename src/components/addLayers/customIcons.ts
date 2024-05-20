@@ -1,6 +1,6 @@
 import type { Map } from "mapbox-gl";
 
-export const new_jeans_buses = {
+export const new_jeans_buses:Record<string, Set<string>> = {
     "orangecountytransportationauthority": new Set(["5855"]),
     "metro~losangeles": new Set(["5832"])
 }

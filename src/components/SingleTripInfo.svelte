@@ -551,6 +551,10 @@
 						<div class="w-full border-t border-slate-500 py-1 pr-1 lg:pr-2">
 							<p class="">
 								<span class="font-bold dark:text-gray-100">{fixStationName(stoptime.name)}</span>
+
+								{#if stoptime.code}
+								<span class="text-gray-800 dark:text-gray-200">{stoptime.code}</span>
+								{/if}
 							</p>
 
 							{#if stoptime.schedule_relationship == 1}
