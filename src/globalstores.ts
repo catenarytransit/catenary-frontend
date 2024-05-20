@@ -26,4 +26,4 @@ export const dark_mode_store = writable(false);
 export const show_zombie_buses_store = writable(false);
 
 export const usunits_store = writable(false);
-export const show_my_location = writable(true);
+export const show_my_location_store = writable(true);

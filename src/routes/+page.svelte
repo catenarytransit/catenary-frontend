@@ -25,7 +25,10 @@
 		lock_on_gps_store,
 		usunits_store,
 
-		show_zombie_buses_store
+		show_zombie_buses_store,
+
+		show_my_location_store
+
 
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
@@ -191,6 +194,12 @@
 
 	show_zombie_buses_store.subscribe((value) => {
 		showzombiebuses = value;
+	});
+
+	let show_my_location = true;
+
+	show_my_location_store.subscribe((value) => {
+		show_my_location = value;
 	});
 
 	const layerspercategory = {
@@ -1448,7 +1457,7 @@ datadogRum.init({
 	</div>
 
 	{#if selectedSettingsTab === 'more'}
-		<div class="flex flex-row gap-x-1">
+		<div class="flex flex-row gap-x-1 flex-wrap">
 			<Layerbutton
 				bind:layersettings
 				selectedSettingsTab="more"
@@ -1532,6 +1541,29 @@ datadogRum.init({
 			/>
 			<label for="show-zombie-buses" class="ml-2">{$_("showtripless")}</label>
 		</div>
+		<div>
+			<input
+				on:click={(x) => {
+					show_my_location_store.update((value) => !value) ;
+
+					localStorage.setItem('show-my-location', String(showzombiebuses));
+
+					runSettingsAdapt();
+				}}
+				on:keydown={(x) => {
+					show_my_location_store.update((value) => !value) ;
+
+					localStorage.setItem('show-my-location', String(showzombiebuses));
+
+					runSettingsAdapt();
+				}}
+				checked={showzombiebuses}
+				id="show-zombie-buses"
+				type="checkbox"
+				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+			/>
+			<label for="show-my-location" class="ml-2">{$_("showmylocation")}</label>
+			</div>
 	{/if}
 
 	{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}

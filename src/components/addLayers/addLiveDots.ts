@@ -35,7 +35,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
                 ['zoom'],
                 ['literal', ['Barlow Regular', 'Arial Unicode MS Regular']],
                 9,
-                ['literal', ['Barlow Bold', 'Arial Unicode MS Medium']],
+                ['literal', ['Barlow Bold', 'Arial Unicode MS Semibold']],
             ],
 
             'text-size': [
@@ -43,7 +43,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
                 ["linear"],
                 ["zoom"],
                 8,
-                8,
+                7,
                 11,
                 12,
                 13,
@@ -151,7 +151,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             ],*/
             'text-variable-anchor': ['top'],
             'text-radial-offset': 0,
-            'text-font': ['literal', ['Barlow Bold', 'Arial Unicode MS Bold']],
+            'text-font': ['literal', ['Barlow Medium', 'Arial Unicode MS Bold']],
             'text-size': ['interpolate', ['linear'], ['zoom'], 6, 7, 9, 10, 10, 11, 11, 13, 13, 13],
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
@@ -174,12 +174,12 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
         source: 'intercityrail',
         minzoom: 2,
         paint: {
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 6, 8, 8, 10, 9, 16, 10],
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 4, 8, 8, 10, 8, 16, 10],
             'circle-color': ['get', 'color'],
             'circle-stroke-color': darkMode == true ? "#ffffff" : "#3a3a3a",
             'circle-stroke-width': 1.1,
             'circle-emissive-strength': 1,
-            'circle-opacity': 0.8
+            'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 11, 0.7]
         }
     });
 
