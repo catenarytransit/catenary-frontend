@@ -162,10 +162,12 @@
 	let markedPointCoords: number[];
 
 	if (typeof window != 'undefined') {
-		markedPointCoords = window.location.hash
-			.replace('#pos=', '')
-			.split('/')
-			.map((x) => parseFloat(x));
+		if (markLoadInPoint) {
+			markedPointCoords = window.location.hash
+				.replace('#pos=', '')
+				.split('/')
+				.map((x) => parseFloat(x));
+		}
 	}
 
 	let current_map_heading = 0;
