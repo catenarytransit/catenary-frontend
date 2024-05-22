@@ -8,11 +8,11 @@
 	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
 	import SidebarInternals from '../components/sidebarInternals.svelte';
 	import { addGeoRadius, setUserCircles } from '../components/userradius';
-	import {init_locales} from '../i18n'
-	import { _ } from 'svelte-i18n'
-	import { isLoading } from 'svelte-i18n'
+	import { init_locales } from '../i18n';
+	import { _ } from 'svelte-i18n';
+	import { isLoading } from 'svelte-i18n';
 	import { datadogRum } from '@datadog/browser-rum';
-	import {changeRailTextOutsideNorthAmerica} from '../components/addLayers/addStops'
+	import { changeRailTextOutsideNorthAmerica } from '../components/addLayers/addStops';
 
 	import {
 		dark_mode_store,
@@ -24,12 +24,8 @@
 		realtime_vehicle_route_cache_store,
 		lock_on_gps_store,
 		usunits_store,
-
 		show_zombie_buses_store,
-
 		show_my_location_store
-
-
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -77,9 +73,9 @@
 	let start_of_move_pointer_height: number | null = null;
 	let start_of_move_sidebar_height: number | null = null;
 	let last_sidebar_release: number | null = null;
-	let current_locale: string= "default";
+	let current_locale: string = 'default';
 	locale.subscribe((value) => {
-		if (typeof window != "undefined") {
+		if (typeof window != 'undefined') {
 			window.localStorage.language = value;
 		}
 	});
@@ -110,10 +106,10 @@
 	let geolocation: GeolocationPosition;
 
 	if (typeof window !== 'undefined') {
-		top_margin_collapser_sidebar = `${(window.innerHeight /2) - 15}px`;
+		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
 
 		if (window.localStorage.language) {
-		locale.set(window.localStorage.language)
+			locale.set(window.localStorage.language);
 		}
 	}
 
@@ -161,6 +157,16 @@
 
 	let desktopapp = urlParams.get('desktop') == 'true';
 	let mobileapp = urlParams.get('utm_source') == 'pwa';
+
+	let markLoadInPoint = urlParams.get('mp') == 'true';
+	let markedPointCoords: number[];
+
+	if (typeof window != 'undefined') {
+		markedPointCoords = window.location.hash
+			.replace('#pos=', '')
+			.split('/')
+			.map((x) => parseFloat(x));
+	}
 
 	let current_map_heading = 0;
 
@@ -506,7 +512,7 @@
 				layersettings = cachedJsonObject;
 			}
 		}
-	
+
 		if (
 			localStorage.theme === 'light' ||
 			(urlParams.get('framework-colorway') == 'light' && embedmode) ||
@@ -548,7 +554,7 @@
 	let style: string = darkMode
 		? 'mapbox://styles/kylerschin/clw2s5gsn01du01rdbjlf0nhr'
 		: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
-/*
+	/*
 	if (typeof window != 'undefined') {
 		let desiredStyle = embedmode
 			? urlParams.get('framework-style') || window.localStorage.mapStyle
@@ -578,19 +584,22 @@
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
-			let padding = {"bottom": document.getElementById('catenary-sidebar')?.offsetHeight, "left": 0};
-			mapglobal.easeTo({padding: padding, duration: 200});
+			let padding = { bottom: document.getElementById('catenary-sidebar')?.offsetHeight, left: 0 };
+			mapglobal.easeTo({ padding: padding, duration: 200 });
 		} else {
 			if (innerWidth < 768) {
-				let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth, "bottom": 0};
-				mapglobal.easeTo({padding: padding, duration: 200});
+				let padding = { left: document.getElementById('catenary-sidebar')?.offsetWidth, bottom: 0 };
+				mapglobal.easeTo({ padding: padding, duration: 200 });
 			} else {
 				if (sidebarOpen == 'full') {
-					let padding = {"left": document.getElementById('catenary-sidebar')?.offsetWidth, "bottom": 0};
-					mapglobal.easeTo({padding: padding, duration: 200});
+					let padding = {
+						left: document.getElementById('catenary-sidebar')?.offsetWidth,
+						bottom: 0
+					};
+					mapglobal.easeTo({ padding: padding, duration: 200 });
 				} else {
-					let padding = {"left": 0};
-					mapglobal.easeTo({padding: padding, duration: 200});
+					let padding = { left: 0 };
+					mapglobal.easeTo({ padding: padding, duration: 200 });
 				}
 			}
 		}
@@ -677,14 +686,14 @@
 	}
 
 	function setSidebarOpen() {
-		if (sidebarOpen == "full") {
-			sidebarOpen = "full";
+		if (sidebarOpen == 'full') {
+			sidebarOpen = 'full';
 		} else {
 			if (window.innerWidth < 768) {
-			sidebarOpen = 'middle';
-		} else {
-			sidebarOpen = 'full';
-		}
+				sidebarOpen = 'middle';
+			} else {
+				sidebarOpen = 'full';
+			}
 		}
 
 		moveToPos({});
@@ -735,30 +744,30 @@
 					}
 				}
 			} else {
-				console.log('desktop sidebar action')
-				if (sidebarOpen == "full") {
+				console.log('desktop sidebar action');
+				if (sidebarOpen == 'full') {
 					if (translate_x_sidebar_number < -0.001) {
-							translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
-							console.log('grow to ', translate_x_sidebar_number)
-							translate_x_sidebar = `${translate_x_sidebar_number}px`;
-							
-							collapser_left_offset_number = sidebar_width - Math.abs(translate_x_sidebar_number);
-							collapser_left_offset = `${collapser_left_offset_number}px`;
+						translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
+						console.log('grow to ', translate_x_sidebar_number);
+						translate_x_sidebar = `${translate_x_sidebar_number}px`;
+
+						collapser_left_offset_number = sidebar_width - Math.abs(translate_x_sidebar_number);
+						collapser_left_offset = `${collapser_left_offset_number}px`;
 					} else {
 						clearInterval(last_sidebar_interval_id);
 					}
 				}
 
-				if (sidebarOpen == "none") {
+				if (sidebarOpen == 'none') {
 					if (translate_x_sidebar_number > 0 - sidebar_width) {
-							translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
-							
+						translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
+
 						console.log('shrink to ', translate_x_sidebar_number, 'target', 0 - sidebar_width);
 
-							translate_x_sidebar = `${translate_x_sidebar_number}px`;
-							
-							collapser_left_offset_number -= 0.1 * Math.abs(sidebar_width);
-							collapser_left_offset = `${collapser_left_offset_number}px`;
+						translate_x_sidebar = `${translate_x_sidebar_number}px`;
+
+						collapser_left_offset_number -= 0.1 * Math.abs(sidebar_width);
+						collapser_left_offset = `${collapser_left_offset_number}px`;
 					} else {
 						clearInterval(last_sidebar_interval_id);
 					}
@@ -851,7 +860,7 @@
 
 		addEventListener('resize', (e) => {
 			console.log('resize', window.innerWidth);
-			top_margin_collapser_sidebar = `${(window.innerHeight /2) - 15}px`;
+			top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
 
 			if (previous_form_factor == 'mobile') {
 				if ((sidebarOpen = 'full')) {
@@ -930,24 +939,24 @@
 		});
 	}
 
-	onMount(() => {	
-datadogRum.init({
-    applicationId: '5201846b-e68a-4388-a47c-a9508e3f3dc2',
-    clientToken: 'pub6a98d8da258f8b43df56ceb1c6203a16',
-    // `site` refers to the Datadog site parameter of your organization
-    // see https://docs.datadoghq.com/getting_started/site/
-    site: 'datadoghq.com',
-    service: 'catenary-maps',
-    env: 'prod',
-    // Specify a version number to identify the deployed version of your application in Datadog
-    // version: '1.0.0', 
-    sessionSampleRate: 100,
-    sessionReplaySampleRate: 100,
-    trackUserInteractions: true,
-    trackResources: true,
-    trackLongTasks: true,
-    defaultPrivacyLevel: 'allow',
-});
+	onMount(() => {
+		datadogRum.init({
+			applicationId: '5201846b-e68a-4388-a47c-a9508e3f3dc2',
+			clientToken: 'pub6a98d8da258f8b43df56ceb1c6203a16',
+			// `site` refers to the Datadog site parameter of your organization
+			// see https://docs.datadoghq.com/getting_started/site/
+			site: 'datadoghq.com',
+			service: 'catenary-maps',
+			env: 'prod',
+			// Specify a version number to identify the deployed version of your application in Datadog
+			// version: '1.0.0',
+			sessionSampleRate: 100,
+			sessionReplaySampleRate: 100,
+			trackUserInteractions: true,
+			trackResources: true,
+			trackLongTasks: true,
+			defaultPrivacyLevel: 'allow'
+		});
 
 		fetch('https://birch.catenarymaps.org/getchateaus')
 			.then(function (response) {
@@ -989,14 +998,16 @@ datadogRum.init({
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
-			fadeDuration: 0,
+			fadeDuration: 0
 		});
+
+		if (markedPointCoords) {
+			new mapboxgl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
+		}
 
 		if (darkMode) {
 			map.on('style.load', () => {
-				// @ts-expect-error
 				map.setConfigProperty('basemap', 'lightPreset', 'night');
-				// @ts-expect-error
 				map.setConfigProperty('basemap', 'showTransitLabels', false);
 			});
 		}
@@ -1233,445 +1244,446 @@ datadogRum.init({
 		rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
 	/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+		rel="stylesheet"
+	/>
 </svelte:head>
 <div class="w-full">
 	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
-	
-	{#key top_margin_collapser_sidebar} 
-	<div class="fixed shadow-sm dark:shadow-gray-600 hidden md:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
-	on:click={() => {
-		if (sidebarOpen == "full") {
-			sidebarOpen = "none";
-			moveToPos({});
-		} else {
-			sidebarOpen = "full";
-			moveToPos({});
-		}
-	}}
-	on:keydown={() => {
-		if (sidebarOpen == "full") {
-			sidebarOpen = "none";
-			moveToPos({});
-		} else {
-			sidebarOpen = "full";
-			moveToPos({});
-		}
-	}}
-	style={`left: ${collapser_left_offset}; top: ${top_margin_collapser_sidebar};`}
-	>{#if sidebarOpen == "none"}
-	<span class="material-symbols-outlined block my-auto">
-		arrow_right
-		</span>
-	{/if}
-	{#if sidebarOpen == "full"}
-	<span class="material-symbols-outlined block my-auto">
-		arrow_left
-		</span>
-	{/if}
-</div>
-{/key}
 
-	{#if !$isLoading}
-	{#key translate_x_sidebar}
-	<div
-		id="catenary-sidebar"
-		style={`height: ${sidebar_height_output}; transform: translateX(${translate_x_sidebar});`}
-		class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
-	>
-
+	{#key top_margin_collapser_sidebar}
 		<div
-			class="block md:hidden py-2 flex flex-row"
-			on:mousedown={startmovesidebar}
-			on:touchstart={startmovesidebar}
-			aria-label="Move sidebar"
-			role="none"
-		>
-			<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
-		</div>
-		{#key on_sidebar_trigger}
-			<SidebarInternals {latest_item_on_stack} {darkMode} />
-		{/key}
-	</div>
-	{/key}
-	{/if}
-</div>
-{#if !$isLoading}
-<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
-	<div
-		on:click={togglelayerfeature}
-		on:keypress={togglelayerfeature}
-		class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
-	>
-		<span
-			class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
-		>
-			layers
-		</span>
-	</div>
-
-	<div
-		on:click={gonorth}
-		on:keypress={gonorth}
-		on:touchstart={gonorth}
-		aria-label="Reset Map to North"
-		class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
-	>
-		<img
-			src={current_map_heading < 7 && current_map_heading > -7
-				? darkMode === true
-					? '/icons/north.svg'
-					: '/icons/light_north.svg'
-				: '/icons/compass.svg'}
-			class="h-7"
-			style={`transform: rotate(${0 - current_map_heading}deg)`}
-		/>
-	</div>
-
-	{#if !desktopapp}
-		{#key sidebar_height_output}
-		{#if typeof geolocation == 'object'}
-		{#if typeof geolocation.coords == 'object'}
-		{#if typeof geolocation.coords.speed == 'number'}
-		<div
-		on:click={(e) => {
-			e.preventDefault();
-		}}
-		class='leading-tight  md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5'
-		style={`font-size: 0px;bottom: ${gpsbutton_bottom_offset_calc()}`}
-		>
-			<p class='leading-none'>
-				{#if geolocation}
-			{#if usunits}
-			<span class='font-semibold text-sm'>{(
-				2.23694 * geolocation.coords.speed
-			).toFixed(1).split(".")[0]}</span>
-			{:else}
-			<span  class='font-semibold text-sm'>{(
-				3.6 * geolocation.coords.speed
-			).toFixed(1).split(".")[0]}</span>
-			{/if}
-			{#if ["fr", "de", "it", "es", "se"].includes(current_locale.split("-")[0])}
-			<span  class="text-sm">,</span>
-			{:else}
-			<span  class="text-sm">.</span>
-			{/if}
-			{#if usunits}
-			<span  class="text-sm">{(
-				2.23694 * geolocation.coords.speed
-			).toFixed(1).split(".")[1]}</span>
-			{:else}
-			<span class="text-sm">{(
-				3.6 * geolocation.coords.speed
-			).toFixed(1).split(".")[1]}</span>
-			{/if}
-			{#if usunits}<br/>
-			<span class="text-xs">mph</span>
-			{:else}<br/>
-			<span class="text-xs">km/h</span>
-			{/if}
-			{/if}
-			</p>
-		</div>
-		{/if}
-		{/if}
-		{/if}
-			<div
-				on:click={gpsbutton}
-				on:keydown={gpsbutton}
-				on:touchstart={gpsbutton}
-				style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
-				class="{lockongps
-					? ' text-blue-500 dark:text-blue-300'
-					: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-			>
-				<span class="material-symbols-outlined align-middle text-lg select-none">
-					{#if lockongps == true}my_location{:else}location_searching{/if}
-				</span>
-			</div>
-		{/key}
-	{/if}
-</div>
-{/if}
-
-{#if !$isLoading}
-<div
-	class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
-		? ''
-		: 'hidden'}"
->
-	<div class="flex flex-row align-middle">
-		<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
-		<div class="ml-auto">
-			<CloseButton
-				onclose={() => {
-					layersettingsBox = false;
-				}}
-				moreclasses=""
-				parentclass=""
-			/>
-		</div>
-	</div>
-	<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
-		<Layerselectionbox
-			text={$_('headingIntercityRail')}
-			changesetting={() => {
-				selectedSettingsTab = 'intercityrail';
-			}}
-			cssclass={`${
-				selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		/>
-
-		<Layerselectionbox
-			text={$_('headingLocalRail')}
-			changesetting={() => {
-				selectedSettingsTab = 'localrail';
-			}}
-			cssclass={`${
-				selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		/>
-
-		<Layerselectionbox
-			text={$_("headingBus")}
-			changesetting={() => {
-				selectedSettingsTab = 'bus';
-			}}
-			cssclass={`${
-				selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		/>
-
-		<Layerselectionbox
-			text={$_("headingOther")}
-			changesetting={() => {
-				selectedSettingsTab = 'other';
-			}}
-			cssclass={`${
-				selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
-		/>
-
-		<div
+			class="fixed shadow-sm dark:shadow-gray-600 hidden md:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
 			on:click={() => {
-				selectedSettingsTab = 'more';
+				if (sidebarOpen == 'full') {
+					sidebarOpen = 'none';
+					moveToPos({});
+				} else {
+					sidebarOpen = 'full';
+					moveToPos({});
+				}
 			}}
 			on:keydown={() => {
-				selectedSettingsTab = 'more';
+				if (sidebarOpen == 'full') {
+					sidebarOpen = 'none';
+					moveToPos({});
+				} else {
+					sidebarOpen = 'full';
+					moveToPos({});
+				}
 			}}
-			class={`${
-				selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
-			} w-1/2 py-1 px-1`}
+			style={`left: ${collapser_left_offset}; top: ${top_margin_collapser_sidebar};`}
 		>
-			<p class="w-full align-center text-center">{$_("headingMisc")}</p>
+			{#if sidebarOpen == 'none'}
+				<span class="material-symbols-outlined block my-auto"> arrow_right </span>
+			{/if}
+			{#if sidebarOpen == 'full'}
+				<span class="material-symbols-outlined block my-auto"> arrow_left </span>
+			{/if}
 		</div>
-	</div>
+	{/key}
 
-	{#if selectedSettingsTab === 'more'}
-		<div class="flex flex-row gap-x-1 flex-wrap">
-			<Layerbutton
-				bind:layersettings
-				selectedSettingsTab="more"
-				change="foamermode"
-				nestedchange="infra"
-				name={$_("orminfra")}
-				urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				selectedSettingsTab="more"
-				change="foamermode"
-				nestedchange="maxspeed"
-				name={$_("ormspeeds")}
-				urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				selectedSettingsTab="more"
-				change="foamermode"
-				nestedchange="signalling"
-				name={$_("ormsignalling")}
-				urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				selectedSettingsTab="more"
-				change="foamermode"
-				nestedchange="electrification"
-				name={$_("ormelectrification")}
-				urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				selectedSettingsTab="more"
-				change="foamermode"
-				nestedchange="gauge"
-				name={$_("ormgauge")}
-				urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
-				{runSettingsAdapt}
-			/>
-			<Layerbutton
-				bind:layersettings
-				selectedSettingsTab="more"
-				change="foamermode"
-				nestedchange="dummy"
-				name={$_("none")}
-				urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
-				{runSettingsAdapt}
-			/>
-		</div>
-
-		<div>
-			<input
-				on:click={(x) => {
-					show_zombie_buses_store.update((value) => !value) ;
-
-					localStorage.setItem('showzombiebuses', String(showzombiebuses));
-
-					runSettingsAdapt();
-				}}
-				on:keydown={(x) => {
-					show_zombie_buses_store.update((value) => !value) ;
-
-					localStorage.setItem('showzombiebuses', String(showzombiebuses));
-
-					runSettingsAdapt();
-				}}
-				checked={showzombiebuses}
-				id="show-zombie-buses"
-				type="checkbox"
-				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-			/>
-			<label for="show-zombie-buses" class="ml-2">{$_("showtripless")}</label>
-		</div>
-		<div>
-			<input
-				on:click={(x) => {
-					show_my_location_store.update((value) => !value) ;
-
-					localStorage.setItem('show-my-location', String(showzombiebuses));
-
-					runSettingsAdapt();
-				}}
-				on:keydown={(x) => {
-					show_my_location_store.update((value) => !value) ;
-
-					localStorage.setItem('show-my-location', String(showzombiebuses));
-
-					runSettingsAdapt();
-				}}
-				checked={showzombiebuses}
-				id="show-zombie-buses"
-				type="checkbox"
-				class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-			/>
-			<label for="show-my-location" class="ml-2">{$_("showmylocation")}</label>
+	{#if !$isLoading}
+		{#key translate_x_sidebar}
+			<div
+				id="catenary-sidebar"
+				style={`height: ${sidebar_height_output}; transform: translateX(${translate_x_sidebar});`}
+				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+			>
+				<div
+					class="block md:hidden py-2 flex flex-row"
+					on:mousedown={startmovesidebar}
+					on:touchstart={startmovesidebar}
+					aria-label="Move sidebar"
+					role="none"
+				>
+					<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
+				</div>
+				{#key on_sidebar_trigger}
+					<SidebarInternals {latest_item_on_stack} {darkMode} />
+				{/key}
 			</div>
-	{/if}
-
-	{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
-		<div class="flex flex-row gap-x-1">
-			<Layerbutton
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="shapes"
-				name={$_("routes")}
-				urlicon="/routesicon.svg"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="labelshapes"
-				name={$_("labels")}
-				urlicon="/labelsicon.svg"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="stops"
-				name={$_("stops")}
-				urlicon="/stopsicon.svg"
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="stoplabels"
-				name={$_("stopnames")}
-				urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
-				{runSettingsAdapt}
-			/>
-
-			<Layerbutton
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="visible"
-				name={$_("vehicles")}
-				urlicon="/vehiclesicon.svg"
-				{runSettingsAdapt}
-			/>
-		</div>
-		<div class="flex flex-row gap-x-1">
-			<Realtimelabel
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="route"
-				name={$_("showroute")}
-				symbol="route"
-				{runSettingsAdapt}
-			/>
-			<Realtimelabel
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="trip"
-				name={$_("showtrip")}
-				symbol="mode_of_travel"
-				{runSettingsAdapt}
-			/>
-			<Realtimelabel
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="vehicle"
-				name={$_("showvehicle")}
-				symbol="train"
-				{runSettingsAdapt}
-			/>
-
-			<Realtimelabel
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="headsign"
-				name={$_("headsign")}
-				symbol="sports_score"
-				{runSettingsAdapt}
-			/>
-
-			<Realtimelabel
-				bind:layersettings
-				bind:selectedSettingsTab
-				change="speed"
-				name={$_("showspeed")}
-				symbol="speed"
-				{runSettingsAdapt}
-			/>
-		</div>
+		{/key}
 	{/if}
 </div>
+{#if !$isLoading}
+	<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
+		<div
+			on:click={togglelayerfeature}
+			on:keypress={togglelayerfeature}
+			class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		>
+			<span
+				class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
+			>
+				layers
+			</span>
+		</div>
+
+		<div
+			on:click={gonorth}
+			on:keypress={gonorth}
+			on:touchstart={gonorth}
+			aria-label="Reset Map to North"
+			class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+		>
+			<img
+				src={current_map_heading < 7 && current_map_heading > -7
+					? darkMode === true
+						? '/icons/north.svg'
+						: '/icons/light_north.svg'
+					: '/icons/compass.svg'}
+				class="h-7"
+				style={`transform: rotate(${0 - current_map_heading}deg)`}
+			/>
+		</div>
+
+		{#if !desktopapp}
+			{#key sidebar_height_output}
+				{#if typeof geolocation == 'object'}
+					{#if typeof geolocation.coords == 'object'}
+						{#if typeof geolocation.coords.speed == 'number'}
+							<div
+								on:click={(e) => {
+									e.preventDefault();
+								}}
+								class="leading-tight md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5"
+								style={`font-size: 0px;bottom: ${gpsbutton_bottom_offset_calc()}`}
+							>
+								<p class="leading-none">
+									{#if geolocation}
+										{#if usunits}
+											<span class="font-semibold text-sm"
+												>{(2.23694 * geolocation.coords.speed).toFixed(1).split('.')[0]}</span
+											>
+										{:else}
+											<span class="font-semibold text-sm"
+												>{(3.6 * geolocation.coords.speed).toFixed(1).split('.')[0]}</span
+											>
+										{/if}
+										{#if ['fr', 'de', 'it', 'es', 'se'].includes(current_locale.split('-')[0])}
+											<span class="text-sm">,</span>
+										{:else}
+											<span class="text-sm">.</span>
+										{/if}
+										{#if usunits}
+											<span class="text-sm"
+												>{(2.23694 * geolocation.coords.speed).toFixed(1).split('.')[1]}</span
+											>
+										{:else}
+											<span class="text-sm"
+												>{(3.6 * geolocation.coords.speed).toFixed(1).split('.')[1]}</span
+											>
+										{/if}
+										{#if usunits}<br />
+											<span class="text-xs">mph</span>
+										{:else}<br />
+											<span class="text-xs">km/h</span>
+										{/if}
+									{/if}
+								</p>
+							</div>
+						{/if}
+					{/if}
+				{/if}
+				<div
+					on:click={gpsbutton}
+					on:keydown={gpsbutton}
+					on:touchstart={gpsbutton}
+					style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+					class="{lockongps
+						? ' text-blue-500 dark:text-blue-300'
+						: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+				>
+					<span class="material-symbols-outlined align-middle text-lg select-none">
+						{#if lockongps == true}my_location{:else}location_searching{/if}
+					</span>
+				</div>
+			{/key}
+		{/if}
+	</div>
 {/if}
+
+{#if !$isLoading}
+	<div
+		class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+			? ''
+			: 'hidden'}"
+	>
+		<div class="flex flex-row align-middle">
+			<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
+			<div class="ml-auto">
+				<CloseButton
+					onclose={() => {
+						layersettingsBox = false;
+					}}
+					moreclasses=""
+					parentclass=""
+				/>
+			</div>
+		</div>
+		<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
+			<Layerselectionbox
+				text={$_('headingIntercityRail')}
+				changesetting={() => {
+					selectedSettingsTab = 'intercityrail';
+				}}
+				cssclass={`${
+					selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
+				} w-1/2 py-1 px-1`}
+			/>
+
+			<Layerselectionbox
+				text={$_('headingLocalRail')}
+				changesetting={() => {
+					selectedSettingsTab = 'localrail';
+				}}
+				cssclass={`${
+					selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+				} w-1/2 py-1 px-1`}
+			/>
+
+			<Layerselectionbox
+				text={$_('headingBus')}
+				changesetting={() => {
+					selectedSettingsTab = 'bus';
+				}}
+				cssclass={`${
+					selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
+				} w-1/2 py-1 px-1`}
+			/>
+
+			<Layerselectionbox
+				text={$_('headingOther')}
+				changesetting={() => {
+					selectedSettingsTab = 'other';
+				}}
+				cssclass={`${
+					selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
+				} w-1/2 py-1 px-1`}
+			/>
+
+			<div
+				on:click={() => {
+					selectedSettingsTab = 'more';
+				}}
+				on:keydown={() => {
+					selectedSettingsTab = 'more';
+				}}
+				class={`${
+					selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
+				} w-1/2 py-1 px-1`}
+			>
+				<p class="w-full align-center text-center">{$_('headingMisc')}</p>
+			</div>
+		</div>
+
+		{#if selectedSettingsTab === 'more'}
+			<div class="flex flex-row gap-x-1 flex-wrap">
+				<Layerbutton
+					bind:layersettings
+					selectedSettingsTab="more"
+					change="foamermode"
+					nestedchange="infra"
+					name={$_('orminfra')}
+					urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					selectedSettingsTab="more"
+					change="foamermode"
+					nestedchange="maxspeed"
+					name={$_('ormspeeds')}
+					urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					selectedSettingsTab="more"
+					change="foamermode"
+					nestedchange="signalling"
+					name={$_('ormsignalling')}
+					urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					selectedSettingsTab="more"
+					change="foamermode"
+					nestedchange="electrification"
+					name={$_('ormelectrification')}
+					urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					selectedSettingsTab="more"
+					change="foamermode"
+					nestedchange="gauge"
+					name={$_('ormgauge')}
+					urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
+					{runSettingsAdapt}
+				/>
+				<Layerbutton
+					bind:layersettings
+					selectedSettingsTab="more"
+					change="foamermode"
+					nestedchange="dummy"
+					name={$_('none')}
+					urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
+					{runSettingsAdapt}
+				/>
+			</div>
+
+			<div>
+				<input
+					on:click={(x) => {
+						show_zombie_buses_store.update((value) => !value);
+
+						localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+						runSettingsAdapt();
+					}}
+					on:keydown={(x) => {
+						show_zombie_buses_store.update((value) => !value);
+
+						localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+						runSettingsAdapt();
+					}}
+					checked={showzombiebuses}
+					id="show-zombie-buses"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="show-zombie-buses" class="ml-2">{$_('showtripless')}</label>
+			</div>
+			<div>
+				<input
+					on:click={(x) => {
+						show_my_location_store.update((value) => !value);
+
+						localStorage.setItem('show-my-location', String(showzombiebuses));
+
+						runSettingsAdapt();
+					}}
+					on:keydown={(x) => {
+						show_my_location_store.update((value) => !value);
+
+						localStorage.setItem('show-my-location', String(showzombiebuses));
+
+						runSettingsAdapt();
+					}}
+					checked={showzombiebuses}
+					id="show-zombie-buses"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="show-my-location" class="ml-2">{$_('showmylocation')}</label>
+			</div>
+		{/if}
+
+		{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
+			<div class="flex flex-row gap-x-1">
+				<Layerbutton
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="shapes"
+					name={$_('routes')}
+					urlicon="/routesicon.svg"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="labelshapes"
+					name={$_('labels')}
+					urlicon="/labelsicon.svg"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="stops"
+					name={$_('stops')}
+					urlicon="/stopsicon.svg"
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="stoplabels"
+					name={$_('stopnames')}
+					urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
+					{runSettingsAdapt}
+				/>
+
+				<Layerbutton
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="visible"
+					name={$_('vehicles')}
+					urlicon="/vehiclesicon.svg"
+					{runSettingsAdapt}
+				/>
+			</div>
+			<div class="flex flex-row gap-x-1">
+				<Realtimelabel
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="route"
+					name={$_('showroute')}
+					symbol="route"
+					{runSettingsAdapt}
+				/>
+				<Realtimelabel
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="trip"
+					name={$_('showtrip')}
+					symbol="mode_of_travel"
+					{runSettingsAdapt}
+				/>
+				<Realtimelabel
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="vehicle"
+					name={$_('showvehicle')}
+					symbol="train"
+					{runSettingsAdapt}
+				/>
+
+				<Realtimelabel
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="headsign"
+					name={$_('headsign')}
+					symbol="sports_score"
+					{runSettingsAdapt}
+				/>
+
+				<Realtimelabel
+					bind:layersettings
+					bind:selectedSettingsTab
+					change="speed"
+					name={$_('showspeed')}
+					symbol="speed"
+					{runSettingsAdapt}
+				/>
+			</div>
+		{/if}
+	</div>
+{/if}
+
 <style>
 	* {
 		cursor: default;
