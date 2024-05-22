@@ -158,7 +158,7 @@
 	let desktopapp = urlParams.get('desktop') == 'true';
 	let mobileapp = urlParams.get('utm_source') == 'pwa';
 
-	let markLoadInPoint = urlParams.get('mp') == 'true';
+	let markLoadInPoint = urlParams.get('mp') == 'true' || urlParams.get('framework-point') == 'true';
 	let markedPointCoords: number[];
 
 	if (typeof window != 'undefined') {
@@ -556,15 +556,12 @@
 	let style: string = darkMode
 		? 'mapbox://styles/kylerschin/clw2s5gsn01du01rdbjlf0nhr'
 		: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
-	/*
+
 	if (typeof window != 'undefined') {
 		let desiredStyle = embedmode
 			? urlParams.get('framework-style') || window.localStorage.mapStyle
 			: window.localStorage.mapStyle;
 
-		if (desiredStyle == '3d') {
-			style = undefined;
-		}
 		if (desiredStyle == 'sat') {
 			style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
 		}
@@ -582,7 +579,7 @@
 		if (desiredStyle == 'minimal') {
 			style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
 		}
-	}*/
+	}
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
