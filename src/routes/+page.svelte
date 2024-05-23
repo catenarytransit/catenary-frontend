@@ -161,7 +161,31 @@
 	let markLoadInPoint = urlParams.get('mp') == 'true' || urlParams.get('framework-point') == 'true';
 	let markedPointCoords: number[];
 
+	let showzombiebuses = false;
+
+	show_zombie_buses_store.subscribe((value) => {
+		showzombiebuses = value;
+	});
+
+	let show_my_location = true;
+
+	show_my_location_store.subscribe((value) => {
+		show_my_location = value;
+	});
+
 	if (typeof window != 'undefined') {
+		let cached_show_my_location_settings = localStorage.getItem('showmylocation');
+
+		if (cached_show_my_location_settings == "false") {
+			show_my_location_store.set(false);
+		}
+
+		let cached_show_zombie_buses_settings = localStorage.getItem('showzombiebuses');
+
+		if (cached_show_zombie_buses_settings == "true") {
+			show_zombie_buses_store.set(true);
+		}
+
 		if (markLoadInPoint) {
 			markedPointCoords = window.location.hash
 				.replace('#pos=', '')
@@ -198,17 +222,6 @@
 
 	let chateaus: any = null;
 	let chateaus_in_frame: Writable<string[]> = writable([]);
-	let showzombiebuses = false;
-
-	show_zombie_buses_store.subscribe((value) => {
-		showzombiebuses = value;
-	});
-
-	let show_my_location = true;
-
-	show_my_location_store.subscribe((value) => {
-		show_my_location = value;
-	});
 
 	const layerspercategory = {
 		bus: {
@@ -1572,14 +1585,14 @@
 					on:click={(x) => {
 						show_my_location_store.update((value) => !value);
 
-						localStorage.setItem('show-my-location', String("showmylocation"));
+						localStorage.setItem('show-my-location', String(show_my_location));
 
 						runSettingsAdapt();
 					}}
 					on:keydown={(x) => {
 						show_my_location_store.update((value) => !value);
 
-						localStorage.setItem('show-my-location', String("showmylocation"));
+						localStorage.setItem('show-my-location', String(show_my_location));
 
 						runSettingsAdapt();
 					}}
