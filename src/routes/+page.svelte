@@ -1159,7 +1159,11 @@
 					map.setLayoutProperty('bearing_position', 'visibility', 'visible');
 				} else {
 					if (nobearingposlayer) {
+						if (show_my_location) {
 						map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+						} else {
+							map.setLayoutProperty('nobearing_position', 'visibility', 'none');
+						}
 					}
 
 					if (bearingposlayer) {
@@ -1568,18 +1572,18 @@
 					on:click={(x) => {
 						show_my_location_store.update((value) => !value);
 
-						localStorage.setItem('show-my-location', String(showzombiebuses));
+						localStorage.setItem('show-my-location', String("showmylocation"));
 
 						runSettingsAdapt();
 					}}
 					on:keydown={(x) => {
 						show_my_location_store.update((value) => !value);
 
-						localStorage.setItem('show-my-location', String(showzombiebuses));
+						localStorage.setItem('show-my-location', String("showmylocation"));
 
 						runSettingsAdapt();
 					}}
-					checked={showzombiebuses}
+					checked={show_my_location}
 					id="show-zombie-buses"
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"

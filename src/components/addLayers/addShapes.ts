@@ -1,5 +1,3 @@
-import { removeWeekendStops } from "../removeWeekendStops";
-
 export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
     
 			const urlParams = new URLSearchParams(window.location.search);
@@ -14,7 +12,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
         filter:
             [
                 'all',
-                ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+             //   ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
                 [
                     '!',
                     [
@@ -70,7 +68,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
                         ['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
                     ]
                 ],
-                ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+             //   ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
                 //['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
             ]
         ,
