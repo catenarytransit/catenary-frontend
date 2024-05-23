@@ -5,22 +5,18 @@
     export let runSettingsAdapt:any;
     export let symbol:string;
     export let change:string;
-    
+
+    function toggle() {
+        layersettings[selectedSettingsTab].label[change] = !layersettings[selectedSettingsTab].label[change] ;
+        runSettingsAdapt();
+        console.log(layersettings[selectedSettingsTab].label[change])
+    }
 </script>
 
 {#if layersettings}
 {#if layersettings[selectedSettingsTab]}
-<div on:click={() => {
-    layersettings[selectedSettingsTab].label[change] = !layersettings[selectedSettingsTab].label[change] ;
-    runSettingsAdapt();
-    console.log(layersettings[selectedSettingsTab].label[change])
-}}
-
-on:keydown={() => {
-    layersettings[selectedSettingsTab].label[change]  = !layersettings[selectedSettingsTab].label[change] ;
-    runSettingsAdapt();
-    console.log(layersettings[selectedSettingsTab].label[change])
-}}
+<div on:click={toggle}
+on:keydown={toggle}
 >
     <!--Toggle Routes-->
     <div
