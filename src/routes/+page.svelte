@@ -174,7 +174,7 @@
 	});
 
 	if (typeof window != 'undefined') {
-		let cached_show_my_location_settings = localStorage.getItem('showmylocation');
+		let cached_show_my_location_settings = localStorage.getItem('show-my-location');
 
 		if (cached_show_my_location_settings == "false") {
 			show_my_location_store.set(false);
