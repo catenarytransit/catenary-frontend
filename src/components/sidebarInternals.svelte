@@ -272,11 +272,11 @@
 					<p>{this_locale}</p>
 					<select
 						bind:value={$locale}
-						class="text-black bg-white dark:bg-slate-900 text-white flex-grow border border-slate-500"
+						class="text-black bg-white dark:bg-slate-900 dark:text-white flex-grow border border-slate-500"
 					>
 						{#each $locales as locale}
 							<option value={locale}
-							class="text-black bg-white dark:bg-slate-900 text-white"
+							class="text-black bg-white dark:bg-slate-900 dark:text-white"
 								>{locale_code_to_name(locale)}</option
 							>
 						{/each}
