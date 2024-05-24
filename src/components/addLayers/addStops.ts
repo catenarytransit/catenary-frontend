@@ -250,27 +250,21 @@ map.addLayer({
 
    map.addLayer({
     id: layerspercategory.other.stops,
-    type: 'symbol',
-    source: 'railstops',
+    type: 'circle',
+    source: 'otherstops',
     'source-layer': 'data',
     layout: {
-        'text-field': ['get', 'displayname'],
-        'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-        'text-size': ['interpolate', ['linear'], ['zoom'], 9, 6, 15, 9, 17, 10],
-        'text-radial-offset': 1,
-        //'text-ignore-placement': true,
-        //'icon-ignore-placement': false,
-        //'text-allow-overlap': true,
-        //'symbol-avoid-edges': false,
-        'text-font': ['Barlow Bold', 'Arial Unicode MS Regular'],
-        
     },
     paint: {
-        
-        'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
-        'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-        'text-halo-width': 1,
-        'text-emissive-strength': 1
+        'circle-color': '#1c2636',
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 4, 15, 5],
+        'circle-stroke-color': darkMode
+            ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd']
+            : '#333333',
+        'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+        'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
+        'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
+        'circle-emissive-strength': 1
     },
     filter: [
         'all',
@@ -279,21 +273,6 @@ map.addLayer({
             ['>',['zoom'],16],['==', null, ['get', "parent_station"]]
             
         ],
-        ['any',
-        ['in', 4, ['get', 'route_types']],
-        ['in', 6, ['get', "children_route_types"]],
-        ['in', 6, ['get', 'route_types']],
-        ['in', 6, ['get', "children_route_types"]],
-        ['in', 7, ['get', 'route_types']],
-        ['in', 7, ['get', "children_route_types"]]
-        ],
-        
-        ['!',['in', 0, ['get', "children_route_types"]]],
-        ['!',['in', 2, ['get', "children_route_types"]]],
-        ['!',['in', 1, ['get', "children_route_types"]]],
-        ['!',['in', 0, ['get', "route_types"]]],
-        ['!',['in', 1, ['get', "route_types"]]],
-        ['!',['in', 2, ['get', "route_types"]]]
     ],
     minzoom: 9
 });
@@ -301,7 +280,7 @@ map.addLayer({
    map.addLayer({
     id: layerspercategory.other.labelstops,
     type: 'symbol',
-    source: 'railstops',
+    source: 'otherstops',
     'source-layer': 'data',
     layout: {
         'text-field': ['get', 'displayname'],
@@ -313,10 +292,8 @@ map.addLayer({
         //'text-allow-overlap': true,
         //'symbol-avoid-edges': false,
         'text-font': ['Barlow Bold', 'Arial Unicode MS Regular'],
-        
     },
     paint: {
-        
         'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
         'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
         'text-halo-width': 1,
@@ -330,16 +307,6 @@ map.addLayer({
             ['==', null, ['get', "parent_station"]]
             
         ],
-        ['any',
-
-        ],
-        ['!',['in', 0, ['get', "children_route_types"]]],
-        ['!',['in', 1, ['get', "children_route_types"]]],
-        ['!',['in', 2, ['get', "children_route_types"]]],
-        
-        ['!',['in', 0, ['get', "route_types"]]],
-        ['!',['in', 1, ['get', "route_types"]]],
-        ['!',['in', 2, ['get', "route_types"]]],
     ],
     minzoom: 9
 });

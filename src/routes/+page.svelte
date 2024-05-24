@@ -515,22 +515,22 @@
 			//handle custom icons
 			let get_custom_icons_category_to_layer_id = get(custom_icons_category_to_layer_id);
 
-			if (get_custom_icons_category_to_layer_id) {
-				Object.entries(get_custom_icons_category_to_layer_id).map((x) => {
-					let category = x[0];
-					let layer_id = x[1];
-
+			Object.entries(get_custom_icons_category_to_layer_id).forEach((x) => {
+				let category = x[0];
+				x[1].forEach((layer_id) => {
 					let layer = mapglobal.getLayer(layer_id);
 
 					if (layer) {
 						if (layersettings[category].visible) {
 							mapglobal.setLayoutProperty(layer_id, 'visibility', 'visible');
+							console.log('set', layer_id, "to show")
 						} else {
 							mapglobal.setLayoutProperty(layer_id, 'visibility', 'none');
+							console.log("hide", layer_id)
 						}
 					}
 				});
-			}
+			});
 
 			true;
 		}

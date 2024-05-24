@@ -82,6 +82,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
             'text-size': ['interpolate', ['linear'], ['zoom'], 5, 7, 9, 8, 11, 8, 13, 10],
             'text-ignore-placement': false,
             'text-allow-overlap': false,
+            "text-pitch-alignment": "viewport",
             'symbol-spacing':
                 window?.innerWidth > 750
                     ? ['step', ['zoom'], 200, 12, 100, 13, 100, 15, 120, 20, 150]
@@ -202,6 +203,7 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
             'text-ignore-placement': false,
             'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
             'text-allow-overlap': false,
+            "text-pitch-alignment": "viewport",
             visibility: 'none'
         },
         paint: {
@@ -271,7 +273,9 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
 
             'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
             'text-allow-overlap': false,
-            visibility: 'none'
+            visibility: 'none',
+            
+            "text-pitch-alignment": "viewport",
         },
         paint: {
             'text-color': ['concat', '#', ['get', 'text_color']],
