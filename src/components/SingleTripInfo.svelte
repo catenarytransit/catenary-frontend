@@ -638,11 +638,13 @@
 										</p>
 										<p class="ml-auto text-right">
 											{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
-												<TimeDiff
-													diff={(stoptime.rt_departure_time ||
-														stoptime.scheduled_departure_time_unix_seconds) -
-														current_time / 1000}
-												/>
+										{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
+										<TimeDiff
+										diff={(stoptime.rt_departure_time ||
+											stoptime.scheduled_departure_time_unix_seconds) -
+											current_time / 1000}
+									/>
+										{/if}
 											{/if}
 										</p>
 									</div>
