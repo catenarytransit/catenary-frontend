@@ -7,7 +7,7 @@ import {
 	realtime_vehicle_route_cache_hash_store,
 	realtime_vehicle_locations_last_updated_store,
 	dark_mode_store,
-    usunits_store
+	usunits_store
 } from '../globalstores';
 import { add_bunny_layer, make_custom_icon_source, new_jeans_buses } from './addLayers/customIcons';
 import mapboxgl from 'mapbox-gl';
@@ -98,8 +98,8 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 	const darkMode = get(dark_mode_store);
 	const realtime_vehicle_locations = get(realtime_vehicle_locations_store);
 	const realtime_vehicle_route_cache = get(realtime_vehicle_route_cache_store);
-    const usunits = get(usunits_store);
-    //console.log( category, 'data contains', realtime_vehicle_locations[category]);
+	const usunits = get(usunits_store);
+	//console.log( category, 'data contains', realtime_vehicle_locations[category]);
 
 	const source_name: string = category_name_to_source_name(category);
 
@@ -112,7 +112,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 				.map(([rt_id, vehicle_data]) => {
 					const vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
 					let colour = '#aaaaaa';
-                    let text_colour: string = '#000000';
+					let text_colour: string = '#000000';
 
 					let tripIdLabel = '';
 					let trip_short_name = null;
@@ -159,11 +159,17 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 									maptag = route.route_long_name;
 								}
 								colour = route.route_colour;
-                                text_colour = route.route_text_colour;
+								text_colour = route.route_text_colour;
 							} else {
-								console.log('Could not find route for ', chateau_id, category, routeId, realtime_vehicle_route_cache[chateau_id][category]);
+								console.log(
+									'Could not find route for ',
+									chateau_id,
+									category,
+									routeId,
+									realtime_vehicle_route_cache[chateau_id][category]
+								);
 							}
-text_colour
+							text_colour;
 							switch (maptag) {
 								case '':
 									break;
@@ -305,20 +311,24 @@ text_colour
 							//keep to degrees as gtfs specs
 							bearing: vehicle_data?.position?.bearing,
 							has_bearing: vehicle_data?.position?.bearing != null,
-							maptag: fixRouteName(chateau_id, maptag, routeId).replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
+							maptag: fixRouteName(chateau_id, maptag, routeId)
+								.replace('Counterclockwise', 'ACW')
+								.replace('Clockwise', 'CW'),
 							trip_short_name: trip_short_name,
 							route_short_name: route_short_name,
 							route_long_name: route_long_name,
 							contrastdarkmode: contrastdarkmode,
 							contrastdarkmodebearing,
 							routeId: routeId,
-							headsign: fixHeadsignText(headsign, maptag).replace("Counterclockwise", "ACW").replace("Clockwise", "CW"),
+							headsign: fixHeadsignText(headsign, maptag)
+								.replace('Counterclockwise', 'ACW')
+								.replace('Clockwise', 'CW'),
 							timestamp: vehicle_data.timestamp,
 							id: rt_id,
-                            text_color: text_colour,
+							text_color: text_colour,
 							trip_id: vehicle_data.trip?.trip_id,
 							start_time: vehicle_data.trip?.start_time,
-							start_date: vehicle_data.trip?.start_date,
+							start_date: vehicle_data.trip?.start_date
 						},
 						geometry: {
 							type: 'Point',
@@ -329,29 +339,72 @@ text_colour
 		)
 		.flat();
 
-	if (category == 'bus') {
-		const tokki_source = map.getSource('tokkibussource');
-
-		const tokki_features = features.filter((x) => {
-			if (new_jeans_buses[x.properties.chateau]) {
-				if (new_jeans_buses[x.properties.chateau].has(x.properties.vehicleIdLabel)) {
-					return true;
-				}
-			}
-
-			return false;
-		});
-
-		tokki_source.setData({
-			type: 'FeatureCollection',
-			features: tokki_features
-		});
-	}
-
 	//console.log('rerendering', category, 'with', features);
 
 	source.setData({
 		type: 'FeatureCollection',
 		features: features
 	});
+
+	if (category == 'bus') {
+		const tokki_source = map.getSource('tokkibussource');
+
+		if (tokki_source) {
+			const tokki_features = [...features]
+			.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == "string")
+				.filter((x) => {
+					if (new_jeans_buses[x.properties.chateau]) {
+						if (new_jeans_buses[x.properties.chateau].has(x.properties.vehicleIdLabel)) {
+							return true;
+						}
+					}
+					return false;
+				});
+
+			tokki_source.setData({
+				type: 'FeatureCollection',
+				features: tokki_features
+			});
+		}
+
+		const rainbowbussource = map.getSource('rainbowbussource');
+
+		if (rainbowbussource) {
+			const rainbowbus_features = [...features]
+				.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == "string")
+				.filter(
+					(x) =>
+						x.properties.chateau == 'metro~losangeles' &&
+					x.properties.vehicleIdLabel.contains('3854')
+				);
+
+			rainbowbussource.setData({
+				type: 'FeatureCollection',
+				features: rainbowbus_features
+			});
+		}
+	}
+
+	if (category == 'metro') {
+		const rainbow_source = map.getSource('rainbowtrainsource');
+
+		if (rainbow_source) {
+			const rainbow_features = [...features]
+				.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == "string")
+				.filter(
+					(x) =>
+						x.properties.chateau == 'metro~losangeles' &&
+						x.properties.vehicleIdLabel.contains('1162')
+				);
+
+			rainbow_source.setData({
+				type: 'FeatureCollection',
+				features: rainbow_features
+			});
+
+			console.log('rainbow source set', rainbow_features);
+		} else {
+			console.log('no rainbow source');
+		}
+	}
 }

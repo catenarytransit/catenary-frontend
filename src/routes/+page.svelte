@@ -1,7 +1,7 @@
 <script lang="ts">
 	import mapboxgl from 'mapbox-gl';
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
+	import { writable, get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 	import Realtimelabel from '../realtimelabel.svelte';
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
@@ -25,7 +25,8 @@
 		lock_on_gps_store,
 		usunits_store,
 		show_zombie_buses_store,
-		show_my_location_store
+		show_my_location_store,
+		custom_icons_category_to_layer_id
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -511,6 +512,26 @@
 
 			localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
 
+			//handle custom icons
+			let get_custom_icons_category_to_layer_id = get(custom_icons_category_to_layer_id);
+
+			if (get_custom_icons_category_to_layer_id) {
+				Object.entries(get_custom_icons_category_to_layer_id).map((x) => {
+					let category = x[0];
+					let layer_id = x[1];
+
+					let layer = mapglobal.getLayer(layer_id);
+
+					if (layer) {
+						if (layersettings[category].visible) {
+							mapglobal.setLayoutProperty(layer_id, 'visibility', 'visible');
+						} else {
+							mapglobal.setLayoutProperty(layer_id, 'visibility', 'none');
+						}
+					}
+				});
+			}
+
 			true;
 		}
 	}
@@ -756,11 +777,9 @@
 					}
 				}
 			} else {
-				console.log('desktop sidebar action');
 				if (sidebarOpen == 'full') {
 					if (translate_x_sidebar_number < -0.001) {
 						translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
-						console.log('grow to ', translate_x_sidebar_number);
 						translate_x_sidebar = `${translate_x_sidebar_number}px`;
 
 						collapser_left_offset_number = sidebar_width - Math.abs(translate_x_sidebar_number);
@@ -774,7 +793,6 @@
 					if (translate_x_sidebar_number > 0 - sidebar_width) {
 						translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
 
-						console.log('shrink to ', translate_x_sidebar_number, 'target', 0 - sidebar_width);
 
 						translate_x_sidebar = `${translate_x_sidebar_number}px`;
 
@@ -871,7 +889,6 @@
 		}
 
 		addEventListener('resize', (e) => {
-			console.log('resize', window.innerWidth);
 			top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
 
 			if (previous_form_factor == 'mobile') {
@@ -907,7 +924,6 @@
 		});
 
 		addEventListener('touchmove', (e) => {
-			console.log('touchmove', e);
 			if (currently_holding_sidebar_grabber) {
 				console.log('sidebar touchmove', e);
 				mousemovesidebar(e);
@@ -916,7 +932,6 @@
 
 		addEventListener('mousemove', (e) => {
 			if (currently_holding_sidebar_grabber) {
-				console.log('sidebar mousemove', e);
 				mousemovesidebar(e);
 			}
 		});
@@ -932,12 +947,10 @@
 				startmovesidebar(e);
 			});
 		} else {
-			console.log('sidebar grabber not found');
 		}
 
 		addEventListener('touchend', (e) => {
 			if (currently_holding_sidebar_grabber) {
-				console.log('Let go');
 				currently_holding_sidebar_grabber = false;
 				letgosidebar(e);
 			}
@@ -1088,14 +1101,10 @@
 		});
 
 		const successCallback = (position: any) => {
-			//console.log(position);
 
 			let location = position;
 
 			if (location) {
-				//console.log('set geo to ', JSON.stringify({...location}));
-
-				//console.log('coords', location.coords.longitude, location.coords.latitude);
 
 				localStorage.setItem(
 					'cachegeolocation',

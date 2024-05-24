@@ -305,11 +305,10 @@ export function setup_load_map(
 			}
 		});
 
+		make_custom_icon_source(map);
 		add_bunny_layer(map, layerspercategory);
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
-
-		make_custom_icon_source(map);
 
 		runSettingsAdapt();
 
