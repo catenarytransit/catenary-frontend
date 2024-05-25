@@ -1217,6 +1217,7 @@
 		})(window, document, 'script', 'dataLayer', 'GTM-WD62NKLX');
 	</script>
 	<!-- End Google Tag Manager -->
+	<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "54830a433cbe4c08881b7f4d4692d822"}'></script><!-- End Cloudflare Web Analytics -->
 	<!-- Primary Meta Tags -->
 	<title>Catenary Maps</title>
 	<meta name="title" content="Catenary Maps" />
