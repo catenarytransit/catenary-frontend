@@ -1,4 +1,6 @@
-export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
+import type mapboxgl from "mapbox-gl";
+
+export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategory: Record<string, any>) {
     
 			const urlParams = new URLSearchParams(window.location.search);
 
@@ -233,8 +235,8 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
                 ['==', ['get', 'chateau'], "gotransit"],
                 ['==', ['get', 'shape_id'], "UNGL"]
             ]
-        ]
-
+        ],
+        ['!=', ['get', 'chateau'], "amtrak"],
     ],
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
@@ -260,8 +262,8 @@ export function addShapes(map: any, darkMode: boolean, layerspercategory: any) {
                     ['==', ['get', 'chateau'], "gotransit"],
                     ['==', ['get', 'shape_id'], "UNGL"]
                 ]
-            ]
-
+            ],
+            ['!=', ['get', 'chateau'], "amtrak"]
         ],
         layout: {
             'symbol-placement': 'line',
