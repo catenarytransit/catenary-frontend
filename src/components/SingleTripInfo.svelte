@@ -122,7 +122,7 @@
 										existing_stop_time.rt_arrival_time -
 										existing_stop_time.scheduled_arrival_time_unix_seconds;
 								}
-							}n
+							}
 						}
 					});
 
