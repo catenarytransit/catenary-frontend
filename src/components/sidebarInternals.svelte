@@ -13,6 +13,7 @@
 		VehicleSelectedStack
 	} from '../components/stackenum';
 	import HomeButton from './SidebarParts/home_button.svelte';
+	import BackButton from './SidebarParts/back_button.svelte';
 	import { SettingsStack } from '../components/stackenum';
 	import { writable } from 'svelte/store';
 	import { data_stack_store, usunits_store } from '../globalstores';
@@ -73,7 +74,6 @@
 	}
 </script>
 
-{#key latest_item_on_stack}
 	{#if latest_item_on_stack != null}
 		{#if latest_item_on_stack.data instanceof MapSelectionScreen}
 			<div class="pl-4 sm:pl-2 lg:pl-4 py-2 flex flex-col h-full">
@@ -301,10 +301,7 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
-			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
-				<div class="flex flex-row gap-x-2">
-					<HomeButton />
-				</div>
+			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">				
 				<p>
 					Vehicle selected {latest_item_on_stack.data.chateau_id}
 					{latest_item_on_stack.data.vehicle_id}
@@ -314,10 +311,6 @@
 		{/if}
 		{#if latest_item_on_stack.data instanceof SingleTrip}
 			<div class=" flex flex-col h-full">
-				<div class="flex flex-row gap-x-2 px-4 sm:px-2 lg:px-4 pt-2">
-					<HomeButton />
-				</div>
-
 				<SingleTripInfo {darkMode} routetype={latest_item_on_stack.data.route_type} trip_selected={latest_item_on_stack.data} />
 			</div>
 		{/if}
@@ -385,4 +378,3 @@
 			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-05-28 05:21Z</p>
 		</div>
 	{/if}
-{/key}

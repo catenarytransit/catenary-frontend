@@ -30,7 +30,8 @@
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
 
-	let stop_id_to_alert_id: Record<string, string> = {};
+	let stop_id_to_alert_ids: Record<string, string[]> = {};
+
 	let alerts: Record<string, any> = {};
 
 	let last_inactive_stop_idx = 0;
@@ -139,8 +140,6 @@
 		});
 	}
 
-
-
 	onDestroy(() => {
 		if (fetchtimeout != null) {
 			clearInterval(fetchtimeout);
@@ -184,6 +183,19 @@
 
 					//load alerts in
 					alerts = trip_data.alert_id_to_alert;
+
+					Object.keys(alerts).forEach((alert_id) => {
+						let alert = alerts[alert_id];
+						alert.informed_entity.forEach((each_entity:any) => {
+							if (each_entity.stop_id) {
+								if (stop_id_to_alert_ids[each_entity.stop_id] == undefined) {
+									stop_id_to_alert_ids[each_entity.stop_id] = [alert_id];
+								} else {
+									stop_id_to_alert_ids[each_entity.stop_id].push(alert_id);
+								}
+							}
+						});
+					})
 
 					console.log('alerts',alerts);
 
@@ -505,7 +517,7 @@
 							<div class="flex flex-col w-2 relative justify-center" style={``}>
 								
 							</div>
-							<div class="mr-2"></div>
+							<div class="mr-3"></div>
 							<div on:click={() => {
 								show_previous_stops = false;
 								
@@ -554,7 +566,7 @@
 					{/key}
 					{#each stoptimes_cleaned_dataset as stoptime, i}
 					{#if show_previous_stops || i > last_inactive_stop_idx - 1}
-					<div class="flex flex-row">
+					<div class="flex flex-row ">
 						<div class="flex flex-col w-2 relative justify-center" style={``}>
 							<div
 								style={`background-color: ${i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_arrived_stop_idx >= i ? 0.5 : 1};`}
@@ -572,7 +584,7 @@
 
 						<div class="w-full border-t border-slate-500 py-1 pr-1 lg:pr-2">
 							<p class="">
-								<span class="font-bold dark:text-gray-100">{fixStationName(stoptime.name)}</span>
+								<span class="font-semibold dark:text-gray-100">{fixStationName(stoptime.name)}</span>
 
 								{#if stoptime.code}
 								<span class="text-gray-800 dark:text-gray-200">{stoptime.code}</span>
@@ -582,6 +594,7 @@
 							{#if stoptime.schedule_relationship == 1}
 								<p class="text-red-700 dark:text-red-300">{$_('cancelled')}</p>
 							{/if}
+
 
 							<div class="flex flex-row">
 								<p class="text-sm text-gray-900 dark:text-gray-200">{$_('arrival')}</p>
