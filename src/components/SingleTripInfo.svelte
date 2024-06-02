@@ -490,14 +490,16 @@
 
 					{#if alerts != null}
 						{#each Object.keys(alerts) as alert_id}
-							<div class="bg-yellow-500 bg-opacity-35 leading-snug">
+							<div class="bg-yellow-500 bg-opacity-35 leading-snug mr-2 px-1 py-1 rounded-sm">
 								{#each alerts[alert_id].header_text.translation as each_header_translation_obj}
-								<p class="text-sm lg:text-base font-bold">{each_header_translation_obj.text}</p>
+								<p class="text-sm  font-bold">{each_header_translation_obj.text}</p>
 								{#each alerts[alert_id].description_text.translation.filter(x => x.language == each_header_translation_obj.language)
 								 as description_alert}
-								 {#each description_alert.text.split("\n") as each_desc_line}
-								<p class="text-sm lg:text-base">{each_desc_line}</p>
+								 <div class="leading-none">
+									{#each description_alert.text.split("\n") as each_desc_line}
+								<p class="text-sm">{each_desc_line}</p>
 								{/each}
+								 </div>
 								 {/each}
 							{/each}
 							</div>
@@ -584,6 +586,11 @@
 
 						<div class="w-full border-t border-slate-500 py-1 pr-1 lg:pr-2">
 							<p class="">
+								{#if stop_id_to_alert_ids[stoptime.stop_id]}
+								<span class="text-amber-500 inline-flex align-middle">
+									<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path fill="currentColor" d="m40-120 440-760 440 760H40Zm440-120q17 0 28.5-11.5T520-280q0-17-11.5-28.5T480-320q-17 0-28.5 11.5T440-280q0 17 11.5 28.5T480-240Zm-40-120h80v-200h-80v200Z"/></svg>
+								</span>
+								{/if}
 								<span class="font-semibold dark:text-gray-100">{fixStationName(stoptime.name)}</span>
 
 								{#if stoptime.code}
