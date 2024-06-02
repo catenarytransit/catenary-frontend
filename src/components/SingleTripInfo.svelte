@@ -264,10 +264,6 @@
 						index = index + 1;
 					});
 
-					if (trip_selected.chateau_id == 'irvine~ca~us') {
-						stoptimes_cleaned.sort((a, b) => a.rt_arrival_time - b.rt_arrival_time);
-					}
-
 					stoptimes_cleaned_dataset = stoptimes_cleaned;
 
 					console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
