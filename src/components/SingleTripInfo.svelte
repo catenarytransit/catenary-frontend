@@ -30,6 +30,9 @@
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
 
+	let stop_id_to_alert_id: Record<string, string> = {};
+	let alerts: Record<string, any> = {};
+
 	let last_inactive_stop_idx = 0;
 	let last_arrived_stop_idx = -1;
 
@@ -178,6 +181,11 @@
 					console.log('trip data', data);
 					is_loading_trip_data = false;
 					trip_data = data;
+
+					//load alerts in
+					alerts = trip_data.alert_id_to_alert;
+
+					console.log('alerts',alerts);
 
 					let stoptimes_cleaned: any[] = [];
 
@@ -471,6 +479,24 @@
 						</p>
 					</div>
 					{/if}
+
+					{#if alerts != null}
+						{#each Object.keys(alerts) as alert_id}
+							<div class="bg-yellow-500 bg-opacity-35">
+								{#each alerts[alert_id].header_text.translation as each_header_translation_obj}
+								<p class="text-sm lg:text-base font-bold">{each_header_translation_obj.text}</p>
+								{#each alerts[alert_id].description_text.translation.filter(x => x.language == each_header_translation_obj.language)
+								 as description_alert}
+								 {#each description_alert.text.split("\n") as each_desc_line}
+								<p class="text-sm lg:text-base">{each_desc_line}</p>
+								{/each}
+								 {/each}
+							{/each}
+							</div>
+						{/each}
+					{/if}
+					
+
 					{
 						#key trip_data
 					}
