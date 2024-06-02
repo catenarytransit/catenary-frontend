@@ -478,7 +478,7 @@
 
 					{#if alerts != null}
 						{#each Object.keys(alerts) as alert_id}
-							<div class="bg-yellow-500 bg-opacity-35">
+							<div class="bg-yellow-500 bg-opacity-35 leading-snug">
 								{#each alerts[alert_id].header_text.translation as each_header_translation_obj}
 								<p class="text-sm lg:text-base font-bold">{each_header_translation_obj.text}</p>
 								{#each alerts[alert_id].description_text.translation.filter(x => x.language == each_header_translation_obj.language)
