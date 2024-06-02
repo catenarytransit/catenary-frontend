@@ -171,8 +171,23 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                 ['==', 1, ['get', 'route_type']],
                 ['==', 5, ['get', 'route_type']],
                 ['==', 12, ['get', 'route_type']],
-            ]
-
+            ],
+            [
+                '!',
+                [
+                    'all',
+                    ['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+                    ['==', ['coalesce', ['get', 'route_label']], 'Event']
+                ]
+            ],
+            [
+                '!',
+                [
+                    'all',
+                    ['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+                    ['==', ['coalesce', ['get', 'route_label']], 'Silver']
+                ]
+            ],
         ],
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
@@ -194,7 +209,23 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                 ['==', 1, ['get', 'route_type']],
                 ['==', 5, ['get', 'route_type']],
                 ['==', 12, ['get', 'route_type']]
-            ]
+            ],
+            [
+                '!',
+                [
+                    'all',
+                    ['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+                    ['==', ['coalesce', ['get', 'route_label']], 'Event']
+                ]
+            ],
+            [
+                '!',
+                [
+                    'all',
+                    ['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+                    ['==', ['coalesce', ['get', 'route_label']], 'Silver']
+                ]
+            ],
         ],
         layout: {
             'symbol-placement': 'line',

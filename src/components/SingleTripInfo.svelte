@@ -184,6 +184,7 @@
 					//load alerts in
 					alerts = trip_data.alert_id_to_alert;
 
+					
 					Object.keys(alerts).forEach((alert_id) => {
 						let alert = alerts[alert_id];
 						alert.informed_entity.forEach((each_entity:any) => {
