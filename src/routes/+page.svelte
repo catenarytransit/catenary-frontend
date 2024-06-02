@@ -1294,10 +1294,9 @@
 	{/key}
 
 	{#if !$isLoading}
-		{#key translate_x_sidebar}
 			<div
 				id="catenary-sidebar"
-				style={`height: ${sidebar_height_output}; transform: translateX(${translate_x_sidebar});`}
+				style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
 				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 			>
 				<div
@@ -1309,11 +1308,8 @@
 				>
 					<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
 				</div>
-				{#key on_sidebar_trigger}
 					<SidebarInternals {latest_item_on_stack} {darkMode} />
-				{/key}
 			</div>
-		{/key}
 	{/if}
 </div>
 {#if !$isLoading}
