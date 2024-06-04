@@ -39,11 +39,11 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
             'line-color': ['concat', '#', ['get', 'color']],
             'line-width': ['interpolate', ['linear'], ['zoom'], 7, 1, 14, 2.6],
             //'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-            'line-opacity': 0.5,
+            'line-opacity': ['interpolate', ['linear'], ['zoom'], 6.7, 0, 7.2, 0.5],
             'line-emissive-strength': 1,
             // 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
         },
-        minzoom: 7
+        minzoom: 6
     });
 
     map.addLayer({
