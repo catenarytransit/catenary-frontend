@@ -9,7 +9,8 @@ export const new_jeans_buses:Record<string, Set<string>> = {
 
 export const pride_buses:Record<string, Set<string>> = {
     "san-diego-mts": new Set(["824"]),
-    "metro~losangeles": new Set(["3854"])
+    "metro~losangeles": new Set(["3854"]),
+    "met": new Set(["4522"])
 }
 
 export function make_custom_icon_source(map: Map) {
