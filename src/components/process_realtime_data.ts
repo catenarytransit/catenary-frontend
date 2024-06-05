@@ -9,7 +9,7 @@ import {
 	dark_mode_store,
 	usunits_store
 } from '../globalstores';
-import { add_bunny_layer, make_custom_icon_source, new_jeans_buses } from './addLayers/customIcons';
+import { add_bunny_layer, make_custom_icon_source, new_jeans_buses, pride_buses } from './addLayers/customIcons';
 import mapboxgl from 'mapbox-gl';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 import { fixHeadsignText, fixRouteName } from './agencyspecific';
@@ -374,8 +374,15 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 				.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == "string")
 				.filter(
 					(x) =>
-						x.properties.chateau == 'metro~losangeles' &&
-					x.properties.vehicleIdLabel.contains('3854')
+		{
+			if (pride_buses[x.properties.chateau]) {
+				if (pride_buses[x.properties.chateau].has(x.properties.vehicleIdLabel)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
 				);
 
 			rainbowbussource.setData({
