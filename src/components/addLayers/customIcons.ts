@@ -7,6 +7,11 @@ export const new_jeans_buses:Record<string, Set<string>> = {
     "metro~losangeles": new Set(["5832"])
 }
 
+export const pride_buses:Record<string, Set<string>> = {
+    "san-diego-mts": new Set(["824"]),
+    "metro~losangeles": new Set(["3854"])
+}
+
 export function make_custom_icon_source(map: Map) {
     map.addSource("tokkibussource", {
         type: 'geojson',
