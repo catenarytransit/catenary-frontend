@@ -49,11 +49,11 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'circle-emissive-strength': 1
         },
         minzoom: window?.innerWidth >= 768 ? 13 : 12,
-        filter: removeWeekendStops(['all',
+        filter: ['all',
     ['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],
-        ['!', ['in', 2, ['get', 'route_types']]]])
+        ['!', ['in', 2, ['get', 'route_types']]]]
     });
 
     map.addLayer({
@@ -61,13 +61,13 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         type: 'symbol',
         source: 'busstops',
         'source-layer': 'data',
-        filter: removeWeekendStops(['all', 
+        filter: ['all', 
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],
         ['!', ['in', 2, ['get', 'route_types']]],
         ['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
         ['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']
-    ]),
+    ],
         layout: {
             'text-field': ['get', 'displayname'],
             //'text-field': ['coalesce', ['get', 'route_types']],
@@ -111,7 +111,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             'circle-emissive-strength': 1
         },
         minzoom: 8,
-        filter: removeWeekendStops(['all',
+        filter: ['all',
         [
             'all',
             [
@@ -128,7 +128,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             ['!',['in', 2, ['get', "children_route_types"]]],
             ['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']
         ],
-        ])
+        ]
     });
     
     map.addLayer({
@@ -194,7 +194,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         'circle-emissive-strength': 1
     },
     minzoom: 7,
-    filter: removeWeekendStops(['all',
+    filter: ['all',
     [
         'all',
         [
@@ -207,7 +207,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         ['in', 2, ['get', "children_route_types"]]
         ]
     ],
-    ])
+    ]
 });
 
 map.addLayer({
