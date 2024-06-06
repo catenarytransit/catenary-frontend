@@ -51,7 +51,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         },
         minzoom: window?.innerWidth >= 768 ? 13 : 12,
         filter: removeWeekendStops(['all',
-    
+    ['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],
         ['!', ['in', 2, ['get', 'route_types']]]])
@@ -65,7 +65,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         filter: removeWeekendStops(['all', 
         ['!', ['in', 1, ['get', 'route_types']]],
         ['!', ['in', 0, ['get', 'route_types']]],
-        ['!', ['in', 2, ['get', 'route_types']]]
+        ['!', ['in', 2, ['get', 'route_types']]],
+        ['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
     ]),
         layout: {
             'text-field': ['get', 'displayname'],

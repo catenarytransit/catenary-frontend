@@ -31,7 +31,7 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                         ['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
                     ]
                 ],
-                //	['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
+                	['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
                 //	['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
             ]
         ,
@@ -70,6 +70,7 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                         ['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
                     ]
                 ],
+                ['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
              //   ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
                 //['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
             ]
@@ -134,7 +135,7 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                 ['==', 4, ['get', 'route_type']],
                 ['==', 6, ['get', 'route_type']],
                 ['==', 7, ['get', 'route_type']]
-            ]
+            ],
         ],
         layout: {
             'symbol-placement': 'line',

@@ -96,7 +96,6 @@ export function add_bunny_layer(map: Map, layerspercategory: any) {
                 map.addLayer({
                     id:  "rainbow-buses",
                     source: 'rainbowbussource',
-                    //filter: ['==', "type", "tokki"],
                     type: 'symbol',
                     paint: {
                         'icon-opacity': [
@@ -120,9 +119,9 @@ export function add_bunny_layer(map: Map, layerspercategory: any) {
                             ["linear"],
                             ["zoom"],
                             6,
-                            0.008,
+                            0.009,
                             13,
-                            0.027,
+                            0.035,
                           ]
                     },
                     minzoom: 8
