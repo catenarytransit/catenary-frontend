@@ -1,5 +1,4 @@
 import type { Map } from "mapbox-gl";
-import { removeWeekendStops } from "../removeWeekendStops";
 
 const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 10, 10, 12];
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
@@ -67,6 +66,7 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
         ['!', ['in', 0, ['get', 'route_types']]],
         ['!', ['in', 2, ['get', 'route_types']]],
         ['!=', ['get', 'chateau'], 'uc~irvine~anteater~express'],
+        ['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']
     ]),
         layout: {
             'text-field': ['get', 'displayname'],
@@ -125,7 +125,8 @@ export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any)
             ['in', 1, ['get', 'route_types']],
             ['in', 1, ['get', "children_route_types"]]
             ],
-            ['!',['in', 2, ['get', "children_route_types"]]]
+            ['!',['in', 2, ['get', "children_route_types"]]],
+            ['!=', ['get', 'onestop_feed_id'], 'f-anteaterexpress']
         ],
         ])
     });
