@@ -24,7 +24,6 @@
 	import {
 		fixHeadsignIcon,
 		fixRouteName,
-		fixRouteNameLong,
 		fixRunNumber,
 		fixHeadsignText,
 		fixRouteIcon
@@ -188,7 +187,7 @@
 															)}</span
 														>
 														<span class="font-normal ml-1"
-															>{fixRouteNameLong(
+															>{fixRouteName(
 																option.data.chateau_id,
 																option.data.route_long_name,
 																option.data.route_id
@@ -197,7 +196,7 @@
 													{:else}
 														<span class="font-semibold"
 															>{option.data.route_long_name
-																? fixRouteNameLong(
+																? fixRouteName(
 																		option.data.chateau_id,
 																		option.data.route_long_name,
 																		option.data.route_id
@@ -235,19 +234,16 @@
 						{/if}
 
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
-							<h3 class="text-base sm:text-lg">{$_('routes')}</h3>
-							<p>Selecting routes doesn't do anything yet!</p>
-							<div class="flex flex-col gap-y-1 md:gap-y-2">
+							<h3 class="text-base sm:text-lg mt-2">{$_('routes')}</h3>
+							<div class="flex flex-col gap-y-1 mt-1">
 								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
-									<div
-										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-md shadow-gray-500 dark:shadow-slate-700 text-sm md:text-base"
-									>
-										<p>{option.data.chateau_id}</p>
+									<div>
 										{#if option.data.name}
 											<span
-												style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-												>{option.data.name}</span
-											>
+												class="font-semibold px-1 py-0.5 rounded-md mr-2"
+												style={`color: ${option.data.text_colour}; background-color: ${option.data.colour}`}
+												>{fixRouteName(option.data.chateau_id, option.data.name, option.data.route_id)}</span
+											> <span class="font-light">{option.data.chateau_id}</span>
 										{/if}
 									</div>
 								{/each}

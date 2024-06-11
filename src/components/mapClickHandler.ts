@@ -103,6 +103,7 @@ export function setup_click_handler(map:mapboxgl.Map, layerspercategory:Record<s
                                     x.properties.chateau,
                                     x.properties.routes.replace('{', '').replace('}', '').split(',')[0],
                                     `#${x.properties.color}`,
+                                    `#${x.properties.text_color}`,
                                     x.properties.route_label
                                 )
                             );

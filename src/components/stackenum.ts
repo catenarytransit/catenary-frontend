@@ -106,12 +106,14 @@ export class RouteMapSelector {
 	public chateau_id: string;
 	public route_id: string;
 	public colour: string;
+	public text_colour: string;
 	public name: string | null;
 
-	constructor(chateau_id: string, route_id: string, colour: string, name: string) {
+	constructor(chateau_id: string, route_id: string, colour: string, text_colour: string, name: string) {
 		this.chateau_id = chateau_id;
 		this.route_id = route_id;
 		this.colour = colour;
+		this.text_colour = text_colour;
 		this.name = name;
 	}
 }

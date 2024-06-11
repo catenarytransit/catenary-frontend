@@ -591,9 +591,7 @@
 		: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
 
 	if (typeof window != 'undefined') {
-		let desiredStyle = embedmode
-			? urlParams.get('framework-style') || window.localStorage.mapStyle
-			: window.localStorage.mapStyle;
+		let desiredStyle = urlParams.get('framework-style');
 
 		if (desiredStyle == 'sat') {
 			style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';

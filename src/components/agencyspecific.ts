@@ -14,18 +14,58 @@ export function fixHeadsignIcon(headsign: string): string | null {
 }
 
 export function fixRouteName(chateau: string, route: string, rid: string): string {
-    let fixPatterns = {
+    if (rid.startsWith('"')) {
+        rid = rid.slice(1, -1)
+    }
+
+    const fixPatterns:Record<string, Record<string, string>> = {
+        'metrolinktrains': {
+            '91 Line': '91/Perris Valley Line',
+            'Antelope Valley Line': 'Antelope Valley Line',
+            'Inland Emp.-Orange Co. Line': 'Inland Empire-OC Line',
+            'Orange County Line': 'Orange County Line',
+            'Riverside Line': 'Riverside Line',
+            'San Bernardino Line': 'San Bernardino Line',
+            'Ventura County Line': 'Ventura County Line',
+        },
+        'metro~losangeles': {
+            '801': 'A Line',
+            '802': 'B Line',
+            '803': 'C Line',
+            '804': 'E Line',
+            '805': 'D Line',
+            '807': 'K Line',
+        },
         'san-diego-mts': {
-            '510': 'Blue Line',
-            '520': 'Orange Line',
-            '530': 'Green Line',
+            '3': 'Ocean View Boulevard/Hillcrest',
+            '5': 'Market Street',
+            '215': 'Mid-City Rapid',
+            '225': 'South Bay Rapid',
+            '235': 'I-15 Rapid',
+            '201': 'SuperLoop',
+            '202': 'SuperLoop',
+            '204': 'SuperLoop',
+            '227': 'Iris Rapid',
+            '237': 'Mira Mesa Rapid',
+            '280': 'Rapid Express',
+            '290': 'Rapid Express',
+            '398': 'COASTER',
+            '399': 'SPRINTER',
+            'AIR': 'Flyer'
         }
+    }
+
+    // agency-specific patterned fixes
+    if (chateau == 'san-francisco-bay-area') {
+        route = route.replaceAll('-N', '')
+        route = route.replaceAll('-S', '')
+        route = route.replaceAll(',', ', ')
     }
 
     // @ts-ignore
     if (fixPatterns[chateau]) {
         // @ts-ignore
-        return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
+        return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route
     } else {
         return route
     }
@@ -47,43 +87,6 @@ export function fixRouteIcon(chateau: string, rid: string): string | null {
         return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || null
     } else {
         return null
-    }
-}
-
-export function fixRouteNameLong(chateau: string, route: string, rid: string): string {
-    const fixPatterns:Record<string, Record<string, string>> = {
-        'metrolinktrains': {
-            'Metrolink 91/Perris Valley Line': '91/Perris Valley Line',
-            'Metrolink Antelope Valley Line': 'Antelope Valley Line',
-            'Metrolink Inland Empire-Orange County Line': 'Inland Empire-OC Line',
-            'Metrolink Orange County Line': 'Orange County Line',
-            'Metrolink Riverside Line': 'Riverside Line',
-            'Metrolink San Bernardino Line': 'San Bernardino Line',
-            'Metrolink Ventura County Line': 'Ventura County Line',
-        },
-        'san-diego-mts': {
-            '3': 'Ocean View Boulevard/Hillcrest',
-            '5': 'Market Street',
-            '215': 'Mid-City Rapid',
-            '225': 'South Bay Rapid',
-            '235': 'I-15 Rapid',
-            '201': 'SuperLoop',
-            '202': 'SuperLoop',
-            '204': 'SuperLoop',
-            '227': 'Iris Rapid',
-            '237': 'Mira Mesa Rapid',
-            '280': 'Rapid Express',
-            '290': 'Rapid Express',
-            '398': 'COASTER',
-            '399': 'SPRINTER',
-            'AIR': 'Flyer'
-        }
-    }
-
-    if (fixPatterns[chateau]) {
-        return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route.replace('Counterclockwise', 'Anticlockwise')
-    } else {
-        return route.replace('Transit Station', 'Sta').replace('Station', 'Sta').replace('Transportation Center', 'TC').replace('Transit Center', 'TC').replace('Transit Ctr', 'TC').trim()
     }
 }
 

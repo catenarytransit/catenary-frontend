@@ -14,7 +14,6 @@
 		fixHeadsignText,
 		fixRouteIcon,
 		fixRouteName,
-		fixRouteNameLong,
 		fixRunNumber,
 		fixStationName
 	} from './agencyspecific';
@@ -408,7 +407,7 @@
 									)}</span
 								>
 								<span class="font-normal ml-1"
-									>{fixRouteNameLong(
+									>{fixRouteName(
 										trip_selected.chateau_id,
 										trip_data.route_long_name,
 										trip_data.route_id
@@ -416,15 +415,9 @@
 								>
 							{:else}
 								<span class="font-semibold"
-									>{trip_data.route_long_name
-										? fixRouteNameLong(
+									>{fixRouteName(
 												trip_selected.chateau_id,
-												trip_data.route_long_name,
-												trip_data.route_id
-											)
-										: fixRouteName(
-												trip_selected.chateau_id,
-												trip_data.route_short_name,
+												trip_data.route_long_name || trip_data.route_short_name,
 												trip_data.route_id
 											)}</span
 								>
