@@ -476,7 +476,7 @@
 				{/if}
 				</div>
 
-				{#if alerts != null}
+				{#if (alerts != null && Object.keys(alerts).length > 0)}
 					<div class="bg-darksky border-[#F99C24] border-y-2 leading-snug p-2">
 						<span class="font-medium text-[#F99C24] block">⚠️ Service Alerts</span>
 						{#each Object.keys(alerts) as alert_id}
