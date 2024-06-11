@@ -240,10 +240,10 @@
 									<div>
 										{#if option.data.name}
 											<span
-												class="font-semibold px-1 py-0.5 rounded-md mr-2"
-												style={`color: ${option.data.text_colour}; background-color: ${option.data.colour}`}
+												class="font-semibold"
+												style={`color: ${lightenColour(option.data.colour)}`}
 												>{fixRouteName(option.data.chateau_id, option.data.name, option.data.route_id)}</span
-											> <span class="font-light">{option.data.chateau_id}</span>
+											>{' // '}<span class="font-light">{option.data.chateau_id}</span>
 										{/if}
 									</div>
 								{/each}
