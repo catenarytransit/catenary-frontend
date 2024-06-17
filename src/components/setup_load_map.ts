@@ -57,6 +57,57 @@ export function setup_load_map(
 			runSettingsAdapt();
 		}
 
+			//fire section
+			map.addSource('arcgisfire', {
+				type: 'geojson',
+				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
+				data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=0Qpq7JG2NWRKLZnEynN%2BgcGPt41fWRNZvWGnaO8%2BZao%3D&se=2024-06-17T04%3A55%3A59Z&sp=r"
+			});
+	
+			map.addLayer({
+				source: "arcgisfire",
+				id: 'arcgisfire',
+				type: "fill",
+				paint: {
+					"fill-color": "#dd3300",
+					"fill-opacity": 0.2,
+				},
+				minzoom: 5
+			});
+
+			map.addLayer({
+				source: "arcgisfire",
+				id: 'arcgisfireborder',
+				type: "line",
+				paint: {
+					"line-color": "#ee0000",
+					"line-width": 3
+				},
+				minzoom: 5
+			});
+
+			/*		map.addSource('arcgisfirepoint', {
+				type: 'geojson',
+				data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
+				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=0Qpq7JG2NWRKLZnEynN%2BgcGPt41fWRNZvWGnaO8%2BZao%3D&se=2024-06-17T04%3A55%3A59Z&sp=r"
+			});
+			*/
+	
+			map.addLayer({
+				source: "arcgisfire",
+				id: 'arcgisfirepoint',
+				type: "symbol",
+				paint: {
+					"text-color":  darkMode? "#ffaaaa" : "#aa0000",
+				},
+				layout: {
+					"text-field": ['concat', ['get', 'attr_IncidentName'], " FIRE"],
+					'text-size': 10,
+					'text-font': ['Barlow Medium', 'Arial Unicode MS Bold'],
+				},
+				minzoom: 5
+			});
+
 		map.addSource('chateaus', {
 			type: 'geojson',
 			data: 'https://birch.catenarymaps.org/getchateaus'
