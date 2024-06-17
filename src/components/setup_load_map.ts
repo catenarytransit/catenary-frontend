@@ -68,6 +68,11 @@ export function setup_load_map(
 				source: "arcgisfire",
 				id: 'arcgisfire',
 				type: "fill",
+				filter: [
+					'all',
+					['!=', ['get', "attr_FireBehaviorGeneral"], null],
+					['!=', ['get', "attr_FireBehaviorGeneral"], "Minimal"]
+				],	
 				paint: {
 					"fill-color": "#dd3300",
 					"fill-opacity": 0.2,
@@ -78,6 +83,11 @@ export function setup_load_map(
 			map.addLayer({
 				source: "arcgisfire",
 				id: 'arcgisfireborder',
+				filter: [
+					'all',
+					['!=', ['get', "attr_FireBehaviorGeneral"], null],
+					['!=', ['get', "attr_FireBehaviorGeneral"], "Minimal"]
+				],
 				type: "line",
 				paint: {
 					"line-color": "#ee0000",
@@ -97,6 +107,11 @@ export function setup_load_map(
 				source: "arcgisfire",
 				id: 'arcgisfirepoint',
 				type: "symbol",
+				filter: [
+					'all',
+					['!=', ['get', "attr_FireBehaviorGeneral"], null],
+					['!=', ['get', "attr_FireBehaviorGeneral"], "Minimal"]
+				],
 				paint: {
 					"text-color":  darkMode? "#ffaaaa" : "#aa0000",
 				},
