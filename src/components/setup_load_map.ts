@@ -57,17 +57,19 @@ export function setup_load_map(
 			runSettingsAdapt();
 		}
 
+		const fire_arcgis_url = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/WFIGS_Interagency_Perimeters_Current/FeatureServer/0/query?where=Shape__Area>0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pgeojson&token=";
+
 			//fire section
 			map.addSource('arcgisfire', {
 				type: 'geojson',
 				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
-				data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=k9m6bvoeo8ZMLeAloKFgCn8qYatO5JWMRU3ARUXmIe8%3D&se=2024-06-17T06%3A24%3A17Z&sp=r"
+				data: fire_arcgis_url
 			});
 
 			setInterval(() => {
 				if (get(chateaus_in_frame).includes("amtrak")) {
 					fetch(
-						"https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=k9m6bvoeo8ZMLeAloKFgCn8qYatO5JWMRU3ARUXmIe8%3D&se=2024-06-17T06%3A24%3A17Z&sp=r"
+						fire_arcgis_url
 					)
 					.then(async (data) => await data.json())
 					.then((cleaned_data:any) => {
