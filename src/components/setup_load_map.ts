@@ -1,5 +1,6 @@
 import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
+import {makeFireMap} from './wildfireMap'
 import mapboxgl from 'mapbox-gl';
 import {
 	what_kactus_to_use,
@@ -56,89 +57,6 @@ export function setup_load_map(
 			show_zombie_buses_store.set(true);
 			runSettingsAdapt();
 		}
-
-		const fire_arcgis_url = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/WFIGS_Interagency_Perimeters_Current/FeatureServer/0/query?where=Shape__Area>0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pgeojson&token=";
-
-			//fire section
-			map.addSource('arcgisfire', {
-				type: 'geojson',
-				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
-				data: fire_arcgis_url
-			});
-
-			setInterval(() => {
-				if (get(chateaus_in_frame).includes("amtrak")) {
-					fetch(
-						fire_arcgis_url
-					)
-					.then(async (data) => await data.json())
-					.then((cleaned_data:any) => {
-						map.getSource(
-						'arcgisfire'
-						).setData(cleaned_data)
-					})
-					.catch((err) => console.error(err))
-				}
-			}, 120_000);
-	
-			map.addLayer({
-				source: "arcgisfire",
-				id: 'arcgisfire',
-				type: "fill",
-				filter: [
-					'all',
-					['!=', ['get', "attr_FireBehaviorGeneral"], null],
-					['!=', ['get', "attr_FireBehaviorGeneral"], "Minimal"]
-				],	
-				paint: {
-					"fill-color": "#dd3300",
-					"fill-opacity": 0.2,
-				},
-				minzoom: 5
-			});
-
-			map.addLayer({
-				source: "arcgisfire",
-				id: 'arcgisfireborder',
-				filter: [
-					'all',
-					['!=', ['get', "attr_FireBehaviorGeneral"], null],
-					['!=', ['get', "attr_FireBehaviorGeneral"], "Minimal"]
-				],
-				type: "line",
-				paint: {
-					"line-color": "#ee0000",
-					"line-width": 3
-				},
-				minzoom: 5
-			});
-
-			/*		map.addSource('arcgisfirepoint', {
-				type: 'geojson',
-				data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
-				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=0Qpq7JG2NWRKLZnEynN%2BgcGPt41fWRNZvWGnaO8%2BZao%3D&se=2024-06-17T04%3A55%3A59Z&sp=r"
-			});
-			*/
-	
-			map.addLayer({
-				source: "arcgisfire",
-				id: 'arcgisfirepoint',
-				type: "symbol",
-				filter: [
-					'all',
-					['!=', ['get', "attr_FireBehaviorGeneral"], null],
-					['!=', ['get', "attr_FireBehaviorGeneral"], "Minimal"]
-				],
-				paint: {
-					"text-color":  darkMode? "#ffaaaa" : "#aa0000",
-				},
-				layout: {
-					"text-field": ['concat', ['get', 'attr_IncidentName'], " FIRE"],
-					'text-size': 10,
-					'text-font': ['Barlow Medium', 'Arial Unicode MS Bold'],
-				},
-				minzoom: 5
-			});
 
 		map.addSource('chateaus', {
 			type: 'geojson',
@@ -484,6 +402,8 @@ export function setup_load_map(
 		const chateau_feed_results = determineFeedsUsingChateaus(map);
 		chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 
+		makeFireMap(map, chateaus_in_frame);
+
 		setInterval(() => {
 			//const chateau_feed_results = determineFeedsUsingChateaus(map);
 			//chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
@@ -507,7 +427,6 @@ export function setup_load_map(
 		);
 
 		makeGpsLayer(map);
-
 		recompute_map_padding();
 		
 		changeRailTextOutsideNorthAmerica(map, layerspercategory);
