@@ -637,7 +637,7 @@
 										</p>
 										<p class="ml-auto text-right">
 											{#if stoptime.rt_arrival_time != null || stoptime.scheduled_arrival_time_unix_seconds != null}
-												<TimeDiff
+											<TimeDiff
 													diff={(stoptime.rt_arrival_time ||
 														stoptime.scheduled_arrival_time_unix_seconds) -
 														current_time / 1000}
