@@ -312,6 +312,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 							bearing: vehicle_data?.position?.bearing,
 							has_bearing: vehicle_data?.position?.bearing != null,
 							maptag: fixRouteName(chateau_id, maptag, routeId)
+								.replace(" Branch", "").replace(" Line","")
 								.replace('Counterclockwise', 'ACW')
 								.replace('Clockwise', 'CW'),
 							trip_short_name: trip_short_name,
