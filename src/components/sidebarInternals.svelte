@@ -314,6 +314,7 @@
 												);
 											}}
 											class="material-symbols-outlined"
+											alt="Route PDF"
 										>
 											picture_as_pdf
 										</a>
