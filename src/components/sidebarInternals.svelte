@@ -31,6 +31,7 @@
 	} from './agencyspecific';
 	import RouteIcon from './RouteIcon.svelte';
 	import { getLocaleStorageOrNav } from '../i18n';
+	import { find_schedule_pdf, find_schedule_pdf_initial, is_schedule_pdf, schedule_pdf_needs_hydration } from './pdf_schedules';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 	let this_locale: string | undefined | null;
@@ -70,55 +71,6 @@
 			} else {
 				return temp;
 			}
-		}
-	}
-
-	function is_schedule_pdf(chateau_id: string, route_id: string) {
-		if (
-			[
-				'metrolinktrains',
-				'san-diego-mts',
-				'northcountytransitdistrict',
-				'orangecountytransportationauthority',
-				'metro~losangeles'
-			].includes(chateau_id)
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	async function find_schedule_pdf(chateau_id: string, route_id: string) {
-		if (chateau_id == 'metrolinktrains') {
-			return `https://metrolinktrains.com/globalassets/schedules/timetables/2023/web_alllines_23-11-06_spreads.pdf`;
-		} else if (chateau_id == 'san-diego-mts') {
-			return `https://www.sdmts.com/sites/default/files/routes/pdf/${route_id}.pdf`;
-		} else if (chateau_id == 'northcountytransitdistrict') {
-			return `https://gonctd.com/wp-content/uploads/transit/${route_id === '301' ? '101' : route_id}.pdf`;
-		} else if (chateau_id === 'orangecountytransportationauthority') {
-			return `https://octa.net/ebusbook/RoutePDF/route${route_id.padStart(3, '0')}.pdf`;
-		} else if (chateau_id === 'metro~losangeles') {
-			let schedule_search = await (
-				await fetch(
-					`https://www.metro.net/wp-json/wp/v2/media?search=${route_id.split('-')[0]}_tt&_fields=link`
-				)
-			).json();
-			if (schedule_search.length > 0) {
-				if (schedule_search[0].link.includes('line-override')) {
-					if (schedule_search.length > 1) {
-						return schedule_search[1].link;
-					} else {
-						return `https://www.metro.net/riding/schedules-2/`;
-					}
-				} else {
-					return schedule_search[0].link;
-				}
-			} else {
-				return `https://www.metro.net/riding/schedules-2/`;
-			}
-		} else {
-			return null;
 		}
 	}
 </script>
@@ -307,11 +259,13 @@
 									</span>
 									{#if is_schedule_pdf(option.data.chateau_id, option.data.route_id)}
 										<a
+											href={find_schedule_pdf_initial(option.data.chateau_id, option.data.route_id)}
 											style:cursor="pointer"
-											on:click={async () => {
-												window.open(
-													await find_schedule_pdf(option.data.chateau_id, option.data.route_id)
-												);
+											on:click={async (e) => {
+												if (schedule_pdf_needs_hydration(option.data.chateau_id)) {
+													e.preventDefault()
+													window.open(await find_schedule_pdf(option.data.chateau_id, option.data.route_id))
+												}
 											}}
 											class="material-symbols-outlined"
 											alt="Route PDF"
