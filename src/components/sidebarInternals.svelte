@@ -87,7 +87,7 @@
 				{#if !isLoading}
 					<p class="text-sm md:text-base leading-tight">{$_('clickonanyitemfromthislist')}</p>
 				{/if}
-				<div class="flex-grow-0 h-full select-all">
+				<div class="flex-grow-0 h-full select-text">
 					<div class=" catenary-scroll overflow-y-auto pr-4 h-full pb-16">
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
 							<h3 class="text-base sm:text-lg">{$_('vehicles')}</h3>
@@ -310,7 +310,7 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof SingleTrip}
-			<div class=" flex flex-col h-full select-all">
+			<div class=" flex flex-col h-full select-text">
 					<div class="flex flex-row gap-x-2">
 						<HomeButton />
 					</div>
@@ -320,7 +320,7 @@
 	{:else if false}
 		<p>Loading home page</p>
 	{:else}
-		<div class="px-4 sm:px-2 lg:px-4 py-2  select-all">
+		<div class="px-4 sm:px-2 lg:px-4 py-2  select-text">
 			<div class="flex flex-row gap-x-2">
 				<button
 					class="h-8 w-8 text-black dark:text-white bg-sky-400 dark:bg-sky-700 rounded-full flex flex-col shadow-md"
