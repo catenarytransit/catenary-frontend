@@ -964,6 +964,47 @@
 	}
 
 	onMount(() => {
+		//#region On the fly IP geolocation
+		
+		if (localStorage.getItem('cachegeolocation')) {
+			const [long, lat] = localStorage.getItem('cachegeolocation')!.split(',');
+			centerinit = [parseFloat(long), parseFloat(lat)];
+			mapglobal.setCenter(centerinit);
+		} else {
+			try {
+				/**
+				 * Use Cloudflare's IP Geolocation API to get the user's ROUGH location
+				 * It will __not__ be accurate, but it will be enough to get the user to their own region.
+				 *
+				 * (this worker is running on edge nodes, so it's fast)
+				 *
+				 * adding a pin with this provided lat/long would prob freak a few people out 
+				 * and even mapping sites (google, bing, etc) don't do it either on default
+				 * -q
+				 */
+				fetch('https://get-cf-geo.api.quacksire.dev')
+					.then((response) => response.text())
+					// the text will be `lat,long`
+					.then((text) => {
+						const [lat, long] = text.split(',');
+						// set the center of the map to the user's location
+						centerinit = [parseFloat(long), parseFloat(lat)];
+						
+						// in case the map is already initialized (rare), set the center to the user's location
+						mapglobal.setCenter(centerinit);
+						
+						// store the user's location in localStorage, as we do with regular browser provided geolocation
+						localStorage.setItem('cachegeolocation', `${long},${lat}`);
+					});
+			} catch (e) {
+				console.error('Failed to get IP location, defaulting to LA');
+			}
+		}
+		
+		// #endregion
+		
+
+
 		fetch('https://birch.catenarymaps.org/getchateaus')
 			.then(function (response) {
 				return response.json();
@@ -1002,7 +1043,7 @@
 			),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
-			//switch to IP geolocation and on the fly rendering for this soon
+			//switch to IP geolocation (ln 967) and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
 			fadeDuration: 0
 		});
