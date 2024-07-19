@@ -969,7 +969,9 @@
 		if (localStorage.getItem('cachegeolocation')) {
 			const [long, lat] = localStorage.getItem('cachegeolocation')!.split(',');
 			centerinit = [parseFloat(long), parseFloat(lat)];
-			mapglobal.setCenter(centerinit);
+			if (mapglobal) {
+				mapglobal.setCenter(centerinit);
+			}
 		} else {
 			try {
 				/**
@@ -988,7 +990,9 @@
 						
 						// set the center of the map to the user's location
 						// in case the map is already initialized (rare), set the center to the user's location
-						mapglobal.setCenter(centerinit);
+						if (mapglobal) {
+							mapglobal.setCenter(centerinit);
+						}
 						
 						// store the user's location in localStorage, as we do with regular browser provided geolocation
 						localStorage.setItem('cachegeolocation', `${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`);
