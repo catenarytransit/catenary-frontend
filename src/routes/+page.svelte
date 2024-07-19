@@ -964,6 +964,44 @@
 	}
 
 	onMount(() => {
+		//#region On the fly IP geolocation
+		
+		if (localStorage.getItem('cachegeolocation')) {
+			const [long, lat] = localStorage.getItem('cachegeolocation')!.split(',');
+			centerinit = [parseFloat(long), parseFloat(lat)];
+			mapglobal.setCenter(centerinit);
+		} else {
+			try {
+				/**
+				 * Use GeoLite2 database on Catenary servers
+				 *
+				 * adding a pin with this provided lat/long would prob freak a few people out 
+				 * and even mapping sites (google, bing, etc) don't do it either on default
+				 * -q
+				 */
+				fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+					.then((response) => response.json())
+					// the text will be `lat,long`
+					.then((geo_api_response) => {
+						if (geo_api_response.geo_resp) {
+							centerinit = [parseFloat(geo_api_response.geo_resp.longitude), parseFloat(geo_api_response.geo_resp.latitude)];
+						
+						// set the center of the map to the user's location
+						// in case the map is already initialized (rare), set the center to the user's location
+						mapglobal.setCenter(centerinit);
+						
+						// store the user's location in localStorage, as we do with regular browser provided geolocation
+						localStorage.setItem('cachegeolocation', `${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`);
+					}});
+			} catch (e) {
+				console.error('Failed to get IP location, defaulting to LA');
+			}
+		}
+		
+		// #endregion
+		
+
+
 		fetch('https://birch.catenarymaps.org/getchateaus')
 			.then(function (response) {
 				return response.json();
@@ -1002,7 +1040,7 @@
 			),
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
-			//switch to IP geolocation and on the fly rendering for this soon
+			//switch to IP geolocation (ln 967) and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
 			fadeDuration: 0
 		});
