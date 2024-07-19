@@ -982,7 +982,7 @@
 				 * and even mapping sites (google, bing, etc) don't do it either on default
 				 * -q
 				 */
-				fetch('https://get-city.api.quacksire.dev/')
+				fetch('https://get-cf-geo.api.quacksire.dev')
 					.then((response) => response.text())
 					// the text will be `lat,long`
 					.then((text) => {
