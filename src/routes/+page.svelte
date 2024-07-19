@@ -973,29 +973,26 @@
 		} else {
 			try {
 				/**
-				 * Use Cloudflare's IP Geolocation API to get the user's ROUGH location
-				 * It will __not__ be accurate, but it will be enough to get the user to their own region.
-				 *
-				 * (this worker is running on edge nodes, so it's fast)
+				 * Use GeoLite2 database on Catenary servers
 				 *
 				 * adding a pin with this provided lat/long would prob freak a few people out 
 				 * and even mapping sites (google, bing, etc) don't do it either on default
 				 * -q
 				 */
-				fetch('https://get-cf-geo.api.quacksire.dev')
-					.then((response) => response.text())
+				fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+					.then((response) => response.json())
 					// the text will be `lat,long`
-					.then((text) => {
-						const [lat, long] = text.split(',');
-						// set the center of the map to the user's location
-						centerinit = [parseFloat(long), parseFloat(lat)];
+					.then((geo_api_response) => {
+						if (geo_api_response.geo_resp) {
+							centerinit = [parseFloat(geo_api_response.geo_resp.longitude), parseFloat(geo_api_response.geo_resp.latitude)];
 						
+						// set the center of the map to the user's location
 						// in case the map is already initialized (rare), set the center to the user's location
 						mapglobal.setCenter(centerinit);
 						
 						// store the user's location in localStorage, as we do with regular browser provided geolocation
-						localStorage.setItem('cachegeolocation', `${long},${lat}`);
-					});
+						localStorage.setItem('cachegeolocation', `${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`);
+					}});
 			} catch (e) {
 				console.error('Failed to get IP location, defaulting to LA');
 			}
