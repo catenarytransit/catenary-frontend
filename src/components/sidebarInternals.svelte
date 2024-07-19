@@ -87,7 +87,7 @@
 				{#if !isLoading}
 					<p class="text-sm md:text-base leading-tight">{$_('clickonanyitemfromthislist')}</p>
 				{/if}
-				<div class="flex-grow-0 h-full">
+				<div class="flex-grow-0 h-full select-all">
 					<div class=" catenary-scroll overflow-y-auto pr-4 h-full pb-16">
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
 							<h3 class="text-base sm:text-lg">{$_('vehicles')}</h3>
@@ -261,7 +261,7 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof SettingsStack}
-			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
+			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full select-text">
 				<div class="flex flex-row gap-x-2">
 					<HomeButton />
 				</div>
@@ -310,7 +310,7 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof SingleTrip}
-			<div class=" flex flex-col h-full">
+			<div class=" flex flex-col h-full select-all">
 					<div class="flex flex-row gap-x-2">
 						<HomeButton />
 					</div>
@@ -320,7 +320,7 @@
 	{:else if false}
 		<p>Loading home page</p>
 	{:else}
-		<div class="px-4 sm:px-2 lg:px-4 py-2">
+		<div class="px-4 sm:px-2 lg:px-4 py-2  select-all">
 			<div class="flex flex-row gap-x-2">
 				<button
 					class="h-8 w-8 text-black dark:text-white bg-sky-400 dark:bg-sky-700 rounded-full flex flex-col shadow-md"
@@ -378,6 +378,6 @@
 			<p class="text-gray-800 dark:text-gray-300">{$_('comingsoon')}</p>
 
 			
-			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-06-02 18:12Z</p>
+			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-07-19 00:42Z</p>
 		</div>
 	{/if}
