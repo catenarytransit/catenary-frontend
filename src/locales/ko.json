@@ -67,5 +67,6 @@
     "early": "초반",
     "late": "늦게",
     "ontime": "정시에",
-    "defaultlang": "기본 설정 언어"
+    "defaultlang": "기본 설정 언어",
+    "hidepreviousstops": "이전 정류장 숨기기"
 }

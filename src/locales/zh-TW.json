@@ -66,5 +66,6 @@
     "departure": "離站",
     "itemsselected": "選定項目",
     "ontime": "準時",
-    "defaultlang": "預設語言"
+    "defaultlang": "預設語言",
+    "hidepreviousstops": "隱藏之前的停靠站"
 }
