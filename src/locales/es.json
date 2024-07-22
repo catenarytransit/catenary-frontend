@@ -64,5 +64,7 @@
     "early": "Temprano",
     "late": "Tarde",
     "ontime": "A tiempo",
-    "defaultlang": "Idioma predeterminado"
+    "defaultlang": "Idioma predeterminado",
+    "hidepreviousstops": "Ocultar paradas anteriores",
+        "showxpreviousstops_pt1": "Mostrar"
 }

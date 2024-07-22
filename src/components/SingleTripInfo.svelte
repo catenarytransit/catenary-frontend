@@ -527,7 +527,7 @@
 							}}
 							class="underline cursor-pointer text-sm text-gray-900 dark:text-gray-100 text-lg font-semibold py-2 lg:py-4 text-base lg:text-lg text-blue-500 dark:text-sky-300"
 							>
-								Hide previous stops
+								{$_("hidepreviousstops")}
 							</div>
 							</div>
 					</div>

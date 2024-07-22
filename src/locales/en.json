@@ -68,5 +68,7 @@
     "skipped": "Skipped",
     "ontime": "On time",
     "defaultlang": "Default language",
-    "showmylocation": "Show my location"
+    "showmylocation": "Show my location",
+    "hidepreviousstops": "Hide previous stops",
+        "showxpreviousstops_pt1": "Show"
   }
