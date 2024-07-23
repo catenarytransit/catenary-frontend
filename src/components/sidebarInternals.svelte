@@ -158,7 +158,7 @@
 										}}
 										role="menuitem"
 										tabindex="0"
-										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-[#0a233f] text-sm md:text-base leading-snug rounded-lg"
+										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-[#0a233f] hover:bg-blue-100 hover:dark:bg-[#1a334f]  text-sm md:text-base leading-snug rounded-lg"
 									>
 										{#if option.data.triplabel}
 											{#if fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id, option.data.trip_short_name, option.data.vehicle_id)}
@@ -236,11 +236,10 @@
 
 						{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
 							<h3 class="text-base sm:text-lg">{$_('routes')}</h3>
-							<p>Selecting routes doesn't do anything yet!</p>
 							<div class="flex flex-col gap-y-1 md:gap-y-2">
 								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
 									<div
-										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-50 dark:bg-slate-800 shadow-md shadow-gray-500 dark:shadow-slate-700 text-sm md:text-base"
+										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-[#0a233f] hover:dark:bg-[#1a334f] text-sm md:text-base leading-snug rounded-lg"
 									>
 										<p>{option.data.chateau_id}</p>
 										{#if option.data.name}
