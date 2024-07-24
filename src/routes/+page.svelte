@@ -25,7 +25,8 @@
 		usunits_store,
 		show_zombie_buses_store,
 		show_my_location_store,
-		custom_icons_category_to_layer_id
+		custom_icons_category_to_layer_id,
+		map_pointer_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -1048,6 +1049,8 @@
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
 			fadeDuration: 0
 		});
+
+		map_pointer_store.set(map);
 
 		if (markedPointCoords) {
 			new mapboxgl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);

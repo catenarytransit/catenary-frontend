@@ -5,7 +5,7 @@ export function makeBearingArrowPointers(map:Map, darkMode:boolean,layerspercate
 
 	const busbearingoffset = ['interpolate', ['linear'], ['zoom'],8, ['literal', [0, -60]], 10, ['literal', [0, -64]], 12, ['literal', [0, -45]], 13, ['literal', [0, -50]], 15, ['literal', [0, -48]]];
 
-	const busbearingsize = ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.17, 12, 0.3, 15, 0.5];
+	const busbearingsize = ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.17, 12, 0.2, 15, 0.3];
 
 	const railbearingiconsize = ['interpolate', ['linear'], ['zoom'], 8, 0.15, 9, 0.18, 12, 0.3, 15, 0.5];
 
