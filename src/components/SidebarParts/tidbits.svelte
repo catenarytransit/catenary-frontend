@@ -1,8 +1,6 @@
 <script lang="ts">
 	/**
-	 * Tidbit interface
-	 *
-	 * @typedef {Object} Tidbit
+	 * A tidbit is a small card that displays information about Catenary. It is displayed in the sidebar.
 	 * @property {string} title - The title of the tidbit.
 	 * @property {string} description - The description of the tidbit.
 	 * @property {string} link - The link to the tidbit.
@@ -10,6 +8,23 @@
 	 * @property {string} [svg] - The SVG to display with the tidbit.
 	 * @property {boolean} [underline] - Whether to underline the first word of the title.
 	 * @property {string} [underlineColor] - The color to underline the first word of the title.
+	 *
+	 * @example
+	 * {
+	 * 			title: "Blank",
+	 * 			description: "This is a blank tidbit. It should never be displayed.",
+	 * 			link: "example.com/blank",
+	 *
+	 * 			image: "url",
+	 * 			// OR
+	 * 			svg: "<svg />",
+	 *
+	 * 			// optional, to underline the first word of the title
+	 * 			underline: true,
+	 * 			// optional, the color of the underline
+	 * 			underlineColor: "green-500",
+	 * }
+	 *
 	 */
 	type Tidbit = {
 		title: string;
@@ -21,6 +36,15 @@
 		underlineColor?: string;
 	}
 
+
+	/**
+	 * An array of tidbits to display in the sidebar.
+	 *
+	 *
+	 *
+	 * @type {Tidbit[]}
+	 *
+	 * */
 	let tidbits: Tidbit[] = [
 		{
 			title: "Research that pushes mobility forwards.",
@@ -54,21 +78,18 @@
 			description: "Show your support for Catenary with our exclusive merchandise. T-shirts, stickers, and more available now!",
 			link: "https://www.redbubble.com/people/catenarymaps/explore",
 		},
-		/*
-
-		Here's a template, if you want to add more tidbits:
+		/* When its ready, uncomment this tidbit
 		{
-			title: "Blank",
-			description: "This is a blank tidbit. It should never be displayed.",
-			link: "",
-			image: "",
+			title: "Stay in the loop.",
+			description: "Join our newsletter to stay up-to-date on the latest Catenary news, updates, and releases.",
+			link: "https://catenarymaps.org/newsletter",
+			svg: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><path d="M22 12h-6l-6 6v-6"/><path d="M2 12l6-6h6l6 6v6"/><path d="M2 12l10 10M22 12L12 2"/></svg>`,
 		},
 		 */
 	]
 
 
 	// we want to randomly select a tidbit to display
-	// generate a random number between 0 and 4, with 4 being a "blank" tidbit
 	let tidbitIndex = Math.floor(Math.random() * tidbits.length);
 
 
