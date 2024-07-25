@@ -31,6 +31,7 @@
 	} from './agencyspecific';
 	import RouteIcon from './RouteIcon.svelte';
 	import { getLocaleStorageOrNav } from '../i18n';
+	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 	let this_locale: string | undefined | null;
@@ -301,7 +302,7 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
-			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">				
+			<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
 				<p>
 					Vehicle selected {latest_item_on_stack.data.chateau_id}
 					{latest_item_on_stack.data.vehicle_id}
@@ -348,10 +349,10 @@
 					>
 				</div>
 			</div>
-	
-		
 
-			
+
+
+
 		</div>
 		{
 			#if this_locale?.startsWith("en")
@@ -364,6 +365,11 @@
 				<a target="_blank" href="https://catenarymaps.org"><button class="bg-white dark:bg-gray-950 font-bold rounded-md px-2 py-1 flex flex-row gap-x-1 text-[#42A7C5]"><img  src="https://catenarymaps.org/logo.svg" class="inline mr-1 h-5 my-auto text-[#42A7C5]"/>Catenary Website</button></a>
 			</div>
 		</div>
+
+			<TidbitSidebarCard />
+
+
+
 		{/if}
 		<div  class="px-4 sm:px-2 lg:px-4 py-2">
 
@@ -377,7 +383,7 @@
 			<h2 class="text-base md:text-lg  text-gray-800 dark:text-gray-300">{$_('nearbydepartures')}</h2>
 			<p class="text-gray-800 dark:text-gray-300">{$_('comingsoon')}</p>
 
-			
+
 			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-07-22 09:27Z</p>
 		</div>
 	{/if}
