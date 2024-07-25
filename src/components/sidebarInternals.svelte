@@ -309,8 +309,8 @@
 			</div>
 		{/if}
 		{#if latest_item_on_stack.data instanceof SingleTrip}
-			<div class=" flex flex-col h-full select-text">
-					<div class="flex flex-row gap-x-2">
+			<div class=" flex flex-col h-full select-text pt-2">
+					<div class="flex flex-row gap-x-2 px-2">
 						<HomeButton />
 					</div>
 				<SingleTripInfo {darkMode} routetype={latest_item_on_stack.data.route_type} trip_selected={latest_item_on_stack.data} />
