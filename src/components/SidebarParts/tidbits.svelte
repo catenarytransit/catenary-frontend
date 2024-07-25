@@ -52,8 +52,7 @@
 			title: "ya like swag?",
 			svg: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tshirt"><path d="M4 6h16v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z"/><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/><path d="M10 9h4"/><path d="M9 3v2"/><path d="M15 3v2"/></svg>`,
 			description: "Show your support for Catenary with our exclusive merchandise. T-shirts, stickers, and more available now!",
-			// TODO: add link to store
-			link: "https://catenarymaps.org/TODO",
+			link: "https://www.redbubble.com/people/catenarymaps/explore",
 		},
 		/*
 
@@ -71,24 +70,28 @@
 	// we want to randomly select a tidbit to display
 	// generate a random number between 0 and 4, with 4 being a "blank" tidbit
 	let tidbitIndex = Math.floor(Math.random() * tidbits.length);
-	// hide 4 for now
-	if (tidbitIndex === 4) {
-		tidbitIndex = 0;
-	}
 
-	//tidbitIndex = 0; // force tidbit 0 for now
 
-	setInterval(() => {
-		tidbitIndex = Math.floor(Math.random() * tidbits.length);
-		// hide 4 for now
-		if (tidbitIndex === 4) {
-			tidbitIndex = 0;
-		}
-	}, 1000);
+	let dismissed = false;
+
+
 
 </script>
 
+
+
+{#if !dismissed}
 	<div class="text-sm lg:text-base py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-y-2 mb-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15">
+		<!-- add a dismiss button to the top right of the card -->
+		<div>
+			<button class="float-right" on:click={() => dismissed = true}>
+				<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
+
+
 		<div class="flex items-center gap-2">
 			{#if tidbits[tidbitIndex].image}
 				<img src="{tidbits[tidbitIndex].image}" class="w-8 h-8" alt="" />
@@ -116,3 +119,4 @@
 			</a>
 		</div>
 	</div>
+{/if}
