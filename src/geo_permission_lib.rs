@@ -1,0 +1,1 @@
+export const permission_to_geolocate = "permission_to_geolocate";
