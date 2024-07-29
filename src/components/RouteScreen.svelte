@@ -148,7 +148,7 @@
 						<span class="material-symbols-outlined font-medium text-2xl align-middle">
 							attachment
 							</span>
-							<span class="font-bold font-mono text-lg">PDF</span>
+							<span class="font-bold font-mono text-base md:text-lg">PDF</span>
 					</div>
 				</a>
 				{/if}
