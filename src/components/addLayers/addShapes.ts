@@ -268,7 +268,7 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                 ['==', ['get', 'shape_id'], "UNGL"]
             ]
         ],
-        ['!=', ['get', 'chateau'], "amtrak"],
+      //  ['!=', ['get', 'chateau'], "amtrak"],
     ],
         paint: {
             'line-color': ['concat', '#', ['get', 'color']],
@@ -295,7 +295,7 @@ export function addShapes(map: mapboxgl.Map, darkMode: boolean, layerspercategor
                     ['==', ['get', 'shape_id'], "UNGL"]
                 ]
             ],
-            ['!=', ['get', 'chateau'], "amtrak"]
+       //     ['!=', ['get', 'chateau'], "amtrak"]
         ],
         layout: {
             'symbol-placement': 'line',
