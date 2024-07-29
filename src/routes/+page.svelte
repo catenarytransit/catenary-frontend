@@ -1342,7 +1342,7 @@
 			<div
 				id="catenary-sidebar"
 				style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:dark:backdrop-blur-md md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 			>
 				<div
 					class="block md:hidden py-2 flex flex-row"

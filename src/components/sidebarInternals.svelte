@@ -29,6 +29,7 @@
 		fixHeadsignText,
 		fixRouteIcon
 	} from './agencyspecific';
+	import RouteScreen from './RouteScreen.svelte';
 	import RouteIcon from './RouteIcon.svelte';
 	import { getLocaleStorageOrNav } from '../i18n';
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
@@ -241,7 +242,22 @@
 								{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
 									<div
 										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-[#0a233f] hover:dark:bg-[#1a334f] text-sm md:text-base leading-snug rounded-lg"
-									>
+									
+										on:click={() => {
+											data_stack_store.update((data_stack) => {
+												data_stack.push(
+													new StackInterface(
+														new RouteStack (
+															option.data.chateau_id,
+															option.data.route_id
+														)
+													)
+												);
+
+												return data_stack;
+											})
+										}}
+										>
 										<p>{option.data.chateau_id}</p>
 										{#if option.data.name}
 											<span
@@ -315,6 +331,16 @@
 						<HomeButton />
 					</div>
 				<SingleTripInfo {darkMode} routetype={latest_item_on_stack.data.route_type} trip_selected={latest_item_on_stack.data} />
+			</div>
+		{/if}
+		{#if latest_item_on_stack.data instanceof RouteStack}
+			<div class=" flex flex-col h-full select-text pt-2">
+					<div class="flex flex-row gap-x-2 px-2">
+						<HomeButton />
+					</div>
+				<RouteScreen {darkMode}
+				routestack={latest_item_on_stack.data}
+				/>
 			</div>
 		{/if}
 	{:else if false}
