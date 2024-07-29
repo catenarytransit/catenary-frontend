@@ -74,7 +74,6 @@ export function setup_load_map(
 			}
 		});
 
-		makeContextLayerDataset(map);
 
 		addGeoRadius(map);
 
@@ -435,6 +434,8 @@ export function setup_load_map(
 		changeRailTextOutsideNorthAmerica(map, layerspercategory);
 
 		runSettingsAdapt();
+
+		makeContextLayerDataset(map);
 
 		setTimeout(() => {
 			recompute_map_padding()

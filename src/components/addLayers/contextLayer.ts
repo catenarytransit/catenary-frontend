@@ -55,9 +55,8 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
         type: 'line',
         source: 'transit_shape_context',
         paint: {
-            'line-color': darkMode ? '#ffffff' : "#000000",
-            'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.8, 14, 6],
-            'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9],
+            'line-color': darkMode ? '#ffffff' : "#ffffff",
+            'line-width': ['interpolate', ['linear'], ['zoom'], 7, 6, 14, 9],
             'line-emissive-strength': 1,
             // 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
         },
@@ -70,7 +69,7 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
         source: 'transit_shape_context',
         paint: {
             'line-color': ['get', 'color'],
-            'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3, 14, 5],
+            'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
             //'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
             'line-emissive-strength': 1,
             // 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
