@@ -9,6 +9,8 @@
 	import { lightenColour } from './lightenDarkColour';
 	import DelayDiff from './DelayDiff.svelte';
 	import TimeDiff from './TimeDiff.svelte';
+	import polyline from '@mapbox/polyline';
+	import { writable, get } from 'svelte/store';
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
@@ -18,6 +20,7 @@
 		fixRunNumber,
 		fixStationName
 	} from './agencyspecific';
+	import mapboxgl from 'mapbox-gl';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
@@ -29,6 +32,22 @@
 	let updatetimecounter :NodeJS.Timeout |null= null;
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
+	
+	import {
+		dark_mode_store,
+		data_stack_store,
+		on_sidebar_trigger_store,
+		realtime_vehicle_locations_last_updated_store,
+		realtime_vehicle_locations_store,
+		realtime_vehicle_route_cache_hash_store,
+		realtime_vehicle_route_cache_store,
+		lock_on_gps_store,
+		usunits_store,
+		show_zombie_buses_store,
+		show_my_location_store,
+		custom_icons_category_to_layer_id,
+		map_pointer_store
+	} from '../globalstores';
 
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
@@ -155,6 +174,9 @@
 	export let darkMode: boolean = false;
 
 	async function fetch_trip_selected() {
+
+		let map = get(map_pointer_store);
+
 		console.log('t-s', trip_selected);
 
 		let url = new URL(
@@ -180,6 +202,39 @@
 					console.log('trip data', data);
 					is_loading_trip_data = false;
 					trip_data = data;
+
+					if (data.shape_polyline) {
+
+						let geojson_polyline_geo = polyline.toGeoJSON(data.shape_polyline,6);
+
+						let geojson_polyline = {
+							"geometry": geojson_polyline_geo,
+							"type": "Feature",
+							"properties": {
+							"text_color": data.text_color,
+							"color": data.color,
+							"route_label": data.route_short_name || data.route_long_name
+						}};
+
+						console.log(' geojson_polyline ',  geojson_polyline );
+
+						let geojson_source_new = {
+                    type: 'FeatureCollection',
+                    features: [
+						geojson_polyline
+					]
+                };
+
+			console.log(' geojson_source_new ',  geojson_source_new );
+
+						if (map != null) {
+							
+						console.log('map is not null');
+							map.getSource("transit_shape_context").setData(
+								geojson_source_new
+							);
+						}
+					}
 
 					//load alerts in
 					alerts = trip_data.alert_id_to_alert;

@@ -30,12 +30,11 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
             'text-radial-offset': 0.2,
             'text-emissive-strength': 1,
-            'text-font': [
-                'step',
-                ['zoom'],
-                ['literal', ['Barlow Regular', 'Arial Unicode MS Regular']],
-                9,
-                ['literal', ['Barlow Bold', 'Arial Unicode MS Semibold']],
+            'text-font': darkMode == true ?  [
+                "Barlow SemiBold",
+            ] :  
+            [
+                "Barlow SemiBold",
             ],
 
             'text-size': [
@@ -43,15 +42,14 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
                 ["linear"],
                 ["zoom"],
                 8,
-                7,
+                6,
                 11,
-                12,
+                10,
                 13,
-                16,
+                10,
                 15,
-                19
+                14
               ],
-
             'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
         },
         paint: {
@@ -59,7 +57,7 @@ export function makeCircleLayers(map:Map, darkMode: boolean, layerspercategory: 
             //'text-color': ['get', 'color'],
             //'text-halo-color': '#eaeaea',
             'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
-            'text-halo-width': 2.4,
+            'text-halo-width': darkMode == true ? 2.4 : 1,
             'text-halo-blur': 1,
             'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 1]
         }

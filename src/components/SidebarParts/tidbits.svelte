@@ -134,7 +134,7 @@
 		<p>{tidbits[tidbitIndex].description}</p>
 		<div class="mt-4">
 			<a target="_blank" href="{tidbits[tidbitIndex].link}">
-				<button class="border-2 border-sky-900 text-white rounded-md px-2 py-1 w-full">
+				<button class="border-2 border-sky-900 text-sky-900 dark:text-white rounded-md px-2 py-1 w-full">
 					Check it out!
 				</button>
 			</a>

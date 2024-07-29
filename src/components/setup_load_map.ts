@@ -31,6 +31,7 @@ import {
 import { makeCircleLayers } from './addLayers/addLiveDots';
 import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
 import {makeGpsLayer} from './makeGpsLayer';
+import { makeContextLayerDataset } from './addLayers/contextLayer';
 
 export function setup_load_map(
 	map: mapboxgl.Map,
@@ -72,6 +73,7 @@ export function setup_load_map(
 				'fill-opacity': 0
 			}
 		});
+
 
 		addGeoRadius(map);
 
@@ -432,6 +434,8 @@ export function setup_load_map(
 		changeRailTextOutsideNorthAmerica(map, layerspercategory);
 
 		runSettingsAdapt();
+
+		makeContextLayerDataset(map);
 
 		setTimeout(() => {
 			recompute_map_padding()

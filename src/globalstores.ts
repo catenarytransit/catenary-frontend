@@ -1,3 +1,4 @@
+import type mapboxgl from 'mapbox-gl';
 import {
     MapSelectionScreen,
     StackInterface,
@@ -29,3 +30,5 @@ export const usunits_store = writable(false);
 export const show_my_location_store = writable(true);
 
 export const custom_icons_category_to_layer_id:Writable<Record<string, string[]>> = writable({});
+
+export const map_pointer_store: Writable<mapboxgl.Map | null> = writable(null);
