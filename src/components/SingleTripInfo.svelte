@@ -233,6 +233,31 @@
 							map.getSource("transit_shape_context").setData(
 								geojson_source_new
 							);
+
+						let stops_features = data.stoptimes.map((eachstoptime:any) => {
+							return {
+							"type": "Feature",
+							"properties": {
+								"label": eachstoptime.name
+							},
+							"geometry": {
+								"coordinates": [
+								eachstoptime.longitude,
+								eachstoptime.latitude
+								],
+								"type": "Point"
+							}
+							}
+						});
+
+						let stop_source_new = {
+                    type: 'FeatureCollection',
+                    features: stops_features
+                };
+
+				map.getSource("stops_context").setData(
+					stop_source_new
+				);
 						}
 					}
 

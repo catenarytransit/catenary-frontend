@@ -79,6 +79,16 @@
                 }
 							);
 
+							map.getSource("stops_context").setData(
+		
+		{
+				type: 'FeatureCollection',
+				features: [
+					
+				]
+			}
+	);
+
 		//insert pdf urls
 
 		if (has_schedule_pdf(routestack.chateau_id)) {

@@ -107,6 +107,48 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
         },
         minzoom: 3
     });
-    
+
+    map.addLayer({
+        id: "contextbusstops",
+        type: 'circle',
+        source: 'stops_context',
+        layout: {},
+        paint: {
+            'circle-color': '#ffffff',
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 10, 2, 13, 4],
+            'circle-stroke-color': "#1a1a1a",
+            'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+            'circle-stroke-opacity': 0.9,
+            'circle-opacity': 1,
+            'circle-emissive-strength': 1
+        },
+        minzoom: 10,
+    });
+
+    map.addLayer({
+        id: "contextbusstops_label",
+        type: 'symbol',
+        source: 'stops_context',
+        layout: {
+            'text-field': ['get', 'label'],
+            //'text-field': ['coalesce', ['get', 'route_types']],
+            'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+            'text-size': 13,
+            'text-radial-offset': 0.7,
+            //'text-ignore-placement': false,
+            //'icon-ignore-placement': false,
+            //'text-allow-overlap': true,
+            //'symbol-avoid-edges': false,
+            'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
+        },
+        paint: {
+            'text-color': darkMode ? '#ffffff' : '#1a1a1a',
+            'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
+            'text-halo-width': 0.2,
+            'text-emissive-strength': 1
+        },
+        minzoom: 13.5
+    });
+   
 
 }

@@ -20,6 +20,16 @@
 					]
                 }
 		);
+
+		map.getSource("stops_context").setData(
+		
+		{
+				type: 'FeatureCollection',
+				features: [
+					
+				]
+			}
+	);
 		}
     }}
 	aria-label="Home"

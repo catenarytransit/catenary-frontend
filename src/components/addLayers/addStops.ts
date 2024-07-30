@@ -27,7 +27,6 @@ export function changeRailTextOutsideNorthAmerica(map:Map, layerspercategory:any
     }
 }
 
-
 export function addStopsLayers(map:any, darkMode:boolean, layerspercategory:any) {
       //BUS
 
