@@ -177,13 +177,13 @@
 	if (typeof window != 'undefined') {
 		let cached_show_my_location_settings = localStorage.getItem('show-my-location');
 
-		if (cached_show_my_location_settings == "false") {
+		if (cached_show_my_location_settings == 'false') {
 			show_my_location_store.set(false);
 		}
 
 		let cached_show_zombie_buses_settings = localStorage.getItem('showzombiebuses');
 
-		if (cached_show_zombie_buses_settings == "true") {
+		if (cached_show_zombie_buses_settings == 'true') {
 			show_zombie_buses_store.set(true);
 		}
 
@@ -523,10 +523,10 @@
 					if (layer) {
 						if (layersettings[category].visible) {
 							mapglobal.setLayoutProperty(layer_id, 'visibility', 'visible');
-							console.log('set', layer_id, "to show")
+							console.log('set', layer_id, 'to show');
 						} else {
 							mapglobal.setLayoutProperty(layer_id, 'visibility', 'none');
-							console.log("hide", layer_id)
+							console.log('hide', layer_id);
 						}
 					}
 				});
@@ -793,7 +793,6 @@
 					if (translate_x_sidebar_number > 0 - sidebar_width) {
 						translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
 
-
 						translate_x_sidebar = `${translate_x_sidebar_number}px`;
 
 						collapser_left_offset_number -= 0.1 * Math.abs(sidebar_width);
@@ -834,6 +833,24 @@
 				lock_on_gps_store.set(true);
 
 				mapglobal.flyTo(target);
+			}
+		} else {
+			if (typeof window !== 'undefined') {
+				const id = navigator.geolocation.watchPosition(
+					(position) => {
+						console.log(position);
+						localStorage.setItem(
+							'cachegeolocation',
+							`${position.coords.longitude},${position.coords.latitude}`
+						);
+
+						geolocation = position;
+					},
+					(e) => console.log(e),
+					{
+						enableHighAccuracy: true
+					}
+				);
 			}
 		}
 	}
@@ -966,7 +983,7 @@
 
 	onMount(() => {
 		//#region On the fly IP geolocation
-		
+
 		if (localStorage.getItem('cachegeolocation')) {
 			const [long, lat] = localStorage.getItem('cachegeolocation')!.split(',');
 			centerinit = [parseFloat(long), parseFloat(lat)];
@@ -978,7 +995,7 @@
 				/**
 				 * Use GeoLite2 database on Catenary servers
 				 *
-				 * adding a pin with this provided lat/long would prob freak a few people out 
+				 * adding a pin with this provided lat/long would prob freak a few people out
 				 * and even mapping sites (google, bing, etc) don't do it either on default
 				 * -q
 				 */
@@ -987,25 +1004,30 @@
 					// the text will be `lat,long`
 					.then((geo_api_response) => {
 						if (geo_api_response.geo_resp) {
-							centerinit = [parseFloat(geo_api_response.geo_resp.longitude), parseFloat(geo_api_response.geo_resp.latitude)];
-						
-						// set the center of the map to the user's location
-						// in case the map is already initialized (rare), set the center to the user's location
-						if (mapglobal) {
-							mapglobal.setCenter(centerinit);
+							centerinit = [
+								parseFloat(geo_api_response.geo_resp.longitude),
+								parseFloat(geo_api_response.geo_resp.latitude)
+							];
+
+							// set the center of the map to the user's location
+							// in case the map is already initialized (rare), set the center to the user's location
+							if (mapglobal) {
+								mapglobal.setCenter(centerinit);
+							}
+
+							// store the user's location in localStorage, as we do with regular browser provided geolocation
+							localStorage.setItem(
+								'cachegeolocation',
+								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+							);
 						}
-						
-						// store the user's location in localStorage, as we do with regular browser provided geolocation
-						localStorage.setItem('cachegeolocation', `${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`);
-					}});
+					});
 			} catch (e) {
 				console.error('Failed to get IP location, defaulting to LA');
 			}
 		}
-		
-		// #endregion
-		
 
+		// #endregion
 
 		fetch('https://birch.catenarymaps.org/getchateaus')
 			.then(function (response) {
@@ -1119,120 +1141,92 @@
 			} else {
 				fps = 0;
 			}
+
+			let geolocationdata = map.getSource('geolocation');
+
+if (geolocationdata) {
+	geolocationdata.setData({
+		type: 'FeatureCollection',
+		features: [
+			{
+				type: 'Feature',
+				geometry: {
+					type: 'Point',
+					coordinates: [geolocation.coords.longitude, geolocation.coords.latitude]
+				},
+				properties: {
+					accuracy: geolocation.coords.accuracy,
+					heading: geolocation.coords.heading
+				}
+			}
+		]
+	});
+
+	setUserCircles(map, geolocation.coords.longitude, geolocation.coords.latitude);
+
+	if (geolocation.coords.accuracy) {
+		let accuracyLayer = map.getSource('userpositionacc');
+
+		if (accuracyLayer) {
+			let numberofpoints: number = 128;
+
+			let geojsondata: any = createGeoJSONCircle(
+				[geolocation.coords.longitude, geolocation.coords.latitude],
+				geolocation.coords.accuracy / 1000,
+				numberofpoints
+			);
+
+			geojsondata.features[0].properties.opacity = 0.2;
+
+			if (geolocation.coords.accuracy >= 1000) {
+				geojsondata.features[0].properties.opacity = 0.1;
+			}
+
+			if (geolocation.coords.accuracy >= 2000) {
+				geojsondata.features[0].properties.opacity = 0.05;
+			}
+
+			if (geolocation.coords.accuracy >= 5000) {
+				geojsondata.features[0].properties.opacity = 0.02;
+			}
+
+			accuracyLayer.setData(
+				geojsondata,
+				geolocation.coords.longitude,
+				geolocation.coords.latitude
+			);
+		}
+	}
+}
+
+let nobearingposlayer = map.getLayer('nobearing_position');
+let bearingposlayer = map.getLayer('bearing_position');
+
+if (false) {
+	console.log('bearing is', geolocation.coords.heading);
+
+	map.setLayoutProperty('nobearing_position', 'visibility', 'none');
+
+	map.setLayoutProperty('bearing_position', 'visibility', 'visible');
+} else {
+	if (nobearingposlayer) {
+		if (show_my_location) {
+			map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+		} else {
+			map.setLayoutProperty('nobearing_position', 'visibility', 'none');
+		}
+	}
+
+	if (bearingposlayer) {
+		map.setLayoutProperty('bearing_position', 'visibility', 'none');
+	}
+}
 		});
 
 		map.on('zoomend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 		});
-
-		const successCallback = (position: any) => {
-
-			let location = position;
-
-			if (location) {
-
-				localStorage.setItem(
-					'cachegeolocation',
-					`${location.coords.longitude},${location.coords.latitude}`
-				);
-
-				geolocation = location;
-
-				let geolocationdata = map.getSource('geolocation');
-
-				if (geolocationdata) {
-					geolocationdata.setData({
-						type: 'FeatureCollection',
-						features: [
-							{
-								type: 'Feature',
-								geometry: {
-									type: 'Point',
-									coordinates: [location.coords.longitude, location.coords.latitude]
-								},
-								properties: {
-									accuracy: location.coords.accuracy,
-									heading: location.coords.heading
-								}
-							}
-						]
-					});
-
-					setUserCircles(map, location.coords.longitude, location.coords.latitude);
-
-					if (location.coords.accuracy) {
-						let accuracyLayer = map.getSource('userpositionacc');
-
-						if (accuracyLayer) {
-							let numberofpoints: number = 128;
-
-							let geojsondata: any = createGeoJSONCircle(
-								[location.coords.longitude, location.coords.latitude],
-								location.coords.accuracy / 1000,
-								numberofpoints
-							);
-
-							geojsondata.features[0].properties.opacity = 0.2;
-
-							if (location.coords.accuracy >= 1000) {
-								geojsondata.features[0].properties.opacity = 0.1;
-							}
-
-							if (location.coords.accuracy >= 2000) {
-								geojsondata.features[0].properties.opacity = 0.05;
-							}
-
-							if (location.coords.accuracy >= 5000) {
-								geojsondata.features[0].properties.opacity = 0.02;
-							}
-
-							accuracyLayer.setData(
-								geojsondata,
-								location.coords.longitude,
-								location.coords.latitude
-							);
-						}
-					}
-				}
-
-				let nobearingposlayer = map.getLayer('nobearing_position');
-				let bearingposlayer = map.getLayer('bearing_position');
-
-				if (false) {
-					console.log('bearing is', location.coords.heading);
-
-					map.setLayoutProperty('nobearing_position', 'visibility', 'none');
-
-					map.setLayoutProperty('bearing_position', 'visibility', 'visible');
-				} else {
-					if (nobearingposlayer) {
-						if (show_my_location) {
-						map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
-						} else {
-							map.setLayoutProperty('nobearing_position', 'visibility', 'none');
-						}
-					}
-
-					if (bearingposlayer) {
-						map.setLayoutProperty('bearing_position', 'visibility', 'none');
-					}
-				}
-
-				gpsupdate();
-			}
-		};
-
-		const errorCallback = (error: any) => {
-			console.log(error);
-		};
-
-		if (typeof window !== 'undefined') {
-			// client-only code here
-			const id = navigator.geolocation.watchPosition(successCallback, errorCallback, {
-				enableHighAccuracy: true
-			});
-		}
 
 		setup_load_map(
 			map,
@@ -1263,7 +1257,11 @@
 	</script>
 	<!-- End Google Tag Manager -->
 	<!-- Cloudflare Web Analytics -->
-	<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon={`{"token": "54830a433cbe4c08881b7f4d4692d822"}`}></script>
+	<script
+		defer
+		src="https://static.cloudflareinsights.com/beacon.min.js"
+		data-cf-beacon={`{"token": "54830a433cbe4c08881b7f4d4692d822"}`}
+	></script>
 	<!-- End Cloudflare Web Analytics -->
 	<!-- Primary Meta Tags -->
 	<title>Catenary Maps</title>
@@ -1339,22 +1337,22 @@
 	{/key}
 
 	{#if !$isLoading}
+		<div
+			id="catenary-sidebar"
+			style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
+			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+		>
 			<div
-				id="catenary-sidebar"
-				style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+				class="block md:hidden py-2 flex flex-row"
+				on:mousedown={startmovesidebar}
+				on:touchstart={startmovesidebar}
+				aria-label="Move sidebar"
+				role="none"
 			>
-				<div
-					class="block md:hidden py-2 flex flex-row"
-					on:mousedown={startmovesidebar}
-					on:touchstart={startmovesidebar}
-					aria-label="Move sidebar"
-					role="none"
-				>
-					<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
-				</div>
-					<SidebarInternals {latest_item_on_stack} {darkMode} />
+				<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
 			</div>
+			<SidebarInternals {latest_item_on_stack} {darkMode} />
+		</div>
 	{/if}
 </div>
 {#if !$isLoading}
