@@ -70,5 +70,5 @@
     "defaultlang": "Default language",
     "showmylocation": "Show my location",
     "hidepreviousstops": "Hide previous stops",
-        "showxpreviousstops_pt1": "Show"
+    "shownpreviousstops": "Show {n} previous {n, plural, other{stops}}"
   }

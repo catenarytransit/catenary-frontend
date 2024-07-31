@@ -382,14 +382,17 @@
 		{
 			#if this_locale?.startsWith("en")
 		}
-		<div class="text-sm lg:text-base py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-y-2 mb-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15">
-			<h2 class="text-lg font-semibold">We get there together.</h2>
-			<p>Catenary is a student-led non-profit organization at the cutting edge of transit and routing research. We add features every day to our map, so come chat with us & give us your feedback on our Discord server!</p>
-			<div class="mt-4 flex flex-row gap-x-2">
-				<a target="_blank" href="https://discord.gg/yVV6dguwtq"><button class="bg-blue-600 font-bold text-white rounded-md px-2 py-1">Join our Discord</button></a>
-				<a target="_blank" href="https://catenarymaps.org"><button class="bg-white dark:bg-gray-950 font-bold rounded-md px-2 py-1 flex flex-row gap-x-1 text-[#42A7C5]"><img  src="https://catenarymaps.org/logo.svg" class="inline mr-1 h-5 my-auto text-[#42A7C5]"/>Catenary Website</button></a>
+		{#if false}
+			<div class="text-sm lg:text-base py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-y-2 mb-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15">
+				<h2 class="text-lg font-semibold">We get there together.</h2>
+				<p>Catenary is a student-led non-profit organization at the cutting edge of transit and routing research. We add features every day to our map, so come chat with us & give us your feedback on our Discord server!</p>
+				<div class="mt-4 flex flex-row gap-x-2">
+					<a target="_blank" href="https://discord.gg/yVV6dguwtq"><button class="bg-blue-600 font-bold text-white rounded-md px-2 py-1">Join our Discord</button></a>
+					<a target="_blank" href="https://catenarymaps.org"><button class="bg-white dark:bg-gray-950 font-bold rounded-md px-2 py-1 flex flex-row gap-x-1 text-[#42A7C5]"><img  src="https://catenarymaps.org/logo.svg" class="inline mr-1 h-5 my-auto text-[#42A7C5]"/>Catenary Website</button></a>
+				</div>
 			</div>
-		</div>
+		{/if}
+			
 
 			<TidbitSidebarCard />
 

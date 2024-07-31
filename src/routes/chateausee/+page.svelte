@@ -1,0 +1,143 @@
+<script lang="ts">
+    	import mapboxgl from 'mapbox-gl';
+        import { onMount } from 'svelte';
+        
+	    import { decode as decodeToAry, encode as encodeAry } from 'base65536';
+
+        const decode = (textToDecode: string) => {
+		try {
+			return new TextDecoder().decode(decodeToAry(textToDecode));
+		} catch (e) {
+			return 'Decode failed: Invalid input';
+		}
+	};
+    
+		let centerinit:[number, number] = [-118, 33.9];
+        let zoominit = 8.1;
+
+        onMount(() => {
+            const map = new mapboxgl.Map({
+			container: 'map',
+			crossSourceCollisions: true,
+			hash: 'pos',
+			preserveDrawingBuffer: false,
+			attributionControl: false,
+			//	antialias: true,
+			style: "mapbox://styles/kylerschin/clu3orpuz026g01ra7kcgg9s9", // stylesheet location
+			accessToken: decode(
+				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
+			),
+			center: centerinit, // starting position [lng, lat]
+			//keep the centre at Los Angeles, since that is our primary user base currently
+			//switch to IP geolocation and on the fly rendering for this soon
+			zoom: zoominit, // starting zoom (must be greater than 8.1)
+			fadeDuration: 0
+		});
+
+        map.on("load", () => {
+            map.addSource('chateaus', {
+			type: 'geojson',
+			data: {
+				"features":[
+			],
+			"type": "FeatureCollection"
+			}
+		});
+
+			fetch("https://birch.catenarymaps.org/getchateaus")
+			.then(async (resp) => {
+				let json = await resp.json();
+
+				let colour_pool = [
+					"#ef4444",
+					"#f97316",
+					"#f59e0b",
+					"#eab308",
+					"#84cc16",
+					"#22c55e",
+					"#10b981",
+					"#14b8a6",
+					"#06b6d4",
+					"#0ea5e9",
+					"#3b82f6",
+					"#6366f1",
+					"#8b5cf6",
+					"#a855f7",
+					"#d946ef",
+					"#ec4899",
+					"#f43f5e"
+				];
+
+				let i = 0;
+
+				let new_features = json.features.map((x:any) => {
+					
+					x.properties.color = colour_pool[i % colour_pool.length];
+					i = i + 1;
+
+					return x;
+				});
+
+				map.getSource("chateaus").setData(
+					{
+				"features":new_features,
+			"type": "FeatureCollection"
+			}
+				)
+			});
+
+			map.addLayer({
+					id: 'static_hull_calc_line',
+					type: 'line',
+					source: "chateaus",
+					paint: {
+						'line-color':  ['get', 'color'],
+						'line-opacity': 1,
+						'line-emissive-strength': 1,
+						'line-width': 2
+					}
+				});
+
+
+				map.addLayer({
+					id: 'static_hull_calc_shape',
+					type: 'fill',
+					source: "chateaus",
+					paint: {
+						'fill-color':  ['get', 'color'],
+						'fill-opacity': 0.03,
+						'fill-emissive-strength': 1,
+					}
+				});
+				map.addLayer({
+					id: 'static_feed_calc_names',
+					type: 'symbol',
+					source: "chateaus",
+					layout: {
+						'text-field': ['get', 'chateau'],
+						'text-size': 9,
+						//'text-allow-overlap': true,
+						//'text-ignore-placement': true,
+						'text-justify': 'center',
+						'text-anchor': 'center',
+						'text-padding': 0,
+						'text-line-height': 1.2,
+						'text-letter-spacing': 0.01,
+						'text-max-width': 10,
+						'text-font': ['Open Sans Medium', 'Arial Unicode MS Regular'],
+						'text-offset': [0, 0]
+					},
+					paint: {
+						'text-color': ['get', 'color'],
+						'text-halo-color': '#000000',
+						'text-halo-width': 2,
+						'text-halo-blur': 5,
+					}
+				});
+        });
+        });
+</script>
+
+<title>Catenary Maps - Chateaus</title>
+
+<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />

@@ -639,7 +639,9 @@
 								}}
 								class="underline cursor-pointer text-sm text-gray-900 dark:text-gray-100 text-lg font-semibold text-base lg:text-lg text-blue-500 dark:text-sky-300"
 								>
-									Show {last_inactive_stop_idx} previous stops
+									{$_("shownpreviousstops", {values: {
+										n:last_inactive_stop_idx
+									}})}
 								</div>
 								{stoptimes_cleaned_dataset[0] == null ? '' : stoptimes_cleaned_dataset[0].name}
 							</div>

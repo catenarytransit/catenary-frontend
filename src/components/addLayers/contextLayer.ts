@@ -119,10 +119,10 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
             'circle-stroke-color': "#1a1a1a",
             'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
             'circle-stroke-opacity': 0.9,
-            'circle-opacity': 1,
+            'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1],
             'circle-emissive-strength': 1
         },
-        minzoom: 10,
+        minzoom: 11,
     });
 
     map.addLayer({
