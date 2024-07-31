@@ -1145,7 +1145,8 @@
 			let geolocationdata = map.getSource('geolocation');
 
 if (geolocationdata) {
-	geolocationdata.setData({
+	if (geolocation.coords) {
+		geolocationdata.setData({
 		type: 'FeatureCollection',
 		features: [
 			{
@@ -1161,6 +1162,8 @@ if (geolocationdata) {
 			}
 		]
 	});
+	}	
+	
 
 	setUserCircles(map, geolocation.coords.longitude, geolocation.coords.latitude);
 
