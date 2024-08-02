@@ -124,7 +124,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 
 							trip_short_name = vehicle_data.trip.trip_short_name;
 						} else {
-							tripIdLabel = vehicle_data.trip.trip_id;
+						//	tripIdLabel = vehicle_data.trip.trip_id;
 						}
 
 						if (vehicle_data.trip.trip_headsign) {
