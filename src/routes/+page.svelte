@@ -271,10 +271,10 @@
 	let layersettings: Record<string, any> = {
 		bus: {
 			visible: true,
-			labelshapes: true,
+			labelshapes: false,
 			stops: true,
 			shapes: true,
-			stoplabels: true,
+			stoplabels: false,
 			label: {
 				route: true,
 				trip: false,
@@ -287,11 +287,11 @@
 		localrail: {
 			visible: true,
 			stops: true,
-			labelshapes: true,
+			labelshapes: false,
 			stoplabels: true,
 			shapes: true,
 			label: {
-				route: true,
+				route: false,
 				trip: false,
 				vehicle: false,
 				headsign: false,
@@ -302,7 +302,7 @@
 		intercityrail: {
 			visible: true,
 			stops: true,
-			labelshapes: true,
+			labelshapes: false,
 			stoplabels: true,
 			shapes: true,
 			label: {
@@ -317,7 +317,7 @@
 		other: {
 			visible: true,
 			stops: true,
-			labelshapes: true,
+			labelshapes: false,
 			stoplabels: true,
 			shapes: true,
 			label: {
