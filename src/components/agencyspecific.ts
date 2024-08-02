@@ -87,9 +87,12 @@ export function fixRouteNameLong(chateau: string, route: string, rid: string): s
     }
 }
 
-export function fixRunNumber(chateau: string, type: number, route: number, tripname: string, vehicle: string): string | null {
+export function fixRunNumber(chateau: string, type: number, route: number, tripname: string | null, vehicle: string, trip_id: string | null): string | null {
     if (chateau == 'san-diego-mts' && type == 0) return vehicle
     if (chateau == 'northcountytransitdistrict' && route != 398) return null
+    if (chateau == 'metra') {
+        return vehicle
+    }
     return tripname
 }
 
