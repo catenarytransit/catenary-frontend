@@ -162,7 +162,7 @@
 										tabindex="0"
 										class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-[#0a233f] hover:bg-blue-100 hover:dark:bg-[#1a334f]  text-sm md:text-base leading-snug rounded-lg"
 									>
-										{#if option.data.triplabel}
+										{#if option.data.trip_id}
 											{#if fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id, option.data.trip_short_name, option.data.vehicle_id)}
 												<span
 													style={`background-color: ${option.data.colour}; color: ${option.data.text_colour};`}
@@ -412,6 +412,6 @@
 			<p class="text-gray-800 dark:text-gray-300">{$_('comingsoon')}</p>
 
 
-			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-07-29 19:39Z</p>
+			<p class="text-xs md:text-sm  text-gray-800 dark:text-gray-300">Catenary Maps {$_('softwareversion')} 2024-08-02 23:29Z</p>
 		</div>
 	{/if}
