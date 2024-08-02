@@ -125,6 +125,14 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 							trip_short_name = vehicle_data.trip.trip_short_name;
 						} else {
 						//	tripIdLabel = vehicle_data.trip.trip_id;
+
+						if (chateau_id == "metra") {
+							const split = vehicle_data.trip.trip_id.split("_");
+
+							if (split[1] != undefined) {
+								tripIdLabel = split[1].replace(/\D/g,'');;
+							}
+						}
 						}
 
 						if (vehicle_data.trip.trip_headsign) {

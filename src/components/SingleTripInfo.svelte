@@ -466,7 +466,7 @@
 							style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
 							class="text-xl mt-0"
 						>
-							{#if fixRunNumber(trip_selected.chateau_id, trip_selected.route_type || 3, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id)}
+							{#if fixRunNumber(trip_selected.chateau_id, trip_selected.route_type || 3, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id, trip_data.trip_id)}
 								<span
 									style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
 									class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min"
@@ -475,7 +475,8 @@
 										trip_selected.route_type || 3,
 										trip_data.route_id,
 										trip_data.trip_short_name,
-										trip_data.vehicle_id
+										trip_data.vehicle_id,
+										trip_data.trip_id
 									)}</span
 								>
 							{/if}
