@@ -481,7 +481,7 @@
 					}
 				}
 
-				let hidevehiclecommand = ['!=', '', ['get', 'tripIdLabel']];
+				let hidevehiclecommand = ['!=', '', ['get', 'trip_id']];
 
 				let regularpointers = [
 					'all',
@@ -490,7 +490,7 @@
 				];
 				let hidevehiclecommandpointers = [
 					'all',
-					['!=', '', ['get', 'tripIdLabel']],
+					['!=', '', ['get', 'trip_id']],
 					['!=', 0, ['get', 'bearing']],
 					['==', true, ['get', 'has_bearing']]
 				];
@@ -1084,6 +1084,14 @@
 				map.setConfigProperty('basemap', 'showTransitLabels', false);
 			});
 		}
+
+		map.on('load', () => {
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			changeRailTextOutsideNorthAmerica(map, layerspercategory);
+			}, 0);
+		})
 
 		mapboxgl.setRTLTextPlugin(
 			'/mapbox-gl-rtl-text.min.js',
