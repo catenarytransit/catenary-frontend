@@ -1150,11 +1150,11 @@
 				fps = 0;
 			}
 
-			let geolocationdata = map.getSource('geolocation');
+			let geolocation_mapboxsource = map.getSource('geolocation');
 
-if (geolocationdata) {
-	if (geolocationdata.coords) {
-		geolocationdata.setData({
+if (geolocation_mapboxsource) {
+	if (geolocation.coords) {
+		geolocation_mapboxsource.setData({
 		type: 'FeatureCollection',
 		features: [
 			{
@@ -1214,7 +1214,7 @@ if (geolocationdata) {
 let nobearingposlayer = map.getLayer('nobearing_position');
 let bearingposlayer = map.getLayer('bearing_position');
 
-if (false) {
+if (geolocation.coords.heading) {
 	console.log('bearing is', geolocation.coords.heading);
 
 	map.setLayoutProperty('nobearing_position', 'visibility', 'none');
