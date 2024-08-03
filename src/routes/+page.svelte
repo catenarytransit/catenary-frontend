@@ -1153,7 +1153,7 @@
 			let geolocationdata = map.getSource('geolocation');
 
 if (geolocationdata) {
-	if (geolocation.coords) {
+	if (geolocationdata.coords) {
 		geolocationdata.setData({
 		type: 'FeatureCollection',
 		features: [
@@ -1170,9 +1170,8 @@ if (geolocationdata) {
 			}
 		]
 	});
-	}	
-	
 
+		
 	setUserCircles(map, geolocation.coords.longitude, geolocation.coords.latitude);
 
 	if (geolocation.coords.accuracy) {
@@ -1208,6 +1207,8 @@ if (geolocationdata) {
 			);
 		}
 	}
+	}	
+	
 }
 
 let nobearingposlayer = map.getLayer('nobearing_position');

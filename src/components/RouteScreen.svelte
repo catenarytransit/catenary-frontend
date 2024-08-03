@@ -170,6 +170,28 @@
 				</a>
 				{/if}
 
+				<p>Directions</p>
+<div class="divide-y bg-slate-200 dark:bg-slate-800 divide-gray-500">
+			{
+				#each Object.entries(route_data.direction_patterns) as direction, index
+			}
+			<div class="py-1 px-2 flex flex-row">
+				<div>
+					
+				</div>
+				<div>
+					<p class="font-medium">{direction[1].direction_pattern.headsign_or_destination}</p>
+				<p>{direction[1].rows.length} {" stops"}</p>
+				
+				</div>
+				
+
+			</div>
+
+				
+		
+			{/each}
+</div>
 			
 			{:else}
 			<div
