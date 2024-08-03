@@ -1207,11 +1207,8 @@ if (geolocation_mapboxsource) {
 			);
 		}
 	}
-	}	
-	
-}
 
-let nobearingposlayer = map.getLayer('nobearing_position');
+	let nobearingposlayer = map.getLayer('nobearing_position');
 let bearingposlayer = map.getLayer('bearing_position');
 
 if (geolocation.coords.heading) {
@@ -1233,6 +1230,11 @@ if (geolocation.coords.heading) {
 		map.setLayoutProperty('bearing_position', 'visibility', 'none');
 	}
 }
+	}	
+	
+}
+
+
 		});
 
 		map.on('zoomend', (events) => {
