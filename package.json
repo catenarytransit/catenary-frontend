@@ -20,7 +20,6 @@
     "@sveltejs/adapter-node": "^5.0.1",
     "@sveltejs/kit": "^2.5.7",
     "@types/mapbox__polyline": "^1.0.5",
-    "@types/mapbox-gl": "^3.5.2",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.0",
     "autoprefixer": "^10.4.17",
