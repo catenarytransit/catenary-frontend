@@ -60,7 +60,7 @@ export class VehicleMapSelector {
 	public route_short_name: string | null;
 	public route_long_name: string | null;
 	public route_type: number;
-    public trip_short_name: string | null;
+	public trip_short_name: string | null;
 	public text_colour: string;
 	public gtfs_id: string;
 	public trip_id: string | null;
@@ -77,7 +77,7 @@ export class VehicleMapSelector {
 		route_short_name: string | null,
 		route_long_name: string | null,
 		route_type: number,
-        trip_short_name: string | null,
+		trip_short_name: string | null,
 		text_colour: string,
 		gtfs_id: string,
 		trip_id: string | null,
@@ -93,7 +93,7 @@ export class VehicleMapSelector {
 		this.route_short_name = route_short_name;
 		this.route_long_name = route_long_name;
 		this.route_type = route_type;
-        this.trip_short_name = trip_short_name;
+		this.trip_short_name = trip_short_name;
 		this.text_colour = text_colour;
 		this.gtfs_id = gtfs_id;
 		this.trip_id = trip_id;
@@ -181,7 +181,7 @@ export class VehicleSelectedStack {
 	public vehicle_id: string | null;
 	public gtfs_id: string;
 
-	constructor(chateau_id: string, vehicle_id: string|null, gtfs_id: string) {
+	constructor(chateau_id: string, vehicle_id: string | null, gtfs_id: string) {
 		this.chateau_id = chateau_id;
 		this.vehicle_id = vehicle_id;
 		this.gtfs_id = gtfs_id;
@@ -189,8 +189,5 @@ export class VehicleSelectedStack {
 }
 
 export class SettingsStack {
-	
-	constructor() {
-
-	}
+	constructor() {}
 }

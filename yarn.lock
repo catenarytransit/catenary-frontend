@@ -446,23 +446,23 @@
     sirv "^2.0.4"
     tiny-glob "^0.2.9"
 
-"@sveltejs/vite-plugin-svelte-inspector@^2.0.0":
+"@sveltejs/vite-plugin-svelte-inspector@^2.1.0":
   version "2.1.0"
   resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte-inspector/-/vite-plugin-svelte-inspector-2.1.0.tgz"
   integrity sha512-9QX28IymvBlSCqsCll5t0kQVxipsfhFFL+L2t3nTWfXnddYwxBuAEtTtlaVQpRz9c37BhJjltSeY4AJSC03SSg==
   dependencies:
     debug "^4.3.4"
 
-"@sveltejs/vite-plugin-svelte@^3.0.0":
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-3.1.0.tgz"
-  integrity sha512-sY6ncCvg+O3njnzbZexcVtUqOBE3iYmQPJ9y+yXSkOwG576QI/xJrBnQSRXFLGwJNBa0T78JEKg5cIR0WOAuUw==
+"@sveltejs/vite-plugin-svelte@^3.0.0", "@sveltejs/vite-plugin-svelte@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-3.1.1.tgz"
+  integrity sha512-rimpFEAboBBHIlzISibg94iP09k/KYdHgVhJlcsTfn7KMBhc70jFX/GRWkRdFCc2fdnk+4+Bdfej23cMDnJS6A==
   dependencies:
-    "@sveltejs/vite-plugin-svelte-inspector" "^2.0.0"
+    "@sveltejs/vite-plugin-svelte-inspector" "^2.1.0"
     debug "^4.3.4"
     deepmerge "^4.3.1"
     kleur "^4.1.5"
-    magic-string "^0.30.9"
+    magic-string "^0.30.10"
     svelte-hmr "^0.16.0"
     vitefu "^0.2.5"
 
@@ -2217,7 +2217,7 @@ lru-queue@^0.1.0:
   dependencies:
     es5-ext "~0.10.2"
 
-magic-string@^0.30.3, magic-string@^0.30.4, magic-string@^0.30.5, magic-string@^0.30.9:
+magic-string@^0.30.10, magic-string@^0.30.3, magic-string@^0.30.4, magic-string@^0.30.5:
   version "0.30.10"
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
@@ -2822,11 +2822,15 @@ prelude-ls@~1.1.2:
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.1.2.tgz"
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
-prettier-plugin-svelte@^3.1.2:
-  version "3.2.3"
+prettier-plugin-svelte@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.npmjs.org/prettier-plugin-svelte/-/prettier-plugin-svelte-3.2.6.tgz"
+  integrity sha512-Y1XWLw7vXUQQZmgv1JAEiLcErqUniAF2wO7QJsw8BVMvpLET2dI5WpEIEJx1r11iHVdSMzQxivyfrH9On9t2IQ==
 
-prettier@^3.0.0, prettier@^3.2.4:
-  version "3.2.5"
+prettier@^3.0.0, prettier@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.npmjs.org/prettier/-/prettier-3.3.3.tgz"
+  integrity sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==
 
 pretty-format@^29.7.0:
   version "29.7.0"

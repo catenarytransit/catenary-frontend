@@ -2,14 +2,14 @@ name: Deploy to Staging on Successful Build
 
 on:
   workflow_run:
-    workflows: ["Build Svelte using Bun"]
+    workflows: ['Build Svelte using Bun']
     types:
       - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Exit if the branch is not master
         run: |
@@ -30,7 +30,7 @@ jobs:
           printf "Host sshstaging.lolpro11.me\nProxyCommand /usr/bin/cloudflared access ssh --hostname %%h" > ~/.ssh/config
           echo "${{ secrets.STAGING_SERVER }}" > ~/.ssh/known_hosts
         shell: bash
-        
+
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh

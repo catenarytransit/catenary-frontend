@@ -3,59 +3,60 @@
 @tailwind utilities;
 
 body {
-    --sb-track-color: #e1ecfb;
-    --sb-thumb-color: #16a4d0;
-    --sb-size: 16px;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-   body {
-    --sb-track-color: #0A233F;
-    --sb-thumb-color: #42A7C5;
-   }
-  }
+	--sb-track-color: #e1ecfb;
+	--sb-thumb-color: #16a4d0;
+	--sb-size: 16px;
+}
 
-  body::-webkit-scrollbar {
-    width: var(--sb-size);
-  }
-  
-  body::-webkit-scrollbar-track {
-    background: var(--sb-track-color);
-    border-radius: 1px;
-  }
-  
-  body::-webkit-scrollbar-thumb {
-    background: var(--sb-thumb-color);
-    border-radius: 1px;
-    border: 2px solid #232e33;
-  }
-  
-  @supports not selector(::-webkit-scrollbar) {
-    body {
-        scrollbar-color: var(--sb-thumb-color)
-                       var(--sb-track-color);
-    }
-  }
+@media (prefers-color-scheme: dark) {
+	body {
+		--sb-track-color: #0a233f;
+		--sb-thumb-color: #42a7c5;
+	}
+}
 
-  .catenary-scroll {
-    scrollbar-color: var(--sb-thumb-color)
-    var(--sb-track-color);
-    scrollbar-width: thin;
-  }
+body::-webkit-scrollbar {
+	width: var(--sb-size);
+}
 
-  .catenary-scroll::-webkit-scrollbar {
-    width: var(--sb-size);
-  }
-  
-  .catenary-scroll::-webkit-scrollbar-track {
-    background: var(--sb-track-color);
-    border-radius: 1px;
-  }
-  
-  .catenary-scroll::-webkit-scrollbar-thumb {
-    background: var(--sb-thumb-color);
-    border-radius: 1px;
-    border: 2px solid #232e33;
-  }
+body::-webkit-scrollbar-track {
+	background: var(--sb-track-color);
+	border-radius: 1px;
+}
 
-  html, body { overscroll-behavior: none; } 
+body::-webkit-scrollbar-thumb {
+	background: var(--sb-thumb-color);
+	border-radius: 1px;
+	border: 2px solid #232e33;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+	body {
+		scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+	}
+}
+
+.catenary-scroll {
+	scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+	scrollbar-width: thin;
+}
+
+.catenary-scroll::-webkit-scrollbar {
+	width: var(--sb-size);
+}
+
+.catenary-scroll::-webkit-scrollbar-track {
+	background: var(--sb-track-color);
+	border-radius: 1px;
+}
+
+.catenary-scroll::-webkit-scrollbar-thumb {
+	background: var(--sb-thumb-color);
+	border-radius: 1px;
+	border: 2px solid #232e33;
+}
+
+html,
+body {
+	overscroll-behavior: none;
+}

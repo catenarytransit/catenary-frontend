@@ -9,20 +9,20 @@ register('zh-CN', () => import('./locales/zh-CN.json'));
 register('zh-TW', () => import('./locales/zh-TW.json'));
 
 export function getLocaleStorageOrNav() {
-  if (typeof window != "undefined") {
-    if ( window.localStorage.language &&  window.localStorage.language  !== "undefined") {
-        return window.localStorage.language;
-    } else {
-      return getLocaleFromNavigator();
-    }
-  } else {
-    return getLocaleFromNavigator();
-  }
+	if (typeof window != 'undefined') {
+		if (window.localStorage.language && window.localStorage.language !== 'undefined') {
+			return window.localStorage.language;
+		} else {
+			return getLocaleFromNavigator();
+		}
+	} else {
+		return getLocaleFromNavigator();
+	}
 }
 
 export function init_locales() {
-    init({
-        fallbackLocale: 'en',
-        initialLocale: getLocaleStorageOrNav(),
-      });
+	init({
+		fallbackLocale: 'en',
+		initialLocale: getLocaleStorageOrNav()
+	});
 }

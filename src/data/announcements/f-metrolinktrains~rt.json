@@ -1,15 +1,19 @@
 {
-    "arrival": {
-        "pattern": ["metrolink/arrival/[[ROUTE]].wav", "metrolink/stations/[[DESTINATION]].wav", "metrolink/arrival/IS NOW ARRIVING.wav"]
-    },
-    "courtesy": {
-        "safety": {
-            "audio": ["courtesy/safety.wav"],
-            "text": "For your personal safety, please keep aisles clear of personal items. If you see a suspicious package onboard the train, report it to the conductor immediately. Safety is everyone's concern."
-        },
-        "litterbug": {
-            "audio": ["courtesy/litterbug.wav"],
-            "text": "No one likes a litterbug, so remember to please throw away all your unwanted trash before leaving the train."
-        }
-    }
+	"arrival": {
+		"pattern": [
+			"metrolink/arrival/[[ROUTE]].wav",
+			"metrolink/stations/[[DESTINATION]].wav",
+			"metrolink/arrival/IS NOW ARRIVING.wav"
+		]
+	},
+	"courtesy": {
+		"safety": {
+			"audio": ["courtesy/safety.wav"],
+			"text": "For your personal safety, please keep aisles clear of personal items. If you see a suspicious package onboard the train, report it to the conductor immediately. Safety is everyone's concern."
+		},
+		"litterbug": {
+			"audio": ["courtesy/litterbug.wav"],
+			"text": "No one likes a litterbug, so remember to please throw away all your unwanted trash before leaving the train."
+		}
+	}
 }

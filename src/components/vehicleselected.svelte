@@ -11,7 +11,7 @@
 	import type GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { durationToIsoElapsed } from '../utils/isoelapsed';
 	import { afterUpdate, onMount } from 'svelte';
-	import {new_jeans_buses} from "./addLayers/customIcons"
+	import { new_jeans_buses } from './addLayers/customIcons';
 	export let strings: Record<string, string>;
 	export let selectedVehicleLookup: SelectedVehicleKeyType;
 	export let map: mapboxgl.Map;
@@ -63,9 +63,9 @@
 		'f-northcountrytransitdistrict~rt': 'nctd',
 		'f-bigbluebus~rt': 'big-blue-bus',
 		'f-f25d-socitdetransportdemontral~rt': 'stm',
-		"f-spokanetransitauthority~rt":"spokane-sta",
-		"f-santa~clarita~rt": "vta",
-		"f-wmata~bus~rt": "wmata"
+		'f-spokanetransitauthority~rt': 'spokane-sta',
+		'f-santa~clarita~rt': 'vta',
+		'f-wmata~bus~rt': 'wmata'
 	};
 
 	onMount(() => {
@@ -92,7 +92,7 @@
 
 		return () => {
 			clearInterval(interval);
-		//	clearInterval(swiftlyinterval);
+			//	clearInterval(swiftlyinterval);
 		};
 	});
 
@@ -133,37 +133,33 @@
 </script>
 
 {#if properties}
-	{#if selectedVehicleLookup.realtime_feed_id == "f-translink~rt"}
-	<img src="https://www.translink.ca/-/media/translink/logos/translink_logo.svg" class='h-10 md:h-12'
-	alt="Translink"
-	>
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-translink~rt'}
+		<img
+			src="https://www.translink.ca/-/media/translink/logos/translink_logo.svg"
+			class="h-10 md:h-12"
+			alt="Translink"
+		/>
 	{/if}
-	{#if selectedVehicleLookup.realtime_feed_id == "f-calgarytransit~rt"}
-	<img src="https://www.calgarytransit.com/etc/clientlibs/transit/v3/transit/main/images/Calgary-Transit-Logo.svg" 
-	alt="Calgary Transit"
-	class="h-10 md:h-12"/>
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-calgarytransit~rt'}
+		<img
+			src="https://www.calgarytransit.com/etc/clientlibs/transit/v3/transit/main/images/Calgary-Transit-Logo.svg"
+			alt="Calgary Transit"
+			class="h-10 md:h-12"
+		/>
 	{/if}
-	{#if selectedVehicleLookup.realtime_feed_id == "f-f25d-socitdetransportdemontral~rt"}
-	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/STM_%28logo%2C_2010%29.svg/2560px-STM_%28logo%2C_2010%29.svg.png" 
-	alt="Société de transport de Montréal"
-	class='h-10 md:h-12' />
+	{#if selectedVehicleLookup.realtime_feed_id == 'f-f25d-socitdetransportdemontral~rt'}
+		<img
+			src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/STM_%28logo%2C_2010%29.svg/2560px-STM_%28logo%2C_2010%29.svg.png"
+			alt="Société de transport de Montréal"
+			class="h-10 md:h-12"
+		/>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-mts~rt~onebusaway'}
-	<div class="flex flex-row align-middle">
-		{#if properties.maptag == 'Green'}
-				<img
-					src="/lines/mts-green.svg"
-					class="h-14"
-					style:margin-right="15px"
-					alt="Green Line"
-				/>
+		<div class="flex flex-row align-middle">
+			{#if properties.maptag == 'Green'}
+				<img src="/lines/mts-green.svg" class="h-14" style:margin-right="15px" alt="Green Line" />
 			{:else if properties.maptag == 'Orange'}
-				<img
-					src="/lines/mts-orange.svg"
-					class="h-14"
-					style:margin-right="15px"
-					alt="Orange Line"
-				/>
+				<img src="/lines/mts-orange.svg" class="h-14" style:margin-right="15px" alt="Orange Line" />
 			{:else if properties.maptag == 'Blue'}
 				<img
 					src="/lines/mts-blue.svg"
@@ -171,37 +167,50 @@
 					style:margin-right="15px"
 					alt="UC San Diego Blue Line"
 				/>
-				{:else}
-				<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
+			{:else}
+				<h1
+					style:color={darkMode ? properties.contrastdarkmode : properties.color}
+					class="text-lg md:text-2xl"
+				>
 					{properties.maptag}
 				</h1>
-
 			{/if}
-	</div>
+		</div>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~rail~rt'}
 		{#if properties.maptag.toLowerCase() == 'b' || properties.maptag.toLowerCase() == 'd'}
-			<img src="/icons/la-hrv.png" style:width="60%" alt=""/>
+			<img src="/icons/la-hrv.png" style:width="60%" alt="" />
 		{:else}
-			<img src="/icons/la-lrv.png" style:width="50%" alt=""/>
+			<img src="/icons/la-lrv.png" style:width="50%" alt="" />
 		{/if}
 		<br />
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metro~losangeles~bus~rt'}
-		<img src="/icons/la-metrobus.png" style:width="40%"  alt=""/>
+		<img src="/icons/la-metrobus.png" style:width="40%" alt="" />
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metrolinktrains~rt'}
-		<img src="/icons/la-metrolink.png"  alt=""/>
+		<img src="/icons/la-metrolink.png" alt="" />
 		<br />
-		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
-			<img src="https://metrolinktrains.com/favicon.ico" style:height="40px" style:float="left" alt="Metrolink"/>
+		<p
+			style:color={darkMode ? properties.contrastdarkmode : properties.color}
+			class="text-lg md:text-2xl"
+		>
+			<img
+				src="https://metrolinktrains.com/favicon.ico"
+				style:height="40px"
+				style:float="left"
+				alt="Metrolink"
+			/>
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
 			{expandMetrolink[properties.maptag]}
 		</p>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-metra~rt'}
-		<p style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
+		<p
+			style:color={darkMode ? properties.contrastdarkmode : properties.color}
+			class="text-lg md:text-2xl"
+		>
 			<img
 				src={`https://ridertools.metrarail.com/sites/default/files/assets/maps-schedules/train-lines/trainline_${
 					properties.maptag == 'ME' || properties.maptag == 'RI'
@@ -217,7 +226,7 @@
 			&nbsp;
 			<span class="font-black text-4xl">{properties.vehicleIdLabel}</span>
 			{expandMetra[properties.maptag]}
-			</p>
+		</p>
 	{/if}
 	{#if selectedVehicleLookup.realtime_feed_id == 'f-amtrak~rt'}
 		<img
@@ -231,21 +240,27 @@
 			class="h-8 block dark:hidden"
 		/>
 		<br />
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
+		<h1
+			style:color={darkMode ? properties.contrastdarkmode : properties.color}
+			class="text-lg md:text-2xl"
+		>
 			<span class="font-black text-4xl">{properties.tripIdLabel}</span>
 			{properties.maptag}
 		</h1>
 	{/if}
-	{#if (swiftly == null && (!['f-amtrak~rt',"f-mts~rt~onebusaway", "f-metrolinktrains~rt", "f-metra~rt"].includes(selectedVehicleLookup.realtime_feed_id)))}
-		<h1 style:color={darkMode ? properties.contrastdarkmode : properties.color} class="text-lg md:text-2xl">
+	{#if swiftly == null && !['f-amtrak~rt', 'f-mts~rt~onebusaway', 'f-metrolinktrains~rt', 'f-metra~rt'].includes(selectedVehicleLookup.realtime_feed_id)}
+		<h1
+			style:color={darkMode ? properties.contrastdarkmode : properties.color}
+			class="text-lg md:text-2xl"
+		>
 			{properties.maptag}
 		</h1>
 	{/if}
 
-    {#if new_jeans_buses[selectedVehicleLookup.realtime_feed_id]}
-	{#if new_jeans_buses[selectedVehicleLookup.realtime_feed_id].has(properties.vehicleIdLabel)}
-	<img alt="New Jeans" src="/icons/newjeanslogo.png" class="h-8"/>
-	{/if}{/if}
+	{#if new_jeans_buses[selectedVehicleLookup.realtime_feed_id]}
+		{#if new_jeans_buses[selectedVehicleLookup.realtime_feed_id].has(properties.vehicleIdLabel)}
+			<img alt="New Jeans" src="/icons/newjeanslogo.png" class="h-8" />
+		{/if}{/if}
 
 	{#if swiftly != null}
 		{#if swiftly_fetch_metadata != null}
@@ -264,18 +279,18 @@
 								alt="{properties.maptag} Line"
 							/>
 						{:else}
-						{properties.maptag}
-						&rarr;&nbsp;
+							{properties.maptag}
+							&rarr;&nbsp;
 						{/if}
 						{swiftly.headsign.replace('Uc Irvine', 'UC Irvine').replace(' Station', '')}
-	</p>
+					</p>
 				{/if}
 			{/if}
 		{/if}
 	{/if}
 {/if}
 
-<div class='mt-2'></div>
+<div class="mt-2"></div>
 
 {#if vehicleOnlyGtfsRt.vehicle}
 	<span class="font-bold text-lg">{strings.provider}</span>
@@ -288,7 +303,7 @@
 		{vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel}
 		<br />
 	{:else if properties.vehicleIdLabel}
-		<span  class="font-bold text-lg">{strings.vehicle}</span >
+		<span class="font-bold text-lg">{strings.vehicle}</span>
 		{properties.vehicleIdLabel}
 		<br />
 	{/if}
@@ -300,7 +315,9 @@
 				{model.type}
 				<br />
 				<span class="text-lg font-bold">{strings.fleet}</span>
-				{model.year || ''} {model.manufacturer || ''} {model.model}
+				{model.year || ''}
+				{model.manufacturer || ''}
+				{model.model}
 				<br />
 			{/if}
 		{/each}
@@ -348,7 +365,7 @@
 					{#if (vehicleOnlyGtfsRt.vehicle.vehicle.label || properties.vehicleIdLabel).match(model.regex)}
 						{#if model.image}
 							<br />
-							<img style:height="250px" src={model.image} alt={model.type}>
+							<img style:height="250px" src={model.image} alt={model.type} />
 							{model.credit}
 							<br />
 						{/if}
@@ -369,4 +386,4 @@
 			</p>
 		{/if}
 	</div>
-	{/if}
+{/if}

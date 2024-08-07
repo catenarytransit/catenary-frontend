@@ -7,11 +7,11 @@
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
 	import SidebarInternals from '../components/sidebarInternals.svelte';
-	import { addGeoRadius, setUserCircles } from '../components/userradius';
 	import { init_locales } from '../i18n';
 	import { _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { changeRailTextOutsideNorthAmerica } from '../components/addLayers/addStops';
+	import { update_geolocation_source } from '../user_location_lib';
 
 	import {
 		dark_mode_store,
@@ -26,7 +26,8 @@
 		show_zombie_buses_store,
 		show_my_location_store,
 		custom_icons_category_to_layer_id,
-		map_pointer_store
+		map_pointer_store,
+		geolocation_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -93,6 +94,12 @@
 	let collapser_left_offset: string = '408px';
 	let top_margin_collapser_sidebar: string = '0px';
 
+	let geolocation: GeolocationPosition | null;
+
+	geolocation_store.subscribe((g) => {
+		geolocation = g;
+	});
+
 	let darkMode = true;
 	let lockongps = false;
 
@@ -103,8 +110,6 @@
 	const lockonconst = 14.5;
 	let firstmove = false;
 	let secondrequestlockgps = false;
-
-	let geolocation: GeolocationPosition;
 
 	if (typeof window !== 'undefined') {
 		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
@@ -834,24 +839,6 @@
 
 				mapglobal.flyTo(target);
 			}
-		} else {
-			if (typeof window !== 'undefined') {
-				const id = navigator.geolocation.watchPosition(
-					(position) => {
-						console.log(position);
-						localStorage.setItem(
-							'cachegeolocation',
-							`${position.coords.longitude},${position.coords.latitude}`
-						);
-
-						geolocation = position;
-					},
-					(e) => console.log(e),
-					{
-						enableHighAccuracy: true
-					}
-				);
-			}
 		}
 	}
 
@@ -1088,10 +1075,10 @@
 		map.on('load', () => {
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
-			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			changeRailTextOutsideNorthAmerica(map, layerspercategory);
+				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+				changeRailTextOutsideNorthAmerica(map, layerspercategory);
 			}, 0);
-		})
+		});
 
 		mapboxgl.setRTLTextPlugin(
 			'/mapbox-gl-rtl-text.min.js',
@@ -1138,103 +1125,7 @@
 		});
 
 		map.on('render', (event) => {
-			frame_render_duration = performance.now() - last_render_start;
-
-			fps_array.push(performance.now());
-
-			fps_array = fps_array.filter((x) => x > performance.now() - 1000);
-
-			if (fps_array.length > 2) {
-				fps = fps_array.length / ((fps_array[fps_array.length - 1] - fps_array[0]) / 1000);
-			} else {
-				fps = 0;
-			}
-
-			let geolocation_mapboxsource = map.getSource('geolocation');
-
-if (geolocation_mapboxsource) {
-	if (geolocation.coords) {
-		geolocation_mapboxsource.setData({
-		type: 'FeatureCollection',
-		features: [
-			{
-				type: 'Feature',
-				geometry: {
-					type: 'Point',
-					coordinates: [geolocation.coords.longitude, geolocation.coords.latitude]
-				},
-				properties: {
-					accuracy: geolocation.coords.accuracy,
-					heading: geolocation.coords.heading
-				}
-			}
-		]
-	});
-
-		
-	setUserCircles(map, geolocation.coords.longitude, geolocation.coords.latitude);
-
-	if (geolocation.coords.accuracy) {
-		let accuracyLayer = map.getSource('userpositionacc');
-
-		if (accuracyLayer) {
-			let numberofpoints: number = 128;
-
-			let geojsondata: any = createGeoJSONCircle(
-				[geolocation.coords.longitude, geolocation.coords.latitude],
-				geolocation.coords.accuracy / 1000,
-				numberofpoints
-			);
-
-			geojsondata.features[0].properties.opacity = 0.2;
-
-			if (geolocation.coords.accuracy >= 1000) {
-				geojsondata.features[0].properties.opacity = 0.1;
-			}
-
-			if (geolocation.coords.accuracy >= 2000) {
-				geojsondata.features[0].properties.opacity = 0.05;
-			}
-
-			if (geolocation.coords.accuracy >= 5000) {
-				geojsondata.features[0].properties.opacity = 0.02;
-			}
-
-			accuracyLayer.setData(
-				geojsondata,
-				geolocation.coords.longitude,
-				geolocation.coords.latitude
-			);
-		}
-	}
-
-	let nobearingposlayer = map.getLayer('nobearing_position');
-let bearingposlayer = map.getLayer('bearing_position');
-
-if (geolocation.coords.heading) {
-	console.log('bearing is', geolocation.coords.heading);
-
-	map.setLayoutProperty('nobearing_position', 'visibility', 'none');
-
-	map.setLayoutProperty('bearing_position', 'visibility', 'visible');
-} else {
-	if (nobearingposlayer) {
-		if (show_my_location) {
-			map.setLayoutProperty('nobearing_position', 'visibility', 'visible');
-		} else {
-			map.setLayoutProperty('nobearing_position', 'visibility', 'none');
-		}
-	}
-
-	if (bearingposlayer) {
-		map.setLayoutProperty('bearing_position', 'visibility', 'none');
-	}
-}
-	}	
-	
-}
-
-
+			update_geolocation_source(map);
 		});
 
 		map.on('zoomend', (events) => {
@@ -1403,7 +1294,7 @@ if (geolocation.coords.heading) {
 
 		{#if !desktopapp}
 			{#key sidebar_height_output}
-				{#if typeof geolocation == 'object'}
+				{#if geolocation != null}
 					{#if typeof geolocation.coords == 'object'}
 						{#if typeof geolocation.coords.speed == 'number'}
 							<div

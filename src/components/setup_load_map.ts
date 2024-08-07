@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import {makeFireMap} from './wildfireMap'
+import { makeFireMap } from './wildfireMap';
 import mapboxgl from 'mapbox-gl';
 import {
 	what_kactus_to_use,
@@ -23,14 +23,10 @@ import { garbageCollectNotInView } from './garbage_collect';
 import { addGeoRadius, setUserCircles } from './userradius';
 import { addShapes } from './addLayers/addShapes';
 import { fetch_realtime_vehicle_locations } from './fetch_realtime_vehicle_locations';
-import {
-	add_bunny_layer,
-	make_custom_icon_source,
-	new_jeans_buses
-} from './addLayers/customIcons';
+import { add_bunny_layer, make_custom_icon_source, new_jeans_buses } from './addLayers/customIcons';
 import { makeCircleLayers } from './addLayers/addLiveDots';
 import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
-import {makeGpsLayer} from './makeGpsLayer';
+import { makeGpsLayer } from './makeGpsLayer';
 import { makeContextLayerDataset } from './addLayers/contextLayer';
 
 export function setup_load_map(
@@ -74,13 +70,23 @@ export function setup_load_map(
 			}
 		});
 
-
 		addGeoRadius(map);
 
-		map.addSource('notbusshapes', {
+		map.addSource('intercityrailshapes', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/shapes_not_bus'
+			url: 'https://birch.catenarymaps.org/shapes_intercity_rail'
 		});
+
+		map.addSource('localcityrailshapes', {
+			type: 'vector',
+			url: 'https://birch.catenarymaps.org/shapes_local_rail'
+		});
+
+		map.addSource('othershapes', {
+			type: 'vector',
+			url: 'https://birch.catenarymaps.org/shapes_ferry'
+		});
+
 
 		map.addSource('busshapes', {
 			type: 'vector',
@@ -142,10 +148,10 @@ export function setup_load_map(
 			type: 'raster',
 			source: 'foamertiles',
 			layout: {
-				'visibility': 'none'
+				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8,
+				'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -154,10 +160,10 @@ export function setup_load_map(
 			type: 'raster',
 			source: 'maxspeedtiles',
 			layout: {
-				'visibility': 'none'
+				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8,
+				'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -166,10 +172,10 @@ export function setup_load_map(
 			type: 'raster',
 			source: 'signallingtiles',
 			layout: {
-				'visibility': 'none'
+				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8,
+				'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -178,10 +184,10 @@ export function setup_load_map(
 			type: 'raster',
 			source: 'electrificationtiles',
 			layout: {
-				'visibility': 'none'
+				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8,
+				'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -190,10 +196,10 @@ export function setup_load_map(
 			type: 'raster',
 			source: 'gaugetiles',
 			layout: {
-				'visibility': 'none'
+				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8,
+				'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -209,7 +215,6 @@ export function setup_load_map(
 				'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
 				'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
 				'line-emissive-strength': 1
-				
 			},
 			minzoom: 3
 		});
@@ -310,6 +315,9 @@ export function setup_load_map(
 
 		make_custom_icon_source(map);
 		add_bunny_layer(map, layerspercategory);
+		
+		makeContextLayerDataset(map);
+
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
 
@@ -430,15 +438,14 @@ export function setup_load_map(
 
 		makeGpsLayer(map);
 		recompute_map_padding();
-		
+
 		changeRailTextOutsideNorthAmerica(map, layerspercategory);
 
 		runSettingsAdapt();
 
-		makeContextLayerDataset(map);
-
+		
 		setTimeout(() => {
-			recompute_map_padding()
+			recompute_map_padding();
 		}, 1);
 	});
 }

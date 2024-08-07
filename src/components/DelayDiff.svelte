@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-    
+
 	import { locale, locales } from 'svelte-i18n';
 	export let diff: number;
 
@@ -10,58 +10,58 @@
 	let m: number = 0;
 	let s: number = 0;
 
-    let this_locale: string | null |undefined = null;
+	let this_locale: string | null | undefined = null;
 
-    function locale_hour_marking(l: string | null | undefined) {
-        if (typeof l == "string") {
-            if (l == "zh" || l == "zh-CH") {
-                return "小时"
-            }
-            if (l == "zh-TW") {
-                return "小時"
-            }
+	function locale_hour_marking(l: string | null | undefined) {
+		if (typeof l == 'string') {
+			if (l == 'zh' || l == 'zh-CH') {
+				return '小时';
+			}
+			if (l == 'zh-TW') {
+				return '小時';
+			}
 
-            if (l.startsWith("ko")) {
-                return "시간"
-            }
-        }
+			if (l.startsWith('ko')) {
+				return '시간';
+			}
+		}
 
-        return "h";
-    }
+		return 'h';
+	}
 
-    function locale_min_marking(l: string | null | undefined) {
-        if (typeof l == "string") {
-            if (l == "zh" || l == "zh-CH") {
-                return "分"
-            }
-            if (l == "zh-TW") {
-                return "分"
-            }
-            if (l.startsWith("ko")) {
-                return "분"
-            }
-        }
+	function locale_min_marking(l: string | null | undefined) {
+		if (typeof l == 'string') {
+			if (l == 'zh' || l == 'zh-CH') {
+				return '分';
+			}
+			if (l == 'zh-TW') {
+				return '分';
+			}
+			if (l.startsWith('ko')) {
+				return '분';
+			}
+		}
 
-        return "m";
-    }
+		return 'm';
+	}
 
-    function locale_s_marking(l: string | null | undefined) {
-        if (typeof l == "string") {
-            if (l == "zh" || l == "zh-CH") {
-                return "秒"
-            }
-            if (l == "zh-TW") {
-                return "秒"
-            }
-            if (l.startsWith("ko")) {
-                return "초"
-            }
-        }
+	function locale_s_marking(l: string | null | undefined) {
+		if (typeof l == 'string') {
+			if (l == 'zh' || l == 'zh-CH') {
+				return '秒';
+			}
+			if (l == 'zh-TW') {
+				return '秒';
+			}
+			if (l.startsWith('ko')) {
+				return '초';
+			}
+		}
 
-        return "s";
-    }
+		return 's';
+	}
 
-    locale.subscribe((x) => this_locale = x);
+	locale.subscribe((x) => (this_locale = x));
 
 	$: if (diff) {
 		if (diff < 60) {
@@ -84,21 +84,21 @@
 <span class={textclass}>
 	<span>
 		<span class="text-sm">{'('}</span>
-        {#if diff < 0}<span class="text-sm">{$_('early')}</span>
+		{#if diff < 0}<span class="text-sm">{$_('early')}</span>
 		{/if}{#if diff > 0}<span class="text-sm">{$_('late')}</span>
 		{/if}{#if diff == 0}<span class="text-sm">{$_('ontime')}</span>{/if}
-        <span class="text-sm">{" "}</span>
+		<span class="text-sm">{' '}</span>
 	</span>
 
 	{#if h > 0}
-    <span  class="text-sm">{h}</span>
-    <span class='text-xs'>{locale_hour_marking(this_locale)}</span>
-    {/if}{#if h > 0 || m > 0}
-    <span class="text-sm">{m}</span>
-    <span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
-    {#if Math.abs(diff) > 0}
-    <span class="text-sm">{s}</span>
-    <span class="text-xs">{locale_s_marking(this_locale)}</span>
-    {/if}
-    <span class="text-sm">{")"}</span>
+		<span class="text-sm">{h}</span>
+		<span class="text-xs">{locale_hour_marking(this_locale)}</span>
+	{/if}{#if h > 0 || m > 0}
+		<span class="text-sm">{m}</span>
+		<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
+	{#if Math.abs(diff) > 0}
+		<span class="text-sm">{s}</span>
+		<span class="text-xs">{locale_s_marking(this_locale)}</span>
+	{/if}
+	<span class="text-sm">{')'}</span>
 </span>
