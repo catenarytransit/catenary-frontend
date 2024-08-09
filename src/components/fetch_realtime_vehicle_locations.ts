@@ -36,8 +36,12 @@ export function fetch_realtime_vehicle_locations(
 	}
 
 	const realtime_chateaus_in_frame = get(chateaus_in_frame).filter(
-		(chateau_id) => chateau_to_realtime_feed_lookup[chateau_id] != undefined
+		(chateau_id:string) => {
+			return chateau_to_realtime_feed_lookup[chateau_id].length > 0;
+		}
 	);
+
+	console.log('realtime chateaus in frame',  realtime_chateaus_in_frame );
 
 	//console.log('realtime_chateaus_in_frame', realtime_chateaus_in_frame);
 
