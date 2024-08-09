@@ -1052,9 +1052,8 @@
 			accessToken: decode(
 				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
 			),
+			//IP geolocation (ln 967) and on the fly rendering for this soon
 			center: centerinit, // starting position [lng, lat]
-			//keep the centre at Los Angeles, since that is our primary user base currently
-			//switch to IP geolocation (ln 967) and on the fly rendering for this soon
 			zoom: zoominit, // starting zoom (must be greater than 8.1)
 			fadeDuration: 0
 		});
