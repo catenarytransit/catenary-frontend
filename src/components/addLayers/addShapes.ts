@@ -129,7 +129,7 @@ export function addShapes(
 	map.addLayer({
 		id: layerspercategory.other.labelshapes,
 		type: 'symbol',
-		
+
 		source: 'othershapes',
 		'source-layer': 'data',
 		filter: [

@@ -78,7 +78,10 @@ export function setup_click_handler(
 				.filter((x: MapSelectionOption | null) => x != null);
 
 			const selected_routes_raw = selectedFeatures.filter(
-				(x: any) => x.source === 'busshapes' || x.source === 'localcityrailshapes' || x.source === 'intercityrailshapes'
+				(x: any) =>
+					x.source === 'busshapes' ||
+					x.source === 'localcityrailshapes' ||
+					x.source === 'intercityrailshapes'
 			);
 
 			const selected_routes_key_unique = new Set();

@@ -87,7 +87,6 @@ export function setup_load_map(
 			url: 'https://birch.catenarymaps.org/shapes_ferry'
 		});
 
-
 		map.addSource('busshapes', {
 			type: 'vector',
 			url: 'https://birch.catenarymaps.org/shapes_bus'
@@ -315,7 +314,7 @@ export function setup_load_map(
 
 		make_custom_icon_source(map);
 		add_bunny_layer(map, layerspercategory);
-		
+
 		makeContextLayerDataset(map);
 
 		makeCircleLayers(map, darkMode, layerspercategory);
@@ -443,7 +442,6 @@ export function setup_load_map(
 
 		runSettingsAdapt();
 
-		
 		setTimeout(() => {
 			recompute_map_padding();
 		}, 1);
