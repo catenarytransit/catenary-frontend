@@ -1124,7 +1124,7 @@
 		});
 
 		map.on('render', (event) => {
-			update_geolocation_source(map);
+			
 		});
 
 		map.on('zoomend', (events) => {

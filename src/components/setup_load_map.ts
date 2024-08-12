@@ -28,6 +28,7 @@ import { makeCircleLayers } from './addLayers/addLiveDots';
 import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
 import { makeGpsLayer } from './makeGpsLayer';
 import { makeContextLayerDataset } from './addLayers/contextLayer';
+import { start_location_watch } from '../user_location_lib';
 
 export function setup_load_map(
 	map: mapboxgl.Map,
@@ -43,6 +44,7 @@ export function setup_load_map(
 	map.on('load', () => {
 		recompute_map_padding();
 		clearbottomright();
+		start_location_watch();
 		// Add new sources and layers
 		const removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
 

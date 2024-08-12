@@ -1,14 +1,32 @@
 import type mapboxgl from 'mapbox-gl';
 import { addGeoRadius, setUserCircles } from './components/userradius';
-import { show_my_location_store, geolocation_store } from './globalstores';
+import { show_my_location_store, geolocation_store, map_pointer_store } from './globalstores';
 export const permission_to_geolocate = 'permission_to_geolocate';
 import { get } from 'svelte/store';
+import { createGeoJSONCircle, componentToHex } from './geoMathsAssist';
 
 let geolocation: GeolocationPosition | null;
 
 geolocation_store.subscribe((g) => {
 	geolocation = g;
 });
+
+export function start_location_watch() {
+	function success(pos: GeolocationPosition ) {
+		geolocation_store.set(pos);
+
+		update_geolocation_source();
+	  }
+	  
+
+	const options = {
+		enableHighAccuracy: false,
+		timeout: 5000,
+		maximumAge: 0,
+	  };
+	  
+	 const id = navigator.geolocation.watchPosition(success, () => {}, options);
+}
 
 export function has_permission_to_geolocate(): boolean {
 	const check = window.localStorage.getItem(permission_to_geolocate);
@@ -26,7 +44,11 @@ export function has_permission_to_geolocate(): boolean {
 
 export function ask_for_user_location_permission() {}
 
-export function update_geolocation_source(map: mapboxgl.Map) {
+export function update_geolocation_source() {
+	const map = get(map_pointer_store);
+
+	if (map != null) {
+		
 	const show_my_location = get(show_my_location_store);
 
 	const geolocation_mapboxsource = map.getSource('geolocation');
@@ -117,4 +139,6 @@ export function update_geolocation_source(map: mapboxgl.Map) {
 			}
 		}
 	}
+	}
+
 }
