@@ -145,6 +145,19 @@
 										existing_stop_time.rt_arrival_time -
 										existing_stop_time.scheduled_arrival_time_unix_seconds;
 								}
+
+								if (typeof existing_stop_time.rt_departure_time == 'number') {
+									if (existing_stop_time.rt_departure_time < existing_stop_time.rt_arrival_time) {
+										existing_stop_time.rt_departure_time = existing_stop_time.rt_arrival_time;
+										existing_stop_time.strike_departure = true;
+									}
+								} else {
+									if (existing_stop_time.scheduled_departure_time_unix_seconds < existing_stop_time.rt_arrival_time) {
+										existing_stop_time.rt_departure_time = existing_stop_time.rt_arrival_time;
+										existing_stop_time.strike_departure = true;
+									}
+									
+								}
 							}
 						}
 					});
@@ -633,9 +646,20 @@
 									style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_arrived_stop_idx >= i + 1 ? 0.5 : 1};`}
 									class={`h-1/2 ${i == 0 ? 'rounded-t-full' : ''}`}
 								></div>
+
+								{#if stoptime.schedule_relationship == 1}
 								<div
-									class="absolute top-1/2 bottom-1/2 left-[1px] w-1.5 h-1.5 rounded-full bg-white"
+									class="flex flex-row absolute top-1/2 bottom-1/2 left-[-3px]  h-6 w-6  rounded-full bg-red-500 border-white border"
+								>
+								<span class="my-auto mx-auto material-symbols-outlined text-base font-bold bottom-2">
+									close
+									</span>
+							</div>
+								{:else}
+								<div
+									class={`absolute top-1/2 bottom-1/2 left-[1px] w-1.5 h-1.5 rounded-full ${i > last_inactive_stop_idx ? 'bg-white' : ' bg-gray-400'}`}
 								></div>
+								{/if}
 							</div>
 							<div class="mr-2"></div>
 
@@ -656,7 +680,7 @@
 											>
 										</span>
 									{/if}
-									<span class="font-semibold dark:text-gray-100"
+									<span class={`font-semibold  ${i > last_inactive_stop_idx ? 'dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}
 										>{fixStationName(stoptime.name)}</span
 									>
 
