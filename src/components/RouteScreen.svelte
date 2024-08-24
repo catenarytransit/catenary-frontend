@@ -72,6 +72,14 @@
 
 	let pdf_url: string | null = null;
 
+	function fix_route_url(x: string): string {
+		if (x.includes("foothilltransit.org") && !x.includes("www.foothilltransit.org")) {
+			return x.replace("foothilltransit.org", "www.foothilltransit.org");
+		} else {
+			return x;
+		}
+	}
+
 	async function fetch_route_selected() {
 		let map = get(map_pointer_store);
 
@@ -140,7 +148,7 @@
 
 			<div class="flex flex-row gap-x-2">
 				{#if pdf_url != null}
-					<a href={pdf_url}>
+					<a target="_blank" href={pdf_url}>
 						<div
 							class="px-1 py-0.5 border-sky-500 text-sky-600 dark:text-blue-200 flex flex-row align-middle justify-center dark:border-sky-200 rounded-full border-2 hover:text-white hover:bg-blue-600 hover:transition-colors"
 						>
@@ -154,8 +162,8 @@
 			</div>
 
 			{#if route_data.url != null}
-				<a class="text-sky-600 dark:text-sky-400 underline text-wrap text-sm" href={route_data.url}>
-					{route_data.url}
+				<a class="text-sky-600 dark:text-sky-400 underline text-wrap text-sm" target="_blank" href={fix_route_url(route_data.url)}>
+					{fix_route_url(route_data.url)}
 				</a>
 			{/if}
 
