@@ -68,7 +68,7 @@
  </script>
 
  <div>
-    <p class="text-smtext-gray-900 text-slate-200 text-2xs md:text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime coming very soon. Refreshes every 20s automatically. Click on times to see full stop list.</p>
+    <p class="text-smtext-gray-900 text-slate-200 text-xs md:text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime coming very soon. Refreshes every 20s automatically. Click on times to see full stop list.</p>
 
     <button on:click={getNearbyDepartures} class="text-sm text-white bg-blue-500 px-2 py-1 rounded-md">
         Refresh Departures 
