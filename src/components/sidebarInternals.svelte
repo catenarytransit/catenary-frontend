@@ -15,6 +15,7 @@
 	import HomeButton from './SidebarParts/home_button.svelte';
 	import BackButton from './SidebarParts/back_button.svelte';
 	import { SettingsStack } from '../components/stackenum';
+	import NearbyDepartures from './NearbyDepartures.svelte';
 	import { writable } from 'svelte/store';
 	import { data_stack_store, usunits_store } from '../globalstores';
 	import { getLocaleFromNavigator, locale, locales } from 'svelte-i18n';
@@ -413,15 +414,14 @@
 		<p class="text-sm md:text-base lg:text-lg font-semibold">
 			{$_('clickonanyvehicleorroutegetstarted')}
 		</p>
-		{#if this_locale?.startsWith('en')}
-			<p>Clicking on stops coming soon....</p>
-		{/if}
+		
 
-		<h2 class="text-base md:text-lg text-gray-800 dark:text-gray-300">{$_('nearbydepartures')}</h2>
-		<p class="text-gray-800 dark:text-gray-300">{$_('comingsoon')}</p>
+		<h2 class="text-base md:text-lg text-gray-800 dark:text-gray-300">{$_('nearbydepartures')} Beta</h2>
+
+		<NearbyDepartures/>
 
 		<p class="text-xs md:text-sm text-gray-800 dark:text-gray-300">
-			Catenary Maps {$_('softwareversion')} 2024-08-21 09:53Z
+			Catenary Maps {$_('softwareversion')} 2024-09-01 11:22Z
 		</p>
 	</div>
 {/if}
