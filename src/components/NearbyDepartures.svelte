@@ -121,20 +121,20 @@
                 }}
             >
                 {#if route_group.route_type == 2 && trip.trip_short_name}
-                <span class="font-medium">{trip.trip_short_name}</span>
+                <p class="font-medium text-sm md:text-sm">{trip.trip_short_name}</p>
                 {/if}
 
                 {#if trip.departure_schedule}
                 <TimeDiff diff={trip.departure_schedule - current_time / 1000} show_brackets={true} />
                 {/if}
 
-                <span class="text-xs md:text-sm">
+                <p class="text-xs md:text-sm">
                     {new Date(
                       trip.departure_schedule * 1000
                     ).toLocaleTimeString('en-UK', {
                         timeZone: trip.tz
                     })}
-                </span>
+                </p>
                 </div>
             {/each}
         </div>
