@@ -68,7 +68,7 @@
  </script>
 
  <div>
-    <p class="text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime coming very soon. Refreshes every 20s automatically.</p>
+    <p class="text-smtext-gray-900 text-slate-200 text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime coming very soon. Refreshes every 20s automatically. Click on times to see full stop list.</p>
 
     <button on:click={getNearbyDepartures} class="text-sm text-white bg-blue-500 px-2 py-1 rounded-md">
         Refresh Departures 
@@ -94,8 +94,10 @@
         <span class="px-0.5 mr-2 bg-slate-600"></span>
         {direction_group.headsign}</p>
 
+        <p class='text-sm'>🚏 {stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name}</p>
+
         <div class="flex flex-row gap-x-1 overflow-x-auto  catenary-scroll">
-        {#each direction_group.trips as trip }
+        {#each direction_group.trips.filter((x) => x.departure_schedule  > (Date.now() / 1000) - 900) as trip }
             <div class="bg-white dark:bg-slate-800 hover:bg-blue-300 hover:dark:bg-blue-900 p-1 rounded-md min-w-24"
                 on:click={() => {
                     data_stack_store.update((stack) => {
