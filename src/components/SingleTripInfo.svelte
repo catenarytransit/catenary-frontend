@@ -48,6 +48,7 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store
 	} from '../globalstores';
+	import RouteHeading from './RouteHeading.svelte';
 
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
@@ -152,11 +153,13 @@
 										existing_stop_time.strike_departure = true;
 									}
 								} else {
-									if (existing_stop_time.scheduled_departure_time_unix_seconds < existing_stop_time.rt_arrival_time) {
+									if (
+										existing_stop_time.scheduled_departure_time_unix_seconds <
+										existing_stop_time.rt_arrival_time
+									) {
 										existing_stop_time.rt_departure_time = existing_stop_time.rt_arrival_time;
 										existing_stop_time.strike_departure = true;
 									}
-									
 								}
 							}
 						}
@@ -457,87 +460,29 @@
 			class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32"
 		>
 			{#if trip_data != null}
-				{#if trip_data.route_long_name || trip_data.route_short_name}
-					<span
-						style={`color: ${darkMode ? lightenColour(trip_data.color) : trip_data.color}`}
-						class="text-xl mt-0"
-					>
-						{#if fixRunNumber(trip_selected.chateau_id, trip_selected.route_type || 3, trip_data.route_id, trip_data.trip_short_name, trip_data.vehicle_id, trip_data.trip_id)}
-							<span
-								style={`background-color: ${trip_data.color}; color: ${trip_data.text_color};`}
-								class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min"
-								>{fixRunNumber(
-									trip_selected.chateau_id,
-									trip_selected.route_type || 3,
-									trip_data.route_id,
-									trip_data.trip_short_name,
-									trip_data.vehicle_id,
-									trip_data.trip_id
-								)}</span
-							>
-						{/if}
-						{#if trip_data.route_long_name && trip_data.route_short_name && !trip_data.route_long_name.includes(trip_data.route_short_name)}
-							<span class="font-bold"
-								>{fixRouteName(
-									trip_selected.chateau_id,
-									trip_data.route_short_name,
-									trip_data.route_id
-								)}</span
-							>
-							<span class="font-normal ml-1"
-								>{fixRouteNameLong(
-									trip_selected.chateau_id,
-									trip_data.route_long_name,
-									trip_data.route_id
-								)}</span
-							>
-						{:else}
-							<span class="font-semibold"
-								>{trip_data.route_long_name
-									? fixRouteNameLong(
-											trip_selected.chateau_id,
-											trip_data.route_long_name,
-											trip_data.route_id
-										)
-									: fixRouteName(
-											trip_selected.chateau_id,
-											trip_data.route_short_name,
-											trip_data.route_id
-										)}</span
-							>
-						{/if}
-					</span>
-				{/if}
-				{#if trip_data.trip_headsign}
-					<!--{#if fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
-								<img
-									alt={trip_data.route_id}
-									class="inline w-5 h-auto mr-0.5 align-middle"
-									style={!darkMode ? 'filter: invert(1)' : ''}
-									src={fixRouteIcon(trip_selected.chateau_id, trip_data.route_id)}
-								/>
-							{:else}
-                                {#if trip_selected.route_type != null}
-								<span class="align-middle text-sm">
-                                    <RouteIcon
-                                route_type={trip_selected.route_type}
-                                />
-                                </span>
-                                {/if}				
-							{/if}-->
-					<p class="text-lg font-semibold mt-0 lg:mt-1">
-						{'→'}
-						{fixHeadsignText(
-							trip_data.trip_headsign,
-							trip_data.route_short_name || trip_data.route_long_name
-						)}
-						{#if fixHeadsignIcon(trip_data.trip_headsign)}
-							<span class="material-symbols-outlined text-lg align-bottom"
-								>{fixHeadsignIcon(trip_data.trip_headsign)}</span
-							>
-						{/if}
-					</p>
-				{/if}
+				<RouteHeading
+					color={trip_data.color}
+					text_color={trip_data.text_color}
+					route_id={trip_data.route_id}
+					chateau_id={trip_selected.chateau_id}
+					text={`→ ${fixHeadsignText(
+						trip_data.trip_headsign,
+						trip_data.route_short_name || trip_data.route_long_name
+					)}`}
+					icon={fixHeadsignIcon(trip_data.trip_headsign)}
+					run_number={fixRunNumber(
+						trip_selected.chateau_id,
+						trip_selected.route_type || 3,
+						trip_data.route_id,
+						trip_data.trip_short_name,
+						trip_data.vehicle_id,
+						trip_data.trip_id
+					)}
+					short_name={trip_data.route_short_name}
+					long_name={trip_data.route_long_name}
+					{darkMode}
+				/>
+
 				<span class="block mt-0 mt-1" />
 				<p class="text-sm">
 					Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
@@ -648,17 +593,19 @@
 								></div>
 
 								{#if stoptime.schedule_relationship == 1}
-								<div
-									class="flex flex-row absolute top-1/2 bottom-1/2 left-[-3px]  h-6 w-6  rounded-full bg-red-500 border-white border"
-								>
-								<span class="my-auto mx-auto material-symbols-outlined text-base font-bold bottom-2">
-									close
-									</span>
-							</div>
+									<div
+										class="flex flex-row absolute top-1/2 bottom-1/2 left-[-3px] h-6 w-6 rounded-full bg-red-500 border-white border"
+									>
+										<span
+											class="my-auto mx-auto material-symbols-outlined text-base font-bold bottom-2"
+										>
+											close
+										</span>
+									</div>
 								{:else}
-								<div
-									class={`absolute top-1/2 bottom-1/2 left-[1px] w-1.5 h-1.5 rounded-full ${i > last_inactive_stop_idx ? 'bg-white' : ' bg-gray-400'}`}
-								></div>
+									<div
+										class={`absolute top-1/2 bottom-1/2 left-[1px] w-1.5 h-1.5 rounded-full ${i > last_inactive_stop_idx ? 'bg-white' : ' bg-gray-400'}`}
+									></div>
 								{/if}
 							</div>
 							<div class="mr-2"></div>
@@ -680,7 +627,8 @@
 											>
 										</span>
 									{/if}
-									<span class={`font-semibold  ${i > last_inactive_stop_idx ? 'dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}
+									<span
+										class={`font-semibold  ${i > last_inactive_stop_idx ? 'dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}
 										>{fixStationName(stoptime.name)}</span
 									>
 

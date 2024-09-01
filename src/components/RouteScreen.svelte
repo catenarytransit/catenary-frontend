@@ -55,6 +55,7 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store
 	} from '../globalstores';
+	import RouteHeading from './RouteHeading.svelte';
 
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
@@ -134,38 +135,17 @@
 		class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32"
 	>
 		{#if loaded == true}
-			<h2 class="text-md">{route_data.agency_name}</h2>
-
-			<h2 style={`color: ${darkMode ? lightenColour(route_data.color) : route_data.color}`}>
-				{#if route_data.short_name}
-					<span class="text-lg font-bold">{route_data.short_name}</span>
-				{/if}
-
-				{#if route_data.long_name}
-					<span class="text-lg font-medium">{route_data.long_name}</span>
-				{/if}
-			</h2>
-
-			<div class="flex flex-row gap-x-2">
-				{#if pdf_url != null}
-					<a target="_blank" href={pdf_url}>
-						<div
-							class="px-1 py-0.5 border-sky-500 text-sky-600 dark:text-blue-200 flex flex-row align-middle justify-center dark:border-sky-200 rounded-full border-2 hover:text-white hover:bg-blue-600 hover:transition-colors"
-						>
-							<span class="material-symbols-outlined font-medium text-2xl align-middle">
-								attachment
-							</span>
-							<span class="font-bold font-mono text-base md:text-lg">PDF</span>
-						</div>
-					</a>
-				{/if}
-			</div>
-
-			{#if route_data.url != null}
-				<a class="text-sky-600 dark:text-sky-400 underline text-wrap text-sm" target="_blank" href={fix_route_url(route_data.url)}>
-					{fix_route_url(route_data.url)}
-				</a>
-			{/if}
+			<RouteHeading
+				color={route_data.color}
+				route_id={routestack.route_id}
+				chateau_id={routestack.chateau_id}
+				text={route_data.agency_name}
+				compact={false}
+				short_name={route_data.short_name}
+				long_name={route_data.long_name}
+				url={route_data.url}
+				{darkMode}
+			/>
 
 			<p>Directions</p>
 			<div class="divide-y bg-slate-200 dark:bg-slate-800 divide-gray-500">
