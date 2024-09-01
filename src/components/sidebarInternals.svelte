@@ -410,10 +410,13 @@
 
 		<TidbitSidebarCard />
 	{/if}
-	<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
-		<p class="text-sm md:text-base lg:text-lg font-semibold">
+	<div class="px-4 sm:px-2 lg:px-4 py-1 flex flex-col h-full">
+		{
+			/*<p class="text-sm md:text-base lg:text-lg font-semibold">
 			{$_('clickonanyvehicleorroutegetstarted')}
 		</p>
+		*/
+		}
 		
 
 		<h2 class="text-base md:text-lg text-gray-800 dark:text-gray-300">{$_('nearbydepartures')} Beta</h2>
