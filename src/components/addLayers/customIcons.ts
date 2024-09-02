@@ -3,7 +3,6 @@ import type { Map } from 'mapbox-gl';
 import { custom_icons_category_to_layer_id } from '../../globalstores';
 
 export const new_jeans_buses: Record<string, Set<string>> = {
-	orangecountytransportationauthority: new Set(['5855']),
 	'metro~losangeles': new Set(['5832'])
 };
 
