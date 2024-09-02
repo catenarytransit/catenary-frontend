@@ -40,7 +40,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@datadog/browser-rum": "^5.17.1",
+    "@datadog/browser-rum": "^5.25.0",
     "@esbuild/linux-x64": "^0.20.2",
     "@mapbox/mapbox-gl-framerate": "github:mapbox/mapbox-gl-framerate",
     "@mapbox/polyline": "^1.2.1",
