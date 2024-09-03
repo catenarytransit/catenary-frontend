@@ -138,12 +138,12 @@
                 {/if}
 
                 {#if trip.departure_schedule}
-                <TimeDiff diff={trip.departure_schedule - current_time / 1000} show_brackets={true} />
+                <TimeDiff diff={(trip.departure_realtime || trip.departure_schedule) - current_time / 1000} show_brackets={true} />
                 {/if}
 
                 <p class="text-xs md:text-sm">
                     {new Date(
-                      trip.departure_schedule * 1000
+                      (trip.departure_realtime || trip.departure_schedule) * 1000
                     ).toLocaleTimeString('en-UK', {
                         timeZone: trip.tz
                     })}
