@@ -6,7 +6,9 @@
     
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
-    import TimeDiff from './TimeDiff.svelte';
+	import { _ } from 'svelte-i18n';
+	import DelayDiff from './DelayDiff.svelte';
+	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
 
     setInterval(() => {
@@ -34,12 +36,23 @@
 
     let current_time: number = Date.now();
 
+    let first_load = false;
+
     onMount(() => {
         getNearbyDepartures();
     
         let interval = setInterval(() => {
             getNearbyDepartures();
         }, 20_000);
+
+        setTimeout(() => {
+            getNearbyDepartures();
+            first_load = true;
+        }, 1500);
+
+        return () => {
+            clearInterval(interval);
+        };
     });
 
 
@@ -135,7 +148,17 @@
                         timeZone: trip.tz
                     })}
                 </p>
-                </div>
+
+                {#if trip.cancelled}
+                    <span class="text-red-500">{$_('cancelled')}</span>
+                {/if}
+
+                {#if trip.departure_realtime != null && trip.departure_schedule != null}
+                
+                <DelayDiff diff={trip.departure_schedule - trip.departure_realtime} />
+                {/if}
+                
+            </div>
             {/each}
         </div>
     {/each}
