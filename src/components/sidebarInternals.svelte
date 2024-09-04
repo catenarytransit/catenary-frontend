@@ -419,7 +419,7 @@
 		<div class='flex flex-col h-full select-text'><NearbyDepartures/></div>
 
 		<p class="text-xs md:text-sm text-gray-800 dark:text-gray-300">
-			Catenary Maps {$_('softwareversion')} 2024-09-01 11:22Z
+			Catenary Maps {$_('softwareversion')} 2024-09-03 11:23Z
 		</p>
 	</div>
 {/if}

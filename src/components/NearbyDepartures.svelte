@@ -6,7 +6,9 @@
     
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
-    import TimeDiff from './TimeDiff.svelte';
+	import { _ } from 'svelte-i18n';
+	import DelayDiff from './DelayDiff.svelte';
+	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
 
     setInterval(() => {
@@ -34,12 +36,23 @@
 
     let current_time: number = Date.now();
 
+    let first_load = false;
+
     onMount(() => {
         getNearbyDepartures();
     
         let interval = setInterval(() => {
             getNearbyDepartures();
         }, 20_000);
+
+        setTimeout(() => {
+            getNearbyDepartures();
+            first_load = true;
+        }, 1500);
+
+        return () => {
+            clearInterval(interval);
+        };
     });
 
 
@@ -68,7 +81,7 @@
  </script>
 
  <div class=" catenary-scroll overflow-y-auto pb-32 h-full">
-    <p class="text-smtext-gray-900 text-slate-200 text-xs md:text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime coming very soon. Refreshes every 20s automatically. Click on times to see full stop list.</p>
+    <p class="text-sm text-gray-900 dark:text-slate-200 text-xs md:text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime will be shown when available. Refreshes every 20s automatically. Click on times to see full stop list.</p>
 
     <button on:click={getNearbyDepartures} class="text-sm text-white bg-blue-500 px-2 py-1 rounded-md">
         Refresh Departures 
@@ -125,17 +138,27 @@
                 {/if}
 
                 {#if trip.departure_schedule}
-                <TimeDiff diff={trip.departure_schedule - current_time / 1000} show_brackets={true} />
+                <TimeDiff diff={(trip.departure_realtime || trip.departure_schedule) - current_time / 1000} show_brackets={true} />
                 {/if}
 
                 <p class="text-xs md:text-sm">
                     {new Date(
-                      trip.departure_schedule * 1000
+                      (trip.departure_realtime || trip.departure_schedule) * 1000
                     ).toLocaleTimeString('en-UK', {
                         timeZone: trip.tz
                     })}
                 </p>
-                </div>
+
+                {#if trip.cancelled}
+                    <span class="text-red-500">{$_('cancelled')}</span>
+                {/if}
+
+                {#if trip.departure_realtime != null && trip.departure_schedule != null}
+                
+                <DelayDiff diff={trip.departure_schedule - trip.departure_realtime} />
+                {/if}
+                
+            </div>
             {/each}
         </div>
     {/each}
