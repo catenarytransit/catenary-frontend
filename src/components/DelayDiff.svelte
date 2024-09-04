@@ -10,6 +10,8 @@
 	let m: number = 0;
 	let s: number = 0;
 
+	export let show_seconds: boolean = true;
+
 	let this_locale: string | null | undefined = null;
 
 	function locale_hour_marking(l: string | null | undefined) {
@@ -96,9 +98,12 @@
 	{/if}{#if h > 0 || m > 0}
 		<span class="text-sm">{m}</span>
 		<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
-	{#if Math.abs(diff) > 0}
-		<span class="text-sm">{s}</span>
-		<span class="text-xs">{locale_s_marking(this_locale)}</span>
+	{#if show_seconds == true}
+		{#if Math.abs(diff) > 0}
+			<span class="text-sm">{s}</span>
+			<span class="text-xs">{locale_s_marking(this_locale)}</span>
+		{/if}
 	{/if}
+	
 	<span class="text-sm">{')'}</span>
 </span>

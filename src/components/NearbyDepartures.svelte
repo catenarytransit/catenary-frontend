@@ -87,80 +87,92 @@
         Refresh Departures 
     </button>
 
+   <div class="flex flex-col gap-y-5">
     {#each departure_list as route_group }
-       <p style={`color: ${route_group.color}`}>
-        {#if route_group.short_name}
-        
-         <span class="font-medium">{route_group.short_name}</span>
-        {/if}
-        
-        {#if route_group.long_name}
-        
-         <span>{route_group.long_name}</span>
-        {/if}
-
+    <div class="px-2 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-md dark:shadow-slate-800">
+        <p style={`color: ${route_group.color}`}>
+            {#if route_group.short_name}
+            
+             <span class="font-bold">{route_group.short_name}</span>
+            {/if}
+            
+            {#if route_group.long_name}
+            
+             <span class="font-medium">{route_group.long_name}</span>
+            {/if}
        
-    </p>
-
-    {#each Object.entries(route_group.directions) as [d_id, direction_group] }
-    <p>
-        <span class="px-0.5 mr-2 bg-slate-600"></span>
-        {direction_group.headsign}</p>
-
-        <p class='text-sm'>🚏 {stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name}</p>
-
-        <div class="flex flex-row gap-x-1 overflow-x-auto  catenary-scroll">
-        {#each direction_group.trips.filter((x) => x.departure_schedule  > (Date.now() / 1000) - 900) as trip }
-            <div class="bg-white dark:bg-slate-800 hover:bg-blue-300 hover:dark:bg-blue-900 p-1 rounded-md min-w-24"
-                on:click={() => {
-                    data_stack_store.update((stack) => {
-                        stack.push(new StackInterface(
-                            new SingleTrip(
-                                route_group.chateau_id,
-                                trip.trip_id,
-                                route_group.route_id,
-                                null,
-                                trip.gtfs_schedule_start_day.replace(/-/g, ""),
-                                null,
-                                route_group.route_type
-                            ),
-                        ));
-
-                        return stack;
-                    }
-                
+           
+        </p>
+       
+        {#each Object.entries(route_group.directions) as [d_id, direction_group] }
+        <p>
+            <span class="px-0.5 mr-2 bg-slate-600"></span>
+            {direction_group.headsign}</p>
+       
+            <p class='text-sm'>🚏 {stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name}</p>
+       
+            <div class="flex flex-row gap-x-1 overflow-x-auto  catenary-scroll">
+            {#each direction_group.trips.filter((x) => x.departure_schedule  > (Date.now() / 1000) - 900) as trip }
+                <div class="bg-white dark:bg-slate-800 hover:bg-blue-300 hover:dark:bg-blue-900 p-1 rounded-md min-w-24"
+                    on:click={() => {
+                        data_stack_store.update((stack) => {
+                            stack.push(new StackInterface(
+                                new SingleTrip(
+                                    route_group.chateau_id,
+                                    trip.trip_id,
+                                    route_group.route_id,
+                                    null,
+                                    trip.gtfs_schedule_start_day.replace(/-/g, ""),
+                                    null,
+                                    route_group.route_type
+                                ),
+                            ));
+       
+                            return stack;
+                        }
                     
-                );
-                }}
-            >
-                {#if route_group.route_type == 2 && trip.trip_short_name}
-                <p class="font-medium text-sm md:text-sm">{trip.trip_short_name}</p>
-                {/if}
+                        
+                    );
+                    }}
+                >
+                    {#if route_group.route_type == 2 && trip.trip_short_name}
+                    <p class="font-medium text-sm md:text-sm">{trip.trip_short_name}</p>
+                    {/if}
+       
+                    {#if trip.departure_schedule}
+                    <TimeDiff
+                    show_brackets={false}
+                    show_seconds={false}
+                    diff={(trip.departure_realtime || trip.departure_schedule) - current_time / 1000} />
+                    {/if}
+       
+                    <p class="text-xs md:text-sm">
+                       
 
-                {#if trip.departure_schedule}
-                <TimeDiff diff={(trip.departure_realtime || trip.departure_schedule) - current_time / 1000} show_brackets={true} />
-                {/if}
-
-                <p class="text-xs md:text-sm">
-                    {new Date(
-                      (trip.departure_realtime || trip.departure_schedule) * 1000
-                    ).toLocaleTimeString('en-UK', {
-                        timeZone: trip.tz
-                    })}
-                </p>
-
-                {#if trip.cancelled}
-                    <span class="text-red-500">{$_('cancelled')}</span>
-                {/if}
-
-                {#if trip.departure_realtime != null && trip.departure_schedule != null}
-                
-                <DelayDiff diff={trip.departure_schedule - trip.departure_realtime} />
-                {/if}
-                
+                        {
+                            new Intl.DateTimeFormat('en-GB', {
+                                hour: "numeric",
+                                minute: "numeric",
+    timeZone: trip.tz,
+  }).format(new Date((trip.departure_realtime || trip.departure_schedule) * 1000))
+                        }
+                    </p>
+       
+                    {#if trip.cancelled}
+                        <span class="text-red-500">{$_('cancelled')}</span>
+                    {/if}
+       
+                    {#if trip.departure_realtime != null && trip.departure_schedule != null}
+                    
+                    <DelayDiff 
+                    diff={trip.departure_schedule - trip.departure_realtime} />
+                    {/if}
+                    
+                </div>
+                {/each}
             </div>
-            {/each}
-        </div>
-    {/each}
-    {/each}
+        {/each}
+    </div>
+ {/each}
+   </div>
  </div>
