@@ -148,17 +148,20 @@
 			/>
 
 			<p>Directions</p>
-			<div class="divide-y bg-slate-200 dark:bg-slate-800 divide-gray-500">
+			<p>
 				{#each Object.entries(route_data.direction_patterns) as direction, index}
-					<div class="py-1 px-2 flex flex-row">
-						<div></div>
 						<div>
-							<p class="font-medium">{direction[1].direction_pattern.headsign_or_destination}</p>
-							<p>{direction[1].rows.length} {' stops'}</p>
+							<p class="font-md my-3">&rarr; {direction[1].direction_pattern.headsign_or_destination}</p>
+							<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
+								{#each direction[1].rows as stop}
+								<div class="bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36">
+									{fixStationName(route_data.stops[stop.stop_id].name)}
+								</div>
+							{/each}
+							</div>
 						</div>
-					</div>
 				{/each}
-			</div>
+				</p>
 		{:else}
 			<div
 				class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"

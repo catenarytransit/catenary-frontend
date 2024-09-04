@@ -157,10 +157,10 @@ export function fixStationName(name: string) {
 		fixPatterns[name] ||
 		name
 			.replace(' Transit Station', '')
-			.replace('Transit Sta', '')
-			.replace('Transportation Center', '')
-			.replace('Transit Center', '')
-			.replace('Transit Ctr', '')
+			.replace(' Transit Sta', '')
+			.replace(' Transportation Center', '')
+			.replace(' Transit Center', '')
+			.replace(' Transit Ctr', '')
 			.replace(' Station', '')
 			.replace(' Metrolink', '')
 			.replace(' Amtrak', '')
