@@ -74,8 +74,8 @@
 	let pdf_url: string | null = null;
 
 	function fix_route_url(x: string): string {
-		if (x.includes("foothilltransit.org") && !x.includes("www.foothilltransit.org")) {
-			return x.replace("foothilltransit.org", "www.foothilltransit.org");
+		if (x.includes('foothilltransit.org') && !x.includes('www.foothilltransit.org')) {
+			return x.replace('foothilltransit.org', 'www.foothilltransit.org');
 		} else {
 			return x;
 		}
@@ -128,7 +128,7 @@
 		fetch_route_selected();
 	}
 
-	let activePattern = ''
+	let activePattern = '';
 </script>
 
 <div class="pl-4 sm:pl-2 lg:pl-4 pt-2 h-full">
@@ -150,23 +150,35 @@
 			/>
 
 			<p>Directions</p>
-			<p>
-				<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
-					{#each Object.entries(route_data.direction_patterns) as direction, index}
-						<div on:click={() => activePattern = direction[1].direction_pattern.direction_pattern_id} class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}>
-							&rarr; {direction[1].direction_pattern.headsign_or_destination}
-						</div>
-					{/each}
-				</div>
-				{#if activePattern != ''}
-					{#each route_data.direction_patterns[activePattern].rows as stop}
-						<span class="">
-							{fixStationName(route_data.stops[stop.stop_id].name)}
-						</span>
-					{/each}
-				{/if}
-				
-				<!-- {#each Object.entries(route_data.direction_patterns) as direction, index}
+			<p></p>
+			<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
+				{#each Object.entries(route_data.direction_patterns) as direction, index}
+					<div
+						on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
+						class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}
+					>
+						&rarr; {direction[1].direction_pattern.headsign_or_destination}
+					</div>
+				{/each}
+			</div>
+			{#if activePattern != ''}
+				{#each route_data.direction_patterns[activePattern].rows as stop, index}
+					<span class="relative">
+						{#if index != (route_data.direction_patterns[activePattern].rows.length - 1)}
+						<div
+							class={`absolute top-1/2 bottom-1/2 left-[1px] w-2 h-7 z-30 rounded-xl`}
+							style:background-color={route_data.color}
+						></div>
+						{/if}
+						<div
+							class={`absolute top-[10px] bottom-1/2 left-[1px] w-2 h-2 rounded-full bg-white z-30`}
+						></div>
+						<span class="text-sm relative ml-[16px] translate-y-px">{fixStationName(route_data.stops[stop.stop_id].name)}</span>
+					</span>
+				{/each}
+			{/if}
+
+			<!-- {#each Object.entries(route_data.direction_patterns) as direction, index}
 						<div>
 							<p class="font-md my-3">&rarr; {direction[1].direction_pattern.headsign_or_destination}</p>
 							<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
