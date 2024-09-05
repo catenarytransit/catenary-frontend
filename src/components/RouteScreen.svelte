@@ -55,6 +55,7 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store
 	} from '../globalstores';
+	import RouteHeading from './RouteHeading.svelte';
 
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
@@ -73,8 +74,8 @@
 	let pdf_url: string | null = null;
 
 	function fix_route_url(x: string): string {
-		if (x.includes("foothilltransit.org") && !x.includes("www.foothilltransit.org")) {
-			return x.replace("foothilltransit.org", "www.foothilltransit.org");
+		if (x.includes('foothilltransit.org') && !x.includes('www.foothilltransit.org')) {
+			return x.replace('foothilltransit.org', 'www.foothilltransit.org');
 		} else {
 			return x;
 		}
@@ -126,6 +127,8 @@
 	$: if (routestack) {
 		fetch_route_selected();
 	}
+
+	let activePattern = '';
 </script>
 
 <div class="pl-4 sm:pl-2 lg:pl-4 pt-2 h-full">
@@ -134,51 +137,60 @@
 		class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32"
 	>
 		{#if loaded == true}
-			<h2 class="text-md">{route_data.agency_name}</h2>
-
-			<h2 style={`color: ${darkMode ? lightenColour(route_data.color) : route_data.color}`}>
-				{#if route_data.short_name}
-					<span class="text-lg font-bold">{route_data.short_name}</span>
-				{/if}
-
-				{#if route_data.long_name}
-					<span class="text-lg font-medium">{route_data.long_name}</span>
-				{/if}
-			</h2>
-
-			<div class="flex flex-row gap-x-2">
-				{#if pdf_url != null}
-					<a target="_blank" href={pdf_url}>
-						<div
-							class="px-1 py-0.5 border-sky-500 text-sky-600 dark:text-blue-200 flex flex-row align-middle justify-center dark:border-sky-200 rounded-full border-2 hover:text-white hover:bg-blue-600 hover:transition-colors"
-						>
-							<span class="material-symbols-outlined font-medium text-2xl align-middle">
-								attachment
-							</span>
-							<span class="font-bold font-mono text-base md:text-lg">PDF</span>
-						</div>
-					</a>
-				{/if}
-			</div>
-
-			{#if route_data.url != null}
-				<a class="text-sky-600 dark:text-sky-400 underline text-wrap text-sm" target="_blank" href={fix_route_url(route_data.url)}>
-					{fix_route_url(route_data.url)}
-				</a>
-			{/if}
+			<RouteHeading
+				color={route_data.color}
+				route_id={routestack.route_id}
+				chateau_id={routestack.chateau_id}
+				text={route_data.agency_name}
+				compact={false}
+				short_name={route_data.short_name}
+				long_name={route_data.long_name}
+				url={route_data.url}
+				{darkMode}
+			/>
 
 			<p>Directions</p>
-			<div class="divide-y bg-slate-200 dark:bg-slate-800 divide-gray-500">
+			<p></p>
+			<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
 				{#each Object.entries(route_data.direction_patterns) as direction, index}
-					<div class="py-1 px-2 flex flex-row">
-						<div></div>
-						<div>
-							<p class="font-medium">{direction[1].direction_pattern.headsign_or_destination}</p>
-							<p>{direction[1].rows.length} {' stops'}</p>
-						</div>
+					<div
+						on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
+						class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}
+					>
+						&rarr; {direction[1].direction_pattern.headsign_or_destination}
 					</div>
 				{/each}
 			</div>
+			{#if activePattern != ''}
+				{#each route_data.direction_patterns[activePattern].rows as stop, index}
+					<span class="relative">
+						{#if index != (route_data.direction_patterns[activePattern].rows.length - 1)}
+						<div
+							class={`absolute top-1/2 bottom-1/2 left-[1px] w-2 h-7 z-30 rounded-xl`}
+							style:background-color={route_data.color}
+						></div>
+						{/if}
+						<div
+							class={`absolute top-[10px] bottom-1/2 left-[1px] w-2 h-2 rounded-full bg-white z-30`}
+						></div>
+						<span class="text-sm relative ml-[16px] translate-y-px">{fixStationName(route_data.stops[stop.stop_id].name)}</span>
+					</span>
+				{/each}
+			{/if}
+
+			<!-- {#each Object.entries(route_data.direction_patterns) as direction, index}
+						<div>
+							<p class="font-md my-3">&rarr; {direction[1].direction_pattern.headsign_or_destination}</p>
+							<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
+								{#each direction[1].rows as stop}
+									<div class="bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36">
+										{fixStationName(route_data.stops[stop.stop_id].name)}
+									</div>
+								{/each}
+							</div>
+						</div>
+				{/each}
+				</p> -->
 		{:else}
 			<div
 				class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
