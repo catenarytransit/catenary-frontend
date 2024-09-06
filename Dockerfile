@@ -13,7 +13,7 @@ COPY . .
 
 SHELL ["/bin/bash", "-c"]
 RUN source /root/.bashrc 
-RUN bun install
-RUN bun run build
+RUN ~/.bun/bin/bun install
+RUN ~/.bun/bin/bun run build
 
-CMD ["bun run preview"]
+CMD ["~/.bun/bin/bun run preview"]
