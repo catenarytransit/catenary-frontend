@@ -11,7 +11,7 @@ WORKDIR /frontend
 
 COPY . .
 
-RUN ~/.bun/bin/bun install
-RUN ~/.bun/bin/bun run build
+RUN bun install
+RUN bun run build
 
-CMD ["~/.bun/bin/bun run preview"]
+CMD ["bun run preview"]
