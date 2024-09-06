@@ -11,6 +11,7 @@ WORKDIR /frontend
 
 COPY . .
 
+RUN source /root/.bashrc 
 RUN bun install
 RUN bun run build
 
