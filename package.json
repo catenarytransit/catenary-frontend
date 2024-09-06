@@ -43,6 +43,7 @@
     "@datadog/browser-rum": "^5.17.1",
     "@esbuild/linux-x64": "^0.20.2",
     "@mapbox/polyline": "^1.2.1",
+    "@sveltejs/adapter-cloudflare": "^4.7.2",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@zerodevx/svelte-toast": "^0.9.5",
     "base65536": "^4.0.3",
