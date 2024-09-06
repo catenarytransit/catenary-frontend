@@ -35,7 +35,7 @@ jobs:
       uses: redhat-actions/push-to-registry@v2
       with:
         image: catenarytransit/catenaryfrontend
-        tags: ${{ github.sha }}
+        tags: ${{ github.sha }} latest
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.PACKAGE_TOKEN }}
