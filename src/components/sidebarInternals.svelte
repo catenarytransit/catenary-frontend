@@ -75,6 +75,8 @@
 			}
 		}
 	}
+
+	export let usunits: boolean;
 </script>
 
 {#if latest_item_on_stack != null}
@@ -332,6 +334,7 @@
 				<HomeButton />
 			</div>
 			<SingleTripInfo
+				{usunits}
 				{darkMode}
 				routetype={latest_item_on_stack.data.route_type}
 				trip_selected={latest_item_on_stack.data}

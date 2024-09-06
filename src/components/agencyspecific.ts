@@ -109,11 +109,9 @@ export function fixRunNumber(
 	vehicle: string,
 	trip_id: string | null
 ): string | null {
-	if (chateau == 'san-diego-mts' && type == 0) return vehicle;
+	if ((chateau == 'san-diego-mts' && route.toString().length == 3 && route.toString().startsWith('5')) || (chateau == 'metra')) return vehicle;
 	if (chateau == 'northcountytransitdistrict' && route != 398) return null;
-	if (chateau == 'metra') {
-		return vehicle;
-	}
+	
 	return tripname;
 }
 

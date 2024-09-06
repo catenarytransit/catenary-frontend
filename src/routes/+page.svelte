@@ -1255,7 +1255,7 @@
 			>
 				<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
 			</div>
-			<SidebarInternals {latest_item_on_stack} {darkMode} />
+			<SidebarInternals usunits={usunits} {latest_item_on_stack} {darkMode} />
 		</div>
 	{/if}
 </div>

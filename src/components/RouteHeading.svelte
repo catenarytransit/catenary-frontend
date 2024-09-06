@@ -26,13 +26,15 @@
 	export let compact: boolean = false;
 	export let darkMode: boolean;
 
+	export let disable_pdf: boolean = false;
+
 	let pdf_url: string | undefined;
 
-	if (has_schedule_pdf(chateau_id)) {
+	if (has_schedule_pdf(chateau_id) && !disable_pdf) {
 		pdf_url = find_schedule_pdf_initial(chateau_id, route_id);
 	}
 
-	if (schedule_pdf_needs_hydration(chateau_id)) {
+	if (schedule_pdf_needs_hydration(chateau_id) && !disable_pdf) {
 		find_schedule_pdf(chateau_id, route_id)
 			.then((answer) => (pdf_url = answer))
 			.catch((pdferr) => console.error(pdferr));
