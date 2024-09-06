@@ -34,7 +34,7 @@ jobs:
       id: push-to-ghcr-frontend
       uses: redhat-actions/push-to-registry@v2
       with:
-        image: catenaryfrontend
+        image: catenarytransit/catenaryfrontend
         tags: ${{ github.sha }}
         registry: ghcr.io
         username: ${{ github.actor }}
