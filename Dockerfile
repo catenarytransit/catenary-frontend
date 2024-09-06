@@ -11,6 +11,7 @@ WORKDIR /frontend
 
 COPY . .
 
+SHELL ["/bin/bash", "-c"]
 RUN source /root/.bashrc 
 RUN bun install
 RUN bun run build
