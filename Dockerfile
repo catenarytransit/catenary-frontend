@@ -2,7 +2,7 @@ FROM debian:latest
 
 # Install Bun
 
-RUN apt-get update && apt-get install -y curl unzip
+RUN apt-get update && apt-get install -y curl unzip git
 RUN curl -fsSL https://bun.sh/install | bash
 
 WORKDIR /frontend
@@ -11,8 +11,9 @@ WORKDIR /frontend
 
 COPY . .
 
+SHELL ["/bin/bash", "-c"]
 RUN source /root/.bashrc 
-RUN bun install
-RUN bun run build
+RUN ~/.bun/bin/bun install
+RUN ~/.bun/bin/bun run build
 
-CMD ["bun run preview"]
+CMD ["~/.bun/bin/bun run preview"]
