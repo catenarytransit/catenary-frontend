@@ -430,7 +430,7 @@
 		}, 100);
 	});
 
-	let simpleRouteMode = true;
+	let simpleRouteMode = false;
 </script>
 
 <div class="pl-4 sm:pl-2 lg:pl-4 pt-2 h-full">
@@ -504,12 +504,15 @@
 						</div>
 					{/if}
 
-					{#if alerts != null}
-						{#each Object.keys(alerts) as alert_id}
-							<div class="bg-yellow-500 bg-opacity-35 leading-snug mr-2 px-1 py-1 rounded-sm">
-								{#each alerts[alert_id].header_text.translation as each_header_translation_obj}
+					{#if Object.keys(alerts).length > 0}
+						<div class="border-[#F99C24] border-2 leading-snug mr-2 p-2 mb-2 rounded-md">
+							<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-1">
+							<span class="text-[#F99C24] font-medium">Service Alert{Object.keys(alerts).length > 1 ? 's' : ''}</span>
+						{#each Object.values(alerts) as alert}
+							<div class="pt-1">
+								{#each alert.header_text.translation as each_header_translation_obj}
 									<p class="text-sm font-bold">{each_header_translation_obj.text}</p>
-									{#each alerts[alert_id].description_text.translation.filter((x) => x.language == each_header_translation_obj.language) as description_alert}
+									{#each alert.description_text.translation.filter((x) => x.language == each_header_translation_obj.language) as description_alert}
 										<div class="leading-none">
 											{#each description_alert.text.split('\n') as each_desc_line}
 												<p class="text-sm">{each_desc_line}</p>
@@ -519,6 +522,7 @@
 								{/each}
 							</div>
 						{/each}
+						</div>
 					{/if}
 				{/if}
 
@@ -585,25 +589,14 @@
 
 							<div class="w-full py-2 pr-1 lg:pr-2">
 								<p class="">
-									{#if stop_id_to_alert_ids[stoptime.stop_id]}
-										<span class="text-amber-500 inline-flex align-middle">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												height="20px"
-												viewBox="0 -960 960 960"
-												width="20px"
-												fill="currentColor"
-												><path
-													fill="currentColor"
-													d="m40-120 440-760 440 760H40Zm440-120q17 0 28.5-11.5T520-280q0-17-11.5-28.5T480-320q-17 0-28.5 11.5T440-280q0 17 11.5 28.5T480-240Zm-40-120h80v-200h-80v200Z"
-												/></svg
-											>
-										</span>
-									{/if}
 									<span
-										class={`font-semibold  ${i > last_inactive_stop_idx ? 'dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}
+										class={`font-semibold  ${stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : 'text-white'}`}
 										>{fixStationName(stoptime.name)}</span
 									>
+
+									{#if stop_id_to_alert_ids[stoptime.stop_id]}
+										<img src="/icons/service_alert.svg" alt="(i)" class="w-4 h-4 inline mr-1">
+									{/if}
 
 									{#if stoptime.code && !simpleRouteMode}
 										<span class="text-gray-800 dark:text-gray-200">{stoptime.code}</span>
@@ -672,7 +665,7 @@
 														{new Date(
 															stoptime.scheduled_departure_time_unix_seconds * 1000
 														).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
-															timeZone: stoptime.timezone || trip_data.tz
+															timeZone: stoptime.timezone || trip_data.tz,
 														})}
 													</span>
 													<span class="text-seashore">
