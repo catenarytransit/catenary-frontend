@@ -109,11 +109,9 @@ export function fixRunNumber(
 	vehicle: string,
 	trip_id: string | null
 ): string | null {
-	if (chateau == 'san-diego-mts' && type == 0) return vehicle;
+	if ((chateau == 'san-diego-mts' && route.toString().length == 3 && route.toString().startsWith('5')) || (chateau == 'metra')) return vehicle;
 	if (chateau == 'northcountytransitdistrict' && route != 398) return null;
-	if (chateau == 'metra') {
-		return vehicle;
-	}
+	
 	return tripname;
 }
 
@@ -143,6 +141,14 @@ export function fixStationName(name: string) {
 		'L.A. Union Station': 'Los Angeles',
 		'Sabre Springs & Penasquitos Transit Station': 'Sabre Springs/Peñasquitos',
 		'Clairemont Mesa Bl & Complex Dr': 'Kearny Mesa',
+		'Clairemont Mesa Bl & Overland Av': 'Overland Avenue',
+		'Clairemont Mesa Bl & Ruffin Rd': 'Ruffin Road',
+		'Broadway & Park Bl': 'City College',
+		'Broadway & 4th Av': 'Horton Plaza',
+		'Broadway & 5th Av': 'Horton Plaza',
+		'India St & C St': 'America Plaza',
+		'SR-905 & Caliente Av': 'Caliente Avenue',
+		'Seacoast Dr & Evergreen Av': 'Imperial Beach Pier',
 		'32nd/Commercial St Station': '32nd & Commercial',
 		'25th/Commercial St Station': '25th & Commercial',
 		'I-15 Centerline Sta & University Av': 'City Heights',

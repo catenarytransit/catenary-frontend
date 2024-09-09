@@ -31,7 +31,7 @@
 			}
 		}
 
-		return 'h';
+		return 'hrs';
 	}
 
 	function locale_min_marking(l: string | null | undefined) {
@@ -47,7 +47,7 @@
 			}
 		}
 
-		return 'm';
+		return 'min';
 	}
 
 	function locale_s_marking(l: string | null | undefined) {
@@ -63,7 +63,7 @@
 			}
 		}
 
-		return 's';
+		return 'sec';
 	}
 
 	locale.subscribe((x) => (this_locale = x));
@@ -81,16 +81,16 @@
 <span class="text-[0px]">
 	<span class="text-sm">
 		{#if show_brackets}{'['}{/if}
-		{#if diff < 0}{"-"}{/if}{#if diff > 0}{"+"}{/if}
+		{#if diff < 0}{"-"}{/if}{#if diff > 0}{""}{/if}
 	</span>
 
 	{#if h > 0}
 		<span class="text-sm">{h}</span>
 		<span class="text-xs">{locale_hour_marking(this_locale)}</span>
 	{/if}
-	{#if h > 0 || m > 0}
-		<span class="text-sm">{m}</span>
-		<span class="text-xs">{locale_min_marking(this_locale)}</span>
+	{#if h > 0 || (m > 0 || (!show_seconds && m >= 0 && diff != 0))}
+		<span class="text-sm">{(m == 0 && !show_seconds && diff >= 0) ? 'DUE' : m}</span>
+		<span class="text-xs">{(m == 0 && !show_seconds && diff >= 0) ? '' : locale_min_marking(this_locale)}</span>
 	{/if}
 	{#if show_seconds}
 		{#if Math.abs(diff) > 0}

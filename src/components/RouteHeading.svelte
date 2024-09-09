@@ -26,13 +26,16 @@
 	export let compact: boolean = false;
 	export let darkMode: boolean;
 
+	export let disable_pdf: boolean = false;
+	export let arrow: boolean = false;
+
 	let pdf_url: string | undefined;
 
-	if (has_schedule_pdf(chateau_id)) {
+	if (has_schedule_pdf(chateau_id) && !disable_pdf) {
 		pdf_url = find_schedule_pdf_initial(chateau_id, route_id);
 	}
 
-	if (schedule_pdf_needs_hydration(chateau_id)) {
+	if (schedule_pdf_needs_hydration(chateau_id) && !disable_pdf) {
 		find_schedule_pdf(chateau_id, route_id)
 			.then((answer) => (pdf_url = answer))
 			.catch((pdferr) => console.error(pdferr));
@@ -63,7 +66,12 @@
         {/if}
 	</h2>
 
-	<h2 class="text-lg font-medium my-1">{text}</h2>
+	<h2 class="text-lg font-medium my-1 -translate-x-1.5">
+		{#if arrow}
+			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
+		{/if}
+		<span class="align-middle">{text}</span>
+	</h2>
 
 	<div class="flex flex-row gap-x-2">
 		{#if pdf_url != null}

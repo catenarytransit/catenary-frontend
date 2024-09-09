@@ -1,16 +1,17 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
+	import { text } from '@sveltejs/kit';
+import { _ } from 'svelte-i18n';
 
 	import { locale, locales } from 'svelte-i18n';
 	export let diff: number;
+
+	export let simple: boolean = false;
 
 	let textclass: string = 'text-[0px]';
 
 	let h: number = 0;
 	let m: number = 0;
 	let s: number = 0;
-
-	export let show_seconds: boolean = true;
 
 	let this_locale: string | null | undefined = null;
 
@@ -28,7 +29,7 @@
 			}
 		}
 
-		return 'h';
+		return 'hrs';
 	}
 
 	function locale_min_marking(l: string | null | undefined) {
@@ -44,7 +45,7 @@
 			}
 		}
 
-		return 'm';
+		return 'min';
 	}
 
 	function locale_s_marking(l: string | null | undefined) {
@@ -60,7 +61,7 @@
 			}
 		}
 
-		return 's';
+		return 'sec';
 	}
 
 	locale.subscribe((x) => (this_locale = x));
@@ -85,25 +86,22 @@
 
 <span class={textclass}>
 	<span>
-		<span class="text-sm">{'('}</span>
 		{#if diff < 0}<span class="text-sm">{$_('early')}</span>
 		{/if}{#if diff > 0}<span class="text-sm">{$_('late')}</span>
-		{/if}{#if diff == 0}<span class="text-sm">{$_('ontime')}</span>{/if}
-		<span class="text-sm">{' '}</span>
+		{/if}{#if diff == 0}<span class="text-sm text-[#009900]">{$_('ontime')}</span>{/if}
+		<span class="text-sm"> &nbsp; </span>
 	</span>
 
 	{#if h > 0}
 		<span class="text-sm">{h}</span>
 		<span class="text-xs">{locale_hour_marking(this_locale)}</span>
-	{/if}{#if h > 0 || m > 0}
-		<span class="text-sm">{m}</span>
+	{/if}{#if h > 0 || (m > 0 || (simple && m >= 0 && diff != 0))}
+		<span class="text-sm">{(simple && diff < 60) ? '<1' : m}</span>
 		<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
-	{#if show_seconds == true}
+	{#if (!simple)}
 		{#if Math.abs(diff) > 0}
 			<span class="text-sm">{s}</span>
 			<span class="text-xs">{locale_s_marking(this_locale)}</span>
 		{/if}
 	{/if}
-	
-	<span class="text-sm">{')'}</span>
 </span>

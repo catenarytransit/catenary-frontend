@@ -157,7 +157,7 @@
 						on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
 						class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}
 					>
-						&rarr; {direction[1].direction_pattern.headsign_or_destination}
+						<span class="material-symbols-outlined">chevron_right</span> {direction[1].direction_pattern.headsign_or_destination}
 					</div>
 				{/each}
 			</div>
