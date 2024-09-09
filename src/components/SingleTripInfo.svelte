@@ -593,7 +593,7 @@
 						<div class="w-full py-2 pr-1 lg:pr-2">
 							<p class="">
 								<span
-									class={`font-semibold ${stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
+									class={`font-semibold ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : (stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : '')}`}
 									>{fixStationName(stoptime.name)}</span
 								>
 
@@ -601,14 +601,14 @@
 									<img src="/icons/service_alert.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
 								{/if}
 
+								{#if stoptime.schedule_relationship == 1}
+									<img src="/icons/cancellation.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
+								{/if}
+
 								{#if stoptime.code && !simpleRouteMode}
 									<span class="text-gray-800 dark:text-gray-200">{stoptime.code}</span>
 								{/if}
 							</p>
-
-							{#if stoptime.schedule_relationship == 1}
-								<p class="text-red-700 dark:text-red-300">{$_('cancelled')}</p>
-							{/if}
 
 							<div class="flex flex-row">
 								{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
