@@ -39,14 +39,14 @@
     let first_load = false;
 
     onMount(() => {
-        getNearbyDepartures();
+        getNearbyDepartures(true);
     
         let interval = setInterval(() => {
             getNearbyDepartures();
         }, 20_000);
 
         setTimeout(() => {
-            getNearbyDepartures();
+            getNearbyDepartures(true);
             first_load = true;
         }, 1500);
 
@@ -55,18 +55,36 @@
         };
     });
 
-
+    let desired_coords: { lat: number; lon: number } = { lat: 0, lon: 0 };
 
     let loading = false;
 
-    async function getNearbyDepartures() {
+    async function getNearbyDepartures(geo?: boolean) {
         loading = true;
-        
+
+        let lat = 0;
+        let lon = 0;
+
+        let coords_from_uri = window.location.hash.replace('#pos=', '').split('/');
+
         let geolocation_of_user = get(geolocation_store);
+        let geo_lat = geolocation_of_user ? geolocation_of_user.coords.latitude : 0;
+        let geo_lon = geolocation_of_user ? geolocation_of_user.coords.longitude : 0;
 
-        if (geolocation_of_user) {
+        if (geo == undefined && desired_coords.lat != 0 && desired_coords.lon != 0) {
+            lat = desired_coords.lat;
+            lon = desired_coords.lon;
+        } else if ((geo_lat == 0 && geo_lon == 0 && geo) || !geo) {
+            lat = parseFloat(coords_from_uri[1]);
+            lon = parseFloat(coords_from_uri[2]);
+            desired_coords = { lat, lon };
+        } else {
+            lat = geo_lat;
+            lon = geo_lon;
+            desired_coords = { lat, lon };
+        }
 
-        let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${geolocation_of_user?.coords.latitude}&lon=${geolocation_of_user?.coords.longitude}`;
+        let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${lat}&lon=${lon}`;
 
         fetch(url)
             .then(response => response.json())
@@ -76,20 +94,26 @@
                 loading = false;
             });
         }
-
-    }
  </script>
 
  <div class=" catenary-scroll overflow-y-auto pb-32 h-full">
     <p class="text-sm text-gray-900 dark:text-slate-200 text-xs md:text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime will be shown when available. Refreshes every 20s automatically. Click on times to see full stop list.</p>
 
-    <button on:click={getNearbyDepartures} class="text-sm text-white bg-blue-500 px-2 py-1 rounded-md">
-        Refresh Departures 
+    <button on:click={() => getNearbyDepartures(true)} class="text-sm text-white bg-blue-500 px-2 py-1 my-3 mr-2 rounded-md">
+        Refresh Departures
+        <br />
+        <span class="text-xs">from my location</span> 
+    </button>
+
+    <button on:click={() => getNearbyDepartures(false)} class="text-sm text-white bg-blue-500 px-2 py-1 my-3 rounded-md">
+        Refresh Departures
+        <br />
+        <span class="text-xs">from center of map</span> 
     </button>
 
    <div class="flex flex-col gap-y-5">
     {#each departure_list as route_group }
-    <div class="px-2 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-md dark:shadow-slate-800">
+    <div class="px-2 py-2 bg-slate-100 dark:bg-darksky rounded-sm">
         <p style={`color: ${route_group.color}`}>
             {#if route_group.short_name}
             
