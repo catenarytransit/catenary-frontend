@@ -131,12 +131,9 @@
 	let activePattern = '';
 </script>
 
-<div class="pl-4 sm:pl-2 lg:pl-4 pt-2 h-full">
-	<div
-		bind:this={bind_scrolling_div}
-		class="flex flex-col catenary-scroll overflow-y-auto h-full pb-32"
-	>
-		{#if loaded == true}
+<div class="h-full">
+	{#if loaded == true}
+		<div class="px-3">
 			<RouteHeading
 				color={route_data.color}
 				route_id={routestack.route_id}
@@ -148,65 +145,47 @@
 				url={route_data.url}
 				{darkMode}
 			/>
-
-			<p>Directions</p>
-			<p></p>
-			<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
-				{#each Object.entries(route_data.direction_patterns) as direction, index}
-					<div
-						on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
-						class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}
-					>
-						<span class="material-symbols-outlined">chevron_right</span> {direction[1].direction_pattern.headsign_or_destination}
-					</div>
-				{/each}
-			</div>
+		</div>
+		<p class="px-3 text-xl my-2">Directions</p>
+		<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
+			{#each Object.entries(route_data.direction_patterns) as direction, index}
+				<div
+					on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
+					class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}
+				>
+					<span class="material-symbols-outlined">chevron_right</span>
+					{direction[1].direction_pattern.headsign_or_destination}
+				</div>
+			{/each}
+		</div>
+		<div
+			bind:this={bind_scrolling_div}
+			class="flex flex-col catenary-scroll overflow-y-auto h-full pb-96 pt-4"
+		>
 			{#if activePattern != ''}
 				{#each route_data.direction_patterns[activePattern].rows as stop, index}
-					<span class="relative">
-						{#if index != (route_data.direction_patterns[activePattern].rows.length - 1)}
-						<div
-							class={`absolute top-1/2 bottom-1/2 left-[1px] w-2 h-7 z-30 rounded-xl`}
-							style:background-color={route_data.color}
-						></div>
+					<span class="relative px-3">
+						{#if index != route_data.direction_patterns[activePattern].rows.length - 1}
+							<div
+								class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-7 z-30 rounded-xl`}
+								style:background-color={route_data.color}
+							></div>
 						{/if}
 						<div
-							class={`absolute top-[10px] bottom-1/2 left-[1px] w-2 h-2 rounded-full bg-white z-30`}
+							class={`absolute top-[10px] bottom-1/2 left-3 w-2 h-2 rounded-full bg-white z-30`}
 						></div>
-						<span class="text-sm relative ml-[16px] translate-y-px">{fixStationName(route_data.stops[stop.stop_id].name)}</span>
+						<span class="text-sm relative ml-[16px] translate-y-px"
+							>{fixStationName(route_data.stops[stop.stop_id].name)}</span
+						>
 					</span>
 				{/each}
 			{/if}
-
-			<!-- {#each Object.entries(route_data.direction_patterns) as direction, index}
-						<div>
-							<p class="font-md my-3">&rarr; {direction[1].direction_pattern.headsign_or_destination}</p>
-							<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
-								{#each direction[1].rows as stop}
-									<div class="bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36">
-										{fixStationName(route_data.stops[stop.stop_id].name)}
-									</div>
-								{/each}
-							</div>
-						</div>
-				{/each}
-				</p> -->
-		{:else}
-			<div
-				class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
-			>
-				<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-				<div class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-				<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-			</div>
-
-			<div
-				class="border-t w-full border-slate-200 dark:border-slate-700 py-3 flex flex-col gap-y-2"
-			>
-				<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-				<div class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-				<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-			</div>
-		{/if}
-	</div>
+		</div>
+	{:else}
+		<div class="w-full p-2 flex flex-col gap-y-2">
+			<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+			<div class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+			<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+		</div>
+	{/if}
 </div>

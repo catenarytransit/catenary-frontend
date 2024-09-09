@@ -66,7 +66,7 @@
         {/if}
 	</h2>
 
-	<h2 class="text-lg font-medium my-1 -translate-x-1.5">
+	<h2 class={`text-lg font-medium my-1 ${arrow ? '-translate-x-1.5' : ''}`}>
 		{#if arrow}
 			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
 		{/if}
