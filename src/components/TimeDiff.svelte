@@ -89,8 +89,8 @@
 		<span class="text-xs">{locale_hour_marking(this_locale)}</span>
 	{/if}
 	{#if h > 0 || (m > 0 || (!show_seconds && m >= 0 && diff != 0))}
-		<span class="text-sm">{(m == 0 && !show_seconds && diff >= 0) ? 'DUE' : m}</span>
-		<span class="text-xs">{(m == 0 && !show_seconds && diff >= 0) ? '' : locale_min_marking(this_locale)}</span>
+		<span class="text-sm">{(this_locale == 'en' && m == 0 && h == 0 && !show_seconds && diff >= 0) ? 'DUE' : m}</span>
+		<span class="text-xs">{(this_locale == 'en' && m == 0 && h == 0 && !show_seconds && diff >= 0) ? '' : locale_min_marking(this_locale)}</span>
 	{/if}
 	{#if show_seconds}
 		{#if Math.abs(diff) > 0}
