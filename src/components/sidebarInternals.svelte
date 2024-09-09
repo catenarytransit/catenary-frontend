@@ -411,7 +411,7 @@
 	<p>Loading home page</p>
 {:else}
 	<div class="mt-3 mb-2">
-		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-1.5">
+		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2">
 		<button
 			class="text-seashore cursor-pointer mx-1"
 			on:click={() => {
