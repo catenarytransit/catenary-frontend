@@ -227,9 +227,10 @@
 											>
 										{/if}
 										{#if option.data.headsign && option.data.headsign != option.data.route_long_name && option.data.headsign != option.data.route_short_name}
-											<span class=""
+											<span class="">
+												<span class="material-symbols-outlined mr-0 align-middle -translate-y-0.5"
+													>chevron_right</span
 												>
-												<span class="material-symbols-outlined mr-0 align-middle -translate-y-0.5">chevron_right</span>
 												{fixHeadsignText(
 													option.data.headsign,
 													option.data.route_short_name || option.data.route_long_name
@@ -409,34 +410,27 @@
 {:else if false}
 	<p>Loading home page</p>
 {:else}
-	<div class="px-4 sm:px-2 lg:px-4 py-2 select-text">
-		<div class="flex flex-row gap-x-2">
-			<button
-				class="h-8 w-8 text-black dark:text-white bg-sky-400 dark:bg-sky-700 rounded-full flex flex-col shadow-md"
-				on:click={() => {
-					window.location.reload();
-				}}
-				aria-label="Refresh"
-				><div class="m-auto block">
-					<span class="material-symbols-outlined block"> refresh </span>
-				</div></button
-			>
-			<div class="ml-auto">
-				<button
-					class="h-8 w-8 text-black dark:text-white bg-sky-400 dark:bg-sky-700 rounded-full flex flex-col shadow-md"
-					on:click={() => {
-						data_stack_store.update((x) => {
-							x.push(new StackInterface(new SettingsStack()));
-							return x;
-						});
-					}}
-					aria-label="Refresh"
-					><div class="m-auto block">
-						<span class="material-symbols-outlined block"> settings </span>
-					</div></button
-				>
-			</div>
-		</div>
+	<div class="mt-3 mb-2">
+		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-1.5">
+		<button
+			class="text-seashore cursor-pointer mx-1"
+			on:click={() => {
+				window.location.reload();
+			}}
+			aria-label="Refresh"
+			><span class="material-symbols-outlined block"> refresh </span>
+		</button>
+		<button
+			class="text-seashore cursor-pointer mx-2"
+			on:click={() => {
+				data_stack_store.update((x) => {
+					x.push(new StackInterface(new SettingsStack()));
+					return x;
+				});
+			}}
+			aria-label="Settings"
+			><span class="material-symbols-outlined block"> settings </span>
+		</button>
 	</div>
 	{#if this_locale?.startsWith('en')}
 		{#if false}
