@@ -60,17 +60,18 @@
 				>{fixRouteNameLong(chateau_id, long_name, route_id)}</span
 			>
 		{/if}
-
-        {#if icon}
-            <span class="material-icons-outlined text-2xl align-middle">{icon}</span>
-        {/if}
 	</h2>
 
 	<h2 class={`text-lg font-medium my-1 ${arrow ? '-translate-x-1.5' : ''}`}>
 		{#if arrow}
 			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
 		{/if}
-		<span class="align-middle">{text}</span>
+		<span class="align-middle">
+			{text}
+			{#if icon}
+            <span class="material-symbols-outlined text-xl align-middle -translate-y-0.5 ml-1">{icon}</span>
+        {/if}
+		</span>
 	</h2>
 
 	<div class="flex flex-row gap-x-2">
