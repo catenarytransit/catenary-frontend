@@ -27,6 +27,7 @@
 	export let darkMode: boolean;
 
 	export let disable_pdf: boolean = false;
+	export let arrow: boolean = false;
 
 	let pdf_url: string | undefined;
 
@@ -65,7 +66,12 @@
         {/if}
 	</h2>
 
-	<h2 class="text-lg font-medium my-1">{text}</h2>
+	<h2 class="text-lg font-medium my-1 -translate-x-1.5">
+		{#if arrow}
+			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
+		{/if}
+		<span class="align-middle">{text}</span>
+	</h2>
 
 	<div class="flex flex-row gap-x-2">
 		{#if pdf_url != null}
