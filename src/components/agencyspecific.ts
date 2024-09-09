@@ -115,9 +115,15 @@ export function fixRunNumber(
 	return tripname;
 }
 
-export function fixHeadsignText(name: string, route: string) {
-	if (name.startsWith(route)) {
-		name = name.replace(route + ' - ', '').trim();
+export function fixHeadsignText(name: string | null, route: string | null) {
+	if (name == null) {
+		return "";
+	}
+
+	if (route != null) {
+		if (name.startsWith(route)) {
+			name = name.replace(route + ' - ', '').trim();
+		}
 	}
 
 	const fixPatterns: Record<string, string> = {
