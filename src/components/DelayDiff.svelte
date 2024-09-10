@@ -29,7 +29,7 @@ import { _ } from 'svelte-i18n';
 			}
 		}
 
-		return 'hrs';
+		return 'h';
 	}
 
 	function locale_min_marking(l: string | null | undefined) {
@@ -45,7 +45,7 @@ import { _ } from 'svelte-i18n';
 			}
 		}
 
-		return 'min';
+		return 'm';
 	}
 
 	function locale_s_marking(l: string | null | undefined) {
@@ -61,7 +61,7 @@ import { _ } from 'svelte-i18n';
 			}
 		}
 
-		return 'sec';
+		return 's';
 	}
 
 	locale.subscribe((x) => (this_locale = x));
