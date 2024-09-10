@@ -29,7 +29,10 @@
 		show_my_location_store,
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
-		geolocation_store
+		geolocation_store,
+
+		nearby_deps_cache_gps
+
 	} from '../globalstores';
 	import { SingleTrip, StackInterface } from './stackenum';
 	import { t } from 'svelte-i18n';
@@ -39,6 +42,13 @@
     let first_load = false;
 
     onMount(() => {
+        let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
+
+        if (hit_nearby_deps_cache) {
+            stops_table = hit_nearby_deps_cache.stop;
+            departure_list = hit_nearby_deps_cache.departures;
+        }
+
         getNearbyDepartures();
     
         let interval = setInterval(() => {
@@ -74,19 +84,14 @@
                 stops_table = data.stop;
                 departure_list = data.departures;
                 loading = false;
+
+                nearby_deps_cache_gps.set(data);
             });
         }
-
     }
  </script>
 
  <div class=" catenary-scroll overflow-y-auto pb-32 h-full">
-    <p class="text-sm text-gray-900 dark:text-slate-200 text-xs md:text-sm">Queries may be very slow in dense cities, optimisation still being worked on. Realtime will be shown when available. Refreshes every 20s automatically. Click on times to see full stop list.</p>
-
-    <button on:click={getNearbyDepartures} class="text-sm text-white bg-blue-500 px-2 py-1 rounded-md">
-        Refresh Departures 
-    </button>
-
    <div class="flex flex-col gap-y-5">
     {#each departure_list as route_group }
     <div class="px-2 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-md dark:shadow-slate-800">
