@@ -69,5 +69,5 @@
 	"ontime": "À l'heure",
 	"defaultlang": "Langage par défaut",
 	"hidepreviousstops": "Masquer les arrêts précédents",
-	"shownpreviousstops": "Afficher les {n} arrêts précédents {n, plural, other{stops}}"
+	"shownpreviousstops": "Afficher les {n} {n, plural, =1 {arrêt précédent} other{arrêts précédents}}"
 }
