@@ -68,5 +68,6 @@
 	"late": "Tard",
 	"ontime": "À l'heure",
 	"defaultlang": "Langage par défaut",
-	"hidepreviousstops": "Masquer les arrêts précédents"
+	"hidepreviousstops": "Masquer les arrêts précédents",
+	"shownpreviousstops": "Afficher les {n} arrêts précédents {n, plural, other{stops}}"
 }
