@@ -486,7 +486,7 @@
 				disable_pdf={true}
 			/>
 
-			<span class="block mt-3" />
+			<span class="block md:mt-3" />
 
 			{#if !simpleRouteMode}
 				<p class="text-sm">
