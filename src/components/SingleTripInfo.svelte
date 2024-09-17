@@ -359,6 +359,21 @@
 							}
 						}
 
+						stoptime.show_both_departure_and_arrival = false;
+
+						if (stoptime_to_use.scheduled_arrival_time_unix_seconds && stoptime_to_use.scheduled_departure_time_unix_seconds) {
+							// if both are different by more than 1 minute, show both
+
+							if (
+								Math.abs(
+									stoptime_to_use.scheduled_arrival_time_unix_seconds -
+										stoptime_to_use.scheduled_departure_time_unix_seconds
+								) > 60
+							) {
+								stoptime.show_both_departure_and_arrival = true;
+							}
+						}
+
 						stoptimes_cleaned.push(stoptime_to_use);
 						index = index + 1;
 					});
