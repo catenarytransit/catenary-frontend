@@ -6,6 +6,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import RouteIcon from './RouteIcon.svelte';
+	import {titleCase} from './../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
 	import DelayDiff from './DelayDiff.svelte';
 	import TimeDiff from './TimeDiff.svelte';
@@ -56,6 +57,9 @@
 		map_pointer_store
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
+
+
+	let activePattern: string = '';
 
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
@@ -118,6 +122,8 @@
 				loaded = true;
 
 				route_data = data;
+
+				activePattern = Object.keys(route_data.direction_patterns)[0];
 			} catch (err) {
 				console.error(err);
 			}
@@ -128,7 +134,6 @@
 		fetch_route_selected();
 	}
 
-	let activePattern = '';
 </script>
 
 <div class="h-full">
@@ -151,10 +156,10 @@
 			{#each Object.entries(route_data.direction_patterns) as direction, index}
 				<div
 					on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
-					class={`bg-white dark:bg-slate-800 hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36 ${direction[1].direction_pattern.direction_pattern_id ? 'bg-seashore' : ''}`}
+					class={` text-sm  hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36  leading-tight ${direction[1].direction_pattern.direction_pattern_id == activePattern ? 'bg-seashore' : 'bg-white dark:bg-slate-800'}`}
 				>
 					<span class="material-symbols-outlined">chevron_right</span>
-					{direction[1].direction_pattern.headsign_or_destination}
+					{titleCase(direction[1].direction_pattern.headsign_or_destination)}
 				</div>
 			{/each}
 		</div>

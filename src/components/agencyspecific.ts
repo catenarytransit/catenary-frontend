@@ -1,3 +1,5 @@
+import {titleCase} from '../utils/titleCase';
+
 export function fixHeadsignIcon(headsign: string): string | null {
 	let fixPatterns = {
 		Airport: 'flight',
@@ -167,7 +169,7 @@ export function fixStationName(name: string) {
 
 	return (
 		fixPatterns[name] ||
-		name
+		titleCase(name
 			.replace(' Transit Station', '')
 			.replace(' Transit Sta', '')
 			.replace(' Transportation Center', '')
@@ -176,6 +178,6 @@ export function fixStationName(name: string) {
 			.replace(' Station', '')
 			.replace(' Metrolink', '')
 			.replace(' Amtrak', '')
-			.trim()
+			.trim())
 	);
 }
