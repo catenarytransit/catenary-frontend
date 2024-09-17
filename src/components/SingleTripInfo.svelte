@@ -488,6 +488,11 @@
 
 			<span class="block md:mt-3" />
 
+			
+			{#if trip_data.vehicle != null}
+				<p class="text-sm">{$_('vehicle')} {trip_data.vehicle.label || trip_data.vehicle.id}</p>
+			{/if}
+
 			{#if !simpleRouteMode}
 				<p class="text-sm">
 					Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
@@ -495,9 +500,6 @@
 					{/if}
 				</p>
 
-				{#if trip_data.vehicle != null}
-					<p class="text-sm">{$_('vehicle')} {trip_data.vehicle.label || trip_data.vehicle.id}</p>
-				{/if}
 				<p class="text-sm">
 					{#if timezones.filter((x) => x != null).length == 1}
 						{$_('timezone')}: {timezones[0]}

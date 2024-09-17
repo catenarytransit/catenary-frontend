@@ -243,7 +243,7 @@
 											>
 										{/if}
 									</p>
-									{#if !simpleRouteMode && option.data.vehicle_id && !(option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0)}
+									{#if option.data.vehicle_id && !(option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0)}
 										<p class="text-sm lg:text-base">{$_('vehicle')} {option.data.vehicle_id}</p>
 									{/if}
 								</div>
