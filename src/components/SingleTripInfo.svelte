@@ -534,7 +534,7 @@
 								{#each alert.description_text.translation.filter((x) => x.language == each_header_translation_obj.language) as description_alert}
 									<div class="leading-none">
 										{#each description_alert.text.split('\n') as each_desc_line}
-											<p class="text-sm">{each_desc_line}</p>
+											<p class="text-sm">{@html each_desc_line.replaceAll("<a ", "<a target=\"_blank\" class=\"text-sky-500 dark:text-sky-300 underline\"")}</p>
 										{/each}
 									</div>
 								{/each}

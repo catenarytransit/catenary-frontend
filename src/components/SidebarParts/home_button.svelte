@@ -4,7 +4,7 @@
 </script>
 
 <button
-	class="m-3 h-10 w-10 text-seashore border-seashore border-2 rounded-full flex items-center justify-center"
+	class="{window.innerHeight < 500 ? 'm-1' : "m-1.5 md:m-2"} h-10 w-10 text-seashore border-seashore border-2 rounded-full flex items-center justify-center"
 	on:click={() => {
 		data_stack_store.set([]);
 		let map = get(map_pointer_store);
