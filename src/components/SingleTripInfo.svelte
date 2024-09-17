@@ -611,7 +611,7 @@
 							</p>
 
 							<div class="flex flex-row">
-								{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null}
+								{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null || stoptime.interpolated_stoptime_unix_seconds != null}
 									{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
 										<span
 											style:color={`${stoptime.rt_departure_time || stoptime.rt_arrival_time ? '#42a7c5' : ''}`}
@@ -619,7 +619,7 @@
 										>
 											<TimeDiff
 												diff={(stoptime.rt_departure_time ||
-													stoptime.scheduled_departure_time_unix_seconds) -
+													stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) -
 													current_time / 1000}
 												show_brackets={false}
 												show_seconds={false}
@@ -640,7 +640,7 @@
 									>
 									<span class="ml-2"></span>
 									<DelayDiff
-										diff={stoptime.rt_departure_diff || stoptime.rt_arrival_diff || 0}
+										diff={stoptime.rt_departure_diff || stoptime.rt_arrival_diff}
 										simple={simpleRouteMode}
 									/>
 								{:else}
@@ -666,7 +666,7 @@
 													class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
 												>
 													{new Date(
-														stoptime.scheduled_departure_time_unix_seconds * 1000
+														(stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) * 1000
 													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
 														hour: simpleRouteMode ? 'numeric' : '2-digit',
@@ -690,7 +690,7 @@
 													class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
 												>
 													{new Date(
-														stoptime.scheduled_arrival_time_unix_seconds * 1000
+														(stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) * 1000
 													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
 														hour: simpleRouteMode ? 'numeric' : '2-digit',
@@ -711,7 +711,7 @@
 												</span>
 											{:else}
 												{new Date(
-													stoptime.scheduled_departure_time_unix_seconds * 1000
+													(stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) * 1000
 												).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
 													timeZone: stoptime.timezone || trip_data.tz,
 													hour: simpleRouteMode ? 'numeric' : '2-digit',
