@@ -5,12 +5,23 @@ export default {
 	theme: {
 		extend: {
 			animation: {
-				fade: 'fadeOut 1s ease-in-out'
+				fade: 'fadeOut 1s ease-in-out',
+				progress: 'progress 1s infinite linear',
 			},
 			colors: {
 				darksky: '#0a233f',
 				seashore: '#42a7c5'
-			}
+			},
+			keyframes: {
+				progress: {
+				  '0%': { transform: ' translateX(0) scaleX(0)' },
+				  '40%': { transform: 'translateX(0) scaleX(0.4)' },
+				  '100%': { transform: 'translateX(100%) scaleX(0.5)' },
+				},
+			  },
+			  transformOrigin: {
+				'left-right': '0% 50%',
+			  }
 		}
 	},
 	plugins: []

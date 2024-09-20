@@ -45,6 +45,8 @@
 
     let timeout_first_attempt : NodeJS.Timeout | null = null;
 
+    let loading = false;
+
     onMount(() => {
         let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
 
@@ -84,9 +86,6 @@
         
     });
 
-
-    let loading = false;
-
     async function getNearbyDepartures() {
         loading = true;
         
@@ -110,6 +109,26 @@
         }
     }
  </script>
+
+{#if !first_attempt_sent}
+
+<p class="italic text-gray-500">Waiting for User GPS or picked location...</p>
+
+{/if}
+
+<div class='w-full'>
+    {#if loading}
+    <div class='h-1 w-full bg-sky-200 dark:bg-sky-900 overflow-hidden'>
+      <div class='progress w-full h-full bg-seashore left-right'></div>
+    </div>
+
+    {:else}
+    
+    <div class="h-1"></div>
+    {/if}
+    
+</div>
+
 
  <div class=" catenary-scroll overflow-y-auto pb-32 h-full">
    <div class="flex flex-col gap-y-5">
