@@ -11,6 +11,18 @@
 	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
 
+    function sort_directions_group(x: any):[[string, any]] {
+        let array = x;
+
+        array.sort((a,b) => 
+            a[1].headsign.localeCompare(b[1].headsign)
+        );
+
+        console.log('sorted dep now ',array);
+
+        return array;
+    }
+
     setInterval(() => {
         current_time = Date.now();
     }, 300);
@@ -36,6 +48,8 @@
 	} from '../globalstores';
 	import { SingleTrip, StackInterface } from './stackenum';
 	import { t } from 'svelte-i18n';
+	import { fixHeadsignText } from './agencyspecific';
+	import { titleCase } from '../utils/titleCase';
 
     let current_time: number = Date.now();
 
@@ -148,16 +162,16 @@
            
         </p>
        
-        {#each Object.entries(route_group.directions) as [d_id, direction_group] }
+        {#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group] }
         <p>
             <span class="px-0.5 mr-2 bg-slate-600"></span>
-            {direction_group.headsign}</p>
+            {titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}</p>
        
             <p class='text-sm'>🚏 {stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name}</p>
        
             <div class="flex flex-row gap-x-1 overflow-x-auto  catenary-scroll">
             {#each direction_group.trips.filter((x) => x.departure_schedule  > (Date.now() / 1000) - 900) as trip }
-                <div class="bg-white dark:bg-slate-800 hover:bg-blue-300 hover:dark:bg-blue-900 p-1 rounded-md min-w-24"
+                <div class="bg-white dark:bg-slate-800 hover:bg-blue-300 hover:dark:bg-blue-900 p-0.5 rounded-md min-w-24"
                     on:click={() => {
                         data_stack_store.update((stack) => {
                             stack.push(new StackInterface(
