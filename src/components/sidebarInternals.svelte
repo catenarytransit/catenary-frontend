@@ -227,7 +227,7 @@
 											>
 										{/if}
 										{#if option.data.headsign && option.data.headsign != option.data.route_long_name && option.data.headsign != option.data.route_short_name}
-											<span class="">
+											<span class="mr-1">
 												<span class="material-symbols-outlined mr-0 align-middle -translate-y-0.5"
 													>chevron_right</span
 												>
@@ -235,23 +235,20 @@
 													option.data.headsign,
 													option.data.route_short_name || option.data.route_long_name
 												)}
+												{#if fixHeadsignIcon(option.data.headsign)}
+													<span class="material-symbols-outlined text-sm align-middle"
+														>{fixHeadsignIcon(option.data.headsign)}</span
+													>
+												{/if}
 											</span>
 										{/if}
-										{#if fixHeadsignIcon(option.data.headsign)}
-											<span class="material-symbols-outlined text-sm align-middle"
-												>{fixHeadsignIcon(option.data.headsign)}</span
+										{#if option.data.vehicle_id && !(option.data.vehicle_id == fixRunNumber(option.data.chateau_id, option.data.route_type, option.data.route_id, option.data.trip_short_name, option.data.vehicle_id))}
+											<span
+												class="text-xs lg:text-base bg-gray-200 dark:bg-background px-1 rounded-md"
 											>
-										{/if}
-										{#if option.data.vehicle_id && !(option.data.vehicle_id == fixRunNumber(
-											option.data.chateau_id,
-											option.data.route_type,
-											option.data.route_id,
-											option.data.trip_short_name,
-											option.data.vehicle_id
-										))}
-											<span class="text-xs font-light lg:text-base bg-gray-200 dark:bg-background px-1 rounded-md">
 												<span class="material-symbols-outlined !text-xs">directions_bus</span>
-												{option.data.vehicle_id}</span>
+												{option.data.vehicle_id}</span
+											>
 										{/if}
 									</p>
 								</div>
@@ -419,7 +416,7 @@
 	<p>Loading home page</p>
 {:else}
 	<div class="mt-3 mb-2">
-		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2">
+		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
 		<button
 			class="text-seashore cursor-pointer mx-1"
 			on:click={() => {

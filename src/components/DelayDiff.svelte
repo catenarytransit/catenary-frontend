@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { text } from '@sveltejs/kit';
-import { _ } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 
 	import { locale, locales } from 'svelte-i18n';
 	export let diff: number;
@@ -68,11 +68,11 @@ import { _ } from 'svelte-i18n';
 
 	$: if (diff) {
 		if (diff < 60) {
-			textclass = 'text-[0px] text-yellow-600 dark:text-yellow-400';
+			textclass = 'text-[0px] text-yellow-600 dark:text-yellow-400 font-semibold';
 		}
 
 		if (diff > 60) {
-			textclass = 'text-[0px] text-red-700 dark:text-red-400';
+			textclass = 'text-[0px] text-red-700 dark:text-red-400 font-semibold';
 		}
 
 		let remainder = Math.abs(diff);
@@ -86,22 +86,26 @@ import { _ } from 'svelte-i18n';
 
 <span class={textclass}>
 	<span>
-		{#if diff < 0}<span class="text-sm">{$_('early')}</span>
-		{/if}{#if diff > 0}<span class="text-sm">{$_('late')}</span>
-		{/if}{#if diff == 0}<span class="text-sm text-[#009900]">{$_('ontime')}</span>{/if}
+		{#if diff < -20}<span class="text-sm">{$_('early')}</span>
+		{/if}{#if diff > 20}<span class="text-sm">{$_('late')}</span>
+		{/if}{#if diff >= -20 && diff <= 20}<span class="text-sm font-semibold text-[#58A738]"
+				>{$_('ontime')}</span
+			>{/if}
 		<span class="text-sm"> &nbsp; </span>
 	</span>
 
-	{#if h > 0}
-		<span class="text-sm">{h}</span>
-		<span class="text-xs">{locale_hour_marking(this_locale)}</span>
-	{/if}{#if h > 0 || (m > 0 || (simple && m >= 0 && diff != 0))}
-		<span class="text-sm">{(simple && diff < 60) ? '<1' : m}</span>
-		<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
-	{#if (!simple)}
-		{#if Math.abs(diff) > 0}
-			<span class="text-sm">{s}</span>
-			<span class="text-xs">{locale_s_marking(this_locale)}</span>
+	{#if diff < -20 || diff > 20}
+		{#if h > 0}
+			<span class="text-sm">{h}</span>
+			<span class="text-xs">{locale_hour_marking(this_locale)}</span>
+		{/if}{#if h > 0 || m > 0 || (simple && m >= 0 && diff != 0)}
+			<span class="text-sm">{simple && diff < 60 ? '<1' : m}</span>
+			<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
+		{#if !simple}
+			{#if Math.abs(diff) > 0}
+				<span class="text-sm">{s}</span>
+				<span class="text-xs">{locale_s_marking(this_locale)}</span>
+			{/if}
 		{/if}
 	{/if}
 </span>
