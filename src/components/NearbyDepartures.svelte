@@ -41,6 +41,10 @@
 
     let first_load = false;
 
+    let first_attempt_sent = false;
+
+    let timeout_first_attempt : NodeJS.Timeout | null = null;
+
     onMount(() => {
         let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
 
@@ -60,11 +64,25 @@
             first_load = true;
         }, 1500);
 
+        timeout_first_attempt = setInterval(() => {
+            if (!first_attempt_sent) {
+                getNearbyDepartures();
+            } else {
+               if (timeout_first_attempt != null) {
+                   clearInterval(timeout_first_attempt);
+               }
+            }
+        }, 300);
+
         return () => {
             clearInterval(interval);
-        };
-    });
 
+            if (timeout_first_attempt != null) {
+               clearInterval(timeout_first_attempt);
+            }
+        };
+        
+    });
 
 
     let loading = false;
@@ -75,6 +93,8 @@
         let geolocation_of_user = get(geolocation_store);
 
         if (geolocation_of_user) {
+
+        first_attempt_sent = true;
 
         let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${geolocation_of_user?.coords.latitude}&lon=${geolocation_of_user?.coords.longitude}`;
 
