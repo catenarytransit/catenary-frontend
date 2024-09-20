@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	import { fixRouteName, fixRouteNameLong } from './agencyspecific';
 	import { lightenColour } from './lightenDarkColour';
 	import {
@@ -17,6 +18,7 @@
 
 	export let run_number: string | null = null;
 	export let icon: string | null = null;
+	export let vehicle: string | null = null;
 
 	export let route_id: string;
 	export let chateau_id: string;
@@ -69,9 +71,20 @@
 		<span class="align-middle">
 			{text}
 			{#if icon}
-            <span class="material-symbols-outlined text-xl align-middle -translate-y-0.5 ml-1">{icon}</span>
-        {/if}
+				<span class="material-symbols-outlined text-xl align-middle -translate-y-0.5 ml-1"
+					>{icon}</span
+				>
+			{/if}
 		</span>
+		{#if vehicle && vehicle != run_number}
+			<span style:background-color={color} style:color={text_color} class="text-sm align-middle ml-1 bg-seashore dark:bg-darksky text-white px-1 rounded-md translate-y-0.5 inline-block"
+				>
+				<span class="material-symbols-outlined text-sm align-middle -translate-y-[0.03rem]"
+					>directions_bus</span
+				>
+				{vehicle}</span
+			>
+		{/if}
 	</h2>
 
 	<div class="flex flex-row gap-x-2">

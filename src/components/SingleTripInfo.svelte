@@ -466,6 +466,7 @@
 				text_color={trip_data.text_color}
 				route_id={trip_data.route_id}
 				chateau_id={trip_selected.chateau_id}
+				vehicle={trip_data.vehicle?.label || trip_data.vehicle?.id}
 				arrow={true}
 				text={fixHeadsignText(
 					trip_data.trip_headsign,
@@ -487,11 +488,6 @@
 			/>
 
 			<span class="block md:mt-3" />
-
-			
-			{#if trip_data.vehicle != null}
-				<p class="text-sm">{$_('vehicle')} {trip_data.vehicle.label || trip_data.vehicle.id}</p>
-			{/if}
 
 			{#if !simpleRouteMode}
 				<p class="text-sm">
