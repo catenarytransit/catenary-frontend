@@ -469,12 +469,8 @@
 
 		<TidbitSidebarCard />
 	{/if}
-	<div class="px-4 sm:px-2 lg:px-4 py-1 flex flex-col h-full">
-		<h2 class="text-base md:text-lg text-gray-800 dark:text-gray-300">
-			{$_('nearbydepartures')} Beta
-		</h2>
-
-		<div class="flex flex-col h-full select-text"><NearbyDepartures /></div>
+	<div class="py-1 flex flex-col h-full">
+		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} /></div>
 
 		<p class="text-xs md:text-sm text-gray-800 dark:text-gray-300">
 			Catenary Maps {$_('softwareversion')} 2024-09-03 11:23Z

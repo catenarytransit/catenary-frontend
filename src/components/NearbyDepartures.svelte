@@ -3,6 +3,8 @@
 <script lang="ts">
     let stops_table: Record<string, Record<string, any>> = {};
     let departure_list: any[] = [];
+
+    export let usunits: boolean = false;
     
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -48,8 +50,9 @@
 	} from '../globalstores';
 	import { SingleTrip, StackInterface } from './stackenum';
 	import { t } from 'svelte-i18n';
-	import { fixHeadsignText } from './agencyspecific';
+	import { fixHeadsignText, fixRouteName, fixRouteNameLong, fixStationName } from './agencyspecific';
 	import { titleCase } from '../utils/titleCase';
+	import { lightenColour } from './lightenDarkColour';
 
     let current_time: number = Date.now();
 
@@ -124,9 +127,14 @@
     }
  </script>
 
+<h2 class="text-base text-xl font-medium text-gray-800 dark:text-gray-300 px-3 mb-2">
+    <span class="material-symbols-outlined mr-1 translate-y-1">near_me</span>
+    {$_('nearbydepartures')}
+</h2>
+
 {#if !first_attempt_sent}
 
-<p class="italic text-gray-500">Waiting for User GPS or picked location...</p>
+<p class="italic px-3 pb-2">Waiting for GPS...</p>
 
 {/if}
 
@@ -144,30 +152,31 @@
 </div>
 
 
- <div class=" catenary-scroll overflow-y-auto pb-32 h-full">
-   <div class="flex flex-col gap-y-5">
+ <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
+   <div class="flex flex-col">
     {#each departure_list as route_group }
-    <div class="px-2 py-2 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-md dark:shadow-slate-800">
-        <p style={`color: ${route_group.color}`}>
+    <div class="px-3 mx-3 mt-1 mb-2 py-2 bg-gray-100 dark:bg-background rounded-md">
+        <p class="text-lg" style={`color: ${lightenColour(route_group.color)}`}>
             {#if route_group.short_name}
-            
-             <span class="font-bold">{route_group.short_name}</span>
+             <span class="font-bold mr-1">{fixRouteName(route_group.chateau_id, route_group.short_name, route_group.route_id)}</span>
             {/if}
             
             {#if route_group.long_name}
             
-             <span class="font-medium">{route_group.long_name}</span>
+             <span class="font-medium">{fixRouteNameLong(route_group.chateau_id, route_group.long_name, route_group.route_id)}</span>
             {/if}
        
            
         </p>
        
         {#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group] }
-        <p>
-            <span class="px-0.5 mr-2 bg-slate-600"></span>
-            {titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}</p>
-       
-            <p class='text-sm'>🚏 {stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name}</p>
+        <p class="font-medium -translate-x-1 mt-3 mb-1">
+            <span class="material-symbols-outlined text-md align-middle -translate-y-0.5">chevron_right</span>
+            {titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
+            <span class='text-sm bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1'>
+                <span class="material-symbols-outlined text-sm align-middle">distance</span>
+                {fixStationName(stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name)}</span>
+        </p>
        
             <div class="flex flex-row gap-x-1 overflow-x-auto  catenary-scroll">
             {#each direction_group.trips.filter((x) => x.departure_schedule  > (Date.now() / 1000) - 900) as trip }
@@ -208,7 +217,7 @@
                        
 
                         {
-                            new Intl.DateTimeFormat('en-GB', {
+                            new Intl.DateTimeFormat(usunits ? 'en-US' : 'en-GB', {
                                 hour: "numeric",
                                 minute: "numeric",
     timeZone: trip.tz,
@@ -222,7 +231,8 @@
        
                     {#if trip.departure_realtime != null && trip.departure_schedule != null}
                     
-                    <DelayDiff 
+                    <DelayDiff
+                    simple={true} 
                     diff={trip.departure_schedule - trip.departure_realtime} />
                     {/if}
                     
