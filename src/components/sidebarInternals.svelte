@@ -242,10 +242,18 @@
 												>{fixHeadsignIcon(option.data.headsign)}</span
 											>
 										{/if}
+										{#if option.data.vehicle_id && !(option.data.vehicle_id == fixRunNumber(
+											option.data.chateau_id,
+											option.data.route_type,
+											option.data.route_id,
+											option.data.trip_short_name,
+											option.data.vehicle_id
+										))}
+											<span class="text-xs font-light lg:text-base bg-gray-200 dark:bg-background px-1 rounded-md">
+												<span class="material-symbols-outlined text-xs">directions_bus</span>
+												{option.data.vehicle_id}</span>
+										{/if}
 									</p>
-									{#if option.data.vehicle_id && !(option.data.chateau_id == 'san-diego-mts' && option.data.route_type == 0)}
-										<p class="text-sm lg:text-base">{$_('vehicle')} {option.data.vehicle_id}</p>
-									{/if}
 								</div>
 							{/each}
 						</div>

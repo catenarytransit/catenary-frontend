@@ -10,7 +10,8 @@ export default {
 			},
 			colors: {
 				darksky: '#0a233f',
-				seashore: '#42a7c5'
+				seashore: '#42a7c5',
+				background: '#06121F'
 			},
 			keyframes: {
 				progress: {
