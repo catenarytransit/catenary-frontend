@@ -11,7 +11,8 @@ export default {
 			colors: {
 				darksky: '#0a233f',
 				seashore: '#42a7c5',
-				background: '#06121F'
+				background: '#06121f',
+				hover: '#1a334f'
 			},
 			keyframes: {
 				progress: {

@@ -1,11 +1,9 @@
-
-
 <script lang="ts">
-    let stops_table: Record<string, Record<string, any>> = {};
-    let departure_list: any[] = [];
+	let stops_table: Record<string, Record<string, any>> = {};
+	let departure_list: any[] = [];
 
-    export let usunits: boolean = false;
-    
+	export let usunits: boolean = false;
+
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
 	import { _ } from 'svelte-i18n';
@@ -13,23 +11,21 @@
 	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
 
-    function sort_directions_group(x: any):[[string, any]] {
-        let array = x;
+	function sort_directions_group(x: any): [[string, any]] {
+		let array = x;
 
-        array.sort((a,b) => 
-            a[1].headsign.localeCompare(b[1].headsign)
-        );
+		array.sort((a, b) => a[1].headsign.localeCompare(b[1].headsign));
 
-        console.log('sorted dep now ',array);
+		console.log('sorted dep now ', array);
 
-        return array;
-    }
+		return array;
+	}
 
-    setInterval(() => {
-        current_time = Date.now();
-    }, 300);
+	setInterval(() => {
+		current_time = Date.now();
+	}, 300);
 
-    import {
+	import {
 		dark_mode_store,
 		data_stack_store,
 		on_sidebar_trigger_store,
@@ -44,203 +40,267 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
 		geolocation_store,
-
 		nearby_deps_cache_gps
-
 	} from '../globalstores';
 	import { SingleTrip, StackInterface } from './stackenum';
 	import { t } from 'svelte-i18n';
-	import { fixHeadsignText, fixRouteName, fixRouteNameLong, fixStationName } from './agencyspecific';
+	import {
+		fixHeadsignText,
+		fixRouteName,
+		fixRouteNameLong,
+		fixStationName
+	} from './agencyspecific';
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
 
-    let current_time: number = Date.now();
+	let current_time: number = Date.now();
 
-    let first_load = false;
+	let first_load = false;
 
-    let first_attempt_sent = false;
+	let first_attempt_sent = false;
 
-    let timeout_first_attempt : NodeJS.Timeout | null = null;
+	let timeout_first_attempt: NodeJS.Timeout | null = null;
 
-    let loading = false;
+	let loading = false;
 
-    onMount(() => {
-        let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
+	onMount(() => {
+		let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
 
-        if (hit_nearby_deps_cache) {
-            stops_table = hit_nearby_deps_cache.stop;
-            departure_list = hit_nearby_deps_cache.departures;
-        }
+		if (hit_nearby_deps_cache) {
+			stops_table = hit_nearby_deps_cache.stop;
+			departure_list = hit_nearby_deps_cache.departures;
+		}
 
-        getNearbyDepartures();
-    
-        let interval = setInterval(() => {
-            getNearbyDepartures();
-        }, 20_000);
+		getNearbyDepartures();
 
-        setTimeout(() => {
-            getNearbyDepartures();
-            first_load = true;
-        }, 1500);
+		let interval = setInterval(() => {
+			getNearbyDepartures();
+		}, 20_000);
 
-        timeout_first_attempt = setInterval(() => {
-            if (!first_attempt_sent) {
-                getNearbyDepartures();
-            } else {
-               if (timeout_first_attempt != null) {
-                   clearInterval(timeout_first_attempt);
-               }
-            }
-        }, 300);
+		setTimeout(() => {
+			getNearbyDepartures();
+			first_load = true;
+		}, 1500);
 
-        return () => {
-            clearInterval(interval);
+		timeout_first_attempt = setInterval(() => {
+			if (!first_attempt_sent) {
+				getNearbyDepartures();
+			} else {
+				if (timeout_first_attempt != null) {
+					clearInterval(timeout_first_attempt);
+				}
+			}
+		}, 300);
 
-            if (timeout_first_attempt != null) {
-               clearInterval(timeout_first_attempt);
-            }
-        };
-        
-    });
+		return () => {
+			clearInterval(interval);
 
-    async function getNearbyDepartures() {
-        loading = true;
-        
-        let geolocation_of_user = get(geolocation_store);
+			if (timeout_first_attempt != null) {
+				clearInterval(timeout_first_attempt);
+			}
+		};
+	});
 
-        if (geolocation_of_user) {
+	async function getNearbyDepartures() {
+		loading = true;
 
-        first_attempt_sent = true;
+		let geolocation_of_user = get(geolocation_store);
 
-        let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${geolocation_of_user?.coords.latitude}&lon=${geolocation_of_user?.coords.longitude}`;
+		if (geolocation_of_user) {
+			first_attempt_sent = true;
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                stops_table = data.stop;
-                departure_list = data.departures;
-                loading = false;
+			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${geolocation_of_user?.coords.latitude}&lon=${geolocation_of_user?.coords.longitude}`;
 
-                nearby_deps_cache_gps.set(data);
-            });
-        }
-    }
- </script>
+			fetch(url)
+				.then((response) => response.json())
+				.then((data) => {
+					stops_table = data.stop;
+					let temp_departure_list = data.departures;
+
+					temp_departure_list.forEach((route_group: any) => {
+						let new_directions: Record<string, any> = {};
+
+						Object.values(route_group.directions).forEach((direction: any) => {
+							if (new_directions[direction.headsign]) {
+								new_directions[direction.headsign].trips = [
+									...new_directions[direction.headsign].trips,
+									...direction.trips
+								];
+							} else {
+								new_directions[direction.headsign] = direction;
+							}
+						});
+
+						route_group.directions = new_directions;
+					});
+
+					departure_list = temp_departure_list;
+
+					console.log('nearby deps', departure_list);
+					
+					loading = false;
+
+					nearby_deps_cache_gps.set(data);
+				});
+		}
+	}
+</script>
 
 <h2 class="text-base text-xl font-medium text-gray-800 dark:text-gray-300 px-3 mb-2">
-    <span class="material-symbols-outlined mr-1 translate-y-1">near_me</span>
-    {$_('nearbydepartures')}
+	<span class="material-symbols-outlined mr-1 translate-y-1">near_me</span>
+	{$_('nearbydepartures')}
 </h2>
 
 {#if !first_attempt_sent}
-
-<p class="italic px-3 pb-2">Waiting for GPS...</p>
-
+	<p class="italic px-3 pb-2">Waiting for GPS...</p>
 {/if}
 
-<div class='w-full'>
-    {#if loading}
-    <div class='h-1 w-full bg-sky-200 dark:bg-sky-900 overflow-hidden'>
-      <div class='progress w-full h-full bg-seashore left-right'></div>
-    </div>
-
-    {:else}
-    
-    <div class="h-1"></div>
-    {/if}
-    
+<div class="w-full">
+	{#if loading}
+		<div class="h-1 w-full bg-sky-200 dark:bg-sky-900 overflow-hidden">
+			<div class="progress w-full h-full bg-seashore left-right"></div>
+		</div>
+	{:else}
+		<div class="h-1"></div>
+	{/if}
 </div>
 
+<div class=" catenary-scroll overflow-y-auto pb-64 h-full">
+	<div class="flex flex-col">
+		{#each departure_list as route_group}
+			<div class="px-3 mx-3 mt-1 mb-2 py-2 bg-gray-100 dark:bg-background rounded-md">
+				<p class="text-lg" style={`color: ${lightenColour(route_group.color)}`}>
+					{#if route_group.short_name}
+						<span class="font-bold mr-1"
+							>{fixRouteName(
+								route_group.chateau_id,
+								route_group.short_name,
+								route_group.route_id
+							)}</span
+						>
+					{/if}
 
- <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
-   <div class="flex flex-col">
-    {#each departure_list as route_group }
-    <div class="px-3 mx-3 mt-1 mb-2 py-2 bg-gray-100 dark:bg-background rounded-md">
-        <p class="text-lg" style={`color: ${lightenColour(route_group.color)}`}>
-            {#if route_group.short_name}
-             <span class="font-bold mr-1">{fixRouteName(route_group.chateau_id, route_group.short_name, route_group.route_id)}</span>
-            {/if}
-            
-            {#if route_group.long_name}
-            
-             <span class="font-medium">{fixRouteNameLong(route_group.chateau_id, route_group.long_name, route_group.route_id)}</span>
-            {/if}
-       
-           
-        </p>
-       
-        {#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group] }
-        <p class="font-medium -translate-x-1 mt-3 mb-1">
-            <span class="material-symbols-outlined text-md align-middle -translate-y-0.5">chevron_right</span>
-            {titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
-            <span class='text-sm bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1'>
-                <span class="material-symbols-outlined text-sm align-middle">distance</span>
-                {fixStationName(stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name)}</span>
-        </p>
-       
-            <div class="flex flex-row gap-x-1 overflow-x-auto  catenary-scroll">
-            {#each direction_group.trips.filter((x) => x.departure_schedule  > (Date.now() / 1000) - 900) as trip }
-                <div class="bg-white dark:bg-slate-800 hover:bg-blue-300 hover:dark:bg-blue-900 p-0.5 rounded-md min-w-24"
-                    on:click={() => {
-                        data_stack_store.update((stack) => {
-                            stack.push(new StackInterface(
-                                new SingleTrip(
-                                    route_group.chateau_id,
-                                    trip.trip_id,
-                                    route_group.route_id,
-                                    null,
-                                    trip.gtfs_schedule_start_day.replace(/-/g, ""),
-                                    null,
-                                    route_group.route_type
-                                ),
-                            ));
-       
-                            return stack;
-                        }
-                    
-                        
-                    );
-                    }}
-                >
-                    {#if route_group.route_type == 2 && trip.trip_short_name}
-                    <p class="font-medium text-sm md:text-sm">{trip.trip_short_name}</p>
-                    {/if}
-       
-                    {#if trip.departure_schedule}
-                    <TimeDiff
-                    show_brackets={false}
-                    show_seconds={false}
-                    diff={(trip.departure_realtime || trip.departure_schedule) - current_time / 1000} />
-                    {/if}
-       
-                    <p class="text-xs md:text-sm">
-                       
+					{#if route_group.long_name}
+						<span class="font-medium"
+							>{fixRouteNameLong(
+								route_group.chateau_id,
+								route_group.long_name,
+								route_group.route_id
+							)}</span
+						>
+					{/if}
+				</p>
 
-                        {
-                            new Intl.DateTimeFormat(usunits ? 'en-US' : 'en-GB', {
-                                hour: "numeric",
-                                minute: "numeric",
-    timeZone: trip.tz,
-  }).format(new Date((trip.departure_realtime || trip.departure_schedule) * 1000))
-                        }
-                    </p>
-       
-                    {#if trip.cancelled}
-                        <span class="text-red-500">{$_('cancelled')}</span>
-                    {/if}
-       
-                    {#if trip.departure_realtime != null && trip.departure_schedule != null}
-                    
-                    <DelayDiff
-                    simple={true} 
-                    diff={trip.departure_schedule - trip.departure_realtime} />
-                    {/if}
-                    
-                </div>
-                {/each}
-            </div>
-        {/each}
-    </div>
- {/each}
-   </div>
- </div>
+				{#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group]}
+					{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - 50 && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + 14400).length > 0}
+						<p class="font-medium -translate-x-1 mt-3 mb-1">
+							<span class="material-symbols-outlined text-md align-middle -translate-y-0.5"
+								>chevron_right</span
+							>
+							{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
+							<span class="text-sm bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
+								<span class="material-symbols-outlined text-sm align-middle">distance</span>
+								{fixStationName(
+									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
+								)}</span
+							>
+						</p>
+					{/if}
+					<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
+						{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - 50 && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + 14400) as trip}
+							<div
+								class="bg-white bg-gray-100 dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-24 flex justify-center"
+								on:click={() => {
+									data_stack_store.update((stack) => {
+										stack.push(
+											new StackInterface(
+												new SingleTrip(
+													route_group.chateau_id,
+													trip.trip_id,
+													route_group.route_id,
+													null,
+													trip.gtfs_schedule_start_day.replace(/-/g, ''),
+													null,
+													route_group.route_type
+												)
+											)
+										);
+
+										return stack;
+									});
+								}}
+							>
+								<div class="text-center">
+									{#if route_group.route_type == 2 && trip.trip_short_name}
+										<p class="font-medium text-sm md:text-sm">{trip.trip_short_name}</p>
+									{/if}
+
+									<span
+										style:color={`${trip.departure_realtime ? '#42a7c5' : ''}`}
+										class="font-semibold"
+									>
+										{#if (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 > 60}
+											<TimeDiff
+												large={true}
+												show_brackets={false}
+												show_seconds={false}
+												diff={(trip.departure_realtime || trip.departure_schedule) -
+													current_time / 1000}
+											/>
+										{:else}
+											<span class="text-lg font-medium">{$_('now')}</span>
+										{/if}
+										{#if trip.departure_realtime}
+											<svg
+												class="inline ml-0.5 w-4 h-4 -translate-y-0.5"
+												height="24"
+												viewBox="0 -960 960 960"
+												width="24"
+												fill={'#42a7c5'}
+												><path
+													d="M200-120q-33 0-56.5-23.5T120-200q0-33 23.5-56.5T200-280q33 0 56.5 23.5T280-200q0 33-23.5 56.5T200-120Zm480 0q0-117-44-218.5T516-516q-76-76-177.5-120T120-680v-120q142 0 265 53t216 146q93 93 146 216t53 265H680Zm-240 0q0-67-25-124.5T346-346q-44-44-101.5-69T120-440v-120q92 0 171.5 34.5T431-431q60 60 94.5 139.5T560-120H440Z"
+												/></svg
+											>
+										{:else}
+											<svg
+												class="inline w-3 h-3"
+												height="24"
+												viewBox="0 -960 960 960"
+												width="24"
+												fill={'white'}
+												><path
+													d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"
+												/></svg
+											>
+										{/if}
+									</span>
+
+									<p class="font-medium" style:color={trip.departure_realtime ? '#42a7c5': ''}>
+										{new Intl.DateTimeFormat(usunits ? 'en-US' : 'en-GB', {
+											hour: 'numeric',
+											minute: 'numeric',
+											timeZone: trip.tz
+										}).format(
+											new Date((trip.departure_realtime || trip.departure_schedule) * 1000)
+										)}
+									</p>
+
+									{#if trip.cancelled}
+										<span class="text-red-500">{$_('cancelled')}</span>
+									{/if}
+
+									{#if trip.departure_realtime != null && trip.departure_schedule != null}
+										<DelayDiff
+											simple={true}
+											diff={trip.departure_schedule - trip.departure_realtime}
+										/>
+									{/if}
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
+		{/each}
+	</div>
+</div>

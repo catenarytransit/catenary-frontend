@@ -7,6 +7,8 @@
 
 	export let show_seconds: boolean = true;
 
+	export let large: boolean = false;
+
 	let textclass: string = 'slashed-zero tabular-nums';
 
 	let h: number = 0;
@@ -78,28 +80,27 @@
 	}
 </script>
 
-<span class="text-[0px]">
-	<span class="text-sm">
+<span class={large ? "" : "text-[0px]"}>
+	<span class={large ? "text-lg" : "text-sm"}>
 		{#if show_brackets}{'['}{/if}
 		{#if diff < 0}{"-"}{/if}{#if diff > 0}{""}{/if}
 	</span>
-
 	{#if h > 0}
-		<span class="text-sm">{h}</span>
-		<span class="text-xs">{locale_hour_marking(this_locale)}</span>
+		<span class={large ? "text-md" : "text-sm"}>{h}</span>
+		<span class={large ? "text-sm" : "text-xs"}>{locale_hour_marking(this_locale)}</span>
 	{/if}
 	{#if h > 0 || (m > 0 || (!show_seconds && m >= 0 && diff != 0))}
-		<span class="text-sm">{m}</span>
-		<span class="text-xs">{locale_min_marking(this_locale)}</span>
+		<span class={large ? "text-md" : "text-sm"}>{m}</span>
+		<span class={large ? "text-sm" : "text-xs"}>{locale_min_marking(this_locale)}</span>
 	{/if}
 	{#if show_seconds}
 		{#if Math.abs(diff) > 0}
-			<span class="text-sm">{s.toFixed(0)}</span>
-			<span class="text-xs">{locale_s_marking(this_locale)}</span>
+			<span class={large ? "text-md" : "text-sm"}>{s.toFixed(0)}</span>
+			<span class={large ? "text-sm" : "text-xs"}>{locale_s_marking(this_locale)}</span>
 		{/if}
 	{/if}
 	
 	{#if show_brackets}
-		<span class="text-sm">{']'}</span>
+		<span class={large ? "text-lg" : "text-sm"}>{']'}</span>
 	{/if}
 </span>

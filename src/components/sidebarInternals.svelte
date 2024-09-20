@@ -168,7 +168,7 @@
 									}}
 									role="menuitem"
 									tabindex="0"
-									class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-[#0a233f] hover:bg-blue-100 hover:dark:bg-[#1a334f] text-sm md:text-base leading-snug rounded-lg"
+									class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover text-sm md:text-base leading-snug rounded-lg"
 								>
 									{#if option.data.trip_id}
 										{#if option.data.route_long_name || option.data.route_short_name}
@@ -261,7 +261,7 @@
 						<div class="flex flex-col gap-y-1 md:gap-y-2">
 							{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
 								<div
-									class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-[#0a233f] hover:dark:bg-[#1a334f] text-sm md:text-base leading-snug rounded-lg"
+									class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-darksky hover:dark:bg-hover text-sm md:text-base leading-snug rounded-lg"
 									on:click={() => {
 										data_stack_store.update((data_stack) => {
 											data_stack.push(
