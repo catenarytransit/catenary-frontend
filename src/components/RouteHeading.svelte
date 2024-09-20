@@ -79,7 +79,7 @@
 		{#if vehicle && vehicle != run_number}
 			<span style:background-color={color} style:color={text_color} class="text-sm align-middle ml-1 bg-seashore dark:bg-darksky text-white px-1 rounded-md translate-y-0.5 inline-block"
 				>
-				<span class="material-symbols-outlined text-sm align-middle -translate-y-[0.03rem]"
+				<span class="material-symbols-outlined !text-sm align-middle -translate-y-[0.03rem]"
 					>directions_bus</span
 				>
 				{vehicle}</span

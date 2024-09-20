@@ -250,7 +250,7 @@
 											option.data.vehicle_id
 										))}
 											<span class="text-xs font-light lg:text-base bg-gray-200 dark:bg-background px-1 rounded-md">
-												<span class="material-symbols-outlined text-xs">directions_bus</span>
+												<span class="material-symbols-outlined !text-xs">directions_bus</span>
 												{option.data.vehicle_id}</span>
 										{/if}
 									</p>
