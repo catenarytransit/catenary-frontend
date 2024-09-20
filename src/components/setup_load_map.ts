@@ -3,13 +3,6 @@ import type { Writable } from 'svelte/store';
 import { makeFireMap } from './wildfireMap';
 import mapboxgl from 'mapbox-gl';
 import {
-	what_kactus_to_use,
-	what_martin_to_use,
-	what_backend_to_use,
-	check_kactus,
-	check_backend
-} from './distributed';
-import {
 	realtime_vehicle_locations_last_updated_store,
 	realtime_vehicle_locations_store,
 	realtime_vehicle_route_cache_hash_store,
