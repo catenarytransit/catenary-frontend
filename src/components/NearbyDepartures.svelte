@@ -232,7 +232,7 @@
 							>
 								<div class="text-center">
 									{#if route_group.route_type == 2 && trip.trip_short_name}
-										<p class="font-medium text-sm md:text-sm">{trip.trip_short_name}</p>
+										<p class="text-md inline-block font-medium px-1 rounded-sm" style:background-color={route_group.color} style:color={route_group.text_color}>{trip.trip_short_name}</p><br />
 									{/if}
 
 									<span
