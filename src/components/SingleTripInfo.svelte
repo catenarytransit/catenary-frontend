@@ -441,7 +441,11 @@
 				i = i + 1;
 			});
 
-			last_inactive_stop_idx = temp_last_inactive_stop_idx;
+			if (stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null) {
+				last_inactive_stop_idx = temp_last_inactive_stop_idx - 1;
+			} else {
+				last_inactive_stop_idx = temp_last_inactive_stop_idx;
+			}
 		}, 100);
 	});
 
