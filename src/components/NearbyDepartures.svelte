@@ -54,14 +54,6 @@
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
 
-    let darkMode = false;
-
-    dark_mode_store.subscribe((value) => {
-        darkMode = value;
-    });
-
-    darkMode = get(dark_mode_store);
-
 	let current_time: number = Date.now();
 
 	let first_load = false;
@@ -176,7 +168,7 @@
 
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
-		{#each departure_list as route_group}
+		{#each departure_list.filter((x) => Object.keys(x.directions).length > 0) as route_group}
 			<div class="px-3 mx-3 mt-1 mb-2 py-2 bg-gray-100 dark:bg-background rounded-md">
 				<p class="text-lg" style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
@@ -207,7 +199,7 @@
 								>chevron_right</span
 							>
 							{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
-							<span class="text-sm bg-gray-100 dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
+							<span class="text-sm bg-white dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
 								<span class="material-symbols-outlined !text-sm align-middle">distance</span>
 								{fixStationName(
 									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
@@ -218,7 +210,7 @@
 					<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
 						{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - 50 && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + 14400) as trip}
 							<div
-								class="bg-white bg-gray-100 dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-24 flex justify-center"
+								class="bg-white dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-24 flex justify-center"
 								on:click={() => {
 									data_stack_store.update((stack) => {
 										stack.push(
@@ -250,14 +242,14 @@
 									>
 										{#if (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 > 60}
 											<TimeDiff
-												large={true}
+												large={false}
 												show_brackets={false}
 												show_seconds={false}
 												diff={(trip.departure_realtime || trip.departure_schedule) -
 													current_time / 1000}
 											/>
 										{:else}
-											<span class="text-lg font-medium">{$_('now')}</span>
+											<span class="text-md font-bold">{$_('now')}</span>
 										{/if}
 										{#if trip.departure_realtime}
 											<svg
@@ -272,7 +264,7 @@
 											>
 										{:else}
 											<svg
-												class="inline w-3 h-3"
+												class="inline ml-0.5 w-3 h-3"
 												height="24"
 												viewBox="0 -960 960 960"
 												width="24"
@@ -284,7 +276,7 @@
 										{/if}
 									</span>
 
-									<p class="font-medium" style:color={trip.departure_realtime ? '#42a7c5': ''}>
+									<p class="font-medium text-sm" style:color={trip.departure_realtime ? '#42a7c5': ''}>
 										{new Intl.DateTimeFormat(usunits ? 'en-US' : 'en-GB', {
 											hour: 'numeric',
 											minute: 'numeric',
