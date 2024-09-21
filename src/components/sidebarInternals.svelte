@@ -470,7 +470,7 @@
 		<TidbitSidebarCard />
 	{/if}
 	<div class="py-1 flex flex-col h-full">
-		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} /></div>
+		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} {darkMode} /></div>
 
 		<p class="text-xs md:text-sm text-gray-800 dark:text-gray-300">
 			Catenary Maps {$_('softwareversion')} 2024-09-03 11:23Z
