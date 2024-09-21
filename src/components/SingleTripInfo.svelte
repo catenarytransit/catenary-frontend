@@ -361,7 +361,10 @@
 
 						stoptime.show_both_departure_and_arrival = false;
 
-						if (stoptime_to_use.scheduled_arrival_time_unix_seconds && stoptime_to_use.scheduled_departure_time_unix_seconds) {
+						if (
+							stoptime_to_use.scheduled_arrival_time_unix_seconds &&
+							stoptime_to_use.scheduled_departure_time_unix_seconds
+						) {
 							// if both are different by more than 1 minute, show both
 
 							if (
@@ -441,7 +444,10 @@
 				i = i + 1;
 			});
 
-			if (stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null || stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_arrival_time != null) {
+			if (
+				stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null ||
+				stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_arrival_time != null
+			) {
 				last_inactive_stop_idx = temp_last_inactive_stop_idx - 1;
 			} else {
 				last_inactive_stop_idx = temp_last_inactive_stop_idx;
@@ -523,7 +529,7 @@
 			class="flex flex-col catenary-scroll overflow-y-scroll h-full pb-60 px-3 pt-2"
 			style:border-top={`3px solid ${trip_data.color}`}
 		>
-		{#if Object.keys(alerts).length > 0}
+			{#if Object.keys(alerts).length > 0}
 				<div class="border-[#F99C24] border-2 leading-snug mb-3 p-2 rounded-md">
 					<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-1" />
 					<span class="text-[#F99C24] font-medium"
@@ -536,7 +542,12 @@
 								{#each alert.description_text.translation.filter((x) => x.language == each_header_translation_obj.language) as description_alert}
 									<div class="leading-none">
 										{#each description_alert.text.split('\n') as each_desc_line}
-											<p class="text-sm">{@html each_desc_line.replaceAll("<a ", "<a target=\"_blank\" class=\"text-sky-500 dark:text-sky-300 underline\"")}</p>
+											<p class="text-sm">
+												{@html each_desc_line.replaceAll(
+													'<a ',
+													'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
+												)}
+											</p>
 										{/each}
 									</div>
 								{/each}
@@ -545,7 +556,7 @@
 					{/each}
 				</div>
 			{/if}
-			
+
 			{#key trip_data}
 				{#if show_previous_stops && last_inactive_stop_idx > -1}
 					<button
@@ -610,7 +621,7 @@
 						<div class="w-full py-2 pr-1 lg:pr-2">
 							<p class="">
 								<span
-									class={`font-semibold ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : (stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : '')}`}
+									class={`font-semibold ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 									>{fixStationName(stoptime.name)}</span
 								>
 
@@ -635,8 +646,9 @@
 											class="text-[0px] font-semibold"
 										>
 											<TimeDiff
-												diff={(stoptime.rt_departure_time ||
-													stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) -
+												diff={(stoptime.rt_arrival_time || stoptime.rt_departure_time ||
+													stoptime.scheduled_departure_time_unix_seconds ||
+													stoptime.interpolated_stoptime_unix_seconds) -
 													current_time / 1000}
 												show_brackets={false}
 												show_seconds={false}
@@ -657,7 +669,7 @@
 									>
 									<span class="ml-2"></span>
 									<DelayDiff
-										diff={stoptime.rt_departure_diff || stoptime.rt_arrival_diff}
+										diff={stoptime.rt_arrival_diff || stoptime.rt_departure_diff}
 										simple={simpleRouteMode}
 									/>
 								{:else}
@@ -678,36 +690,14 @@
 								<div class="ml-auto text-sm">
 									<div class="text-sm text-right">
 										<p class="text-right">
-											{#if stoptime.rt_departure_time}
-												<span
-													class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
-												>
-													{new Date(
-														(stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) * 1000
-													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
-														timeZone: stoptime.timezone || trip_data.tz,
-														hour: simpleRouteMode ? 'numeric' : '2-digit',
-														minute: '2-digit',
-														second: simpleRouteMode ? undefined : '2-digit'
-													})}
-												</span>
-												<span class="text-seashore font-medium">
-													{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
-														usunits ? 'en-US' : 'en-UK',
-														{
-															timeZone: stoptime.timezone || trip_data.tz,
-															hour: simpleRouteMode ? 'numeric' : '2-digit',
-															minute: '2-digit',
-															second: simpleRouteMode ? undefined : '2-digit'
-														}
-													)}
-												</span>
-											{:else if stoptime.rt_arrival_time}
+											{#if stoptime.rt_arrival_time}
+												{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('arrival')}</span>{/if}
 												<span
 													class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
 												>
 													{new Date(
-														(stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) * 1000
+														(stoptime.scheduled_arrival_time_unix_seconds ||
+															stoptime.interpolated_stoptime_unix_seconds) * 1000
 													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
 														hour: simpleRouteMode ? 'numeric' : '2-digit',
@@ -726,9 +716,37 @@
 														}
 													)}
 												</span>
+											{:else if stoptime.rt_departure_time}
+												{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
+												<span
+													class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
+												>
+													{new Date(
+														(stoptime.scheduled_departure_time_unix_seconds ||
+															stoptime.interpolated_stoptime_unix_seconds) * 1000
+													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
+														timeZone: stoptime.timezone || trip_data.tz,
+														hour: simpleRouteMode ? 'numeric' : '2-digit',
+														minute: '2-digit',
+														second: simpleRouteMode ? undefined : '2-digit'
+													})}
+												</span>
+												<span class="text-seashore font-medium">
+													{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
+														usunits ? 'en-US' : 'en-UK',
+														{
+															timeZone: stoptime.timezone || trip_data.tz,
+															hour: simpleRouteMode ? 'numeric' : '2-digit',
+															minute: '2-digit',
+															second: simpleRouteMode ? undefined : '2-digit'
+														}
+													)}
+												</span>
 											{:else}
+												{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
 												{new Date(
-													(stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) * 1000
+													(stoptime.scheduled_departure_time_unix_seconds ||
+														stoptime.interpolated_stoptime_unix_seconds) * 1000
 												).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
 													timeZone: stoptime.timezone || trip_data.tz,
 													hour: simpleRouteMode ? 'numeric' : '2-digit',
@@ -740,6 +758,96 @@
 									</div>
 								</div>
 							</div>
+
+							{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}
+								<div class="flex flex-row">
+									{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null || stoptime.interpolated_stoptime_unix_seconds != null}
+										{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
+											<span
+												style:color={`${stoptime.rt_departure_time || stoptime.rt_arrival_time ? '#42a7c5' : ''}`}
+												class="text-[0px] font-semibold"
+											>
+												<TimeDiff
+													diff={(stoptime.rt_departure_time ||
+														stoptime.scheduled_departure_time_unix_seconds ||
+														stoptime.interpolated_stoptime_unix_seconds) -
+														current_time / 1000}
+													show_brackets={false}
+													show_seconds={false}
+												/>
+											</span>
+										{/if}
+									{/if}
+									{#if stoptime.rt_departure_time}
+										<svg
+											class="inline ml-1 w-3 h-3 translate-y-1"
+											height="24"
+											viewBox="0 -960 960 960"
+											width="24"
+											fill={'#42a7c5'}
+											><path
+												d="M200-120q-33 0-56.5-23.5T120-200q0-33 23.5-56.5T200-280q33 0 56.5 23.5T280-200q0 33-23.5 56.5T200-120Zm480 0q0-117-44-218.5T516-516q-76-76-177.5-120T120-680v-120q142 0 265 53t216 146q93 93 146 216t53 265H680Zm-240 0q0-67-25-124.5T346-346q-44-44-101.5-69T120-440v-120q92 0 171.5 34.5T431-431q60 60 94.5 139.5T560-120H440Z"
+											/></svg
+										>
+										<span class="ml-2"></span>
+										<DelayDiff diff={stoptime.rt_departure_diff} simple={simpleRouteMode} />
+									{:else}
+										<svg
+											class="inline ml-1 w-3 h-3 translate-y-1"
+											height="24"
+											viewBox="0 -960 960 960"
+											width="24"
+											fill={'white'}
+											><path
+												d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"
+											/></svg
+										>
+									{/if}
+									<div class="ml-auto text-sm">
+										<div class="text-sm text-right">
+											<p class="text-right">
+												<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>
+												{#if stoptime.rt_departure_time}
+													<span
+														class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
+													>
+														{new Date(
+															(stoptime.scheduled_departure_time_unix_seconds ||
+																stoptime.interpolated_stoptime_unix_seconds) * 1000
+														).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
+															timeZone: stoptime.timezone || trip_data.tz,
+															hour: simpleRouteMode ? 'numeric' : '2-digit',
+															minute: '2-digit',
+															second: simpleRouteMode ? undefined : '2-digit'
+														})}
+													</span>
+													<span class="text-seashore font-medium">
+														{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
+															usunits ? 'en-US' : 'en-UK',
+															{
+																timeZone: stoptime.timezone || trip_data.tz,
+																hour: simpleRouteMode ? 'numeric' : '2-digit',
+																minute: '2-digit',
+																second: simpleRouteMode ? undefined : '2-digit'
+															}
+														)}
+													</span>
+												{:else}
+													{new Date(
+														(stoptime.scheduled_departure_time_unix_seconds ||
+															stoptime.interpolated_stoptime_unix_seconds) * 1000
+													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
+														timeZone: stoptime.timezone || trip_data.tz,
+														hour: simpleRouteMode ? 'numeric' : '2-digit',
+														minute: '2-digit',
+														second: simpleRouteMode ? undefined : '2-digit'
+													})}
+												{/if}
+											</p>
+										</div>
+									</div>
+								</div>
+							{/if}
 
 							{#if timezones.filter((x) => x != null).length > 1}
 								<p class="text-xs text-gray-900 dark:text-gray-400">
