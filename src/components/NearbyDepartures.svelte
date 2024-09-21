@@ -54,6 +54,14 @@
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
 
+    let darkMode = false;
+
+    dark_mode_store.subscribe((value) => {
+        darkMode = value;
+    });
+
+    darkMode = get(dark_mode_store);
+
 	let current_time: number = Date.now();
 
 	let first_load = false;
@@ -170,7 +178,7 @@
 	<div class="flex flex-col">
 		{#each departure_list as route_group}
 			<div class="px-3 mx-3 mt-1 mb-2 py-2 bg-gray-100 dark:bg-background rounded-md">
-				<p class="text-lg" style={`color: ${lightenColour(route_group.color)}`}>
+				<p class="text-lg" style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
 						<span class="font-bold mr-1"
 							>{fixRouteName(
@@ -194,7 +202,7 @@
 
 				{#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group]}
 					{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - 50 && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + 14400).length > 0}
-						<p class="font-medium -translate-x-1 mt-3 mb-1">
+						<p class="font-medium -translate-x-1 mt-1 md:mt-3 mb-1">
 							<span class="material-symbols-outlined text-md align-middle -translate-y-0.5"
 								>chevron_right</span
 							>
