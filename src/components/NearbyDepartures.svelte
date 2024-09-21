@@ -147,8 +147,8 @@
 	}
 </script>
 
-<h2 class="text-base text-xl font-medium text-gray-800 dark:text-gray-300 px-3 mb-2">
-	<span class="material-symbols-outlined mr-1 translate-y-1">near_me</span>
+<h2 class="text-lg md:text-xl font-medium text-gray-800 dark:text-gray-300 px-3 mb-1 md:mb-2">
+	<span class="material-symbols-outlined mr-1 translate-y-1 text-lg md:text-xl">near_me</span>
 	{$_('nearbydepartures')}
 </h2>
 
@@ -231,7 +231,7 @@
 									});
 								}}
 							>
-								<div class="text-center">
+								<div class="text-center leading-none md:leading-tight">
 									{#if route_group.route_type == 2 && trip.trip_short_name}
 										<p class="text-md inline-block font-medium px-1 rounded-sm" style:background-color={route_group.color} style:color={route_group.text_color}>{trip.trip_short_name}</p><br />
 									{/if}
