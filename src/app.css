@@ -4,15 +4,12 @@
 
 body {
 	--sb-track-color: #e1ecfb;
-	--sb-thumb-color: #16a4d0;
+	--sb-thumb-color: #42a7c5;
 	--sb-size: 16px;
 }
 
-@media (prefers-color-scheme: dark) {
-	body {
-		--sb-track-color: #0a233f;
-		--sb-thumb-color: #42a7c5;
-	}
+.dark body {
+	--sb-track-color: #0a233f;
 }
 
 body::-webkit-scrollbar {
@@ -66,19 +63,22 @@ body {
 /*https://www.creative-tim.com/twcomponents/component/indeterminate-progress-bar*/
 .progress {
 	animation: progress 1s infinite linear;
-  }
-  
-  .left-right {
-	  transform-origin: 0% 50%;
-  }
-	  @keyframes progress {
-	  0% {
-		  transform:  translateX(0) scaleX(0);
-	  }
-	  40% {
-		  transform:  translateX(0) scaleX(0.4);
-	  }
-	  100% {
-		  transform:  translateX(100%) scaleX(0.5);
-	  }
-  }
+}
+
+.left-right {
+	transform-origin: 0% 50%;
+}
+
+@keyframes progress {
+	0% {
+		transform: translateX(0) scaleX(0);
+	}
+
+	40% {
+		transform: translateX(0) scaleX(0.4);
+	}
+
+	100% {
+		transform: translateX(100%) scaleX(0.5);
+	}
+}

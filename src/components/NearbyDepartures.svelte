@@ -3,6 +3,7 @@
 	let departure_list: any[] = [];
 
 	export let usunits: boolean = false;
+	export let darkMode: boolean = true;
 
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -198,7 +199,7 @@
 								>chevron_right</span
 							>
 							{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
-							<span class="text-sm bg-slate-200 dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
+							<span class="text-sm bg-gray-100 dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
 								<span class="material-symbols-outlined !text-sm align-middle">distance</span>
 								{fixStationName(
 									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
@@ -267,7 +268,7 @@
 												height="24"
 												viewBox="0 -960 960 960"
 												width="24"
-												fill={'white'}
+												fill={darkMode ? 'white' : 'black'}
 												><path
 													d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"
 												/></svg
