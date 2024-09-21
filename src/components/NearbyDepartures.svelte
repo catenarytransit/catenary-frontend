@@ -198,7 +198,7 @@
 								>chevron_right</span
 							>
 							{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
-							<span class="text-sm bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
+							<span class="text-sm bg-slate-200 dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1">
 								<span class="material-symbols-outlined !text-sm align-middle">distance</span>
 								{fixStationName(
 									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
