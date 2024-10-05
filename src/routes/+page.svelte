@@ -1004,10 +1004,10 @@
 							}
 
 							// store the user's location in localStorage, as we do with regular browser provided geolocation
-							localStorage.setItem(
+							/*localStorage.setItem(
 								'cachegeolocation',
 								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-							);
+							);*/
 						}
 					});
 			} catch (e) {
