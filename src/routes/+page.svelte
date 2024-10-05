@@ -976,6 +976,7 @@
 			centerinit = [parseFloat(long), parseFloat(lat)];
 			if (mapglobal) {
 				mapglobal.setCenter(centerinit);
+				mapglobal.setZoom(14);
 			}
 		} else {
 			try {

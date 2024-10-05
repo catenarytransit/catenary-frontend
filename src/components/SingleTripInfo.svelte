@@ -375,7 +375,15 @@
 							) {
 								stoptime.show_both_departure_and_arrival = true;
 							}
+
+							if (stoptime_to_use.scheduled_arrival_time_unix_seconds == stoptime_to_use.scheduled_departure_time_unix_seconds && 
+								stoptime_to_use.rt_arrival_time == stoptime_to_use.rt_departure_time
+							) {
+								stoptime.show_both_departure_and_arrival = false;
+							}
 						}
+
+						
 
 						stoptimes_cleaned.push(stoptime_to_use);
 						index = index + 1;
