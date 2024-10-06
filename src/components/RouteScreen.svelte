@@ -111,7 +111,7 @@
 		}
 
 		let url = new URL(
-			`https://birch.catenarymaps.org/route_info?chateau=${routestack.chateau_id}&route_id=${encodeURI(routestack.route_id)}`
+			`https://birch.catenarymaps.org/route_info?chateau=${routestack.chateau_id}&route_id=${encodeURIComponent(routestack.route_id)}`
 		);
 
 		await fetch(url.toString()).then(async (response) => {
