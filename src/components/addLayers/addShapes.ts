@@ -33,7 +33,6 @@ export function addShapes(
 					['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 				]
 			],
-			['!=', ['get', 'chateau'], 'uc~irvine~anteater~express']
 			//	['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
 		],
 		paint: {
@@ -70,7 +69,6 @@ export function addShapes(
 					['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 				]
 			],
-			['!=', ['get', 'chateau'], 'uc~irvine~anteater~express']
 			//   ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 			//['!=', ['get', 'onestop_feed_id'], 'f-u-flixbus']
 		],
