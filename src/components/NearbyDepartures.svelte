@@ -13,6 +13,7 @@
 	import type { Writable } from 'svelte/store';
 
     const TIME_CUTOFF = 20000;
+	const TIME_PREVIOUS_CUTOFF = 10 * 60;
 
 	function sort_directions_group(x: any): [[string, any]] {
 		let array = x;
@@ -195,7 +196,7 @@
 				</p>
 
 				{#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group]}
-					{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - 50 && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).length > 0}
+					{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).length > 0}
 						<p class="font-medium -translate-x-1 mt-1 md:mt-3 mb-1">
 							<span class="material-symbols-outlined text-md align-middle -translate-y-0.5"
 								>chevron_right</span
@@ -210,7 +211,7 @@
 						</p>
 					{/if}
 					<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
-						{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - 50 && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF) as trip}
+						{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF) as trip}
 							<div
 								class="bg-white dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-24 flex justify-center"
 								on:click={() => {
@@ -239,10 +240,9 @@
 									{/if}
 
 									<span
-										style:color={`${trip.departure_realtime ? '#42a7c5' : ''}`}
-										class="font-semibold"
+										class={`font-semibold ${(trip.departure_realtime || trip.departure_schedule) - current_time / 1000 < -60 ?  "text-gray-600 dark:text-gray-400" : (trip.departure_realtime ? 'text-[#42a7c5]' : '')}`}
 									>
-										{#if (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 > 60}
+										{#if (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 > 60 || (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 < -60}
 											<TimeDiff
 												large={false}
 												show_brackets={false}
