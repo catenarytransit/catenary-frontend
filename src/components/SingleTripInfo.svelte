@@ -246,11 +246,23 @@
 							console.log('map is not null');
 							map.getSource('transit_shape_context').setData(geojson_source_new);
 
-							let stops_features = data.stoptimes.map((eachstoptime: any) => {
+							let already_seen_stop_ids: string[] = [];
+
+							let stops_features = data.stoptimes
+							.filter((eachstoptime: any) => {
+								if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
+									already_seen_stop_ids.push(eachstoptime.stop_id);
+									return true;
+								}
+								return false;
+							})
+							.map((eachstoptime: any) => {
 								return {
 									type: 'Feature',
 									properties: {
-										label: eachstoptime.name
+										label: eachstoptime.name,
+										stop_id: eachstoptime.stop_id,
+										chateau: trip_selected.chateau_id,
 									},
 									geometry: {
 										coordinates: [eachstoptime.longitude, eachstoptime.latitude],
