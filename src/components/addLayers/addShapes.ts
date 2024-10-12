@@ -108,7 +108,7 @@ export function addShapes(
 		minzoom: 8
 	});
 
-	//OTHER RAIL
+	//OTHER SHAPES
 	map.addLayer({
 		id: layerspercategory.other.shapes,
 		type: 'line',
@@ -158,6 +158,23 @@ export function addShapes(
 			'text-halo-blur': 1,
 			'line-emissive-strength': 1
 			//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
+		},
+		minzoom: 3
+	});
+
+	
+	map.addLayer({
+		id: 'ferryshapes',
+		type: 'line',
+		source: 'othershapes',
+		'source-layer': 'data',
+		filter: ['all', ['==', 4, ['get', 'route_type']]],
+		paint: {
+			'line-dasharray': [1, 1],
+			'line-color': ['concat', '#', ['get', 'color']],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1, 7, 2, 14, 3],
+			'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
+			'line-emissive-strength': 1
 		},
 		minzoom: 3
 	});

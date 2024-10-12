@@ -197,22 +197,6 @@ export function setup_load_map(
 			}
 		});
 
-		map.addLayer({
-			id: 'ferryshapes',
-			type: 'line',
-			source: 'notbusshapes',
-			'source-layer': 'data',
-			filter: ['all', ['==', 4, ['get', 'route_type']]],
-			paint: {
-				'line-dasharray': [1, 2],
-				'line-color': ['concat', '#', ['get', 'color']],
-				'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 14, 3],
-				'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
-				'line-emissive-strength': 1
-			},
-			minzoom: 3
-		});
-
 		addShapes(map, darkMode, layerspercategory);
 
 		addStopsLayers(map, darkMode, layerspercategory);

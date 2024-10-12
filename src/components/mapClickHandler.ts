@@ -81,7 +81,7 @@ export function setup_click_handler(
 				(x: any) =>
 					x.source === 'busshapes' ||
 					x.source === 'localcityrailshapes' ||
-					x.source === 'intercityrailshapes'
+					x.source === 'intercityrailshapes' || x.source == "othershapes"
 			);
 
 			const selected_routes_key_unique = new Set();
