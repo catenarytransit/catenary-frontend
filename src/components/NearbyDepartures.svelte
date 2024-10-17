@@ -67,7 +67,17 @@
 
 	let loading = false;
 
+	export let window_height_known: number =   500;
+
+	
+
 	onMount(() => {
+		window.addEventListener('resize', () => {
+			window_height_known = window.innerHeight;
+		});
+
+		window_height_known = window.innerHeight;
+
 		let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
 
 		if (hit_nearby_deps_cache) {
@@ -150,7 +160,7 @@
 	}
 </script>
 
-<h2 class="text-lg md:text-xl font-medium text-gray-800 dark:text-gray-300 px-3 mb-1 md:mb-2">
+<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3  md:mb-2`}>
 	<span class="material-symbols-outlined mr-1 translate-y-1 text-lg md:text-xl">near_me</span>
 	{$_('nearbydepartures')}
 </h2>
@@ -172,8 +182,8 @@
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
 		{#each departure_list.filter((x) => Object.keys(x.directions).length > 0) as route_group}
-			<div class="px-3 mx-3 mt-1 mb-2 py-2 bg-gray-100 dark:bg-background rounded-md">
-				<p class="text-lg" style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
+			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-2 bg-gray-100 dark:bg-background rounded-md`}>
+				<p class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`} style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
 						<span class="font-bold mr-1"
 							>{fixRouteName(

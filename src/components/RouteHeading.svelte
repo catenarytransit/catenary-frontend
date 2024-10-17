@@ -8,6 +8,7 @@
 		has_schedule_pdf,
 		schedule_pdf_needs_hydration
 	} from './pdf_schedules';
+	import { onMount } from 'svelte';
 
 	export let color: string;
 	export let text_color: string;
@@ -31,6 +32,14 @@
 	export let disable_pdf: boolean = false;
 	export let arrow: boolean = false;
 
+	export let window_height_known: number = window.innerHeight || 500;
+
+	onMount(() => {
+		window.addEventListener('resize', () => {
+		window_height_known = window.innerHeight;
+	});
+
+	});
 	let pdf_url: string | undefined;
 
 	if (has_schedule_pdf(chateau_id) && !disable_pdf) {
@@ -45,7 +54,7 @@
 </script>
 
 {#if !compact}
-	<h2 class="text-xl md:mt-2" style={`color: ${darkMode ? lightenColour(color) : color}`}>
+	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-xl md:mt-2'} `} style={`color: ${darkMode ? lightenColour(color) : color}`}>
 		{#if run_number}
 			<span
 				style={`background-color: ${color}; color: ${text_color};`}
@@ -64,7 +73,7 @@
 		{/if}
 	</h2>
 
-	<h2 class={`md:text-lg font-medium my-0.5 ${arrow ? '-translate-x-1.5' : ''}`}>
+	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-lg  my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''}`}>
 		{#if arrow}
 			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
 		{/if}

@@ -33,6 +33,17 @@
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
 
+	export let window_height_known: number =  500;
+	onMount(() => {
+		window_height_known = window.innerHeight;
+
+		
+	window.addEventListener('resize', () => {
+		window_height_known = window.innerHeight;
+	});
+	})
+
+
 	export let usunits: boolean;
 
 	import {
@@ -517,7 +528,7 @@
 				disable_pdf={true}
 			/>
 
-			<span class="block mt-1" />
+			<span class={`block ${window_height_known < 600 ? 'leading-none' : 'mt-1'}`} />
 
 			{#if !simpleRouteMode}
 				<p class="text-sm">
