@@ -127,6 +127,8 @@
 							);
 							let new_stop_time_data_to_use = new_stop_time_to_use_arr[0];
 
+							existing_stop_time.rt_platform_string = new_stop_time_data_to_use.rt_platform_string;
+
 							if (typeof new_stop_time_data_to_use.rt_arrival?.time == 'number') {
 								existing_stop_time.rt_arrival_time = new_stop_time_data_to_use.rt_arrival?.time;
 								existing_stop_time.strike_arrival = true;
@@ -883,6 +885,12 @@
 							{#if timezones.filter((x) => x != null).length > 1}
 								<p class="text-xs text-gray-900 dark:text-gray-400">
 									{$_('timezone')}: {stoptime.timezone || trip_data.tz}
+								</p>
+							{/if}
+
+							{#if stoptime.rt_platform_string}
+								<p class="text-xs text-gray-900 dark:text-gray-400">
+									{$_('platform')}: {stoptime.rt_platform_string}
 								</p>
 							{/if}
 

@@ -71,5 +71,6 @@
 	"ontime": "정시에",
 	"defaultlang": "기본 설정 언어",
 	"hidepreviousstops": "이전 정류장 숨기기",
-	"shownpreviousstops": "Show {n, number} previous stops"
+	"shownpreviousstops": "Show {n, number} previous stops",
+	"platform": "승강장"
 }

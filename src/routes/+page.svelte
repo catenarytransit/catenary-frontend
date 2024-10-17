@@ -1059,6 +1059,12 @@
 			fadeDuration: 0
 		});
 
+		//map tile bounds
+
+		if (urlParams.get('tilebounds')) {
+			  map.showTileBoundaries = true;
+		}
+
 		map_pointer_store.set(map);
 
 		if (markedPointCoords) {

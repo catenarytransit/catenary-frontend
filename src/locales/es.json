@@ -68,5 +68,6 @@
 	"ontime": "A tiempo",
 	"defaultlang": "Idioma predeterminado",
 	"hidepreviousstops": "Ocultar paradas anteriores",
-	"showxpreviousstops_pt1": "Mostrar"
+	"showxpreviousstops_pt1": "Mostrar",
+	"platform": "Plataforma"
 }

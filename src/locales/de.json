@@ -67,5 +67,6 @@
 	"early": "Anfang",
 	"late": "Späte",
 	"ontime": "Pünktlich",
-	"defaultlang": "Standardsprache"
+	"defaultlang": "Standardsprache",
+	"platform": "Bahnsteig"
 }

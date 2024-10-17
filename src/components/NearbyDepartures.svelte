@@ -308,6 +308,12 @@
 											diff={trip.departure_schedule - trip.departure_realtime}
 										/>
 									{/if}
+
+									{#if trip.platform}
+										<p class="text-xs text-gray-600 dark:text-gray-400">
+											{trip.platform}
+										</p>
+									{/if}
 								</div>
 							</div>
 						{/each}
