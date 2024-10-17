@@ -528,16 +528,16 @@
 				disable_pdf={true}
 			/>
 
-			<span class={`block ${window_height_known < 600 ? 'leading-none' : 'mt-1'}`} />
+			<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 
 			{#if !simpleRouteMode}
-				<p class="text-sm">
+				<p class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
 					Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
-						<span class="text-sm">{' | Block '}{trip_data.block_id}</span>
+						<span>{' | Block '}{trip_data.block_id}</span>
 					{/if}
 				</p>
 
-				<p class="text-sm">
+				<p  class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
 					{#if timezones.filter((x) => x != null).length == 1}
 						{$_('timezone')}: {timezones[0]}
 					{:else}
@@ -546,7 +546,7 @@
 				</p>
 				{#if init_loaded != 0}
 					<div>
-						<p class="text-sm">
+						<p  class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
 							{$_('lastupdated')}:
 							<TimeDiff diff={init_loaded / 1000 - current_time / 1000} show_brackets={false} />
 						</p>
