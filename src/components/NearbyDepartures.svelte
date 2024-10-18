@@ -310,7 +310,7 @@
 									{/if}
 
 									{#if trip.platform}
-										<p class="text-xs text-gray-600 dark:text-gray-400">
+										<p class="text-xs text-gray-800 dark:text-gray-200">
 											{trip.platform}
 										</p>
 									{/if}
