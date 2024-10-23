@@ -196,8 +196,6 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 						'interpolate',
 						['linear'],
 						['zoom'],
-						7,
-						0.0,
 						8,
 						0,
 						8.5,
