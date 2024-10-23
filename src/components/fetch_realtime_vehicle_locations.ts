@@ -90,7 +90,7 @@ export function fetch_realtime_vehicle_locations(
 					allowed_to_fetch = false;
 				}
 
-				if (map.getZoom() < 7 && category == 'bus') {
+				if (map.getZoom() < 8 && category == 'bus') {
 					allowed_to_fetch = false;
 				}
 
