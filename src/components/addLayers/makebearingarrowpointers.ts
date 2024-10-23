@@ -29,6 +29,8 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 		0.15,
 		9,
 		0.18,
+		11,
+		0.22,
 		12,
 		0.3,
 		15,
@@ -240,7 +242,7 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 				type: 'symbol',
 				filter: ['all', ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 				paint: {
-					'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
+					'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
 				},
 				layout: {
 					'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
