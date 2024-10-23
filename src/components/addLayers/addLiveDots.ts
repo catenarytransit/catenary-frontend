@@ -18,7 +18,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
-		minzoom: 7
+		minzoom: 8.5
 	});
 
 	map.addLayer({
@@ -35,6 +35,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'text-size': ['interpolate', ['linear'], ['zoom'], 8, 6, 11, 10, 13, 10, 15, 14],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
+		minzoom: 9,
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
 			//'text-color': ['get', 'color'],

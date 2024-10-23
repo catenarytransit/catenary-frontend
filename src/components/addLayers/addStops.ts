@@ -123,7 +123,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
 			'circle-emissive-strength': 1
 		},
-		minzoom: 8,
+		minzoom: 8.5,
 		filter: [
 			'all',
 			[
