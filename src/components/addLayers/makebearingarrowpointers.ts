@@ -19,7 +19,7 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 		['literal', [0, -48]]
 	];
 
-	const busbearingsize = ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.17, 12, 0.2, 15, 0.3];
+	const busbearingsize = ['interpolate', ['linear'], ['zoom'], 8, 0.1, 9, 0.13, 12, 0.19, 15, 0.3];
 
 	const railbearingiconsize = [
 		'interpolate',
