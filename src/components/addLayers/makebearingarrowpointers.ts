@@ -10,7 +10,7 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 		9,
 		['literal', [0, -50]],
 		10,
-		['literal', [0, -64]],
+		['literal', [0, -45]],
 		12,
 		['literal', [0, -45]],
 		13,
