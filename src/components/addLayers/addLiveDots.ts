@@ -10,7 +10,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		type: 'circle',
 		source: 'buses',
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 2, 10, 4, 16, 6],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 2, 9, 2, 10, 3, 16, 6],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
