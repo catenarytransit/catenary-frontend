@@ -91,7 +91,7 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 					'icon-offset': busbearingoffset,
 					'icon-size': busbearingsize
 				},
-				minzoom: 8.7
+				minzoom: 9.1
 			});
 
 			map.addLayer({
@@ -196,10 +196,6 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 						'interpolate',
 						['linear'],
 						['zoom'],
-						8,
-						0,
-						8.5,
-						0.3,
 						9,
 						0.4,
 						11,
@@ -215,7 +211,7 @@ export function makeBearingArrowPointers(map: Map, darkMode: boolean, layersperc
 					'icon-offset': busbearingoffset,
 					'icon-size': busbearingsize
 				},
-				minzoom: 8.7
+				minzoom: 9.2
 			});
 
 			map.addLayer({
