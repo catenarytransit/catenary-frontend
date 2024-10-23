@@ -31,8 +31,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'text-radial-offset': 0.2,
 			'text-emissive-strength': 1,
 			'text-font': darkMode == true ? ['Barlow SemiBold'] : ['Barlow SemiBold'],
-
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 10, 13, 10, 15, 14],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 14],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		minzoom: 9,
