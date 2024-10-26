@@ -290,7 +290,7 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 5, 1.4, 7, 2, 9, 3],
 			'line-opacity': 1,
 			'line-emissive-strength': 1
 		},
@@ -330,6 +330,6 @@ export function addShapes(
 			'text-halo-blur': 1
 			//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
 		},
-		minzoom: 5
+		minzoom: 5.5
 	});
 }

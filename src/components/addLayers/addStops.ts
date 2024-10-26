@@ -15,6 +15,14 @@ const internationalIntercityCircleSize = [
 	8
 ];
 
+function getCircleInside(darkMode: boolean) {
+	return darkMode ? '#1c2636' : '#ffffff';
+}
+
+function getCircleOutside(darkMode: boolean) {
+	return darkMode ? '#ffffff': '#1c2636';
+}
+
 export function changeRailTextOutsideNorthAmerica(map: Map, layerspercategory: any) {
 	console.log('change rail size out side na');
 	const centre = map.getCenter();
@@ -115,30 +123,25 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		'source-layer': 'data',
 		layout: {},
 		paint: {
-			'circle-color': '#1c2636',
+			'circle-color': getCircleInside(darkMode),
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 4, 15, 5],
-			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
+			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
 			'circle-emissive-strength': 1
 		},
-		minzoom: 8.5,
+		minzoom: 9,
 		filter: [
 			'all',
+			//['==', null, ['get', 'parent_station']],
 			[
-				'all',
-				['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]],
-				[
-					'any',
-					['in', 0, ['get', 'route_types']],
-					['in', 0, ['get', 'children_route_types']],
-					['in', 1, ['get', 'route_types']],
-					['in', 1, ['get', 'children_route_types']]
-				],
-				['!', ['in', 2, ['get', 'children_route_types']]],
-			]
-		]
+				'any',
+				['in', 1, ['get', 'route_types']],
+				['in', 1, ['get', 'children_route_types']],
+			],
+			['!', ['in', 2, ['get', 'children_route_types']]]
+		],
 	});
 
 	map.addLayer({
@@ -149,7 +152,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		layout: {
 			'text-field': ['get', 'displayname'],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 10, 11, 10, 12, 12],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 9, 11, 9, 12, 12],
 			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.5, 12, 0.7],
 			//'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
@@ -165,15 +168,92 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		},
 		filter: [
 			'all',
-			['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]],
+			//['==', null, ['get', 'parent_station']],
+			[
+				'any',
+				['in', 1, ['get', 'route_types']],
+				['in', 1, ['get', 'children_route_types']],
+			],
+			['!', ['in', 2, ['get', 'children_route_types']]]
+		],
+		minzoom: 10.2
+	});
+
+	// TRAMS
+
+	map.addLayer({
+		id: 'tramstops',
+		type: 'circle',
+		source: 'railstops',
+		'source-layer': 'data',
+		layout: {},
+		paint: {
+			'circle-color':  getCircleInside(darkMode),
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 12, 3, 15, 4],
+			'circle-stroke-color': getCircleOutside(darkMode),
+			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
+			'circle-opacity': 0.8,
+			'circle-emissive-strength': 1
+		},
+		minzoom: 9,
+		filter: [
+			'all',
+			//['==', null, ['get', 'parent_station']],
+			["!",
+				[
+					'any',
+					['in', 1, ['get', 'route_types']],
+					['in', 1, ['get', 'children_route_types']],
+				]
+			],
 			[
 				'any',
 				['in', 0, ['get', 'route_types']],
 				['in', 0, ['get', 'children_route_types']],
-				['in', 1, ['get', 'route_types']],
-				['in', 1, ['get', 'children_route_types']]
 			],
-			['!', ['in', 2, ['get', 'children_route_types']]]
+			['!', ['in', 2, ['get', 'children_route_types']]],
+		]
+	});
+
+	map.addLayer({
+		id: 'tramstopslabel',
+		type: 'symbol',
+		source: 'railstops',
+		'source-layer': 'data',
+		layout: {
+			'text-field': ['get', 'displayname'],
+			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 7, 11, 7, 12, 9, 14, 10],
+			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.5, 12, 0.7],
+			//'text-ignore-placement': true,
+			//'icon-ignore-placement': false,
+			//'text-allow-overlap': true,
+			//'symbol-avoid-edges': false,
+			'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
+		},
+		paint: {
+			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
+			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+			'text-halo-width': 1,
+			'text-emissive-strength': 1
+		},
+		filter: [
+			'all',
+			//['==', null, ['get', 'parent_station']],
+			["!",
+				[
+					'any',
+					['in', 1, ['get', 'route_types']],
+					['in', 1, ['get', 'children_route_types']],
+				]
+			],
+			[
+				'any',
+				['in', 0, ['get', 'route_types']],
+				['in', 0, ['get', 'children_route_types']],
+			],
+			['!', ['in', 2, ['get', 'children_route_types']]],
 		],
 		minzoom: 11
 	});
@@ -187,15 +267,15 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		'source-layer': 'data',
 		layout: {},
 		paint: {
-			'circle-color': '#1c2636',
+			'circle-color': getCircleInside(darkMode),
 			'circle-radius': northAmericaIntercityCircleSize,
-			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
+			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 12, 0.8],
+			'circle-opacity': 0.8,
 			'circle-emissive-strength': 1
 		},
-		minzoom: 7,
+		minzoom: 7.7,
 		filter: [
 			'all',
 			[
@@ -233,7 +313,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			['any', ['>', ['zoom'], 15], ['==', null, ['get', 'parent_station']]],
 			['any', ['in', 2, ['get', 'route_types']], ['in', 2, ['get', 'children_route_types']]]
 		],
-		minzoom: 7
+		minzoom: 7.7
 	});
 
 	//OTHER
@@ -245,9 +325,9 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		'source-layer': 'data',
 		layout: {},
 		paint: {
-			'circle-color': '#1c2636',
+			'circle-color': getCircleInside(darkMode),
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 4, 15, 5],
-			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
+			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],

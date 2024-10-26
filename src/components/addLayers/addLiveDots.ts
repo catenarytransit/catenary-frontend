@@ -105,9 +105,9 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		id: layerspercategory.localrail.livedots,
 		type: 'circle',
 		source: 'localrail',
-		minzoom: 3,
+		minzoom: 4,
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 4, 8, 5.5, 10, 6, 11, 7, 16, 12],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 8, 4, 10, 5, 11, 6, 16, 12],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-width': 1.2,
@@ -120,7 +120,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		id: layerspercategory.localrail.labeldots,
 		type: 'symbol',
 		source: 'localrail',
-		minzoom: 4,
+		minzoom: 6,
 		layout: {
 			'text-field': ['get', 'maptag'],
 			/*'text-field': [
@@ -132,7 +132,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
 			'text-font': ['literal', ['Barlow Medium', 'Arial Unicode MS Bold']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 7, 9, 10, 10, 11, 11, 13, 13, 13],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 8, 10, 9, 11, 11, 13, 12],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {

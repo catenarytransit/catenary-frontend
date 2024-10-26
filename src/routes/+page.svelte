@@ -435,6 +435,14 @@
 
 				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
 				if (stoplayer) {
+					if (category == "localrail") {
+						if (this_layer_settings.stops) {
+							mapglobal.setLayoutProperty("tramstops", 'visibility', 'visible');
+						} else {
+							mapglobal.setLayoutProperty("tramstops", 'visibility', 'none');
+						}
+					}
+
 					if (this_layer_settings.stops) {
 						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
 					} else {
@@ -446,6 +454,14 @@
 
 				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
 				if (stopslabellayer) {
+					if (category == "localrail") {
+						if (this_layer_settings.stoplabels) {
+							mapglobal.setLayoutProperty("tramstopslabel", 'visibility', 'visible');
+						} else {
+							mapglobal.setLayoutProperty("tramstopslabel", 'visibility', 'none');
+						}
+					}
+
 					if (this_layer_settings.stoplabels) {
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
 					} else {
@@ -454,6 +470,8 @@
 				} else {
 					console.log('no stops label layer found for ', category);
 				}
+
+				
 
 				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
 				let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
