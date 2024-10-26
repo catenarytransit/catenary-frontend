@@ -1,8 +1,8 @@
 import type { Map } from 'mapbox-gl';
 
-const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 10, 10, 12];
+const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 10, 12];
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
-const northAmericaIntercityCircleSize = ['interpolate', ['linear'], ['zoom'], 7, 4, 12, 6, 15, 8];
+const northAmericaIntercityCircleSize = ['interpolate', ['linear'], ['zoom'], 7, 2.8, 12, 6, 15, 8];
 const internationalIntercityCircleSize = [
 	'interpolate',
 	['linear'],
