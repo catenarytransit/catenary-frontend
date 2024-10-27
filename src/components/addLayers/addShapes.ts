@@ -37,7 +37,7 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.4, 7, 0.8, 10, 0.7, 12, 1, 14, 2.6],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 0.7, 12, 1, 14, 2.6],
 			'line-opacity': ['step', ['zoom'], 0.3, 10, 0.5],
 			
 			'line-emissive-strength': 1
@@ -88,7 +88,7 @@ export function addShapes(
 				: ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 5, 7, 9, 8, 11, 8, 13, 10],
+			'text-size': ['interpolate', ['linear'], ['zoom'],  10, 6, 11, 8, 13, 10],
 			'text-ignore-placement': false,
 			'text-allow-overlap': false,
 			'text-pitch-alignment': 'viewport',
