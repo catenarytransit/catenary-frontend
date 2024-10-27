@@ -290,7 +290,7 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 5, 1.4, 7, 2, 9, 3],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 5, 0.7, 7, 1.5, 9, 2.5],
 			'line-opacity': 1,
 			'line-emissive-strength': 1
 		},
