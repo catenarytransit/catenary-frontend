@@ -1,7 +1,7 @@
 import type { Map } from 'mapbox-gl';
 
 function textColorOfMapLabels(darkMode: boolean) {
-	return ['get', darkMode === true ? 'contrastdarkmode' : 'color'];
+	return ['get', darkMode === true ? 'contrastdarkmode' : 'contrastlightmode'];
 }
 
 export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory: any) {

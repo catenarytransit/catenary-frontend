@@ -16,8 +16,11 @@ import {
 	pride_buses
 } from './addLayers/customIcons';
 import mapboxgl from 'mapbox-gl';
+import {lightenColour, darkenColour } from './lightenDarkColour';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
+import {calculateGamma} from './colour/computeBrightness';
 import { fixHeadsignText, fixRouteName } from './agencyspecific';
+import { adjustGamma } from './colour/readjustGamma';
 function category_name_to_source_name(category: string): string {
 	switch (category) {
 		case 'bus':
@@ -248,6 +251,27 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 					let contrastdarkmode = colour;
 					let contrastdarkmodebearing = colour;
 
+					let contrastlightmode = colour;
+
+					if (colour && darkMode === false) {
+						let rgb = hexToRgb(colour);
+
+						let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+						const gamma = calculateGamma(rgb.r, rgb.g, rgb.b);
+
+						if (gamma > (0.6)) {
+							let [r, g, b] = adjustGamma([rgb.r, rgb.g, rgb.b], 0.6);
+
+							rgb = { r, g, b };
+						}
+
+						contrastlightmode = `#${componentToHex(rgb.r)}${componentToHex(
+							rgb.g
+						)}${componentToHex(rgb.b)}`;
+					//	console.log("darkened from ", colour, "to", contrastlightmode);
+					}
+
 					if (colour && darkMode === true) {
 						//convert hex colour to array of 3 numbers
 
@@ -334,6 +358,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 							route_long_name: route_long_name,
 							contrastdarkmode: contrastdarkmode,
 							contrastdarkmodebearing,
+							contrastlightmode: contrastlightmode,
 							routeId: routeId,
 							headsign: fixHeadsignText(headsign, maptag)
 								.replace('Counterclockwise', 'ACW')

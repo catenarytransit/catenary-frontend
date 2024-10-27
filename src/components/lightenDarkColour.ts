@@ -45,3 +45,32 @@ export function lightenColour(inputstring: string): string {
 
 	return contrastdarkmode;
 }
+
+export function darkenColour(inputstring: string): string {
+	//convert hex colour to array of 3 numbers
+
+	let contrastlightmode = inputstring;
+
+	let rgb = hexToRgb(inputstring);
+
+	// console.log('rgb', rgb)
+
+	if (rgb != null) {
+		let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+		// console.log('hsl', hsl)
+
+		//
+		if (hsl.l > 60) {
+			hsl.l = (0.5 * (hsl.l - 60)) + 60
+		}
+
+		const newrgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+
+		contrastlightmode = `#${componentToHex(newrgb.r)}${componentToHex(
+			newkrgb.g
+		)}${componentToHex(newrgb.b)}`;
+	}
+
+	return contrastlightmode;
+}
