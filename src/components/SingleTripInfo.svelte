@@ -724,7 +724,7 @@
 									<div class="text-sm text-right">
 										<p class="text-right">
 											{#if stoptime.rt_arrival_time}
-												{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('arrival')}</span>{/if}
+												{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('arrival')}</span>{/if}
 												<span
 													class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
 												>
@@ -750,7 +750,7 @@
 													)}
 												</span>
 											{:else if stoptime.rt_departure_time}
-												{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
+												{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
 												<span
 													class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
 												>
@@ -776,7 +776,7 @@
 													)}
 												</span>
 											{:else}
-												{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
+												{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
 												{new Date(
 													(stoptime.scheduled_departure_time_unix_seconds ||
 														stoptime.interpolated_stoptime_unix_seconds) * 1000
@@ -792,7 +792,7 @@
 								</div>
 							</div>
 
-							{#if (stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}
+							{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}
 								<div class="flex flex-row">
 									{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null || stoptime.interpolated_stoptime_unix_seconds != null}
 										{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
