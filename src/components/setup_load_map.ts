@@ -39,11 +39,7 @@ export function setup_load_map(
 		clearbottomright();
 		start_location_watch();
 		// Add new sources and layers
-		const removelogo1 = document.getElementsByClassName('mapboxgl-ctrl-logo');
-
-		if (removelogo1) {
-			removelogo1[0].remove();
-		}
+		
 
 		if (localStorage.getItem('showzombiebuses') === 'true') {
 			show_zombie_buses_store.set(true);

@@ -1065,7 +1065,9 @@
 			hash: 'pos',
 			useWebGL2: true,
 			preserveDrawingBuffer: false,
-			attributionControl: false,
+			attributionControl: new mapboxgl.AttributionControl({
+        compact: false
+    }),
 			//	antialias: true,
 			style: style, // stylesheet location
 			accessToken: decode(

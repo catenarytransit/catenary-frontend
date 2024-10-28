@@ -21,7 +21,9 @@
 			crossSourceCollisions: true,
 			hash: 'pos',
 			preserveDrawingBuffer: false,
-			attributionControl: false,
+			attributionControl: new mapboxgl.AttributionControl({
+        compact: true
+    }),
 			//	antialias: true,
 			style: 'mapbox://styles/kylerschin/clu3orpuz026g01ra7kcgg9s9', // stylesheet location
 			accessToken: decode(
