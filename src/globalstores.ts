@@ -44,3 +44,5 @@ export const map_pointer_store: Writable<mapboxgl.Map | null> = writable(null);
 export const geolocation_store: Writable<GeolocationPosition | null> = writable(null);
 
 export const nearby_deps_cache_gps: Writable<any | null> = writable(null);
+
+export const chateaus_store: Writable<any | null> = writable(null);

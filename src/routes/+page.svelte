@@ -27,7 +27,8 @@
 		show_my_location_store,
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
-		geolocation_store
+		geolocation_store,
+		chateaus_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -1058,6 +1059,14 @@
 						(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
 					);
 				});
+
+				let chateaus_source = mapglobal.getSource('chateaus');
+
+				if (chateaus_source) {
+					chateaus_source.setData(json);
+				}
+
+				chateaus_store.set(json);
 			})
 			.catch((err) => console.error(err));
 

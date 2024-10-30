@@ -7,7 +7,8 @@ import {
 	realtime_vehicle_locations_store,
 	realtime_vehicle_route_cache_hash_store,
 	realtime_vehicle_route_cache_store,
-	show_zombie_buses_store
+	show_zombie_buses_store,
+	chateaus_store
 } from '../globalstores';
 import { clearbottomright } from './clearbottomright';
 import { determineFeedsUsingChateaus } from '../maploaddata';
@@ -48,8 +49,15 @@ export function setup_load_map(
 
 		map.addSource('chateaus', {
 			type: 'geojson',
-			data: 'https://birch.catenarymaps.org/getchateaus'
+			data: {
+				type: 'FeatureCollection',
+				features: []
+			}
 		});
+
+		if (get(chateaus_store) !== null) {
+			map.getSource('chateaus').setData(get(chateaus_store));
+		}
 
 		map.addLayer({
 			id: 'chateaus_calc',
