@@ -1035,7 +1035,9 @@
 
 		// #endregion
 
-		fetch('https://birch.catenarymaps.org/getchateaus')
+		// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
+		// https://birch.catenarymaps.org/getchateaus
+		fetch('https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json')
 			.then(function (response) {
 				return response.json();
 			})
