@@ -274,7 +274,7 @@
 										});
 									}}
 								>
-									<p>{option.data.chateau_id}</p>
+									
 									{#if option.data.name}
 										<span
 											style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}

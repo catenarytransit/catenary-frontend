@@ -1094,6 +1094,7 @@
 
 		if (urlParams.get('tilebounds')) {
 			  map.showTileBoundaries = true;
+			  map.showParseStatus = true;
 		}
 
 		map_pointer_store.set(map);
