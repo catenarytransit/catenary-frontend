@@ -149,7 +149,7 @@ export function setup_load_map(
 				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				//'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -161,7 +161,7 @@ export function setup_load_map(
 				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				//'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -173,7 +173,7 @@ export function setup_load_map(
 				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				//'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -185,7 +185,7 @@ export function setup_load_map(
 				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				//'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -197,7 +197,7 @@ export function setup_load_map(
 				visibility: 'none'
 			},
 			paint: {
-				'raster-emissive-strength': 0.8
+				//'raster-emissive-strength': 0.8
 			}
 		});
 
@@ -218,7 +218,7 @@ export function setup_load_map(
 					filter: ['all', ['==', 2, ['get', 'location_type']]],
 					'source-layer': 'data',
 					paint: {
-						'symbol-emissive-strength': 1
+						//'symbol-emissive-strength': 1
 					},
 					layout: {
 						'icon-image': 'station-enter',
@@ -255,7 +255,7 @@ export function setup_load_map(
 						'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
 						'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 						'text-halo-width': darkMode ? 0.4 : 0.2,
-						'text-emissive-strength': 1
+						//'text-emissive-strength': 1
 					},
 					minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
 				},
@@ -337,7 +337,7 @@ export function setup_load_map(
 			paint: {
 				'fill-color': '#38bdf8',
 				'fill-opacity': ['get', 'opacity'],
-				'fill-emissive-strength': 1
+				//'fill-emissive-strength': 1
 			}
 		});
 
@@ -364,7 +364,7 @@ export function setup_load_map(
 				},
 				paint: {
 					'icon-opacity': 0.8,
-					'icon-emissive-strength': 1
+					//'icon-emissive-strength': 1
 				}
 			});
 		});
@@ -386,7 +386,7 @@ export function setup_load_map(
 				},
 				paint: {
 					'icon-opacity': 0.8,
-					'icon-emissive-strength': 1
+					//'icon-emissive-strength': 1
 				}
 			});
 		});

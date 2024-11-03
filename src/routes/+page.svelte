@@ -1054,10 +1054,27 @@
 		const map = new maplibregl.Map({
           container: 'map',
 		  hash: 'pos',
+		  pixelRatio: window.devicePixelRatio * 1.4,
           style: style, // stylesheet location
 		  center: centerinit, // starting position [lng, lat]
 		  zoom: zoominit, // starting zoom (must be greater than 8.1)
         });
+
+		let remove = null;
+
+		const updatePixelRatio = () => {
+			map.setPixelRatio(window.devicePixelRatio * 1.4);
+
+  if (remove != null) {
+    remove();
+  }
+}
+const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+const media = matchMedia(mqString);
+  media.addEventListener("change", updatePixelRatio);
+  remove = () => {
+    media.removeEventListener("change", updatePixelRatio);
+  };
 
 		//map tile bounds
 
@@ -1069,7 +1086,7 @@
 		map_pointer_store.set(map);
 
 		if (markedPointCoords) {
-			new mapboxgl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
+			new maplibregl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
 		}
 
 		if (darkMode) {
@@ -1080,6 +1097,8 @@
 		}
 
 		map.on('load', () => {
+			map.setProjection({type: 'globe'})
+
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
@@ -1128,9 +1147,7 @@
 			last_render_start = performance.now();
 		});
 
-		map.on('render', (event) => {
-			
-		});
+		
 
 		map.on('zoomend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
