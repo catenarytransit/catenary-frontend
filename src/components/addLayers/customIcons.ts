@@ -1,4 +1,4 @@
-import type { Map } from 'mapbox-gl';
+import type { Map } from 'maplibre-gl';
 
 import { custom_icons_category_to_layer_id } from '../../globalstores';
 

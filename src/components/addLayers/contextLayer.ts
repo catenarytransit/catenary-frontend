@@ -16,7 +16,7 @@ import {
 
 import { writable, get } from 'svelte/store';
 
-export function makeContextLayerDataset(map: mapboxgl.Map) {
+export function makeContextLayerDataset(map: maplibregl.Map) {
 	let darkMode = get(dark_mode_store);
 
 	const urlParams =
@@ -55,7 +55,7 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
 		paint: {
 			'line-color': darkMode ? '#111133' : '#ffffff',
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 6, 14, 9],
-			'line-emissive-strength': 1
+			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
 		minzoom: 3
@@ -69,7 +69,7 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
 			'line-color': ['get', 'color'],
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
-			'line-emissive-strength': 1
+			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
 		minzoom: 3
@@ -100,7 +100,7 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
 			'text-halo-color': ['get', 'color'],
 			'text-halo-width': 2,
 			'text-halo-blur': 0,
-			'line-emissive-strength': 1
+			//'line-emissive-strength': 1
 		},
 		minzoom: 3
 	});
@@ -117,7 +117,7 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': 0.9,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1],
-			'circle-emissive-strength': 1
+			//'circle-emissive-strength': 1
 		},
 		minzoom: 11
 	});
@@ -142,7 +142,7 @@ export function makeContextLayerDataset(map: mapboxgl.Map) {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
 			'text-halo-width': 0.2,
-			'text-emissive-strength': 1
+			//'text-emissive-strength': 1
 		},
 		minzoom: 13.5
 	});

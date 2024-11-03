@@ -1,4 +1,4 @@
-import mapboxgl from 'mapbox-gl';
+import maplibregl from 'maplibre-gl';
 import type { Writable } from 'svelte/store';
 import { writable, get } from 'svelte/store';
 import { data_stack_store, on_sidebar_trigger_store } from '../globalstores';
@@ -14,14 +14,14 @@ import {
 } from './stackenum';
 
 export function setup_click_handler(
-	map: mapboxgl.Map,
+	map: maplibregl.Map,
 	layerspercategory: Record<string, any>,
 	setSidebarOpen: () => void
 ) {
 	map.on('click', (e) => {
 		console.log('clicked on ', e);
 
-		const click_bbox: [mapboxgl.PointLike, mapboxgl.PointLike] = [
+		const click_bbox: [maplibregl.PointLike, maplibregl.PointLike] = [
 			[e.point.x - 5, e.point.y - 5],
 			[e.point.x + 5, e.point.y + 5]
 		];

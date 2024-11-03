@@ -15,7 +15,7 @@ export function fetch_realtime_vehicle_locations(
 	chateaus_in_frame: Writable<string[]>,
 	chateau_to_realtime_feed_lookup: Record<string, any>,
 	pending_chateau_rt_request: Record<string, number>,
-	map: mapboxgl.Map
+	map: maplibregl.Map
 ) {
 	const categories_to_request: string[] = [];
 
