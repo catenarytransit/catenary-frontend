@@ -1158,13 +1158,7 @@
 			lasttimeofnorth = 0;
 		});
 
-		map.on('renderstart', (event) => {
-			last_render_start = performance.now();
-		});
-
-		map.on('render', (event) => {
-			
-		});
+		
 
 		map.on('zoomend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
