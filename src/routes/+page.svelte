@@ -358,7 +358,7 @@
 
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
-		if (mapglobal && mapglobal.loaded()) {
+		if (mapglobal) {
 			
 			if (show_my_location) {
 					if (mapglobal.getLayer('nobearing_position')) {
@@ -641,10 +641,7 @@
 
 	let style: string = darkMode
 		? 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539/style.json?key=tf30gb2F4vIsBW5k9Msd'
-		: 'https://api.maptiler.com/maps/dbb80139-208d-449f-a69e-31243c0ee779/style.json?key=tf30gb2F4vIsBW5k9Msd';
-
-	
-	
+		: 'https://api.maptiler.com/maps/4d1cd5c4-1119-4921-b0d8-82e79de13053/style.json?key=tf30gb2F4vIsBW5k9Msd';
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
@@ -1107,7 +1104,7 @@ const media = matchMedia(mqString);
 
 		if (urlParams.get('tilebounds')) {
 			  map.showTileBoundaries = true;
-			  map.showParseStatus = true;
+			//  map.showParseStatus = true;
 		}
 
 		map_pointer_store.set(map);
@@ -1117,10 +1114,7 @@ const media = matchMedia(mqString);
 		}
 
 		if (darkMode) {
-			map.on('style.load', () => {
-			//	map.setConfigProperty('basemap', 'lightPreset', 'night');
-			//	map.setConfigProperty('basemap', 'showTransitLabels', false);
-			});
+		
 		}
 
 		map.on('load', () => {
@@ -1130,7 +1124,13 @@ const media = matchMedia(mqString);
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 				changeRailTextOutsideNorthAmerica(map, layerspercategory);
+
+				runSettingsAdapt();
 			}, 0);
+
+			setTimeout(() => {
+				runSettingsAdapt()
+			}, 1000);
 		});
 
 		maplibregl.setRTLTextPlugin(

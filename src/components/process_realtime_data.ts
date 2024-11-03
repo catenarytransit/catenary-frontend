@@ -15,7 +15,7 @@ import {
 	new_jeans_buses,
 	pride_buses
 } from './addLayers/customIcons';
-import mapboxgl from 'mapbox-gl';
+import maplibregl from 'mapbox-gl';
 import {lightenColour, darkenColour } from './lightenDarkColour';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 import {calculateGamma} from './colour/computeBrightness';
@@ -41,7 +41,7 @@ export function process_realtime_vehicle_locations(
 	chateau_id: string,
 	category: string,
 	response_from_birch_vehicles: any,
-	map: mapboxgl.Map
+	map: maplibregl.Map
 ) {
 	//console.log('process realtime data', chateau_id, category);
 
@@ -102,7 +102,7 @@ export function process_realtime_vehicle_locations(
 	rerender_category_live_dots(category, map);
 }
 
-export function rerender_category_live_dots(category: string, map: mapboxgl.Map) {
+export function rerender_category_live_dots(category: string, map: maplibregl.Map) {
 	const darkMode = get(dark_mode_store);
 	const realtime_vehicle_locations = get(realtime_vehicle_locations_store);
 	const realtime_vehicle_route_cache = get(realtime_vehicle_route_cache_store);
@@ -379,7 +379,7 @@ export function rerender_category_live_dots(category: string, map: mapboxgl.Map)
 		)
 		.flat();
 
-	//console.log('rerendering', category, 'with', features);
+	console.log('rerendering', category, 'with', features);
 
 	source.setData({
 		type: 'FeatureCollection',

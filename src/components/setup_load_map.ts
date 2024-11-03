@@ -427,6 +427,7 @@ export async function setup_load_map(
 
 		setTimeout(() => {
 			recompute_map_padding();
+			runSettingsAdapt();
 		}, 1);
 	});
 }
