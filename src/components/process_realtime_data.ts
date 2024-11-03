@@ -379,7 +379,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 		)
 		.flat();
 
-	console.log('rerendering', category, 'with', features);
+	//console.log('rerendering', category, 'with', features);
 
 	source.setData({
 		type: 'FeatureCollection',

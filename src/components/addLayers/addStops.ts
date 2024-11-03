@@ -300,7 +300,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Bold', 'Arial Unicode MS Regular']
+			'text-font': ['literal', ['Barlow Medium']]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
