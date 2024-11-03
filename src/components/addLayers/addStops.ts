@@ -1,4 +1,4 @@
-import type { Map } from 'mapbox-gl';
+import type { Map } from 'maplibre-gl';
 
 const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 10, 12];
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
@@ -71,7 +71,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': 0.1,
-			'circle-emissive-strength': 1
+			//'circle-emissive-strength': 1
 		},
 		minzoom: window?.innerWidth >= 768 ? 13 : 12,
 		filter: [
@@ -109,7 +109,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 0.4,
-			'text-emissive-strength': 1
+			//'text-emissive-strength': 1
 		},
 		minzoom: window?.innerWidth >= 768 ? 14.3 : 13.3
 	});
@@ -129,7 +129,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
-			'circle-emissive-strength': 1
+			//'circle-emissive-strength': 1
 		},
 		minzoom: 9,
 		filter: [
@@ -164,7 +164,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 1,
-			'text-emissive-strength': 1
+			//'text-emissive-strength': 1
 		},
 		filter: [
 			'all',
@@ -194,7 +194,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': 0.8,
-			'circle-emissive-strength': 1
+			//'circle-emissive-strength': 1
 		},
 		minzoom: 9,
 		filter: [
@@ -236,7 +236,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 1,
-			'text-emissive-strength': 1
+			//'text-emissive-strength': 1
 		},
 		filter: [
 			'all',
@@ -273,7 +273,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': 0.8,
-			'circle-emissive-strength': 1
+			//'circle-emissive-strength': 1
 		},
 		minzoom: 7.7,
 		filter: [
@@ -300,13 +300,13 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Bold', 'Arial Unicode MS Regular']
+			'text-font': ['literal', ['Barlow Medium']]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 1,
-			'text-emissive-strength': 1
+			//'text-emissive-strength': 1
 		},
 		filter: [
 			'all',
@@ -331,7 +331,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
-			'circle-emissive-strength': 1
+			//'circle-emissive-strength': 1
 		},
 		filter: ['all', ['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]]],
 		minzoom: 9
@@ -357,7 +357,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': 1,
-			'text-emissive-strength': 1
+			//'text-emissive-strength': 1
 		},
 		filter: ['all', ['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]]],
 		minzoom: 9

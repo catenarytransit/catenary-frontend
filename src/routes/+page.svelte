@@ -1,5 +1,6 @@
 <script lang="ts">
-	import mapboxgl from 'mapbox-gl';
+	import maplibregl from 'maplibre-gl';
+	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
@@ -150,7 +151,7 @@
 		latest_item_on_stack = data_stack[data_stack.length - 1];
 	});
 
-	let mapglobal: mapboxgl.Map | null = null;
+	let mapglobal: maplibregl.Map | null = null;
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -358,24 +359,50 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
+			
 			if (show_my_location) {
+					if (mapglobal.getLayer('nobearing_position')) {
+						
 				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'visible');
-				mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
-				mapglobal.setLayoutProperty('km_text', 'visibility', 'visible');
-				mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
+					}
+
+				if (mapglobal.getLayer('geolocationheadingshell')) {
+					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
+				}
+
+				if (mapglobal.getLayer('km_text')) {
+					mapglobal.setLayoutProperty('km_text', 'visibility', 'visible');
+				}
+
+				if (mapglobal.getLayer('km_line')) {
+					mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
+				}
 			} else {
-				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
-				mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
-				mapglobal.setLayoutProperty('km_text', 'visibility', 'none');
-				mapglobal.setLayoutProperty('km_line', 'visibility', 'none');
+				if (mapglobal.getLayer('geolocationheadingshell')) {
+					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('km_text')) {
+					mapglobal.setLayoutProperty('km_text', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('km_line')) {
+					mapglobal.setLayoutProperty('km_line', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('nobearing_position')) {
+					mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
+				}
 			}
 
-			if (layersettings.more.foamermode.infra) {
-				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
-			}
-
+			if (mapglobal.getLayer('foamershapes')) {
+				
+				if (layersettings.more.foamermode.infra) {
+					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
+				}
+	
 			if (layersettings.more.foamermode.maxspeed) {
 				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
 			} else {
@@ -398,6 +425,7 @@
 				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
 			} else {
 				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
+			}
 			}
 
 			Object.entries(layerspercategory).map((eachcategory) => {
@@ -612,32 +640,8 @@
 	const dragger = 24;
 
 	let style: string = darkMode
-		? 'mapbox://styles/kylerschin/clw2s5gsn01du01rdbjlf0nhr'
-		: 'mapbox://styles/kylerschin/cllpbma0e002h01r6afyzcmd8';
-
-	if (typeof window != 'undefined') {
-		let desiredStyle = embedmode
-			? urlParams.get('framework-style') || window.localStorage.mapStyle
-			: window.localStorage.mapStyle;
-
-		if (desiredStyle == 'sat') {
-			style = 'mapbox://styles/kylerschin/clncqfm5p00b601recvp14ipu';
-		}
-		if (desiredStyle == 'rustic') {
-			style = 'mapbox://styles/kylerschin/clrgqjvqm005m01oo661z8v1e';
-		}
-		if (desiredStyle == 'deepsea') {
-			style = darkMode
-				? 'mapbox://styles/kylerschin/clqogkdiy00bs01obh352h32o'
-				: 'mapbox://styles/kylerschin/clqomei1n006h01raaylca7ty';
-		}
-		if (desiredStyle == 'archi') {
-			style = 'mapbox://styles/kylerschin/clqpdas5u00c801r8anbdf6xl';
-		}
-		if (desiredStyle == 'minimal') {
-			style = 'mapbox://styles/kylerschin/clqpxwqw700bs01rjej165jc7';
-		}
-	}
+		? 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539/style.json?key=tf30gb2F4vIsBW5k9Msd'
+		: 'https://api.maptiler.com/maps/4d1cd5c4-1119-4921-b0d8-82e79de13053/style.json?key=tf30gb2F4vIsBW5k9Msd';
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
@@ -1070,61 +1074,69 @@
 			})
 			.catch((err) => console.error(err));
 
-		const map = new mapboxgl.Map({
-			container: 'map',
-			crossSourceCollisions: true,
-			hash: 'pos',
-			useWebGL2: true,
-			preserveDrawingBuffer: false,
-			attributionControl: new mapboxgl.AttributionControl({
-        compact: false
-    }),
-			//	antialias: true,
-			style: style, // stylesheet location
-			accessToken: decode(
-				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
-			),
-			//IP geolocation (ln 967) and on the fly rendering for this soon
-			center: centerinit, // starting position [lng, lat]
-			zoom: zoominit, // starting zoom (must be greater than 8.1)
-			fadeDuration: 0
-		});
+		
+		const map = new maplibregl.Map({
+          container: 'map',
+		  hash: 'pos',
+		  pixelRatio: window.devicePixelRatio * 1.4,
+          style: style, // stylesheet location
+		  center: centerinit, // starting position [lng, lat]
+		  zoom: zoominit, // starting zoom (must be greater than 8.1)
+        });
+
+		let remove = null;
+
+		const updatePixelRatio = () => {
+			map.setPixelRatio(window.devicePixelRatio * 1.4);
+
+  if (remove != null) {
+    remove();
+  }
+}
+const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+const media = matchMedia(mqString);
+  media.addEventListener("change", updatePixelRatio);
+  remove = () => {
+    media.removeEventListener("change", updatePixelRatio);
+  };
 
 		//map tile bounds
 
 		if (urlParams.get('tilebounds')) {
 			  map.showTileBoundaries = true;
-			  map.showParseStatus = true;
+			//  map.showParseStatus = true;
 		}
 
 		map_pointer_store.set(map);
 
 		if (markedPointCoords) {
-			new mapboxgl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
+			new maplibregl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
 		}
 
 		if (darkMode) {
-			map.on('style.load', () => {
-				map.setConfigProperty('basemap', 'lightPreset', 'night');
-				map.setConfigProperty('basemap', 'showTransitLabels', false);
-			});
+		
 		}
 
 		map.on('load', () => {
+			map.setProjection({type: 'globe'})
+
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 				changeRailTextOutsideNorthAmerica(map, layerspercategory);
+
+				runSettingsAdapt();
 			}, 0);
+
+			setTimeout(() => {
+				runSettingsAdapt()
+			}, 1000);
 		});
 
-		mapboxgl.setRTLTextPlugin(
-			'/mapbox-gl-rtl-text.min.js',
-			(err) => {
-				console.error(err);
-			},
-			true // Lazy load the plugin
-		);
+		maplibregl.setRTLTextPlugin(
+        'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
+        true // Lazy load the plugin
+    );
 
 		mapglobal = map;
 
@@ -1136,8 +1148,6 @@
 
 			current_map_heading = map.getBearing();
 		}
-
-		setup_click_handler(map, layerspercategory, setSidebarOpen);
 
 		map.on('move', (events) => {
 			updateData();
@@ -1158,18 +1168,12 @@
 			lasttimeofnorth = 0;
 		});
 
-		map.on('renderstart', (event) => {
-			last_render_start = performance.now();
-		});
-
-		map.on('render', (event) => {
-			
-		});
-
 		map.on('zoomend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 		});
+
+		console.log("setting up load map")
 
 		setup_load_map(
 			map,
@@ -1182,6 +1186,10 @@
 			pending_chateau_rt_request,
 			recompute_map_padding
 		);
+
+		console.log("setting up click handler")
+
+		setup_click_handler(map, layerspercategory, setSidebarOpen);
 	});
 </script>
 
