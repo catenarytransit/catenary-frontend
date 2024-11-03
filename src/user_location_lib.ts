@@ -51,7 +51,7 @@ export function update_geolocation_source() {
 		
 	const show_my_location = get(show_my_location_store);
 
-	const geolocation_mapboxsource = map.getSource('geolocation');
+	const geolocation_mapboxsource = map.getSource('user_geolocation');
 
 	if (geolocation_mapboxsource) {
 		if (geolocation) {

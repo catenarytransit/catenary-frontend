@@ -2,7 +2,7 @@
 import { get } from 'svelte/store';
 import { createGeoJSONCircle, createGeoJSONCircleFeature } from '../geoMathsAssist';
 import { dark_mode_store } from '../globalstores';
-export function addGeoRadius(map: any) {
+export function addGeoRadius(map: maplibregl.Map) {
 	try {
 		map.addSource('km_source', {
 			type: 'geojson',
@@ -19,7 +19,7 @@ export function addGeoRadius(map: any) {
 			paint: {
 				'line-color': get(dark_mode_store) ? '#dddddd' : '#121212',
 				'line-width': 1.2,
-				'line-emissive-strength': 1
+				//'line-emissive-strength': 1
 			}
 		});
 
@@ -46,7 +46,7 @@ export function addGeoRadius(map: any) {
 	}
 }
 
-export function setUserCircles(map: any, lng: number, lat: number) {
+export function setUserCircles(map: maplibregl.Map, lng: number, lat: number) {
 	const km_source = map.getSource('km_source');
 	const numberofpoints: number = 256;
 

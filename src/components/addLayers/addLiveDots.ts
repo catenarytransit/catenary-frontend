@@ -1,4 +1,4 @@
-import type { Map } from 'mapbox-gl';
+import type { Map } from 'maplibre-gl';
 
 function textColorOfMapLabels(darkMode: boolean) {
 	return ['get', darkMode === true ? 'contrastdarkmode' : 'contrastlightmode'];

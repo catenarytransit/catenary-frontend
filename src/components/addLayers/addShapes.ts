@@ -1,7 +1,7 @@
-import type mapboxgl from 'mapbox-gl';
+import maplibregl from 'mapbox-gl';
 
 export function addShapes(
-	map: mapboxgl.Map,
+	map: maplibregl.Map,
 	darkMode: boolean,
 	layerspercategory: Record<string, any>
 ) {
@@ -266,7 +266,7 @@ export function addShapes(
 		},
 		paint: {
 			'text-color': ['concat', '#', ['get', 'text_color']],
-			'text-emissive-strength': 1,
+			//'text-emissive-strength': 1,
 			'text-halo-color': ['concat', '#', ['get', 'color']],
 			'text-halo-width': 1,
 			'text-halo-blur': 1
@@ -324,7 +324,7 @@ export function addShapes(
 		},
 		paint: {
 			'text-color': ['concat', '#', ['get', 'text_color']],
-			'text-emissive-strength': 1,
+			//'text-emissive-strength': 1,
 			'text-halo-color': ['concat', '#', ['get', 'color']],
 			'text-halo-width': 1,
 			'text-halo-blur': 1

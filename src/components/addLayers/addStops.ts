@@ -1,4 +1,4 @@
-import type { Map } from 'mapbox-gl';
+import type { Map } from 'maplibre-gl';
 
 const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 10, 12];
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];

@@ -1,6 +1,6 @@
 <script lang="ts">
-	    import maplibregl from 'maplibre-gl';
-		import 'maplibre-gl/dist/maplibre-gl.css';
+	import maplibregl from 'maplibre-gl';
+	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
@@ -358,25 +358,51 @@
 
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
-		if (mapglobal) {
+		if (mapglobal && mapglobal.loaded()) {
+			
 			if (show_my_location) {
+					if (mapglobal.getLayer('nobearing_position')) {
+						
 				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'visible');
-				mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
-				mapglobal.setLayoutProperty('km_text', 'visibility', 'visible');
-				mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
+					}
+
+				if (mapglobal.getLayer('geolocationheadingshell')) {
+					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
+				}
+
+				if (mapglobal.getLayer('km_text')) {
+					mapglobal.setLayoutProperty('km_text', 'visibility', 'visible');
+				}
+
+				if (mapglobal.getLayer('km_line')) {
+					mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
+				}
 			} else {
-				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
-				mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
-				mapglobal.setLayoutProperty('km_text', 'visibility', 'none');
-				mapglobal.setLayoutProperty('km_line', 'visibility', 'none');
+				if (mapglobal.getLayer('geolocationheadingshell')) {
+					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('km_text')) {
+					mapglobal.setLayoutProperty('km_text', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('km_line')) {
+					mapglobal.setLayoutProperty('km_line', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('nobearing_position')) {
+					mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
+				}
 			}
 
-			if (layersettings.more.foamermode.infra) {
-				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
-			}
-
+			if (mapglobal.getLayer('foamershapes')) {
+				
+				if (layersettings.more.foamermode.infra) {
+					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
+				}
+	
 			if (layersettings.more.foamermode.maxspeed) {
 				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
 			} else {
@@ -399,6 +425,7 @@
 				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
 			} else {
 				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
+			}
 			}
 
 			Object.entries(layerspercategory).map((eachcategory) => {
@@ -1122,8 +1149,6 @@ const media = matchMedia(mqString);
 			current_map_heading = map.getBearing();
 		}
 
-		setup_click_handler(map, layerspercategory, setSidebarOpen);
-
 		map.on('move', (events) => {
 			updateData();
 			lock_on_gps_store.set(false);
@@ -1143,16 +1168,13 @@ const media = matchMedia(mqString);
 			lasttimeofnorth = 0;
 		});
 
-		map.on('renderstart', (event) => {
-			last_render_start = performance.now();
-		});
-
-		
 
 		map.on('zoomend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 		});
+
+		console.log("setting up load map")
 
 		setup_load_map(
 			map,
@@ -1165,6 +1187,10 @@ const media = matchMedia(mqString);
 			pending_chateau_rt_request,
 			recompute_map_padding
 		);
+
+		console.log("setting up click handler")
+
+		setup_click_handler(map, layerspercategory, setSidebarOpen);
 	});
 </script>
 

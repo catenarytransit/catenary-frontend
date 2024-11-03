@@ -20,7 +20,7 @@
 
 		array.sort((a, b) => a[1].headsign.localeCompare(b[1].headsign));
 
-		console.log('sorted dep now ', array);
+		//console.log('sorted dep now ', array);
 
 		return array;
 	}

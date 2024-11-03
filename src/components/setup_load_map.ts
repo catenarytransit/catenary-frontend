@@ -1,7 +1,7 @@
 import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { makeFireMap } from './wildfireMap';
-import mapboxgl from 'mapbox-gl';
+import maplibregl from 'maplibre-gl';
 import {
 	realtime_vehicle_locations_last_updated_store,
 	realtime_vehicle_locations_store,
@@ -24,8 +24,8 @@ import { makeGpsLayer } from './makeGpsLayer';
 import { makeContextLayerDataset } from './addLayers/contextLayer';
 import { start_location_watch } from '../user_location_lib';
 
-export function setup_load_map(
-	map: mapboxgl.Map,
+export async function setup_load_map(
+	map: maplibregl.Map,
 	runSettingsAdapt: () => void,
 	darkMode: boolean,
 	layerspercategory: Record<string, any>,
@@ -35,7 +35,7 @@ export function setup_load_map(
 	pending_chateau_rt_request: Record<string, number>,
 	recompute_map_padding: () => void
 ) {
-	map.on('load', () => {
+	map.on('load', async () => {
 		recompute_map_padding();
 		clearbottomright();
 		start_location_watch();
@@ -70,6 +70,7 @@ export function setup_load_map(
 		});
 
 		addGeoRadius(map);
+		makeGpsLayer(map);
 
 		map.addSource('intercityrailshapes', {
 			type: 'vector',
@@ -205,10 +206,9 @@ export function setup_load_map(
 
 		addStopsLayers(map, darkMode, layerspercategory);
 
-		map.loadImage('/station-enter.png', (error, image) => {
-			if (error) throw error;
 
-			map.addImage('station-enter', image);
+		map.loadImage('/station-enter.png').then((image) => {
+			map.addImage('station-enter', image.data);
 
 			map.addLayer(
 				{
@@ -301,11 +301,12 @@ export function setup_load_map(
 		makeContextLayerDataset(map);
 
 		makeCircleLayers(map, darkMode, layerspercategory);
+		console.log('making bearing arrow pointers');
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
 
 		runSettingsAdapt();
 
-		map.addSource('geolocation', {
+		map.addSource('user_geolocation', {
 			type: 'geojson',
 			data: {
 				type: 'FeatureCollection',
@@ -343,52 +344,52 @@ export function setup_load_map(
 
 		runSettingsAdapt();
 
-		map.loadImage('/geo-circle.png', (error, image) => {
-			if (error) throw error;
+		map.loadImage('/geo-circle.png')
+			.then((image) => {
+				map.addImage('geocircle', image.data);
 
-			// Add the image to the map style.
-			map.addImage('geocircle', image);
-
-			map.addLayer({
-				id: 'nobearing_position',
-				type: 'symbol',
-				source: 'geolocation', // reference the data source
-				layout: {
-					'icon-image': 'geocircle', // reference the image
-					'icon-size': 0.1,
-					visibility: 'none',
-					'icon-allow-overlap': true,
-					'icon-ignore-placement': true,
-					'text-allow-overlap': true,
-					'text-ignore-placement': true
-				},
-				paint: {
-					'icon-opacity': 0.8,
-					//'icon-emissive-strength': 1
-				}
+				map.addLayer({
+					id: 'nobearing_position',
+					type: 'symbol',
+					source: 'user_geolocation', // reference the data source
+					layout: {
+						'icon-image': 'geocircle', // reference the image
+						'icon-size': 0.1,
+						visibility: 'none',
+						'icon-allow-overlap': true,
+						'icon-ignore-placement': true,
+						'text-allow-overlap': true,
+						'text-ignore-placement': true
+					},
+					paint: {
+						'icon-opacity': 0.8,
+						//'icon-emissive-strength': 1
+					}
+				});
+			})
+			.catch((error) => {
+				console.error(error);
 			});
-		});
+	
 
-		map.loadImage('/geo-nav.png', (error, image) => {
-			if (error) throw error;
-			// Add the image to the map style.
-			map.addImage('geonav', image);
+		const geo_nav = await map.loadImage('/geo-nav.png');
 
-			map.addLayer({
-				id: 'bearing_position',
-				type: 'symbol',
-				source: 'geolocation', // reference the data source
-				layout: {
-					'icon-image': 'geonav', // reference the image
-					'icon-size': 0.13,
-					'icon-rotate': ['get', 'heading'],
-					visibility: 'none'
-				},
-				paint: {
-					'icon-opacity': 0.8,
-					//'icon-emissive-strength': 1
-				}
-			});
+		map.addImage('geonav', geo_nav.data);
+
+		map.addLayer({
+			id: 'bearing_position',
+			type: 'symbol',
+			source: 'user_geolocation', // reference the data source
+			layout: {
+				'icon-image': 'geonav', // reference the image
+				'icon-size': 0.13,
+				'icon-rotate': ['get', 'heading'],
+				visibility: 'none'
+			},
+			paint: {
+				'icon-opacity': 0.8,
+				//'icon-emissive-strength': 1
+			}
 		});
 
 		const chateau_feed_results = determineFeedsUsingChateaus(map);
@@ -418,7 +419,6 @@ export function setup_load_map(
 			map
 		);
 
-		makeGpsLayer(map);
 		recompute_map_padding();
 
 		changeRailTextOutsideNorthAmerica(map, layerspercategory);

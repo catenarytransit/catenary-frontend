@@ -2,7 +2,7 @@ import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { dark_mode_store } from '../globalstores';
 
-export function makeFireMap(map: mapboxgl.Map, chateaus_in_frame: Writable<string[]>) {
+export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<string[]>) {
 	console.log('load wildfire data');
 
 	const darkMode = get(dark_mode_store);
