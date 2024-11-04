@@ -24,7 +24,9 @@
       "type": "fill",
       "source": "esa-worldcover-polygons",
       "source-layer": "globallandcover",
+      "maxzoom": 10,
       "filter": ["any", ["==", "class", "land"]],
+      "layout": {"visibility": "visible"},
       "paint": {
         "fill-color": {
           "stops": [
@@ -1244,7 +1246,8 @@
           2.5,
           20,
           18
-        ]
+        ],
+        "line-translate-anchor": "map"
       }
     },
     {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
+	import '@maplibre/maplibre-gl-inspect/dist/maplibre-gl-inspect.css';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -560,18 +561,32 @@
 
 				if (dotcirclelayer && mapglobal) {
 					if (showzombiebuses === true) {
-						mapglobal.setFilter(categoryvalues.livedots, undefined);
-						mapglobal.setFilter(categoryvalues.labeldots, undefined);
-						mapglobal.setFilter(categoryvalues.pointing, regularpointers);
-						mapglobal.setFilter(categoryvalues.pointingshell, regularpointers);
+						if (mapglobal.getLayer(categoryvalues.livedots)) {
+							mapglobal.setFilter(categoryvalues.livedots, undefined);
+							mapglobal.setFilter(categoryvalues.labeldots, undefined);
+						
+						}
+						if (mapglobal.getLayer(categoryvalues.pointing)) {
+							mapglobal.setFilter(categoryvalues.pointing, regularpointers);
+							mapglobal.setFilter(categoryvalues.pointingshell, regularpointers);
+						}
+
+						if (mapglobal.getLayer(categoryvalues.livedots)) {
+							mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
+							mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
+						}
 					} else {
-						mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
-						mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
-						mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
-						mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers);
-					}
+						if (mapglobal.getlayer(categoryvalues.livedots)) {
+							mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
+							mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
+						}
+
+						if (mapglobal.getLayer(categoryvalues.pointing)) {
+							mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
+							mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers);
+						}
 				}
-			});
+			}});
 
 			localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
 
@@ -1129,7 +1144,16 @@ const media = matchMedia(mqString);
 		}
 
 		map.on('load', () => {
-			map.setProjection({type: 'globe'})
+			map.setProjection({type: 'globe'});
+
+			if (debugmode) {
+				map.addControl(new MaplibreInspect({
+  popup: new maplibregl.Popup({
+    closeButton: false,
+    closeOnClick: false
+  })
+}));
+			}
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
