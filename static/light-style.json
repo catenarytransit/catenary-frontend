@@ -22,10 +22,10 @@
       {
         "id": "landcover-land",
         "type": "fill",
-        "source": "esa-worldcover-polygons",
-        "source-layer": "globallandcover",
+        "source": "openmaptiles",
+        "source-layer": "water",
         "maxzoom": 11,
-        "filter": ["==", "class", "land"],
+        "filter": ["all"],
         "layout": {"visibility": "visible"},
         "paint": {
           "fill-color": [
@@ -44,6 +44,25 @@
             "#f6f6f6"
           ],
           "fill-opacity": {"stops": [[8, 1], [9, 0]]}
+        }
+      },
+      {
+        "id": "water",
+        "type": "fill",
+        "source": "openmaptiles",
+        "source-layer": "water",
+        "filter": ["!=", ["get", "brunnel"], "tunnel"],
+        "layout": {"visibility": "visible"},
+        "paint": {
+          "fill-color": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            0,
+            "#54CEE3",
+            9,
+            "#90DAEE"
+          ]
         }
       },
       {
@@ -277,25 +296,6 @@
           ],
           "line-blur": 1,
           "line-width": 1.1
-        }
-      },
-      {
-        "id": "water",
-        "type": "fill",
-        "source": "esa-worldcover-polygons",
-        "source-layer": "globallandcover",
-        "filter": ["all", ["==", "class", "water"]],
-        "layout": {"visibility": "visible"},
-        "paint": {
-          "fill-color": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            0,
-            "#54CEE3",
-            9,
-            "#90DAEE"
-          ]
         }
       },
       {
