@@ -582,7 +582,7 @@
 							mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
 						}
 					} else {
-						if (mapglobal.getlayer(categoryvalues.livedots)) {
+						if (mapglobal.getLayer(categoryvalues.livedots)) {
 							mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
 							mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
 						}
