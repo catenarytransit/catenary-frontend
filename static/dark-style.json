@@ -11,7 +11,7 @@
       "url": "https://tiles.swiss-map.cc/esa-worldcover-polygons-v2.json"
     }
   },
-  "sprite": "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
+  "sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
   "glyphs": "https://mapfonts.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
   "layers": [
     {
@@ -2234,17 +2234,15 @@
       "filter": [
         "all",
         ["==", ["geometry-type"], "Point"],
-        [">=", ["get", "rank"], 1],
-        ["<", ["get", "rank"], 7],
+        ["-=", ["get", "rank"], 1],
         ["!=", ["get", "class"], "bus"],
         ["!=", ["get", "class"], "railway"],
         ["!=", ["get", "class"], "metro"]
       ],
       "layout": {
         "icon-image": [
-          "match",
-          ["get", "subclass"],
-          ["florist", "furniture"],
+          "case",
+          ["==", ["get", "class"], "pitch"],
           ["get", "subclass"],
           ["get", "class"]
         ],
@@ -2449,6 +2447,7 @@
       "source": "openmaptiles",
       "source-layer": "transportation_name",
       "minzoom": 9,
+      "maxzoom": 24,
       "filter": [
         "all",
         ["<=", ["get", "ref_length"], 6],
