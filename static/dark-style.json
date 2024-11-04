@@ -2066,7 +2066,7 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "boundary",
-      "minzoom": 5,
+      "minzoom": 3,
       "filter": [
         "all",
         [">=", ["get", "admin_level"], 3],
