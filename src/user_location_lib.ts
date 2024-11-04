@@ -89,15 +89,15 @@ export function update_geolocation_source() {
 						geojsondata.features[0].properties.opacity = 0.2;
 
 						if (geolocation.coords.accuracy >= 1000) {
-							geojsondata.features[0].properties.opacity = 0.1;
-						}
-
-						if (geolocation.coords.accuracy >= 2000) {
 							geojsondata.features[0].properties.opacity = 0.05;
 						}
 
-						if (geolocation.coords.accuracy >= 5000) {
+						if (geolocation.coords.accuracy >= 2000) {
 							geojsondata.features[0].properties.opacity = 0.02;
+						}
+
+						if (geolocation.coords.accuracy >= 5000) {
+							geojsondata.features[0].properties.opacity = 0.01;
 						}
 
 						accuracyLayer.setData(
