@@ -326,7 +326,7 @@
       "source": "openmaptiles",
       "source-layer": "aeroway",
       "minzoom": 11,
-      "filter": ["==", ["geometry-type"], "Polygon"],
+      "filter": ["match", ["geometry-type"], ["Polygon", "MultiPolygon"], true, false],
       "paint": {"fill-color": "rgba(25, 25, 21, 1)", "fill-opacity": 0.7}
     },
     {
@@ -893,7 +893,7 @@
       "type": "fill",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "filter": ["==", ["geometry-type"], "Polygon"],
+      "filter": ["match", ["geometry-type"], ["Polygon", "MultiPolygon"], true, false],
       "paint": {"fill-antialias": false, "fill-color": "rgba(49, 49, 49, 1)"}
     },
     {
