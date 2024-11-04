@@ -255,7 +255,7 @@ export function addShapes(
 			'symbol-placement': 'line',
 			'text-field': ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+			'text-font': ['Barlow Bold'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 			'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
@@ -311,7 +311,7 @@ export function addShapes(
 			'symbol-placement': 'line',
 			'text-field': ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular'],
+			'text-font': ['Barlow Bold'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 

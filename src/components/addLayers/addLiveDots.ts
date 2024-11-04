@@ -30,7 +30,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-radial-offset': 0.2,
 		//	//'text-emissive-strength': 1,
-			'text-font': darkMode == true ? ['Barlow SemiBold'] : ['Barlow SemiBold'],
+			'text-font': ['literal', ['Barlow SemiBold']],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 14],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
@@ -81,9 +81,9 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'text-font': [
 				'step',
 				['zoom'],
-				['literal', ['Barlow Regular', 'Arial Unicode MS Regular']],
+				['literal', ['Barlow Regular']],
 				9,
-				['literal', ['Barlow Bold', 'Arial Unicode MS Medium']]
+				['literal', ['Barlow Bold']]
 			],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 14, 11, 15, 13, 16],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
@@ -131,7 +131,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
             ],*/
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
-			'text-font': ['literal', ['Barlow Medium', 'Arial Unicode MS Bold']],
+			'text-font': ['literal', ['Barlow Medium']],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 8, 10, 9, 11, 11, 13, 12],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
@@ -178,7 +178,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
             ],*/
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-radial-offset': 0,
-			'text-font': ['literal', ['Barlow Medium', 'Arial Unicode MS Bold']],
+			'text-font': ['literal', ['Barlow Medium']],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 10, 9, 10, 11, 14, 13, 15],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},

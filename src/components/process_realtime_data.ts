@@ -15,7 +15,7 @@ import {
 	new_jeans_buses,
 	pride_buses
 } from './addLayers/customIcons';
-import maplibregl from 'mapbox-gl';
+import maplibregl from 'maplibre-gl';
 import {lightenColour, darkenColour } from './lightenDarkColour';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 import {calculateGamma} from './colour/computeBrightness';

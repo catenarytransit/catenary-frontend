@@ -1,4 +1,3 @@
-import type mapboxgl from 'mapbox-gl';
 import {
 	MapSelectionScreen,
 	StackInterface,

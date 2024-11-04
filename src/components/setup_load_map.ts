@@ -249,7 +249,7 @@ export async function setup_load_map(
 						//'icon-ignore-placement': false,
 						'text-allow-overlap': true,
 						//'symbol-avoid-edges': false,
-						'text-font': ['Open Sans Bold', 'Arial Unicode MS Regular']
+						'text-font': ['Barlow Bold']
 					},
 					paint: {
 						'text-color': darkMode ? '#bae6fd' : '#1d4ed8',

@@ -153,7 +153,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		layout: {
 			'text-field': ['concat', ['get', 'attr_IncidentName'], ' FIRE'],
 			'text-size': 10,
-			'text-font': ['Barlow Medium', 'Arial Unicode MS Bold']
+			'text-font': ['Barlow Medium']
 		},
 		minzoom: 5
 	});

@@ -507,6 +507,8 @@
 
 				if (dotcirclelayer && dotlabel) {
 					if (this_layer_settings.visible) {
+						if (mapglobal?.getLayer(categoryvalues.livedots)) {
+
 						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
 						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
 						mapglobal.setLayoutProperty(
@@ -514,14 +516,23 @@
 							'text-field',
 							interpretLabelsToCode(this_layer_settings.label, usunits)
 						);
+						}
 						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
-							mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+							if (mapglobal?.getLayer(x)) {
+								mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+							}
 						});
 					} else {
+						
+						if (mapglobal?.getLayer(categoryvalues.livedots)) {
+							
 						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'none');
 						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'none');
+						}
 						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
-							mapglobal.setLayoutProperty(x, 'visibility', 'none');
+							if (mapglobal?.getLayer(x)) {
+								mapglobal.setLayoutProperty(x, 'visibility', 'none');
+							}
 						});
 					}
 				} else {
@@ -547,7 +558,7 @@
 					['==', true, ['get', 'has_bearing']]
 				];
 
-				if (dotcirclelayer) {
+				if (dotcirclelayer && mapglobal) {
 					if (showzombiebuses === true) {
 						mapglobal.setFilter(categoryvalues.livedots, undefined);
 						mapglobal.setFilter(categoryvalues.labeldots, undefined);
@@ -640,8 +651,8 @@
 	const dragger = 24;
 
 	let style: string = darkMode
-		? 'https://api.maptiler.com/maps/68c2a685-a6e4-4e26-b1c1-25b394003539/style.json?key=tf30gb2F4vIsBW5k9Msd'
-		: 'https://api.maptiler.com/maps/4d1cd5c4-1119-4921-b0d8-82e79de13053/style.json?key=tf30gb2F4vIsBW5k9Msd';
+		? '/dark-style.json'
+		: '/light-style.json';
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
@@ -1692,10 +1703,6 @@ const media = matchMedia(mqString);
 
 	.material-symbols-outlined {
 		font-family: 'Material Symbols Outlined', sans-serif;
-	}
-
-	:global(.mapboxgl-canvas) {
-		outline: none;
 	}
 
 	.lineNumber {

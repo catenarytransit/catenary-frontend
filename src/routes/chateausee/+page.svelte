@@ -1,5 +1,5 @@
 <script lang="ts">
-	import mapboxgl from 'mapbox-gl';
+	import maplibregl from 'maplibre-gl';
 	import { onMount } from 'svelte';
 
 	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
@@ -25,10 +25,7 @@
         compact: true
     }),
 			//	antialias: true,
-			style: 'mapbox://styles/kylerschin/clu3orpuz026g01ra7kcgg9s9', // stylesheet location
-			accessToken: decode(
-				'ꉰ騮罹縱𒁪险ꌳ轳罘蹺鴲靰繩繳穭葩罩陪筪陳繪輰艈艷繄艺筮陷荘靨ꍄ荲鵄繫敮謮轤𔕰𖥊浊豧扁缭𠁎詫鐵ᕑ'
-			),
+			style: '/dark-style.json', // stylesheet location
 			center: centerinit, // starting position [lng, lat]
 			//keep the centre at Los Angeles, since that is our primary user base currently
 			//switch to IP geolocation and on the fly rendering for this soon
@@ -120,7 +117,7 @@
 					'text-line-height': 1.2,
 					'text-letter-spacing': 0.01,
 					'text-max-width': 10,
-					'text-font': ['Open Sans Medium', 'Arial Unicode MS Regular'],
+					'text-font': ['Open Sans Medium'],
 					'text-offset': [0, 0]
 				},
 				paint: {

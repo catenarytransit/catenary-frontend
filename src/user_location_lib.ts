@@ -1,4 +1,3 @@
-import type mapboxgl from 'mapbox-gl';
 import { addGeoRadius, setUserCircles } from './components/userradius';
 import { show_my_location_store, geolocation_store, map_pointer_store } from './globalstores';
 export const permission_to_geolocate = 'permission_to_geolocate';

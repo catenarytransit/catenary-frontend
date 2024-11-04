@@ -103,7 +103,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
+			'text-font': ['Barlow Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
@@ -111,7 +111,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			'text-halo-width': 0.4,
 			//'text-emissive-strength': 1
 		},
-		minzoom: window?.innerWidth >= 768 ? 14.3 : 13.3
+		minzoom: window?.innerWidth >= 768 ? 14.7 : 13.7
 	});
 
 	//LOCAL RAIL
@@ -158,7 +158,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
+			'text-font': ['Barlow Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -230,7 +230,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
+			'text-font': ['Barlow Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -351,7 +351,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Bold', 'Arial Unicode MS Regular']
+			'text-font': ['literal', ['Barlow Bold']]
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',

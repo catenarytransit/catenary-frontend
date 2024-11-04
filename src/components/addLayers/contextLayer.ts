@@ -136,7 +136,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium', 'Arial Unicode MS Regular']
+			'text-font': ['Barlow Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',

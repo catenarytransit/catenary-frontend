@@ -20,7 +20,6 @@
 		fixRunNumber,
 		fixStationName
 	} from './agencyspecific';
-	import mapboxgl from 'mapbox-gl';
 	let is_loading_trip_data: boolean = true;
 	let trip_data: Record<string, any> | null = null;
 	let init_loaded = 0;
