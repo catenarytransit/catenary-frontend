@@ -12,7 +12,7 @@
     }
   },
   "sprite": "https://protomaps.github.io/basemaps-assets/sprites/v4/dark",
-  "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+  "glyphs": "https://mapfonts.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
@@ -190,7 +190,7 @@
         "fill-opacity": 0.1,
         "fill-translate-anchor": "map",
         "fill-pattern": "wetland_bg_11",
-        "fill-color": "#00000"
+        "fill-color": "#000000"
       }
     },
     {
