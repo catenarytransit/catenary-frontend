@@ -2234,7 +2234,7 @@
       "filter": [
         "all",
         ["==", ["geometry-type"], "Point"],
-        ["-=", ["get", "rank"], 1],
+        ["==", ["get", "rank"], 1],
         ["!=", ["get", "class"], "bus"],
         ["!=", ["get", "class"], "railway"],
         ["!=", ["get", "class"], "metro"]
