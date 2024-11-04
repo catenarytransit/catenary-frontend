@@ -38,8 +38,8 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
 			//'text-color': ['get', 'color'],
-			//'text-halo-color': '#eaeaea',
-			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
+			//'text-halo-color': '#ededed',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
 			'text-halo-width': darkMode == true ? 2.4 : 1,
 			'text-halo-blur': 1,
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 1]
@@ -90,8 +90,8 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
-			//'text-halo-color': '#eaeaea',
-			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
+			//'text-halo-color': '#ededed',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
 			'text-halo-width': 2.4,
 			'text-halo-blur': 1,
 			//'text-emissive-strength': 1,
@@ -137,8 +137,8 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
-			//'text-halo-color': '#eaeaea',
-			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
+			//'text-halo-color': '#ededed',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
 			'text-halo-width': 2.4,
 			'text-halo-blur': 1,
 			//'text-emissive-strength': 1,
@@ -184,7 +184,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 		},
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
-			'text-halo-color': darkMode == true ? '#1d1d1d' : '#eaeaea',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
 			'text-halo-width': 2.4,
 			'text-halo-blur': 1,
 			//'text-emissive-strength': 1,
