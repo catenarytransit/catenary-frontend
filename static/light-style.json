@@ -1291,7 +1291,7 @@
         ],
         "layout": {"line-join": "round"},
         "paint": {
-          "line-color": "hsl(0,0%,100%)",
+          "line-color": "#3daa81",
           "line-dasharray": [1, 0.7],
           "line-width": [
             "interpolate",
@@ -1299,8 +1299,8 @@
             ["zoom"],
             14,
             1,
-            20,
-            10
+            23,
+            3
           ]
         }
       },
