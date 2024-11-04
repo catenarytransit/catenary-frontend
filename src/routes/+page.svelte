@@ -6,7 +6,6 @@
 	import { writable, get } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 	import Realtimelabel from '../realtimelabel.svelte';
-	import { decode as decodeToAry, encode as encodeAry } from 'base65536';
 	import { createGeoJSONCircle, componentToHex } from '../geoMathsAssist';
 	import SidebarInternals from '../components/sidebarInternals.svelte';
 	import { init_locales } from '../i18n';

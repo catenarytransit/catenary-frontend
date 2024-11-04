@@ -1227,6 +1227,7 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
+      "minzoom": 8,
       "filter": [
         "all",
         ["==", ["geometry-type"], "LineString"],
