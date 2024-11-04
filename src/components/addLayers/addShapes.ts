@@ -291,7 +291,7 @@ export function addShapes(
 			'line-opacity': 1,
 			//'line-emissive-strength': 1
 		},
-		minzoom: 4
+		minzoom: 3
 	});
 
 	map.addLayer({
