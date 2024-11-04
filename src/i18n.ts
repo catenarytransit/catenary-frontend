@@ -7,6 +7,7 @@ register('es', () => import('./locales/es.json'));
 register('ko', () => import('./locales/ko.json'));
 register('zh-CN', () => import('./locales/zh-CN.json'));
 register('zh-TW', () => import('./locales/zh-TW.json'));
+register('nl', () => import('./locales/nl.json'));
 
 export function getLocaleStorageOrNav() {
 	if (typeof window != 'undefined') {

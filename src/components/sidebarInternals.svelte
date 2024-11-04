@@ -49,7 +49,8 @@
 		de: 'Deutsch',
 		ko: '한국어',
 		'zh-CH': '简体中文',
-		'zh-TW': '繁體中文'
+		'zh-TW': '繁體中文',
+		nl: 'Nederlands'
 	};
 
 	let locales_options_lookup: Record<string, string> = {
@@ -60,7 +61,8 @@
 		ko: '한국어',
 		zh: '中文',
 		'zh-CH': '简体中文',
-		'zh-TW': '繁體中文'
+		'zh-TW': '繁體中文',
+		nl: 'Nederlands'
 	};
 
 	function locale_code_to_name(locale: string | null | undefined) {
