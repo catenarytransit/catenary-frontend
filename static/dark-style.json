@@ -2379,7 +2379,7 @@
         "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
       },
       "paint": {
-        "text-color": "#666",
+        "text-color": "rgba(245, 245, 245, 1)",
         "text-halo-blur": 0.5,
         "text-halo-width": 1
       }
