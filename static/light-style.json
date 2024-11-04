@@ -1663,6 +1663,15 @@
 				"fill-extrusion-opacity": 0.8
 			}
 		},
+        {
+			"id": "pool",
+			"type": "fill",
+			"source": "openmaptiles",
+			"source-layer": "water",
+			"filter": ["==", ["get", "class"], "swimming_pool"],
+			"paint": { "fill-color": "#9be2e7" },
+            "minzoom":13
+		},
 		{
 			"id": "boundary_3",
 			"type": "line",

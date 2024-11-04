@@ -2053,6 +2053,15 @@
       }
     },
     {
+			"id": "pool",
+			"type": "fill",
+			"source": "openmaptiles",
+			"source-layer": "water",
+			"filter": ["==", ["get", "class"], "swimming_pool"],
+			"paint": { "fill-color": "#2a2a6a" },
+            "minzoom":13
+		},
+    {
       "id": "boundary_3",
       "type": "line",
       "source": "openmaptiles",
