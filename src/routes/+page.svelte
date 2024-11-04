@@ -376,6 +376,10 @@
 				if (mapglobal.getLayer('km_line')) {
 					mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
 				}
+
+				if (mapglobal.getLayer('userpositionacclayer')) {
+					mapglobal.setLayoutProperty('userpositionacclayer', 'visibility', 'visible');
+				}
 			} else {
 				if (mapglobal.getLayer('geolocationheadingshell')) {
 					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
@@ -391,6 +395,10 @@
 
 				if (mapglobal.getLayer('nobearing_position')) {
 					mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
+				}
+
+				if (mapglobal.getLayer('userpositionacclayer')) {
+					mapglobal.setLayoutProperty('uuserpositionacclayer', 'visibility', 'none');
 				}
 			}
 
