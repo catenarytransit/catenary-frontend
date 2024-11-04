@@ -1025,11 +1025,41 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "filter": [
+      "filter":  [
         "all",
-        ["match", ["get", "brunnel"], ["bridge", "tunnel"], false, true],
-        ["match", ["get", "class"], ["secondary", "tertiary"], true, false],
-        ["!=", ["get", "ramp"], 1]
+        [
+          "match",
+          [
+            "get",
+            "brunnel"
+          ],
+          [
+            "bridge",
+            "tunnel"
+          ],
+          false,
+          true
+        ],
+        [
+          "match",
+          [
+            "get",
+            "class"
+          ],
+            "secondary",
+          true,
+            "tertiary",
+            true,
+          false
+        ],
+        [
+          "!=",
+          [
+            "get",
+            "ramp"
+          ],
+          1
+        ]
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
@@ -1117,7 +1147,7 @@
       ],
       "layout": {"line-join": "round"},
       "paint": {
-        "line-color": "rgba(52, 76, 89, 1)",
+        "line-color": "#344c59",
         "line-dasharray": [1, 0.7],
         "line-width": [
           "interpolate",

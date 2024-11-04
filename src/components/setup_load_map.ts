@@ -12,7 +12,7 @@ import {
 } from '../globalstores';
 import { clearbottomright } from './clearbottomright';
 import { determineFeedsUsingChateaus } from '../maploaddata';
-import { addStopsLayers, changeRailTextOutsideNorthAmerica } from './addLayers/addStops';
+import { addStopsLayers } from './addLayers/addStops';
 import { garbageCollectNotInView } from './garbage_collect';
 import { addGeoRadius, setUserCircles } from './userradius';
 import { addShapes } from './addLayers/addShapes';
@@ -421,7 +421,6 @@ export async function setup_load_map(
 
 		recompute_map_padding();
 
-		changeRailTextOutsideNorthAmerica(map, layerspercategory);
 
 		runSettingsAdapt();
 

@@ -11,7 +11,6 @@
 	import { init_locales } from '../i18n';
 	import { _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
-	import { changeRailTextOutsideNorthAmerica } from '../components/addLayers/addStops';
 	import { update_geolocation_source } from '../user_location_lib';
 
 	import {
@@ -1157,7 +1156,6 @@ const media = matchMedia(mqString);
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-				changeRailTextOutsideNorthAmerica(map, layerspercategory);
 
 				runSettingsAdapt();
 			}, 0);
@@ -1168,7 +1166,7 @@ const media = matchMedia(mqString);
 		});
 
 		maplibregl.setRTLTextPlugin(
-        'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
+        '/mapbox-gl-rtl-text.min.js',
         true // Lazy load the plugin
     );
 
@@ -1191,7 +1189,6 @@ const media = matchMedia(mqString);
 		map.on('moveend', (events) => {
 			let chateau_feed_results = determineFeedsUsingChateaus(map);
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			changeRailTextOutsideNorthAmerica(map, layerspercategory);
 		});
 
 		map.on('touchmove', (events) => {

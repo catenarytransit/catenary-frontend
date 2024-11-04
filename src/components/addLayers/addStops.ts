@@ -1,8 +1,6 @@
 import type { Map } from 'maplibre-gl';
 
-const northAmericaIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 10, 12];
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
-const northAmericaIntercityCircleSize = ['interpolate', ['linear'], ['zoom'], 7, 2.8, 12, 6, 15, 8];
 const internationalIntercityCircleSize = [
 	'interpolate',
 	['linear'],
@@ -23,39 +21,8 @@ function getCircleOutside(darkMode: boolean) {
 	return darkMode ? '#ffffff': '#1c2636';
 }
 
-export function changeRailTextOutsideNorthAmerica(map: Map, layerspercategory: any) {
-	console.log('change rail size out side na');
-	const centre = map.getCenter();
-	if (centre.lng >= -52) {
-		console.log('set to international stop size');
-		map.setLayoutProperty(
-			layerspercategory.intercityrail.labelstops,
-			'text-size',
-			internationalIntercityLabelSize
-		);
 
-		map.setPaintProperty(
-			layerspercategory.intercityrail.stops,
-			'circle-radius',
-			internationalIntercityCircleSize
-		);
-	} else {
-		console.log('set to na stop size');
-		map.setLayoutProperty(
-			layerspercategory.intercityrail.labelstops,
-			'text-size',
-			northAmericaIntercityLabelSize
-		);
-
-		map.setPaintProperty(
-			layerspercategory.intercityrail.stops,
-			'circle-radius',
-			northAmericaIntercityCircleSize
-		);
-	}
-}
-
-export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: any) {
+export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: any) {
 	//BUS
 
 	map.addLayer({
@@ -268,7 +235,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		layout: {},
 		paint: {
 			'circle-color': getCircleInside(darkMode),
-			'circle-radius': northAmericaIntercityCircleSize,
+			'circle-radius': internationalIntercityCircleSize,
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
@@ -294,7 +261,7 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		layout: {
 			'text-field': ['get', 'displayname'],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size': northAmericaIntercityLabelSize,
+			'text-size': internationalIntercityLabelSize,
 			'text-radial-offset': 0.2,
 			//'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
@@ -362,6 +329,4 @@ export function addStopsLayers(map: any, darkMode: boolean, layerspercategory: a
 		filter: ['all', ['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]]],
 		minzoom: 9
 	});
-
-	changeRailTextOutsideNorthAmerica(map, layerspercategory);
 }
