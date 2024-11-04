@@ -1,5 +1,3 @@
-import maplibregl from 'mapbox-gl';
-
 export function addShapes(
 	map: maplibregl.Map,
 	darkMode: boolean,

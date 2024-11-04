@@ -1,4 +1,4 @@
-//import {Map} from 'mapbox-gl'
+
 import { get } from 'svelte/store';
 import { createGeoJSONCircle, createGeoJSONCircleFeature } from '../geoMathsAssist';
 import { dark_mode_store } from '../globalstores';

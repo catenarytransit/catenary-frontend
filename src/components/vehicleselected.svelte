@@ -7,7 +7,6 @@
 </script>
 
 <script lang="ts">
-	import type mapboxgl from 'mapbox-gl';
 	import type GtfsRealtimeBindings from 'gtfs-realtime-bindings';
 	import { durationToIsoElapsed } from '../utils/isoelapsed';
 	import { afterUpdate, onMount } from 'svelte';
