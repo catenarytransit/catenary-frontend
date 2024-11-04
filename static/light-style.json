@@ -22,10 +22,10 @@
 		{
 			"id": "landcover-land",
 			"type": "fill",
-			"source": "openmaptiles",
-			"source-layer": "water",
+            "source": "esa-worldcover-polygons",
+            "source-layer": "globallandcover",
+            "filter": ["==", "class", "land"],
 			"maxzoom": 11,
-			"filter": ["all"],
 			"layout": { "visibility": "visible" },
 			"paint": {
 				"fill-color": [
