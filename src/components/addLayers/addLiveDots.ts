@@ -14,7 +14,7 @@ export function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory:
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 9, 0.9],
-			'circle-stroke-width': 0.8,
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 15, 0.6],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
