@@ -256,12 +256,12 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 					if (colour && darkMode === false) {
 						let rgb = hexToRgb(colour);
 
-						let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+						//let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
 						const gamma = calculateGamma(rgb.r, rgb.g, rgb.b);
 
-						if (gamma > (0.6)) {
-							let [r, g, b] = adjustGamma([rgb.r, rgb.g, rgb.b], 0.6);
+						if (gamma > (0.55)) {
+							let [r, g, b] = adjustGamma([rgb.r, rgb.g, rgb.b], 0.55);
 
 							rgb = { r, g, b };
 						}
