@@ -287,7 +287,7 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 5, 0.7, 7, 1.5, 9, 2.5],
+			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.5, 5, 0.7, 7, 1.5, 9, 2.5],
 			'line-opacity': 1,
 			//'line-emissive-strength': 1
 		},
