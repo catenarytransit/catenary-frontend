@@ -628,7 +628,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#e9ac77",
+				"line-color": "rgba(79, 75, 207, 1)",
 				"line-dasharray": [0.5, 0.25],
 				"line-width": [
 					"interpolate",
@@ -792,7 +792,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#ffdaa6",
+				"line-color": "rgba(150, 157, 201, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 5, 0, 7, 1, 20, 18]
 			}
 		},
