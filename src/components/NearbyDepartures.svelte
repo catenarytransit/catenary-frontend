@@ -305,7 +305,7 @@
 									{#if trip.departure_realtime != null && trip.departure_schedule != null}
 										<DelayDiff
 											simple={true}
-											diff={trip.departure_schedule - trip.departure_realtime}
+											diff={trip.departure_realtime - trip.departure_schedule}
 										/>
 									{/if}
 

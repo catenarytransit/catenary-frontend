@@ -5,6 +5,8 @@
 	import { locale, locales } from 'svelte-i18n';
 	export let diff: number;
 
+	//Positive diff means late, negative diff means early
+
 	export let simple: boolean = false;
 
 	let textclass: string = 'text-[0px]';
