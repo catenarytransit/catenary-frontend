@@ -347,6 +347,7 @@
 			"source": "openmaptiles",
 			"source-layer": "landcover",
 			"filter": ["==", ["get", "class"], "grass"],
+			"layout": { "visibility": "visible" },
 			"paint": {
 				"fill-antialias": false,
 				"fill-color": "rgba(176, 213, 154, 1)",
@@ -582,7 +583,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#e9ac77",
+				"line-color": "rgba(92, 92, 116, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 8, 1.5, 20, 17]
 			}
 		},
@@ -598,7 +599,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#e9ac77",
+				"line-color": "rgba(78, 78, 85, 1)",
 				"line-width": [
 					"interpolate",
 					["exponential", 1.2],
@@ -758,7 +759,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#fff4c6",
+				"line-color": "rgba(204, 204, 225, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 6.5, 0, 7, 0.5, 20, 10]
 			}
 		},
@@ -774,7 +775,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#fff4c6",
+				"line-color": "rgba(211, 215, 229, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 5, 0, 7, 1, 20, 18]
 			}
 		},
@@ -911,7 +912,7 @@
 			],
 			"layout": { "line-cap": "round", "line-join": "round" },
 			"paint": {
-				"line-color": "#e9ac77",
+				"line-color": "rgba(119, 125, 233, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 12, 1, 13, 3, 14, 4, 20, 15]
 			}
 		},
@@ -1005,7 +1006,7 @@
 					6,
 					0.7,
 					7,
-					1.75,
+					1.5,
 					14,
 					2,
 					20,
@@ -1296,7 +1297,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#e9ac77",
+				"line-color": "rgba(149, 151, 176, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 12, 1, 13, 3, 14, 4, 20, 15]
 			}
 		},
@@ -1374,7 +1375,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#e9ac77",
+				"line-color": "rgba(151, 148, 148, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 8, 1.5, 20, 17]
 			}
 		},
@@ -1467,7 +1468,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#fc8",
+				"line-color": "rgba(139, 144, 155, 1)",
 				"line-width": [
 					"interpolate",
 					["exponential", 1.2],
@@ -1551,7 +1552,7 @@
 			],
 			"layout": { "line-join": "round" },
 			"paint": {
-				"line-color": "#fea",
+				"line-color": "rgba(200, 200, 209, 1)",
 				"line-width": ["interpolate", ["exponential", 1.2], ["zoom"], 6.5, 0, 7, 0.5, 20, 10]
 			}
 		},
