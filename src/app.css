@@ -82,3 +82,16 @@ body {
 		transform: translateX(100%) scaleX(0.5);
 	}
 }
+
+.maplibregl-canvas 
+{
+
+	background-color: #000000;
+}
+
+@media (prefers-color-scheme: dark) {.maplibregl-canvas 
+{
+
+	background-color: #000000;
+}
+}

@@ -150,6 +150,48 @@
 		latest_item_on_stack = data_stack[data_stack.length - 1];
 	});
 
+	function skyRefresh(map: maplibregl.Map, darkMode: boolean) {
+		if (darkMode) {
+			map.setSky({
+				"sky-color": "#000000",
+                            "sky-horizon-blend": 1,
+                            "horizon-color": "#ffffff",
+                            "horizon-fog-blend": .5,
+                    "fog-ground-blend": .5,
+					"atmosphere-blend": [
+						"interpolate",
+						["linear"],
+						["zoom"],
+						2,
+						0.4,
+						7,
+						0.1,
+						9,
+						0
+					]
+			});
+		} else {
+			map.setSky({
+				"sky-color": "#199EF3", // the color of the sky
+     "sky-horizon-blend": 1, // a value between 0 and 1. 0 is the horizon, 1 is map-height / 2
+     "horizon-color": "#ffffff", // the second sky color at the horizon, default is sky-color
+     "horizon-fog-blend": 1, // with a value from 0 to 1. 0 is no blend, 1 is blend to height/2 (e.g. max visible sky at max pitch)
+     "fog-color": "#0000ff", // the color of the fog
+     "fog-ground-blend": 1, // with a value from 0 to 1. 0 is the map-center, 1 is the far-clipping-plane. This setting works only in 3d-mode, also fog is faded out when lowering pitch and disappears below pitch 60
+     "atmosphere-blend": ["interpolate", // interpolate the atmosphere blend using expressions
+          ["linear"],
+          ["zoom"],
+          0,0, // z0 - 1 - fully visible atmosphere
+          10,0.1, // z10 - 1 - fully visible atmosphere
+          12,0 // z12 - 0 - no atmosphere
+          ],
+     
+			});
+
+			
+		}
+	}
+
 	let mapglobal: maplibregl.Map | null = null;
 
 	const urlParams =
@@ -1109,6 +1151,7 @@
 		
 		const map = new maplibregl.Map({
           container: 'map',
+		  light: {"anchor": "viewport", "color": "white", "intensity": 0.4},
 		  hash: 'pos',
 		  pixelRatio: window.devicePixelRatio * 1.4,
           style: style, // stylesheet location
@@ -1151,6 +1194,7 @@ const media = matchMedia(mqString);
 
 		map.on('load', () => {
 			map.setProjection({type: 'globe'});
+			skyRefresh(map, darkMode);
 
 			if (debugmode) {
 				map.addControl(new MaplibreInspect({
