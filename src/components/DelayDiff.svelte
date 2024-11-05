@@ -101,7 +101,7 @@
 			<span class="text-sm">{h}</span>
 			<span class="text-xs">{locale_hour_marking(this_locale)}</span>
 		{/if}{#if h > 0 || m > 0 || (simple && m >= 0 && diff != 0)}
-			<span class="text-sm">{simple && diff < 60 ? '<1' : m}</span>
+			<span class="text-sm">{simple && Math.abs(diff) < 60 ? '<1' : m}</span>
 			<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
 		{#if !simple}
 			{#if Math.abs(diff) > 0}
