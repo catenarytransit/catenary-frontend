@@ -440,7 +440,7 @@
 				}
 
 				if (mapglobal.getLayer('userpositionacclayer')) {
-					mapglobal.setLayoutProperty('uuserpositionacclayer', 'visibility', 'none');
+					mapglobal.setLayoutProperty('userpositionacclayer', 'visibility', 'none');
 				}
 			}
 
