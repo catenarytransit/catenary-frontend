@@ -508,7 +508,7 @@
 						}
 					}
 				} else {
-					console.log('could not fetch shapes layer', category);
+					console.error('could not fetch shapes layer', category);
 				}
 
 				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
@@ -527,7 +527,7 @@
 						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
 					}
 				} else {
-					console.log('no stop layer found for', category);
+					console.error('no stop layer found for', category);
 				}
 
 				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
@@ -546,7 +546,7 @@
 						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
 					}
 				} else {
-					console.log('no stops label layer found for ', category);
+					console.error('no stops label layer found for ', category);
 				}
 
 				
@@ -586,10 +586,10 @@
 					}
 				} else {
 					if (dotcirclelayer == null) {
-						console.log('could not fetch dotcirclelayer', category);
+						console.error('could not fetch dotcirclelayer', category);
 					}
 					if (dotlabel == null) {
-						console.log('could not fetch dotlabel', category);
+						console.error('could not fetch dotlabel', category);
 					}
 				}
 
