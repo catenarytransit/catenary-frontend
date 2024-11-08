@@ -31,7 +31,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 					map.getSource('arcgisfire').setData(cleaned_data);
 				})
 				.catch((err) => console.error(err));
-			/*
+			
                     fetch(
 						california_firis_arcgis_url 
 					)
@@ -41,7 +41,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 						'californiafire'
 						).setData(cleaned_data)
 					})
-					.catch((err) => console.error(err))*/
+					.catch((err) => console.error(err));
 		}
 	}, 120_000);
 
@@ -52,7 +52,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		filter: [
 			'all',
 			['!=', ['get', 'attr_FireBehaviorGeneral'], null],
-			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal']
+			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal'],
+			['!=', ['get', 'attr_IncidentName'], 'LINE']
 		],
 		paint: {
 			'fill-color': '#dd3300',
@@ -67,7 +68,9 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		filter: [
 			'all',
 			['!=', ['get', 'attr_FireBehaviorGeneral'], null],
-			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal']
+			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal'],
+			
+			['!=', ['get', 'attr_IncidentName'], 'LINE']
 		],
 		type: 'line',
 		paint: {
@@ -76,7 +79,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		},
 		minzoom: 5
 	});
-	/*
+	
             map.addLayer({
 				source: "californiafire",
 				id: 'caarcgisfire',
@@ -107,16 +110,16 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 					"line-width": 1.5
 				},
 				minzoom: 6
-			});*/
+			});
 
-	/*		map.addSource('arcgisfirepoint', {
+			map.addSource('arcgisfirepoint', {
 				type: 'geojson',
 				data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
 				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=0Qpq7JG2NWRKLZnEynN%2BgcGPt41fWRNZvWGnaO8%2BZao%3D&se=2024-06-17T04%3A55%3A59Z&sp=r"
 			});
 			
-        */
-	/*
+        
+	
 
             map.addLayer({
 				source: "californiafire",
@@ -136,7 +139,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 					'text-font': ['Barlow Medium', 'Arial Unicode MS Bold'],
 				},
 				minzoom: 6
-			});*/
+			});
 
 	map.addLayer({
 		source: 'arcgisfire',
@@ -145,7 +148,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		filter: [
 			'all',
 			['!=', ['get', 'attr_FireBehaviorGeneral'], null],
-			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal']
+			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal'],
+			['!=', ['get', 'attr_IncidentName'], 'LINE']
 		],
 		paint: {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000'
