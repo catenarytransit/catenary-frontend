@@ -40,7 +40,7 @@ export async function find_schedule_pdf(chateau_id: string, route_id: string) {
 	if (chateau_id === 'metro~losangeles') {
 		const schedule_search = await (
 			await fetch(
-				`https://www.metro.net/wp-json/wp/v2/media?search=${route_id.split('-')[0]}_tt&_fields=link`
+				`https://www.metro.net/wp-json/wp/v2/media?search=${route_id.split('-')[0].padStart(3, '0')}_tt&_fields=link`
 			)
 		).json();
 		if (schedule_search.length > 0) {
