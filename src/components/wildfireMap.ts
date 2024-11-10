@@ -89,7 +89,14 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		id: 'evacuation_ca_fire_bounds',
 		type: 'fill',
 		paint: {
-			'fill-color': '#dd3300',
+			'fill-color': [
+				'case',
+				['==', ['get', 'STATUS'], 'Evacuation Order'],
+				'#dd3300',
+				['==', ['get', 'STATUS'], 'Evacuation Warning'],
+				'#cc9900',
+				'#ff0000'
+			],
 			'fill-opacity': 0.4
 		},
 		minzoom: 5
