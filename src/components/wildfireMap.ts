@@ -9,20 +9,19 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const evacuation_fire_url = "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/CA_EVACUATIONS_PROD/FeatureServer/0/query/?spatialRel=esriSpatialRelIntersects&f=geojson&where=SHAPE__Area>0&outFields=*";
 
-	const national_usa_fire_arcgis_url =
-		'https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/WFIGS_Interagency_Perimeters_Current/FeatureServer/0/query?where=Shape__Area>0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pgeojson&token=';
+	//const national_usa_fire_arcgis_url =	'https://services3.arcgis.com/T4QMspbfLg3qTGWY/ArcGIS/rest/services/WFIGS_Interagency_Perimeters_Current/FeatureServer/0/query?where=Shape__Area%3E0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&returnEnvelope=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnTrueCurves=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=';
 	//  const california_firis_arcgis_url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/ArcGIS/rest/services/CA_Perimeters_NIFC_FIRIS_public_view/FeatureServer/0/query?where=OBJECTID>0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pgeojson&token=";
 
 	//fire section
+	/*
 	map.addSource('arcgisfire', {
 		type: 'geojson',
-		//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
 		data: national_usa_fire_arcgis_url
 	});
+	*/
 
 	map.addSource('evacuation_ca_fire', {
 		type: 'geojson',
-		//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-201269/IMSR_Incident_Locations_Most_Recent_View_-7922161599661102971.geojson?sv=2018-03-28&sr=b&sig=iNCmDjs038sig3DJ7jyIM6imAabZl3OH2AITGiWUOVw%3D&se=2024-06-17T04%3A49%3A30Z&sp=r"
 		data: evacuation_fire_url
 	});
 	/*
@@ -33,12 +32,14 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	setInterval(() => {
 		if (get(chateaus_in_frame).includes('amtrak')) {
+			/*
 			fetch(national_usa_fire_arcgis_url)
 				.then(async (data) => await data.json())
 				.then((cleaned_data: any) => {
 					map.getSource('arcgisfire').setData(cleaned_data);
 				})
 				.catch((err) => console.error(err));
+				*/
 			
 			fetch(evacuation_fire_url)
 				.then(async (data) => await data.json())
@@ -48,7 +49,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				.catch((err) => console.error(err));
 		}
 	}, 120_000);
-
+/*
 	map.addLayer({
 		source: 'arcgisfire',
 		id: 'arcgisfire',
@@ -73,7 +74,6 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			'all',
 			['!=', ['get', 'attr_FireBehaviorGeneral'], null],
 			['!=', ['get', 'attr_FireBehaviorGeneral'], 'Minimal'],
-			
 			['!=', ['get', 'attr_IncidentName'], 'LINE']
 		],
 		type: 'line',
@@ -82,7 +82,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			'line-width': 3
 		},
 		minzoom: 5
-	});
+	});*/
 
 	map.addLayer({
 		source: 'evacuation_ca_fire',
@@ -109,7 +109,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			});
 
 			
-
+/*
 	map.addLayer({
 		source: 'arcgisfire',
 		id: 'arcgisfirepoint',
@@ -130,7 +130,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		},
 		minzoom: 5
 	});
-
+*/
 	map.addLayer({
 		source: 'evacuation_ca_fire',
 		id: 'evacuation_ca_fire_txt',
