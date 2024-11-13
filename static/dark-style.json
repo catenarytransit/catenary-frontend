@@ -2221,7 +2221,7 @@
         "icon-image": ["get", "subclass"]
       },
       "paint": {
-        "text-color": "#666",
+        "text-color": "#eee",
         "text-halo-blur": 0.5,
         "text-halo-color": "#000000",
         "text-halo-width": 1
@@ -2261,7 +2261,7 @@
         ]
       },
       "paint": {
-        "text-color": "#666",
+        "text-color": "#eee",
         "text-halo-blur": 0.5,
         "text-halo-color": "#111111",
         "text-halo-width": 1
@@ -2302,9 +2302,9 @@
         "symbol-placement": "point"
       },
       "paint": {
-        "text-color": "#ddd",
+        "text-color": "#eee",
         "text-halo-blur": 0.5,
-        "text-halo-color": "#222",
+        "text-halo-color": "#111",
         "text-halo-width": 1
       }
     },
