@@ -39,6 +39,21 @@
       }
     },
     {
+      "id": "landcover_wetland",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landcover",
+      "minzoom": 12,
+      "filter": ["==", ["get", "class"], "wetland"],
+      "paint": {
+        "fill-antialias": true,
+        "fill-opacity": 0.1,
+        "fill-translate-anchor": "map",
+        "fill-pattern": "wetland_bg_11",
+        "fill-color": "#000000"
+      }
+    },
+    {
       "id": "landcover-land-crop",
       "type": "fill",
       "source": "esa-worldcover-polygons",
@@ -177,21 +192,6 @@
         "fill-antialias": false,
         "fill-color": "rgba(106, 136, 146, 1)",
         "fill-opacity": 1
-      }
-    },
-    {
-      "id": "landcover_wetland",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landcover",
-      "minzoom": 12,
-      "filter": ["==", ["get", "class"], "wetland"],
-      "paint": {
-        "fill-antialias": true,
-        "fill-opacity": 0.1,
-        "fill-translate-anchor": "map",
-        "fill-pattern": "wetland_bg_11",
-        "fill-color": "#000000"
       }
     },
     {
