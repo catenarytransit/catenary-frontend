@@ -621,9 +621,10 @@
 			{#each stoptimes_cleaned_dataset as stoptime, i}
 				{#if show_previous_stops || i > last_inactive_stop_idx}
 					<div class="flex flex-row">
+							<!--The left side coloured bars to indicate trip progress-->
 						<div class="flex flex-col w-2 relative justify-center" style={``}>
 							<div
-								style={`background: ${i - 1 == last_inactive_stop_idx && i != 0 ? `linear-gradient(${show_previous_stops ? `rgba(${Object.values(hexToRgb(trip_data.color)).join(',')}, 0.4)` : 'transparent'}, ${trip_data.color})` : i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
+								style={`background: ${i - 1 == last_inactive_stop_idx && i != 0 ? `linear-gradient(${show_previous_stops ? `rgba(${Object.values(hexToRgb(trip_data.color)).join(',')}, 0.4)` : 'transparent'}, ${trip_data.color})` : i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i  ? 0.4 : 1};`}
 								class={`h-1/2 w-2 ${i == trip_data.stoptimes.length - 1 ? 'rounded-b-full' : ''}`}
 							></div>
 							<div
@@ -650,10 +651,10 @@
 
 						<div class="mr-4"></div>
 
-						<div class="w-full py-2 pr-1 lg:pr-2">
-							<p class="">
+						<div class={`w-full py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ""}`}>
+							<p class=" text-base">
 								<span
-									class={`font-semibold ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
+									class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 									>{fixStationName(stoptime.name)}</span
 								>
 
@@ -666,7 +667,7 @@
 								{/if}
 
 								{#if stoptime.code && !simpleRouteMode}
-									<span class="text-gray-800 dark:text-gray-200">{stoptime.code}</span>
+									<span class="text-gray-800 dark:text-gray-200 font-extralight">{stoptime.code}</span>
 								{/if}
 							</p>
 
