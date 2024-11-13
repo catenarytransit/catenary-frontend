@@ -122,6 +122,21 @@
 
 				route_data = data;
 
+				alerts = data.alert_id_to_alert;
+
+				Object.keys(alerts).forEach((alert_id) => {
+						let alert = alerts[alert_id];
+						alert.informed_entity.forEach((each_entity: any) => {
+							if (each_entity.stop_id) {
+								if (stop_id_to_alert_ids[each_entity.stop_id] == undefined) {
+									stop_id_to_alert_ids[each_entity.stop_id] = [alert_id];
+								} else {
+									stop_id_to_alert_ids[each_entity.stop_id].push(alert_id);
+								}
+							}
+						});
+					});
+
 				activePattern = Object.keys(route_data.direction_patterns)[0];
 			} catch (err) {
 				console.error(err);
@@ -135,8 +150,12 @@
 
 </script>
 
-<div class="h-full">
+<div class="h-full"
+
+>
 	{#if loaded == true}
+	<div class="flex flex-col catenary-scroll overflow-y-auto h-full"
+	bind:this={bind_scrolling_div}>
 		<div class="px-3">
 			<RouteHeading
 				color={route_data.color}
@@ -150,7 +169,36 @@
 				{darkMode}
 			/>
 		</div>
-		<p class="px-3 text-xl my-2">Directions</p>
+
+		<div class="px-2">{#if Object.keys(alerts).length > 0}
+			<div class="border-[#F99C24] border-2 leading-snug mb-0 p-2 rounded-md">
+				<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-1" />
+				<span class="text-[#F99C24] font-medium"
+					>Service Alert{Object.keys(alerts).length > 1 ? 's' : ''}</span
+				>
+				{#each Object.values(alerts) as alert}
+					<div class="pt-1">
+						{#each alert.header_text.translation as each_header_translation_obj}
+							<p class="text-sm font-bold">{each_header_translation_obj.text}</p>
+							{#each alert.description_text.translation.filter((x) => x.language == each_header_translation_obj.language) as description_alert}
+								<div class="leading-none">
+									{#each description_alert.text.split('\n') as each_desc_line}
+										<p class="text-sm">
+											{@html each_desc_line.replaceAll(
+												'<a ',
+												'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
+											)}
+										</p>
+									{/each}
+								</div>
+							{/each}
+						{/each}
+					</div>
+				{/each}
+			</div>
+		{/if}</div>
+
+		<p class="px-3 text-xl my-1">Directions</p>
 		<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
 			{#each Object.entries(route_data.direction_patterns) as direction, index}
 				<div
@@ -163,8 +211,7 @@
 			{/each}
 		</div>
 		<div
-			bind:this={bind_scrolling_div}
-			class="flex flex-col catenary-scroll overflow-y-auto h-full pb-96 pt-4"
+			class="h-full pb-96 pt-2 flex flex-col"
 		>
 			{#if activePattern != ''}
 				{#each route_data.direction_patterns[activePattern].rows as stop, index}
@@ -176,7 +223,8 @@
 							></div>
 						{/if}
 						<div
-							class={`absolute top-[10px] bottom-1/2 left-3 w-2 h-2 rounded-full bg-white z-30`}
+							class={`absolute top-[10px] bottom-1/2 left-2.5 w-3 h-3 rounded-full bg-white z-30 border-2`}
+							style:border-color={route_data.color}
 						></div>
 						<span class="text-sm relative ml-[16px] translate-y-px"
 							>{fixStationName(route_data.stops[stop.stop_id].name)}</span
@@ -185,6 +233,7 @@
 				{/each}
 			{/if}
 		</div>
+	</div>
 	{:else}
 		<div class="w-full p-2 flex flex-col gap-y-2">
 			<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
