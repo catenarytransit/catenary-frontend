@@ -554,44 +554,14 @@
 				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
 				let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
 
-				if (dotcirclelayer && dotlabel) {
-					if (this_layer_settings.visible) {
-						if (mapglobal?.getLayer(categoryvalues.livedots)) {
-
-						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
-						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
-						mapglobal.setLayoutProperty(
-							categoryvalues.labeldots,
-							'text-field',
-							interpretLabelsToCode(this_layer_settings.label, usunits)
-						);
-						}
-						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
+				[categoryvalues.pointing, categoryvalues.pointingshell, categoryvalues.labeldots, categoryvalues.livedots].forEach((x) => {
 							if (mapglobal?.getLayer(x)) {
-								mapglobal.setLayoutProperty(x, 'visibility', 'visible');
+								let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
+								mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
+							} else {
+								console.error('could not find layer', x);
 							}
 						});
-					} else {
-						
-						if (mapglobal?.getLayer(categoryvalues.livedots)) {
-							
-						mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'none');
-						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'none');
-						}
-						[categoryvalues.pointing, categoryvalues.pointingshell].forEach((x) => {
-							if (mapglobal?.getLayer(x)) {
-								mapglobal.setLayoutProperty(x, 'visibility', 'none');
-							}
-						});
-					}
-				} else {
-					if (dotcirclelayer == null) {
-						console.error('could not fetch dotcirclelayer', category);
-					}
-					if (dotlabel == null) {
-						console.error('could not fetch dotlabel', category);
-					}
-				}
 
 				let hidevehiclecommand = ['!=', '', ['get', 'trip_id']];
 
@@ -617,11 +587,6 @@
 						if (mapglobal.getLayer(categoryvalues.pointing)) {
 							mapglobal.setFilter(categoryvalues.pointing, regularpointers);
 							mapglobal.setFilter(categoryvalues.pointingshell, regularpointers);
-						}
-
-						if (mapglobal.getLayer(categoryvalues.livedots)) {
-							mapglobal.setLayoutProperty(categoryvalues.livedots, 'visibility', 'visible');
-							mapglobal.setLayoutProperty(categoryvalues.labeldots, 'visibility', 'visible');
 						}
 					} else {
 						if (mapglobal.getLayer(categoryvalues.livedots)) {
