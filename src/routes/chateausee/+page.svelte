@@ -87,7 +87,7 @@
 				paint: {
 					'line-color': ['get', 'color'],
 					'line-opacity': 1,
-					'line-emissive-strength': 1,
+					//'line-emissive-strength': 1,
 					'line-width': 2
 				}
 			});
@@ -99,7 +99,7 @@
 				paint: {
 					'fill-color': ['get', 'color'],
 					'fill-opacity': 0.03,
-					'fill-emissive-strength': 1
+				//	'fill-emissive-strength': 1
 				}
 			});
 			map.addLayer({
