@@ -339,7 +339,7 @@
 			stoplabels: true,
 			shapes: true,
 			label: {
-				route: false,
+				route: true,
 				trip: false,
 				vehicle: false,
 				headsign: false,
