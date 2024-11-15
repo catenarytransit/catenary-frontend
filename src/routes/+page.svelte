@@ -563,6 +563,12 @@
 							}
 						});
 
+						mapglobal.setLayoutProperty(
+							categoryvalues.labeldots,
+							'text-field',
+							interpretLabelsToCode(this_layer_settings.label, usunits)
+						);
+
 				let hidevehiclecommand = ['!=', '', ['get', 'trip_id']];
 
 				let regularpointers = [

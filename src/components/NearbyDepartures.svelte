@@ -289,7 +289,7 @@
 									</span>
 
 									<p class="font-medium text-sm" style:color={trip.departure_realtime ? '#42a7c5': ''}>
-										{new Intl.DateTimeFormat(usunits ? 'en-US' : 'en-GB', {
+										{new Intl.DateTimeFormat('en-GB', {
 											hour: 'numeric',
 											minute: 'numeric',
 											timeZone: trip.tz

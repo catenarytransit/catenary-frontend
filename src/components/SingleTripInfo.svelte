@@ -731,7 +731,7 @@
 													{new Date(
 														(stoptime.scheduled_arrival_time_unix_seconds ||
 															stoptime.interpolated_stoptime_unix_seconds) * 1000
-													).toLocaleTimeString(usunits ? 'en-US' : 'en-UK', {
+													).toLocaleTimeString('en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
 														hour: simpleRouteMode ? 'numeric' : '2-digit',
 														minute: '2-digit',
@@ -740,7 +740,7 @@
 												</span>
 												<span class="text-seashore font-medium">
 													{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString(
-														usunits ? 'en-US' : 'en-UK',
+														'en-UK',
 														{
 															timeZone: stoptime.timezone || trip_data.tz,
 															hour: simpleRouteMode ? 'numeric' : '2-digit',
