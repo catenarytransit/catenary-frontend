@@ -16,12 +16,12 @@
 	let zoominit = 8.1;
 
 	onMount(() => {
-		const map = new mapboxgl.Map({
+		const map = new maplibregl.Map({
 			container: 'map',
 			crossSourceCollisions: true,
 			hash: 'pos',
 			preserveDrawingBuffer: false,
-			attributionControl: new mapboxgl.AttributionControl({
+			attributionControl: new maplibregl.AttributionControl({
         compact: true
     }),
 			//	antialias: true,
