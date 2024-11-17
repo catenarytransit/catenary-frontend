@@ -29,7 +29,7 @@ $: languagelist = Object.values(alerts).map((alert) => {
 							{#if alert.url}
 								{#each alert.url.translation as url_translation} 
 									<p class="text-sm">
-										<span>{url_translation.language}: </span><a href={url_translation.text} class="hover:underline text-blue-500" target="_blank">{url_translation.text}</a>
+										<span>{url_translation.language}: </span><a href={url_translation.text} class="hover:underline text-sky-500 dark:text-sky-300" target="_blank">{url_translation.text}</a>
 									</p>
 								{/each}
 							{/if}
