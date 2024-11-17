@@ -185,7 +185,7 @@
 				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
 					Chateau: <span class="font-bold">{routestack.chateau_id}</span>
 					<br/>
-					Route: <span class="font-bold">{routestack.route_id}</span>
+					Route: <span class="font-bold">{routestack.route_id.replace(/^\"/, "").replace(/\"$/, "")}</span>
 				</div>
 
 			</div>

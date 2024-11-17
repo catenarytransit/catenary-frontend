@@ -307,7 +307,7 @@
 								
 								}
 								<span class="font-mono text-xs dark:text-gray-400 text-gray-500 ml-1 font-semibold"
-								>{option.data.route_id}</span
+								>{option.data.route_id.replace(/^\"/, "").replace(/\"$/, "")}</span
 							>
 								
 								
