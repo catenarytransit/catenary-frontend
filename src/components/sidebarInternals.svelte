@@ -35,6 +35,7 @@
 	import RouteIcon from './RouteIcon.svelte';
 	import { getLocaleStorageOrNav } from '../i18n';
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
+	import {locales_options, locales_options_lookup} from '../i18n';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 	let this_locale: string | undefined | null;
@@ -49,28 +50,7 @@
           show_gtfs_ids = value;
         });
 
-	let locales_options: Record<string, string> = {
-		en: 'English',
-		fr: 'Français',
-		es: 'Español',
-		de: 'Deutsch',
-		ko: '한국어',
-		'zh-CH': '简体中文',
-		'zh-TW': '繁體中文',
-		nl: 'Nederlands'
-	};
 
-	let locales_options_lookup: Record<string, string> = {
-		en: 'English',
-		fr: 'Français',
-		es: 'Español',
-		de: 'Deutsch',
-		ko: '한국어',
-		zh: '中文',
-		'zh-CH': '简体中文',
-		'zh-TW': '繁體中文',
-		nl: 'Nederlands'
-	};
 
 	function locale_code_to_name(locale: string | null | undefined) {
 		if (locale == null || locale == undefined) {
