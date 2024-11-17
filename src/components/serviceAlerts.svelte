@@ -30,7 +30,11 @@ $: languagelist = Object.values(alerts).map((alert) => {
 								
 							{/if}
 							{#if alert.url}
-							<a href={alert.url} class="text-blue-500" target="_blank">{alert.url}</a>
+								{#each alert.url.translation as url_translation} 
+									<p class="text-sm">
+										<span>{url_translation.language}: </span><a href={url_translation.text} class="text-blue-500" target="_blank">{url_translation.text}</a>
+									</p>
+								{/each}
 							{/if}
 							{#each alert.header_text.translation.filter((x) => languagelist.includes("en-html") ? (x.language != "en") : true) as each_header_translation_obj}
 								<p class="text-sm font-bold">{each_header_translation_obj.text.replaceAll(/\<(\/)?p\>/g,"").replaceAll(/\<(\/)?b\>/g,"")}</p>
