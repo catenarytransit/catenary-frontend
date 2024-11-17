@@ -1,4 +1,7 @@
 <script lang="ts">
+	
+	import { _ } from 'svelte-i18n'; 
+	import  { cause_id_str, effect_id_str } from './alert_id_to_str_key';
 export let alerts = {};
 </script>
 
@@ -10,6 +13,12 @@ export let alerts = {};
 					>
 					{#each Object.values(alerts) as alert}
 						<div class="pt-1">
+							<p>
+								<span>{$_(cause_id_str(alert.cause))}</span>
+								<span> | </span>
+								<span>{$_(effect_id_str(alert.effect))}</span>
+								
+							</p>
 							{#each alert.header_text.translation as each_header_translation_obj}
 								<p class="text-sm font-bold">{each_header_translation_obj.text}</p>
 								{#each alert.description_text.translation.filter((x) => x.language == each_header_translation_obj.language) as description_alert}
