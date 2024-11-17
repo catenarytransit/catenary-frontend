@@ -71,5 +71,6 @@
 	"defaultlang": "預設語言",
 	"hidepreviousstops": "隱藏之前的停靠站",
 	"shownpreviousstops": "顯示前 {n, number} 個之前的站點",
-	"platform": "站台"
+	"platform": "站台",
+	"show_gtfs_ids": "顯示 GTFS ID"
 }

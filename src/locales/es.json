@@ -69,5 +69,6 @@
 	"defaultlang": "Idioma predeterminado",
 	"hidepreviousstops": "Ocultar paradas anteriores",
 	"showxpreviousstops_pt1": "Mostrar",
-	"platform": "Plataforma"
+	"platform": "Plataforma",
+	"show_gtfs_ids": "Mostrar IDs GTFS"
 }

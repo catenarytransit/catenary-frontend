@@ -71,5 +71,6 @@
 	"defaultlang": "Langage par défaut",
 	"hidepreviousstops": "Masquer les arrêts précédents",
 	"shownpreviousstops": "Afficher les {n} {n, plural, =1 {arrêt précédent} other{arrêts précédents}}",
-	"platform": "quai"
+	"platform": "quai",
+	"show_gtfs_ids": "Afficher les identifiants GTFS"
 }

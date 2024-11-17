@@ -59,7 +59,8 @@
 		show_zombie_buses_store,
 		show_my_location_store,
 		custom_icons_category_to_layer_id,
-		map_pointer_store
+		map_pointer_store,
+		show_gtfs_ids_store
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { hexToRgb } from '../utils/colour';
@@ -67,6 +68,12 @@
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
 	let alerts: Record<string, any> = {};
+
+	let show_gtfs_ids = get(show_gtfs_ids_store);
+
+	show_gtfs_ids_store.subscribe((value) => {
+		show_gtfs_ids = value;
+	});
 
 	let last_inactive_stop_idx = -1;
 
@@ -562,6 +569,18 @@
 			class="flex flex-col catenary-scroll overflow-y-scroll h-full pb-60 px-3 pt-2"
 			style:border-top={`3px solid ${trip_data.color}`}
 		>
+		{
+			#if show_gtfs_ids
+		}
+			<div class="font-mono px-3">
+				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
+					Chateau: <span class="font-bold">{trip_selected.chateau_id}</span>
+				<br/>
+					Route: <span class="font-bold">{trip_selected.route_id}</span>
+				</div>
+			</div>
+			{/if}
+
 			<AlertBox alerts={alerts}/>
 
 			{#key trip_data}

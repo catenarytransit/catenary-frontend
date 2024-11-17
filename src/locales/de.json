@@ -68,5 +68,6 @@
 	"late": "Spät",
 	"ontime": "Pünktlich",
 	"defaultlang": "Standardsprache",
-	"platform": "Bahnsteig"
+	"platform": "Bahnsteig",
+	"show_gtfs_ids": "GTFS-IDs anzeigen"
 }

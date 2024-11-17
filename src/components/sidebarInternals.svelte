@@ -17,7 +17,7 @@
 	import { SettingsStack } from '../components/stackenum';
 	import NearbyDepartures from './NearbyDepartures.svelte';
 	import { writable } from 'svelte/store';
-	import { data_stack_store, usunits_store, dark_mode_store } from '../globalstores';
+	import { data_stack_store, usunits_store, dark_mode_store, show_gtfs_ids_store } from '../globalstores';
 	import { getLocaleFromNavigator, locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
@@ -330,6 +330,24 @@
 			<div class="flex flex-row gap-x-2">
 				<input
 					type="checkbox"
+					bind:checked={$show_gtfs_ids_store}
+					class="accent-seashore"
+					on:click={() => {
+						show_gtfs_ids_store.update((x) => !x);
+						window.localStorage.show_gtfs_ids = show_gtfs_ids_store;
+					}}
+					on:keydown={(e) => {
+						if (e.key === 'Enter') {
+							show_gtfs_ids_store.update((x) => !x);
+							window.localStorage.show_gtfs_ids = show_gtfs_ids_store;
+						}
+					}}
+				/>
+				<p>{$_('show_gtfs_ids')}</p>
+			</div>
+			<div class="flex flex-row gap-x-2">
+				<input
+					type="checkbox"
 					checked={window.localStorage.theme == 'dark'}
 					class="accent-seashore"
 					on:click={(e) => {
@@ -473,9 +491,5 @@
 	{/if}
 	<div class="py-1 flex flex-col h-full">
 		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} {darkMode} /></div>
-
-		<p class="text-xs md:text-sm text-gray-800 dark:text-gray-300">
-			Catenary Maps {$_('softwareversion')} 2024-09-03 11:23Z
-		</p>
 	</div>
 {/if}

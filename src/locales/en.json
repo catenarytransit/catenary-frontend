@@ -73,5 +73,6 @@
 	"showmylocation": "Show my location",
 	"hidepreviousstops": "Hide previous stops",
 	"shownpreviousstops": "Show {n} previous {n, plural, =1 {stop} other{stops}}",
-	"Platform": "Platform"
+	"Platform": "Platform",
+	"show_gtfs_ids": "Show GTFS IDs"
 }

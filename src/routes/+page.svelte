@@ -28,7 +28,8 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
 		geolocation_store,
-		chateaus_store
+		chateaus_store,
+		show_gtfs_ids_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -117,6 +118,10 @@
 
 		if (window.localStorage.language) {
 			locale.set(window.localStorage.language);
+		}
+
+		if (window.localStorage.show_gtfs_ids) {
+			show_gtfs_ids_store.set(true);
 		}
 	}
 

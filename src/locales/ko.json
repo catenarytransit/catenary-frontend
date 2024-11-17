@@ -72,5 +72,6 @@
 	"defaultlang": "기본 설정 언어",
 	"hidepreviousstops": "이전 정류장 숨기기",
 	"shownpreviousstops": "Show {n, number} previous stops",
-	"platform": "승강장"
+	"platform": "승강장",
+	"show_gtfs_ids": "GTFS ID 표시"
 }

@@ -53,6 +53,7 @@
 		usunits_store,
 		show_zombie_buses_store,
 		show_my_location_store,
+		show_gtfs_ids_store,
 		custom_icons_category_to_layer_id,
 		map_pointer_store
 	} from '../globalstores';
@@ -60,6 +61,12 @@
 
 
 	let activePattern: string = '';
+
+	let show_gtfs_ids = get(show_gtfs_ids_store);
+
+	show_gtfs_ids_store.subscribe((value) => {
+		show_gtfs_ids = value;
+	});
 
 	let stop_id_to_alert_ids: Record<string, string[]> = {};
 
@@ -171,7 +178,21 @@
 			/>
 		</div>
 
+		{
+			#if show_gtfs_ids
+		}
+			<div class="font-mono px-3">
+				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
+					Chateau: <span class="font-bold">{routestack.chateau_id}</span>
+				<br/>
+					Route: <span class="font-bold">{routestack.route_id}</span>
+				</div>
+			</div>
+			{/if}
+
 		<div class="px-2"><AlertBox alerts={alerts}/></div>
+
+		
 
 		<p class="px-3 text-xl my-1">Directions</p>
 		<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
@@ -204,6 +225,14 @@
 						<span class="text-sm relative ml-[16px] translate-y-px"
 							>{fixStationName(route_data.stops[stop.stop_id].name)}</span
 						>
+						{#if stop.code} 
+						<span class="text-sm relative ml-0 translate-y-px font-light"
+							>{fixStationName(route_data.stops[stop.stop_id].code)}</span
+						>
+						{/if}
+						{#if show_gtfs_ids}
+							<span class="text-xs text-gray-600 dark:text-gray-200 bg-blue-200 dark:bg-blue-900">{stop.stop_id}</span>
+						{/if}
 					</span>
 				{/each}
 			{/if}

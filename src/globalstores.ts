@@ -35,6 +35,7 @@ export const show_zombie_buses_store = writable(false);
 
 export const usunits_store = writable(false);
 export const show_my_location_store = writable(true);
+export const show_gtfs_ids_store = writable(false);
 
 export const custom_icons_category_to_layer_id: Writable<Record<string, string[]>> = writable({});
 

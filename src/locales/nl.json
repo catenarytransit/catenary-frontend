@@ -73,5 +73,6 @@
 	"showmylocation": "Toon mijn locatie",
 	"hidepreviousstops": "Verberg eerdere haltes",
 	"shownpreviousstops": "Toon {n} eerdere {n, plural, =1 {halte} other{haltes}}",
-	"Platform": "Platform"
+	"Platform": "Platform",
+	"show_gtfs_ids": "Toon GTFS-IDs"
 }
