@@ -295,7 +295,24 @@
 										});
 									}}
 								>
-									
+								{
+									#if show_gtfs_ids_store
+								}
+								<p>
+									<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
+								>{option.data.chateau_id}</span
+							>  
+								{
+									#if option.data.route_id
+								
+								}
+								<span class="font-mono text-xs dark:text-gray-400 text-gray-500 ml-1 font-semibold"
+								>{option.data.route_id}</span
+							>
+								
+								
+							{/if}</p>
+								{/if}
 									{#if option.data.name}
 										<span
 											style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
