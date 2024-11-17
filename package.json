@@ -55,6 +55,7 @@
     "maplibre-gl": "5.0.0-pre.5",
     "moment": "^2.30.1",
     "protobufjs": "^7.4.0",
+    "stringify-object": "^5.0.0",
     "svelte-i18n": "^4.0.1",
     "svelte-toasts": "^1.1.2",
     "toastify-js": "^1.12.0",

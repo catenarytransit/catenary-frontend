@@ -11,6 +11,7 @@
 	import TimeDiff from './TimeDiff.svelte';
 	import polyline from '@mapbox/polyline';
 	import AlertBox from './serviceAlerts.svelte';
+	import stringifyObject from 'stringify-object';
 	import { writable, get } from 'svelte/store';
 	import {
 		fixHeadsignIcon,
@@ -428,6 +429,10 @@
 					console.log('refresh component');
 				} catch (e: any) {
 					error = text;
+					console.log(stringifyObject(trip_selected, {
+					indent: '  ',
+					singleQuotes: false
+				}))
 				}
 			})
 			.catch((e) => {
@@ -500,7 +505,18 @@
 
 <div class="h-full">
 	{#if error != null}
-		{error}
+		<div>
+			<p>Error from server:</p>
+			<p class="font-mono">{error}</p>
+			<p>Request made:</p>
+			<p class="text-wrap text-xs font-mono">
+				{@html stringifyObject(trip_selected, {
+					indent: '\t',
+					singleQuotes: false
+				}).replaceAll("\n", "<br/>")}
+			</p>
+			<p>Report this error to the Catenary Discord server: <a href="https://discord.gg/w4Kd5Gj3re" target="_blank" class="underline text-blue-500 dark:text-blue-300">https://discord.gg/w4Kd5Gj3re</a></p>
+		</div>
 	{:else if is_loading_trip_data}
 		{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
 			<div class="w-full p-3 flex flex-col gap-y-2">
