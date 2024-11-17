@@ -17,6 +17,7 @@
 	import { SettingsStack } from '../components/stackenum';
 	import NearbyDepartures from './NearbyDepartures.svelte';
 	import { writable } from 'svelte/store';
+	import {get} from 'svelte/store';
 	import { data_stack_store, usunits_store, dark_mode_store, show_gtfs_ids_store } from '../globalstores';
 	import { getLocaleFromNavigator, locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
