@@ -407,11 +407,15 @@
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
+			<HomeButton/>
 			<p>
-				Vehicle selected {latest_item_on_stack.data.chateau_id}
-				{latest_item_on_stack.data.vehicle_id}
-				{latest_item_on_stack.data.gtfs_id}
+				Tripless vehicle selected
 			</p>
+			<p>
+Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chateau_id}</span>
+				
+			</p>
+			<p>Vehicle ID: <span  class="font-mono text-semibold">{latest_item_on_stack.data.vehicle_id}</span></p>
 		</div>
 	{/if}
 	{#if latest_item_on_stack.data instanceof SingleTrip}
@@ -487,7 +491,7 @@
 			</div>
 		{/if}
 
-		<TidbitSidebarCard />
+		<!--<TidbitSidebarCard />-->
 	{/if}
 	<div class="py-1 flex flex-col h-full">
 		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} {darkMode} /></div>
