@@ -13,9 +13,9 @@ export let alerts = {};
 					>
 					{#each Object.values(alerts) as alert}
 						<div class="pt-1">
-							<p>
-								<span>{$_(cause_id_str(alert.cause))}</span>
-								<span> | </span>
+							<p class="text-sm">
+								<span class="">{$_(cause_id_str(alert.cause))}</span>
+								<span> -> </span>
 								<span>{$_(effect_id_str(alert.effect))}</span>
 								
 							</p>
@@ -35,6 +35,7 @@ export let alerts = {};
 								{/each}
 							{/each}
 						</div>
+						<hr/>
 					{/each}
 				</div>
 			{/if}
