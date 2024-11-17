@@ -42,6 +42,12 @@
 		this_locale = newval;
 	});
 
+        let show_gtfs_ids = get(show_gtfs_ids_store);
+
+        show_gtfs_ids_store.subscribe((value) => {
+          show_gtfs_ids = value;
+        });
+
 	let locales_options: Record<string, string> = {
 		en: 'English',
 		fr: 'Français',
@@ -296,7 +302,7 @@
 									}}
 								>
 								{
-									#if show_gtfs_ids_store
+									#if show_gtfs_ids
 								}
 								<p>
 									<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
