@@ -172,12 +172,31 @@
 									tabindex="0"
 									class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover text-sm md:text-base leading-snug rounded-lg"
 								>
+								{
+									#if show_gtfs_ids_store
+								}
+								<p>
+									<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
+								>{option.data.chateau_id}</span
+							>  
+								{
+									#if option.data.route_id
+								
+								}
+								<span class="font-mono text-xs dark:text-gray-400 text-gray-500 ml-1 font-semibold"
+								>{option.data.route_id}</span
+							>
+								
+								
+							{/if}</p>
+								{/if}
 									{#if option.data.trip_id}
 										{#if option.data.route_long_name || option.data.route_short_name}
 											<span
 												class="text-md"
 												style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
 											>
+												
 												{#if option.data.route_long_name && option.data.route_short_name && !option.data.route_long_name.includes(option.data.route_short_name)}
 													<span class="font-bold"
 														>{fixRouteName(

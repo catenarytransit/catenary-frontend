@@ -184,9 +184,10 @@
 			<div class="font-mono px-3">
 				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
 					Chateau: <span class="font-bold">{routestack.chateau_id}</span>
-				<br/>
+					<br/>
 					Route: <span class="font-bold">{routestack.route_id}</span>
 				</div>
+
 			</div>
 			{/if}
 

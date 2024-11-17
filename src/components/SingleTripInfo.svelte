@@ -189,7 +189,7 @@
 
 					stoptimes_cleaned_dataset = next_stoptimes_cleaned;
 					init_loaded = Date.now();
-					console.log('single trip rt update', stoptimes_cleaned_dataset);
+					//console.log('single trip rt update', stoptimes_cleaned_dataset);
 				}
 			} catch (e: any) {
 				console.error(e);
