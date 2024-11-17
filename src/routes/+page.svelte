@@ -120,7 +120,7 @@
 			locale.set(window.localStorage.language);
 		}
 
-		if (window.localStorage.show_gtfs_ids) {
+		if (window.localStorage.show_gtfs_ids == true) {
 			show_gtfs_ids_store.set(true);
 		}
 	}
