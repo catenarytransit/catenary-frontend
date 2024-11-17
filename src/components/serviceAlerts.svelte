@@ -25,10 +25,6 @@ $: languagelist = Object.values(alerts).map((alert) => {
 								<span>{$_(effect_id_str(alert.effect))}</span>
 								
 							</p>
-							{#if alert.image}
-								<img src={alert.image} alt="Service Alert Image" class="max-w-fit" />
-								
-							{/if}
 
 							{#if alert.url}
 								{#each alert.url.translation as url_translation} 
