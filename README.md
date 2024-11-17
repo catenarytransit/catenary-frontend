@@ -1,5 +1,7 @@
 # catenary-frontend
 
+This is the Svelte JS (and eventually Rust WASM) version of Catenary Maps. Catenary Maps allows users to discover public transport routes and track vehicles on public transport networks in countries around the world including the United States, Canada, EU Countries like Ireland, Germany, France, Spain, Germany, Switzerland, Portugal, Norway, Finland, Sweden, Belgium, Netherlands, and United Kingdom, Japan, Australia , and New Zealand. Data such as the speed and vehicle numbers is on Catenary, not shown on other map apps. We also collect realtime data from proprietary sources and convert them to GTFS. All data processing, ingestion, and queries are handled by https://github.com/catenarytransit/catenary-backend, which is written in Pure rhst.
+
 Current site URL: https://maps.catenarymaps.org
 
 ## Install Dependenices
