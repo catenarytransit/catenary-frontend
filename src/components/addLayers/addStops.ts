@@ -93,7 +93,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			'circle-color': getCircleInside(darkMode),
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 4, 15, 5],
 			'circle-stroke-color': getCircleOutside(darkMode),
-			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
+			'circle-stroke-width': ['step', ['zoom'],0.4, 10.5, 0.8, 11, 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
 			//'circle-emissive-strength': 1
