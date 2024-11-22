@@ -20,7 +20,8 @@ export function fixRouteName(chateau: string, route: string, rid: string): strin
 		'san-diego-mts': {
 			'510': 'Blue Line',
 			'520': 'Orange Line',
-			'530': 'Green Line'
+			'530': 'Green Line',
+			'535': 'Copper Line'
 		}
 	};
 
@@ -58,18 +59,14 @@ export function fixRouteIcon(chateau: string, rid: string): string | null {
 
 export function fixRouteNameLong(chateau: string, route: string, rid: string): string {
 	const fixPatterns: Record<string, Record<string, string>> = {
-		metrolinktrains: {
-			'Metrolink 91/Perris Valley Line': '91/Perris Valley Line',
-			'Metrolink Antelope Valley Line': 'Antelope Valley Line',
-			'Metrolink Inland Empire-Orange County Line': 'Inland Empire-OC Line',
-			'Metrolink Orange County Line': 'Orange County Line',
-			'Metrolink Riverside Line': 'Riverside Line',
-			'Metrolink San Bernardino Line': 'San Bernardino Line',
-			'Metrolink Ventura County Line': 'Ventura County Line'
-		},
 		'san-diego-mts': {
-			'3': 'Ocean View Boulevard/Hillcrest',
-			'5': 'Market Street',
+			'3': 'Ocean View',
+			'4': 'Imperial',
+			'5': 'Market',
+			'12': 'Skyline',
+			'20': 'Highway 163 Express',
+			'992': 'Airport',
+			'30': 'La Jolla Village',
 			'215': 'Mid-City Rapid',
 			'225': 'South Bay Rapid',
 			'235': 'I-15 Rapid',
@@ -80,11 +77,14 @@ export function fixRouteNameLong(chateau: string, route: string, rid: string): s
 			'237': 'Mira Mesa Rapid',
 			'280': 'Rapid Express',
 			'290': 'Rapid Express',
-			'398': 'COASTER',
-			'399': 'SPRINTER',
-			AIR: 'Flyer'
+			'530': 'El Cajon - 12th & Imperial',
+			'535': 'East County Connector'
 		}
 	};
+
+	if (chateau == 'metrolinktrains') {
+		return route.replace('Metrolink ', '')
+	}
 
 	if (fixPatterns[chateau]) {
 		return (
