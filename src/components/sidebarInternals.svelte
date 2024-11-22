@@ -96,13 +96,14 @@
 
 {#if latest_item_on_stack != null}
 	{#if latest_item_on_stack.data instanceof MapSelectionScreen}
+		<HomeButton />
 		<div class="px-4 flex flex-col h-full w-full">
 			<h1 class="text-lg md:text-2xl font-semibold leading-tight">
 				{latest_item_on_stack.data.arrayofoptions.length}
 				{$_('itemsselected')}
 			</h1>
 			<div class="flex-grow-0 h-full select-text">
-				<div class="pr-2">
+				<div class=" catenary-scroll overflow-y-auto pr-2 h-full pb-16">
 					{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof VehicleMapSelector).length > 0}
 						<h3 class="text-xl my-1">{$_('vehicles')}</h3>
 						<div class="flex flex-col gap-y-1 md:gap-y-2">
@@ -333,6 +334,7 @@
 		</div>
 	{/if}
 	{#if latest_item_on_stack.data instanceof SettingsStack}
+		<HomeButton />
 		<div class="px-3 pt-1 flex flex-col h-full select-text">
 			<h1 class="text-3xl font-medium mb-2">{$_('settings')}</h1>
 			<span class="text-xl block">{$_('language')}</span>
@@ -446,6 +448,7 @@
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
+			<HomeButton/>
 			<p>
 				Tripless vehicle selected
 			</p>
@@ -457,6 +460,7 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 		</div>
 	{/if}
 	{#if latest_item_on_stack.data instanceof SingleTrip}
+		<HomeButton />
 		<div class="flex flex-col h-full select-text">
 			<SingleTripInfo
 				{usunits}
@@ -468,6 +472,7 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 		</div>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
+		<HomeButton />
 		<div class="flex flex-col h-full select-text">
 			<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
 		</div>
@@ -475,6 +480,28 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 {:else if false}
 	<p>Loading home page</p>
 {:else}
+	<div class="mt-3 mb-2">
+		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
+		<button
+			class="text-seashore cursor-pointer mx-1"
+			on:click={() => {
+				window.location.reload();
+			}}
+			aria-label="Refresh"
+			><span class="material-symbols-outlined block"> refresh </span>
+		</button>
+		<button
+			class="text-seashore cursor-pointer mx-2"
+			on:click={() => {
+				data_stack_store.update((x) => {
+					x.push(new StackInterface(new SettingsStack()));
+					return x;
+				});
+			}}
+			aria-label="Settings"
+			><span class="material-symbols-outlined block"> settings </span>
+		</button>
+	</div>
 	{#if this_locale?.startsWith('en')}
 		{#if false}
 			<div

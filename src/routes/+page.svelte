@@ -49,7 +49,6 @@
 	import { determineFeedsUsingChateaus } from '../maploaddata';
 	import CloseButton from '../components/CloseButton.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
-	import HomeButton from '../components/SidebarParts/home_button.svelte';
 
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -1351,10 +1350,8 @@ const media = matchMedia(mqString);
 		<div
 			id="catenary-sidebar"
 			style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white overflow-y-auto catenary-scroll"
+			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 		>
-			<HomeButton />
-			<div class="my-4"></div>
 			<div
 				class="block md:hidden py-2 flex flex-row"
 				on:mousedown={startmovesidebar}
