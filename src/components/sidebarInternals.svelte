@@ -70,10 +70,26 @@
 	let simpleRouteMode: boolean = true;
 
 	if (typeof window !== 'undefined') {
-		if (window.localStorage.getItem('simpleRouteMode') == 'true') {
+		if (window.localStorage.getItem('simpleRouteMode') != 'false') {
 			simpleRouteMode = true;
 		} else {
 			simpleRouteMode = false;
+		}
+
+		if (window.localStorage.getItem('usunits') == 'true') {
+			usunits = true;
+			usunits_store.set(true)
+		} else {
+			usunits = false;
+			usunits_store.set(false)
+		}
+
+		if (window.localStorage.getItem('show_gtfs_ids') == 'true') {
+			show_gtfs_ids = true;
+			show_gtfs_ids_store.set(true)
+		} else {
+			show_gtfs_ids = false;
+			show_gtfs_ids_store.set(false)
 		}
 	}
 </script>
@@ -337,14 +353,16 @@
 			<div class="flex flex-row gap-x-2">
 				<input
 					type="checkbox"
-					bind:checked={$usunits_store}
+					checked={get(usunits_store)}
 					class="accent-seashore"
 					on:click={() => {
 						usunits_store.update((x) => !x);
+						window.localStorage.usunits = get(usunits_store);
 					}}
 					on:keydown={(e) => {
 						if (e.key === 'Enter') {
 							usunits_store.update((x) => !x);
+							window.localStorage.usunits = get(usunits_store);
 						}
 					}}
 				/>
@@ -353,16 +371,16 @@
 			<div class="flex flex-row gap-x-2">
 				<input
 					type="checkbox"
-					bind:checked={$show_gtfs_ids_store}
+					checked={get(show_gtfs_ids_store)}
 					class="accent-seashore"
 					on:click={() => {
 						show_gtfs_ids_store.update((x) => !x);
-						window.localStorage.show_gtfs_ids = show_gtfs_ids_store;
+						window.localStorage.show_gtfs_ids = get(show_gtfs_ids_store);
 					}}
 					on:keydown={(e) => {
 						if (e.key === 'Enter') {
 							show_gtfs_ids_store.update((x) => !x);
-							window.localStorage.show_gtfs_ids = show_gtfs_ids_store;
+							window.localStorage.show_gtfs_ids = get(show_gtfs_ids_store);
 						}
 					}}
 				/>
@@ -401,8 +419,8 @@
 			<div class="flex flex-row gap-x-2">
 				<input
 					type="checkbox"
-					checked={!simpleRouteMode}
 					class="accent-seashore"
+					checked={window.localStorage.simpleRouteMode == 'false'}
 					on:click={(e) => {
 						if (e.target.checked) {
 							window.localStorage.simpleRouteMode = 'false';

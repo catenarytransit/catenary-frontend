@@ -43,7 +43,6 @@
   "type": "module",
   "dependencies": {
     "@datadog/browser-rum": "^5.30.0",
-    "@esbuild/linux-x64": "^0.20.2",
     "@mapbox/polyline": "^1.2.1",
     "@maplibre/maplibre-gl-inspect": "^1.7.0",
     "@sveltejs/adapter-cloudflare": "^4.7.4",
