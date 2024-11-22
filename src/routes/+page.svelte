@@ -92,8 +92,8 @@
 	let maplat: number, maplng: number, mapzoom: number;
 	let translate_x_sidebar: string = '0px';
 	let translate_x_sidebar_number: number = 0;
-	let collapser_left_offset_number: number = 408;
-	let collapser_left_offset: string = '408px';
+	let collapser_left_offset_number: number = 380;
+	let collapser_left_offset: string = '380px';
 	let top_margin_collapser_sidebar: string = '0px';
 
 	let geolocation: GeolocationPosition | null;
@@ -1316,7 +1316,7 @@ const media = matchMedia(mqString);
 
 	{#key top_margin_collapser_sidebar}
 		<div
-			class="fixed shadow-sm dark:shadow-gray-600 hidden md:block px-1 py-2 rounded-r-md bg-white dark:bg-slate-800 text-black dark:text-white"
+			class="fixed hidden md:flex p-1 flex items-center rounded-r-md bg-white dark:bg-darksky text-black dark:text-white"
 			on:click={() => {
 				if (sidebarOpen == 'full') {
 					sidebarOpen = 'none';
@@ -1338,10 +1338,10 @@ const media = matchMedia(mqString);
 			style={`left: ${collapser_left_offset}; top: ${top_margin_collapser_sidebar};`}
 		>
 			{#if sidebarOpen == 'none'}
-				<span class="material-symbols-outlined block my-auto"> arrow_right </span>
+				<span class="material-symbols-outlined block my-auto"> chevron_right </span>
 			{/if}
 			{#if sidebarOpen == 'full'}
-				<span class="material-symbols-outlined block my-auto"> arrow_left </span>
+				<span class="material-symbols-outlined block my-auto"> chevron_left </span>
 			{/if}
 		</div>
 	{/key}
@@ -1350,7 +1350,7 @@ const media = matchMedia(mqString);
 		<div
 			id="catenary-sidebar"
 			style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 shadow-sm dark:shadow-gray-600 w-full sm:w-2/5 md:h-full md:w-[380px] lg:w-[408px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
 		>
 			<div
 				class="block md:hidden py-2 flex flex-row"
