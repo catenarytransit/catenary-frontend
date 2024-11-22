@@ -4,10 +4,10 @@
 	import { SettingsStack, StackInterface } from '../stackenum';
 </script>
 
-<div class="mt-3 mb-2">
-	<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
+<div class="pt-3 mb-2 sticky top-2 left-3 bg-gray-100 dark:bg-darksky z-50 inline rounded-md border border-seashore">
+	<img src="/logo.svg" alt="Catenary" class="h-6 mx-3 inline align-middle -translate-y-2" />
 	<button
-		class="text-seashore cursor-pointer mx-1"
+		class="text-seashore cursor-pointer"
 		on:click={() => {
 			data_stack_store.set([]);
 			let map = get(map_pointer_store);
@@ -29,7 +29,7 @@
 		><span class="material-symbols-outlined block"> home </span>
 	</button>
 	<button
-		class="text-seashore cursor-pointer mx-2"
+		class="text-seashore cursor-pointer mr-2 ml-1"
 		on:click={() => {
 			data_stack_store.update((x) => {
 				x.push(new StackInterface(new SettingsStack()));

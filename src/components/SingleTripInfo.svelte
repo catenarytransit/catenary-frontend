@@ -582,7 +582,7 @@
 
 		<div
 			bind:this={bind_scrolling_div}
-			class="flex flex-col catenary-scroll overflow-y-scroll h-full pb-60 px-3 pt-2"
+			class="flex flex-col px-3 pt-2"
 			style:border-top={`3px solid ${trip_data.color}`}
 		>
 		{

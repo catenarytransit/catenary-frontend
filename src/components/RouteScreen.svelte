@@ -162,7 +162,7 @@
 
 >
 	{#if loaded == true}
-	<div class="flex flex-col catenary-scroll overflow-y-auto h-full"
+	<div class="flex flex-col"
 	bind:this={bind_scrolling_div}>
 		<div class="px-3">
 			<RouteHeading
@@ -208,7 +208,7 @@
 			{/each}
 		</div>
 		<div
-			class="h-full pb-96 pt-2 flex flex-col"
+			class="pt-2 flex flex-col"
 		>
 			{#if activePattern != ''}
 				{#each route_data.direction_patterns[activePattern].rows as stop, index}
