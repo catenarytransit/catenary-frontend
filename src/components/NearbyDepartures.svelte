@@ -181,7 +181,9 @@
 
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
-		{#each departure_list.filter((x) => Object.keys(x.directions).length > 0) as route_group}
+		{#each departure_list
+		.filter((x) => x.chateau_id != "greyhound~flix")
+		.filter((x) => Object.keys(x.directions).length > 0) as route_group}
 			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-2 bg-gray-100 dark:bg-background rounded-md`}>
 				<p class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`} style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
