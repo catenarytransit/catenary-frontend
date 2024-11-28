@@ -288,7 +288,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 8, 3, 10, 4, 11, 6, 16, 12],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
-			'circle-stroke-width': 1.2,
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 10, 1.2],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.7]
 		}
