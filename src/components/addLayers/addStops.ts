@@ -35,7 +35,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			'circle-color': '#1c2636',
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
 			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
-			'circle-stroke-width': ['step', ['zoom'], 11.5, 0.8, 12, 1.2, 13.2, 1.5],
+			'circle-stroke-width': ['step', ['zoom'], 0.8, 12, 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': 0.1,
 			//'circle-emissive-strength': 1
