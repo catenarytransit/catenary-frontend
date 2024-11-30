@@ -1105,7 +1105,11 @@
 		  true,
 		  false
 		],
-		"paint": {"fill-pattern": "mbicons:pedestrian-polygon"}
+		"paint": {
+		  "fill-pattern": "mbicons:pedestrian-polygon",
+		  "fill-antialias": false,
+		  "fill-opacity": 1
+		}
 	  },
 	  {
 		"id": "road_motorway_link_casing",
@@ -2265,7 +2269,7 @@
 			14,
 			"hsl(35,6%,79%)"
 		  ],
-		  "fill-opacity": {"stops": [[13, 0.5], [15, 1]]}
+		  "fill-opacity": {"stops": [[13, 0.3], [15.5, 0.4], [16, 0.8]]}
 		}
 	  },
 	  {
@@ -2275,8 +2279,9 @@
 		"source-layer": "building",
 		"minzoom": 13,
 		"paint": {
-		  "line-color": "#bfb5b0",
-		  "line-width": {"stops": [[13, 0.4], [14, 0.6], [16, 0.8]]}
+		  "line-color": {"stops": [[13, "#dcdde1"], [16, "#bfb5b0"]]},
+		  "line-width": {"stops": [[13, 0.4], [14, 0.6], [16, 0.8]]},
+		  "line-opacity": {"stops": [[13, 0], [14, 0.2], [16, 0.8]]}
 		}
 	  },
 	  {
@@ -2449,26 +2454,30 @@
 		  ["!=", ["get", "class"], "metro"]
 		],
 		"layout": {
-		  "icon-image": ["coalesce",
-		  ["image", [
-			  "concat",
-			  "mbicons:",
+		  "icon-image": [
+			"coalesce",
+			[
+			  "image",
 			  [
-				"match",
-				["get", "class"],
-				["pitch"],
-				["get", "subclass"],
+				"concat",
+				"mbicons:",
 				[
 				  "match",
+				  ["get", "class"],
+				  ["pitch"],
 				  ["get", "subclass"],
-				  ["florist", "furniture"],
-				  ["get", "subclass"],
-				  ["get", "class"]
+				  [
+					"match",
+					["get", "subclass"],
+					["florist", "furniture"],
+					["get", "subclass"],
+					["get", "class"]
+				  ]
 				]
 			  ]
-			]],
+			],
 			["image", "marker"]
-	  ],
+		  ],
 		  "text-anchor": "top",
 		  "text-field": [
 			"case",
@@ -2555,26 +2564,30 @@
 		  ["!=", ["get", "class"], "metro"]
 		],
 		"layout": {
-		  "icon-image": ["coalesce",
-		  ["image", [
-			  "concat",
-			  "mbicons:",
+		  "icon-image": [
+			"coalesce",
+			[
+			  "image",
 			  [
-				"match",
-				["get", "class"],
-				["pitch"],
-				["get", "subclass"],
+				"concat",
+				"mbicons:",
 				[
 				  "match",
+				  ["get", "class"],
+				  ["pitch"],
 				  ["get", "subclass"],
-				  ["florist", "furniture"],
-				  ["get", "subclass"],
-				  ["get", "class"]
+				  [
+					"match",
+					["get", "subclass"],
+					["florist", "furniture"],
+					["get", "subclass"],
+					["get", "class"]
+				  ]
 				]
 			  ]
-			]],
+			],
 			["image", "marker"]
-	  ],
+		  ],
 		  "text-anchor": "top",
 		  "text-field": [
 			"case",
