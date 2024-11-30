@@ -64,7 +64,7 @@
 		"filter": ["any", ["==", "class", "crop"]],
 		"paint": {
 		  "fill-color": "rgba(23, 63, 65, 1)",
-		  "fill-opacity": {"stops": [[6, 1], [7, 0.3]]}
+		  "fill-opacity": {"stops": [[6, 1], [7, 0.3], [10, 0.1]]}
 		}
 	  },
 	  {
@@ -273,7 +273,7 @@
 		],
 		"layout": {"line-cap": "round"},
 		"paint": {
-		  "line-color": "#a0c8f0",
+		  "line-color": "rgba(1, 35, 60, 1)",
 		  "line-width": [
 			"interpolate",
 			["exponential", 1.2],
@@ -2296,22 +2296,26 @@
 		  "text-offset": [0, 0.6],
 		  "text-size": 12,
 		  "icon-image": [
-			"concat",
-			"mbicons:",
+			"coalesce",
 			[
-			  "match",
-			  ["get", "class"],
-			  ["pitch"],
-			  ["get", "subclass"],
+			  "concat",
+			  "mbicons:",
 			  [
 				"match",
+				["get", "class"],
+				["pitch"],
 				["get", "subclass"],
-				["florist", "furniture"],
-				["get", "subclass"],
-				["get", "class"]
-			  ]
+				[
+				  "match",
+				  ["get", "subclass"],
+				  ["florist", "furniture"],
+				  ["get", "subclass"],
+				  ["get", "class"]
+				]
+			  ],
+			  "-dark"
 			],
-			"-dark"
+			["image", "marker-dark"]
 		  ]
 		},
 		"paint": {
@@ -2347,22 +2351,26 @@
 		  "text-offset": [0, 0.6],
 		  "text-size": 12,
 		  "icon-image": [
-			"concat",
-			"mbicons:",
+			"coalesce",
 			[
-			  "match",
-			  ["get", "class"],
-			  ["pitch"],
-			  ["get", "subclass"],
+			  "concat",
+			  "mbicons:",
 			  [
 				"match",
+				["get", "class"],
+				["pitch"],
 				["get", "subclass"],
-				["florist", "furniture"],
-				["get", "subclass"],
-				["get", "class"]
-			  ]
+				[
+				  "match",
+				  ["get", "subclass"],
+				  ["florist", "furniture"],
+				  ["get", "subclass"],
+				  ["get", "class"]
+				]
+			  ],
+			  "-dark"
 			],
-			"-dark"
+			["image", "marker-dark"]
 		  ]
 		},
 		"paint": {
@@ -2388,22 +2396,26 @@
 		],
 		"layout": {
 		  "icon-image": [
-			"concat",
-			"mbicons:",
+			"coalesce",
 			[
-			  "match",
-			  ["get", "class"],
-			  ["pitch"],
-			  ["get", "subclass"],
+			  "concat",
+			  "mbicons:",
 			  [
 				"match",
+				["get", "class"],
+				["pitch"],
 				["get", "subclass"],
-				["florist", "furniture"],
-				["get", "subclass"],
-				["get", "class"]
-			  ]
+				[
+				  "match",
+				  ["get", "subclass"],
+				  ["florist", "furniture"],
+				  ["get", "subclass"],
+				  ["get", "class"]
+				]
+			  ],
+			  "-dark"
 			],
-			"-dark"
+			["image", "marker-dark"]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
