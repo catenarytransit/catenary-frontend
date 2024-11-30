@@ -12,12 +12,8 @@
 	  }
 	},
 	"sprite": [
-		{"id": "ofm",
-		"url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm"},
-		{
-			"id": "mbicons",
-			"url":"https://moreicons.pages.dev/sprite"
-		}
+	  {"id": "ofm", "url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm"},
+	  {"id": "mbicons", "url": "https://moreicons.pages.dev/sprite"}
 	],
 	"glyphs": "https://mapfonts.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
 	"layers": [
@@ -393,7 +389,7 @@
 		"source": "openmaptiles",
 		"source-layer": "landuse",
 		"filter": ["==", ["get", "class"], "school"],
-		"paint": {"fill-color": "rgb(236,238,204)"}
+		"paint": {"fill-color": "#f0e6d1"}
 	  },
 	  {
 		"id": "landuse_pitch",
@@ -2282,7 +2278,7 @@
 		  "line-color": "#bfb5b0",
 		  "line-width": {"stops": [[13, 0.4], [14, 0.6], [16, 0.8]]}
 		}
-	  },  
+	  },
 	  {
 		"id": "pool",
 		"type": "fill",
@@ -2456,18 +2452,19 @@
 		  "icon-image": [
 			"concat",
 			"mbicons:",
-			["match",
-			["get", "class"],
-			["pitch"],
-			["get", "subclass"],
 			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
 				"match",
 				["get", "subclass"],
 				["florist", "furniture"],
 				["get", "subclass"],
 				["get", "class"]
+			  ]
 			]
-		]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2507,18 +2504,19 @@
 		  "icon-image": [
 			"concat",
 			"mbicons:",
-			["match",
-			["get", "class"],
-			["pitch"],
-			["get", "subclass"],
 			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
 				"match",
 				["get", "subclass"],
 				["florist", "furniture"],
 				["get", "subclass"],
 				["get", "class"]
+			  ]
 			]
-		]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2557,18 +2555,19 @@
 		  "icon-image": [
 			"concat",
 			"mbicons:",
-			["match",
-			["get", "class"],
-			["pitch"],
-			["get", "subclass"],
 			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
 				"match",
 				["get", "subclass"],
 				["florist", "furniture"],
 				["get", "subclass"],
 				["get", "class"]
+			  ]
 			]
-		]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2599,18 +2598,19 @@
 		  "icon-image": [
 			"concat",
 			"mbicons:",
-			["match",
-			["get", "class"],
-			["pitch"],
-			["get", "subclass"],
 			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
 				"match",
 				["get", "subclass"],
 				["florist", "furniture"],
 				["get", "subclass"],
 				["get", "class"]
+			  ]
 			]
-		]
 		  ],
 		  "icon-size": 0.7,
 		  "text-anchor": "left",
