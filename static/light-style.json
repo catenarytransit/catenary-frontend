@@ -63,7 +63,7 @@
 		"paint": {
 		  "fill-antialias": true,
 		  "fill-opacity": 0.8,
-		  "fill-pattern": "wetland_bg_11",
+		  "fill-pattern": "mbicons:wetland",
 		  "fill-translate-anchor": "map"
 		}
 	  },

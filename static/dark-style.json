@@ -52,7 +52,7 @@
 		  "fill-antialias": true,
 		  "fill-opacity": 0.1,
 		  "fill-translate-anchor": "map",
-		  "fill-pattern": "wetland_bg_11",
+		  "fill-pattern": "mbicons:wetland",
 		  "fill-color": "#000000"
 		}
 	  },
