@@ -222,6 +222,7 @@
 			"source": "esa-worldcover-polygons",
 			"source-layer": "globallandcover",
 			"filter": ["==", "class", "forest"],
+			"layout": { "visibility": "visible" },
 			"paint": {
 				"fill-color": [
 					"interpolate",
@@ -235,7 +236,13 @@
 					"#AFEFCA",
 					9,
 					"#D3F8E2"
-				]
+				],
+				"fill-opacity": {
+					"stops": [
+						[9, 1],
+						[10, 0.17]
+					]
+				}
 			}
 		},
 		{
