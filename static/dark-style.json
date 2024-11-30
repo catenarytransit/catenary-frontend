@@ -2296,28 +2296,47 @@
 		  "text-max-width": 9,
 		  "text-offset": [0, 0.6],
 		  "text-size": 12,
-		  "icon-image": [
-			"coalesce",
+		  "icon-image": 
+
+		  ["coalesce",
+		  ["image", [
+			"concat",
+			"mbicons:",
 			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
+			  "match",
+			  ["get", "subclass"],
+			  ["florist", "furniture"],
+			  ["get", "subclass"],
+			  ["get", "class"]
+			  ]
+			],
+			"-dark"
+			]],
+			["image", [
 			  "concat",
-			  "mbicons:",
+			  "ofm:",
 			  [
 				"match",
 				["get", "class"],
 				["pitch"],
 				["get", "subclass"],
 				[
-				  "match",
-				  ["get", "subclass"],
-				  ["florist", "furniture"],
-				  ["get", "subclass"],
-				  ["get", "class"]
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
 				]
 			  ],
 			  "-dark"
-			],
-			["image", "marker-dark"]
-		  ]
+			  ]],
+			  ["image", "mbicons:marker-dark"]
+		]
 		},
 		"paint": {
 		  "text-color": "#eee",
@@ -2351,28 +2370,47 @@
 		  "text-max-width": 9,
 		  "text-offset": [0, 0.6],
 		  "text-size": 12,
-		  "icon-image": [
-			"coalesce",
+		  "icon-image": 
+
+		  ["coalesce",
+		  ["image", [
+			"concat",
+			"mbicons:",
 			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
+			  "match",
+			  ["get", "subclass"],
+			  ["florist", "furniture"],
+			  ["get", "subclass"],
+			  ["get", "class"]
+			  ]
+			],
+			"-dark"
+			]],
+			["image", [
 			  "concat",
-			  "mbicons:",
+			  "ofm:",
 			  [
 				"match",
 				["get", "class"],
 				["pitch"],
 				["get", "subclass"],
 				[
-				  "match",
-				  ["get", "subclass"],
-				  ["florist", "furniture"],
-				  ["get", "subclass"],
-				  ["get", "class"]
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
 				]
 			  ],
 			  "-dark"
-			],
-			["image", "marker-dark"]
-		  ]
+			  ]],
+			  ["image", "mbicons:marker-dark"]
+		]
 		},
 		"paint": {
 		  "text-color": "#eee",

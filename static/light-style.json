@@ -2454,30 +2454,26 @@
 		  ["!=", ["get", "class"], "metro"]
 		],
 		"layout": {
-		  "icon-image": [
-			"coalesce",
-			[
-			  "image",
+		  "icon-image": ["coalesce",
+		  ["image", [
+			  "concat",
+			  "mbicons:",
 			  [
-				"concat",
-				"mbicons:",
+				"match",
+				["get", "class"],
+				["pitch"],
+				["get", "subclass"],
 				[
 				  "match",
-				  ["get", "class"],
-				  ["pitch"],
 				  ["get", "subclass"],
-				  [
-					"match",
-					["get", "subclass"],
-					["florist", "furniture"],
-					["get", "subclass"],
-					["get", "class"]
-				  ]
+				  ["florist", "furniture"],
+				  ["get", "subclass"],
+				  ["get", "class"]
 				]
 			  ]
-			],
-			["image", "marker"]
-		  ],
+			]],
+			["image", "mbicons:marker"]
+	  ],
 		  "text-anchor": "top",
 		  "text-field": [
 			"case",
@@ -2513,23 +2509,26 @@
 		  ["!=", ["get", "class"], "metro"]
 		],
 		"layout": {
-		  "icon-image": [
-			"concat",
-			"mbicons:",
-			[
-			  "match",
-			  ["get", "class"],
-			  ["pitch"],
-			  ["get", "subclass"],
+		  "icon-image": ["coalesce",
+		  ["image", [
+			  "concat",
+			  "mbicons:",
 			  [
 				"match",
+				["get", "class"],
+				["pitch"],
 				["get", "subclass"],
-				["florist", "furniture"],
-				["get", "subclass"],
-				["get", "class"]
+				[
+				  "match",
+				  ["get", "subclass"],
+				  ["florist", "furniture"],
+				  ["get", "subclass"],
+				  ["get", "class"]
+				]
 			  ]
-			]
-		  ],
+			]],
+			["image", "mbicons:marker"]
+	  ],
 		  "text-anchor": "top",
 		  "text-field": [
 			"case",
