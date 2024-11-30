@@ -2098,21 +2098,16 @@
 		}
 	  },
 	  {
-		"id": "building-3d",
-		"type": "fill-extrusion",
+		"id": "building-outline",
+		"type": "line",
 		"source": "openmaptiles",
 		"source-layer": "building",
-		"minzoom": 14,
+		"minzoom": 13,
 		"paint": {
-		  "fill-extrusion-base": ["get", "render_min_height"],
-		  "fill-extrusion-color": {
-			"stops": [[10, "rgba(17, 22, 35, 1)"], [15, "rgba(20, 24, 35, 1)"]]
-		  },
-		  "fill-extrusion-height": ["get", "render_height"],
-		  "fill-extrusion-opacity": {"stops": [[15, 0.8], [19, 0.9]]},
-		  "fill-extrusion-translate-anchor": "map"
+		  "line-color": "#bfb5b0",
+		  "line-width": {"stops": [[13, 0.5], [14, 0.8]]}
 		}
-	  },
+	  },  
 	  {
 		"id": "pool",
 		"type": "fill",
