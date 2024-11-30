@@ -11,7 +11,10 @@
 		"url": "https://tiles.swiss-map.cc/esa-worldcover-polygons-v2.json"
 	  }
 	},
-	"sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
+	"sprite": [
+	  {"id": "ofm", "url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm"},
+	  {"id": "mbicons", "url": "https://moreicons.pages.dev/sprite"}
+	],
 	"glyphs": "https://mapfonts.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
 	"layers": [
 	  {
@@ -243,7 +246,7 @@
 		"source-layer": "waterway",
 		"filter": ["==", ["get", "brunnel"], "tunnel"],
 		"paint": {
-		  "line-color": "#a0c8f0",
+		  "line-color": "rgba(10, 45, 83, 1)",
 		  "line-dasharray": [3, 3],
 		  "line-gap-width": ["interpolate", ["linear"], ["zoom"], 12, 0, 20, 6],
 		  "line-opacity": 1,
@@ -294,7 +297,7 @@
 		],
 		"layout": {"line-cap": "round"},
 		"paint": {
-		  "line-color": "#a0c8f0",
+		  "line-color": "rgba(7, 57, 102, 1)",
 		  "line-width": [
 			"interpolate",
 			["exponential", 1.3],
@@ -1526,7 +1529,7 @@
 		"minzoom": 16,
 		"filter": ["==", ["get", "oneway"], -1],
 		"layout": {
-		  "icon-image": "arrow",
+		  "icon-image": "ofm:arrow",
 		  "icon-rotate": 180,
 		  "symbol-placement": "line"
 		}
@@ -2084,7 +2087,7 @@
 		"minzoom": 13,
 		"maxzoom": 24,
 		"paint": {
-		  "fill-color": "rgba(29, 39, 53, 1)",
+		  "fill-color": "rgba(38, 55, 79, 1)",
 		  "fill-outline-color": [
 			"interpolate",
 			["linear"],
@@ -2104,10 +2107,10 @@
 		"source-layer": "building",
 		"minzoom": 13,
 		"paint": {
-		  "line-color": "#bfb5b0",
+		  "line-color": "rgba(18, 18, 19, 1)",
 		  "line-width": {"stops": [[13, 0.5], [14, 0.8]]}
 		}
-	  },  
+	  },
 	  {
 		"id": "pool",
 		"type": "fill",
@@ -2292,7 +2295,24 @@
 		  "text-max-width": 9,
 		  "text-offset": [0, 0.6],
 		  "text-size": 12,
-		  "icon-image": ["get", "subclass"]
+		  "icon-image": [
+			"concat",
+			"mbicons:",
+			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			  ]
+			],
+			"-dark"
+		  ]
 		},
 		"paint": {
 		  "text-color": "#eee",
@@ -2327,11 +2347,22 @@
 		  "text-offset": [0, 0.6],
 		  "text-size": 12,
 		  "icon-image": [
-			"match",
-			["get", "subclass"],
-			["florist", "furniture"],
-			["get", "subclass"],
-			["get", "class"]
+			"concat",
+			"mbicons:",
+			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			  ]
+			],
+			"-dark"
 		  ]
 		},
 		"paint": {
@@ -2357,10 +2388,22 @@
 		],
 		"layout": {
 		  "icon-image": [
-			"case",
-			["==", ["get", "class"], "pitch"],
-			["get", "subclass"],
-			["get", "class"]
+			"concat",
+			"mbicons:",
+			[
+			  "match",
+			  ["get", "class"],
+			  ["pitch"],
+			  ["get", "subclass"],
+			  [
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			  ]
+			],
+			"-dark"
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2492,14 +2535,15 @@
 			["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
 			["coalesce", ["get", "name_en"], ["get", "name"]]
 		  ],
-		  "text-font": ["Noto Sans Regular"],
+		  "text-font": ["Noto Sans Medium"],
 		  "text-rotation-alignment": "map",
 		  "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
 		},
 		"paint": {
 		  "text-color": "rgba(245, 245, 245, 1)",
 		  "text-halo-blur": 0.5,
-		  "text-halo-width": 1
+		  "text-halo-width": 2,
+		  "text-halo-color": "rgba(28, 28, 28, 1)"
 		}
 	  },
 	  {
@@ -2527,7 +2571,7 @@
 		  ]
 		],
 		"layout": {
-		  "icon-image": ["concat", "road_", ["get", "ref_length"]],
+		  "icon-image": ["concat", "ofm:road_", ["get", "ref_length"]],
 		  "icon-rotation-alignment": "viewport",
 		  "icon-size": 1,
 		  "symbol-placement": ["step", ["zoom"], "point", 11, "line"],
@@ -2620,7 +2664,7 @@
 		"minzoom": 10,
 		"filter": ["all", ["has", "iata"]],
 		"layout": {
-		  "icon-image": "airport_11",
+		  "icon-image": "mbicons:airport-dark",
 		  "icon-size": 1,
 		  "text-anchor": "top",
 		  "text-field": [

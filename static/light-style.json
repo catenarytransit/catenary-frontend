@@ -11,7 +11,14 @@
 		"url": "https://tiles.openfreemap.org/planet"
 	  }
 	},
-	"sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
+	"sprite": [
+		{"id": "ofm",
+		"url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm"},
+		{
+			"id": "mbicons",
+			"url":"https://moreicons.pages.dev/sprite"
+		}
+	],
 	"glyphs": "https://mapfonts.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
 	"layers": [
 	  {
@@ -1102,7 +1109,7 @@
 		  true,
 		  false
 		],
-		"paint": {"fill-pattern": "pedestrian_polygon"}
+		"paint": {"fill-pattern": "mbicons:pedestrian-polygon"}
 	  },
 	  {
 		"id": "road_motorway_link_casing",
@@ -2273,7 +2280,7 @@
 		"minzoom": 13,
 		"paint": {
 		  "line-color": "#bfb5b0",
-		  "line-width": {"stops": [[13, 0.5], [14, 0.8]]}
+		  "line-width": {"stops": [[13, 0.4], [14, 0.6], [16, 0.8]]}
 		}
 	  },  
 	  {
@@ -2447,11 +2454,20 @@
 		],
 		"layout": {
 		  "icon-image": [
-			"match",
+			"concat",
+			"mbicons:",
+			["match",
+			["get", "class"],
+			["pitch"],
 			["get", "subclass"],
-			["florist", "furniture"],
-			["get", "subclass"],
-			["get", "class"]
+			[
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			]
+		]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2489,11 +2505,20 @@
 		],
 		"layout": {
 		  "icon-image": [
-			"match",
+			"concat",
+			"mbicons:",
+			["match",
+			["get", "class"],
+			["pitch"],
 			["get", "subclass"],
-			["florist", "furniture"],
-			["get", "subclass"],
-			["get", "class"]
+			[
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			]
+		]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2530,11 +2555,20 @@
 		],
 		"layout": {
 		  "icon-image": [
-			"match",
+			"concat",
+			"mbicons:",
+			["match",
+			["get", "class"],
+			["pitch"],
 			["get", "subclass"],
-			["florist", "furniture"],
-			["get", "subclass"],
-			["get", "class"]
+			[
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			]
+		]
 		  ],
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2562,7 +2596,22 @@
 		"source-layer": "poi",
 		"filter": ["match", ["get", "class"], ["airport"], true, false],
 		"layout": {
-		  "icon-image": ["to-string", ["get", "class"]],
+		  "icon-image": [
+			"concat",
+			"mbicons:",
+			["match",
+			["get", "class"],
+			["pitch"],
+			["get", "subclass"],
+			[
+				"match",
+				["get", "subclass"],
+				["florist", "furniture"],
+				["get", "subclass"],
+				["get", "class"]
+			]
+		]
+		  ],
 		  "icon-size": 0.7,
 		  "text-anchor": "left",
 		  "text-field": [
@@ -2699,7 +2748,7 @@
 		  ]
 		],
 		"layout": {
-		  "icon-image": ["concat", "road_", ["get", "ref_length"]],
+		  "icon-image": ["concat", "ofm:road_", ["get", "ref_length"]],
 		  "icon-rotation-alignment": "viewport",
 		  "icon-size": 1,
 		  "symbol-placement": ["step", ["zoom"], "point", 11, "line"],
@@ -2732,6 +2781,7 @@
 		"layout": {
 		  "icon-image": [
 			"concat",
+			"ofm:",
 			["get", "network"],
 			"_",
 			["get", "ref_length"]
@@ -2791,7 +2841,7 @@
 		"minzoom": 10,
 		"filter": ["all", ["has", "iata"]],
 		"layout": {
-		  "icon-image": "airport_11",
+		  "icon-image": "mbicons:airport",
 		  "icon-size": 1,
 		  "text-anchor": "top",
 		  "text-field": [
@@ -2834,7 +2884,7 @@
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
 			["coalesce", ["get", "name_en"], ["get", "name"]]
 		  ],
-		  "text-font": ["Barlow Italic"],
+		  "text-font": ["Noto Sans Italic"],
 		  "text-letter-spacing": 0.1,
 		  "text-max-width": 9,
 		  "text-size": ["interpolate", ["linear"], ["zoom"], 8, 9, 12, 10],
@@ -2856,7 +2906,7 @@
 		"filter": ["==", ["get", "class"], "village"],
 		"layout": {
 		  "icon-allow-overlap": true,
-		  "icon-image": ["step", ["zoom"], "circle_11_black", 10, ""],
+		  "icon-image": ["step", ["zoom"], "ofm:circle_11_black", 10, ""],
 		  "icon-optional": false,
 		  "icon-size": 0.2,
 		  "text-anchor": "bottom",
@@ -2894,7 +2944,7 @@
 		"filter": ["==", ["get", "class"], "town"],
 		"layout": {
 		  "icon-allow-overlap": true,
-		  "icon-image": ["step", ["zoom"], "circle_11_black", 10, ""],
+		  "icon-image": ["step", ["zoom"], "ofm:circle_11_black", 10, ""],
 		  "icon-optional": false,
 		  "icon-size": 0.2,
 		  "text-anchor": "bottom",
@@ -2964,7 +3014,7 @@
 		],
 		"layout": {
 		  "icon-allow-overlap": true,
-		  "icon-image": ["step", ["zoom"], "circle_11_black", 9, ""],
+		  "icon-image": ["step", ["zoom"], "ofm:circle_11_black", 9, ""],
 		  "icon-optional": false,
 		  "icon-size": 0.4,
 		  "text-anchor": "bottom",
@@ -2974,7 +3024,7 @@
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
 			["coalesce", ["get", "name_en"], ["get", "name"]]
 		  ],
-		  "text-font": ["Barlow Regular"],
+		  "text-font": ["Noto Sans Regular"],
 		  "text-max-width": 8,
 		  "text-offset": [0, -0.1],
 		  "text-size": [
@@ -3009,7 +3059,7 @@
 		],
 		"layout": {
 		  "icon-allow-overlap": true,
-		  "icon-image": ["step", ["zoom"], "circle_11_black", 9, ""],
+		  "icon-image": ["step", ["zoom"], "ofm:circle_11_black", 9, ""],
 		  "icon-optional": false,
 		  "icon-size": 0.5,
 		  "text-anchor": "bottom",
@@ -3108,7 +3158,7 @@
 		],
 		"layout": {
 		  "text-field": ["get", "name"],
-		  "text-font": ["Barlow Bold"],
+		  "text-font": ["Noto Sans Bold"],
 		  "text-max-width": 6.25,
 		  "text-size": ["interpolate", ["linear"], ["zoom"], 1, 9, 4, 17]
 		},
