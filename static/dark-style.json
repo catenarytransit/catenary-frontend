@@ -90,7 +90,11 @@
 		"maxzoom": 24,
 		"filter": ["any", ["==", "class", "forest"]],
 		"layout": {"visibility": "visible"},
-		"paint": {"fill-color": {"stops": [[6, "#0d2c31"], [8, "#0e2d32"]]}}
+		"paint": {
+		  "fill-color": {"stops": [[6, "#0d2c31"], [8, "#0e2d32"]]},
+		  "fill-opacity": {"stops": [[9, 1], [12, 0.2]]},
+		  "fill-antialias": false
+		}
 	  },
 	  {
 		"id": "landcover-moss-wetland-mangroves",
