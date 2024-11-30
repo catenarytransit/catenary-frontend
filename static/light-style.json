@@ -2369,7 +2369,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-letter-spacing": 0.2,
@@ -2426,7 +2426,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-letter-spacing": 0.2,
@@ -2479,7 +2479,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-max-width": 9,
@@ -2534,7 +2534,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-max-width": 9,
@@ -2592,7 +2592,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-max-width": 9,
@@ -2636,7 +2636,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-max-width": 9,
@@ -2663,7 +2663,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-rotation-alignment": "map",
@@ -2698,7 +2698,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-rotation-alignment": "map",
@@ -2729,7 +2729,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-rotation-alignment": "map",
@@ -2866,7 +2866,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-max-width": 9,
@@ -2900,7 +2900,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-letter-spacing": 0.1,
@@ -2932,7 +2932,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-max-width": 8,
@@ -2970,7 +2970,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-max-width": 8,
@@ -3004,7 +3004,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Italic"],
 		  "text-letter-spacing": 0.2,
@@ -3040,7 +3040,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-max-width": 8,
@@ -3085,7 +3085,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Bold"],
 		  "text-max-width": 8,
@@ -3126,7 +3126,7 @@
 			"case",
 			["has", "name:nonlatin"],
 			["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
-			["coalesce", ["get", "name_en"], ["get", "name"]]
+			["coalesce", ["get", "name"], ["get", "name_en"]]
 		  ],
 		  "text-font": ["Noto Sans Bold"],
 		  "text-max-width": 6.25,
