@@ -20,7 +20,7 @@
 	  {
 		"id": "background",
 		"type": "background",
-		"paint": {"background-color": "#f8f4f0"}
+		"paint": {"background-color": "#f5f3f4"}
 	  },
 	  {
 		"id": "landcover-land",
@@ -514,7 +514,7 @@
 		  true,
 		  false
 		],
-		"paint": {"fill-color": "rgba(229, 228, 224, 1)", "fill-opacity": 0.7}
+		"paint": {"fill-color": "#D7E3ED", "fill-opacity": 0.7}
 	  },
 	  {
 		"id": "aeroway_runway",
@@ -534,15 +534,19 @@
 		  ["==", ["get", "class"], "runway"]
 		],
 		"paint": {
-		  "line-color": "#f0ede9",
+		  "line-color": "#c1ced9",
 		  "line-width": [
 			"interpolate",
 			["exponential", 1.2],
 			["zoom"],
 			11,
 			3,
+			15,
+			10,
+			16,
 			20,
-			16
+			20,
+			100
 		  ]
 		}
 	  },
@@ -564,15 +568,19 @@
 		  ["==", ["get", "class"], "taxiway"]
 		],
 		"paint": {
-		  "line-color": "#f0ede9",
+		  "line-color": "#c4d5df",
 		  "line-width": [
 			"interpolate",
 			["exponential", 1.2],
 			["zoom"],
 			11,
 			0.5,
+			14,
+			3,
+			16,
 			20,
-			6
+			20,
+			50
 		  ]
 		}
 	  },
@@ -2377,7 +2385,7 @@
 		  "text-size": 14
 		},
 		"paint": {
-		  "text-color": "#74aee9",
+		  "text-color": "rgba(0, 88, 182, 1)",
 		  "text-halo-color": "rgba(255,255,255,0.7)",
 		  "text-halo-width": 1.5
 		}
@@ -2451,29 +2459,34 @@
 		  [">=", ["get", "rank"], 20],
 		  ["!=", ["get", "class"], "bus"],
 		  ["!=", ["get", "class"], "railway"],
-		  ["!=", ["get", "class"], "metro"]
+		  ["!=", ["get", "class"], "metro"],
+		  ["!=", ["get", "class"], "parking"]
 		],
 		"layout": {
-		  "icon-image": ["coalesce",
-		  ["image", [
-			  "concat",
-			  "mbicons:",
+		  "icon-image": [
+			"coalesce",
+			[
+			  "image",
 			  [
-				"match",
-				["get", "class"],
-				["pitch"],
-				["get", "subclass"],
+				"concat",
+				"mbicons:",
 				[
 				  "match",
+				  ["get", "class"],
+				  ["pitch"],
 				  ["get", "subclass"],
-				  ["florist", "furniture"],
-				  ["get", "subclass"],
-				  ["get", "class"]
+				  [
+					"match",
+					["get", "subclass"],
+					["florist", "furniture"],
+					["get", "subclass"],
+					["get", "class"]
+				  ]
 				]
 			  ]
-			]],
+			],
 			["image", "mbicons:marker"]
-	  ],
+		  ],
 		  "text-anchor": "top",
 		  "text-field": [
 			"case",
@@ -2506,29 +2519,34 @@
 		  ["<", ["get", "rank"], 7],
 		  ["!=", ["get", "class"], "bus"],
 		  ["!=", ["get", "class"], "railway"],
-		  ["!=", ["get", "class"], "metro"]
+		  ["!=", ["get", "class"], "metro"],
+		  ["!=", ["get", "class"], "parking"]
 		],
 		"layout": {
-		  "icon-image": ["coalesce",
-		  ["image", [
-			  "concat",
-			  "mbicons:",
+		  "icon-image": [
+			"coalesce",
+			[
+			  "image",
 			  [
-				"match",
-				["get", "class"],
-				["pitch"],
-				["get", "subclass"],
+				"concat",
+				"mbicons:",
 				[
 				  "match",
+				  ["get", "class"],
+				  ["pitch"],
 				  ["get", "subclass"],
-				  ["florist", "furniture"],
-				  ["get", "subclass"],
-				  ["get", "class"]
+				  [
+					"match",
+					["get", "subclass"],
+					["florist", "furniture"],
+					["get", "subclass"],
+					["get", "class"]
+				  ]
 				]
 			  ]
-			]],
+			],
 			["image", "mbicons:marker"]
-	  ],
+		  ],
 		  "text-anchor": "top",
 		  "text-field": [
 			"case",
@@ -2560,7 +2578,8 @@
 		  ["==", ["get", "rank"], 1],
 		  ["!=", ["get", "class"], "bus"],
 		  ["!=", ["get", "class"], "railway"],
-		  ["!=", ["get", "class"], "metro"]
+		  ["!=", ["get", "class"], "metro"],
+		  ["!=", ["get", "class"], "parking"]
 		],
 		"layout": {
 		  "icon-image": [
@@ -2670,7 +2689,7 @@
 		  "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
 		},
 		"paint": {
-		  "text-color": "hsl(30,23%,62%)",
+		  "text-color": "rgba(82, 82, 82, 1)",
 		  "text-halo-color": "#f8f4f0",
 		  "text-halo-width": 0.5
 		}
@@ -2702,12 +2721,13 @@
 		  ],
 		  "text-font": ["Noto Sans Regular"],
 		  "text-rotation-alignment": "map",
-		  "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
+		  "text-size": ["interpolate", ["linear"], ["zoom"], 13, 11, 14, 12]
 		},
 		"paint": {
-		  "text-color": "#666",
+		  "text-color": "rgba(78, 78, 78, 1)",
 		  "text-halo-blur": 0.5,
-		  "text-halo-width": 1
+		  "text-halo-width": 1,
+		  "text-halo-color": "rgba(237, 237, 237, 1)"
 		}
 	  },
 	  {
@@ -2736,9 +2756,10 @@
 		  "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
 		},
 		"paint": {
-		  "text-color": "#666",
+		  "text-color": "rgba(70, 70, 70, 1)",
 		  "text-halo-blur": 0.5,
-		  "text-halo-width": 1
+		  "text-halo-width": 1,
+		  "text-halo-color": "rgba(237, 237, 237, 1)"
 		}
 	  },
 	  {

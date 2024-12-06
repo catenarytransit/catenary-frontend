@@ -471,7 +471,7 @@
 						temp_last_inactive_stop_idx = i;
 					}
 				} else {
-					if (stoptime.scheduled_departure_time_unix_seconds < current_time / 1000) {
+					if (stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds < current_time / 1000) {
 						temp_last_inactive_stop_idx = i;
 					} else {
 						if (stoptime.rt_arrival_time != null) {
