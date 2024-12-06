@@ -465,13 +465,16 @@
 			let temp_last_inactive_stop_idx = -1;
 
 			let i = 0;
+
+			console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset)
+
 			stoptimes_cleaned_dataset.forEach((stoptime: any) => {
 				if (stoptime.rt_departure_time != null) {
 					if (stoptime.rt_departure_time < current_time / 1000) {
 						temp_last_inactive_stop_idx = i;
 					}
 				} else {
-					if (stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds < current_time / 1000) {
+					if ((stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) < current_time / 1000) {
 						temp_last_inactive_stop_idx = i;
 					} else {
 						if (stoptime.rt_arrival_time != null) {
