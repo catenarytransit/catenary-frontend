@@ -466,7 +466,7 @@
 
 			let i = 0;
 
-			console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset)
+			//console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset)
 
 			stoptimes_cleaned_dataset.forEach((stoptime: any) => {
 				if (stoptime.rt_departure_time != null) {
