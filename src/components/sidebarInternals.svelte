@@ -19,9 +19,8 @@
 	import { writable } from 'svelte/store';
 	import {get} from 'svelte/store';
 	import { data_stack_store, usunits_store, dark_mode_store, show_gtfs_ids_store } from '../globalstores';
-	import { getLocaleFromNavigator, locale, locales } from 'svelte-i18n';
+	import { getLocaleFromNavigator, locale, locales, _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
-	import { _ } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
 	import {
 		fixHeadsignIcon,
@@ -338,6 +337,7 @@
 		<div class="px-3 pt-1 flex flex-col h-full select-text">
 			<h1 class="text-3xl font-medium mb-2">{$_('settings')}</h1>
 			<span class="text-xl block">{$_('language')}</span>
+				<p>{$locale}</p>
 			<select
 				bind:value={$locale}
 				class="text-black bg-white dark:bg-slate-900 dark:text-white p-1 border-2 my-1 border-seashore rounded-md"

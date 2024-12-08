@@ -19,7 +19,7 @@
 
 	function locale_hour_marking(l: string | null | undefined) {
 		if (typeof l == 'string') {
-			if (l == 'zh' || l == 'zh-CH') {
+			if (l == 'zh' || l == 'zh-CN') {
 				return '小时';
 			}
 			if (l == 'zh-TW') {
@@ -36,7 +36,7 @@
 
 	function locale_min_marking(l: string | null | undefined) {
 		if (typeof l == 'string') {
-			if (l == 'zh' || l == 'zh-CH') {
+			if (l == 'zh' || l == 'zh-CN') {
 				return '分';
 			}
 			if (l == 'zh-TW') {
@@ -47,15 +47,15 @@
 			}
 		}
 
-		return 'm';
+		return 'min';
 	}
 
 	function locale_s_marking(l: string | null | undefined) {
 		if (typeof l == 'string') {
-			if (l == 'zh' || l == 'zh-CH') {
+			if (l == 'zh' || l == 'zh-CN' || l == "zh_CN") {
 				return '秒';
 			}
-			if (l == 'zh-TW') {
+			if (l == 'zh-TW' || l == "zh_TW") {
 				return '秒';
 			}
 			if (l.startsWith('ko')) {
