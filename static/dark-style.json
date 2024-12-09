@@ -939,7 +939,7 @@
 		],
 		"layout": {"visibility": "visible"},
 		"paint": {
-		  "fill-antialias": false,
+		  "fill-antialias": true,
 		  "fill-color": "rgba(49, 49, 49, 1)",
 		  "fill-opacity": 0.2
 		}
