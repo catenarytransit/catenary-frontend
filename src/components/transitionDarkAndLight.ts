@@ -116,5 +116,7 @@ export function refreshUIMaplibre() {
                     }
                 }
             });
+
+        map.setPaintProperty('contextlinebacking', 'line-color', darkMode ? '#111133' : '#ffffff');
     }
 }

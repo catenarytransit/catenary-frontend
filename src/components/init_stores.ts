@@ -1,6 +1,5 @@
 
 import {
-    dark_mode_store,
     data_stack_store,
     on_sidebar_trigger_store,
     realtime_vehicle_locations_last_updated_store,
@@ -36,12 +35,6 @@ export function init_stores() {
     
         if (window.localStorage.show_gtfs_ids == true) {
             show_gtfs_ids_store.set(true);
-        }
-    
-        if (window.localStorage.getItem('dark_mode') == 'true') {
-            dark_mode_store.set(true)
-        } else {
-            dark_mode_store.set(false)
         }
 
         let ui_theme_grab=window.localStorage.getItem("ui_theme_store");
