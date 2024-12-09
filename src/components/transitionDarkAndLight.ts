@@ -16,6 +16,7 @@ import {
     chateaus_store,
     show_gtfs_ids_store
 } from '../globalstores';
+import {changeContextTheme} from './addLayers/contextLayer';
 
 import {get} from 'svelte/store';
 
@@ -117,6 +118,6 @@ export function refreshUIMaplibre() {
                 }
             });
 
-        map.setPaintProperty('contextlinebacking', 'line-color', darkMode ? '#111133' : '#ffffff');
+            changeContextTheme(map, darkMode);
     }
 }

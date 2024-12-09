@@ -146,3 +146,9 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		minzoom: 13.5
 	});
 }
+
+export function changeContextTheme(map: maplibregl.Map, darkMode: boolean) {
+	map.setPaintProperty("contextlinebacking", "line-color", darkMode ? '#111133' : '#ffffff');
+	map.setPaintProperty("contextbusstops_label", "text-color", darkMode ? '#ffffff' : '#1a1a1a');
+	map.setPaintProperty("contextbusstops_label", "text-halo-color", darkMode ? '#1a1a1a' : '#dadada');
+}

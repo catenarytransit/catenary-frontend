@@ -4,6 +4,9 @@ function textColorOfMapLabels(darkMode: boolean) {
 	return ['get', darkMode === true ? 'contrastdarkmode' : 'contrastlightmode'];
 }
 
+export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
+}
+
 export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory: any) {
 	const busbearingoffset = [
 		'interpolate',

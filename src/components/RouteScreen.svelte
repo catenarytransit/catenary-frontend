@@ -59,7 +59,6 @@
 	import RouteHeading from './RouteHeading.svelte';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 
-
 	let activePattern: string = '';
 
 	let show_gtfs_ids = get(show_gtfs_ids_store);
@@ -90,6 +89,75 @@
 		} else {
 			return x;
 		}
+	}
+
+	function change_active_pattern(pattern: string) {
+		activePattern = pattern;
+
+		const map = get(map_pointer_store);
+
+		let shape_id = route_data.direction_patterns[pattern].direction_pattern.gtfs_shape_id;
+
+		console.log('shapeid', shape_id);
+
+		if (shape_id) {
+			if (route_data.shapes_polyline[shape_id]) {
+				let geojson_polyline_geo = polyline.toGeoJSON(route_data.shapes_polyline[shape_id], 6);
+
+						let geojson_polyline = {
+							geometry: geojson_polyline_geo,
+							type: 'Feature',
+							properties: {
+								text_color: route_data.text_color,
+								color: route_data.color,
+								route_label: route_data.route_short_name || route_data.route_long_name
+							}
+						};
+
+						let geojson_source_new = {
+							type: 'FeatureCollection',
+							features: [geojson_polyline]
+						};
+
+		map.getSource('transit_shape_context').setData(geojson_source_new);
+			}
+
+			//now work on stops
+
+			let already_seen_stop_ids: string[] = [];
+
+							let stops_features = route_data.direction_patterns[pattern].rows
+							.filter((eachstoptime: any) => {
+								if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
+									already_seen_stop_ids.push(eachstoptime.stop_id);
+									return true;
+								}
+								return false;
+							})
+							.map((eachstoptime: any) => {
+								return {
+									type: 'Feature',
+									properties: {
+										label: route_data.stops[eachstoptime.stop_id].name,
+										stop_id: eachstoptime.stop_id,
+										chateau: eachstoptime.chateau_id,
+									},
+									geometry: {
+										coordinates: [route_data.stops[eachstoptime.stop_id].longitude, route_data.stops[eachstoptime.stop_id].latitude],
+										type: 'Point'
+									}
+								};
+							});
+
+							let stop_source_new = {
+								type: 'FeatureCollection',
+								features: stops_features
+							};
+
+							map.getSource('stops_context').setData(stop_source_new);
+		}
+
+		
 	}
 
 	async function fetch_route_selected() {
@@ -145,7 +213,7 @@
 						});
 					});
 
-				activePattern = Object.keys(route_data.direction_patterns)[0];
+				change_active_pattern(Object.keys(route_data.direction_patterns)[0]);
 			} catch (err) {
 				console.error(err);
 			}
@@ -199,7 +267,7 @@
 		<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
 			{#each Object.entries(route_data.direction_patterns) as direction, index}
 				<div
-					on:click={() => (activePattern = direction[1].direction_pattern.direction_pattern_id)}
+					on:click={() => (change_active_pattern(direction[1].direction_pattern.direction_pattern_id))}
 					class={` text-sm  hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36  leading-tight ${direction[1].direction_pattern.direction_pattern_id == activePattern ? 'bg-seashore' : 'bg-white dark:bg-slate-800'}`}
 				>
 					<span class="material-symbols-outlined">chevron_right</span>
