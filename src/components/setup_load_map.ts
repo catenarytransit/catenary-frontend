@@ -114,31 +114,45 @@ export async function setup_load_map(
 
 		map.addSource('foamertiles', {
 			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'],
+			tiles: ['https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
+			 'https://b.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
+			 'https://c.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'],
 			tileSize: 256
 		});
 
 		map.addSource('maxspeedtiles', {
 			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png'],
+			tiles: ['https://a.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png',
+			'https://b.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png',
+			'https://c.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png'
+			],
 			tileSize: 256
 		});
 
 		map.addSource('signallingtiles', {
 			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png'],
+			tiles: ['https://a.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png',
+			'https://b.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png',
+			'https://c.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png'
+			],
 			tileSize: 256
 		});
 
 		map.addSource('electrificationtiles', {
 			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png'],
+			tiles: ['https://a.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png',
+			'https://b.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png',
+			'https://c.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png'
+			],
 			tileSize: 256
 		});
 
 		map.addSource('gaugetiles', {
 			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png'],
+			tiles: ['https://a.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png',
+			'https://b.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png',
+			'https://c.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png'
+			],
 			tileSize: 256
 		});
 
