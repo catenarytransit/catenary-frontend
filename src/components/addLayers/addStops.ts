@@ -21,6 +21,9 @@ function getCircleOutside(darkMode: boolean) {
 	return darkMode ? '#ffffff': '#1c2636';
 }
 
+export function bus_stop_stop_color(darkMode: boolean) {
+	return darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333';
+}
 
 export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: any) {
 	//BUS
@@ -34,7 +37,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 		paint: {
 			'circle-color': '#1c2636',
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 0.9, 12, 1.2, 13, 2],
-			'circle-stroke-color': darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333',
+			'circle-stroke-color': bus_stop_stop_color(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 0.8, 12, 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
 			'circle-opacity': 0.1,

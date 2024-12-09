@@ -97,5 +97,10 @@
 	"alert_effect_unknown_effect": "Nieznany efekt",
 	"alert_effect_stop_moved": "Przystanek przeniesiony",
 	"alert_effect_no_effect": "Brak efektu",
-	"alert_effect_accessibility_issue": "Problem z dostępnością"
+	"alert_effect_accessibility_issue": "Problem z dostępnością",
+	"show_seconds_in_trips": "Pokaż sekundy w podróżach",
+	"system_theme": "System",
+	"dark_theme": "Ciemny",
+	"light_theme": "Jasny",
+	"12_hour_clock": "Zegar 12-godzinny"
 }

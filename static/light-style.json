@@ -1102,7 +1102,7 @@
 		}
 	  },
 	  {
-		"id": "road_area_pattern",
+		"id": "pedestrian_area_pattern",
 		"type": "fill",
 		"source": "openmaptiles",
 		"source-layer": "transportation",

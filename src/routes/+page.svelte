@@ -1,6 +1,5 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
-	import '@maplibre/maplibre-gl-inspect/dist/maplibre-gl-inspect.css';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -12,6 +11,9 @@
 	import { _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { update_geolocation_source } from '../user_location_lib';
+	import {init_stores} from '../components/init_stores';
+	import {refreshUIMaplibre} from '../components/transitionDarkAndLight';
+	import {layerspercategory } from '../components/layernames';
 
 	import {
 		dark_mode_store,
@@ -29,7 +31,8 @@
 		map_pointer_store,
 		geolocation_store,
 		chateaus_store,
-		show_gtfs_ids_store
+		show_gtfs_ids_store,
+		ui_theme_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -67,6 +70,7 @@
 		}
 	};
 	init_locales();
+	init_stores();
 	let sidebarOpen: string = 'middle';
 	let sidebar_height_output: string = '100vh';
 	//percentage
@@ -113,6 +117,7 @@
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
+
 	if (typeof window !== 'undefined') {
 		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
 
@@ -120,8 +125,42 @@
 			locale.set(window.localStorage.language);
 		}
 
-		if (window.localStorage.show_gtfs_ids == true) {
-			show_gtfs_ids_store.set(true);
+		if (ui_theme_store) {
+
+			ui_theme_store.subscribe((value) => {
+				if (value == "system") {
+					const checkIsDarkSchemePreferred = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
+
+					darkMode = checkIsDarkSchemePreferred();
+				}
+				else if (value == "dark") {
+					darkMode = true;
+				} else {
+					darkMode = false;
+				}
+
+				if (darkMode) {
+					document.body.classList.add('dark');
+				} else {
+					document.body.classList.remove('dark');
+				}
+
+				refreshUIMaplibre();
+			});
+
+			window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change',({ matches }) => {
+  if (matches) {
+    console.log("change to dark mode!");
+	darkMode = true;
+  } else {
+	console.log("change to light mode!");
+
+	darkMode = false;
+
+	refreshUIMaplibre();
+  }
+})
 		}
 	}
 
@@ -276,50 +315,6 @@
 
 	let chateaus: any = null;
 	let chateaus_in_frame: Writable<string[]> = writable([]);
-
-	const layerspercategory = {
-		bus: {
-			livedots: 'bus',
-			labeldots: 'labelbuses',
-			pointing: 'busespointing',
-			pointingshell: 'busespointingshell',
-			stops: 'busstopscircle',
-			labelstops: 'busstopslabel',
-			shapes: 'busshapes',
-			labelshapes: 'labelbusshapes'
-		},
-		intercityrail: {
-			livedots: 'intercityrail',
-			labeldots: 'labelintercityrail',
-			pointing: 'intercityrailpointing',
-			pointingshell: 'intercityrailpointingshell',
-			stops: 'intercityrailstopscircle',
-			labelstops: 'intercityrailstopslabel',
-			shapes: 'intercityrailshapes',
-			labelshapes: 'intercityraillabelshapes'
-		},
-		localrail: {
-			livedots: 'localrail',
-			labeldots: 'labellocalrail',
-			pointing: 'localrailpointing',
-			pointingshell: 'localrailpointingshell',
-			stops: 'localrailstopscircle',
-			labelstops: 'localrailstopslabel',
-			shapes: 'localrailshapes',
-			labelshapes: 'localraillabelshapes'
-		},
-
-		other: {
-			livedots: 'other',
-			labeldots: 'labelother',
-			pointing: 'otherpointing',
-			pointingshell: 'otherpointingshell',
-			stops: 'otherstopscircle',
-			labelstops: 'otherstopslabel',
-			shapes: 'othershapes',
-			labelshapes: 'otherlabelshapes'
-		}
-	};
 
 	let layersettings: Record<string, any> = {
 		bus: {
@@ -649,21 +644,6 @@
 			if (cachedJsonObject != null) {
 				layersettings = cachedJsonObject;
 			}
-		}
-
-		if (
-			localStorage.theme === 'light' ||
-			(urlParams.get('framework-colorway') == 'light' && embedmode) ||
-			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)
-		) {
-			console.log('dark mode triggered');
-			document.documentElement.classList.remove('dark');
-			darkMode = false;
-			dark_mode_store.set(false);
-		} else {
-			document.documentElement.classList.add('dark');
-			darkMode = true;
-			dark_mode_store.set(true);
 		}
 	}
 
@@ -1171,15 +1151,6 @@ const media = matchMedia(mqString);
 		map.on('load', () => {
 			map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
-
-			if (debugmode) {
-				map.addControl(new MaplibreInspect({
-  popup: new maplibregl.Popup({
-    closeButton: false,
-    closeOnClick: false
-  })
-}));
-			}
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);

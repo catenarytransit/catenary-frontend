@@ -97,5 +97,10 @@
 	"alert_effect_unknown_effect": "不明な影響",
 	"alert_effect_stop_moved": "停留所が移動しました",
 	"alert_effect_no_effect": "影響なし",
-	"alert_effect_accessibility_issue": "アクセシビリティの問題"
+	"alert_effect_accessibility_issue": "アクセシビリティの問題",
+	"show_seconds_in_trips": "トリップで秒を表示",
+	"system_theme": "システム",
+	"dark_theme": "ダーク",
+	"light_theme": "ライト",
+	"12_hour_clock": "12時間制"
 }

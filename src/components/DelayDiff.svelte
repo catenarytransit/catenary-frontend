@@ -7,7 +7,7 @@
 
 	//Positive diff means late, negative diff means early
 
-	export let simple: boolean = false;
+	export let show_seconds = false;
 
 	let textclass: string = 'text-[0px]';
 
@@ -100,10 +100,10 @@
 		{#if h > 0}
 			<span class="text-sm">{h}</span>
 			<span class="text-xs">{locale_hour_marking(this_locale)}</span>
-		{/if}{#if h > 0 || m > 0 || (simple && m >= 0 && diff != 0)}
-			<span class="text-sm">{simple && Math.abs(diff) < 60 ? '<1' : m}</span>
+		{/if}{#if h > 0 || m > 0 || (!show_seconds && m >= 0 && diff != 0)}
+			<span class="text-sm">{!show_seconds && Math.abs(diff) < 60 ? '<1' : m}</span>
 			<span class="text-xs">{locale_min_marking(this_locale)}</span>{/if}
-		{#if !simple}
+		{#if show_seconds}
 			{#if Math.abs(diff) > 0}
 				<span class="text-sm">{s}</span>
 				<span class="text-xs">{locale_s_marking(this_locale)}</span>

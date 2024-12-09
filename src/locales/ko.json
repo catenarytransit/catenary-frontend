@@ -96,5 +96,10 @@
 	"alert_effect_unknown_effect": "알 수 없는 효과",
 	"alert_effect_stop_moved": "정류장 이동",
 	"alert_effect_no_effect": "효과 없음",
-	"alert_effect_accessibility_issue": "접근성 문제"
+	"alert_effect_accessibility_issue": "접근성 문제",
+	"show_seconds_in_trips": "여행에서 초 표시",
+	"system_theme": "시스템",
+	"dark_theme": "다크모드",
+	"light_theme": "라이트모드",
+	"12_hour_clock": "12시간제"
 }

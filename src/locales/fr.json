@@ -95,5 +95,10 @@
 	"alert_effect_unknown_effect": "Effet inconnu",
 	"alert_effect_stop_moved": "Arrêt déplacé",
 	"alert_effect_no_effect": "Aucun effet",
-	"alert_effect_accessibility_issue": "Problème d'accessibilité"
+	"alert_effect_accessibility_issue": "Problème d'accessibilité",
+	"show_seconds_in_trips": "Afficher les secondes dans les voyages",
+	"system_theme": "Système",
+	"dark_theme": "Sombre",
+	"light_theme": "Clair",
+	"12_hour_clock": "Système horaire sur 12 heures"
 }

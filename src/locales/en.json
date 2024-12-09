@@ -97,5 +97,10 @@
 	"alert_effect_unknown_effect": "Unknown effect",
 	"alert_effect_stop_moved": "Stop moved",
 	"alert_effect_no_effect": "No effect",
-	"alert_effect_accessibility_issue": "Accessibility issue"
+	"alert_effect_accessibility_issue": "Accessibility issue",
+	"show_seconds_in_trips": "Show seconds in trips",
+	"system_theme": "System",
+	"dark_theme": "Dark",
+	"light_theme": "Light",
+	"12_hour_clock": "12-hour clock"
 }

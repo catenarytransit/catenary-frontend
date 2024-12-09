@@ -97,5 +97,10 @@
 	"alert_effect_unknown_effect": "Onbekend effect",
 	"alert_effect_stop_moved": "Halte verplaatst",
 	"alert_effect_no_effect": "Geen effect",
-	"alert_effect_accessibility_issue": "Toegankelijkheidsprobleem"
+	"alert_effect_accessibility_issue": "Toegankelijkheidsprobleem",
+	"show_seconds_in_trips": "Seconden in reizen weergeven",
+	"system_theme": "Systeem",
+	"dark_theme": "Donker",
+	"light_theme": "Licht",
+	"12_hour_clock": "12-uurs klok"
 }

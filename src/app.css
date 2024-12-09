@@ -86,12 +86,11 @@ body {
 .maplibregl-canvas 
 {
 
-	background-color: #000000;
+	background-color: #324a78;
 }
 
-@media (prefers-color-scheme: dark) {.maplibregl-canvas 
+.dark .maplibregl-canvas 
 {
 
 	background-color: #000000;
-}
 }

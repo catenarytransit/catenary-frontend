@@ -31,6 +31,9 @@ export const lock_on_gps_store = writable(false);
 
 export const dark_mode_store = writable(false);
 
+// system, light, dark
+export const ui_theme_store:Writable<string> = writable('system');
+
 export const show_zombie_buses_store = writable(false);
 
 export const usunits_store = writable(false);
@@ -46,3 +49,5 @@ export const geolocation_store: Writable<GeolocationPosition | null> = writable(
 export const nearby_deps_cache_gps: Writable<any | null> = writable(null);
 
 export const chateaus_store: Writable<any | null> = writable(null);
+
+export const show_seconds_store = writable(false);

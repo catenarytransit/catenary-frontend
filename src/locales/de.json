@@ -92,5 +92,10 @@
 	"alert_effect_unknown_effect": "Unbekannte Auswirkung",
 	"alert_effect_stop_moved": "Haltestelle verlegt",
 	"alert_effect_no_effect": "Keine Auswirkung",
-	"alert_effect_accessibility_issue": "Barrierefreiheitsproblem"
+	"alert_effect_accessibility_issue": "Barrierefreiheitsproblem",
+	"show_seconds_in_trips": "Sekunden in Reisen anzeigen",
+	"system_theme": "System",
+	"dark_theme": "Dunkel",
+	"light_theme": "Hell",
+	"12_hour_clock": "2-mal-12-Stunden-Zählung"
 }

@@ -5,7 +5,7 @@
 	export let diff: number;
 	export let show_brackets: boolean = true;
 
-	export let show_seconds: boolean = true;
+	export let show_seconds: boolean = false;
 
 	export let large: boolean = false;
 

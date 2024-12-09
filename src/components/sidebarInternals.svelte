@@ -1,6 +1,7 @@
 <script lang="ts">
 	// @ts-nocheck
 	import { lightenColour } from './lightenDarkColour';
+	import store from 'store2';
 	import {
 		MapSelectionScreen,
 		StackInterface,
@@ -15,6 +16,7 @@
 	import HomeButton from './SidebarParts/home_button.svelte';
 	import BackButton from './SidebarParts/back_button.svelte';
 	import { SettingsStack } from '../components/stackenum';
+	import SettingsMenu from './SettingsMenu.svelte';
 	import NearbyDepartures from './NearbyDepartures.svelte';
 	import { writable } from 'svelte/store';
 	import {get} from 'svelte/store';
@@ -37,34 +39,13 @@
 	import {locales_options, locales_options_lookup} from '../i18n';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
-	let this_locale: string | undefined | null;
-
-	locale.subscribe((newval) => {
-		this_locale = newval;
-	});
-
-        let show_gtfs_ids = get(show_gtfs_ids_store);
-
-        show_gtfs_ids_store.subscribe((value) => {
-          show_gtfs_ids = value;
-        });
-
-
-
-	function locale_code_to_name(locale: string | null | undefined) {
-		if (locale == null || locale == undefined) {
-			return '--';
-		} else {
-			let temp = locales_options_lookup[locale];
-			if (temp == null || temp == undefined) {
-				return locale;
-			} else {
-				return temp;
-			}
-		}
-	}
-
 	export let usunits: boolean;
+
+	let show_gtfs_ids = get(show_gtfs_ids_store);
+
+	show_gtfs_ids_store.subscribe((value) => {
+		show_gtfs_ids = value;
+	});
 
 	let simpleRouteMode: boolean = true;
 
@@ -73,22 +54,6 @@
 			simpleRouteMode = true;
 		} else {
 			simpleRouteMode = false;
-		}
-
-		if (window.localStorage.getItem('usunits') == 'true') {
-			usunits = true;
-			usunits_store.set(true)
-		} else {
-			usunits = false;
-			usunits_store.set(false)
-		}
-
-		if (window.localStorage.getItem('show_gtfs_ids') == 'true') {
-			show_gtfs_ids = true;
-			show_gtfs_ids_store.set(true)
-		} else {
-			show_gtfs_ids = false;
-			show_gtfs_ids_store.set(false)
 		}
 	}
 </script>
@@ -333,118 +298,7 @@
 		</div>
 	{/if}
 	{#if latest_item_on_stack.data instanceof SettingsStack}
-		<HomeButton />
-		<div class="px-3 pt-1 flex flex-col h-full select-text">
-			<h1 class="text-3xl font-medium mb-2">{$_('settings')}</h1>
-			<span class="text-xl block">{$_('language')}</span>
-				<p>{$locale}</p>
-			<select
-				bind:value={$locale}
-				class="text-black bg-white dark:bg-slate-900 dark:text-white p-1 border-2 my-1 border-seashore rounded-md"
-			>
-				{#each $locales as locale}
-					<option value={locale} class="text-black bg-white dark:bg-slate-900 dark:text-white"
-						>{locale_code_to_name(locale)}</option
-					>
-				{/each}
-			</select>
-			<span class="block my-2"></span>
-			<span class="text-xl block mb-1">{$_('mapstyle')}</span>
-			<div class="flex flex-row gap-x-2">
-				<input
-					type="checkbox"
-					checked={get(usunits_store)}
-					class="accent-seashore"
-					on:click={() => {
-						usunits_store.update((x) => !x);
-						window.localStorage.usunits = get(usunits_store);
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter') {
-							usunits_store.update((x) => !x);
-							window.localStorage.usunits = get(usunits_store);
-						}
-					}}
-				/>
-				<p>{$_('useUSunits')}</p>
-			</div>
-			<div class="flex flex-row gap-x-2">
-				<input
-					type="checkbox"
-					checked={get(show_gtfs_ids_store)}
-					class="accent-seashore"
-					on:click={() => {
-						show_gtfs_ids_store.update((x) => !x);
-						window.localStorage.show_gtfs_ids = get(show_gtfs_ids_store);
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter') {
-							show_gtfs_ids_store.update((x) => !x);
-							window.localStorage.show_gtfs_ids = get(show_gtfs_ids_store);
-						}
-					}}
-				/>
-				<p>{$_('show_gtfs_ids')}</p>
-			</div>
-			<div class="flex flex-row gap-x-2">
-				<input
-					type="checkbox"
-					checked={window.localStorage.theme == 'dark'}
-					class="accent-seashore"
-					on:click={(e) => {
-						if (e.target.checked) {
-							window.localStorage.theme = 'dark';
-							dark_mode_store.update((x) => true);
-						} else {
-							window.localStorage.theme = 'light';
-							dark_mode_store.update((x) => false);
-						}
-						window.location.reload();
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter') {
-							if (e.target.checked) {
-								window.localStorage.theme = 'dark';
-								dark_mode_store.update((x) => true);
-							} else {
-								window.localStorage.theme = 'light';
-								dark_mode_store.update((x) => false);
-							}
-							window.location.reload();
-						}
-					}}
-				/>
-				<p>{$_('darkmode')}</p>
-			</div>
-			<div class="flex flex-row gap-x-2">
-				<input
-					type="checkbox"
-					class="accent-seashore"
-					checked={window.localStorage.simpleRouteMode == 'false'}
-					on:click={(e) => {
-						if (e.target.checked) {
-							window.localStorage.simpleRouteMode = 'false';
-							simpleRouteMode = false;
-						} else {
-							window.localStorage.simpleRouteMode = 'true';
-							simpleRouteMode = true;
-						}
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter') {
-							if (e.target.checked) {
-								window.localStorage.simpleRouteMode = 'false';
-								simpleRouteMode = false;
-							} else {
-								window.localStorage.simpleRouteMode = 'true';
-								simpleRouteMode = true;
-							}
-						}
-					}}
-				/>
-				<p>{$_('foamervision')}</p>
-			</div>
-		</div>
+		<SettingsMenu/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
@@ -467,7 +321,6 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 				{darkMode}
 				routetype={latest_item_on_stack.data.route_type}
 				trip_selected={latest_item_on_stack.data}
-				{simpleRouteMode}
 			/>
 		</div>
 	{/if}
@@ -502,38 +355,6 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 			><span class="material-symbols-outlined block"> settings </span>
 		</button>
 	</div>
-	{#if this_locale?.startsWith('en')}
-		{#if false}
-			<div
-				class="text-sm lg:text-base py-2 px-4 sm:px-2 lg:px-4 border-sky-400 border-y-2 mb-2 bg-sky-100 dark:bg-sky-700 dark:bg-opacity-15"
-			>
-				<h2 class="text-lg font-semibold">We get there together.</h2>
-				<p>
-					Catenary is a student-led non-profit organization at the cutting edge of transit and
-					routing research. We add features every day to our map, so come chat with us & give us
-					your feedback on our Discord server!
-				</p>
-				<div class="mt-4 flex flex-row gap-x-2">
-					<a target="_blank" href="https://discord.gg/yVV6dguwtq"
-						><button class="bg-blue-600 font-bold text-white rounded-md px-2 py-1"
-							>Join our Discord</button
-						></a
-					>
-					<a target="_blank" href="https://catenarymaps.org"
-						><button
-							class="bg-white dark:bg-gray-950 font-bold rounded-md px-2 py-1 flex flex-row gap-x-1 text-[#42A7C5]"
-							><img
-								src="https://catenarymaps.org/logo.svg"
-								class="inline mr-1 h-5 my-auto text-[#42A7C5]"
-							/>Catenary Website</button
-						></a
-					>
-				</div>
-			</div>
-		{/if}
-
-		<!--<TidbitSidebarCard />-->
-	{/if}
 	<div class="py-1 flex flex-col h-full">
 		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} {darkMode} /></div>
 	</div>
