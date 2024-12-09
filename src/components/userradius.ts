@@ -1,8 +1,11 @@
 
 import { get } from 'svelte/store';
 import { createGeoJSONCircle, createGeoJSONCircleFeature } from '../geoMathsAssist';
-import { dark_mode_store } from '../globalstores';
+import { ui_theme_store } from '../globalstores';
+import { determineDarkModeToBool } from './determineDarkModeToBool';
 export function addGeoRadius(map: maplibregl.Map) {
+	const dark_mode = determineDarkModeToBool();
+
 	try {
 		map.addSource('km_source', {
 			type: 'geojson',
@@ -17,7 +20,7 @@ export function addGeoRadius(map: maplibregl.Map) {
 			type: 'line',
 			source: 'km_source',
 			paint: {
-				'line-color': get(dark_mode_store) ? '#dddddd' : '#121212',
+				'line-color': dark_mode ? '#dddddd' : '#121212',
 				'line-width': 1.2,
 				//'line-emissive-strength': 1
 			}
@@ -36,8 +39,8 @@ export function addGeoRadius(map: maplibregl.Map) {
 				'text-allow-overlap': true
 			},
 			paint: {
-				'text-color': get(dark_mode_store) ? '#ffffff' : '#121212',
-				'text-halo-color': get(dark_mode_store) ? '#000030' : '#eeeeee',
+				'text-color': dark_mode ? '#ffffff' : '#121212',
+				'text-halo-color': dark_mode ? '#000030' : '#eeeeee',
 				'text-halo-width': 2
 			}
 		});

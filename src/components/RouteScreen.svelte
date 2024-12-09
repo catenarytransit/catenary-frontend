@@ -42,7 +42,6 @@
 	} from './pdf_schedules';
 
 	import {
-		dark_mode_store,
 		data_stack_store,
 		on_sidebar_trigger_store,
 		realtime_vehicle_locations_last_updated_store,
@@ -58,6 +57,7 @@
 		map_pointer_store
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
+	import { determineDarkModeToBool } from './determineDarkModeToBool';
 
 
 	let activePattern: string = '';
@@ -74,7 +74,7 @@
 
 	export let routestack: RouteStack;
 
-	export let darkMode: boolean = false;
+	export let darkMode: boolean = determineDarkModeToBool();
 
 	let initial_data_load = {};
 

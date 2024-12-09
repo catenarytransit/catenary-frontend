@@ -16,7 +16,6 @@
 	import {layerspercategory } from '../components/layernames';
 
 	import {
-		dark_mode_store,
 		data_stack_store,
 		on_sidebar_trigger_store,
 		realtime_vehicle_locations_last_updated_store,
@@ -52,6 +51,7 @@
 	import { determineFeedsUsingChateaus } from '../maploaddata';
 	import CloseButton from '../components/CloseButton.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
+	import { determineDarkModeToBool } from '../components/determineDarkModeToBool';
 
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -106,7 +106,7 @@
 		geolocation = g;
 	});
 
-	let darkMode = true;
+	let darkMode = determineDarkModeToBool();
 	let lockongps = false;
 
 	lock_on_gps_store.subscribe((value) => {
@@ -125,7 +125,45 @@
 			locale.set(window.localStorage.language);
 		}
 
+		window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change',({ matches }) => {
+		let ui_theme_grab = get(ui_theme_store);
+
+		if (ui_theme_grab == "system") {
+			if (matches) {
+    console.log("change to dark mode!");
+	darkMode = true;
+	refreshUIMaplibre();
+  } else {
+	console.log("change to light mode!");
+
+	darkMode = false;
+
+	refreshUIMaplibre();
+  }
+		} 
+});
+
 		if (ui_theme_store) {
+
+			let ui_theme_grab = get(ui_theme_store);
+
+			if (ui_theme_grab == "system") {
+					const checkIsDarkSchemePreferred = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
+
+					darkMode = checkIsDarkSchemePreferred();
+				}
+				else if (ui_theme_grab == "dark") {
+					darkMode = true;
+				} else {
+					darkMode = false;
+				}
+
+				if (darkMode) {
+					document.body.classList.add('dark');
+				} else {
+					document.body.classList.remove('dark');
+				}
 
 			ui_theme_store.subscribe((value) => {
 				if (value == "system") {
@@ -148,19 +186,8 @@
 				refreshUIMaplibre();
 			});
 
-			window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change',({ matches }) => {
-  if (matches) {
-    console.log("change to dark mode!");
-	darkMode = true;
-  } else {
-	console.log("change to light mode!");
-
-	darkMode = false;
-
-	refreshUIMaplibre();
-  }
-})
+			console.log('dark mode ', darkMode, 'sytstem theme', ui_theme_grab);
+			
 		}
 	}
 

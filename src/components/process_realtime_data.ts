@@ -6,7 +6,6 @@ import {
 	realtime_vehicle_route_cache_store,
 	realtime_vehicle_route_cache_hash_store,
 	realtime_vehicle_locations_last_updated_store,
-	dark_mode_store,
 	usunits_store
 } from '../globalstores';
 import {
@@ -21,6 +20,7 @@ import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
 import {calculateGamma} from './colour/computeBrightness';
 import { fixHeadsignText, fixRouteName } from './agencyspecific';
 import { adjustGamma } from './colour/readjustGamma';
+import { determineDarkModeToBool } from './determineDarkModeToBool';
 function category_name_to_source_name(category: string): string {
 	switch (category) {
 		case 'bus':
@@ -103,7 +103,7 @@ export function process_realtime_vehicle_locations(
 }
 
 export function rerender_category_live_dots(category: string, map: maplibregl.Map) {
-	const darkMode = get(dark_mode_store);
+	const darkMode = determineDarkModeToBool();
 	const realtime_vehicle_locations = get(realtime_vehicle_locations_store);
 	const realtime_vehicle_route_cache = get(realtime_vehicle_route_cache_store);
 	const usunits = get(usunits_store);

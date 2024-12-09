@@ -30,7 +30,7 @@
 	}, 300);
 
 	import {
-		dark_mode_store,
+		ui_theme_store,
 		data_stack_store,
 		on_sidebar_trigger_store,
 		realtime_vehicle_locations_last_updated_store,

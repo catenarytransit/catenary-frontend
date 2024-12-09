@@ -48,7 +48,6 @@
 	
 
 	import {
-		dark_mode_store,
 		data_stack_store,
 		on_sidebar_trigger_store,
 		realtime_vehicle_locations_last_updated_store,
@@ -62,10 +61,12 @@
 		show_my_location_store,
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
-		show_gtfs_ids_store
+		show_gtfs_ids_store,
+		ui_theme_store
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { hexToRgb } from '../utils/colour';
+	import { determineDarkModeToBool } from './determineDarkModeToBool';
 
 	let show_seconds = get(show_seconds_store);
 
@@ -217,7 +218,7 @@
 
 	export let trip_selected: SingleTrip;
 
-	export let darkMode: boolean = false;
+	export let darkMode: boolean = determineDarkModeToBool();
 
 	async function fetch_trip_selected() {
 		let map = get(map_pointer_store);

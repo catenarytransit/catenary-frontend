@@ -1,5 +1,4 @@
 import {
-	dark_mode_store,
 	data_stack_store,
 	on_sidebar_trigger_store,
 	realtime_vehicle_locations_last_updated_store,
@@ -13,11 +12,11 @@ import {
 	custom_icons_category_to_layer_id,
 	map_pointer_store
 } from '../../globalstores';
-
+import { determineDarkModeToBool } from '../determineDarkModeToBool';
 import { writable, get } from 'svelte/store';
 
 export function makeContextLayerDataset(map: maplibregl.Map) {
-	let darkMode = get(dark_mode_store);
+	let darkMode = determineDarkModeToBool();
 
 	const urlParams =
 		typeof window !== 'undefined'

@@ -1,11 +1,11 @@
 import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import { dark_mode_store } from '../globalstores';
+import { determineDarkModeToBool } from './determineDarkModeToBool';
 
 export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<string[]>) {
 	console.log('load wildfire data');
 
-	const darkMode = get(dark_mode_store);
+	const darkMode = determineDarkModeToBool();
 
 	const evacuation_fire_url = "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/CA_EVACUATIONS_PROD/FeatureServer/0/query/?spatialRel=esriSpatialRelIntersects&f=geojson&where=SHAPE__Area>0&outFields=*";
 

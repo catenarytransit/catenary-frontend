@@ -20,7 +20,7 @@
 	import NearbyDepartures from './NearbyDepartures.svelte';
 	import { writable } from 'svelte/store';
 	import {get} from 'svelte/store';
-	import { data_stack_store, usunits_store, dark_mode_store, show_gtfs_ids_store } from '../globalstores';
+	import { data_stack_store, usunits_store, show_gtfs_ids_store } from '../globalstores';
 	import { getLocaleFromNavigator, locale, locales, _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
