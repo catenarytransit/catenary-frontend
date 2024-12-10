@@ -56,7 +56,8 @@ export function makeGpsLayer(map: mapboxgl.Map) {
 					'icon-image': 'geonav', // reference the image
 					'icon-size': 0.13,
 					'icon-rotate': ['get', 'heading'],
-					visibility: 'none'
+					visibility: 'none',
+					'icon-rotation-alignment': 'map'
 				},
 				paint: {
 					'icon-opacity': 0.8,
