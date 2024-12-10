@@ -742,7 +742,7 @@
 															stoptime.interpolated_stoptime_unix_seconds) * 1000
 													).toLocaleTimeString('en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
-														hour: show_seconds ? '2-digit' : 'numeric',
+														hour: '2-digit',
 														minute: '2-digit',
 														second: show_seconds ? '2-digit' : undefined
 													})}
@@ -752,7 +752,7 @@
 														'en-UK',
 														{
 															timeZone: stoptime.timezone || trip_data.tz,
-															hour: show_seconds ? '2-digit' : 'numeric',
+															hour: '2-digit',
 															minute: '2-digit',
 															second: show_seconds ? '2-digit' : undefined
 														}
@@ -768,7 +768,7 @@
 															stoptime.interpolated_stoptime_unix_seconds) * 1000
 													).toLocaleTimeString('en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
-														hour: show_seconds ? '2-digit' : 'numeric',
+														hour: '2-digit',
 														minute: '2-digit',
 														second: show_seconds ? '2-digit' : undefined
 													})}
@@ -778,7 +778,7 @@
 														'en-UK',
 														{
 															timeZone: stoptime.timezone || trip_data.tz,
-															hour: show_seconds ? '2-digit' : 'numeric',
+															hour: '2-digit',
 															minute: '2-digit',
 															second: show_seconds ? '2-digit' : undefined
 														}
@@ -791,7 +791,7 @@
 														stoptime.interpolated_stoptime_unix_seconds) * 1000
 												).toLocaleTimeString('en-UK', {
 													timeZone: stoptime.timezone || trip_data.tz,
-													hour: show_seconds ? '2-digit' : 'numeric',
+													hour: '2-digit'
 													minute: '2-digit',
 													second: show_seconds ? '2-digit' : undefined
 												})}
@@ -858,7 +858,7 @@
 																stoptime.interpolated_stoptime_unix_seconds) * 1000
 														).toLocaleTimeString('en-UK', {
 															timeZone: stoptime.timezone || trip_data.tz,
-															hour: show_seconds ? '2-digit' : 'numeric',
+															hour: '2-digit'
 															minute: '2-digit',
 															second: show_seconds ? '2-digit' : undefined
 														})}
@@ -868,7 +868,7 @@
 															'en-UK',
 															{
 																timeZone: stoptime.timezone || trip_data.tz,
-																hour: show_seconds ? '2-digit' : 'numeric',
+																hour: '2-digit'
 																minute: '2-digit',
 																second: show_seconds ? '2-digit' : undefined
 															}
@@ -880,7 +880,7 @@
 															stoptime.interpolated_stoptime_unix_seconds) * 1000
 													).toLocaleTimeString('en-UK', {
 														timeZone: stoptime.timezone || trip_data.tz,
-														hour: show_seconds ? '2-digit' : 'numeric',
+														hour: '2-digit'
 														minute: '2-digit',
 														second: show_seconds ? '2-digit' : undefined
 													})}
