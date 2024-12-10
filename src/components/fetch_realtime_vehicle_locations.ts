@@ -10,6 +10,14 @@ import {
 	realtime_vehicle_locations_last_updated_store
 } from '../globalstores';
 
+const subdomains = [
+	"https://birch_rt1.catenarymaps.org",
+	"https://birch_rt2.catenarymaps.org",
+	"https://birch_rt3.catenarymaps.org",
+	"https://birch_rt4.catenarymaps.org",
+	"https://birch_rt5.catenarymaps.org",
+];
+
 export function fetch_realtime_vehicle_locations(
 	layersettings: Record<string, any>,
 	chateaus_in_frame: Writable<string[]>,
@@ -67,7 +75,11 @@ export function fetch_realtime_vehicle_locations(
 				}
 			}
 
-			const url = `https://birch.catenarymaps.org/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/${existing_fasthash}`;
+			//pick a random subdomain
+
+			const subdomain_picked = subdomains[Math.floor(Math.random() * subdomains.length)];
+
+			const url = `${subdomain_picked}/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/${existing_fasthash}`;
 
 			if (chateau_to_realtime_feed_lookup[chateauId]) {
 				const pending_chateau_rt_request_for_chateau = pending_chateau_rt_request[pending_key];

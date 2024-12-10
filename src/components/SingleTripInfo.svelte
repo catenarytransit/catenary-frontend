@@ -88,7 +88,7 @@
 
 	async function update_realtime_data() {
 		let url = new URL(
-			`https://birch.catenarymaps.org/get_trip_information_rt_update/${trip_selected.chateau_id}/`
+			`https://birch_req_trip.catenarymaps.org/get_trip_information_rt_update/${trip_selected.chateau_id}/`
 		);
 
 		if (trip_selected.trip_id != null) {
@@ -226,7 +226,7 @@
 		console.log('t-s', trip_selected);
 
 		let url = new URL(
-			`https://birch.catenarymaps.org/get_trip_information/${trip_selected.chateau_id}/`
+			`https://birch_req_trip.catenarymaps.org/get_trip_information/${trip_selected.chateau_id}/`
 		);
 
 		if (trip_selected.trip_id != null) {

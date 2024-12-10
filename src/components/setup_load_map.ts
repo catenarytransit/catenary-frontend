@@ -74,42 +74,42 @@ export async function setup_load_map(
 
 		map.addSource('intercityrailshapes', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/shapes_intercity_rail'
+			url: 'https://birch1.catenarymaps.org/shapes_intercity_rail'
 		});
 
 		map.addSource('localcityrailshapes', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/shapes_local_rail'
+			url: 'https://birch2.catenarymaps.org/shapes_local_rail'
 		});
 
 		map.addSource('othershapes', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/shapes_ferry'
+			url: 'https://birch3.catenarymaps.org/shapes_ferry'
 		});
 
 		map.addSource('busshapes', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/shapes_bus'
+			url: 'https://birch4.catenarymaps.org/shapes_bus'
 		});
 
 		map.addSource('busstops', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/busstops'
+			url: 'https://birch6.catenarymaps.org/busstops'
 		});
 
 		map.addSource('stationfeatures', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/station_features'
+			url: 'https://birch7.catenarymaps.org/station_features'
 		});
 
 		map.addSource('railstops', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/railstops'
+			url: 'https://birch5.catenarymaps.org/railstops'
 		});
 
 		map.addSource('otherstops', {
 			type: 'vector',
-			url: 'https://birch.catenarymaps.org/otherstops'
+			url: 'https://birch8.catenarymaps.org/otherstops'
 		});
 
 		map.addSource('foamertiles', {

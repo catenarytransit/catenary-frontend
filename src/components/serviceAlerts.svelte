@@ -46,7 +46,7 @@ $: languagelist = Object.values(alerts).map((alert) => {
 											{@html each_desc_line.replaceAll(
 												'<a ',
 												'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
-											).replaceAll(/\<(\/)?p\>/g,"").replaceAll(/\<(\/)?b\>/g,"").replaceAll(/(\[)?accessibility icon(\])?/g, "<span class=\"bg-blue-200 dark:bg-gray-500 w-3 h-3 rounded-full inline\"><span class=\"text-sm material-symbols-outlined \">accessible</span></span>")}
+											).replaceAll(/\<(\/)?p\>/g,"").replaceAll(/\<(\/)?b\>/g,"").replaceAll(/(\[)?accessibility icon(\])?/g, "<span class=\"bg-blue-200 dark:bg-gray-500 w-3 h-3 rounded-full inline\"><span class=\"text-xs material-symbols-outlined \">accessible</span></span>")}
 										</div>
 									{/each}
 									
