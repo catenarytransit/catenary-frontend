@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+.catenary-scroll {
 	--sb-track-color: #e1ecfb;
 	--sb-thumb-color: #42a7c5;
 	--sb-size: 16px;
 }
 
-.dark body {
+.dark .catenary-scroll {
 	--sb-track-color: #0a233f;
 }
 
