@@ -294,7 +294,7 @@
 										{new Intl.DateTimeFormat('en-GB', {
 											hour: 'numeric',
 											minute: 'numeric',
-											timeZone: trip.tz
+											timeZone: stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].timezone || trip.tz
 										}).format(
 											new Date((trip.departure_realtime || trip.departure_schedule) * 1000)
 										)}
