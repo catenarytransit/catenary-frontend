@@ -71,7 +71,7 @@
 	locale.subscribe((x) => (this_locale = x));
 
 	$: if (diff) {
-		let remainder = Math.abs(diff);
+		let remainder = Math.floor(Math.abs(diff));
 		h = Math.floor(remainder / 3600);
 		remainder = remainder - h * 3600;
 		m = Math.floor(remainder / 60);
