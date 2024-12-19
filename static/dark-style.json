@@ -154,6 +154,47 @@
 		}
 	  },
 	  {
+		"id": "landuse_cemetery",
+		"type": "fill",
+		"source": "openmaptiles",
+		"source-layer": "landuse",
+		"filter": ["==", ["get", "class"], "cemetery"],
+		"paint": {"fill-color": "rgba(57, 61, 57, 1)", "fill-opacity": 0.2}
+	  },
+	  {
+		"id": "landuse_hospital",
+		"type": "fill",
+		"source": "openmaptiles",
+		"source-layer": "landuse",
+		"filter": ["==", ["get", "class"], "hospital"],
+		"paint": {"fill-color": "rgba(78, 61, 70, 1)"}
+	  },
+	  {
+		"id": "landuse_school",
+		"type": "fill",
+		"source": "openmaptiles",
+		"source-layer": "landuse",
+		"filter": ["==", ["get", "class"], "school"],
+		"paint": {"fill-color": "rgba(28, 28, 31, 1)"}
+	  },
+	  {
+		"id": "landuse_track",
+		"type": "fill",
+		"source": "openmaptiles",
+		"source-layer": "landuse",
+		"filter": ["==", ["get", "class"], "track"],
+		"paint": {"fill-color": "rgba(115, 71, 56, 1)"}
+	  },
+	  {
+		"id": "landuse_pitch",
+		"type": "fill",
+		"source": "openmaptiles",
+		"source-layer": "landuse",
+		"filter": ["==", ["get", "class"], "pitch"],
+		"paint": {"fill-color": "rgba(19, 78, 72, 1)"}
+	  },
+	  
+	  {
 		"id": "landcover_grass",
 		"type": "fill",
 		"source": "openmaptiles",
@@ -198,46 +239,6 @@
 		  "fill-color": "rgba(106, 136, 146, 1)",
 		  "fill-opacity": 1
 		}
-	  },
-	  {
-		"id": "landuse_cemetery",
-		"type": "fill",
-		"source": "openmaptiles",
-		"source-layer": "landuse",
-		"filter": ["==", ["get", "class"], "cemetery"],
-		"paint": {"fill-color": "rgba(57, 61, 57, 1)", "fill-opacity": 0.2}
-	  },
-	  {
-		"id": "landuse_hospital",
-		"type": "fill",
-		"source": "openmaptiles",
-		"source-layer": "landuse",
-		"filter": ["==", ["get", "class"], "hospital"],
-		"paint": {"fill-color": "rgba(78, 61, 70, 1)"}
-	  },
-	  {
-		"id": "landuse_school",
-		"type": "fill",
-		"source": "openmaptiles",
-		"source-layer": "landuse",
-		"filter": ["==", ["get", "class"], "school"],
-		"paint": {"fill-color": "rgba(28, 28, 31, 1)"}
-	  },
-	  {
-		"id": "landuse_track",
-		"type": "fill",
-		"source": "openmaptiles",
-		"source-layer": "landuse",
-		"filter": ["==", ["get", "class"], "track"],
-		"paint": {"fill-color": "rgba(115, 71, 56, 1)"}
-	  },
-	  {
-		"id": "landuse_pitch",
-		"type": "fill",
-		"source": "openmaptiles",
-		"source-layer": "landuse",
-		"filter": ["==", ["get", "class"], "pitch"],
-		"paint": {"fill-color": "rgba(19, 78, 72, 1)"}
 	  },
 	  {
 		"id": "waterway_tunnel",
