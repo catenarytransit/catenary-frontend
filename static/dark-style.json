@@ -186,15 +186,6 @@
 		"paint": {"fill-color": "rgba(115, 71, 56, 1)"}
 	  },
 	  {
-		"id": "landuse_pitch",
-		"type": "fill",
-		"source": "openmaptiles",
-		"source-layer": "landuse",
-		"filter": ["==", ["get", "class"], "pitch"],
-		"paint": {"fill-color": "rgba(19, 78, 72, 1)"}
-	  },
-	  
-	  {
 		"id": "landcover_grass",
 		"type": "fill",
 		"source": "openmaptiles",
@@ -239,6 +230,14 @@
 		  "fill-color": "rgba(106, 136, 146, 1)",
 		  "fill-opacity": 1
 		}
+	  },
+	  {
+		"id": "landuse_pitch",
+		"type": "fill",
+		"source": "openmaptiles",
+		"source-layer": "landuse",
+		"filter": ["==", ["get", "class"], "pitch"],
+		"paint": {"fill-color": "rgba(19, 78, 72, 1)"}
 	  },
 	  {
 		"id": "waterway_tunnel",
