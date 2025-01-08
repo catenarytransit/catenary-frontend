@@ -9,15 +9,16 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const evacuation_fire_url = "https://services3.arcgis.com/uknczv4rpevve42E/arcgis/rest/services/CA_EVACUATIONS_PROD/FeatureServer/0/query/?spatialRel=esriSpatialRelIntersects&f=geojson&where=SHAPE__Area>0&outFields=*";
 
-	const national_usa_fire_arcgis_url =	'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters_Current/FeatureServer/0/query?where=Shape__Area%3E0&fullText=&objectIds=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&returnEnvelope=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&collation=&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnTrueCurves=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=';
+	const modis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/modis.json";
+	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
 	//  const california_firis_arcgis_url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/ArcGIS/rest/services/CA_Perimeters_NIFC_FIRIS_public_view/FeatureServer/0/query?where=OBJECTID>0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pgeojson&token=";
 
 	//fire section
 	
-	map.addSource('arcgisfire', {
-		type: 'geojson',
-		data: national_usa_fire_arcgis_url
-	});
+//	map.addSource('arcgisfire', {
+//		type: 'geojson',
+//		data: national_usa_fire_arcgis_url
+	//});
 	
 
 	map.addSource('evacuation_ca_fire', {
@@ -30,15 +31,31 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
                 data: california_firis_arcgis_url 
             })*/
 
+	map.addSource("modis", {
+		type: 'geojson',
+		data: modis_url
+	})
+
+
+/*
+	async function fetch_and_update_bounds_usa() {
+		fetch(national_usa_fire_arcgis_url)
+				.then(async (data) => await data.json())
+				.then((cleaned_data: any) => {
+					let arcgis_fire_source =map.getSource('arcgisfire');
+
+					if (arcgis_fire_source) {
+						arcgis_fire_source.setData(cleaned_data);
+					}
+
+				})
+				.catch((err) => console.error(err));	
+}*/
+
 	setInterval(() => {
 		if (get(chateaus_in_frame).includes('amtrak')) {
 			
-			fetch(national_usa_fire_arcgis_url)
-				.then(async (data) => await data.json())
-				.then((cleaned_data: any) => {
-					map.getSource('arcgisfire').setData(cleaned_data);
-				})
-				.catch((err) => console.error(err));	
+		//	fetch_and_update_bounds_usa();
 			
 			fetch(evacuation_fire_url)
 				.then(async (data) => await data.json())
@@ -49,6 +66,16 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		}
 	}, 120_000);
 
+	setInterval(() => {
+		fetch(modis_url)
+		.then(async (data) => await data.json())
+		.then((cleaned_data: any) => {
+			map.getSource('modis').setData(cleaned_data);
+		})
+		.catch((err) => console.error(err));
+	}, 1000_000);
+
+	/*
 	map.addLayer({
 		source: 'arcgisfire',
 		id: 'arcgisfire',
@@ -81,7 +108,31 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			'line-width': 3
 		},
 		minzoom: 5
-	});
+	});*/
+
+	map.addLayer({
+		"type": "circle",
+		minzoom: 4,
+		"id": 'modis',
+		"paint": {
+		  "circle-color": '#ff341a',
+		  "circle-opacity": 0.4,
+		  "circle-radius": [
+	  "interpolate",
+	  ["linear"],
+	  ["zoom"],
+	  5,
+	  1,
+	  9,
+	  7,
+	  12,
+	  15,
+	  22,
+	  40
+	]
+		},
+		'source': 'modis'
+	  });
 
 	map.addLayer({
 		source: 'evacuation_ca_fire',
