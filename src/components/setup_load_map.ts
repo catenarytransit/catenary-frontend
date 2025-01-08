@@ -156,6 +156,8 @@ export async function setup_load_map(
 			tileSize: 256
 		});
 
+		makeFireMap(map, chateaus_in_frame);
+
 		map.addLayer({
 			id: 'foamershapes',
 			type: 'raster',
@@ -219,7 +221,6 @@ export async function setup_load_map(
 		addShapes(map, darkMode, layerspercategory);
 
 		addStopsLayers(map, darkMode, layerspercategory);
-
 
 		map.loadImage('/station-enter.png').then((image) => {
 			map.addImage('station-enter', image.data);
@@ -408,8 +409,6 @@ export async function setup_load_map(
 
 		const chateau_feed_results = determineFeedsUsingChateaus(map);
 		chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-
-		makeFireMap(map, chateaus_in_frame);
 
 		setInterval(() => {
 			//const chateau_feed_results = determineFeedsUsingChateaus(map);
