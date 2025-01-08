@@ -112,7 +112,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	map.addLayer({
 		"type": "circle",
-		minzoom: 4,
+		minzoom: 5,
 		"id": 'modis',
 		"paint": {
 		  "circle-color": '#ff341a',
