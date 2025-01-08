@@ -64,7 +64,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				})
 				.catch((err) => console.error(err));
 		}
-	}, 120_000);
+	}, 60_000);
 
 	setInterval(() => {
 		fetch(modis_url)
