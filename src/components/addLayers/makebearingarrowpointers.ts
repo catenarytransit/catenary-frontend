@@ -1,5 +1,24 @@
 import maplibregl from 'maplibre-gl';
 
+
+const geobearingiconsize = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	6,
+	0.12,
+	8,
+	0.15,
+	9,
+	0.18,
+	11,
+	0.22,
+	12,
+	0.3,
+	15,
+	0.5
+];
+
 export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: boolean, layerspercategory: any) {
 	// const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.18, 10.5, 0.25, 12, 0.47, 15, 1];
 
@@ -22,7 +41,7 @@ export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: bo
 			'icon-rotate': ['get', 'heading'],
 			'icon-rotation-alignment': 'map',
 			'icon-offset': geobearingoffset,
-			'icon-size': railbearingiconsize
+			'icon-size': geobearingiconsize
 		}
 	});
 
@@ -30,6 +49,22 @@ export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: bo
 
 
 	//usergeo
+
+
+	const geobearingoffset = [
+		'interpolate',
+		['linear'],
+		['zoom'],
+		9,
+		['literal', [0, -80]],
+		13,
+		['literal', [0, -60]],
+		15,
+		['literal', [0, -60]],
+		17,
+		['literal', [0, -50]]
+	];
+	
 
 	map.addLayer({
 		id: 'geolocationheadingshell',
@@ -46,7 +81,8 @@ export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: bo
 			'icon-rotate': ['get', 'heading'],
 			'icon-rotation-alignment': 'map',
 			'icon-offset': geobearingoffset,
-			'icon-size': railbearingiconsize
+			'icon-size': geobearingiconsize
 		}
 	});
 }
+
