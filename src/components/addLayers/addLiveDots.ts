@@ -56,20 +56,6 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['literal', [0, -60]]
 	];
 
-	const geobearingoffset = [
-		'interpolate',
-		['linear'],
-		['zoom'],
-		9,
-		['literal', [0, -80]],
-		13,
-		['literal', [0, -60]],
-		15,
-		['literal', [0, -60]],
-		17,
-		['literal', [0, -50]]
-	];
-	
 	const pointing_shell_light_image = await map.loadImage('/icons/pointing-shell-light.png');
 	map.addImage('pointingshelllight', pointing_shell_light_image.data);
 
