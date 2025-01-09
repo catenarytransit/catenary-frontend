@@ -53,18 +53,14 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 }*/
 
 	setInterval(() => {
-		if (get(chateaus_in_frame).includes('amtrak')) {
-			
-		//	fetch_and_update_bounds_usa();
-			
-			fetch(evacuation_fire_url)
-				.then(async (data) => await data.json())
-				.then((cleaned_data: any) => {
-					map.getSource('evacuation_fire').setData(cleaned_data);
-				})
-				.catch((err) => console.error(err));
-		}
-	}, 60_000);
+
+		fetch(evacuation_fire_url)
+		.then(async (data) => await data.json())
+		.then((cleaned_data: any) => {
+			map.getSource('evacuation_fire').setData(cleaned_data);
+		})
+		.catch((err) => console.error(err));
+	}, 30_000);
 
 	setInterval(() => {
 		fetch(modis_url)
@@ -73,7 +69,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			map.getSource('modis').setData(cleaned_data);
 		})
 		.catch((err) => console.error(err));
-	}, 1000_000);
+	}, 500_000);
 
 	/*
 	map.addLayer({
