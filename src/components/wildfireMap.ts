@@ -180,8 +180,10 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'interpolate',
 				['linear'],
 				['zoom'],
-				12,
+				9,
 				0.3,
+				12,
+				0.2,
 				15,
 				0.2,
 				16,
@@ -208,8 +210,10 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'interpolate',
 				['linear'],
 				['zoom'],
-				12,
+				9,
 				0.3,
+				12,
+				0.2,
 				15,
 				0.2
 			]
