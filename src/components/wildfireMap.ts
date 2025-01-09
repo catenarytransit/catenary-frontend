@@ -179,7 +179,17 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'#cc9900',
 				'#ff0000'
 			],
-			'fill-opacity': 0.4
+			'fill-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				12,
+				0.3,
+				15,
+				0.2,
+				16,
+				0.15
+			]
 		},
 		minzoom: 5
 	});
@@ -197,7 +207,15 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'#cc9900',
 				'#ff0000'
 			],
-			'fill-opacity': 0.3
+			'fill-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				12,
+				0.3,
+				15,
+				0.2
+			]
 		},
 		minzoom: 5
 	});
@@ -208,7 +226,17 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		type: 'fill',
 		paint: {
 			'fill-color': '#ff0000',
-			'fill-opacity': 0.2
+			'fill-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				8,
+				0.15,
+				12,
+				0.07,
+				15,
+				0.05
+			]
 		},
 		minzoom: 5
 	});
@@ -220,8 +248,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		type: 'line',
 		paint: {
 			'line-color': '#ff0000',
-			'line-opacity': 0.4,
-			'line-width': 1,
+			'line-opacity': 0.5,
+			'line-width': 1.2,
 			'line-dasharray': [2, 2]
 		},
 		minzoom: 6
