@@ -266,4 +266,26 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		},
 		minzoom: 5
 	});
+
+	map.addLayer({
+		source: 'evacuation_ca_fire',
+		id: 'evacuation_ca_fire_txt',
+		type: 'symbol',
+		paint: {
+			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
+		},
+		layout: {
+			'text-field': [
+				'case',
+				['==', ['get', 'Label'], 'Mandatory'],
+				"Mandatory Evacuation",
+				['==', ['get', 'Label'], 'Warning'],
+				'Evacuation Warning',
+				' '
+			],
+			'text-size': 12.5,
+			'text-font': ['Barlow Bold']
+		},
+		minzoom: 5
+	});
 }
