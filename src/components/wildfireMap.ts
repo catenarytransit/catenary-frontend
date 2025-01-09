@@ -174,7 +174,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		type: 'fill',
 		paint: {
 			'fill-color': '#ff0000',
-			'fill-opacity': 0.02
+			'fill-opacity': 0.2
 		},
 		minzoom: 5
 	});
@@ -187,9 +187,10 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		paint: {
 			'line-color': '#ff0000',
 			'line-opacity': 0.4,
-			'line-width': 0.4
+			'line-width': 1,
+			'line-dasharray': [2, 2]
 		},
-		minzoom: 5
+		minzoom: 6
 	});
 
 			map.addSource('arcgisfirepoint', {
