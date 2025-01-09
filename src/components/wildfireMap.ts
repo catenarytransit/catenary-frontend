@@ -156,11 +156,13 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	  5,
 	  1,
 	  9,
-	  7,
+	  5,
 	  12,
 	  15,
+	  15,
+	  40,
 	  22,
-	  40
+	  50
 	]
 		},
 		'source': 'modis'
