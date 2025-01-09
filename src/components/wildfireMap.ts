@@ -89,7 +89,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			map.getSource('modis').setData(cleaned_data);
 		})
 		.catch((err) => console.error(err));
-	}, 500_000);
+	}, 60_000);
 
 	/*
 	map.addLayer({
