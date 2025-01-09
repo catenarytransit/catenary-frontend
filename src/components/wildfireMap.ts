@@ -7,7 +7,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const darkMode = determineDarkModeToBool();
 
-	const evacuation_fire_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/evac_california.json";
+	const evacuation_fire_url = "https://fireboundscache.catenarymaps.org/data/evac_california.json";
 
 	const modis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/modis.json";
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
@@ -22,11 +22,15 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 //		data: national_usa_fire_arcgis_url
 	//});
 	
-	function fetch_and_update_layer(source_id, url) {
+	function fetch_and_update_layer(source_id:string, url:string) {
 		fetch(url)
 		.then(async (data) => await data.json())
 		.then((cleaned_data: any) => {
-			map.getSource(source_id).setData(cleaned_data);
+			const source = map.getSource(source_id);
+
+			if (source) {
+				source.setData(cleaned_data);
+			}
 		})
 		.catch((err) => console.error(err));
 	}
@@ -169,9 +173,9 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		paint: {
 			'fill-color': [
 				'case',
-				['==', ['get', 'STATUS'], 'Evacuation Order'],
+				['==', ['get', 'Label'], 'Mandatory'],
 				'#dd3300',
-				['==', ['get', 'STATUS'], 'Evacuation Warning'],
+				['==', ['get', 'Label'], 'Warning'],
 				'#cc9900',
 				'#ff0000'
 			],
@@ -260,7 +264,14 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
 		},
 		layout: {
-			'text-field': ['concat', ['get', 'STATUS'], ''],
+			'text-field': [
+				'case',
+				['==', ['get', 'Label'], 'Mandatory'],
+				"Mandatory Evacuation",
+				['==', ['get', 'Label'], 'Warning'],
+				'Evacuation Warning',
+				' '
+			],
 			'text-size': 13,
 			'text-font': ['Barlow Bold']
 		},
