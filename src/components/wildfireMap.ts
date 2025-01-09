@@ -27,7 +27,8 @@ async function make_fire_names(map: maplibregl.Map) {
 		},
 		paint: {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
-		}
+		},
+		minzoom: 6,
 	});
 }
 
