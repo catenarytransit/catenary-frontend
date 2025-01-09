@@ -64,7 +64,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				})
 				.catch((err) => console.error(err));
 		}
-	}, 120_000);
+	}, 60_000);
 
 	setInterval(() => {
 		fetch(modis_url)
@@ -115,8 +115,24 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		minzoom: 5,
 		"id": 'modis',
 		"paint": {
-		  "circle-color": '#ff341a',
-		  "circle-opacity": 0.4,
+		  "circle-color": [
+			"interpolate",
+			["linear"],
+			["get", "BRIGHTNESS"],
+			310.64,
+			"#ff751f",
+			508.63,
+			"#ff1a1a"
+		  ],
+		  "circle-opacity": [
+			"interpolate",
+			["linear"],
+			["get", "BRIGHTNESS"],
+			310.64,
+			0.3,
+			508.63,
+			0.5
+		  ],
 		  "circle-radius": [
 	  "interpolate",
 	  ["linear"],
