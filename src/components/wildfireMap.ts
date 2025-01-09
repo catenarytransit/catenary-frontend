@@ -268,8 +268,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	});
 
 	map.addLayer({
-		source: 'evacuation_ca_fire',
-		id: 'evacuation_ca_fire_txt',
+		source: 'los_angeles_city_fire_evac',
+		id: 'los_angeles_city_fire_evac_txt',
 		type: 'symbol',
 		paint: {
 			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
