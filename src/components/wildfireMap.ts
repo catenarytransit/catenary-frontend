@@ -13,6 +13,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
 	const california_firis_arcgis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/ca_fire_bounds.json";
 
+	const los_angeles_fire_evac = 'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/los_angeles_evac.json'
+
 	//fire section
 	
 //	map.addSource('arcgisfire', {
@@ -20,12 +22,26 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 //		data: national_usa_fire_arcgis_url
 	//});
 	
+	function fetch_and_update_layer(source_id, url) {
+		fetch(url)
+		.then(async (data) => await data.json())
+		.then((cleaned_data: any) => {
+			map.getSource(source_id).setData(cleaned_data);
+		})
+		.catch((err) => console.error(err));
+	}
 
 	map.addSource('evacuation_ca_fire', {
 		type: 'geojson',
 		data: evacuation_fire_url
 	});
 	
+	map.addSource('los_angeles_city_fire_evac', {
+		type: 'geojson',
+		data: los_angeles_fire_evac
+	});
+	
+
             map.addSource("californiafireperims", {
                 type: "geojson",
                 data: california_firis_arcgis_url 
@@ -52,14 +68,14 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				.catch((err) => console.error(err));	
 }*/
 
+
+
 	setInterval(() => {
 
-		fetch(evacuation_fire_url)
-		.then(async (data) => await data.json())
-		.then((cleaned_data: any) => {
-			map.getSource('evacuation_fire').setData(cleaned_data);
-		})
-		.catch((err) => console.error(err));
+		fetch_and_update_layer('evacuation_ca_fire', evacuation_fire_url);
+
+		fetch_and_update_layer('los_angeles_city_fire_evac', los_angeles_fire_evac);
+		
 	}, 30_000);
 
 	setInterval(() => {
@@ -160,6 +176,24 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'#ff0000'
 			],
 			'fill-opacity': 0.4
+		},
+		minzoom: 5
+	});
+
+	map.addLayer({
+		source: 'los_angeles_city_fire_evac',
+		id: 'los_angeles_city_fire_evac_bounds',
+		type: 'fill',
+		paint: {
+			'fill-color': [
+				'case',
+				['==', ['get', 'Label'], 'Mandatory'],
+				'#dd3300',
+				['==', ['get', 'Label'], 'Warning'],
+				'#cc9900',
+				'#ff0000'
+			],
+			'fill-opacity': 0.3
 		},
 		minzoom: 5
 	});
