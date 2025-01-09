@@ -295,10 +295,18 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		},
 		layout: {
 			'text-field': ['concat', ['get', 'STATUS'], ''],
-			'text-size': 13,
+			'text-size': [
+				"interpolate",
+				["linear"],
+				['zoom'],
+				7,
+				8,
+				9,
+				13
+			  ],
 			'text-font': ['Barlow Bold']
 		},
-		minzoom: 5
+		minzoom: 6
 	});
 
 	map.addLayer({
@@ -317,9 +325,17 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'Evacuation Warning',
 				' '
 			],
-			'text-size': 12.5,
+			'text-size': [
+				"interpolate",
+				["linear"],
+				['zoom'],
+				7,
+				8,
+				9,
+				12.5
+			  ],
 			'text-font': ['Barlow Bold']
 		},
-		minzoom: 5
+		minzoom: 6
 	});
 }
