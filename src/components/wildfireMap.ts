@@ -83,12 +83,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	}, 30_000);
 
 	setInterval(() => {
-		fetch(modis_url)
-		.then(async (data) => await data.json())
-		.then((cleaned_data: any) => {
-			map.getSource('modis').setData(cleaned_data);
-		})
-		.catch((err) => console.error(err));
+		fetch_and_update_layer('modis', modis_url)
 	}, 60_000);
 
 	/*
