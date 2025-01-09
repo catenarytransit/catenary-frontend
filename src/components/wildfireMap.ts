@@ -2,6 +2,35 @@ import { get, writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import { determineDarkModeToBool } from './determineDarkModeToBool';
 
+async function make_fire_names(map: maplibregl.Map) {
+	const image = await map.loadImage('/fire_1f525.png');
+
+	map.addImage('fireicon', image.data);
+
+	
+	const darkMode = determineDarkModeToBool();
+
+	map.addLayer({
+		'id': 'firenameslabel',
+		'type': 'symbol',
+		'source': 'firenames',
+		'layout': {
+			'icon-image': 'fireicon',
+			'icon-size': 0.04,
+			'text-field': ['get', 'name'],
+			'text-offset': [0, 1],
+			'text-anchor': 'top',
+
+			'text-size': 14,
+			'text-font': ['Barlow Medium'],
+			
+		},
+		paint: {
+			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
+		}
+	});
+}
+
 export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<string[]>) {
 	console.log('load wildfire data');
 
@@ -13,7 +42,9 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
 	const california_firis_arcgis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/ca_fire_bounds.json";
 
-	const los_angeles_fire_evac = 'https://fireboundscache.catenarymaps.org/data/los_angeles_evac.json'
+	const los_angeles_fire_evac = 'https://fireboundscache.catenarymaps.org/data/los_angeles_evac.json';
+
+	const firenamesurl = 'https://fireboundscache.catenarymaps.org/data/firenames.json';
 
 	//fire section
 	
@@ -56,6 +87,12 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		data: modis_url
 	})
 
+	map.addSource('firenames', {
+		type: 'geojson',
+		data: firenamesurl
+	})
+
+	make_fire_names(map);
 
 /*
 	async function fetch_and_update_bounds_usa() {
@@ -79,6 +116,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		fetch_and_update_layer('evacuation_ca_fire', evacuation_fire_url);
 
 		fetch_and_update_layer('los_angeles_city_fire_evac', los_angeles_fire_evac);
+
+		fetch_and_update_layer('firenames', firenamesurl);
 		
 	}, 30_000);
 
@@ -262,6 +301,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				//data: "https://stg-arcgisazurecdataprod3.az.arcgis.com/exportfiles-2532-182272/WFIGS_Interagency_Perimeters_Current_-6544343811762491332.geojson?sv=2018-03-28&sr=b&sig=0Qpq7JG2NWRKLZnEynN%2BgcGPt41fWRNZvWGnaO8%2BZao%3D&se=2024-06-17T04%3A55%3A59Z&sp=r"
 			});
 
+		load_fire_names();
 			
 /*
 	map.addLayer({
