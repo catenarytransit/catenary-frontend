@@ -13,7 +13,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
 	const california_firis_arcgis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/ca_fire_bounds.json";
 
-	const los_angeles_fire_evac = 'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/los_angeles_evac.json'
+	const los_angeles_fire_evac = 'https://fireboundscache.catenarymaps.org/data/los_angeles_evac.json'
 
 	//fire section
 	
