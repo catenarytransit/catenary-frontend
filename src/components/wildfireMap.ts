@@ -11,7 +11,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const modis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/modis.json";
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
-	//  const california_firis_arcgis_url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/ArcGIS/rest/services/CA_Perimeters_NIFC_FIRIS_public_view/FeatureServer/0/query?where=OBJECTID>0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&units=esriSRUnit_Meter&outFields=*&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&quantizationParameters=&sqlFormat=none&f=pgeojson&token=";
+	const california_firis_arcgis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/ca_fire_bounds.json";
 
 	//fire section
 	
@@ -25,11 +25,11 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		type: 'geojson',
 		data: evacuation_fire_url
 	});
-	/*
-            map.addSource("californiafire", {
+	
+            map.addSource("californiafireperims", {
                 type: "geojson",
                 data: california_firis_arcgis_url 
-            })*/
+            })
 
 	map.addSource("modis", {
 		type: 'geojson',
@@ -164,6 +164,30 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				'#ff0000'
 			],
 			'fill-opacity': 0.4
+		},
+		minzoom: 5
+	});
+
+	map.addLayer({
+		source: 'californiafireperims',
+		id: 'californiafireperims',
+		type: 'fill',
+		paint: {
+			'fill-color': '#ff0000',
+			'fill-opacity': 0.02
+		},
+		minzoom: 5
+	});
+
+
+	map.addLayer({
+		source: 'californiafireperims',
+		id: 'californiafireperimslines',
+		type: 'line',
+		paint: {
+			'line-color': '#ff0000',
+			'line-opacity': 0.4,
+			'line-width': 0.4
 		},
 		minzoom: 5
 	});
