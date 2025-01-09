@@ -173,9 +173,9 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		paint: {
 			'fill-color': [
 				'case',
-				['==', ['get', 'Label'], 'Mandatory'],
+				['==', ['get', 'STATUS'], 'Evacuation Order'],
 				'#dd3300',
-				['==', ['get', 'Label'], 'Warning'],
+				['==', ['get', 'STATUS'], 'Evacuation Warning'],
 				'#cc9900',
 				'#ff0000'
 			],
@@ -264,14 +264,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
 		},
 		layout: {
-			'text-field': [
-				'case',
-				['==', ['get', 'Label'], 'Mandatory'],
-				"Mandatory Evacuation",
-				['==', ['get', 'Label'], 'Warning'],
-				'Evacuation Warning',
-				' '
-			],
+			'text-field': ['concat', ['get', 'STATUS'], ''],
 			'text-size': 13,
 			'text-font': ['Barlow Bold']
 		},
