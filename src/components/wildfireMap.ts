@@ -81,7 +81,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		'type': 'vector',
 		'tiles': [watchduty_proxy],
 		maxzoom: 10,
-		minzoom: 5
+		minzoom: 5,
+		"bounds": [-180, -85, 180, 85]
 	});
 	
 	function refresh_watchduty_source() {
