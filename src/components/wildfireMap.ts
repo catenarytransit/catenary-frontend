@@ -80,7 +80,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	map.addSource("watchduty_proxy", {
 		'type': 'vector',
 		'tiles': [watchduty_proxy],
-		maxzoom: 10
+		maxzoom: 10,
+		minzoom: 5
 	});
 	
 	function refresh_watchduty_source() {
