@@ -45,7 +45,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const los_angeles_fire_evac = 'https://fireboundscache.catenarymaps.org/data/los_angeles_evac.json';
 
-	const firenamesurl = 'https://fireboundscache.catenarymaps.org/data/firenames.json';
+	const firenamesurl = 'https://fireboundscache.catenarymaps.org/manual_data/firenames.json';
 
 	const fire_evac_manual = 'https://fireboundscache.catenarymaps.org/manual_data/evac.json';
 
