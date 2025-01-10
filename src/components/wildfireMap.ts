@@ -47,6 +47,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const firenamesurl = 'https://fireboundscache.catenarymaps.org/data/firenames.json';
 
+	const fire_evac_manual = 'https://fireboundscache.catenarymaps.org/manual_data/evac.json';
+
 	//fire section
 	
 //	map.addSource('arcgisfire', {
@@ -93,6 +95,11 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		data: firenamesurl
 	})
 
+	map.addSource('fire_evac_manual', {
+		type: 'geojson',
+		data: fire_evac_manual
+	})
+
 	make_fire_names(map);
 
 /*
@@ -119,6 +126,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		fetch_and_update_layer('los_angeles_city_fire_evac', los_angeles_fire_evac);
 
 		fetch_and_update_layer('firenames', firenamesurl);
+
+		fetch_and_update_layer('fire_evac_manual', fire_evac_manual);
 		
 	}, 30_000);
 
@@ -202,6 +211,36 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		},
 		'source': 'modis'
 	  });
+
+	  map.addLayer({
+		source: 'fire_evac_manual',
+		id: 'fire_evac_manual_bounds',
+		type: 'fill',
+		paint: {
+			'fill-color': [
+				'case',
+				['==', ['get', 'status'], 'go'],
+				'#dd3300',
+				['==', ['get', 'status'], 'set'],
+				'#cc9900',
+				'#ff0000'
+			],
+			'fill-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				9,
+				0.3,
+				12,
+				0.2,
+				15,
+				0.2,
+				16,
+				0.15
+			]
+		},
+		minzoom: 5
+	});
 
 	map.addLayer({
 		source: 'evacuation_ca_fire',
