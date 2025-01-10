@@ -380,11 +380,11 @@ refresh_watchduty_evacs();
 				['linear'],
 				['zoom'],
 				9,
-				0.3,
-				12,
 				0.2,
+				12,
+				0.1,
 				15,
-				0.2
+				0.1
 			]
 		},
 		minzoom: 5
