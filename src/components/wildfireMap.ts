@@ -56,7 +56,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const darkMode = determineDarkModeToBool();
 
-	const watchduty_proxy = "https://birch.catenarymaps.org/watchduty_tiles_proxy/{z}/{x}/{y}";
+	const watchduty_proxy = "https://birchfire.catenarymaps.org/watchduty_tiles_proxy/{z}/{x}/{y}";
 
 	const evacuation_fire_url = "https://fireboundscache.catenarymaps.org/data/evac_california.json";
 
