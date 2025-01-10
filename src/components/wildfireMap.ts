@@ -504,30 +504,6 @@ refresh_watchduty_evacs();
 	});
 
 	map.addLayer({
-		'id': 'zones-fill-watchduty-go-txt',
-		source: "watchduty_proxy",
-		'source-layer': 'zones',
-		type: 'symbol',
-		'layout': {
-			'text-field': "Mandatory Evacuation",
-			'text-size': [
-				"interpolate",
-				["linear"],
-				['zoom'],
-				7,
-				6,
-				9,
-				13
-			  ],
-			'text-font': ['Barlow Bold']
-		},
-		paint: {
-			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
-		},
-		filter: ["==", "a", "b"]
-	});
-
-	map.addLayer({
 		'id': 'zones-fill-watchduty-warning-txt',
 		source: "watchduty_proxy",
 		'source-layer': 'zones',
@@ -538,10 +514,10 @@ refresh_watchduty_evacs();
 				"interpolate",
 				["linear"],
 				['zoom'],
-				7,
-				5,
 				9,
-				12
+				4,
+				12,
+				10
 			  ],
 			'text-font': ['Barlow Bold']
 		},
@@ -550,6 +526,31 @@ refresh_watchduty_evacs();
 		},
 		filter: ["==", "a", "b"]
 	});
+	
+	map.addLayer({
+		'id': 'zones-fill-watchduty-go-txt',
+		source: "watchduty_proxy",
+		'source-layer': 'zones',
+		type: 'symbol',
+		'layout': {
+			'text-field': "Mandatory Evacuation",
+			'text-size': [
+				"interpolate",
+				["linear"],
+				['zoom'],
+				9,
+				5,
+				12,
+				13
+			  ],
+			'text-font': ['Barlow Bold']
+		},
+		paint: {
+			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
+		},
+		filter: ["==", "a", "b"]
+	});
+
 	map.addLayer({
 		source: 'fire_evac_manual',
 		id: 'fire_evac_manual_txt',
