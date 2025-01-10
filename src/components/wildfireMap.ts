@@ -32,10 +32,31 @@ async function make_fire_names(map: maplibregl.Map) {
 	});
 }
 
+function generateArrayInFormat(key: string, array: string[]) {
+	/*[
+  "in",
+  [
+    "get",
+    "name"
+  ],
+	[
+    "literal",
+    ["Kenneth Fire"]
+  ]
+]
+  */
+
+	return ["in", ["get", key], ["literal", array]];
+
+}
+
+
 export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<string[]>) {
 	console.log('load wildfire data');
 
 	const darkMode = determineDarkModeToBool();
+
+	const watchduty_proxy = "https://birch.catenarymaps.org/watchduty_tiles_proxy/{z}/{x}/{y}";
 
 	const evacuation_fire_url = "https://fireboundscache.catenarymaps.org/data/evac_california.json";
 
@@ -49,13 +70,77 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const fire_evac_manual = 'https://fireboundscache.catenarymaps.org/manual_data/evac.json';
 
-	//fire section
+	const fire_evac_codes_california = "https://fireboundscache.catenarymaps.org/data/watchduty_events.json";
 	
 //	map.addSource('arcgisfire', {
 //		type: 'geojson',
 //		data: national_usa_fire_arcgis_url
 	//});
+
+	map.addSource("watchduty_proxy", {
+		'type': 'vector',
+		'tiles': [watchduty_proxy],
+	});
 	
+	function refresh_watchduty_source() {
+		/*
+		map.removeSource('watchduty_proxy');
+
+		map.addSource("watchduty_proxy", {
+			'type': 'vector',
+			'tiles': [watchduty_proxy + '?t=' + Date.now()],
+		});
+
+		*/
+		
+	}
+
+	function refresh_watchduty_evacs() {
+		fetch(fire_evac_codes_california)
+		.then(async (data) => await data.json())
+		.then((cleaned_data: any) => {
+			//combine all evacuation_orders_arr in every object in the array into a single array
+
+			console.log('refreshing evac sources from watchduty')
+
+			let combined_evacuation_orders_arr = cleaned_data.map((fire) => fire.evacuation_orders_arr).flat().filter((x) => typeof x === 'string');
+
+			let combined_evacuation_warnings_arr = cleaned_data.map((fire) => fire.evacuation_warnings_arr).flat().filter((x) => typeof x === 'string');
+
+			console.log('set evac to ',  generateArrayInFormat("zone_name", combined_evacuation_orders_arr))
+
+			map.setFilter('zones-fill-watchduty-go', generateArrayInFormat("zone_name", combined_evacuation_orders_arr));
+			map.setFilter('zones-fill-watchduty-warning', generateArrayInFormat("zone_name", combined_evacuation_warnings_arr));
+
+			map.setFilter('zones-fill-watchduty-go-txt', generateArrayInFormat("zone_name", combined_evacuation_orders_arr));
+			map.setFilter('zones-fill-watchduty-warning-txt', generateArrayInFormat("zone_name", combined_evacuation_warnings_arr));
+		});
+	}
+
+	map.addLayer({
+		'id': 'zones-fill-watchduty-go',
+		source: "watchduty_proxy",
+		'source-layer': 'zones',
+		'type': 'fill',
+		'paint': {
+			'fill-color': '#dd3300',
+			"fill-opacity": 0.2
+		},
+		filter: ["==", "a", "b"]
+	});
+
+	map.addLayer({
+		'id': 'zones-fill-watchduty-warning',
+		source: "watchduty_proxy",
+		'source-layer': 'zones',
+		'type': 'fill',
+		'paint': {
+			'fill-color': '#cc9900',
+			"fill-opacity": 0.2
+		},
+		filter: ["==", "a", "b"]
+	});
+
 	function fetch_and_update_layer(source_id:string, url:string) {
 		fetch(url)
 		.then(async (data) => await data.json())
@@ -69,10 +154,10 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		.catch((err) => console.error(err));
 	}
 
-	map.addSource('evacuation_ca_fire', {
-		type: 'geojson',
-		data: evacuation_fire_url
-	});
+//	map.addSource('evacuation_ca_fire', {
+//		type: 'geojson',
+//		data: evacuation_fire_url
+	//});
 	
 	map.addSource('los_angeles_city_fire_evac', {
 		type: 'geojson',
@@ -117,23 +202,25 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				.catch((err) => console.error(err));	
 }*/
 
-
+refresh_watchduty_evacs();
 
 	setInterval(() => {
-
-		fetch_and_update_layer('evacuation_ca_fire', evacuation_fire_url);
+		refresh_watchduty_evacs();
+		//fetch_and_update_layer('evacuation_ca_fire', evacuation_fire_url);
 
 		fetch_and_update_layer('los_angeles_city_fire_evac', los_angeles_fire_evac);
 
 		fetch_and_update_layer('firenames', firenamesurl);
 
 		fetch_and_update_layer('fire_evac_manual', fire_evac_manual);
+
+		refresh_watchduty_source();
 		
 	}, 30_000);
 
 	setInterval(() => {
 		fetch_and_update_layer('modis', modis_url)
-	}, 60_000);
+	}, 120_000);
 
 	/*
 	map.addLayer({
@@ -241,7 +328,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		},
 		minzoom: 5
 	});
-
+/*
 	map.addLayer({
 		source: 'evacuation_ca_fire',
 		id: 'evacuation_ca_fire_bounds',
@@ -270,7 +357,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			]
 		},
 		minzoom: 5
-	});
+	});*/
 
 	map.addLayer({
 		source: 'los_angeles_city_fire_evac',
@@ -359,6 +446,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		minzoom: 5
 	});
 */
+/*
 	map.addLayer({
 		source: 'evacuation_ca_fire',
 		id: 'evacuation_ca_fire_txt',
@@ -380,7 +468,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			'text-font': ['Barlow Bold']
 		},
 		minzoom: 6
-	});
+	});*/
 
 	map.addLayer({
 		source: 'los_angeles_city_fire_evac',
@@ -412,6 +500,53 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		minzoom: 6
 	});
 
+	map.addLayer({
+		'id': 'zones-fill-watchduty-go-txt',
+		source: "watchduty_proxy",
+		'source-layer': 'zones',
+		type: 'symbol',
+		'layout': {
+			'text-field': "Mandatory Evacuation",
+			'text-size': [
+				"interpolate",
+				["linear"],
+				['zoom'],
+				7,
+				9,
+				9,
+				13
+			  ],
+			'text-font': ['Barlow Bold']
+		},
+		paint: {
+			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
+		},
+		filter: ["==", "a", "b"]
+	});
+
+	map.addLayer({
+		'id': 'zones-fill-watchduty-warning-txt',
+		source: "watchduty_proxy",
+		'source-layer': 'zones',
+		type: 'symbol',
+		'layout': {
+			'text-field': "Evacuation Warning",
+			'text-size': [
+				"interpolate",
+				["linear"],
+				['zoom'],
+				7,
+				9,
+				9,
+				13
+			  ],
+			'text-font': ['Barlow Bold']
+		},
+		paint: {
+			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
+		},
+		filter: ["==", "a", "b"]
+	});
 	map.addLayer({
 		source: 'fire_evac_manual',
 		id: 'fire_evac_manual_txt',
