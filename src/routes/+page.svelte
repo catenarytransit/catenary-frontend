@@ -1179,6 +1179,24 @@ const media = matchMedia(mqString);
 			map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
 
+			map.addSource('hillshade',
+				{
+					type: 'raster-dem',
+				url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=B265xPhJaYe2kWHOLHTG'
+				}
+			)
+
+			map.addLayer({
+				id: 'hillshade',
+				type: 'hillshade',
+				source: 'hillshade',
+				
+				paint: { 'hillshade-shadow-color': '#050511',
+					'hillshade-highlight-color': '#aaaaaa',
+					'hillshade-accent-color': '#000000',
+				  }
+			})
+
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
