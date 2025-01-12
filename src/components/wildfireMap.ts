@@ -232,11 +232,11 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 				['linear'],
 				['zoom'],
 				8,
-				0.15,
+				0.1,
 				12,
-				0.07,
+				0.06,
 				15,
-				0.05
+				0.04
 			]
 		},
 		minzoom: 5
