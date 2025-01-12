@@ -1180,10 +1180,21 @@ const media = matchMedia(mqString);
 			map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
 
+			
+			const demSource = new mlcontour.DemSource({
+        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=tf30gb2F4vIsBW5k9Msd',
+        encoding: 'mapbox',
+        maxzoom: 14,
+        // offload contour line computation to a web worker
+        worker: true
+    });
+
+	demSource.setupMaplibre(maplibregl);
+
 			map.addSource('hillshade',
 				{
 				type: 'raster-dem',
-				url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=B265xPhJaYe2kWHOLHTG'
+				tiles: [demSource.sharedDemProtocolUrl]
 				},
 			)
 
@@ -1202,15 +1213,6 @@ const media = matchMedia(mqString);
 				  }
 			}, "aeroway_fill");
 
-			const demSource = new mlcontour.DemSource({
-        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=tf30gb2F4vIsBW5k9Msd',
-        encoding: 'mapbox',
-        maxzoom: 14,
-        // offload contour line computation to a web worker
-        worker: true
-    });
-
-	demSource.setupMaplibre(maplibregl);
 
 	map.addSource("contourSourceMetres", {
 		type: 'vector',
