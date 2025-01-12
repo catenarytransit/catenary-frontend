@@ -1272,6 +1272,7 @@ const media = matchMedia(mqString);
                     type: 'symbol',
                     source: 'contourSourceMetres',
                     'source-layer': 'contours',
+					minzoom: 12,
                     filter: ['>', ['get', 'level'], 0],
                     paint: {
                         'text-halo-color': darkMode ? 'black' : 'white',
