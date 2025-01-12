@@ -1200,6 +1200,20 @@ const media = matchMedia(mqString);
 				  }
 			})
 
+			map.addLayer({
+				id: 'hillshade',
+				type: 'hillshade',
+				source: 'hillshade',
+				
+				paint: { 'hillshade-shadow-color': darkMode ? '#050511' : '#aaaaaa',
+					'hillshade-highlight-color': darkMode ? '#aaaaaa' : '#dddddd',
+					'hillshade-accent-color': darkMode ? '#000000' : '#aaaaaa'
+				  },
+				  layout: {
+					
+				  }
+			}, "aeroway_fill")
+
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));

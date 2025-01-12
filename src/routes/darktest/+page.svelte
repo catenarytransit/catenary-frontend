@@ -30,13 +30,13 @@
 				source: 'hillshade',
 				
 				paint: { 'hillshade-shadow-color': '#050511',
-					'hillshade-highlight-color': '#aaaaaa',
-					'hillshade-accent-color': '#000000'
+					'hillshade-highlight-color': '#333333',
+					'hillshade-accent-color': '#aaaaaa'
 				  },
 				  layout: {
 					
 				  }
-			})
+			}, "aeroway_fill")
 
         console.log(map);
        })
