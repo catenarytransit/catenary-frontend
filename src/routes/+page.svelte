@@ -1267,6 +1267,29 @@ const media = matchMedia(mqString);
                 
 			}, "aeroway_fill")
 
+			map.addLayer({
+                    id: 'contour-text',
+                    type: 'symbol',
+                    source: 'contourSourceMetres',
+                    'source-layer': 'contours',
+                    filter: ['>', ['get', 'level'], 0],
+                    paint: {
+                        'text-halo-color': darkMode ? 'black' : 'white',
+                        'text-halo-width': 1,
+						'text-color': darkMode ? '#eeeeee' : '#000000'
+                    },
+                    layout: {
+                        'symbol-placement': 'line',
+                        'text-size': 10,
+                        'text-field': [
+                            'concat',
+                            ['number-format', ['get', 'ele'], {}],
+                            'm'
+                        ],
+                        'text-font': ['Barlow Medium']
+                    }
+                }, "aeroway_fill")
+
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
