@@ -1191,24 +1191,10 @@ const media = matchMedia(mqString);
 				type: 'hillshade',
 				source: 'hillshade',
 				
-				paint: { 'hillshade-shadow-color': '#050511',
-					'hillshade-highlight-color': '#aaaaaa',
-					'hillshade-accent-color': '#000000',
-					'hillshade-exaggeration': 0.3
-				  },
-				  layout: {
-					
-				  }
-			})
-
-			map.addLayer({
-				id: 'hillshade',
-				type: 'hillshade',
-				source: 'hillshade',
-				
-				paint: { 'hillshade-shadow-color': darkMode ? '#050511' : '#aaaaaa',
+				paint: { 'hillshade-shadow-color': darkMode ? '#050511' : '#111111',
 					'hillshade-highlight-color': darkMode ? '#aaaaaa' : '#dddddd',
-					'hillshade-accent-color': darkMode ? '#000000' : '#aaaaaa'
+					'hillshade-accent-color': darkMode ? '#000000' : '#222222',
+					"hillshade-exaggeration": 0.3
 				  },
 				  layout: {
 					
