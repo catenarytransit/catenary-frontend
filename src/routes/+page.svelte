@@ -1254,7 +1254,7 @@ const media = matchMedia(mqString);
 								0.3,
 								0.15
 							],
-						'line-color': darkMode ? '#ddddaa' : '#626250',
+						'line-color': darkMode ? '#aaaa66' : '#626250',
                         // "major" contours have level=1, "minor" have level=0
                         'line-width': [
 								"match",
