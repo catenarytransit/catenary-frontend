@@ -1194,7 +1194,8 @@ const media = matchMedia(mqString);
 			map.addSource('hillshade',
 				{
 				type: 'raster-dem',
-				tiles: [demSource.sharedDemProtocolUrl]
+				tiles: [demSource.sharedDemProtocolUrl],
+				tileSize: 512,
 				},
 			)
 
@@ -1253,7 +1254,7 @@ const media = matchMedia(mqString);
 								0.3,
 								0.15
 							],
-						'line-color': darkMode ? '#ddddaa' : '#aaaaaa',
+						'line-color': darkMode ? '#ddddaa' : '#626250',
                         // "major" contours have level=1, "minor" have level=0
                         'line-width': [
 								"match",
