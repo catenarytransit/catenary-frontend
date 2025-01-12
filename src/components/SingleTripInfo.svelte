@@ -486,7 +486,7 @@
 				} else {
 					if ((stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) < current_time / 1000) {
 						
-						if (!(stoptime.schedule_relationship == 1 && i - 1 == temp_last_inactive_stop_idx)) {
+						if (!(stoptime.schedule_relationship == 1 && i - 1 > temp_last_inactive_stop_idx)) {
 							temp_last_inactive_stop_idx = i;
 						}
 					} else {
@@ -496,7 +496,7 @@
 							}
 						} else {
 							if (stoptime.scheduled_arrival_time_unix_seconds < current_time / 1000) {
-								if (!(stoptime.schedule_relationship == 1 && i - 1 == temp_last_inactive_stop_idx)) {
+								if (!(stoptime.schedule_relationship == 1 && i - 1 > temp_last_inactive_stop_idx)) {
 									temp_last_inactive_stop_idx = i;
 								}
 							}
