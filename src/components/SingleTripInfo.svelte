@@ -474,6 +474,8 @@
 
 			let i = 0;
 
+			let locked = false;
+
 			//console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset)
 
 			stoptimes_cleaned_dataset.forEach((stoptime: any) => {
@@ -483,7 +485,10 @@
 					}
 				} else {
 					if ((stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) < current_time / 1000) {
-						temp_last_inactive_stop_idx = i;
+						
+						if (!(stoptime.schedule_relationship == 1 && i - 1 == temp_last_inactive_stop_idx)) {
+							temp_last_inactive_stop_idx = i;
+						}
 					} else {
 						if (stoptime.rt_arrival_time != null) {
 							if (stoptime.rt_arrival_time < current_time / 1000) {
@@ -491,7 +496,9 @@
 							}
 						} else {
 							if (stoptime.scheduled_arrival_time_unix_seconds < current_time / 1000) {
-								temp_last_inactive_stop_idx = i;
+								if (!(stoptime.schedule_relationship == 1 && i - 1 == temp_last_inactive_stop_idx)) {
+									temp_last_inactive_stop_idx = i;
+								}
 							}
 						}
 					}

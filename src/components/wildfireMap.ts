@@ -127,7 +127,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		'type': 'fill',
 		'paint': {
 			'fill-color': '#dd3300',
-			"fill-opacity": 0.2
+			"fill-opacity": 0.35
 		},
 		filter: ["==", "a", "b"]
 	});
@@ -139,7 +139,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		'type': 'fill',
 		'paint': {
 			'fill-color': '#cc9900',
-			"fill-opacity": 0.2
+			"fill-opacity": 0.35
 		},
 		filter: ["==", "a", "b"]
 	});
@@ -380,11 +380,11 @@ refresh_watchduty_evacs();
 				['linear'],
 				['zoom'],
 				9,
-				0.3,
-				12,
 				0.2,
+				12,
+				0.1,
 				15,
-				0.2
+				0.1
 			]
 		},
 		minzoom: 5
@@ -401,11 +401,11 @@ refresh_watchduty_evacs();
 				['linear'],
 				['zoom'],
 				8,
-				0.15,
+				0.1,
 				12,
-				0.07,
+				0.06,
 				15,
-				0.05
+				0.04
 			]
 		},
 		minzoom: 5
@@ -504,30 +504,6 @@ refresh_watchduty_evacs();
 	});
 
 	map.addLayer({
-		'id': 'zones-fill-watchduty-go-txt',
-		source: "watchduty_proxy",
-		'source-layer': 'zones',
-		type: 'symbol',
-		'layout': {
-			'text-field': "Mandatory Evacuation",
-			'text-size': [
-				"interpolate",
-				["linear"],
-				['zoom'],
-				7,
-				9,
-				9,
-				13
-			  ],
-			'text-font': ['Barlow Bold']
-		},
-		paint: {
-			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
-		},
-		filter: ["==", "a", "b"]
-	});
-
-	map.addLayer({
 		'id': 'zones-fill-watchduty-warning-txt',
 		source: "watchduty_proxy",
 		'source-layer': 'zones',
@@ -538,9 +514,33 @@ refresh_watchduty_evacs();
 				"interpolate",
 				["linear"],
 				['zoom'],
-				7,
 				9,
+				4,
+				12,
+				10
+			  ],
+			'text-font': ['Barlow Bold']
+		},
+		paint: {
+			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
+		},
+		filter: ["==", "a", "b"]
+	});
+	
+	map.addLayer({
+		'id': 'zones-fill-watchduty-go-txt',
+		source: "watchduty_proxy",
+		'source-layer': 'zones',
+		type: 'symbol',
+		'layout': {
+			'text-field': "Mandatory Evacuation",
+			'text-size': [
+				"interpolate",
+				["linear"],
+				['zoom'],
 				9,
+				5,
+				12,
 				13
 			  ],
 			'text-font': ['Barlow Bold']
@@ -550,6 +550,7 @@ refresh_watchduty_evacs();
 		},
 		filter: ["==", "a", "b"]
 	});
+
 	map.addLayer({
 		source: 'fire_evac_manual',
 		id: 'fire_evac_manual_txt',
