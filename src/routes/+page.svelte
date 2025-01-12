@@ -1193,7 +1193,10 @@ const media = matchMedia(mqString);
 				
 				paint: { 'hillshade-shadow-color': '#050511',
 					'hillshade-highlight-color': '#aaaaaa',
-					'hillshade-accent-color': '#000000',
+					'hillshade-accent-color': '#000000'
+				  },
+				  layout: {
+					
 				  }
 			})
 
