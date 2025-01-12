@@ -14,6 +14,7 @@
 	import {init_stores} from '../components/init_stores';
 	import {refreshUIMaplibre} from '../components/transitionDarkAndLight';
 	import {layerspercategory } from '../components/layernames';
+	import mlcontour from "maplibre-contour";
 
 	import {
 		data_stack_store,
@@ -1181,9 +1182,9 @@ const media = matchMedia(mqString);
 
 			map.addSource('hillshade',
 				{
-					type: 'raster-dem',
+				type: 'raster-dem',
 				url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=B265xPhJaYe2kWHOLHTG'
-				}
+				},
 			)
 
 			map.addLayer({
@@ -1199,6 +1200,68 @@ const media = matchMedia(mqString);
 				  layout: {
 					
 				  }
+			}, "aeroway_fill");
+
+			const demSource = new mlcontour.DemSource({
+        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=tf30gb2F4vIsBW5k9Msd',
+        encoding: 'mapbox',
+        maxzoom: 14,
+        // offload contour line computation to a web worker
+        worker: true
+    });
+
+	demSource.setupMaplibre(maplibregl);
+
+	map.addSource("contourSourceMetres", {
+		type: 'vector',
+                    tiles: [
+                        demSource.contourProtocolUrl({
+                        // meters to feet
+                            multiplier: 1,
+                            overzoom: 1,
+                            thresholds: {
+                            // zoom: [minor, major]
+                                11: [200, 1000],
+                                12: [40, 200],
+                                13: [20, 100],
+                                14: [10, 50],
+                                15: [10, 50],
+								16: [10, 50]
+                            },
+                            elevationKey: 'ele',
+                            levelKey: 'level',
+                            contourLayer: 'contours'
+                        })
+                    ],
+                    maxzoom: 16
+	})
+
+			map.addLayer(
+				{
+					minzoom: 11,
+                    id: 'contours',
+                    type: 'line',
+                    source: 'contourSourceMetres',
+                    'source-layer': 'contours',
+                    paint: {
+                        'line-opacity': [
+								"match",
+								["get", "level"],
+								1,
+								0.3,
+								0.15
+							],
+						'line-color': darkMode ? '#ddddaa' : '#aaaaaa',
+                        // "major" contours have level=1, "minor" have level=0
+                        'line-width': [
+								"match",
+								["get", "level"],
+								1,
+								0.6,
+								0.5
+							]
+                    }
+                
 			}, "aeroway_fill")
 
 			setTimeout(() => {

@@ -50,6 +50,7 @@
     "base65536": "^4.0.3",
     "geolocation": "^0.0.0",
     "gtfs-realtime-bindings": "^1.1.1",
+    "maplibre-contour": "^0.1.0",
     "maplibre-gl": "5.0.0-pre.5",
     "moment": "^2.30.1",
     "protobufjs": "^7.4.0",
