@@ -1248,13 +1248,27 @@ const media = matchMedia(mqString);
                     'source-layer': 'contours',
                     paint: {
                         'line-opacity': [
+  "interpolate",
+  ["linear"],
+  ["zoom"],
+  11,
+  [
 								"match",
 								["get", "level"],
 								1,
 								0.3,
 								0.15
 							],
-						'line-color': darkMode ? '#aaaa66' : '#626250',
+  13,
+  [
+								"match",
+								["get", "level"],
+								1,
+								0.5,
+								0.3
+							]
+],
+						'line-color': darkMode ? 'hsl(150, 89%, 31%)' : '#626250',
                         // "major" contours have level=1, "minor" have level=0
                         'line-width': [
 								"match",
