@@ -1204,9 +1204,9 @@ const media = matchMedia(mqString);
 				type: 'hillshade',
 				source: 'hillshade',
 				
-				paint: { 'hillshade-shadow-color': darkMode ? '#050511' : '#111111',
-					'hillshade-highlight-color': darkMode ? '#aaaaaa' : '#dddddd',
-					'hillshade-accent-color': darkMode ? '#000000' : '#222222',
+				paint: { 'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 10%)' : '#111111',
+					'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 83%, 0.61)' : '#dddddd',
+					'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
 					"hillshade-exaggeration": 0.3
 				  },
 				  layout: {
