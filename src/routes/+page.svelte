@@ -1182,9 +1182,11 @@ const media = matchMedia(mqString);
 
 			
 			const demSource = new mlcontour.DemSource({
-        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=tf30gb2F4vIsBW5k9Msd',
+        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=8aJbxlvd5nHjeJF64r60',
         encoding: 'mapbox',
+		cacheSize: 1000, 
         maxzoom: 14,
+		
         // offload contour line computation to a web worker
         worker: true
     });
