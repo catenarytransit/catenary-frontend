@@ -1205,7 +1205,7 @@ const media = matchMedia(mqString);
 				source: 'hillshade',
 				
 				paint: { 'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 10%)' : '#111111',
-					'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 83%, 0.61)' : '#dddddd',
+					'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 73%, 0.51)' : '#dddddd',
 					'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
 					"hillshade-exaggeration": 0.3
 				  },
@@ -1279,7 +1279,7 @@ const media = matchMedia(mqString);
 							]
                     }
                 
-			}, "aeroway_fill")
+			}, "hillshade")
 
 			map.addLayer({
                     id: 'contour-text',
