@@ -1177,12 +1177,12 @@ const media = matchMedia(mqString);
 		}
 
 		map.on('load', () => {
-			map.setProjection({type: 'globe'});
+		map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
 
 			
 			const demSource = new mlcontour.DemSource({
-        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=8aJbxlvd5nHjeJF64r60',
+        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=tK5B8WtNfkv7u3Ro8waG',
         encoding: 'mapbox',
 		cacheSize: 1000, 
         maxzoom: 14,
@@ -1193,6 +1193,8 @@ const media = matchMedia(mqString);
 
 	demSource.setupMaplibre(maplibregl);
 
+			
+
 			map.addSource('hillshade',
 				{
 				type: 'raster-dem',
@@ -1200,6 +1202,8 @@ const media = matchMedia(mqString);
 				tileSize: 512,
 				},
 			)
+
+			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
 
 			map.addLayer({
 				id: 'hillshade',
@@ -1270,7 +1274,7 @@ const media = matchMedia(mqString);
 								0.3
 							]
 ],
-						'line-color': darkMode ? 'hsl(150, 89%, 31%)' : '#626250',
+						'line-color': darkMode ? '#6644dd' : '#626250',
                         // "major" contours have level=1, "minor" have level=0
                         'line-width': [
 								"match",
