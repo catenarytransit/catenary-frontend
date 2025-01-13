@@ -1180,9 +1180,9 @@ const media = matchMedia(mqString);
 		map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
 
-			
+			/*
 			const demSource = new mlcontour.DemSource({
-        url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=tK5B8WtNfkv7u3Ro8waG',
+        url: 'https://birch.catenarymaps.org/terrain_tiles_proxy/{z}/{x}/{y}',
         encoding: 'mapbox',
 		cacheSize: 1000, 
         maxzoom: 14,
@@ -1310,6 +1310,7 @@ const media = matchMedia(mqString);
                         'text-font': ['Barlow Medium']
                     }
                 }, "aeroway_fill")
+				*/
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
