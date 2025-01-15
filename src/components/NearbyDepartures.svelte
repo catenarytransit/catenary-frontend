@@ -12,6 +12,10 @@
 	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
 
+	const onbutton = "bg-blue-500 bg-opacity-80";
+
+	const offbutton = "";
+
     const TIME_CUTOFF = 20000;
 	const TIME_PREVIOUS_CUTOFF = 10 * 60;
 
@@ -24,6 +28,7 @@
 
 		return array;
 	}
+
 
 	setInterval(() => {
 		current_time = Date.now();
@@ -44,8 +49,47 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
 		geolocation_store,
-		nearby_deps_cache_gps
+		nearby_deps_cache_gps,
+		nearby_departures_filter
 	} from '../globalstores';
+
+	
+	function filter_for_route_id(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
+		if (route_id == 3 ) {
+			if (nearby_departures_filter_local.bus == true) {
+				
+			return true;
+			} else {
+				return false;
+			}
+		}
+
+		if ((route_id == 0 || route_id == 1)) {
+			if (nearby_departures_filter_local.metro == true) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		
+		if ((route_id == 2)) {
+			if (nearby_departures_filter_local.rail == true) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	let nearby_departures_filter_local = get(nearby_departures_filter);
+
+	nearby_departures_filter.subscribe((x) => nearby_departures_filter_local = dearby_departures_filter);
+
+	import type {
+		NearbySelectionFilterRouteType} from "../globalstores";
 	import { SingleTrip, StackInterface } from './stackenum';
 	import { t } from 'svelte-i18n';
 	import {
@@ -69,7 +113,7 @@
 
 	export let window_height_known: number =   500;
 
-	
+	let show_filter_menu:bool = false;
 
 	onMount(() => {
 		window.addEventListener('resize', () => {
@@ -160,10 +204,21 @@
 	}
 </script>
 
-<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3  md:mb-2`}>
-	<span class="material-symbols-outlined mr-1 translate-y-1 text-lg md:text-xl">near_me</span>
-	{$_('nearbydepartures')}
-</h2>
+<div class="flex flex-row mb-1">
+	<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3  md:mb-2`}>
+		<span class="material-symbols-outlined mr-1 translate-y-1 text-lg md:text-xl">near_me</span>
+		{$_('nearbydepartures')}
+	</h2>
+	<div class='ml-auto pr-2'>
+		<button
+		on:click={() => {
+			show_filter_menu = !show_filter_menu;
+		}}
+		 class="px-1 py-1 rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+			<span class="material-symbols-outlined translate-y-1">filter_alt</span>
+	</button>
+	</div>
+</div>
 
 {#if !first_attempt_sent}
 	<p class="italic px-3 pb-2">Waiting for GPS...</p>
@@ -179,11 +234,41 @@
 	{/if}
 </div>
 
+{#if show_filter_menu}
+<div class="py-2 px-3">
+	<button
+	on:click={() => {
+		nearby_departures_filter.set({...nearby_departures_filter_local, rail:!nearby_departures_filter_local.rail})
+	}}
+	 class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.rail ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
+
+	 <button
+	on:click={() => {
+		nearby_departures_filter.set({...nearby_departures_filter_local, metro:!nearby_departures_filter_local.metro})
+	}}
+	 class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
+
+	 <button
+	on:click={() => {
+		nearby_departures_filter.set({...nearby_departures_filter_local, bus:!nearby_departures_filter_local.bus})
+	}}
+	 class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingBus")}</button>
+
+	 <button
+	 on:click={() => {
+		 nearby_departures_filter.set({...nearby_departures_filter_local, other:!nearby_departures_filter_local.other})
+	 }}
+	  class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingOther")}</button>
+</div>
+{/if}
+
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
 		{#each departure_list
 		.filter((x) => x.chateau_id != "greyhound~flix")
-		.filter((x) => Object.keys(x.directions).length > 0) as route_group}
+		.filter((x) => Object.keys(x.directions).length > 0)
+		.filter((x) => filter_for_route_id(x.route_id, nearby_departures_filter_local))
+		 as route_group}
 			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-2 bg-gray-100 dark:bg-background rounded-md`}>
 				<p class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`} style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}

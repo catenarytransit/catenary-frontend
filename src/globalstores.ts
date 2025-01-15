@@ -29,6 +29,20 @@ export const realtime_vehicle_locations_last_updated_store: Writable<
 > = writable({});
 export const lock_on_gps_store = writable(false);
 
+export interface NearbySelectionFilterRouteType {
+	bus: boolean,
+	metro: boolean,
+	rail: boolean,
+	other: boolean
+}
+
+export const nearby_departures_filter: Writable<NearbySelectionFilterRouteType> = writable({
+	bus:true,
+	metro: true,
+	rail: true,
+	other: true
+});
+
 //depreciated
 export const dark_mode_store = writable(false);
 
