@@ -30,6 +30,27 @@ async function make_fire_names(map: maplibregl.Map) {
 		},
 		minzoom: 6,
 	});
+
+	map.addLayer({
+		'id': 'firenameslabelwd',
+		'type': 'symbol',
+		'source': 'firenames_wd',
+		'layout': {
+			'icon-image': 'fireicon',
+			'icon-size': 0.04,
+			'text-field': ['get', 'name'],
+			'text-offset': [0, 1],
+			'text-anchor': 'top',
+
+			'text-size': 14,
+			'text-font': ['Barlow Medium'],
+			
+		},
+		paint: {
+			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
+		},
+		minzoom: 6,
+	});
 }
 
 function generateArrayInFormat(key: string, array: string[]) {
@@ -116,7 +137,29 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			map.setFilter('zones-fill-watchduty-warning', generateArrayInFormat("zone_name", combined_evacuation_warnings_arr));
 
 			map.setFilter('zones-fill-watchduty-go-txt', generateArrayInFormat("zone_name", combined_evacuation_orders_arr));
+
 			map.setFilter('zones-fill-watchduty-warning-txt', generateArrayInFormat("zone_name", combined_evacuation_warnings_arr));
+
+			const fires_points = cleaned_data.filter((fire) => fire.is_active == true).map((fire) => {
+				return {
+					"type": "Feature",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [fire.lng, fire.lat]
+					},
+					"properties": {
+						"name": fire.name
+					}
+				}
+			}
+			);
+
+			console.log('fire points', fires_points)
+
+			map.getSource('firenames_wd').setData({
+				"type": "FeatureCollection",
+				"features": fires_points
+			});
 		});
 	}
 
@@ -181,6 +224,14 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	map.addSource('firenames', {
 		type: 'geojson',
 		data: firenamesurl
+	})
+
+	map.addSource('firenames_wd', {
+		type: 'geojson',
+		data: {
+			"type": "FeatureCollection",
+			"features": []
+		}
 	})
 
 	map.addSource('fire_evac_manual', {

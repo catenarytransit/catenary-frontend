@@ -18,6 +18,27 @@
        map.on('load', () => {
         map.setProjection({type: "globe"});
 
+        map.addSource('hillshade',
+				{
+					type: 'raster-dem',
+				url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=B265xPhJaYe2kWHOLHTG'
+				}
+			)
+
+			map.addLayer({
+				id: 'hillshade',
+				type: 'hillshade',
+				source: 'hillshade',
+				
+				paint: { 'hillshade-shadow-color': '#050511',
+					'hillshade-highlight-color': '#aaaaaa',
+					'hillshade-accent-color': '#000000'
+				  },
+				  layout: {
+					
+				  }
+			})
+
         console.log(map);
        })
     });

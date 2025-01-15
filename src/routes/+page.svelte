@@ -14,6 +14,7 @@
 	import {init_stores} from '../components/init_stores';
 	import {refreshUIMaplibre} from '../components/transitionDarkAndLight';
 	import {layerspercategory } from '../components/layernames';
+	import mlcontour from "maplibre-contour";
 
 	import {
 		data_stack_store,
@@ -1176,8 +1177,140 @@ const media = matchMedia(mqString);
 		}
 
 		map.on('load', () => {
-			map.setProjection({type: 'globe'});
+		map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
+
+			/*
+			const demSource = new mlcontour.DemSource({
+        url: 'https://birch.catenarymaps.org/terrain_tiles_proxy/{z}/{x}/{y}',
+        encoding: 'mapbox',
+		cacheSize: 1000, 
+        maxzoom: 14,
+		
+        // offload contour line computation to a web worker
+        worker: true
+    });
+
+	demSource.setupMaplibre(maplibregl);
+
+			
+
+			map.addSource('hillshade',
+				{
+				type: 'raster-dem',
+				tiles: [demSource.sharedDemProtocolUrl],
+				tileSize: 512,
+				},
+			)
+
+			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
+
+			map.addLayer({
+				id: 'hillshade',
+				type: 'hillshade',
+				source: 'hillshade',
+				
+				paint: { 'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 10%)' : '#111111',
+					'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 73%, 0.51)' : '#dddddd',
+					'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
+					"hillshade-exaggeration": 0.3
+				  },
+				  layout: {
+					
+				  }
+			}, "aeroway_fill");
+
+
+	map.addSource("contourSourceMetres", {
+		type: 'vector',
+                    tiles: [
+                        demSource.contourProtocolUrl({
+                        // meters to feet
+                            multiplier: 1,
+                            overzoom: 1,
+                            thresholds: {
+                            // zoom: [minor, major]
+                                11: [200, 1000],
+                                12: [40, 200],
+                                13: [20, 100],
+                                14: [10, 50],
+                                15: [10, 50],
+								16: [10, 50]
+                            },
+                            elevationKey: 'ele',
+                            levelKey: 'level',
+                            contourLayer: 'contours'
+                        })
+                    ],
+                    maxzoom: 16
+	})
+
+			map.addLayer(
+				{
+					minzoom: 11,
+                    id: 'contours',
+                    type: 'line',
+                    source: 'contourSourceMetres',
+                    'source-layer': 'contours',
+                    paint: {
+                        'line-opacity': [
+  "interpolate",
+  ["linear"],
+  ["zoom"],
+  11,
+  [
+								"match",
+								["get", "level"],
+								1,
+								0.3,
+								0.15
+							],
+  13,
+  [
+								"match",
+								["get", "level"],
+								1,
+								0.5,
+								0.3
+							]
+],
+						'line-color': darkMode ? '#6644dd' : '#626250',
+                        // "major" contours have level=1, "minor" have level=0
+                        'line-width': [
+								"match",
+								["get", "level"],
+								1,
+								0.6,
+								0.5
+							]
+                    }
+                
+			}, "hillshade")
+
+			map.addLayer({
+                    id: 'contour-text',
+                    type: 'symbol',
+                    source: 'contourSourceMetres',
+                    'source-layer': 'contours',
+					minzoom: 12,
+                    filter: ['>', ['get', 'level'], 0],
+                    paint: {
+                        'text-halo-color': darkMode ? 'black' : 'white',
+                        'text-halo-width': 1,
+						'text-color': darkMode ? '#eeeeee' : '#000000'
+                    },
+                    layout: {
+                        'symbol-placement': 'line',
+                        'text-size': 10,
+                        'text-field': [
+                            'concat',
+                            ['number-format', ['get', 'ele'], {}],
+                            'm'
+                        ],
+                        'text-font': ['Barlow Medium']
+                    }
+                }, "aeroway_fill")
+				*/
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
