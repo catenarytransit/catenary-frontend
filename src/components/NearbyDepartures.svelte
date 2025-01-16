@@ -54,18 +54,17 @@
 	} from '../globalstores';
 
 	
-	function filter_for_route_type(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
-		console.log('filtering for route id', route_id, nearby_departures_filter_local);
-
-		if (route_id == 3 || route_id == 11) {
+	function filter_for_route_id(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
+		if (route_id == 3 ) {
 			if (nearby_departures_filter_local.bus == true) {
+				
 			return true;
 			} else {
 				return false;
 			}
 		}
 
-		if ([0,1,5,7,12].includes(route_id)) {
+		if ((route_id == 0 || route_id == 1)) {
 			if (nearby_departures_filter_local.metro == true) {
 				return true;
 			} else {
@@ -82,9 +81,12 @@
 			}
 		}
 
-		return true;
+		return nearby_departures_filter_local.other;
 	}
 
+	let nearby_departures_filter_local = get(nearby_departures_filter);
+
+	nearby_departures_filter.subscribe((x) => nearby_departures_filter_local = nearby_departures_filter);
 
 	import type {
 		NearbySelectionFilterRouteType} from "../globalstores";
@@ -98,36 +100,6 @@
 	} from './agencyspecific';
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
-
-	
-	let nearby_departures_filter_local = {
-		rail: true,
-		bus: true,
-		metro: true,
-		other: true
-	};
-
-	let departure_list_filtered = [];
-
-	let nearby_rail_show = nearby_departures_filter_local.rail;
-	let nearby_bus_show = nearby_departures_filter_local.bus;
-	let nearby_metro_show = nearby_departures_filter_local.metro;
-	let nearby_other_show = nearby_departures_filter_local.other;
-
-	nearby_departures_filter.subscribe((x) => {
-		nearby_departures_filter_local = get(nearby_departures_filter);
-		nearby_rail_show = x.rail;
-		nearby_bus_show = x.bus;
-		nearby_metro_show = x.metro;
-		nearby_other_show = x.other;
-		refilter();
-	});
-
-	function refilter() {
-		departure_list_filtered = departure_list.filter((x) => x.chateau_id != "greyhound~flix")
-		.filter((x) => Object.keys(x.directions).length > 0)
-		.filter((x) => filter_for_route_type(x.route_type, nearby_departures_filter_local));
-	}
 
 	let current_time: number = 0;
 
@@ -226,11 +198,9 @@
 
 					departure_list = temp_departure_list;
 
-					//console.log('nearby deps', departure_list);
+					console.log('nearby deps', departure_list);
 					
 					loading = false;
-
-					refilter();
 
 					nearby_deps_cache_gps.set(data);
 				});
@@ -273,37 +243,37 @@
 <div class="py-2 px-3 flex flex-row gap-x-2">
 	<button
 	on:click={() => {
-		nearby_departures_filter.update((x) => {return {...x, rail: !x.rail}});
-		refilter();
+		nearby_departures_filter.set({...nearby_departures_filter_local, rail:!nearby_departures_filter_local.rail})
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white border-2 ${ nearby_rail_show == true ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white border-2 ${ nearby_departures_filter_local.rail ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
 
 	 <button
 	on:click={() => {
-		nearby_departures_filter.update((x) => {return {...x, metro: !x.metro}});
-		refilter();
+		nearby_departures_filter.set({...nearby_departures_filter_local, metro:!nearby_departures_filter_local.metro})
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_metro_show == true ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_departures_filter_local.metro ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
 
 	 <button
 	on:click={() => {
-		nearby_departures_filter.update((x) => {return {...x, bus: !x.bus}});
-		refilter();
+		nearby_departures_filter.set({...nearby_departures_filter_local, bus:!nearby_departures_filter_local.bus})
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_bus_show == true  ? onbutton : ""}`}>{$_("headingBus")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingBus")}</button>
 
 	 <button
 	 on:click={() => {
-		 nearby_departures_filter.update((x) => {return {...x, other: !x.other}});
-		 refilter();
+		 nearby_departures_filter.set({...nearby_departures_filter_local, other:!nearby_departures_filter_local.other})
 	 }}
-	  class={`px-2 rounded-full border-black dark:border-white border-2  ${ nearby_other_show == true ? onbutton : ""}`}>{$_("headingOther")}</button>
+	  class={`px-2 rounded-full border-black dark:border-white border-2  ${ nearby_departures_filter_local.other ? onbutton : ""}`}>{$_("headingOther")}</button>
 </div>
 {/if}
 
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
-		{#each departure_list_filtered as route_group}
+		{#each departure_list
+		.filter((x) => x.chateau_id != "greyhound~flix")
+		.filter((x) => Object.keys(x.directions).length > 0)
+		.filter((x) => filter_for_route_id(x.route_id, nearby_departures_filter_local))
+		 as route_group}
 			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-2 bg-gray-100 dark:bg-background rounded-md`}>
 				<p class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`} style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
