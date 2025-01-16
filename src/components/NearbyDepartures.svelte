@@ -271,25 +271,29 @@
 <div class="py-2 px-3 flex flex-row gap-x-2">
 	<button
 	on:click={() => {
-		nearby_departures_filter.update((x) => {return {...x, rail: !x.rail}})
+		nearby_departures_filter.update((x) => {return {...x, rail: !x.rail}});
+		refilter();
 	}}
 	 class={`px-2 rounded-full border-black dark:border-white border-2 ${ nearby_rail_show == true ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
 
 	 <button
 	on:click={() => {
-		nearby_departures_filter.update((x) => {return {...x, metro: !x.metro}})
+		nearby_departures_filter.update((x) => {return {...x, metro: !x.metro}});
+		refilter();
 	}}
 	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_metro_show == true ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
 
 	 <button
 	on:click={() => {
-		nearby_departures_filter.update((x) => {return {...x, bus: !x.bus}})
+		nearby_departures_filter.update((x) => {return {...x, bus: !x.bus}});
+		refilter();
 	}}
 	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_bus_show == true  ? onbutton : ""}`}>{$_("headingBus")}</button>
 
 	 <button
 	 on:click={() => {
-		 nearby_departures_filter.update((x) => {return {...x, other: !x.other}})
+		 nearby_departures_filter.update((x) => {return {...x, other: !x.other}});
+		 refilter();
 	 }}
 	  class={`px-2 rounded-full border-black dark:border-white border-2  ${ nearby_other_show == true ? onbutton : ""}`}>{$_("headingOther")}</button>
 </div>
