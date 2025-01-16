@@ -55,6 +55,8 @@
 
 	
 	function filter_for_route_id(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
+		//console.log('filtering for route id', route_id, nearby_departures_filter_local);
+
 		if (route_id == 3 || route_id == 11) {
 			if (nearby_departures_filter_local.bus == true) {
 			return true;
@@ -113,7 +115,7 @@
 	let nearby_other_show = nearby_departures_filter_local.other;
 
 	nearby_departures_filter.subscribe((x) => {
-		nearby_departures_filter_local = nearby_departures_filter;
+		nearby_departures_filter_local = get(nearby_departures_filter);
 		nearby_rail_show = x.rail;
 		nearby_bus_show = x.bus;
 		nearby_metro_show = x.metro;
@@ -224,7 +226,7 @@
 
 					departure_list = temp_departure_list;
 
-					console.log('nearby deps', departure_list);
+					//console.log('nearby deps', departure_list);
 					
 					loading = false;
 
