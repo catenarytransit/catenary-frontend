@@ -433,9 +433,9 @@ refresh_watchduty_evacs();
 				9,
 				0.2,
 				12,
-				0.1,
+				0.35,
 				15,
-				0.1
+				0.2
 			]
 		},
 		minzoom: 5
