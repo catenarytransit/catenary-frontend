@@ -14,7 +14,7 @@
 	import {init_stores} from '../components/init_stores';
 	import {refreshUIMaplibre} from '../components/transitionDarkAndLight';
 	import {layerspercategory } from '../components/layernames';
-	import mlcontour from "maplibre-contour";
+	//import mlcontour from "maplibre-contour";
 
 	import {
 		data_stack_store,

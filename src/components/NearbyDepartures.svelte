@@ -86,7 +86,7 @@
 
 	let nearby_departures_filter_local = get(nearby_departures_filter);
 
-	nearby_departures_filter.subscribe((x) => nearby_departures_filter_local = dearby_departures_filter);
+	nearby_departures_filter.subscribe((x) => nearby_departures_filter_local = nearby_departures_filter);
 
 	import type {
 		NearbySelectionFilterRouteType} from "../globalstores";
@@ -101,7 +101,7 @@
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
 
-	let current_time: number = Date.now();
+	let current_time: number = 0;
 
 	let first_load = false;
 
@@ -116,6 +116,10 @@
 	let show_filter_menu:bool = false;
 
 	onMount(() => {
+		if (typeof window != "undefined") {
+		current_time = Date.now();
+	}
+
 		window.addEventListener('resize', () => {
 			window_height_known = window.innerHeight;
 		});
@@ -204,6 +208,7 @@
 	}
 </script>
 
+{#if current_time != 0}
 <div class="flex flex-row mb-1">
 	<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3  md:mb-2`}>
 		<span class="material-symbols-outlined mr-1 translate-y-1 text-lg md:text-xl">near_me</span>
@@ -235,30 +240,30 @@
 </div>
 
 {#if show_filter_menu}
-<div class="py-2 px-3">
+<div class="py-2 px-3 flex flex-row gap-x-2">
 	<button
 	on:click={() => {
 		nearby_departures_filter.set({...nearby_departures_filter_local, rail:!nearby_departures_filter_local.rail})
 	}}
-	 class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.rail ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white border-2 ${ nearby_departures_filter_local.rail ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
 
 	 <button
 	on:click={() => {
 		nearby_departures_filter.set({...nearby_departures_filter_local, metro:!nearby_departures_filter_local.metro})
 	}}
-	 class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_departures_filter_local.metro ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
 
 	 <button
 	on:click={() => {
 		nearby_departures_filter.set({...nearby_departures_filter_local, bus:!nearby_departures_filter_local.bus})
 	}}
-	 class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingBus")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingBus")}</button>
 
 	 <button
 	 on:click={() => {
 		 nearby_departures_filter.set({...nearby_departures_filter_local, other:!nearby_departures_filter_local.other})
 	 }}
-	  class={`rounded-full border-black dark:border-white ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingOther")}</button>
+	  class={`px-2 rounded-full border-black dark:border-white border-2  ${ nearby_departures_filter_local.other ? onbutton : ""}`}>{$_("headingOther")}</button>
 </div>
 {/if}
 
@@ -391,7 +396,7 @@
 
 									{#if trip.departure_realtime != null && trip.departure_schedule != null}
 										<DelayDiff
-											simple={true}
+											show_seconds={false}
 											diff={trip.departure_realtime - trip.departure_schedule}
 										/>
 									{/if}
@@ -410,3 +415,5 @@
 		{/each}
 	</div>
 </div>
+
+{/if}
