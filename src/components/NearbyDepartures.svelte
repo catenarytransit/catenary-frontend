@@ -54,8 +54,8 @@
 	} from '../globalstores';
 
 	
-	function filter_for_route_id(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
-		//console.log('filtering for route id', route_id, nearby_departures_filter_local);
+	function filter_for_route_type(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
+		console.log('filtering for route id', route_id, nearby_departures_filter_local);
 
 		if (route_id == 3 || route_id == 11) {
 			if (nearby_departures_filter_local.bus == true) {
@@ -126,7 +126,7 @@
 	function refilter() {
 		departure_list_filtered = departure_list.filter((x) => x.chateau_id != "greyhound~flix")
 		.filter((x) => Object.keys(x.directions).length > 0)
-		.filter((x) => filter_for_route_id(x.route_id, nearby_departures_filter_local));
+		.filter((x) => filter_for_route_type(x.route_type, nearby_departures_filter_local));
 	}
 
 	let current_time: number = 0;
