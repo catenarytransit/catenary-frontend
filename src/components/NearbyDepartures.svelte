@@ -55,16 +55,15 @@
 
 	
 	function filter_for_route_id(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
-		if (route_id == 3 ) {
+		if (route_id == 3 || route_id == 11) {
 			if (nearby_departures_filter_local.bus == true) {
-				
 			return true;
 			} else {
 				return false;
 			}
 		}
 
-		if ((route_id == 0 || route_id == 1)) {
+		if ([0,1,5,7,12].includes(route_id)) {
 			if (nearby_departures_filter_local.metro == true) {
 				return true;
 			} else {
@@ -84,9 +83,6 @@
 		return true;
 	}
 
-	let nearby_departures_filter_local = get(nearby_departures_filter);
-
-	nearby_departures_filter.subscribe((x) => nearby_departures_filter_local = nearby_departures_filter);
 
 	import type {
 		NearbySelectionFilterRouteType} from "../globalstores";
@@ -100,6 +96,28 @@
 	} from './agencyspecific';
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
+
+	
+	let nearby_departures_filter_local = {
+		rail: true,
+		bus: true,
+		metro: true,
+		other: true
+	};
+
+	let nearby_rail_show = nearby_departures_filter_local.rail;
+	let nearby_bus_show = nearby_departures_filter_local.bus;
+	let nearby_metro_show = nearby_departures_filter_local.metro;
+	let nearby_other_show = nearby_departures_filter_local.other;
+
+	nearby_departures_filter.subscribe((x) => {
+		nearby_departures_filter_local = nearby_departures_filter;
+		nearby_rail_show = x.rail;
+		nearby_bus_show = x.bus;
+		nearby_metro_show = x.metro;
+		nearby_other_show = x.other;
+		departure_list = [...departure_list];
+	});
 
 	let current_time: number = 0;
 
@@ -243,27 +261,27 @@
 <div class="py-2 px-3 flex flex-row gap-x-2">
 	<button
 	on:click={() => {
-		nearby_departures_filter.set({...nearby_departures_filter_local, rail:!nearby_departures_filter_local.rail})
+		nearby_departures_filter.update((x) => {return {...x, rail: !x.rail}})
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white border-2 ${ nearby_departures_filter_local.rail ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white border-2 ${ nearby_rail_show == true ? onbutton : ""}`}>{$_("headingIntercityRail")}</button>
 
 	 <button
 	on:click={() => {
-		nearby_departures_filter.set({...nearby_departures_filter_local, metro:!nearby_departures_filter_local.metro})
+		nearby_departures_filter.update((x) => {return {...x, metro: !x.metro}})
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_departures_filter_local.metro ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_metro_show == true ? onbutton : ""}`}>{$_("headingLocalRail")}</button>
 
 	 <button
 	on:click={() => {
-		nearby_departures_filter.set({...nearby_departures_filter_local, bus:!nearby_departures_filter_local.bus})
+		nearby_departures_filter.update((x) => {return {...x, bus: !x.bus}})
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_departures_filter_local.bus ? onbutton : ""}`}>{$_("headingBus")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_bus_show == true  ? onbutton : ""}`}>{$_("headingBus")}</button>
 
 	 <button
 	 on:click={() => {
-		 nearby_departures_filter.set({...nearby_departures_filter_local, other:!nearby_departures_filter_local.other})
+		 nearby_departures_filter.update((x) => {return {...x, other: !x.other}})
 	 }}
-	  class={`px-2 rounded-full border-black dark:border-white border-2  ${ nearby_departures_filter_local.other ? onbutton : ""}`}>{$_("headingOther")}</button>
+	  class={`px-2 rounded-full border-black dark:border-white border-2  ${ nearby_other_show == true ? onbutton : ""}`}>{$_("headingOther")}</button>
 </div>
 {/if}
 
