@@ -1168,7 +1168,7 @@
 			const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
-				cacheSize: 1000,
+				cacheSize: 128,
 				maxzoom: 15,
 
 				// offload contour line computation to a web worker
@@ -1199,7 +1199,7 @@
 					},
 					layout: {}
 				},
-				'aeroway_fill'
+				'water'
 			);
 
 			map.addSource('contourSourceMetres', {
@@ -1233,6 +1233,7 @@
 					type: 'line',
 					source: 'contourSourceMetres',
 					'source-layer': 'contours',
+					filter : [">=", 'ele', 0],
 					paint: {
 						'line-opacity': [
 							'interpolate',
@@ -1253,6 +1254,7 @@
 
 			map.addLayer(
 				{
+					filter : [">=", 'ele', 0],
 					id: 'contour-text',
 					type: 'symbol',
 					source: 'contourSourceMetres',
