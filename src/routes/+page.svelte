@@ -1129,14 +1129,9 @@
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
-		let remove = null;
-
 		const updatePixelRatio = () => {
 			map.setPixelRatio(window.devicePixelRatio * 1.4);
 
-			if (remove != null) {
-				remove();
-			}
 		};
 		const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
 		const media = matchMedia(mqString);
