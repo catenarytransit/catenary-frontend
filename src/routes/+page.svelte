@@ -675,7 +675,14 @@
 			if (window.innerWidth >= 640) {
 				return '32px';
 			} else {
-				return `${32 - dragger + document.getElementById('catenary-sidebar')?.offsetHeight}px`;
+				let sidebar = document.getElementById('catenary-sidebar');
+
+				if (sidebar) {
+					return `${32 - dragger + sidebar.offsetHeight}px`;
+				}
+				else {
+					return '32px';
+				}
 			}
 		} else {
 			return '32px';
@@ -687,21 +694,25 @@
 	let style: string = darkMode ? '/dark-style.json' : '/light-style.json';
 
 	function recompute_map_padding() {
-		if (mapglobal) {
+		let sidebar = document.getElementById('catenary-sidebar');
+		
+		if (sidebar) {
+			if (mapglobal) {
+			
 			if (innerWidth < 640) {
-			let padding = { bottom: document.getElementById('catenary-sidebar')?.offsetHeight, left: 0 };
+			let padding = { bottom: sidebar.offsetHeight, left: 0 };
 			if (mapglobal) {
 				
 			mapglobal.easeTo({ padding: padding, duration: 200 });
 			}
 		} else {
 			if (innerWidth < 768) {
-				let padding = { left: document.getElementById('catenary-sidebar')?.offsetWidth, bottom: 0 };
+				let padding = { left: sidebar.offsetWidth, bottom: 0 };
 				mapglobal.easeTo({ padding: padding, duration: 200 });
 			} else {
 				if (sidebarOpen == 'full') {
 					let padding = {
-						left: document.getElementById('catenary-sidebar')?.offsetWidth,
+						left: sidebar.offsetWidth,
 						bottom: 0
 					};
 					mapglobal.easeTo({ padding: padding, duration: 200 });
@@ -710,6 +721,7 @@
 					mapglobal.easeTo({ padding: padding, duration: 200 });
 				}
 			}
+		}
 		}
 		}
 	}
@@ -792,7 +804,13 @@
 		} else {
 			start_of_move_pointer_height = e.touches[0].clientY;
 		}
-		start_of_move_sidebar_height = document.getElementById('catenary-sidebar').offsetHeight;
+
+		let sidebar = document.getElementById('catenary-sidebar');
+
+		if (sidebar) {
+		start_of_move_sidebar_height = sidebar.offsetHeight;
+		}
+
 		console.log('start moving sidebar');
 	}
 
@@ -811,9 +829,12 @@
 	}
 
 	function moveToPos(values: any) {
-		last_sidebar_release = performance.now();
+		let sidebar = document.getElementById('catenary-sidebar');
 
-		let sidebar_width = document.getElementById('catenary-sidebar')?.offsetWidth || 0;
+		if (sidebar) {
+			last_sidebar_release = performance.now();
+
+		let sidebar_width = sidebar.offsetWidth || 0;
 
 		if (last_sidebar_interval_id != null) {
 			clearInterval(last_sidebar_interval_id);
@@ -881,6 +902,7 @@
 				}
 			}
 		}, 0.5);
+		}
 	}
 
 	function letgosidebar(e: Event) {
@@ -1041,7 +1063,8 @@
 		});
 	}
 
-	onMount(() => {
+	try {
+		onMount(() => {
 		//#region On the fly IP geolocation
 
 		if (localStorage.getItem('cachegeolocation')) {
@@ -1231,6 +1254,7 @@
 
 		console.log('setting up load map');
 
+		
 		setup_load_map(
 			map,
 			runSettingsAdapt,
@@ -1246,22 +1270,14 @@
 		console.log('setting up click handler');
 
 		setup_click_handler(map, layerspercategory, setSidebarOpen);
+		
 	});
+	} catch (e) {
+		console.error(e);
+	}
 </script>
-
 <svelte:head>
-	<script>
-		(function (w, d, s, l, i) {
-			w[l] = w[l] || [];
-			w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-			var f = d.getElementsByTagName(s)[0],
-				j = d.createElement(s),
-				dl = l != 'dataLayer' ? '&l=' + l : '';
-			j.async = true;
-			j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-			f.parentNode.insertBefore(j, f);
-		})(window, document, 'script', 'dataLayer', 'GTM-WD62NKLX');
-	</script>
+	
 	<!-- End Google Tag Manager -->
 	<!-- Primary Meta Tags -->
 	<title>Catenary Maps</title>
@@ -1301,6 +1317,8 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
+<svelte:boundary>
+
 <div class="w-full">
 	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 
@@ -1762,3 +1780,4 @@
 			'opsz' 64;
 	}
 </style>
+</svelte:boundary>
