@@ -1129,16 +1129,17 @@
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
+		function remove_listener() {
+			media.removeEventListener('change', updatePixelRatio);
+		};
+
 		const updatePixelRatio = () => {
 			map.setPixelRatio(window.devicePixelRatio * 1.4);
-
 		};
 		const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
 		const media = matchMedia(mqString);
 		media.addEventListener('change', updatePixelRatio);
-		remove = () => {
-			media.removeEventListener('change', updatePixelRatio);
-		};
+		
 
 		//map tile bounds
 
