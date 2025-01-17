@@ -1169,7 +1169,7 @@
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
 				cacheSize: 128,
-				maxzoom: 15,
+				maxzoom: 11,
 
 				// offload contour line computation to a web worker
 				worker: true
