@@ -1166,7 +1166,7 @@
 			skyRefresh(map, darkMode);
 
 			const demSource = new mlcontour.DemSource({
-				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}',
+				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
 				cacheSize: 1000,
 				maxzoom: 15,
