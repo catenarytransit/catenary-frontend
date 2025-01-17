@@ -1238,7 +1238,10 @@
 					type: 'line',
 					source: 'contourSourceMetres',
 					'source-layer': 'contours',
-					filter : [">=", 'ele', 0],
+					filter : ['all',
+					[">=", ['get', 'ele'], 0],
+					['>', ['get', 'level'], 0],
+					],
 					paint: {
 						'line-opacity': [
 							'interpolate',
@@ -1260,7 +1263,7 @@
 			map.addLayer(
 				{
 					filter : ['all',
-					[">=", 'ele', 0],
+					[">=", ['get', 'ele'], 0],
 					['>', ['get', 'level'], 0],
 					],
 					id: 'contour-text',
