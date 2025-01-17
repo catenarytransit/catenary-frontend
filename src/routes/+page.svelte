@@ -1175,7 +1175,11 @@
 			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
 
 			if (false) {
-				demSource.setupMaplibre(maplibregl);
+				
+
+			/*
+
+			demSource.setupMaplibre(maplibregl);
 
 				map.addSource('hillshade', {
 					type: 'raster-dem',
@@ -1200,8 +1204,6 @@
 				},
 				'water'
 			);
-
-			/*
 			 * map.addSource('contourSourceMetres', {
 				type: 'vector',
 				tiles: [
