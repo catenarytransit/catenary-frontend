@@ -23,7 +23,8 @@ async function make_fire_names(map: maplibregl.Map) {
 
 			'text-size': 14,
 			'text-font': ['Barlow Medium'],
-			'text-ignore-placement': true
+			'text-ignore-placement': true,
+			'icon-ignore-placement': true
 		},
 		paint: {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
@@ -44,7 +45,8 @@ async function make_fire_names(map: maplibregl.Map) {
 
 			'text-size': 14,
 			'text-font': ['Barlow Medium'],
-			'text-ignore-placement': true
+			'text-ignore-placement': true,
+			"icon-ignore-placement": true
 		},
 		paint: {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
