@@ -1169,8 +1169,7 @@
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
 				cacheSize: 128,
-				maxzoom: 11,
-
+				maxzoom: 12,
 				// offload contour line computation to a web worker
 				worker: true
 			});
