@@ -1,5 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
+	import mlcontour from "maplibre-contour";
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -14,7 +15,6 @@
 	import {init_stores} from '../components/init_stores';
 	import {refreshUIMaplibre} from '../components/transitionDarkAndLight';
 	import {layerspercategory } from '../components/layernames';
-	//import mlcontour from "maplibre-contour";
 
 	import {
 		data_stack_store,
@@ -1180,20 +1180,18 @@ const media = matchMedia(mqString);
 		map.setProjection({type: 'globe'});
 			skyRefresh(map, darkMode);
 
-			/*
+			
 			const demSource = new mlcontour.DemSource({
-        url: 'https://birch.catenarymaps.org/terrain_tiles_proxy/{z}/{x}/{y}',
+        url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}',
         encoding: 'mapbox',
 		cacheSize: 1000, 
-        maxzoom: 14,
+        maxzoom: 15,
 		
         // offload contour line computation to a web worker
         worker: true
     });
 
 	demSource.setupMaplibre(maplibregl);
-
-			
 
 			map.addSource('hillshade',
 				{
@@ -1285,7 +1283,7 @@ const media = matchMedia(mqString);
 							]
                     }
                 
-			}, "hillshade")
+			}, "hillshade");
 
 			map.addLayer({
                     id: 'contour-text',
@@ -1309,8 +1307,8 @@ const media = matchMedia(mqString);
                         ],
                         'text-font': ['Barlow Medium']
                     }
-                }, "aeroway_fill")
-				*/
+                }, "aeroway_fill");
+				
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
