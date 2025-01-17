@@ -20,10 +20,10 @@ async function make_fire_names(map: maplibregl.Map) {
 			'text-field': ['get', 'name'],
 			'text-offset': [0, 1],
 			'text-anchor': 'top',
-
-			'text-size': 14,
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 6, 12, 14],
 			'text-font': ['Barlow Medium'],
-			
+			'text-ignore-placement': true,
+			"icon-ignore-placement": true
 		},
 		paint: {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
@@ -41,9 +41,10 @@ async function make_fire_names(map: maplibregl.Map) {
 			'text-field': ['get', 'name'],
 			'text-offset': [0, 1],
 			'text-anchor': 'top',
-
-			'text-size': 14,
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 6, 12, 14],
 			'text-font': ['Barlow Medium'],
+			'text-ignore-placement': true,
+			"icon-ignore-placement": true
 			
 		},
 		paint: {
