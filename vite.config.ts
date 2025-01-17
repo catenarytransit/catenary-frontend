@@ -7,6 +7,7 @@ export default defineConfig({
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
 	build: {
-		sourcemap: true
+		sourcemap: true,
+		minify: false
 	}
 });
