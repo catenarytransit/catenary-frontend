@@ -184,7 +184,7 @@
 				refreshUIMaplibre();
 			});
 
-			console.log('dark mode ', darkMode, 'sytstem theme', ui_theme_grab);
+			console.log('dark mode ', darkMode, 'system theme', ui_theme_grab);
 		}
 	}
 
