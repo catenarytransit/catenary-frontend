@@ -1195,9 +1195,19 @@
 						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 5%)' : '#111111',
 						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#dddddd',
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
-						'hillshade-exaggeration': 0.3
+						'hillshade-exaggeration': [
+							'interpolate',
+							['linear'],
+							['zoom'],
+							5,
+							0.1,
+							9,
+							0.2,
+							11,
+							0.3
+						],
 					},
-					layout: {}
+					layout: {},
 				},
 				'water'
 			);
