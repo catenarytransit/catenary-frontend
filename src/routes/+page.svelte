@@ -1263,13 +1263,15 @@
 
 			map.addLayer(
 				{
-					filter : [">=", 'ele', 0],
+					filter : ['all',
+					[">=", 'ele', 0],
+					['>', ['get', 'level'], 0],
+					],
 					id: 'contour-text',
 					type: 'symbol',
 					source: 'contourSourceMetres',
 					'source-layer': 'contours',
 					minzoom: 12,
-					filter: ['>', ['get', 'level'], 0],
 					paint: {
 						'text-halo-color': darkMode ? 'black' : 'white',
 						'text-halo-width': 1,
