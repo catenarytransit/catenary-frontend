@@ -1167,7 +1167,7 @@
 
 			const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}',
-				encoding: 'mapbox',
+				encoding: 'terrarium',
 				cacheSize: 1000,
 				maxzoom: 15,
 
