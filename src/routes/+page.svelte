@@ -1,6 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
-	import mlcontour from 'maplibre-contour';
+	//import mlcontour from 'maplibre-contour';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -1156,127 +1156,20 @@
 
 		if (darkMode) {
 		}
-
-		map.on('load', () => {
-			map.setProjection({ type: 'globe' });
-			skyRefresh(map, darkMode);
-
-			const demSource = new mlcontour.DemSource({
+		
+		/*
+		const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
 				cacheSize: 128,
 				maxzoom: 12,
 				// offload contour line computation to a web worker
 				worker: true
-			});
+			});*/
 
-			demSource.setupMaplibre(maplibregl);
-
-			map.addSource('hillshade', {
-				type: 'raster-dem',
-				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 512
-			});
-
-			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
-
-			if (true) {
-				map.addLayer(
-				{
-					id: 'hillshade',
-					type: 'hillshade',
-					source: 'hillshade',
-
-					paint: {
-						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : '#111111',
-						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#dddddd',
-						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
-						'hillshade-exaggeration': 0.3,
-					},
-					layout: {},
-				},
-				'water'
-			);
-
-			map.addSource('contourSourceMetres', {
-				type: 'vector',
-				tiles: [
-					demSource.contourProtocolUrl({
-						// meters to feet
-						multiplier: 1,
-						overzoom: 1,
-						thresholds: {
-							// zoom: [minor, major]
-							11: [200, 1000],
-							12: [40, 200],
-							13: [20, 100],
-							14: [10, 50],
-							15: [10, 50],
-							16: [10, 50]
-						},
-						elevationKey: 'ele',
-						levelKey: 'level',
-						contourLayer: 'contours'
-					})
-				],
-				maxzoom: 16
-			});
-
-			map.addLayer(
-				{
-					minzoom: 11,
-					id: 'contours',
-					type: 'line',
-					source: 'contourSourceMetres',
-					'source-layer': 'contours',
-					filter : ['all',
-					[">=", ['get', 'ele'], 0],
-					['>', ['get', 'level'], 0],
-					],
-					paint: {
-						'line-opacity': [
-							'interpolate',
-							['linear'],
-							['zoom'],
-							11,
-							['match', ['get', 'level'], 1, 0.3, 0.15],
-							13,
-							['match', ['get', 'level'], 1, 0.5, 0.3]
-						],
-						'line-color': darkMode ? '#6644dd' : '#626250',
-						// "major" contours have level=1, "minor" have level=0
-						'line-width': ['match', ['get', 'level'], 1, 0.6, 0.5]
-					}
-				},
-				'hillshade'
-			);
-
-			map.addLayer(
-				{
-					filter : ['all',
-					[">=", ['get', 'ele'], 0],
-					['>', ['get', 'level'], 0],
-					],
-					id: 'contour-text',
-					type: 'symbol',
-					source: 'contourSourceMetres',
-					'source-layer': 'contours',
-					minzoom: 12,
-					paint: {
-						'text-halo-color': darkMode ? 'black' : 'white',
-						'text-halo-width': 1,
-						'text-color': darkMode ? '#eeeeee' : '#000000'
-					},
-					layout: {
-						'symbol-placement': 'line',
-						'text-size': 10,
-						'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
-						'text-font': ['Barlow Medium']
-					}
-				},
-				'aeroway_fill'
-			);
-			}
+		map.on('load', () => {
+			map.setProjection({ type: 'globe' });
+			skyRefresh(map, darkMode);
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
