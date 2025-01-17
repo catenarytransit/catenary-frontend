@@ -1180,7 +1180,8 @@
 
 			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
 
-			map.addLayer(
+			if (false) {
+				map.addLayer(
 				{
 					id: 'hillshade',
 					type: 'hillshade',
@@ -1285,6 +1286,7 @@
 				},
 				'aeroway_fill'
 			);
+			}
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
