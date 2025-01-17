@@ -715,7 +715,9 @@
 	}
 
 	function mousemovesidebar(e: TouchEvent | MouseEvent) {
-		clearInterval(last_sidebar_interval_id);
+		if (last_sidebar_interval_id) {	
+			clearInterval(last_sidebar_interval_id);
+		}
 		//	console.log('sidebar mouse move' ,e)
 		//console.log('mousemovesidebar', Date.now(), e);
 
