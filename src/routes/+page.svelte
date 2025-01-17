@@ -1,6 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
-	import mlcontour from 'maplibre-contour';
+	//import mlcontour from 'maplibre-contour';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
