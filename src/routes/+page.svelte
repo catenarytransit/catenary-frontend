@@ -1157,6 +1157,7 @@
 		if (darkMode) {
 		}
 		
+		/*
 		const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
@@ -1164,7 +1165,7 @@
 				maxzoom: 12,
 				// offload contour line computation to a web worker
 				worker: true
-			});
+			});*/
 
 		map.on('load', () => {
 			map.setProjection({ type: 'globe' });
