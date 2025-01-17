@@ -1277,8 +1277,6 @@
 	}
 </script>
 <svelte:head>
-	
-	<!-- End Google Tag Manager -->
 	<!-- Primary Meta Tags -->
 	<title>Catenary Maps</title>
 	<meta name="title" content="Catenary Maps" />
