@@ -1156,12 +1156,8 @@
 
 		if (darkMode) {
 		}
-
-		map.on('load', () => {
-			map.setProjection({ type: 'globe' });
-			skyRefresh(map, darkMode);
-
-			const demSource = new mlcontour.DemSource({
+		
+		const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
 				cacheSize: 128,
@@ -1170,17 +1166,23 @@
 				worker: true
 			});
 
-			demSource.setupMaplibre(maplibregl);
+		map.on('load', () => {
+			map.setProjection({ type: 'globe' });
+			skyRefresh(map, darkMode);
 
-			map.addSource('hillshade', {
-				type: 'raster-dem',
-				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 512
-			});
-
+			
 			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
 
-			if (true) {
+			if (false) {
+				demSource.setupMaplibre(maplibregl);
+
+				map.addSource('hillshade', {
+					type: 'raster-dem',
+					tiles: [demSource.sharedDemProtocolUrl],
+					tileSize: 512
+				});
+
+
 				map.addLayer(
 				{
 					id: 'hillshade',
