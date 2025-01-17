@@ -1192,7 +1192,7 @@
 					source: 'hillshade',
 
 					paint: {
-						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 5%)' : '#111111',
+						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : '#111111',
 						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#dddddd',
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
 						'hillshade-exaggeration': [
