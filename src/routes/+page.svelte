@@ -1198,7 +1198,8 @@
 				'water'
 			);
 
-			map.addSource('contourSourceMetres', {
+			/*
+			 * map.addSource('contourSourceMetres', {
 				type: 'vector',
 				tiles: [
 					demSource.contourProtocolUrl({
@@ -1276,6 +1277,7 @@
 				},
 				'aeroway_fill'
 			);
+			 */
 			}
 
 			setTimeout(() => {
