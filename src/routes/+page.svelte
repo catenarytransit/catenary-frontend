@@ -1,6 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
-	import mlcontour from "maplibre-contour";
+	import mlcontour from 'maplibre-contour';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -12,9 +12,9 @@
 	import { _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { update_geolocation_source } from '../user_location_lib';
-	import {init_stores} from '../components/init_stores';
-	import {refreshUIMaplibre} from '../components/transitionDarkAndLight';
-	import {layerspercategory } from '../components/layernames';
+	import { init_stores } from '../components/init_stores';
+	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
+	import { layerspercategory } from '../components/layernames';
 
 	import {
 		data_stack_store,
@@ -118,7 +118,6 @@
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
-
 	if (typeof window !== 'undefined') {
 		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
 
@@ -126,53 +125,51 @@
 			locale.set(window.localStorage.language);
 		}
 
-		window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change',({ matches }) => {
-		let ui_theme_grab = get(ui_theme_store);
-
-		if (ui_theme_grab == "system") {
-			if (matches) {
-    console.log("change to dark mode!");
-	darkMode = true;
-	refreshUIMaplibre();
-  } else {
-	console.log("change to light mode!");
-
-	darkMode = false;
-
-	refreshUIMaplibre();
-  }
-		} 
-});
-
-		if (ui_theme_store) {
-
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches }) => {
 			let ui_theme_grab = get(ui_theme_store);
 
-			if (ui_theme_grab == "system") {
-					const checkIsDarkSchemePreferred = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
-
-					darkMode = checkIsDarkSchemePreferred();
-				}
-				else if (ui_theme_grab == "dark") {
+			if (ui_theme_grab == 'system') {
+				if (matches) {
+					console.log('change to dark mode!');
 					darkMode = true;
+					refreshUIMaplibre();
 				} else {
-					darkMode = false;
-				}
+					console.log('change to light mode!');
 
-				if (darkMode) {
-					document.body.classList.add('dark');
-				} else {
-					document.body.classList.remove('dark');
+					darkMode = false;
+
+					refreshUIMaplibre();
 				}
+			}
+		});
+
+		if (ui_theme_store) {
+			let ui_theme_grab = get(ui_theme_store);
+
+			if (ui_theme_grab == 'system') {
+				const checkIsDarkSchemePreferred = () =>
+					window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
+
+				darkMode = checkIsDarkSchemePreferred();
+			} else if (ui_theme_grab == 'dark') {
+				darkMode = true;
+			} else {
+				darkMode = false;
+			}
+
+			if (darkMode) {
+				document.body.classList.add('dark');
+			} else {
+				document.body.classList.remove('dark');
+			}
 
 			ui_theme_store.subscribe((value) => {
-				if (value == "system") {
-					const checkIsDarkSchemePreferred = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
+				if (value == 'system') {
+					const checkIsDarkSchemePreferred = () =>
+						window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
 
 					darkMode = checkIsDarkSchemePreferred();
-				}
-				else if (value == "dark") {
+				} else if (value == 'dark') {
 					darkMode = true;
 				} else {
 					darkMode = false;
@@ -188,7 +185,6 @@
 			});
 
 			console.log('dark mode ', darkMode, 'sytstem theme', ui_theme_grab);
-			
 		}
 	}
 
@@ -225,42 +221,33 @@
 	function skyRefresh(map: maplibregl.Map, darkMode: boolean) {
 		if (darkMode) {
 			map.setSky({
-				"sky-color": "#000000",
-                            "sky-horizon-blend": 1,
-                            "horizon-color": "#ffffff",
-                            "horizon-fog-blend": .5,
-                    "fog-ground-blend": .5,
-					"atmosphere-blend": [
-						"interpolate",
-						["linear"],
-						["zoom"],
-						2,
-						0.4,
-						7,
-						0.1,
-						9,
-						0
-					]
+				'sky-color': '#000000',
+				'sky-horizon-blend': 1,
+				'horizon-color': '#ffffff',
+				'horizon-fog-blend': 0.5,
+				'fog-ground-blend': 0.5,
+				'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 2, 0.4, 7, 0.1, 9, 0]
 			});
 		} else {
 			map.setSky({
-				"sky-color": "#199EF3", // the color of the sky
-     "sky-horizon-blend": 1, // a value between 0 and 1. 0 is the horizon, 1 is map-height / 2
-     "horizon-color": "#ffffff", // the second sky color at the horizon, default is sky-color
-     "horizon-fog-blend": 1, // with a value from 0 to 1. 0 is no blend, 1 is blend to height/2 (e.g. max visible sky at max pitch)
-     "fog-color": "#0000ff", // the color of the fog
-     "fog-ground-blend": 1, // with a value from 0 to 1. 0 is the map-center, 1 is the far-clipping-plane. This setting works only in 3d-mode, also fog is faded out when lowering pitch and disappears below pitch 60
-     "atmosphere-blend": ["interpolate", // interpolate the atmosphere blend using expressions
-          ["linear"],
-          ["zoom"],
-          0,0, // z0 - 1 - fully visible atmosphere
-          10,0.1, // z10 - 1 - fully visible atmosphere
-          12,0 // z12 - 0 - no atmosphere
-          ],
-     
+				'sky-color': '#199EF3', // the color of the sky
+				'sky-horizon-blend': 1, // a value between 0 and 1. 0 is the horizon, 1 is map-height / 2
+				'horizon-color': '#ffffff', // the second sky color at the horizon, default is sky-color
+				'horizon-fog-blend': 1, // with a value from 0 to 1. 0 is no blend, 1 is blend to height/2 (e.g. max visible sky at max pitch)
+				'fog-color': '#0000ff', // the color of the fog
+				'fog-ground-blend': 1, // with a value from 0 to 1. 0 is the map-center, 1 is the far-clipping-plane. This setting works only in 3d-mode, also fog is faded out when lowering pitch and disappears below pitch 60
+				'atmosphere-blend': [
+					'interpolate', // interpolate the atmosphere blend using expressions
+					['linear'],
+					['zoom'],
+					0,
+					0, // z0 - 1 - fully visible atmosphere
+					10,
+					0.1, // z10 - 1 - fully visible atmosphere
+					12,
+					0 // z12 - 0 - no atmosphere
+				]
 			});
-
-			
 		}
 	}
 
@@ -428,12 +415,10 @@
 	function runSettingsAdapt() {
 		console.log('run settings adapt', layersettings);
 		if (mapglobal) {
-			
 			if (show_my_location) {
-					if (mapglobal.getLayer('nobearing_position')) {
-						
-				mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'visible');
-					}
+				if (mapglobal.getLayer('nobearing_position')) {
+					mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'visible');
+				}
 
 				if (mapglobal.getLayer('geolocationheadingshell')) {
 					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
@@ -473,36 +458,35 @@
 			}
 
 			if (mapglobal.getLayer('foamershapes')) {
-				
 				if (layersettings.more.foamermode.infra) {
 					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
 				} else {
 					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
 				}
-	
-			if (layersettings.more.foamermode.maxspeed) {
-				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'none');
-			}
 
-			if (layersettings.more.foamermode.signalling) {
-				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'none');
-			}
+				if (layersettings.more.foamermode.maxspeed) {
+					mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'none');
+				}
 
-			if (layersettings.more.foamermode.electrification) {
-				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'none');
-			}
+				if (layersettings.more.foamermode.signalling) {
+					mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'none');
+				}
 
-			if (layersettings.more.foamermode.gauge) {
-				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
-			} else {
-				mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
-			}
+				if (layersettings.more.foamermode.electrification) {
+					mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'none');
+				}
+
+				if (layersettings.more.foamermode.gauge) {
+					mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
+				}
 			}
 
 			Object.entries(layerspercategory).map((eachcategory) => {
@@ -541,11 +525,11 @@
 
 				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
 				if (stoplayer) {
-					if (category == "localrail") {
+					if (category == 'localrail') {
 						if (this_layer_settings.stops) {
-							mapglobal.setLayoutProperty("tramstops", 'visibility', 'visible');
+							mapglobal.setLayoutProperty('tramstops', 'visibility', 'visible');
 						} else {
-							mapglobal.setLayoutProperty("tramstops", 'visibility', 'none');
+							mapglobal.setLayoutProperty('tramstops', 'visibility', 'none');
 						}
 					}
 
@@ -560,11 +544,11 @@
 
 				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
 				if (stopslabellayer) {
-					if (category == "localrail") {
+					if (category == 'localrail') {
 						if (this_layer_settings.stoplabels) {
-							mapglobal.setLayoutProperty("tramstopslabel", 'visibility', 'visible');
+							mapglobal.setLayoutProperty('tramstopslabel', 'visibility', 'visible');
 						} else {
-							mapglobal.setLayoutProperty("tramstopslabel", 'visibility', 'none');
+							mapglobal.setLayoutProperty('tramstopslabel', 'visibility', 'none');
 						}
 					}
 
@@ -577,25 +561,28 @@
 					console.error('no stops label layer found for ', category);
 				}
 
-				
-
 				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
 				let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
 
-				[categoryvalues.pointing, categoryvalues.pointingshell, categoryvalues.labeldots, categoryvalues.livedots].forEach((x) => {
-							if (mapglobal?.getLayer(x)) {
-								let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
-								mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
-							} else {
-								console.error('could not find layer', x);
-							}
-						});
+				[
+					categoryvalues.pointing,
+					categoryvalues.pointingshell,
+					categoryvalues.labeldots,
+					categoryvalues.livedots
+				].forEach((x) => {
+					if (mapglobal?.getLayer(x)) {
+						let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
+						mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
+					} else {
+						console.error('could not find layer', x);
+					}
+				});
 
-						mapglobal.setLayoutProperty(
-							categoryvalues.labeldots,
-							'text-field',
-							interpretLabelsToCode(this_layer_settings.label, usunits)
-						);
+				mapglobal.setLayoutProperty(
+					categoryvalues.labeldots,
+					'text-field',
+					interpretLabelsToCode(this_layer_settings.label, usunits)
+				);
 
 				let hidevehiclecommand = ['!=', '', ['get', 'trip_id']];
 
@@ -616,7 +603,6 @@
 						if (mapglobal.getLayer(categoryvalues.livedots)) {
 							mapglobal.setFilter(categoryvalues.livedots, undefined);
 							mapglobal.setFilter(categoryvalues.labeldots, undefined);
-						
 						}
 						if (mapglobal.getLayer(categoryvalues.pointing)) {
 							mapglobal.setFilter(categoryvalues.pointing, regularpointers);
@@ -632,8 +618,9 @@
 							mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
 							mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers);
 						}
+					}
 				}
-			}});
+			});
 
 			localStorage.setItem(layersettingsnamestorage, JSON.stringify(layersettings));
 
@@ -697,9 +684,7 @@
 
 	const dragger = 24;
 
-	let style: string = darkMode
-		? '/dark-style.json'
-		: '/light-style.json';
+	let style: string = darkMode ? '/dark-style.json' : '/light-style.json';
 
 	function recompute_map_padding() {
 		if (innerWidth < 640) {
@@ -1100,7 +1085,9 @@
 
 		// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
 		// https://birch.catenarymaps.org/getchateaus
-		fetch('https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json')
+		fetch(
+			'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json'
+		)
 			.then(function (response) {
 				return response.json();
 			})
@@ -1132,37 +1119,36 @@
 			})
 			.catch((err) => console.error(err));
 
-		
 		const map = new maplibregl.Map({
-          container: 'map',
-		  light: {"anchor": "viewport", "color": "white", "intensity": 0.4},
-		  hash: 'pos',
-		  pixelRatio: window.devicePixelRatio * 1.4,
-          style: style, // stylesheet location
-		  center: centerinit, // starting position [lng, lat]
-		  zoom: zoominit, // starting zoom (must be greater than 8.1)
-        });
+			container: 'map',
+			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
+			hash: 'pos',
+			pixelRatio: window.devicePixelRatio * 1.4,
+			style: style, // stylesheet location
+			center: centerinit, // starting position [lng, lat]
+			zoom: zoominit // starting zoom (must be greater than 8.1)
+		});
 
 		let remove = null;
 
 		const updatePixelRatio = () => {
 			map.setPixelRatio(window.devicePixelRatio * 1.4);
 
-  if (remove != null) {
-    remove();
-  }
-}
-const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-const media = matchMedia(mqString);
-  media.addEventListener("change", updatePixelRatio);
-  remove = () => {
-    media.removeEventListener("change", updatePixelRatio);
-  };
+			if (remove != null) {
+				remove();
+			}
+		};
+		const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+		const media = matchMedia(mqString);
+		media.addEventListener('change', updatePixelRatio);
+		remove = () => {
+			media.removeEventListener('change', updatePixelRatio);
+		};
 
 		//map tile bounds
 
 		if (urlParams.get('tilebounds')) {
-			  map.showTileBoundaries = true;
+			map.showTileBoundaries = true;
 			//  map.showParseStatus = true;
 		}
 
@@ -1173,142 +1159,120 @@ const media = matchMedia(mqString);
 		}
 
 		if (darkMode) {
-		
 		}
 
 		map.on('load', () => {
-		map.setProjection({type: 'globe'});
+			map.setProjection({ type: 'globe' });
 			skyRefresh(map, darkMode);
 
-			
 			const demSource = new mlcontour.DemSource({
-        url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}',
-        encoding: 'mapbox',
-		cacheSize: 1000, 
-        maxzoom: 15,
-		
-        // offload contour line computation to a web worker
-        worker: true
-    });
+				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}',
+				encoding: 'mapbox',
+				cacheSize: 1000,
+				maxzoom: 15,
 
-	demSource.setupMaplibre(maplibregl);
+				// offload contour line computation to a web worker
+				worker: true
+			});
 
-			map.addSource('hillshade',
-				{
+			demSource.setupMaplibre(maplibregl);
+
+			map.addSource('hillshade', {
 				type: 'raster-dem',
 				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 512,
-				},
-			)
+				tileSize: 512
+			});
 
 			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
 
-			map.addLayer({
-				id: 'hillshade',
-				type: 'hillshade',
-				source: 'hillshade',
-				
-				paint: { 'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 10%)' : '#111111',
-					'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 73%, 0.51)' : '#dddddd',
-					'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
-					"hillshade-exaggeration": 0.3
-				  },
-				  layout: {
-					
-				  }
-			}, "aeroway_fill");
+			map.addLayer(
+				{
+					id: 'hillshade',
+					type: 'hillshade',
+					source: 'hillshade',
 
+					paint: {
+						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 10%)' : '#111111',
+						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 73%, 0.51)' : '#dddddd',
+						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222',
+						'hillshade-exaggeration': 0.3
+					},
+					layout: {}
+				},
+				'aeroway_fill'
+			);
 
-	map.addSource("contourSourceMetres", {
-		type: 'vector',
-                    tiles: [
-                        demSource.contourProtocolUrl({
-                        // meters to feet
-                            multiplier: 1,
-                            overzoom: 1,
-                            thresholds: {
-                            // zoom: [minor, major]
-                                11: [200, 1000],
-                                12: [40, 200],
-                                13: [20, 100],
-                                14: [10, 50],
-                                15: [10, 50],
-								16: [10, 50]
-                            },
-                            elevationKey: 'ele',
-                            levelKey: 'level',
-                            contourLayer: 'contours'
-                        })
-                    ],
-                    maxzoom: 16
-	})
+			map.addSource('contourSourceMetres', {
+				type: 'vector',
+				tiles: [
+					demSource.contourProtocolUrl({
+						// meters to feet
+						multiplier: 1,
+						overzoom: 1,
+						thresholds: {
+							// zoom: [minor, major]
+							11: [200, 1000],
+							12: [40, 200],
+							13: [20, 100],
+							14: [10, 50],
+							15: [10, 50],
+							16: [10, 50]
+						},
+						elevationKey: 'ele',
+						levelKey: 'level',
+						contourLayer: 'contours'
+					})
+				],
+				maxzoom: 16
+			});
 
 			map.addLayer(
 				{
 					minzoom: 11,
-                    id: 'contours',
-                    type: 'line',
-                    source: 'contourSourceMetres',
-                    'source-layer': 'contours',
-                    paint: {
-                        'line-opacity': [
-  "interpolate",
-  ["linear"],
-  ["zoom"],
-  11,
-  [
-								"match",
-								["get", "level"],
-								1,
-								0.3,
-								0.15
-							],
-  13,
-  [
-								"match",
-								["get", "level"],
-								1,
-								0.5,
-								0.3
-							]
-],
+					id: 'contours',
+					type: 'line',
+					source: 'contourSourceMetres',
+					'source-layer': 'contours',
+					paint: {
+						'line-opacity': [
+							'interpolate',
+							['linear'],
+							['zoom'],
+							11,
+							['match', ['get', 'level'], 1, 0.3, 0.15],
+							13,
+							['match', ['get', 'level'], 1, 0.5, 0.3]
+						],
 						'line-color': darkMode ? '#6644dd' : '#626250',
-                        // "major" contours have level=1, "minor" have level=0
-                        'line-width': [
-								"match",
-								["get", "level"],
-								1,
-								0.6,
-								0.5
-							]
-                    }
-                
-			}, "hillshade");
+						// "major" contours have level=1, "minor" have level=0
+						'line-width': ['match', ['get', 'level'], 1, 0.6, 0.5]
+					}
+				},
+				'hillshade'
+			);
 
-			map.addLayer({
-                    id: 'contour-text',
-                    type: 'symbol',
-                    source: 'contourSourceMetres',
-                    'source-layer': 'contours',
+			map.addLayer(
+				{
+					id: 'contour-text',
+					type: 'symbol',
+					source: 'contourSourceMetres',
+					'source-layer': 'contours',
 					minzoom: 12,
-                    filter: ['>', ['get', 'level'], 0],
-                    paint: {
-                        'text-halo-color': darkMode ? 'black' : 'white',
-                        'text-halo-width': 1,
+					filter: ['>', ['get', 'level'], 0],
+					paint: {
+						'text-halo-color': darkMode ? 'black' : 'white',
+						'text-halo-width': 1,
 						'text-color': darkMode ? '#eeeeee' : '#000000'
-                    },
-                    layout: {
-                        'symbol-placement': 'line',
-                        'text-size': 10,
-                        'text-field': [
-                            'concat',
-                            ['number-format', ['get', 'ele'], {}],
-                            'm'
-                        ],
-                        'text-font': ['Barlow Medium']
-                    }
-                }, "aeroway_fill");
-				
+					},
+					layout: {
+						'symbol-placement': 'line',
+						'text-size': 10,
+						'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
+						'text-font': ['Barlow Medium']
+					}
+				},
+				'aeroway_fill'
+			);
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
@@ -1318,14 +1282,14 @@ const media = matchMedia(mqString);
 			}, 0);
 
 			setTimeout(() => {
-				runSettingsAdapt()
+				runSettingsAdapt();
 			}, 1000);
 		});
 
 		maplibregl.setRTLTextPlugin(
-        '/mapbox-gl-rtl-text.min.js',
-        true // Lazy load the plugin
-    );
+			'/mapbox-gl-rtl-text.min.js',
+			true // Lazy load the plugin
+		);
 
 		mapglobal = map;
 
@@ -1361,7 +1325,7 @@ const media = matchMedia(mqString);
 			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
 		});
 
-		console.log("setting up load map")
+		console.log('setting up load map');
 
 		setup_load_map(
 			map,
@@ -1375,7 +1339,7 @@ const media = matchMedia(mqString);
 			recompute_map_padding
 		);
 
-		console.log("setting up click handler")
+		console.log('setting up click handler');
 
 		setup_click_handler(map, layerspercategory, setSidebarOpen);
 	});
@@ -1490,7 +1454,7 @@ const media = matchMedia(mqString);
 			>
 				<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
 			</div>
-			<SidebarInternals usunits={usunits} {latest_item_on_stack} {darkMode} />
+			<SidebarInternals {usunits} {latest_item_on_stack} {darkMode} />
 		</div>
 	{/if}
 </div>
