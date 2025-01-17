@@ -687,9 +687,13 @@
 	let style: string = darkMode ? '/dark-style.json' : '/light-style.json';
 
 	function recompute_map_padding() {
-		if (innerWidth < 640) {
+		if (mapglobal) {
+			if (innerWidth < 640) {
 			let padding = { bottom: document.getElementById('catenary-sidebar')?.offsetHeight, left: 0 };
+			if (mapglobal) {
+				
 			mapglobal.easeTo({ padding: padding, duration: 200 });
+			}
 		} else {
 			if (innerWidth < 768) {
 				let padding = { left: document.getElementById('catenary-sidebar')?.offsetWidth, bottom: 0 };
@@ -706,6 +710,7 @@
 					mapglobal.easeTo({ padding: padding, duration: 200 });
 				}
 			}
+		}
 		}
 	}
 
