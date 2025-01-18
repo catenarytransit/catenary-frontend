@@ -1206,7 +1206,7 @@
 			map.addSource('hillshade', {
 				type: 'raster-dem',
 				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 512
+				tileSize: 256
 			});
 
 			map.addLayer(
