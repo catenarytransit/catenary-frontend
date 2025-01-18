@@ -1,6 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
-	//import mlcontour from 'maplibre-contour';
+	import mlcontour from 'maplibre-contour';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
@@ -1187,7 +1187,7 @@
 		if (darkMode) {
 		}
 		
-		/*
+		
 		const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
@@ -1195,11 +1195,36 @@
 				maxzoom: 12,
 				// offload contour line computation to a web worker
 				worker: true
-			});*/
+			});
 
 		map.on('load', () => {
 			map.setProjection({ type: 'globe' });
 			skyRefresh(map, darkMode);
+
+			demSource.setupMaplibre(maplibregl);
+
+			map.addSource('hillshade', {
+				type: 'raster-dem',
+				tiles: [demSource.sharedDemProtocolUrl],
+				tileSize: 512
+			});
+
+			map.addLayer(
+				{
+					id: 'hillshade',
+					type: 'hillshade',
+					source: 'hillshade',
+
+					paint: {
+						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
+						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff55',
+						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
+						'hillshade-exaggeration': 0.3,
+					},
+					layout: {},
+				},
+				'water'
+			);
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
