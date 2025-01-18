@@ -1191,8 +1191,8 @@
 		const demSource = new mlcontour.DemSource({
 				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
 				encoding: 'terrarium',
-				cacheSize: 128,
-				maxzoom: 12,
+				cacheSize: 256,
+				maxzoom: 14,
 				// offload contour line computation to a web worker
 				worker: true
 			});
