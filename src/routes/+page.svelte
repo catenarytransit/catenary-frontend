@@ -1192,7 +1192,7 @@
 				url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
 				encoding: 'terrarium',
 				cacheSize: 512,
-				maxzoom: 14,
+				maxzoom: 13,
 				// offload contour line computation to a web worker
 				worker: true
 			});
