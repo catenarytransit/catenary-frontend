@@ -1189,9 +1189,9 @@
 		
 		
 		const demSource = new mlcontour.DemSource({
-				url: 'https://terraintiles.catenarymaps.org/{z}/{x}/{y}.png',
+				url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
 				encoding: 'terrarium',
-				cacheSize: 256,
+				cacheSize: 512,
 				maxzoom: 14,
 				// offload contour line computation to a web worker
 				worker: true
@@ -1219,7 +1219,7 @@
 						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
 						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffffee',
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
-						'hillshade-exaggeration': 0.3,
+						'hillshade-exaggeration': 0.2,
 					},
 					layout: {},
 				},
