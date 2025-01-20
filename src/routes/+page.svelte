@@ -591,7 +591,10 @@
 					interpretLabelsToCode(this_layer_settings.label, usunits)
 				);
 
-				let hidevehiclecommand = ['!=', '', ['get', 'trip_id']];
+				let hidevehiclecommand = ['all', 
+                                ['!=', '', ['get', 'trip_id']],
+                                ['has', 'trip_id']
+                                ];
 
 				let regularpointers = [
 					'all',
