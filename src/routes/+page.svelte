@@ -32,7 +32,8 @@
 		geolocation_store,
 		chateaus_store,
 		show_gtfs_ids_store,
-		ui_theme_store
+		ui_theme_store,
+		show_topo_global_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -58,6 +59,12 @@
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
 	const disabledlayerstyle =
 		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
+
+	let show_topo = true;
+
+	show_my_location_store.subscribe((value) => {
+		show_topo = value;
+	})
 
 	let centerinit = [-118, 33.9];
 
@@ -1221,10 +1228,20 @@
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
 						'hillshade-exaggeration': 0.2,
 					},
-					layout: {},
+					layout: {
+						visibility: "none"
+					},
 				},
 				'water'
 			);
+
+				show_topo_global_store.subscribe((value:boolean) => {
+					if (value === true) {
+						map.setLayoutProperty('hillshade', "visibility", "visible");
+					} else {
+						map.setLayoutProperty('hillshade', "visibility", "none");
+					}
+				})
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
@@ -1670,11 +1687,35 @@
 						runSettingsAdapt();
 					}}
 					checked={show_my_location}
-					id="show-zombie-buses"
+					id="show-my-location"
 					type="checkbox"
 					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 				/>
 				<label for="show-my-location" class="ml-2">{$_('showmylocation')}</label>
+			</div>
+
+			<div>
+				<input
+					on:click={(x) => {
+						show_topo_global_store.update((value) => !value);
+
+						localStorage.setItem('show-topo', String(get(show_topo_global_store)));
+
+						runSettingsAdapt();
+					}}
+					on:keydown={(x) => {
+						show_topo_global_store.update((value) => !value);
+
+						localStorage.setItem('show-topo', String(get(show_topo_global_store)));
+
+						runSettingsAdapt();
+					}}
+					checked={show_my_location}
+					id="show-topo-toggle"
+					type="checkbox"
+					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+				/>
+				<label for="show-topo-toggle" class="ml-2">{$_('topo')}</label>
 			</div>
 		{/if}
 

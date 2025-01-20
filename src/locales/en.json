@@ -102,5 +102,6 @@
 	"system_theme": "System",
 	"dark_theme": "Dark",
 	"light_theme": "Light",
-	"12_hour_clock": "12-hour clock"
+	"12_hour_clock": "12-hour clock",
+	"topo": "Topography"
 }

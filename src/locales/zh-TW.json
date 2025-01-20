@@ -100,5 +100,6 @@
 	"system_theme": "系統",
 	"dark_theme": "暗模式",
 	"light_theme": "亮模式",
-	"12_hour_clock": "十二小時制"
+	"12_hour_clock": "十二小時制",
+	"topo": "地形"
 }
