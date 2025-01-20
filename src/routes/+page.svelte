@@ -60,7 +60,7 @@
 	const disabledlayerstyle =
 		'text-gray-900 dark:text-gray-50 border bg-gray-300 border-gray-400 dark:bg-gray-800  dark:border-gray-700 text-sm md:text-sm';
 
-	let show_topo = true;
+	let show_topo = false;
 
 	show_my_location_store.subscribe((value) => {
 		show_topo = value;
