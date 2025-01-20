@@ -62,7 +62,7 @@
 
 	let show_topo = false;
 
-	show_my_location_store.subscribe((value) => {
+	show_topo_global_store.subscribe((value) => {
 		show_topo = value;
 	})
 
