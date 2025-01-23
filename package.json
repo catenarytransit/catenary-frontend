@@ -21,7 +21,7 @@
     "@sveltejs/kit": "^2.15.3",
     "@types/mapbox__polyline": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20",
+    "@typescript-eslint/parser": "^8.21",
     "@wasm-tool/rollup-plugin-rust": "^2.4.5",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.18",
