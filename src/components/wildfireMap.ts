@@ -83,6 +83,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	const evacuation_fire_url = "https://fireboundscache.catenarymaps.org/data/evac_california.json";
 
 	const modis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/modis.json";
+
+	const viirs_mw_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/viirs_nw.json";
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
 	const california_firis_arcgis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/ca_fire_bounds.json";
 
@@ -222,6 +224,12 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		data: modis_url
 	})
 
+	map.addSource("viirs_nw", {
+		type: 'geojson',
+		data: viirs_mw_url
+	})
+
+
 	map.addSource('firenames', {
 		type: 'geojson',
 		data: firenamesurl
@@ -274,7 +282,9 @@ refresh_watchduty_evacs();
 	}, 30_000);
 
 	setInterval(() => {
-		fetch_and_update_layer('modis', modis_url)
+		fetch_and_update_layer('modis', modis_url);
+
+		fetch_and_update_layer('viirs_nw', viirs_mw_url);
 	}, 120_000);
 
 	/*
@@ -352,6 +362,50 @@ refresh_watchduty_evacs();
 	]
 		},
 		'source': 'modis'
+	  });
+
+	  map.addLayer({
+		"type": "circle",
+		minzoom: 5,
+		"id": 'viirs_nw',
+		"paint": {
+		  "circle-color": [
+			"interpolate",
+			["linear"],
+			["get", "frp"],
+			3,
+			"#ff751f",
+			100,
+			"#ff1a1a"
+		  ],
+		  "circle-opacity": [
+			"interpolate",
+			["linear"],
+			["get", "frp"],
+			3,
+			0.1,
+			10,
+			0.3,
+			100,
+			0.4,
+		  ],
+		  "circle-radius": [
+	  "interpolate",
+	  ["linear"],
+	  ["zoom"],
+	  5,
+	  0.3,
+	  9,
+	  1.6,
+	  12,
+	  5,
+	  15,
+	  13,
+	  22,
+	  16
+	]
+		},
+		'source': 'viirs_nw'
 	  });
 
 	  map.addLayer({
