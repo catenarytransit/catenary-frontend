@@ -66,3 +66,5 @@ export const nearby_deps_cache_gps: Writable<any | null> = writable(null);
 export const chateaus_store: Writable<any | null> = writable(null);
 
 export const show_seconds_store = writable(false);
+
+export const show_topo_global_store = writable(false);

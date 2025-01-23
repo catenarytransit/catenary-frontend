@@ -101,5 +101,6 @@
 	"system_theme": "시스템",
 	"dark_theme": "다크모드",
 	"light_theme": "라이트모드",
-	"12_hour_clock": "12시간제"
+	"12_hour_clock": "12시간제",
+	"topo": "지형"
 }

@@ -683,7 +683,7 @@
 								{/if}
 
 								{#if stoptime.code}
-									<!--<span class="text-gray-800 dark:text-gray-200 font-extralight">{stoptime.code}</span>-->
+									<span class="text-gray-800 dark:text-gray-200 font-extralight">{stoptime.code}</span>
 								{/if}
 							</p>
 
