@@ -39,4 +39,5 @@ User-agent: Omgilibot
 User-agent: PerplexityBot
 User-agent: Timpibot
 User-agent: Kangaroo Bot
+User-agent: Crawlspace
 Disallow: /
