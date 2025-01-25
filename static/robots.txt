@@ -38,4 +38,5 @@ User-agent: Meta-ExternalFetcher
 User-agent: Omgilibot
 User-agent: PerplexityBot
 User-agent: Timpibot
+User-agent: Kangaroo Bot
 Disallow: /
