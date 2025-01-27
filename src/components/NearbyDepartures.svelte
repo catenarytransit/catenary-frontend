@@ -65,7 +65,7 @@
 			}
 		}
 
-		if ([0,1,5,7,12].includes(route_type)) {
+		if ([0,1,5,7,12,900].includes(route_type)) {
 			if (nearby_departures_filter_local.metro == true) {
 				return true;
 			} else {
