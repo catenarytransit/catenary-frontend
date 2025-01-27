@@ -465,35 +465,7 @@
 			}
 
 			if (mapglobal.getLayer('foamershapes')) {
-				if (layersettings.more.foamermode.infra) {
-					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('foamershapes', 'visibility', 'none');
-				}
-
-				if (layersettings.more.foamermode.maxspeed) {
-					mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('maxspeedshapes', 'visibility', 'none');
-				}
-
-				if (layersettings.more.foamermode.signalling) {
-					mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('signallingshapes', 'visibility', 'none');
-				}
-
-				if (layersettings.more.foamermode.electrification) {
-					mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('electrificationshapes', 'visibility', 'none');
-				}
-
-				if (layersettings.more.foamermode.gauge) {
-					mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'visible');
-				} else {
-					mapglobal.setLayoutProperty('gaugeshapes', 'visibility', 'none');
-				}
+				
 			}
 
 			Object.entries(layerspercategory).map((eachcategory) => {

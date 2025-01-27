@@ -13,7 +13,15 @@
 	},
 	"sprite": [
 	  {"id": "ofm", "url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm"},
-	  {"id": "mbicons", "url": "https://moreicons.pages.dev/sprite"}
+	  {"id": "mbicons", "url": "https://moreicons.pages.dev/sprite"},
+	  {
+		"id": "sdf",
+		"url": "https://openrailwaymap.fly.dev/sdf_sprite/symbols"
+	  },
+	  {
+		"id": "default",
+		"url": "https://openrailwaymap.fly.dev/sprite/symbols"
+	  }
 	],
 	"glyphs": "https://mapfonts.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
 	"layers": [
