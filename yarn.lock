@@ -3941,10 +3941,10 @@ svelte-toasts@^1.1.2:
   resolved "https://registry.npmjs.org/svelte-toasts/-/svelte-toasts-1.1.2.tgz"
   integrity sha512-m+yL4eEKXyJoyjTYaH1j1GFwF0Pi8YDqnVfwWPDmwi4712iZesv+TNCmToSNlav3R5Vkmc8ZBRkT8DOcu3sywQ==
 
-svelte@^5.19.1:
-  version "5.19.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.19.1.tgz#087ce8eea789df42de9b3d226aaed19ab862dd82"
-  integrity sha512-H/Vs2O51bwILZbaNUSdr4P1NbLpOGsxl4jJAjd88ELjzRgeRi1BHqexcVGannDr7D1pmTYWWajzHOM7bMbtB9Q==
+svelte@^5.19.4:
+  version "5.19.4"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-5.19.4.tgz#90f247f97816dea5e17c26b54df28331b931afd8"
+  integrity sha512-pzWvFQdvfEfT4Ll/JriAtcG7qmWjcL+x/NSl9Q+FPje5SXukYNp9kcufZ27ydauLLE/dwYMz9XRC8kiwTZmfDA==
   dependencies:
     "@ampproject/remapping" "^2.3.0"
     "@jridgewell/sourcemap-codec" "^1.5.0"
