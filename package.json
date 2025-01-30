@@ -15,7 +15,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "^1.50.0",
     "@sveltejs/adapter-auto": "^4.0.0",
     "@sveltejs/adapter-node": "^5.2.11",
     "@sveltejs/kit": "^2.15.3",
