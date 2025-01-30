@@ -1,9 +1,14 @@
 import { handleErrorWithSentry, replayIntegration, replayCanvasIntegration } from '@sentry/sveltekit';
-import * as Sentry from '@sentry/sveltekit';
+//import * as Sentry from '@sentry/sveltekit';
 
-Sentry.init({
-	dsn: 'https://fbd55168ab59964cd223ca010f7b5e02@o4508730818166784.ingest.de.sentry.io/4508730819739728',
+import {init} from '@jill64/sentry-sveltekit-cloudflare/client';
+//import { handleErrorWithSentry, replayIntegration, replayCanvasIntegration } from '@jill64/sentry-sveltekit-cloudflare';
 
+init(
+	'https://fbd55168ab59964cd223ca010f7b5e02@o4508730818166784.ingest.de.sentry.io/4508730819739728',
+{
+	"sentryOptions": {
+		
 	tracesSampleRate: 1.0,
 
 	// This sets the sample rate to be 10%. You may want this to be 100% while
@@ -19,7 +24,8 @@ Sentry.init({
 		maskAllText: false,
 		blockAllMedia: false,
 	}),replayCanvasIntegration()]
+	}
 });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
-export const handleError = handleErrorWithSentry();
+//export const handleError = handleErrorWithSentry();
