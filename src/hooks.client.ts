@@ -22,6 +22,7 @@ init(
 	integrations: [replayIntegration({
 		maskAllText: false,
 		blockAllMedia: false,
+		maskInputs: false,
 	}),replayCanvasIntegration()]
 	}
 });
