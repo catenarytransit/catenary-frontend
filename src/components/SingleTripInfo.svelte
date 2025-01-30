@@ -30,6 +30,7 @@
 	let stoptimes_cleaned_dataset: Array<Record<string, any>> = [];
 	let current_time: number = Date.now();
 	let fetchtimeout: NodeJS.Timeout | null = null;
+	let bigfetchtimeout: NodeJS.Timeout | null = null;
 	let updatetimecounter: NodeJS.Timeout | null = null;
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
@@ -467,6 +468,12 @@
 			update_realtime_data();
 		}, 5_000);
 
+		bigfetchtimeout = setInterval(() => {
+			if (trip_selected) {
+				fetch_trip_selected();
+			}
+		}, 60_000);
+
 		updatetimecounter = setInterval(() => {
 			current_time = Date.now();
 
@@ -519,7 +526,15 @@
 			}
 			
 		}, 100);
+
+		return () => {
+		clearInterval(fetchtimeout);
+		clearInterval(updatetimecounter);
+		clearInterval(bigfetchtimeout);
+		}
 	});
+
+	
 </script>
 
 <div class="h-full">
