@@ -507,7 +507,8 @@
 				i = i + 1;
 			});
 
-			if (
+			if (temp_last_inactive_stop_idx > 0) {
+				if (
 				stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null ||
 				stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_arrival_time != null
 			) {
@@ -515,6 +516,8 @@
 			} else {
 				last_inactive_stop_idx = temp_last_inactive_stop_idx;
 			}
+			}
+			
 		}, 100);
 	});
 </script>
