@@ -39,7 +39,7 @@ $: languagelist = Object.values(alerts).map((alert) => {
 							{#each languagelist.filter((x) => languagelist.includes("en-html") ? (x.language != "en") : true) as language}
 								
 							{#if alert.header_text}
-								{#each alert.header_text.translation.filter((x) => x.language == language) as each_header_translation_obj}
+								{#each alert.header_text.filter((x) => x.language == language) as each_header_translation_obj}
 									<p class={`text-sm`}>{each_header_translation_obj.text.replaceAll(/\<(\/)?p\>/g,"").replaceAll(/\<(\/)?b\>/g,"")}</p>
 								{/each}
 							{/if}
@@ -47,7 +47,7 @@ $: languagelist = Object.values(alerts).map((alert) => {
 								{
 									#if alert.description_text
 								}
-								{#each alert.description_text.translation.filter((x) => x.language == language) as description_alert}
+								{#each alert.description_text.filter((x) => x.language == language) as description_alert}
 								<div class="leading-none">
 									{#each description_alert.text.split('\n') as each_desc_line}
 										<div class="text-xs pt-0.5">
