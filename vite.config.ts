@@ -5,12 +5,6 @@ import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
 	plugins: [
-		sentrySvelteKit({
-			sourceMapsUploadOptions: {
-				org: 'catenary',
-				project: 'javascript-sveltekit'
-			}
-		}),
 		sentryVitePlugin({
 			org: process.env.SENTRY_ORG,
 			project: process.env.SENTRY_PROJECT,
