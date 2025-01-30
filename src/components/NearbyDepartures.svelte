@@ -54,10 +54,10 @@
 	} from '../globalstores';
 
 	
-	function filter_for_route_type(route_id: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
-		console.log('filtering for route id', route_id, nearby_departures_filter_local);
+	function filter_for_route_type(route_type: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
+		console.log('filtering for route type', route_type, nearby_departures_filter_local);
 
-		if (route_id == 3 || route_id == 11) {
+		if ([3,11,700].includes(route_type)) {
 			if (nearby_departures_filter_local.bus == true) {
 			return true;
 			} else {
@@ -65,7 +65,7 @@
 			}
 		}
 
-		if ([0,1,5,7,12].includes(route_id)) {
+		if ([0,1,5,7,12,900].includes(route_type)) {
 			if (nearby_departures_filter_local.metro == true) {
 				return true;
 			} else {
@@ -74,7 +74,7 @@
 		}
 
 		
-		if ((route_id == 2)) {
+		if (([2,106,107,101,100,102,103].includes(route_type))) {
 			if (nearby_departures_filter_local.rail == true) {
 				return true;
 			} else {
