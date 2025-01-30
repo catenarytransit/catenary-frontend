@@ -43,6 +43,7 @@
 	"type": "module",
 	"dependencies": {
 		"@datadog/browser-rum": "^6.0.0",
+		"@jill64/sentry-sveltekit-cloudflare": "^2.0.6",
 		"@mapbox/polyline": "^1.2.1",
 		"@sentry/sveltekit": "^8",
 		"@sveltejs/adapter-cloudflare": "^5.0.1",
