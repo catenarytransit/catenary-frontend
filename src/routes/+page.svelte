@@ -1108,8 +1108,6 @@
 								geo_api_response.geo_resp.latitude
 							];
 
-							console.log('ip addr saved', geoinit);
-
 							// set the center of the map to the user's location
 							// in case the map is already initialized (rare), set the center to the user's location
 							if (mapglobal) {
