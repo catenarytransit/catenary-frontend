@@ -1372,6 +1372,9 @@ datadogRum.init({
 	trackLongTasks: true,
 	trackResources: true,
 	trackUserInteractions: true,
+	compressIntakeRequests: true,
+	storeContextsAcrossPages: true,
+	silentMultipleInit: true
 });
 	});
 	} catch (e) {
