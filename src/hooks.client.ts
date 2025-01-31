@@ -1,4 +1,4 @@
-import { handleErrorWithSentry, replayIntegration, replayCanvasIntegration } from '@sentry/sveltekit';
+import { handleErrorWithSentry, replayIntegration } from '@sentry/sveltekit';
 //import * as Sentry from '@sentry/sveltekit';
 
 import {init} from '@jill64/sentry-sveltekit-cloudflare/client';
@@ -23,7 +23,7 @@ init(
 		maskAllText: false,
 		blockAllMedia: false,
 		maskInputs: false,
-	}),replayCanvasIntegration()]
+	})]
 	}
 });
 
