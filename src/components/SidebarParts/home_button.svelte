@@ -4,7 +4,7 @@
 	import { SettingsStack, StackInterface } from '../stackenum';
 </script>
 
-<div class="mt-3 mb-2">
+<div class="mt-3 mb-2 select-none">
 	<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
 	<button
 		class="text-seashore cursor-pointer mx-1"

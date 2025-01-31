@@ -68,6 +68,7 @@
 	import RouteHeading from './RouteHeading.svelte';
 	import { hexToRgb } from '../utils/colour';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
+	import NativeLands from './NativeLands.svelte';
 
 	let show_seconds = get(show_seconds_store);
 
@@ -537,7 +538,6 @@
 	
 </script>
 
-<div class="h-full">
 	{#if error != null}
 		<div>
 			<p>Error from server:</p>
@@ -606,7 +606,7 @@
 
 		<div
 			bind:this={bind_scrolling_div}
-			class="flex flex-col catenary-scroll overflow-y-scroll h-full pb-60 px-3 pt-2"
+			class="flex flex-col catenary-scroll overflow-y-scroll h-full px-3 pt-2"
 			style:border-top={`3px solid ${trip_data.color}`}
 		>
 		{
@@ -935,6 +935,12 @@
 					</div>
 				{/if}
 			{/each}
+
+			<br/>
+
+			<NativeLands chateau={trip_selected.chateau_id} />
+
+			<br/>
 		</div>
 	{/if}
-</div>
+
