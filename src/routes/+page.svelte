@@ -66,9 +66,9 @@
 		show_topo = value;
 	})
 
-	let centerinit = [-118, 33.9];
+	let centerinit = [-117.6969, 33.6969];
 
-	let zoominit = 8.1;
+	let zoominit = 9;
 
 	const decode = (textToDecode: string) => {
 		try {
@@ -1077,8 +1077,10 @@
 		onMount(() => {
 		//#region On the fly IP geolocation
 
-		if (localStorage.getItem('cachegeolocation')) {
-			const [long, lat] = localStorage.getItem('cachegeolocation')!.split(',');
+		let cachegeostored = localStorage.getItem('cacheipgeolocation');
+
+		if (cachegeostored) {
+			const [long, lat] = cachegeostored.split(',');
 			centerinit = [parseFloat(long), parseFloat(lat)];
 			if (mapglobal) {
 				mapglobal.setCenter(centerinit);
@@ -1097,11 +1099,14 @@
 					.then((response) => response.json())
 					// the text will be `lat,long`
 					.then((geo_api_response) => {
+						console.log('ip addr', geo_api_response);
 						if (geo_api_response.geo_resp) {
 							centerinit = [
-								parseFloat(geo_api_response.geo_resp.longitude),
-								parseFloat(geo_api_response.geo_resp.latitude)
+								geo_api_response.geo_resp.longitude,
+								geo_api_response.geo_resp.latitude
 							];
+
+							console.log('ip addr saved', geoinit);
 
 							// set the center of the map to the user's location
 							// in case the map is already initialized (rare), set the center to the user's location
@@ -1110,10 +1115,10 @@
 							}
 
 							// store the user's location in localStorage, as we do with regular browser provided geolocation
-							/*localStorage.setItem(
-								'cachegeolocation',
+							localStorage.setItem(
+								'cacheipgeolocation',
 								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-							);*/
+							);
 						}
 					});
 			} catch (e) {
@@ -1169,6 +1174,8 @@
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
+		mapglobal = map;
+
 		function remove_listener() {
 			media.removeEventListener('change', updatePixelRatio);
 		};
@@ -1208,6 +1215,28 @@
 			});
 
 		map.on('load', () => {
+			console.log('map coords', map.getCenter());
+
+			fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+					.then((response) => response.json())
+					// the text will be `lat,long`
+					.then((geo_api_response) => {
+						console.log('ip addr', geo_api_response);
+						localStorage.setItem(
+								'cacheipgeolocation',
+								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+							);
+					}
+			);
+
+			let coords = map.getCenter();
+
+			if (coords.lng == -117.6969 && coords.lat == 33.6969) {
+				console.log('change to ', centerinit);
+
+				map.setCenter(centerinit);
+			}
+
 			map.setProjection({ type: 'globe' });
 			skyRefresh(map, darkMode);
 
@@ -1256,6 +1285,16 @@
 			setTimeout(() => {
 				runSettingsAdapt();
 			}, 1000);
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			}, 4000);
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			}, 5000);
 		});
 
 		maplibregl.setRTLTextPlugin(
