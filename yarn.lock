@@ -373,6 +373,14 @@
     wrap-ansi "^8.1.0"
     wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
+"@jill64/sentry-sveltekit-cloudflare@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.npmjs.org/@jill64/sentry-sveltekit-cloudflare/-/sentry-sveltekit-cloudflare-2.0.6.tgz"
+  integrity sha512-/LhhF3BVDABSjfCdkHGtrjrwGjNdS8ySob87wohRtdb6FhCCBgiRuDRAShRgnYSD5zOqS5+veTrXiHBc4U5Isw==
+  dependencies:
+    "@sentry/svelte" "8.51.0"
+    toucan-js "4.1.0"
+
 "@jridgewell/gen-mapping@^0.3.2", "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.5"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.5.tgz"
@@ -947,12 +955,26 @@
   resolved "https://registry.npmjs.org/@rollup/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.30.1.tgz"
   integrity sha512-V9U8Ey2UqmQsBT+xTOeMzPzwDzyXmnAoO4edZhL7INkwQcaW1Ckv3WJX3qrrp/VHaDkEWIBWhRwP47r8cdrOow==
 
+"@sentry-internal/browser-utils@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry-internal/browser-utils/-/browser-utils-8.51.0.tgz"
+  integrity sha512-r94yfRK17zNJER0hgQE4qOSy5pWzsnFcGTJQSqhSEKUcC4KK37qSfoPrPejFxtIqXhqlkd/dTWKvrMwXWcn0MQ==
+  dependencies:
+    "@sentry/core" "8.51.0"
+
 "@sentry-internal/browser-utils@8.52.0":
   version "8.52.0"
   resolved "https://registry.npmjs.org/@sentry-internal/browser-utils/-/browser-utils-8.52.0.tgz"
   integrity sha512-ojFldpRpGrgacIQMbbMZeqLYetNJJ61n+Pz29FpggaIRrbkq84ocoy4FCy+9BuLo6ywgxtUFrjOXD9pPRcZtUA==
   dependencies:
     "@sentry/core" "8.52.0"
+
+"@sentry-internal/feedback@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry-internal/feedback/-/feedback-8.51.0.tgz"
+  integrity sha512-VgfxSZWLYUPKDnkt2zG+Oe5ccv8U3WPM6Mo4kfABIJT3Ai4VbZB7+vb2a4pm6lUCF9DeOPXHb5o9Tg17SHDAHw==
+  dependencies:
+    "@sentry/core" "8.51.0"
 
 "@sentry-internal/feedback@8.52.0":
   version "8.52.0"
@@ -961,6 +983,14 @@
   dependencies:
     "@sentry/core" "8.52.0"
 
+"@sentry-internal/replay-canvas@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry-internal/replay-canvas/-/replay-canvas-8.51.0.tgz"
+  integrity sha512-ERXIbwdULkdtIQnfkMLRVfpoGV2rClwySGRlTPepFKeLxlcXo9o09cPu+qbukiDnGK0cgEgRnrV961hMg21Bmw==
+  dependencies:
+    "@sentry-internal/replay" "8.51.0"
+    "@sentry/core" "8.51.0"
+
 "@sentry-internal/replay-canvas@8.52.0":
   version "8.52.0"
   resolved "https://registry.npmjs.org/@sentry-internal/replay-canvas/-/replay-canvas-8.52.0.tgz"
@@ -968,6 +998,14 @@
   dependencies:
     "@sentry-internal/replay" "8.52.0"
     "@sentry/core" "8.52.0"
+
+"@sentry-internal/replay@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry-internal/replay/-/replay-8.51.0.tgz"
+  integrity sha512-lkm7id3a2n3yMZeF5socCVQUeEeShNOGr7Wtsmb5RORacEnld0z+NfbMTilo1mDwiWBzI5OYBjm62eglm1HFsQ==
+  dependencies:
+    "@sentry-internal/browser-utils" "8.51.0"
+    "@sentry/core" "8.51.0"
 
 "@sentry-internal/replay@8.52.0":
   version "8.52.0"
@@ -981,6 +1019,17 @@
   version "2.22.6"
   resolved "https://registry.npmjs.org/@sentry/babel-plugin-component-annotate/-/babel-plugin-component-annotate-2.22.6.tgz"
   integrity sha512-V2g1Y1I5eSe7dtUVMBvAJr8BaLRr4CLrgNgtPaZyMT4Rnps82SrZ5zqmEkLXPumlXhLUWR6qzoMNN2u+RXVXfQ==
+
+"@sentry/browser@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry/browser/-/browser-8.51.0.tgz"
+  integrity sha512-1kbbyVfBBAx5Xyynp+lC5lLnAHo0qJ2r4mtmdT6koPjesvoOocEK0QQnouQBmdUbm3L0L/bPI1SgXjbeJyhzHQ==
+  dependencies:
+    "@sentry-internal/browser-utils" "8.51.0"
+    "@sentry-internal/feedback" "8.51.0"
+    "@sentry-internal/replay" "8.51.0"
+    "@sentry-internal/replay-canvas" "8.51.0"
+    "@sentry/core" "8.51.0"
 
 "@sentry/browser@8.52.0":
   version "8.52.0"
@@ -1031,10 +1080,23 @@
     "@sentry/cli-win32-i686" "2.41.1"
     "@sentry/cli-win32-x64" "2.41.1"
 
+"@sentry/core@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry/core/-/core-8.51.0.tgz"
+  integrity sha512-Go0KxCYLw+OBIlLSv5YsYX+x9NW43fNVcyB6rhkSp2Q5Zme3tAE6KtZFvyu4SO7G/903wisW5Q6qV6UuK/ee4A==
+
 "@sentry/core@8.52.0":
   version "8.52.0"
   resolved "https://registry.npmjs.org/@sentry/core/-/core-8.52.0.tgz"
   integrity sha512-2j3B7IKmseTKFm6AyheJ+RSgXqIsx+3blFSuxpkdvsEt60Lbzva2uDkCENfBDOclioo1kvHgsyuXLfWW4A+wwA==
+
+"@sentry/core@8.9.2":
+  version "8.9.2"
+  resolved "https://registry.npmjs.org/@sentry/core/-/core-8.9.2.tgz"
+  integrity sha512-ixm8NISFlPlEo3FjSaqmq4nnd13BRHoafwJ5MG+okCz6BKGZ1SexEggP42/QpGvDprUUHnfncG6WUMgcarr1zA==
+  dependencies:
+    "@sentry/types" "8.9.2"
+    "@sentry/utils" "8.9.2"
 
 "@sentry/node@8.52.0":
   version "8.52.0"
@@ -1084,6 +1146,15 @@
   dependencies:
     "@sentry/core" "8.52.0"
 
+"@sentry/svelte@8.51.0":
+  version "8.51.0"
+  resolved "https://registry.npmjs.org/@sentry/svelte/-/svelte-8.51.0.tgz"
+  integrity sha512-MlgeW9XQXnf1LdHzhried6nGQaRNrYeKsEoW+IPilzjSgQM1QHdvy6i9RIbY14Xp1aTJO45IbX2bY89zJvpCxw==
+  dependencies:
+    "@sentry/browser" "8.51.0"
+    "@sentry/core" "8.51.0"
+    magic-string "^0.30.0"
+
 "@sentry/svelte@8.52.0":
   version "8.52.0"
   resolved "https://registry.npmjs.org/@sentry/svelte/-/svelte-8.52.0.tgz"
@@ -1106,6 +1177,18 @@
     magic-string "0.30.7"
     magicast "0.2.8"
     sorcery "1.0.0"
+
+"@sentry/types@8.9.2":
+  version "8.9.2"
+  resolved "https://registry.npmjs.org/@sentry/types/-/types-8.9.2.tgz"
+  integrity sha512-+LFOyQGl+zk5SZRGZD2MEURf7i5RHgP/mt3s85Rza+vz8M211WJ0YsjkIGUJFSY842nged5QLx4JysLaBlLymg==
+
+"@sentry/utils@8.9.2":
+  version "8.9.2"
+  resolved "https://registry.npmjs.org/@sentry/utils/-/utils-8.9.2.tgz"
+  integrity sha512-A4srR9mEBFdVXwSEKjQ94msUbVkMr8JeFiEj9ouOFORw/Y/ux/WV2bWVD/ZI9wq0TcTNK8L1wBgU8UMS5lIq3A==
+  dependencies:
+    "@sentry/types" "8.9.2"
 
 "@sentry/vite-plugin@2.22.6":
   version "2.22.6"
@@ -4518,6 +4601,15 @@ totalist@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/totalist/-/totalist-3.0.1.tgz"
   integrity sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==
+
+toucan-js@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/toucan-js/-/toucan-js-4.1.0.tgz"
+  integrity sha512-KaD6yfjFuOiFfKccvJ95EICwxus+g2mfPUHyxfPCq7yzsEg5Qi2wpym0cxsZI7oS4t3S7/HwL1v+2TW5/pGAUA==
+  dependencies:
+    "@sentry/core" "8.9.2"
+    "@sentry/types" "8.9.2"
+    "@sentry/utils" "8.9.2"
 
 tr46@~0.0.3:
   version "0.0.3"

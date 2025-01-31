@@ -58,6 +58,7 @@
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
+	import NativeLands from './NativeLands.svelte';
 
 	let activePattern: string = '';
 
@@ -226,11 +227,8 @@
 
 </script>
 
-<div class="h-full"
-
->
-	{#if loaded == true}
-	<div class="flex flex-col catenary-scroll overflow-y-auto h-full"
+{#if loaded == true}
+	<div class=" catenary-scroll overflow-y-auto grow"
 	bind:this={bind_scrolling_div}>
 		<div class="px-3">
 			<RouteHeading
@@ -276,7 +274,7 @@
 			{/each}
 		</div>
 		<div
-			class="h-full pb-96 pt-2 flex flex-col"
+			class="grow pt-2 flex flex-col"
 		>
 			{#if activePattern != ''}
 				{#each route_data.direction_patterns[activePattern].rows as stop, index}
@@ -305,6 +303,12 @@
 					</span>
 				{/each}
 			{/if}
+
+			<br/>
+
+			<NativeLands chateau={routestack.chateau_id} />
+
+			<br/>
 		</div>
 	</div>
 	{:else}
@@ -314,4 +318,3 @@
 			<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
 		</div>
 	{/if}
-</div>

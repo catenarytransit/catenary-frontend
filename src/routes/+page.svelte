@@ -1407,6 +1407,7 @@
 	{#key top_margin_collapser_sidebar}
 		<div
 			class="fixed hidden md:flex p-1 flex items-center rounded-r-md bg-white dark:bg-darksky text-black dark:text-white"
+			
 			on:click={() => {
 				if (sidebarOpen == 'full') {
 					sidebarOpen = 'none';
@@ -1440,10 +1441,10 @@
 		<div
 			id="catenary-sidebar"
 			style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white"
+			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
 		>
 			<div
-				class="block md:hidden py-2 flex flex-row"
+				class="flex md:hidden py-2 flex-row"
 				on:mousedown={startmovesidebar}
 				on:touchstart={startmovesidebar}
 				aria-label="Move sidebar"
