@@ -936,11 +936,12 @@
 				{/if}
 			{/each}
 
+			<!--
 			<br/>
 
 			<NativeLands chateau={trip_selected.chateau_id} />
 
-			<br/>
+			<br/>-->
 		</div>
 	{/if}
 
