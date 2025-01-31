@@ -48,5 +48,41 @@ export const native_lands_db: Record<string, NativeLand> = {
                 title: "TransLink - Indigenous Relations, Art, and Initiatives"
             }
         ]
+    },
+    "ttc": {
+        nations: null,
+        title_translated: {
+            "en": "Indigenous peoples of Toronto"
+        },
+        default_language_code: "en",
+        agency_statement: {
+            "en": "The Toronto Transit Commission acknowledges that it operates in the territory of the Anishinaabeg, the Haudenosaunee Confederacy, the Wendat, and the Mississaugas of the Credit First Nation. We acknowledge that Toronto is covered by Treaty 13 with the Mississaugas of the Credit."
+        },
+        links: [
+            {
+                title: "City of Toronto - Indigenous Affairs Office",
+                url: "https://www.toronto.ca/city-government/accessibility-human-rights/indigenous-affairs-office/"
+            }
+        ]
+    },
+    "calgarytransit": {
+        nations: null,
+        title_translated: {
+            "en": "Indigenous peoples of Calgary"
+        },
+        default_language_code: "en",
+        agency_statement: {
+            "en": "We appreciate and acknowledge that we live, work, and play on the ancestral and traditional territories of the Blackfoot confederacy, made up of the Siksika, Piikani, Amskaapipiikani and Kainai First Nations; the Îethka Nakoda Wîcastabi First Nations, comprised of the Chiniki, Bearspaw, and Goodstoney First Nations; and the Tsuut’ina First Nation."
+        },
+        links: [
+            {
+                title: "City of Calgary - Indigenous Relations",
+                url: "https://www.calgary.ca/content/www/en/home/communities/indigenous.html"
+            },
+            {
+                title: "Indigenous Communities in and around Calgary",
+                url: "https://www.calgary.ca/communities/indigenous/groups-in-calgary.html"
+            }
+        ]
     }
 };
