@@ -1462,7 +1462,7 @@ datadogRum.init({
 		<div
 			id="catenary-sidebar"
 			style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-md md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
+			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-xs md:backdrop-blur-sm md:bg-opacity-90 md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
 		>
 			<div
 				class="flex md:hidden py-2 flex-row"
