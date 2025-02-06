@@ -16,6 +16,8 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 
+	import { datadogRum } from '@datadog/browser-rum';
+
 	import {
 		data_stack_store,
 		on_sidebar_trigger_store,
@@ -66,9 +68,9 @@
 		show_topo = value;
 	})
 
-	let centerinit = [-118, 33.9];
+	let centerinit = [-117.6969, 33.6969];
 
-	let zoominit = 8.1;
+	let zoominit = 9;
 
 	const decode = (textToDecode: string) => {
 		try {
@@ -1077,8 +1079,10 @@
 		onMount(() => {
 		//#region On the fly IP geolocation
 
-		if (localStorage.getItem('cachegeolocation')) {
-			const [long, lat] = localStorage.getItem('cachegeolocation')!.split(',');
+		let cachegeostored = localStorage.getItem('cacheipgeolocation');
+
+		if (cachegeostored) {
+			const [long, lat] = cachegeostored.split(',');
 			centerinit = [parseFloat(long), parseFloat(lat)];
 			if (mapglobal) {
 				mapglobal.setCenter(centerinit);
@@ -1097,10 +1101,11 @@
 					.then((response) => response.json())
 					// the text will be `lat,long`
 					.then((geo_api_response) => {
+						console.log('ip addr', geo_api_response);
 						if (geo_api_response.geo_resp) {
 							centerinit = [
-								parseFloat(geo_api_response.geo_resp.longitude),
-								parseFloat(geo_api_response.geo_resp.latitude)
+								geo_api_response.geo_resp.longitude,
+								geo_api_response.geo_resp.latitude
 							];
 
 							// set the center of the map to the user's location
@@ -1110,10 +1115,10 @@
 							}
 
 							// store the user's location in localStorage, as we do with regular browser provided geolocation
-							/*localStorage.setItem(
-								'cachegeolocation',
+							localStorage.setItem(
+								'cacheipgeolocation',
 								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-							);*/
+							);
 						}
 					});
 			} catch (e) {
@@ -1169,6 +1174,8 @@
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
+		mapglobal = map;
+
 		function remove_listener() {
 			media.removeEventListener('change', updatePixelRatio);
 		};
@@ -1208,6 +1215,28 @@
 			});
 
 		map.on('load', () => {
+			console.log('map coords', map.getCenter());
+
+			fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+					.then((response) => response.json())
+					// the text will be `lat,long`
+					.then((geo_api_response) => {
+						console.log('ip addr', geo_api_response);
+						localStorage.setItem(
+								'cacheipgeolocation',
+								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+							);
+					}
+			);
+
+			let coords = map.getCenter();
+
+			if (coords.lng == -117.6969 && coords.lat == 33.6969) {
+				console.log('change to ', centerinit);
+
+				map.setCenter(centerinit);
+			}
+
 			map.setProjection({ type: 'globe' });
 			skyRefresh(map, darkMode);
 
@@ -1256,6 +1285,16 @@
 			setTimeout(() => {
 				runSettingsAdapt();
 			}, 1000);
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			}, 4000);
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			}, 5000);
 		});
 
 		maplibregl.setRTLTextPlugin(
@@ -1316,6 +1355,27 @@
 
 		setup_click_handler(map, layerspercategory, setSidebarOpen);
 		
+	
+datadogRum.init({
+    applicationId: '5201846b-e68a-4388-a47c-a9508e3f3dc2',
+    clientToken: 'pub6a98d8da258f8b43df56ceb1c6203a16',
+    // `site` refers to the Datadog site parameter of your organization
+    // see https://docs.datadoghq.com/getting_started/site/
+    site: 'datadoghq.com',
+    service: 'catenary-maps',
+    env: 'prod',
+    // Specify a version number to identify the deployed version of your application in Datadog
+    // version: '1.0.0',
+    sessionSampleRate: 100,
+    sessionReplaySampleRate: 100,
+    defaultPrivacyLevel: 'mask-user-input',
+	trackLongTasks: true,
+	trackResources: true,
+	trackUserInteractions: true,
+	compressIntakeRequests: true,
+	storeContextsAcrossPages: true,
+	silentMultipleInit: true
+});
 	});
 	} catch (e) {
 		console.error(e);

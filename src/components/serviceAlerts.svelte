@@ -5,10 +5,17 @@
 
 	$: languagelist = Object.values(alerts)
 		.map((alert) => {
-			if (alert.header_text) {
-				return alert.header_text.translation.map((x) => x.language);
+			let list: any[] = [];
+
+			if (alert.header_text != null) {
+				list = list.concat(alert.header_text.translation.map((x) => x.language));
 			}
-			return [];
+
+			if (alert.description_text != null) {
+				list = list.concat(alert.description_text.translation.map((x) => x.language));
+			}
+
+			return list;
 		})
 		.flat()
 		.filter((x, i, a) => a.indexOf(x) == i);

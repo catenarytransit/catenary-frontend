@@ -15,7 +15,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "^1.50.1",
     "@sveltejs/adapter-auto": "^4.0.0",
     "@sveltejs/adapter-node": "^5.2.11",
     "@sveltejs/kit": "^2.15.3",
@@ -31,7 +31,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "rollup-plugin-svelte": "^7.2.2",
-    "svelte": "^5.19.4",
+    "svelte": "^5.19.8",
     "svelte-adapter-bun": "^0.5.2",
     "svelte-check": "^4.1.4",
     "tailwindcss": "^3.4.17",
@@ -42,7 +42,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@datadog/browser-rum": "^6.0.0",
+    "@datadog/browser-rum": "^6.1.0",
     "@jill64/sentry-sveltekit-cloudflare": "^2.0.6",
     "@mapbox/polyline": "^1.2.1",
     "@sentry/sveltekit": "^8",
