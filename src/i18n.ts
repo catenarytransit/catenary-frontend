@@ -1,7 +1,7 @@
 import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
 //sort like Google / YouTube
-const locale_list = ["de", "en", "es", "fr", "it", "nl", "pl", "zh-CN", "zh-TW", "jp", "ko"];
+const locale_list = ["de", "en", "es", "fr", "ge", "it", "nl", "pl", "zh-CN", "zh-TW", "jp", "ko"];
 
 for (let i = 0; i < locale_list.length; i++) {
 	register(locale_list[i], () => import(`./locales/${locale_list[i]}.json`));
@@ -32,6 +32,7 @@ export const locales_options: Record<string, string> = {
 	fr: 'Français',
 	es: 'Español',
 	de: 'Deutsch',
+	ge: 'Gaeilge',
 	ko: '한국어',
 	'zh-CN': '中文 (简体)',
 	'zh-TW': '中文 (繁體)',
@@ -46,6 +47,7 @@ export const locales_options_lookup: Record<string, string> = {
 	fr: 'Français',
 	es: 'Español',
 	de: 'Deutsch',
+	ge: 'Gaeilge',
 	ko: '한국어',
 	zh: '中文',
 	'zh-CN': '中文 (简体)',
