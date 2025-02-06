@@ -498,8 +498,16 @@ refresh_watchduty_evacs();
 
 	map.addLayer({
 		source: 'californiafireperims',
-		id: 'californiafireperims',
+		id: 'californiafireperims_new',
 		type: 'fill',
+		filter: [
+			"all",
+			[
+				">",
+				["/", ["get", "poly_DateCurrent"], 1000],
+				Date.now() - (86400 * 7)
+			]
+		],
 		paint: {
 			'fill-color': '#ff0000',
 			'fill-opacity': [
@@ -512,6 +520,35 @@ refresh_watchduty_evacs();
 				0.06,
 				15,
 				0.04
+			]
+		},
+		minzoom: 5,
+	});
+
+	map.addLayer({
+		source: 'californiafireperims',
+		id: 'californiafireperims_old',
+		type: 'fill',
+		filter: [
+			"all",
+			[
+				"<",
+				["/", ["get", "poly_DateCurrent"], 1000],
+				Date.now() - (86400 * 7)
+			]
+		],
+		paint: {
+			'fill-color': '#ff0000',
+			'fill-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				8,
+				0.005,
+				12,
+				0.01,
+				15,
+				0.01
 			]
 		},
 		minzoom: 5
