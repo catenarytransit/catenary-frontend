@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 .catenary-scroll {
 	--sb-track-color: #e1ecfb;
 	--sb-thumb-color: #42a7c5;
