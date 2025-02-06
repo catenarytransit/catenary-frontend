@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 .catenary-scroll {
 	--sb-track-color: #e1ecfb;
@@ -81,15 +81,11 @@ body {
 	}
 }
 
-.maplibregl-canvas 
-{
-
+.maplibregl-canvas {
 	background-color: #324a78;
 }
 
-.dark .maplibregl-canvas 
-{
-
+.dark .maplibregl-canvas {
 	background-color: #000000;
 }
 
@@ -103,12 +99,22 @@ body {
 	--animate-progress: progress 1s infinite linear;
 
 	@keyframes progress {
-				  0% { transform: translateX(0) scaleX(0) }
-				  40% { transform: translateX(0) scaleX(0.4) }
-				  100% { transform: translateX(100%) scaleX(0.5) }
-				}
-@keyframes transformOrigin {
-				  0% { transform-origin: 0% 50% }
-				  100% { transform-origin: 100% 50% }
-				}
+		0% {
+			transform: translateX(0) scaleX(0);
+		}
+		40% {
+			transform: translateX(0) scaleX(0.4);
+		}
+		100% {
+			transform: translateX(100%) scaleX(0.5);
+		}
+	}
+	@keyframes transformOrigin {
+		0% {
+			transform-origin: 0% 50%;
+		}
+		100% {
+			transform-origin: 100% 50%;
+		}
+	}
 }
