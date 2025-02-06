@@ -42,13 +42,10 @@ export function process_realtime_vehicle_locations_v2(
 	map: maplibregl.Map
 ) {
 	realtime_vehicle_locations_store.update((realtime_vehicle_locations) => {
-	
 
 		Object.entries(response_from_birch_vehicles_2.chateaus)
 		.forEach(([chateau_id, chateau_data]) => {
 			//console.log('chateau', chateau_id, chateau_data);
-
-			
 
 			if (chateau_data.categories) {
 				Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
