@@ -549,7 +549,7 @@
 					singleQuotes: false
 				}).replaceAll("\n", "<br/>")}
 			</p>
-			<p>Report this error to the Catenary Discord server: <a href="https://discord.gg/w4Kd5Gj3re" target="_blank" class="underline text-blue-500 dark:text-blue-300">https://discord.gg/w4Kd5Gj3re</a></p>
+			<p>Report this error to the Catenary Discussions page or the frontend issues page on GitHub: <a href="https://github.com/orgs/catenarytransit/discussions" target="_blank" class="underline text-blue-500 dark:text-blue-300">https://github.com/orgs/catenarytransit/discussions</a></p>
 		</div>
 	{:else if is_loading_trip_data}
 		{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
