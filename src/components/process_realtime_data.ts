@@ -46,7 +46,7 @@ export function process_realtime_vehicle_locations_v2(
 
 		Object.entries(response_from_birch_vehicles_2.chateaus)
 		.forEach(([chateau_id, chateau_data]) => {
-			console.log('chateau', chateau_id, chateau_data);
+			//console.log('chateau', chateau_id, chateau_data);
 
 			
 
@@ -123,7 +123,7 @@ export function process_realtime_vehicle_locations_v2(
 		}
 	);		
 
-	console.log('rerendering all categories');
+	//console.log('rerendering all categories');
 
 	rerender_category_live_dots("metro", map);
 	rerender_category_live_dots("rail", map);
