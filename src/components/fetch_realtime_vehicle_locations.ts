@@ -1,7 +1,7 @@
 import type { Writable } from 'svelte/store';
 import { writable } from 'svelte/store';
 import { get } from 'svelte/store';
-import { process_realtime_vehicle_locations } from './process_realtime_data';
+import { process_realtime_vehicle_locations_v2 } from './process_realtime_data';
 
 import {
 	realtime_vehicle_locations_store,
@@ -67,7 +67,7 @@ export function fetch_realtime_vehicle_locations(
 	let raw = JSON.stringify({
 		"categories": categories_to_request,
 		chateaus: chateaus_to_fetch
-	})
+	});
 
 	const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
@@ -79,8 +79,13 @@ myHeaders.append("Content-Type", "application/json");
 		redirect: "follow",
 		mode: 'cors'
 	  };
+
+	  if (categories_to_request.length > 0) {
+		fetch("https://birch.catenarymaps.org/bulk_realtime_fetch_v1", requestOptions)
+		.then((response) => response.json())
+		.then((result) => {
+			process_realtime_vehicle_locations_v2(result, map);
+		});
+	  }
 	  
-	  fetch("https://birch.catenarymaps.org/bulk_realtime_fetch_v1", requestOptions)
-		.then((response) => response.text())
-		.then((result) => console.log(result));
 }

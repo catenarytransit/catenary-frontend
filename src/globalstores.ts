@@ -17,7 +17,12 @@ export const on_sidebar_trigger_store = writable(0);
 
 export const realtime_vehicle_locations_store: Writable<
 	Record<string, Record<string, Record<string, any>>>
-> = writable({});
+> = writable({
+	bus: {},
+	rail: {},
+	metro: {},
+	other: {}
+});
 export const realtime_vehicle_route_cache_store: Writable<
 	Record<string, Record<string, Record<string, any>>>
 > = writable({});
