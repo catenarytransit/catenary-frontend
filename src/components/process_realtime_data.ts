@@ -110,6 +110,19 @@ export function process_realtime_vehicle_locations_v2(
 			return realtime_vehicle_locations_last_updated;
 		});
 
+		realtime_vehicle_route_cache_hash_store.update((realtime_vehicle_route_cache_hash) => {
+		
+			Object.entries(response_from_birch_vehicles_2.chateaus)
+			.forEach(([chateau_id, chateau_data]) => {
+				//console.log('chateau', chateau_id, chateau_data);
+			
+				realtime_vehicle_route_cache_hash[chateau_id] = chateau_data.hash_of_routes;
+			})
+
+			return realtime_vehicle_route_cache_hash;
+		}
+	);		
+
 	console.log('rerendering all categories');
 
 	rerender_category_live_dots("metro", map);
