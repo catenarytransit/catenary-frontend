@@ -22,10 +22,10 @@ export const realtime_vehicle_route_cache_store: Writable<
 	Record<string, Record<string, Record<string, any>>>
 > = writable({});
 export const realtime_vehicle_route_cache_hash_store: Writable<
-	Record<string, Record<string, number>>
+	Record<string, number>
 > = writable({});
 export const realtime_vehicle_locations_last_updated_store: Writable<
-	Record<string, Record<string, number>>
+	Record<string, number>
 > = writable({});
 export const lock_on_gps_store = writable(false);
 

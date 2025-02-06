@@ -12,10 +12,6 @@ import {
 
 const subdomains = [
 	"https://birch_rt1.catenarymaps.org",
-	"https://birch_rt2.catenarymaps.org",
-	"https://birch_rt3.catenarymaps.org",
-	"https://birch_rt4.catenarymaps.org",
-	"https://birch_rt5.catenarymaps.org",
 ];
 
 export function fetch_realtime_vehicle_locations(
@@ -51,106 +47,40 @@ export function fetch_realtime_vehicle_locations(
 
 	//console.log('realtime_chateaus_in_frame', realtime_chateaus_in_frame);
 
+	let chateaus_to_fetch: Record<string, Record<string, any>> = {};
+
 	get(chateaus_in_frame).forEach((chateauId) => {
-		categories_to_request.forEach((category) => {
-			const pending_key = `${chateauId}-${category}`;
+		const realtime_vehicle_locations_last_updated = get(
+			realtime_vehicle_locations_last_updated_store
+		);
+		const realtime_vehicle_route_cache_hash = get(realtime_vehicle_route_cache_hash_store);
 
-			let last_updated_time_ms: number = 0;
+		let this_chateau_last_updated = realtime_vehicle_locations_last_updated[chateauId] || 0;
+		let this_chateau_route_cache_hash = realtime_vehicle_route_cache_hash[chateauId] || 0;
 
-			const realtime_vehicle_locations_last_updated = get(
-				realtime_vehicle_locations_last_updated_store
-			);
-			const realtime_vehicle_route_cache_hash = get(realtime_vehicle_route_cache_hash_store);
-			const realtime_vehicle_route_cache = get(realtime_vehicle_route_cache_store);
-
-			if (realtime_vehicle_locations_last_updated[chateauId]) {
-				if (realtime_vehicle_locations_last_updated[chateauId][category]) {
-					last_updated_time_ms = realtime_vehicle_locations_last_updated[chateauId][category];
-				}
-			}
-			let existing_fasthash: number = 0;
-			if (realtime_vehicle_route_cache_hash[chateauId]) {
-				if (realtime_vehicle_route_cache[chateauId]) {
-					existing_fasthash = realtime_vehicle_route_cache_hash[chateauId][category] || 0;
-				}
-			}
-
-			//pick a random subdomain
-
-			const subdomain_picked = subdomains[Math.floor(Math.random() * subdomains.length)];
-
-			const url = `${subdomain_picked}/get_realtime_locations/${chateauId}/${category}/${last_updated_time_ms}/${existing_fasthash}`;
-
-			if (chateau_to_realtime_feed_lookup[chateauId]) {
-				const pending_chateau_rt_request_for_chateau = pending_chateau_rt_request[pending_key];
-
-				let allowed_to_fetch = true;
-
-				if (pending_chateau_rt_request[pending_key] != undefined) {
-					if (Date.now() - pending_chateau_rt_request_for_chateau < 20000) {
-						/*allowed_to_fetch = false;
-								console.log(
-									'blocking',
-									pending_key,
-									', fetch in progress',
-									Date.now() - pending_chateau_rt_request_for_chateau
-								);*/
-					}
-				}
-
-				if (map.getZoom() < 4) {
-					allowed_to_fetch = false;
-				}
-
-				if (map.getZoom() < 8.2 && category == 'bus') {
-					allowed_to_fetch = false;
-				}
-
-				if (map.getZoom() < 5 && category == 'metro') {
-					allowed_to_fetch = false;
-				}
-
-				pending_chateau_rt_request[pending_key] = Date.now();
-
-				if (allowed_to_fetch == true) {
-					fetch(url)
-						.then(async (response) => {
-							delete pending_chateau_rt_request[pending_key];
-							try {
-								//if response is 200
-								if (response.status == 200) {
-									const response_from_birch_vehicles_text = await response.text();
-
-									const no_data_answer = 'No assigned node found for this chateau';
-
-									if (
-										response_from_birch_vehicles_text != no_data_answer &&
-										response_from_birch_vehicles_text != 'No realtime data found for this chateau'
-									) {
-										const response_from_birch_vehicles = JSON.parse(
-											response_from_birch_vehicles_text
-										);
-										//console.log('processing now', chateauId, category);
-										process_realtime_vehicle_locations(
-											chateauId,
-											category,
-											response_from_birch_vehicles,
-											map
-										);
-									}
-								}
-							} catch (e) {
-								//console.error(chateauId, category, e);
-								//return false;
-							}
-						})
-						.catch((err: any) => {
-							delete pending_chateau_rt_request[pending_key];
-						});
-				} else {
-					//console.log('not allowed to fetch', chateauId, category);
-				}
-			}
-		});
+		chateaus_to_fetch[chateauId] = {
+			"last_updated_time_ms": this_chateau_last_updated,
+            "existing_fasthash_of_routes": this_chateau_route_cache_hash
+		}
 	});
+
+	let raw = JSON.stringify({
+		"categories": categories_to_request,
+		chateaus: chateaus_to_fetch
+	})
+
+	const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+	const requestOptions = {
+		method: "POST",
+		headers: myHeaders,
+		body: raw,
+		redirect: "follow",
+		mode: 'cors'
+	  };
+	  
+	  fetch("https://birch.catenarymaps.org/bulk_realtime_fetch_v1", requestOptions)
+		.then((response) => response.text())
+		.then((result) => console.log(result));
 }
