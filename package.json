@@ -51,6 +51,7 @@
     "@sveltejs/adapter-cloudflare": "^5.0.2",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tailwindcss/postcss": "^4.0.3",
+    "@tailwindcss/vite": "^4.0.3",
     "@zerodevx/svelte-toast": "^0.9.6",
     "base65536": "^4.0.3",
     "geolocation": "^0.2.0",
@@ -63,6 +64,7 @@
     "stringify-object": "^5.0.0",
     "svelte-i18n": "^4.0.1",
     "svelte-toasts": "^1.1.2",
+    "tailwind": "^4.0.0",
     "toastify-js": "^1.12.0",
     "wrangler": "^3.107.3"
   }

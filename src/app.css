@@ -1,7 +1,4 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .catenary-scroll {
 	--sb-track-color: #e1ecfb;
@@ -94,4 +91,24 @@ body {
 {
 
 	background-color: #000000;
+}
+
+@theme {
+	--color-darksky: #0a233f;
+	--color-seashore: #42a7c5;
+	--color-background: #06121f;
+	--color-hover: #1a334f;
+
+	--animate-fade: fadeOut 1s ease-in-out;
+	--animate-progress: progress 1s infinite linear;
+
+	@keyframes progress {
+				  0% { transform: translateX(0) scaleX(0) }
+				  40% { transform: translateX(0) scaleX(0.4) }
+				  100% { transform: translateX(100%) scaleX(0.5) }
+				}
+@keyframes transformOrigin {
+				  0% { transform-origin: 0% 50% }
+				  100% { transform-origin: 100% 50% }
+				}
 }
