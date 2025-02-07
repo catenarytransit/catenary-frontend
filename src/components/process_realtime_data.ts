@@ -55,7 +55,10 @@ export function process_realtime_vehicle_locations_v2(
 						realtime_vehicle_locations[category] = {};
 					}
 
-					realtime_vehicle_locations[category][chateau_id]= category_data.vehicle_positions;
+					if (category_data.vehicle_positions) {
+						realtime_vehicle_locations[category][chateau_id]= category_data.vehicle_positions;
+					}
+					
 					} else {
 						//console.log('no category data for', category, chateau_id);
 					}
@@ -83,7 +86,11 @@ export function process_realtime_vehicle_locations_v2(
 					realtime_vehicle_route_cache[chateau_id] = {};
 				}
 
+				if (category_data.vehicle_route_cache) {
+					
 				realtime_vehicle_route_cache[chateau_id][category] = category_data.vehicle_route_cache;
+				}
+
 			} else {
 				//console.log('no category data for', category, chateau_id);
 			}
@@ -108,6 +115,7 @@ export function process_realtime_vehicle_locations_v2(
 								realtime_vehicle_locations_last_updated[chateau_id] = {};
 							}
 		
+							
 							realtime_vehicle_locations_last_updated[chateau_id][category] = category_data.last_updated_time_ms;
 						} else {
 							//console.log('no category data for', category, chateau_id);
@@ -166,10 +174,11 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 	const source = map.getSource(source_name);
 
+	console.log(Object.entries(realtime_vehicle_locations[category]))
+
 	const features = Object.entries(realtime_vehicle_locations[category])
 		.map(([chateau_id, chateau_vehicles_list]) =>
-		{
-			if (chateau_vehicles_list) {
+		
 				Object.entries(chateau_vehicles_list)
 				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
 				.map(([rt_id, vehicle_data]) => {
@@ -435,82 +444,16 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							coordinates: [vehicle_data.position.longitude, vehicle_data.position.latitude]
 						}
 					};
-				});
-			}
-			}
+				})
+			
+			
 		)
 		.flat();
 
-	//console.log('rerendering', category, 'with', features);
+	console.log('rerendering', category, 'with', features);
 
 	source.setData({
 		type: 'FeatureCollection',
 		features: features
 	});
-
-	if (category == 'bus') {
-		const tokki_source = map.getSource('tokkibussource');
-
-		if (tokki_source) {
-			const tokki_features = [...features]
-				.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == 'string')
-				.filter((x) => {
-					if (new_jeans_buses[x.properties.chateau]) {
-						if (new_jeans_buses[x.properties.chateau].has(x.properties.vehicleIdLabel)) {
-							return true;
-						}
-					}
-					return false;
-				});
-
-			tokki_source.setData({
-				type: 'FeatureCollection',
-				features: tokki_features
-			});
-		}
-
-		const rainbowbussource = map.getSource('rainbowbussource');
-
-		if (rainbowbussource) {
-			const rainbowbus_features = [...features]
-				.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == 'string')
-				.filter((x) => {
-					if (pride_buses[x.properties.chateau]) {
-						if (pride_buses[x.properties.chateau].has(x.properties.vehicleIdLabel)) {
-							return true;
-						}
-					}
-
-					return false;
-				});
-
-			rainbowbussource.setData({
-				type: 'FeatureCollection',
-				features: rainbowbus_features
-			});
-		}
-	}
-
-	if (category == 'metro') {
-		const rainbow_source = map.getSource('rainbowtrainsource');
-
-		if (rainbow_source) {
-			const rainbow_features = [...features]
-				.filter((x) => x.properties.chateau && typeof x.properties.vehicleIdLabel == 'string')
-				.filter(
-					(x) =>
-						x.properties.chateau == 'metro~losangeles' &&
-						x.properties.vehicleIdLabel.includes('1162')
-				);
-
-			rainbow_source.setData({
-				type: 'FeatureCollection',
-				features: rainbow_features
-			});
-
-			console.log('rainbow source set', rainbow_features);
-		} else {
-			console.log('no rainbow source');
-		}
-	}
 }
