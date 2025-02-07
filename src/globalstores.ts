@@ -23,14 +23,22 @@ export const realtime_vehicle_locations_store: Writable<
 	metro: {},
 	other: {}
 });
+
+export interface CategoryHash {
+	bus: number,
+	rail: number,
+	metro: number,
+	other: number
+}
+
 export const realtime_vehicle_route_cache_store: Writable<
 	Record<string, Record<string, Record<string, any>>>
 > = writable({});
 export const realtime_vehicle_route_cache_hash_store: Writable<
-	Record<string, number>
+	Record<string, CategoryHash>
 > = writable({});
 export const realtime_vehicle_locations_last_updated_store: Writable<
-	Record<string, number>
+	Record<string, CategoryHash>
 > = writable({});
 export const lock_on_gps_store = writable(false);
 

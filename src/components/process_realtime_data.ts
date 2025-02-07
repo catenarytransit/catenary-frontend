@@ -99,9 +99,21 @@ export function process_realtime_vehicle_locations_v2(
 		
 			Object.entries(response_from_birch_vehicles_2.chateaus)
 			.forEach(([chateau_id, chateau_data]) => {
-				//console.log('chateau', chateau_id, chateau_data);
+				console.log('chateau', chateau_id, chateau_data);
 			
-				realtime_vehicle_locations_last_updated[chateau_id] = chateau_data.last_updated_time_ms;
+				if (chateau_data.categories) {
+					Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
+						if (category_data != null) {
+							if (!realtime_vehicle_locations_last_updated[chateau_id]) {
+								realtime_vehicle_locations_last_updated[chateau_id] = {};
+							}
+		
+							realtime_vehicle_locations_last_updated[chateau_id][category] = category_data.last_updated_time_ms;
+						} else {
+							//console.log('no category data for', category, chateau_id);
+						}
+					});
+				}
 			})
 
 			return realtime_vehicle_locations_last_updated;
@@ -111,9 +123,24 @@ export function process_realtime_vehicle_locations_v2(
 		
 			Object.entries(response_from_birch_vehicles_2.chateaus)
 			.forEach(([chateau_id, chateau_data]) => {
-				//console.log('chateau', chateau_id, chateau_data);
+				console.log('chateau', chateau_id, chateau_data);
 			
-				realtime_vehicle_route_cache_hash[chateau_id] = chateau_data.hash_of_routes;
+				//realtime_vehicle_route_cache_hash[chateau_id] = chateau_data.hash_of_routes;
+				if (chateau_data.categories) {
+					Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
+						if (category_data != null) {
+							if (!realtime_vehicle_route_cache_hash[chateau_id]) {
+								realtime_vehicle_route_cache_hash[chateau_id] = {};
+							}
+		
+							realtime_vehicle_route_cache_hash[chateau_id][category] = category_data.hash_of_routes;
+						} else {
+							//console.log('no category data for', category, chateau_id);
+						}
+					}
+					);
+
+				}
 			})
 
 			return realtime_vehicle_route_cache_hash;
