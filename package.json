@@ -51,7 +51,7 @@
     "@sveltejs/adapter-cloudflare": "^5.0.2",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tailwindcss/postcss": "^4.0.3",
-    "@tailwindcss/vite": "^4.0.3",
+    "@tailwindcss/vite": "^4.0.4",
     "@zerodevx/svelte-toast": "^0.9.6",
     "base65536": "^4.0.3",
     "geolocation": "^0.2.0",
