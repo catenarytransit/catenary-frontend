@@ -168,7 +168,9 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 	const features = Object.entries(realtime_vehicle_locations[category])
 		.map(([chateau_id, chateau_vehicles_list]) =>
-			Object.entries(chateau_vehicles_list)
+		{
+			if (chateau_vehicles_list) {
+				Object.entries(chateau_vehicles_list)
 				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
 				.map(([rt_id, vehicle_data]) => {
 
@@ -433,7 +435,9 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							coordinates: [vehicle_data.position.longitude, vehicle_data.position.latitude]
 						}
 					};
-				})
+				});
+			}
+			}
 		)
 		.flat();
 
