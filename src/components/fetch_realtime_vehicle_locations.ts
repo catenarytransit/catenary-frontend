@@ -71,6 +71,22 @@ export function fetch_realtime_vehicle_locations(
 			}
 		});
 
+		if (this_chateau_last_updated) {
+			['bus', 'rail', 'metro', 'other'].forEach((category) => {
+				if (this_chateau_last_updated[category]) {
+					category_params[category].last_updated_time_ms = this_chateau_last_updated[category];
+				}
+			});
+		}
+
+		if (this_chateau_route_cache_hash) {
+			['bus', 'rail', 'metro', 'other'].forEach((category) => {
+				if (this_chateau_route_cache_hash[category]) {
+					category_params[category].hash_of_routes = this_chateau_route_cache_hash[category];
+				}
+			});
+		}
+
 		chateaus_to_fetch[chateauId] = {
 			category_params: category_params
 		}
