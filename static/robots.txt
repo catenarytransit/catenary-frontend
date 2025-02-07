@@ -41,3 +41,6 @@ User-agent: Timpibot
 User-agent: Kangaroo Bot
 User-agent: Crawlspace
 Disallow: /
+
+User-agent: *
+Disallow: /cdn-cgi/
