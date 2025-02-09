@@ -434,7 +434,7 @@
 </div>
 
 {#if show_filter_menu}
-<div class="py-0.5 md:py-2 px-3 flex flex-row gap-x-2">
+<div class="py-0.5 md:py-2 px-3 flex flex-row gap-x-2 text-sm md:text-base">
 	<button
 	on:click={() => {
 		nearby_departures_filter.update((x) => {return {...x, rail: !x.rail}});
