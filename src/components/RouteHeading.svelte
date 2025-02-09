@@ -54,7 +54,7 @@
 </script>
 
 {#if !compact}
-	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-xl md:mt-2'} `} style={`color: ${darkMode ? lightenColour(color) : color}`}>
+	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} `} style={`color: ${darkMode ? lightenColour(color) : color}`}>
 		{#if run_number}
 			<span
 				style={`background-color: ${color}; color: ${text_color};`}
@@ -73,7 +73,7 @@
 		{/if}
 	</h2>
 
-	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-lg  my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''}`}>
+	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-base md:text-lg my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''}`}>
 		{#if arrow}
 			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
 		{/if}
