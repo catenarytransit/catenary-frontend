@@ -15,8 +15,7 @@
 	import { init_stores } from '../components/init_stores';
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
-
-	import { datadogRum } from '@datadog/browser-rum';
+	import {start_location_watch} from '../user_location_lib';
 
 	import {
 		data_stack_store,
@@ -1075,6 +1074,8 @@
 		});
 	}
 
+	start_location_watch();
+
 	try {
 		onMount(() => {
 		//#region On the fly IP geolocation
@@ -1355,27 +1356,6 @@
 
 		setup_click_handler(map, layerspercategory, setSidebarOpen);
 		
-	
-datadogRum.init({
-    applicationId: '5201846b-e68a-4388-a47c-a9508e3f3dc2',
-    clientToken: 'pub6a98d8da258f8b43df56ceb1c6203a16',
-    // `site` refers to the Datadog site parameter of your organization
-    // see https://docs.datadoghq.com/getting_started/site/
-    site: 'datadoghq.com',
-    service: 'catenary-maps',
-    env: 'prod',
-    // Specify a version number to identify the deployed version of your application in Datadog
-    // version: '1.0.0',
-    sessionSampleRate: 100,
-    sessionReplaySampleRate: 100,
-    defaultPrivacyLevel: 'mask-user-input',
-	trackLongTasks: true,
-	trackResources: true,
-	trackUserInteractions: true,
-	compressIntakeRequests: true,
-	storeContextsAcrossPages: true,
-	silentMultipleInit: true
-});
 	});
 	} catch (e) {
 		console.error(e);

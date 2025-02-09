@@ -22,7 +22,7 @@ import { makeCircleLayers } from './addLayers/addLiveDots';
 import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
 import { makeGpsLayer } from './makeGpsLayer';
 import { makeContextLayerDataset } from './addLayers/contextLayer';
-import { start_location_watch } from '../user_location_lib';
+import { start_location_watch, update_geolocation_source } from '../user_location_lib';
 
 export async function setup_load_map(
 	map: maplibregl.Map,
@@ -38,9 +38,11 @@ export async function setup_load_map(
 	map.on('load', async () => {
 		recompute_map_padding();
 		clearbottomright();
-		start_location_watch();
+
+		addGeoRadius(map);
+		makeGpsLayer(map);
 		// Add new sources and layers
-		
+		update_geolocation_source();
 
 		if (localStorage.getItem('showzombiebuses') === 'true') {
 			show_zombie_buses_store.set(true);
@@ -69,8 +71,7 @@ export async function setup_load_map(
 			}
 		});
 
-		addGeoRadius(map);
-		makeGpsLayer(map);
+		
 
 		map.addSource('intercityrailshapes', {
 			type: 'vector',
@@ -413,7 +414,7 @@ export async function setup_load_map(
 		setInterval(() => {
 			//const chateau_feed_results = determineFeedsUsingChateaus(map);
 			//chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			console.log('fetching realtime locations now');
+			//console.log('fetching realtime locations now');
 			fetch_realtime_vehicle_locations(
 				layersettings,
 				chateaus_in_frame,
