@@ -76,6 +76,17 @@ export const geolocation_store: Writable<GeolocationPosition | null> = writable(
 
 export const nearby_deps_cache_gps: Writable<any | null> = writable(null);
 
+//0 for user location
+//1 for user picks
+export const nearby_pick_state_store: Writable<number> = writable(0);
+
+export interface UserPicksNearby {
+	longitude: number,
+	latitude: number
+}
+
+export const nearby_user_picks_store: Writable<UserPicksNearby | null> = writable(null);
+
 export const chateaus_store: Writable<any | null> = writable(null);
 
 export const show_seconds_store = writable(false);

@@ -38,7 +38,6 @@ export async function setup_load_map(
 	map.on('load', async () => {
 		recompute_map_padding();
 		clearbottomright();
-		start_location_watch();
 		// Add new sources and layers
 		
 

@@ -11,12 +11,14 @@ geolocation_store.subscribe((g) => {
 });
 
 export function start_location_watch() {
+	if (typeof navigator != "undefined") {
 	function success(pos: GeolocationPosition ) {
 		geolocation_store.set(pos);
 
 		update_geolocation_source();
 	  }
-	  
+
+	navigator.geolocation.getCurrentPosition(success);
 
 	const options = {
 		enableHighAccuracy: false,
@@ -25,6 +27,7 @@ export function start_location_watch() {
 	  };
 	  
 	 const id = navigator.geolocation.watchPosition(success, () => {}, options);
+	}
 }
 
 export function has_permission_to_geolocate(): boolean {

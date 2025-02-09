@@ -12,7 +12,7 @@
 	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
 
-	const onbutton = "bg-blue-500 bg-opacity-80";
+	const onbutton = "bg-blue-300 dark:bg-blue-500 bg-opacity-80";
 
 	const offbutton = "";
 
@@ -28,7 +28,6 @@
 
 		return array;
 	}
-
 
 	setInterval(() => {
 		current_time = Date.now();
@@ -50,9 +49,12 @@
 		map_pointer_store,
 		geolocation_store,
 		nearby_deps_cache_gps,
-		nearby_departures_filter
+		nearby_departures_filter,
+		nearby_pick_state_store,
+		nearby_user_picks_store
 	} from '../globalstores';
 
+	import type {UserPicksNearby} from '../globalstores';
 	
 	function filter_for_route_type(route_type: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
 		console.log('filtering for route type', route_type, nearby_departures_filter_local);
@@ -85,7 +87,6 @@
 		return true;
 	}
 
-
 	import type {
 		NearbySelectionFilterRouteType} from "../globalstores";
 	import { SingleTrip, StackInterface } from './stackenum';
@@ -99,7 +100,6 @@
 	import { titleCase } from '../utils/titleCase';
 	import { lightenColour } from './lightenDarkColour';
 
-	
 	let nearby_departures_filter_local = {
 		rail: true,
 		bus: true,
@@ -138,6 +138,8 @@
 	let timeout_first_attempt: NodeJS.Timeout | null = null;
 
 	let loading = false;
+
+	let marker_reference: maplibergl.Marker | null = null;
 
 	export let window_height_known: number =   500;
 
@@ -187,6 +189,10 @@
 
 			if (timeout_first_attempt != null) {
 				clearInterval(timeout_first_attempt);
+			}
+
+			if (marker_reference) {
+				maker_reference.remove();
 			}
 		};
 	});
@@ -239,9 +245,8 @@
 </script>
 
 {#if current_time != 0}
-<div class="flex flex-row mb-1">
+<div class="flex flex-row mb-0.5 md:mb-1">
 	<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3  md:mb-2`}>
-		<span class="material-symbols-outlined mr-1 translate-y-1 text-lg md:text-xl">near_me</span>
 		{$_('nearbydepartures')}
 	</h2>
 	<div class='ml-auto pr-2'>
@@ -253,6 +258,24 @@
 			<span class="material-symbols-outlined translate-y-1">filter_alt</span>
 	</button>
 	</div>
+</div>
+
+<div class="flex flex-row mb-1 gap-x-1 pl-3">
+	<div class="border-2 bg-green-200 dark:bg-green-800 rounded-lg border-green-500 px-1 py-1">
+		<span class="material-symbols-outlined mr-1 translate-y-1 md:text-xl">near_me</span>
+	</div>
+
+	<div class="border-2 bg-purple-200 dark:bg-purple-800 rounded-lg border-purple-500 flex flex-row">
+			<div class="px-1 py-1 border-r border-gray-500">
+				<span class="material-symbols-outlined mr-1 translate-y-1 md:text-xl">pin_drop</span>
+			</div>
+
+			<div class="px-1 py-1 ">
+				<span class="material-symbols-outlined mr-1 translate-y-1 md:text-xl">center_focus_strong</span>
+			</div>
+
+	</div>
+
 </div>
 
 {#if !first_attempt_sent}
