@@ -419,7 +419,7 @@
 
 </div>
 
-{#if !first_attempt_sent}
+{#if !first_attempt_sent && current_nearby_pick_state == 0}
 	<p class="italic px-3 pb-2">Waiting for GPS...</p>
 {/if}
 
