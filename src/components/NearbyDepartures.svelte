@@ -291,6 +291,13 @@
 		}
 
 		marker_reference.setLngLat([centre.lng, centre.lat]);
+
+		nearby_user_picks_store.set({
+						
+						latitude:  centre.lat,
+						longitude: centre.lng
+					
+				});
 	}
 
 		pin_drop_press();
