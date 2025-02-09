@@ -434,7 +434,7 @@
 </div>
 
 {#if show_filter_menu}
-<div class="py-2 px-3 flex flex-row gap-x-2">
+<div class="py-0.5 md:py-2 px-3 flex flex-row gap-x-2">
 	<button
 	on:click={() => {
 		nearby_departures_filter.update((x) => {return {...x, rail: !x.rail}});
@@ -454,7 +454,7 @@
 		nearby_departures_filter.update((x) => {return {...x, bus: !x.bus}});
 		refilter();
 	}}
-	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_bus_show == true  ? onbutton : ""}`}>{$_("headingBus")}</button>
+	 class={`px-2 rounded-full border-black dark:border-white  border-2  ${ nearby_bus_show == true  ? onbutton : ""} `}>{$_("headingBus")}</button>
 
 	 <button
 	 on:click={() => {
@@ -468,7 +468,7 @@
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
 		{#each departure_list_filtered as route_group}
-			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}>
+			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}>
 				<p class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`} style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
 						<span class="font-bold mr-1"
