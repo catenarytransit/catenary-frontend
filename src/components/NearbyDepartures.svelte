@@ -121,6 +121,8 @@
 	let nearby_metro_show = nearby_departures_filter_local.metro;
 	let nearby_other_show = nearby_departures_filter_local.other;
 
+	let abort_controller : AbortController | null = null;
+
 	nearby_departures_filter.subscribe((x) => {
 		nearby_departures_filter_local = get(nearby_departures_filter);
 		nearby_rail_show = x.rail;
@@ -334,7 +336,19 @@
 
 			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${lat}&lon=${lng}`;
 
-			fetch(url)
+			if (abort_controller) {
+				abort_controller.abort();
+			}
+
+			abort_controller = new AbortController();
+
+			let signal = abort_controller.signal;
+
+			fetch(url,
+				{
+					signal: signal
+				}
+			)
 				.then((response) => response.json())
 				.then((data) => {
 					stops_table = data.stop;
