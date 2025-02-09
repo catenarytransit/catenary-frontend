@@ -374,21 +374,8 @@
 
 {#if current_time != 0}
 <div class="flex flex-row mb-0.5 md:mb-1">
-	<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3 `}>
-		{$_('nearbydepartures')}
-	</h2>
-	<div class='ml-auto pr-2'>
-		<button
-		on:click={() => {
-			show_filter_menu = !show_filter_menu;
-		}}
-		 class="px-1 py-1 rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
-			<span class="material-symbols-outlined translate-y-1">filter_alt</span>
-	</button>
-	</div>
-</div>
 
-<div class="flex flex-row mb-1 gap-x-1 pl-3">
+	<div class="flex flex-row gap-x-1 pl-3">
 	<div
 	on:click={() => {
 		my_location_press()
@@ -418,6 +405,24 @@
 	</div>
 
 </div>
+	
+<!--
+<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3 `}>
+		{$_('nearbydepartures')}
+	</h2>
+	-->
+	<div class='ml-auto pr-2'>
+		<button
+		on:click={() => {
+			show_filter_menu = !show_filter_menu;
+		}}
+		 class="px-1 py-1 rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+			<span class="material-symbols-outlined translate-y-1">filter_alt</span>
+	</button>
+	</div>
+</div>
+
+
 
 {#if !first_attempt_sent && current_nearby_pick_state == 0}
 	<p class="italic px-3 pb-2">Waiting for GPS...</p>

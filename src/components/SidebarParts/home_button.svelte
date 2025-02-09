@@ -4,7 +4,7 @@
 	import { SettingsStack, StackInterface } from '../stackenum';
 </script>
 
-<div class="mt-1 md:mt-3 mb-1 md:mb-1 select-none">
+<div class=" md:mt-3  md:mb-1 select-none">
 	<a href="https://catenarymaps.org" target="_blank" rel="author">
 		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
 	</a>

@@ -328,7 +328,7 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 {:else if false}
 	<p>Loading home page</p>
 {:else}
-	<div class="mt-1 md:mt-3 mb-1 md:mb-1">
+	<div class=" md:mt-3 md:mb-1">
 		<a href="https://catenarymaps.org">
 		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
 		</a>
