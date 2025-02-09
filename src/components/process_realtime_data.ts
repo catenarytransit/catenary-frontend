@@ -106,7 +106,7 @@ export function process_realtime_vehicle_locations_v2(
 		
 			Object.entries(response_from_birch_vehicles_2.chateaus)
 			.forEach(([chateau_id, chateau_data]) => {
-				console.log('chateau', chateau_id, chateau_data);
+				//console.log('chateau', chateau_id, chateau_data);
 			
 				if (chateau_data.categories) {
 					Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
@@ -131,7 +131,7 @@ export function process_realtime_vehicle_locations_v2(
 		
 			Object.entries(response_from_birch_vehicles_2.chateaus)
 			.forEach(([chateau_id, chateau_data]) => {
-				console.log('chateau', chateau_id, chateau_data);
+				//console.log('chateau', chateau_id, chateau_data);
 			
 				//realtime_vehicle_route_cache_hash[chateau_id] = chateau_data.hash_of_routes;
 				if (chateau_data.categories) {
@@ -157,6 +157,7 @@ export function process_realtime_vehicle_locations_v2(
 
 	//console.log('rerendering all categories');
 
+	
 	rerender_category_live_dots("metro", map);
 	rerender_category_live_dots("rail", map);
 	rerender_category_live_dots("bus", map);
@@ -174,11 +175,10 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 	const source = map.getSource(source_name);
 
-	console.log(Object.entries(realtime_vehicle_locations[category]))
+	//console.log(Object.entries(realtime_vehicle_locations[category]))
 
 	const features = Object.entries(realtime_vehicle_locations[category])
 		.map(([chateau_id, chateau_vehicles_list]) =>
-		
 				Object.entries(chateau_vehicles_list)
 				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
 				.map(([rt_id, vehicle_data]) => {
@@ -445,12 +445,10 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						}
 					};
 				})
-			
-			
 		)
 		.flat();
 
-	console.log('rerendering', category, 'with', features);
+//	console.log('rerendering', category, 'with', features);
 
 	source.setData({
 		type: 'FeatureCollection',

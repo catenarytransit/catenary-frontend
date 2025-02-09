@@ -12,21 +12,26 @@ geolocation_store.subscribe((g) => {
 
 export function start_location_watch() {
 	if (typeof navigator != "undefined") {
-	function success(pos: GeolocationPosition ) {
-		geolocation_store.set(pos);
-
-		update_geolocation_source();
-	  }
-
-	navigator.geolocation.getCurrentPosition(success);
-
-	const options = {
-		enableHighAccuracy: false,
-		timeout: 5000,
-		maximumAge: 0,
-	  };
-	  
-	 const id = navigator.geolocation.watchPosition(success, () => {}, options);
+			if (typeof window != 'undefined') {
+				function success(pos: GeolocationPosition ) {
+					geolocation_store.set(pos);
+			
+					update_geolocation_source();
+				  }
+			
+				  setInterval(() => {
+					update_geolocation_source()
+				  }, 1000)
+			
+				const options = {
+					enableHighAccuracy: false,
+					timeout: 5000,
+					maximumAge: 0,
+				  };
+				  
+				 const id = navigator.geolocation.watchPosition(success, () => {}, options);
+			}
+		
 	}
 }
 
@@ -47,18 +52,20 @@ export function has_permission_to_geolocate(): boolean {
 export function ask_for_user_location_permission() {}
 
 export function update_geolocation_source() {
+//	console.log('updating geolocation source');
+
 	const map = get(map_pointer_store);
 
 	if (map != null) {
 		
 	const show_my_location = get(show_my_location_store);
 
-	const geolocation_mapboxsource = map.getSource('user_geolocation');
+	const geolocation_mapsource = map.getSource('user_geolocation');
 
-	if (geolocation_mapboxsource) {
+	if (geolocation_mapsource) {
 		if (geolocation) {
 			if (geolocation.coords) {
-				geolocation_mapboxsource.setData({
+				geolocation_mapsource.setData({
 					type: 'FeatureCollection',
 					features: [
 						{
@@ -141,6 +148,8 @@ export function update_geolocation_source() {
 			}
 		}
 	}
+	} else {
+		console.log('no map for geolocation');
 	}
 
 }

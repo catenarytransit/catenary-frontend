@@ -11,6 +11,7 @@
 	import DelayDiff from './DelayDiff.svelte';
 	import TimeDiff from './TimeDiff.svelte';
 	import type { Writable } from 'svelte/store';
+	import * as maplibregl from "maplibre-gl";
 
 	const onbutton = "bg-blue-300 dark:bg-blue-500 bg-opacity-80";
 
@@ -55,9 +56,15 @@
 	} from '../globalstores';
 
 	import type {UserPicksNearby} from '../globalstores';
+
+	let current_nearby_pick_state = get(nearby_pick_state_store);
+
+	nearby_pick_state_store.subscribe((x) => {
+		current_nearby_pick_state = x;
+	});
 	
 	function filter_for_route_type(route_type: number, nearby_departures_filter_local: NearbySelectionFilterRouteType) {
-		console.log('filtering for route type', route_type, nearby_departures_filter_local);
+		//console.log('filtering for route type', route_type, nearby_departures_filter_local);
 
 		if ([3,11,700].includes(route_type)) {
 			if (nearby_departures_filter_local.bus == true) {
@@ -139,7 +146,7 @@
 
 	let loading = false;
 
-	let marker_reference: maplibergl.Marker | null = null;
+	let marker_reference: maplibregl.Marker | null = null;
 
 	export let window_height_known: number =   500;
 
@@ -156,11 +163,13 @@
 
 		window_height_known = window.innerHeight;
 
-		let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
+		if (current_nearby_pick_state == 0) {
+			let hit_nearby_deps_cache = get(nearby_deps_cache_gps);
 
 		if (hit_nearby_deps_cache) {
 			stops_table = hit_nearby_deps_cache.stop;
 			departure_list = hit_nearby_deps_cache.departures;
+		}
 		}
 
 		getNearbyDepartures();
@@ -192,20 +201,131 @@
 			}
 
 			if (marker_reference) {
-				maker_reference.remove();
+				marker_reference.remove();
 			}
 		};
 	});
 
+	function my_location_press() {
+		nearby_pick_state_store.set(0);
+
+		getNearbyDepartures();
+	}
+
+	function pin_drop_press() {
+		nearby_pick_state_store.set(1);
+
+
+		//get map centre
+		let map = get(map_pointer_store);
+
+		if (map) {
+			
+			let centre = map.getCenter();
+		
+
+		if (marker_reference == null) {
+			makeNewMarker();
+		}
+		
+		getNearbyDepartures();
+	}
+	}
+
+	function onDragEnd() {
+		if (marker_reference) {
+
+        const lngLat = marker_reference.getLngLat();
+
+		nearby_user_picks_store.set({
+				latitude: lngLat.lat,
+				longitude: lngLat.lng
+			
+		});
+
+		getNearbyDepartures();
+		}
+    }
+
+	function makeNewMarker() {
+		let map = get(map_pointer_store);
+
+		if (map) {
+			let centre = map.getCenter();
+
+			if (marker_reference == null) {
+				marker_reference = new maplibregl.Marker({
+					color: '#ac46ff',
+					draggable: true
+				})
+					.setLngLat([centre.lng, centre.lat])
+					.addTo(map);
+
+					const lngLat = marker_reference.getLngLat();
+
+					nearby_user_picks_store.set({
+						
+							latitude: lngLat.lat,
+							longitude: lngLat.lng
+						
+					});
+
+    			marker_reference.on('dragend', onDragEnd);
+			}
+
+			
+		}
+	}
+
+	function centre_press() {
+		//get map centre
+		let map = get(map_pointer_store);
+
+		if (map) {
+			
+			let centre = map.getCenter();
+		
+
+		if (marker_reference == null) {
+			makeNewMarker();
+		}
+
+		marker_reference.setLngLat([centre.lng, centre.lat]);
+	}
+
+		pin_drop_press();
+	}
+
 	async function getNearbyDepartures() {
 		loading = true;
 
+		let query_type = get(nearby_pick_state_store);
+
 		let geolocation_of_user = get(geolocation_store);
 
-		if (geolocation_of_user) {
+		let lat = 0;
+		let lng = 0;
+
+		if (query_type == 1) {
+			let user_picks = get(nearby_user_picks_store);
+
+			if (user_picks != null) {
+				lat = user_picks.latitude;
+				lng = user_picks.longitude;
+			}
+		}
+
+		if (query_type == 0) {
+			if (geolocation_of_user) {
+				lat = geolocation_of_user.coords.latitude;
+				lng = geolocation_of_user.coords.longitude;
+			}
+		}
+
+		if (lat != 0 && lng != 0) {
 			first_attempt_sent = true;
 
-			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${geolocation_of_user?.coords.latitude}&lon=${geolocation_of_user?.coords.longitude}`;
+			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${lat}&lon=${lng}`;
 
 			fetch(url)
 				.then((response) => response.json())
@@ -235,10 +355,11 @@
 					//console.log('nearby deps', departure_list);
 					
 					loading = false;
-
 					refilter();
 
+					if (query_type == 0) {
 					nearby_deps_cache_gps.set(data);
+					}
 				});
 		}
 	}
@@ -246,7 +367,7 @@
 
 {#if current_time != 0}
 <div class="flex flex-row mb-0.5 md:mb-1">
-	<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3  md:mb-2`}>
+	<h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3 `}>
 		{$_('nearbydepartures')}
 	</h2>
 	<div class='ml-auto pr-2'>
@@ -261,17 +382,30 @@
 </div>
 
 <div class="flex flex-row mb-1 gap-x-1 pl-3">
-	<div class="border-2 bg-green-200 dark:bg-green-800 rounded-lg border-green-500 px-1 py-1">
-		<span class="material-symbols-outlined mr-1 translate-y-1 md:text-xl">near_me</span>
+	<div
+	on:click={() => {
+		my_location_press()
+	}}
+	class={`border-2 ${current_nearby_pick_state == 0 ? "bg-green-200 dark:bg-green-800" : ""} rounded-lg border-green-500 px-1.5 py-1`}>
+		<span class="material-symbols-outlined mx-auto translate-y-1  text-sm">near_me</span>
 	</div>
 
-	<div class="border-2 bg-purple-200 dark:bg-purple-800 rounded-lg border-purple-500 flex flex-row">
-			<div class="px-1 py-1 border-r border-gray-500">
-				<span class="material-symbols-outlined mr-1 translate-y-1 md:text-xl">pin_drop</span>
+	<div class={`border-2  ${current_nearby_pick_state == 1 ? "bg-purple-200 dark:bg-purple-800 " : ""} 
+	rounded-lg border-purple-500 flex flex-row`}>
+			<div class="px-2 py-0.5 border-r border-gray-500 flex flex-row"
+			on:click={() => {
+				pin_drop_press()
+			}}
+			>
+				<span class="material-symbols-outlined mx-auto translate-y-1  text-sm">pin_drop</span>
 			</div>
 
-			<div class="px-1 py-1 ">
-				<span class="material-symbols-outlined mr-1 translate-y-1 md:text-xl">center_focus_strong</span>
+			<div class="px-2 py-0.5 flex flex-row"
+			on:click={() => {
+				centre_press()
+			}}
+			>
+				<span class="material-symbols-outlined mx-auto translate-y-1 text-sm">center_focus_strong</span>
 			</div>
 
 	</div>
