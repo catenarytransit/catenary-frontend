@@ -551,9 +551,15 @@
 						{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).sort((a, b) => (a.departure_realtime || a.departure_schedule) > (b.departure_realtime || b.departure_schedule)) as trip}
 							<button
 								aria-label={`Go to ${fixHeadsignText(direction_group.headsign, route_group.route_id)} at ${fixStationName(
-									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
-								)}`}
-								class="bg-white dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-24 flex justify-center"
+									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name 
+								)} at ${new Intl.DateTimeFormat('en-GB', {
+											hour: 'numeric',
+											minute: 'numeric',
+											timeZone: stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].timezone || trip.tz
+										}).format(
+											new Date((trip.departure_realtime || trip.departure_schedule) * 1000)
+										)}`}
+								class="bg-white dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-20 flex justify-center"
 								on:click={() => {
 									data_stack_store.update((stack) => {
 										stack.push(
@@ -653,11 +659,12 @@
 		{/each}
 	</div>
 
-	<!--Testing advert-->
+	<!--Testing advert
 	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2140162638544192"
 		crossorigin="anonymous"></script>
 
 		
+		<p class='ml-2 hidden md:block'>Advert:</p>
 	
 	<div class={`w-full overflow-x-clip ${darkMode ? "hidden md:block" : "hidden"}`}>
 	
@@ -679,8 +686,10 @@
 
 	</div>
 
+	-->
+
 	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({});
+	//	(adsbygoogle = window.adsbygoogle || []).push({});
    </script>
 </div>
 
