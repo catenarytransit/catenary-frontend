@@ -652,6 +652,38 @@
 			</div>
 		{/each}
 	</div>
+
+	<!--Testing advert-->
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2140162638544192"
+		crossorigin="anonymous"></script>
+
+		
+	
+	<div class={`w-full overflow-x-clip ${darkMode ? "hidden md:block" : "hidden"}`}>
+	
+   <ins class="adsbygoogle"
+		style="display:block"
+		data-ad-format="fluid"
+		data-ad-layout-key="-gw-3+1f-3d+2z"
+		data-ad-client="ca-pub-2140162638544192"
+		data-ad-slot="9693813767"></ins>
+	</div>
+
+	<div  class={`w-full overflow-x-clip ${darkMode ? "hidden" : "hidden md:block"}`}>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-gw-3+1f-3d+2z"
+     data-ad-client="ca-pub-2140162638544192"
+     data-ad-slot="3466257276"></ins>
+
+	</div>
+
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+   </script>
 </div>
+
+
 
 {/if}
