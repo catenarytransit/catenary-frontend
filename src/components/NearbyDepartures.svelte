@@ -159,6 +159,28 @@
 		current_time = Date.now();
 	}
 
+		if (current_nearby_pick_state == 1) {
+			let map = get(map_pointer_store);
+
+		if (map) {
+
+			let marker_info = get(nearby_user_picks_store);
+
+			if (marker_reference == null) {
+				marker_reference = new maplibregl.Marker({
+					color: '#ac46ff',
+					draggable: true
+				})
+					.setLngLat([marker_info?.longitude, marker_info?.latitude])
+					.addTo(map);
+
+    			marker_reference.on('dragend', onDragEnd);
+			}
+
+			
+		}
+		}
+
 		window.addEventListener('resize', () => {
 			window_height_known = window.innerHeight;
 		});
