@@ -659,7 +659,7 @@
 		{/each}
 	</div>
 
-	<!--Testing advert-->
+	<!--Testing advert
 	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2140162638544192"
 		crossorigin="anonymous"></script>
 
@@ -686,8 +686,10 @@
 
 	</div>
 
+	-->
+
 	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({});
+	//	(adsbygoogle = window.adsbygoogle || []).push({});
    </script>
 </div>
 
