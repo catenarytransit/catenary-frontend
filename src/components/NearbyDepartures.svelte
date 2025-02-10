@@ -664,7 +664,7 @@
 		crossorigin="anonymous"></script>
 
 		
-		<p class='ml-2'>Advert:</p>
+		<p class='ml-2 hidden md:block'>Advert:</p>
 	
 	<div class={`w-full overflow-x-clip ${darkMode ? "hidden md:block" : "hidden"}`}>
 	
