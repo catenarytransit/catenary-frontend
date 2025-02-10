@@ -942,6 +942,19 @@
 			<NativeLands chateau={trip_selected.chateau_id} />
 
 			<br/>-->
+
+			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2140162638544192"
+				crossorigin="anonymous"></script>
+			<!-- Sidebar -->
+			<ins class="adsbygoogle"
+				style="display:block"
+				data-ad-client="ca-pub-2140162638544192"
+				data-ad-slot="7135228916"
+				data-ad-format="auto"
+				data-full-width-responsive="true"></ins>
+			<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
 		</div>
 	{/if}
 
