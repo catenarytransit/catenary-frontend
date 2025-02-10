@@ -509,7 +509,7 @@
 <div class=" catenary-scroll overflow-y-auto pb-64 h-full">
 	<div class="flex flex-col">
 		{#each departure_list_filtered as route_group}
-			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-2'} px-3 mx-3 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}>
+			<div class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-3 mx-3 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}>
 				<p class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`} style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}>
 					{#if route_group.short_name}
 						<span class="font-bold mr-1"
@@ -549,7 +549,10 @@
 					{/if}
 					<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
 						{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).sort((a, b) => (a.departure_realtime || a.departure_schedule) > (b.departure_realtime || b.departure_schedule)) as trip}
-							<div
+							<button
+								aria-label={`Go to ${fixHeadsignText(direction_group.headsign, route_group.route_id)} at ${fixStationName(
+									stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
+								)}`}
 								class="bg-white dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-24 flex justify-center"
 								on:click={() => {
 									data_stack_store.update((stack) => {
@@ -571,9 +574,9 @@
 									});
 								}}
 							>
-								<div class="text-center leading-none md:leading-tight">
+								<div class="text-center ">
 									{#if route_group.route_type == 2 && trip.trip_short_name}
-										<p class="text-md inline-block font-medium px-1 rounded-sm" style:background-color={route_group.color} style:color={route_group.text_color}>{trip.trip_short_name}</p><br />
+										<p class="text-md inline-block font-medium px-1 rounded-sm leading-none md:leading-tight" style:background-color={route_group.color} style:color={route_group.text_color}>{trip.trip_short_name}</p><br />
 									{/if}
 
 									<span
@@ -615,7 +618,7 @@
 										{/if}
 									</span>
 
-									<p class="font-medium text-sm" style:color={trip.departure_realtime ? '#42a7c5': ''}>
+									<p class="font-medium text-sm  leading-none md:leading-tight" style:color={trip.departure_realtime ? '#42a7c5': ''}>
 										{new Intl.DateTimeFormat('en-GB', {
 											hour: 'numeric',
 											minute: 'numeric',
@@ -626,7 +629,7 @@
 									</p>
 
 									{#if trip.cancelled}
-										<span class="text-red-500">{$_('cancelled')}</span>
+										<p class="text-red-500  leading-none md:leading-tight">{$_('cancelled')}</p>
 									{/if}
 
 									{#if trip.departure_realtime != null && trip.departure_schedule != null}
@@ -637,12 +640,12 @@
 									{/if}
 
 									{#if trip.platform}
-										<p class="text-xs text-gray-800 dark:text-gray-200">
+										<p class="text-xs text-gray-800 dark:text-gray-200  leading-none md:leading-tight">
 											{trip.platform}
 										</p>
 									{/if}
 								</div>
-							</div>
+							</button>
 						{/each}
 					</div>
 				{/each}
