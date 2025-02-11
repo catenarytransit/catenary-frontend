@@ -1,5 +1,7 @@
-<script>
+<script lang="ts">
 	import '../app.css';
+
+    import { page } from '$app/state';
 </script>
 
     <div class="flex flex-col max-w-md mx-auto h-screen justify-center items-center">
