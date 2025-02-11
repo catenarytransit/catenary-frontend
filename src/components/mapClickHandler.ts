@@ -19,7 +19,7 @@ export function setup_click_handler(
 	setSidebarOpen: () => void
 ) {
 	map.on('click', (e) => {
-		console.log('clicked on ', e);
+		// console.log('clicked on ', e);
 
 		const click_bbox: [maplibregl.PointLike, maplibregl.PointLike] = [
 			[e.point.x - 5, e.point.y - 5],
@@ -27,13 +27,8 @@ export function setup_click_handler(
 		];
 
 		try {
-			const selectedFeatures = map.queryRenderedFeatures(click_bbox, {
-				layers: Object.values(layerspercategory)
-					.map((x) => Object.values(x))
-					.flat()
-			});
-
-			console.log('selectedFeatures', selectedFeatures);
+			const selectedFeatures = map.queryRenderedFeatures(clickBbox, { layers: interactiveLayers });
+			// console.log('selectedFeatures', selectedFeatures);
 
 			const selected_vehicles_raw = selectedFeatures.filter(
 				(x: Record<string, any>) =>
@@ -117,7 +112,7 @@ export function setup_click_handler(
 				})
 				.filter((x: MapSelectionOption | null) => x != null);
 
-			console.log('selected shapes', selected_routes_raw);
+			// console.log('selected shapes', selected_routes_raw);
 
 			let MapSelectionOptions = new Array<MapSelectionOption>();
 
@@ -138,7 +133,7 @@ export function setup_click_handler(
 					);
 				}
 
-				console.log('data stack now', get(data_stack_store));
+				// console.log('data stack now', get(data_stack_store));
 				on_sidebar_trigger_store.update((x) => x + 1);
 
 				setSidebarOpen();
