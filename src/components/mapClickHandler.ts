@@ -18,10 +18,13 @@ export function setup_click_handler(
 	layerspercategory: Record<string, any>,
 	setSidebarOpen: () => void
 ) {
-	map.on('click', (e) => {
-		// console.log('clicked on ', e);
+	// Precompute interactive layers array
+	const interactiveLayers = Object.values(layerspercategory)
+		.flatMap((category) => Object.values(category))
+		.filter(Boolean);
 
-		const click_bbox: [maplibregl.PointLike, maplibregl.PointLike] = [
+	map.on('click', (e) => {
+		const clickBbox: [maplibregl.PointLike, maplibregl.PointLike] = [
 			[e.point.x - 5, e.point.y - 5],
 			[e.point.x + 5, e.point.y + 5]
 		];
