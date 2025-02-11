@@ -32,6 +32,10 @@ export function init_stores() {
         } else {
             show_gtfs_ids_store.set(false)
         }
+
+        if (window.localStorage.getItem("show_seconds") == 'true') {
+            show_seconds_store.set(true);
+        }
     
         if (window.localStorage.show_gtfs_ids == true) {
             show_gtfs_ids_store.set(true);

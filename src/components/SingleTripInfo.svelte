@@ -735,10 +735,12 @@
 										/></svg
 									>
 									<span class="ml-2"></span>
+									{#if stoptime.rt_arrival_diff != null || stoptime.rt_departure_diff != null}
 									<DelayDiff
 										diff={stoptime.rt_arrival_diff || stoptime.rt_departure_diff}
 										show_seconds={show_seconds}
 									/>
+									{/if}
 								{:else}
 									<svg
 										class="inline ml-1 w-3 h-3 translate-y-1"
@@ -857,7 +859,9 @@
 											/></svg
 										>
 										<span class="ml-2"></span>
+										{#if stoptime.rt_departure_diff != null}
 										<DelayDiff diff={stoptime.rt_departure_diff} show_seconds={show_seconds} />
+										{/if}
 									{:else}
 										<svg
 											class="inline ml-1 w-3 h-3 translate-y-1"
