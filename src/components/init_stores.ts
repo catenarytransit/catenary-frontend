@@ -51,7 +51,7 @@ export function init_stores() {
         });
 
         show_seconds_store.subscribe(value => {
-            window.localStorage.setItem('show_seconds', value);
+            window.localStorage.setItem('show_seconds', String(value));
         }
     );
     }

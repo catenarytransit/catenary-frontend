@@ -149,11 +149,9 @@
 					checked={show_seconds}
 					on:click={(e) => {
 						show_seconds_store.set(e.target.checked);
-						window.localStorage.show_seconds = e.target.checked;
 					}}
 					on:keydown={(e) => {
 						show_seconds_store.set(e.target.checked);
-						window.localStorage.show_seconds = e.target.checked; 
 					}}
 				/>
 				<p>{$_('show_seconds_in_trips')}</p>
