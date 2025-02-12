@@ -104,7 +104,7 @@
 				let text = await response.text();
 				try {
 					const data = JSON.parse(text);
-					console.log('vehicle data', data);
+					//console.log('vehicle data', data);
 
 					vehicle_data = data.data;
 				} catch (e: any) {
@@ -112,7 +112,7 @@
 				}
 			});
 		} else {
-			console.log('no vehicle label found')
+			//console.log('no vehicle label found')
 		}
 		}
 		
@@ -139,7 +139,7 @@
 			let text = await response.text();
 			try {
 				const rt_update_json = JSON.parse(text);
-				console.log('rt trip data', rt_update_json);
+			//	console.log('rt trip data', rt_update_json);
 
 				const data = rt_update_json.data;
 
@@ -277,7 +277,7 @@
 				let text = await response.text();
 				try {
 					const data = JSON.parse(text);
-					console.log('trip data', data);
+				//	console.log('trip data', data);
 					is_loading_trip_data = false;
 					trip_data = data;
 
@@ -294,17 +294,17 @@
 							}
 						};
 
-						console.log(' geojson_polyline ', geojson_polyline);
+				//		console.log(' geojson_polyline ', geojson_polyline);
 
 						let geojson_source_new = {
 							type: 'FeatureCollection',
 							features: [geojson_polyline]
 						};
 
-						console.log(' geojson_source_new ', geojson_source_new);
+					//	console.log(' geojson_source_new ', geojson_source_new);
 
 						if (map != null) {
-							console.log('map is not null');
+							//console.log('map is not null');
 							map.getSource('transit_shape_context').setData(geojson_source_new);
 
 							let already_seen_stop_ids: string[] = [];
