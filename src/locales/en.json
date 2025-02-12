@@ -103,5 +103,14 @@
 	"dark_theme": "Dark",
 	"light_theme": "Light",
 	"12_hour_clock": "12-hour clock",
-	"topo": "Topography"
+	"topo": "Topography",
+	"occupancy_status_empty": "Empty",
+	"occupancy_status_many_seats_available": "Many seats available",
+	"occupancy_status_few_seats_available": "Few seats available",
+	"occupancy_status_standing_room_only": "Standing room only",
+	"occupancy_status_crushed_standing_room_only": "Crushed standing room only",
+	"occupancy_status_full": "Full",
+	"occupancy_status_not_accepting_passengers": "Not accepting passengers",
+	"occupancy_status_no_data_available": "No data available",
+	"occupancy_status_not_boardable": "Not boardable"
 }
