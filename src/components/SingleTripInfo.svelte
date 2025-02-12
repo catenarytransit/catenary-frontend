@@ -11,7 +11,6 @@
 	import TimeDiff from './TimeDiff.svelte';
 	import polyline from '@mapbox/polyline';
 	import AlertBox from './serviceAlerts.svelte';
-	import stringifyObject from 'stringify-object';
 	import { writable, get } from 'svelte/store';
 	import {
 		fixHeadsignIcon,
@@ -86,7 +85,38 @@
 		show_gtfs_ids = value;
 	});
 
+	let vehicle_data: any| null=  null;
+
+	
+	let db_vehicle_label: string | null = null;
+
 	let last_inactive_stop_idx = -1;
+
+	async function update_vehicle_rt() {
+		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
+		if (trip_data) {
+			if (trip_data.vehicle?.label || trip_data.vehicle?.id) {
+			let url = new URL(
+				`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id}`
+			);
+
+			await fetch(url.toString()).then(async (response) => {
+				let text = await response.text();
+				try {
+					const data = JSON.parse(text);
+					console.log('vehicle data', data);
+
+					vehicle_data = data.data;
+				} catch (e: any) {
+					console.error(e);
+				}
+			});
+		} else {
+			console.log('no vehicle label found')
+		}
+		}
+		
+	}
 
 	async function update_realtime_data() {
 		let url = new URL(
@@ -308,6 +338,8 @@
 							};
 
 							map.getSource('stops_context').setData(stop_source_new);
+
+							update_vehicle_rt();
 						}
 					}
 
@@ -467,12 +499,16 @@
 
 		fetchtimeout = setInterval(() => {
 			update_realtime_data();
+
+			update_vehicle_rt();
 		}, 5_000);
 
 		bigfetchtimeout = setInterval(() => {
 			if (trip_selected) {
 				fetch_trip_selected();
 			}
+
+			update_vehicle_rt();
 		}, 60_000);
 
 		updatetimecounter = setInterval(() => {
@@ -618,6 +654,26 @@
 				<br/>
 					Route: <span class="font-bold">{trip_selected.route_id}</span>
 				</div>
+			</div>
+			{/if}
+
+			{#if vehicle_data} 
+			<div>
+				<p class="text-xs">{$_("lastupdated")}: <TimeDiff
+					show_seconds={true}
+					show_brackets={false}
+					diff={vehicle_data.timestamp - current_time / 1000}
+					/></p>
+
+					<p class="text-xs">{$_("speed")}:
+						{#if vehicle_data.position?.speed != null}
+						{#if usunits}
+							{(vehicle_data.position?.speed * 2.23694 ).toFixed(2) } mph
+						{:else}
+							{(vehicle_data.position?.speed * 3.6).toFixed(2) } km/h
+						{/if}
+						{/if}
+					</p>
 			</div>
 			{/if}
 
