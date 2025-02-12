@@ -34,18 +34,16 @@
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
 
-	export let window_height_known: number =  500;
+	export let window_height_known: number = 500;
 	onMount(() => {
 		window_height_known = window.innerHeight;
 
-		
-	window.addEventListener('resize', () => {
-		window_height_known = window.innerHeight;
+		window.addEventListener('resize', () => {
+			window_height_known = window.innerHeight;
+		});
 	});
-	})
 
 	export let usunits: boolean;
-	
 
 	import {
 		data_stack_store,
@@ -70,10 +68,11 @@
 	import NativeLands from './NativeLands.svelte';
 
 	function fix_vehicle_number(chateau_id: string, vehicle_id: string) {
-		if (chateau_id == "translink-queensland-au") {
+		if (chateau_id == 'translink-queensland-au') {
 			return vehicle_id.split('_')[1];
 		} else {
-return vehicle_id;		}
+			return vehicle_id;
+		}
 	}
 
 	let show_seconds = get(show_seconds_store);
@@ -92,9 +91,8 @@ return vehicle_id;		}
 		show_gtfs_ids = value;
 	});
 
-	let vehicle_data: any| null=  null;
+	let vehicle_data: any | null = null;
 
-	
 	let db_vehicle_label: string | null = null;
 
 	let last_inactive_stop_idx = -1;
@@ -103,26 +101,25 @@ return vehicle_id;		}
 		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
 		if (trip_data) {
 			if (trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id) {
-			let url = new URL(
-				`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id}`
-			);
+				let url = new URL(
+					`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id}`
+				);
 
-			await fetch(url.toString()).then(async (response) => {
-				let text = await response.text();
-				try {
-					const data = JSON.parse(text);
-					//console.log('vehicle data', data);
+				await fetch(url.toString()).then(async (response) => {
+					let text = await response.text();
+					try {
+						const data = JSON.parse(text);
+						//console.log('vehicle data', data);
 
-					vehicle_data = data.data;
-				} catch (e: any) {
-					console.error(e);
-				}
-			});
-		} else {
-			//console.log('no vehicle label found')
+						vehicle_data = data.data;
+					} catch (e: any) {
+						console.error(e);
+					}
+				});
+			} else {
+				//console.log('no vehicle label found')
+			}
 		}
-		}
-		
 	}
 
 	async function update_realtime_data() {
@@ -146,7 +143,7 @@ return vehicle_id;		}
 			let text = await response.text();
 			try {
 				const rt_update_json = JSON.parse(text);
-			//	console.log('rt trip data', rt_update_json);
+				//	console.log('rt trip data', rt_update_json);
 
 				const data = rt_update_json.data;
 
@@ -284,7 +281,7 @@ return vehicle_id;		}
 				let text = await response.text();
 				try {
 					const data = JSON.parse(text);
-				//	console.log('trip data', data);
+					//	console.log('trip data', data);
 					is_loading_trip_data = false;
 					trip_data = data;
 
@@ -301,14 +298,11 @@ return vehicle_id;		}
 							}
 						};
 
-				//		console.log(' geojson_polyline ', geojson_polyline);
+						//		console.log(' geojson_polyline ', geojson_polyline);
 
-						let geojson_source_new = {
-							type: 'FeatureCollection',
-							features: [geojson_polyline]
-						};
+						let geojson_source_new = { type: 'FeatureCollection', features: [geojson_polyline] };
 
-					//	console.log(' geojson_source_new ', geojson_source_new);
+						//	console.log(' geojson_source_new ', geojson_source_new);
 
 						if (map != null) {
 							//console.log('map is not null');
@@ -317,32 +311,29 @@ return vehicle_id;		}
 							let already_seen_stop_ids: string[] = [];
 
 							let stops_features = data.stoptimes
-							.filter((eachstoptime: any) => {
-								if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
-									already_seen_stop_ids.push(eachstoptime.stop_id);
-									return true;
-								}
-								return false;
-							})
-							.map((eachstoptime: any) => {
-								return {
-									type: 'Feature',
-									properties: {
-										label: eachstoptime.name,
-										stop_id: eachstoptime.stop_id,
-										chateau: trip_selected.chateau_id,
-									},
-									geometry: {
-										coordinates: [eachstoptime.longitude, eachstoptime.latitude],
-										type: 'Point'
+								.filter((eachstoptime: any) => {
+									if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
+										already_seen_stop_ids.push(eachstoptime.stop_id);
+										return true;
 									}
-								};
-							});
+									return false;
+								})
+								.map((eachstoptime: any) => {
+									return {
+										type: 'Feature',
+										properties: {
+											label: eachstoptime.name,
+											stop_id: eachstoptime.stop_id,
+											chateau: trip_selected.chateau_id
+										},
+										geometry: {
+											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
+											type: 'Point'
+										}
+									};
+								});
 
-							let stop_source_new = {
-								type: 'FeatureCollection',
-								features: stops_features
-							};
+							let stop_source_new = { type: 'FeatureCollection', features: stops_features };
 
 							map.getSource('stops_context').setData(stop_source_new);
 
@@ -458,14 +449,14 @@ return vehicle_id;		}
 								stoptime.show_both_departure_and_arrival = true;
 							}
 
-							if (stoptime_to_use.scheduled_arrival_time_unix_seconds == stoptime_to_use.scheduled_departure_time_unix_seconds && 
+							if (
+								stoptime_to_use.scheduled_arrival_time_unix_seconds ==
+									stoptime_to_use.scheduled_departure_time_unix_seconds &&
 								stoptime_to_use.rt_arrival_time == stoptime_to_use.rt_departure_time
 							) {
 								stoptime.show_both_departure_and_arrival = false;
 							}
 						}
-
-						
 
 						stoptimes_cleaned.push(stoptime_to_use);
 						index = index + 1;
@@ -478,10 +469,7 @@ return vehicle_id;		}
 					console.log('refresh component');
 				} catch (e: any) {
 					error = text;
-					console.log(stringifyObject(trip_selected, {
-					indent: '  ',
-					singleQuotes: false
-				}))
+					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 				}
 			})
 			.catch((e) => {
@@ -535,8 +523,11 @@ return vehicle_id;		}
 						temp_last_inactive_stop_idx = i;
 					}
 				} else {
-					if ((stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds) < current_time / 1000) {
-						
+					if (
+						(stoptime.scheduled_departure_time_unix_seconds ||
+							stoptime.interpolated_stoptime_unix_seconds) <
+						current_time / 1000
+					) {
 						if (!(stoptime.schedule_relationship == 1 && i - 1 > temp_last_inactive_stop_idx)) {
 							temp_last_inactive_stop_idx = i;
 						}
@@ -560,242 +551,375 @@ return vehicle_id;		}
 
 			if (temp_last_inactive_stop_idx > 0) {
 				if (
-				stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null ||
-				stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_arrival_time != null
-			) {
-				last_inactive_stop_idx = temp_last_inactive_stop_idx - 1;
-			} else {
-				last_inactive_stop_idx = temp_last_inactive_stop_idx;
+					stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null ||
+					stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_arrival_time != null
+				) {
+					last_inactive_stop_idx = temp_last_inactive_stop_idx - 1;
+				} else {
+					last_inactive_stop_idx = temp_last_inactive_stop_idx;
+				}
 			}
-			}
-			
 		}, 100);
 
 		return () => {
-		clearInterval(fetchtimeout);
-		clearInterval(updatetimecounter);
-		clearInterval(bigfetchtimeout);
-		}
+			clearInterval(fetchtimeout);
+			clearInterval(updatetimecounter);
+			clearInterval(bigfetchtimeout);
+		};
 	});
-
-	
 </script>
 
-	{#if error != null}
-		<div>
-			<p>Error from server:</p>
-			<p class="font-mono">{error}</p>
-			<p>Request made:</p>
-			<p class="text-wrap text-xs font-mono">
-				{@html stringifyObject(trip_selected, {
-					indent: '\t',
-					singleQuotes: false
-				}).replaceAll("\n", "<br/>")}
-			</p>
-			<p>Report this error to the Catenary Discussions page or the frontend issues page on GitHub: <a href="https://github.com/orgs/catenarytransit/discussions" target="_blank" class="underline text-blue-500 dark:text-blue-300">https://github.com/orgs/catenarytransit/discussions</a></p>
+{#if error != null}
+	<div>
+		<p>Error from server:</p>
+		<p class="font-mono">{error}</p>
+		<p>Request made:</p>
+		<p class="text-wrap text-xs font-mono">
+			{@html stringifyObject(trip_selected, { indent: '\t', singleQuotes: false }).replaceAll(
+				'\n',
+				'<br/>'
+			)}
+		</p>
+		<p>
+			Report this error to the Catenary Discussions page or the frontend issues page on GitHub: <a
+				href="https://github.com/orgs/catenarytransit/discussions"
+				target="_blank"
+				class="underline text-blue-500 dark:text-blue-300"
+				>https://github.com/orgs/catenarytransit/discussions</a
+			>
+		</p>
+	</div>
+{:else if is_loading_trip_data}
+	{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
+		<div class="w-full p-3 flex flex-col gap-y-2">
+			<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+			<div class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
+			<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
 		</div>
-	{:else if is_loading_trip_data}
-		{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
-			<div class="w-full p-3 flex flex-col gap-y-2">
-				<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-				<div class="h-3 w-1/4 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-				<div class="h-3 w-2/5 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
-			</div>
-		{/each}
-	{:else if trip_data != null}
-		<div class="px-3">
-			<RouteHeading
-				color={trip_data.color}
-				text_color={trip_data.text_color}
-				route_id={trip_data.route_id}
-				chateau_id={trip_selected.chateau_id}
-				vehicle={fix_vehicle_number(
+	{/each}
+{:else if trip_data != null}
+	<div class="px-3">
+		<RouteHeading
+			color={trip_data.color}
+			text_color={trip_data.text_color}
+			route_id={trip_data.route_id}
+			chateau_id={trip_selected.chateau_id}
+			vehicle={fix_vehicle_number(
 				trip_selected.chateau_id,
-				(trip_data.vehicle?.label || trip_data.vehicle?.id
-				))}
-				arrow={true}
-				text={fixHeadsignText(
-					trip_data.trip_headsign,
-					trip_data.route_short_name || trip_data.route_long_name
-				)}
-				icon={fixHeadsignIcon(trip_data.trip_headsign)}
-				run_number={fixRunNumber(
-					trip_selected.chateau_id,
-					trip_selected.route_type || 3,
-					trip_data.route_id,
-					trip_data.trip_short_name,
-					trip_data.vehicle?.label || trip_data.vehicle?.id,
-					trip_data.trip_id
-				)}
-				short_name={trip_data.route_short_name}
-				long_name={trip_data.route_long_name}
-				{darkMode}
-				disable_pdf={true}
-			/>
+				trip_data.vehicle?.label || trip_data.vehicle?.id
+			)}
+			arrow={true}
+			text={fixHeadsignText(
+				trip_data.trip_headsign,
+				trip_data.route_short_name || trip_data.route_long_name
+			)}
+			icon={fixHeadsignIcon(trip_data.trip_headsign)}
+			run_number={fixRunNumber(
+				trip_selected.chateau_id,
+				trip_selected.route_type || 3,
+				trip_data.route_id,
+				trip_data.trip_short_name,
+				trip_data.vehicle?.label || trip_data.vehicle?.id,
+				trip_data.trip_id
+			)}
+			short_name={trip_data.route_short_name}
+			long_name={trip_data.route_long_name}
+			{darkMode}
+			disable_pdf={true}
+		/>
 
-			<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
+		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 
-				<p class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
-					Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
-						<span>{' | Block '}{trip_data.block_id}</span>
-					{/if}
-				</p>
+		<p class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
+			Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
+				<span>{' | Block '}{trip_data.block_id}</span>
+			{/if}
+		</p>
 
-				<p  class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
-					{#if timezones.filter((x) => x != null).length == 1}
-						{$_('timezone')}: {timezones[0]}
-					{:else}
-						{$_('timezone')}: {timezones.filter((x) => x != null).join(', ')}
-					{/if}
-				</p>
-		</div>
+		<p class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
+			{#if timezones.filter((x) => x != null).length == 1}
+				{$_('timezone')}: {timezones[0]}
+			{:else}
+				{$_('timezone')}: {timezones.filter((x) => x != null).join(', ')}
+			{/if}
+		</p>
+	</div>
 
-		<div
-			bind:this={bind_scrolling_div}
-			class="flex flex-col catenary-scroll overflow-y-scroll h-full px-3 pt-2"
-			style:border-top={`3px solid ${trip_data.color}`}
-		>
-		{
-			#if show_gtfs_ids
-		}
+	<div
+		bind:this={bind_scrolling_div}
+		class="flex flex-col catenary-scroll overflow-y-scroll h-full px-3 pt-2"
+		style:border-top={`3px solid ${trip_data.color}`}
+	>
+		{#if show_gtfs_ids}
 			<div class="font-mono px-3">
 				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
 					Chateau: <span class="font-bold">{trip_selected.chateau_id}</span>
-				<br/>
+					<br />
 					Route: <span class="font-bold">{trip_selected.route_id}</span>
 				</div>
 			</div>
-			{/if}
+		{/if}
 
-			{#if vehicle_data} 
+		{#if vehicle_data}
 			<div>
-				<p class="text-xs">{$_("lastupdated")}: <TimeDiff
-					show_seconds={true}
-					show_brackets={false}
-					diff={vehicle_data.timestamp - current_time / 1000}
-					/></p>
-					{#if vehicle_data.position?.speed != null}
-					<p class="text-xs">{$_("speed")}:
-						
+				<p class="text-xs">
+					{$_('lastupdated')}: <TimeDiff
+						show_seconds={true}
+						show_brackets={false}
+						diff={vehicle_data.timestamp - current_time / 1000}
+					/>
+				</p>
+				{#if vehicle_data.position?.speed != null}
+					<p class="text-xs">
+						{$_('speed')}:
+
 						{#if usunits}
-							{(vehicle_data.position?.speed * 2.23694 ).toFixed(2) } mph
+							{(vehicle_data.position?.speed * 2.23694).toFixed(2)} mph
 						{:else}
-							{(vehicle_data.position?.speed * 3.6).toFixed(2) } km/h
+							{(vehicle_data.position?.speed * 3.6).toFixed(2)} km/h
 						{/if}
-						
 					</p>{/if}
 
-					{#if vehicle_data.occupancy_status != null}
-					<p class={`text-xs ${ vehicle_data.occupancy_status == 3 ? "text-amber-600 dark:text-amber-400" : ""} ${[4,5,6,8].includes(vehicle_data.occupancy_status)} ? "text-red-600 dark:text-red-500" : ""`}>{$_("occupancy_status")}:
-						
-						{#if  vehicle_data.occupancy_status == 0} 
-							{$_("occupancy_status_empty")}
+				{#if vehicle_data.occupancy_status != null}
+					<p
+						class={`text-xs ${vehicle_data.occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_data.occupancy_status)} ? "text-red-600 dark:text-red-500" : ""`}
+					>
+						{$_('occupancy_status')}:
+
+						{#if vehicle_data.occupancy_status == 0}
+							{$_('occupancy_status_empty')}
 						{:else if vehicle_data.occupancy_status == 1}
-							{$_("occupancy_status_many_seats_available")}
+							{$_('occupancy_status_many_seats_available')}
 						{:else if vehicle_data.occupancy_status == 2}
-							{$_("occupancy_status_few_seats_available")}
+							{$_('occupancy_status_few_seats_available')}
 						{:else if vehicle_data.occupancy_status == 3}
-							{$_("occupancy_status_standing_room_only")}
+							{$_('occupancy_status_standing_room_only')}
 						{:else if vehicle_data.occupancy_status == 4}
-							{$_("occupancy_status_crushed_standing_room_only")}
+							{$_('occupancy_status_crushed_standing_room_only')}
 						{:else if vehicle_data.occupancy_status == 5}
-							{$_("occupancy_status_full")}
+							{$_('occupancy_status_full')}
 						{:else if vehicle_data.occupancy_status == 6}
-							{$_("occupancy_status_not_accepting_passengers")}
+							{$_('occupancy_status_not_accepting_passengers')}
 						{:else if vehicle_data.occupancy_status == 7}
-							{$_("occupancy_status_no_data")}
+							{$_('occupancy_status_no_data')}
 						{:else if vehicle_data.occupancy_status == 8}
-							{$_("occupancy_status_not_boardable")}
+							{$_('occupancy_status_not_boardable')}
 						{/if}
-						
 					</p>{/if}
 			</div>
+		{/if}
+
+		<AlertBox {alerts} />
+
+		{#key trip_data}
+			{#if show_previous_stops && last_inactive_stop_idx > -1}
+				<button
+					on:click={() => {
+						show_previous_stops = false;
+					}}
+					class="cursor-pointer text-md font-medium text-seashore mb-2"
+				>
+					&darr;
+					{$_('hidepreviousstops')}
+				</button>
 			{/if}
+			{#if !show_previous_stops && last_inactive_stop_idx > -1}
+				<button
+					on:click={() => {
+						show_previous_stops = true;
+					}}
+					class="cursor-pointer text-md font-medium text-seashore mb-2"
+				>
+					&uarr;
+					{$_('shownpreviousstops', { values: { n: last_inactive_stop_idx + 1 } })}
+				</button>
+			{/if}
+		{/key}
 
-			<AlertBox alerts={alerts}/>
+		{#each stoptimes_cleaned_dataset as stoptime, i}
+			{#if show_previous_stops || i > last_inactive_stop_idx}
+				<div class="flex flex-row">
+					<!--The left side coloured bars to indicate trip progress-->
+					<div class="flex flex-col w-2 relative justify-center" style={``}>
+						<div
+							style={`background: ${i - 1 == last_inactive_stop_idx && i != 0 ? `linear-gradient(${show_previous_stops ? `rgba(${Object.values(hexToRgb(trip_data.color)).join(',')}, 0.4)` : 'transparent'}, ${trip_data.color})` : i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
+							class={`h-1/2 w-2 ${i == trip_data.stoptimes.length - 1 ? 'rounded-b-full' : ''}`}
+						></div>
+						<div
+							style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
+							class={`h-1/2 w-2 ${i == 0 ? 'rounded-t-full' : ''}`}
+						></div>
 
-			{#key trip_data}
-				{#if show_previous_stops && last_inactive_stop_idx > -1}
-					<button
-						on:click={() => {
-							show_previous_stops = false;
-						}}
-						class="cursor-pointer text-md font-medium text-seashore mb-2"
-					>
-						&darr;
-						{$_('hidepreviousstops')}
-					</button>
-				{/if}
-				{#if !show_previous_stops && last_inactive_stop_idx > -1}
-					<button
-						on:click={() => {
-							show_previous_stops = true;
-						}}
-						class="cursor-pointer text-md font-medium text-seashore mb-2"
-					>
-						&uarr;
-						{$_('shownpreviousstops', {
-							values: {
-								n: last_inactive_stop_idx + 1
-							}
-						})}
-					</button>
-				{/if}
-			{/key}
-
-			{#each stoptimes_cleaned_dataset as stoptime, i}
-				{#if show_previous_stops || i > last_inactive_stop_idx}
-					<div class="flex flex-row">
-							<!--The left side coloured bars to indicate trip progress-->
-						<div class="flex flex-col w-2 relative justify-center" style={``}>
+						{#if stoptime.schedule_relationship == 1}
 							<div
-								style={`background: ${i - 1 == last_inactive_stop_idx && i != 0 ? `linear-gradient(${show_previous_stops ? `rgba(${Object.values(hexToRgb(trip_data.color)).join(',')}, 0.4)` : 'transparent'}, ${trip_data.color})` : i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i  ? 0.4 : 1};`}
-								class={`h-1/2 w-2 ${i == trip_data.stoptimes.length - 1 ? 'rounded-b-full' : ''}`}
-							></div>
+								class="flex flex-row absolute top-1/2 bottom-1/2 left-[-3px] h-6 w-6 rounded-full bg-red-500 border-white border"
+							>
+								<span
+									class="my-auto mx-auto material-symbols-outlined text-base font-bold bottom-2"
+								>
+									close
+								</span>
+							</div>
+						{:else}
 							<div
-								style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
-								class={`h-1/2 w-2 ${i == 0 ? 'rounded-t-full' : ''}`}
+								class={`absolute top-1/2 bottom-1/2 left-0 w-2 h-2 rounded-full ${i > last_inactive_stop_idx ? 'bg-white' : ' bg-gray-400'}`}
 							></div>
+						{/if}
+					</div>
+
+					<div class="mr-4"></div>
+
+					<div
+						class={`w-full py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ''}`}
+					>
+						<p class=" text-base">
+							<span
+								class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
+								>{fixStationName(stoptime.name)}</span
+							>
+
+							{#if stop_id_to_alert_ids[stoptime.stop_id]}
+								<img src="/icons/service_alert.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
+							{/if}
 
 							{#if stoptime.schedule_relationship == 1}
-								<div
-									class="flex flex-row absolute top-1/2 bottom-1/2 left-[-3px] h-6 w-6 rounded-full bg-red-500 border-white border"
-								>
-									<span
-										class="my-auto mx-auto material-symbols-outlined text-base font-bold bottom-2"
-									>
-										close
-									</span>
-								</div>
-							{:else}
-								<div
-									class={`absolute top-1/2 bottom-1/2 left-0 w-2 h-2 rounded-full ${i > last_inactive_stop_idx ? 'bg-white' : ' bg-gray-400'}`}
-								></div>
+								<img src="/icons/cancellation.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
 							{/if}
+
+							{#if stoptime.code}
+								<span class="text-gray-800 dark:text-gray-200 font-extralight">{stoptime.code}</span
+								>
+							{/if}
+						</p>
+
+						<div class="flex flex-row">
+							{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null || stoptime.interpolated_stoptime_unix_seconds != null}
+								{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
+									<span
+										style:color={`${stoptime.rt_departure_time || stoptime.rt_arrival_time ? '#42a7c5' : ''}`}
+										class="text-[0px] font-semibold"
+									>
+										<TimeDiff
+											diff={(stoptime.rt_arrival_time ||
+												stoptime.rt_departure_time ||
+												stoptime.scheduled_departure_time_unix_seconds ||
+												stoptime.interpolated_stoptime_unix_seconds) -
+												current_time / 1000}
+											show_brackets={false}
+											{show_seconds}
+										/>
+									</span>
+								{/if}
+							{/if}
+							{#if stoptime.rt_departure_time || stoptime.rt_arrival_time}
+								<svg
+									class="inline ml-1 w-3 h-3 translate-y-1"
+									height="24"
+									viewBox="0 -960 960 960"
+									width="24"
+									fill={'#42a7c5'}
+									><path
+										d="M200-120q-33 0-56.5-23.5T120-200q0-33 23.5-56.5T200-280q33 0 56.5 23.5T280-200q0 33-23.5 56.5T200-120Zm480 0q0-117-44-218.5T516-516q-76-76-177.5-120T120-680v-120q142 0 265 53t216 146q93 93 146 216t53 265H680Zm-240 0q0-67-25-124.5T346-346q-44-44-101.5-69T120-440v-120q92 0 171.5 34.5T431-431q60 60 94.5 139.5T560-120H440Z"
+									/></svg
+								>
+								<span class="ml-2"></span>
+								{#if stoptime.rt_arrival_diff != null || stoptime.rt_departure_diff != null}
+									<DelayDiff
+										diff={stoptime.rt_arrival_diff || stoptime.rt_departure_diff}
+										{show_seconds}
+									/>
+								{/if}
+							{:else}
+								<svg
+									class="inline ml-1 w-3 h-3 translate-y-1"
+									height="24"
+									viewBox="0 -960 960 960"
+									width="24"
+									fill={'white'}
+									><path
+										d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"
+									/></svg
+								>
+							{/if}
+
+							<!-- {#if (simpleRouteMode && stoptime.rt_arrival_diff && stoptime.rt_departure_diff && stoptime.rt_arrival_time == stoptime.rt_departure_time) || (stoptime.rt_departure_diff && !stoptime.rt_arrival_diff) || (stoptime.rt_arrival_diff && !stoptime.rt_departure_diff) || (!stoptime.rt_arrival_diff && !stoptime.rt_departure_diff && (stoptime.rt_arrival_time || stoptime.rt_departure_time)) || (!stoptime.rt_arrival_diff && !stoptime.rt_departure_diff && stoptime.scheduled_arrival_time_unix_seconds == stoptime.scheduled_departure_time_unix_seconds)} -->
+
+							<div class="ml-auto text-sm">
+								<div class="text-sm text-right">
+									<p class="text-right">
+										{#if stoptime.rt_arrival_time}
+											{#if (stoptime.rt_arrival_time != stoptime.rt_departure_time && stoptime.rt_arrival_time && stoptime.rt_departure_time) || (stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span
+													class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+													>{$_('arrival')}</span
+												>{/if}
+											<span
+												class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
+											>
+												{new Date(
+													(stoptime.scheduled_arrival_time_unix_seconds ||
+														stoptime.interpolated_stoptime_unix_seconds) * 1000
+												).toLocaleTimeString('en-UK', {
+													timeZone: stoptime.timezone || trip_data.tz,
+													hour: '2-digit',
+													minute: '2-digit',
+													second: show_seconds ? '2-digit' : undefined
+												})}
+											</span>
+											<span class="text-seashore font-medium">
+												{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString('en-UK', {
+													timeZone: stoptime.timezone || trip_data.tz,
+													hour: '2-digit',
+													minute: '2-digit',
+													second: show_seconds ? '2-digit' : undefined
+												})}
+											</span>
+										{:else if stoptime.rt_departure_time}
+											{#if (stoptime.rt_arrival_time != stoptime.rt_departure_time && stoptime.rt_arrival_time && stoptime.rt_departure_time) || (stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span
+													class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+													>{$_('departure')}</span
+												>{/if}
+											<span
+												class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
+											>
+												{new Date(
+													(stoptime.scheduled_departure_time_unix_seconds ||
+														stoptime.interpolated_stoptime_unix_seconds) * 1000
+												).toLocaleTimeString('en-UK', {
+													timeZone: stoptime.timezone || trip_data.tz,
+													hour: '2-digit',
+													minute: '2-digit',
+													second: show_seconds ? '2-digit' : undefined
+												})}
+											</span>
+											<span class="text-seashore font-medium">
+												{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString('en-UK', {
+													timeZone: stoptime.timezone || trip_data.tz,
+													hour: '2-digit',
+													minute: '2-digit',
+													second: show_seconds ? '2-digit' : undefined
+												})}
+											</span>
+										{:else}
+											{#if (stoptime.rt_arrival_time != stoptime.rt_departure_time && stoptime.rt_arrival_time && stoptime.rt_departure_time) || (stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span
+													class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+													>{$_('departure')}</span
+												>{/if}
+											{new Date(
+												(stoptime.scheduled_departure_time_unix_seconds ||
+													stoptime.interpolated_stoptime_unix_seconds) * 1000
+											).toLocaleTimeString('en-UK', {
+												timeZone: stoptime.timezone || trip_data.tz,
+												hour: '2-digit',
+												minute: '2-digit',
+												second: show_seconds ? '2-digit' : undefined
+											})}
+										{/if}
+									</p>
+								</div>
+							</div>
 						</div>
 
-						<div class="mr-4"></div>
-
-						<div class={`w-full py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ""}`}>
-							<p class=" text-base">
-								<span
-									class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
-									>{fixStationName(stoptime.name)}</span
-								>
-
-								{#if stop_id_to_alert_ids[stoptime.stop_id]}
-									<img src="/icons/service_alert.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
-								{/if}
-
-								{#if stoptime.schedule_relationship == 1}
-									<img src="/icons/cancellation.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
-								{/if}
-
-								{#if stoptime.code}
-									<span class="text-gray-800 dark:text-gray-200 font-extralight">{stoptime.code}</span>
-								{/if}
-							</p>
-
+						{#if (stoptime.rt_arrival_time != stoptime.rt_departure_time && stoptime.rt_arrival_time && stoptime.rt_departure_time) || (stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}
 							<div class="flex flex-row">
 								{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null || stoptime.interpolated_stoptime_unix_seconds != null}
 									{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
@@ -804,17 +928,17 @@ return vehicle_id;		}
 											class="text-[0px] font-semibold"
 										>
 											<TimeDiff
-												diff={(stoptime.rt_arrival_time || stoptime.rt_departure_time ||
+												diff={(stoptime.rt_departure_time ||
 													stoptime.scheduled_departure_time_unix_seconds ||
 													stoptime.interpolated_stoptime_unix_seconds) -
 													current_time / 1000}
 												show_brackets={false}
-												show_seconds={show_seconds}
+												{show_seconds}
 											/>
 										</span>
 									{/if}
 								{/if}
-								{#if stoptime.rt_departure_time || stoptime.rt_arrival_time}
+								{#if stoptime.rt_departure_time}
 									<svg
 										class="inline ml-1 w-3 h-3 translate-y-1"
 										height="24"
@@ -826,11 +950,8 @@ return vehicle_id;		}
 										/></svg
 									>
 									<span class="ml-2"></span>
-									{#if stoptime.rt_arrival_diff != null || stoptime.rt_departure_diff != null}
-									<DelayDiff
-										diff={stoptime.rt_arrival_diff || stoptime.rt_departure_diff}
-										show_seconds={show_seconds}
-									/>
+									{#if stoptime.rt_departure_diff != null}
+										<DelayDiff diff={stoptime.rt_departure_diff} {show_seconds} />
 									{/if}
 								{:else}
 									<svg
@@ -844,40 +965,14 @@ return vehicle_id;		}
 										/></svg
 									>
 								{/if}
-
-								<!-- {#if (simpleRouteMode && stoptime.rt_arrival_diff && stoptime.rt_departure_diff && stoptime.rt_arrival_time == stoptime.rt_departure_time) || (stoptime.rt_departure_diff && !stoptime.rt_arrival_diff) || (stoptime.rt_arrival_diff && !stoptime.rt_departure_diff) || (!stoptime.rt_arrival_diff && !stoptime.rt_departure_diff && (stoptime.rt_arrival_time || stoptime.rt_departure_time)) || (!stoptime.rt_arrival_diff && !stoptime.rt_departure_diff && stoptime.scheduled_arrival_time_unix_seconds == stoptime.scheduled_departure_time_unix_seconds)} -->
-
 								<div class="ml-auto text-sm">
 									<div class="text-sm text-right">
 										<p class="text-right">
-											{#if stoptime.rt_arrival_time}
-												{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('arrival')}</span>{/if}
-												<span
-													class={`${stoptime.strike_arrival == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
-												>
-													{new Date(
-														(stoptime.scheduled_arrival_time_unix_seconds ||
-															stoptime.interpolated_stoptime_unix_seconds) * 1000
-													).toLocaleTimeString('en-UK', {
-														timeZone: stoptime.timezone || trip_data.tz,
-														hour: '2-digit',
-														minute: '2-digit',
-														second: show_seconds ? '2-digit' : undefined
-													})}
-												</span>
-												<span class="text-seashore font-medium">
-													{new Date(stoptime.rt_arrival_time * 1000).toLocaleTimeString(
-														'en-UK',
-														{
-															timeZone: stoptime.timezone || trip_data.tz,
-															hour: '2-digit',
-															minute: '2-digit',
-															second: show_seconds ? '2-digit' : undefined
-														}
-													)}
-												</span>
-											{:else if stoptime.rt_departure_time}
-												{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
+											<span
+												class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+												>{$_('departure')}</span
+											>
+											{#if stoptime.rt_departure_time}
 												<span
 													class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
 												>
@@ -892,18 +987,14 @@ return vehicle_id;		}
 													})}
 												</span>
 												<span class="text-seashore font-medium">
-													{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
-														'en-UK',
-														{
-															timeZone: stoptime.timezone || trip_data.tz,
-															hour: '2-digit',
-															minute: '2-digit',
-															second: show_seconds ? '2-digit' : undefined
-														}
-													)}
+													{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString('en-UK', {
+														timeZone: stoptime.timezone || trip_data.tz,
+														hour: '2-digit',
+														minute: '2-digit',
+														second: show_seconds ? '2-digit' : undefined
+													})}
 												</span>
 											{:else}
-												{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>{/if}
 												{new Date(
 													(stoptime.scheduled_departure_time_unix_seconds ||
 														stoptime.interpolated_stoptime_unix_seconds) * 1000
@@ -918,127 +1009,33 @@ return vehicle_id;		}
 									</div>
 								</div>
 							</div>
+						{/if}
 
-							{#if ((stoptime.rt_arrival_time != stoptime.rt_departure_time) && stoptime.rt_arrival_time && stoptime.rt_departure_time) || ((stoptime.scheduled_arrival_time_unix_seconds != stoptime.scheduled_departure_time_unix_seconds) && stoptime.scheduled_arrival_time_unix_seconds && stoptime.scheduled_departure_time_unix_seconds)}
-								<div class="flex flex-row">
-									{#if stoptime.rt_departure_time != null || stoptime.scheduled_departure_time_unix_seconds != null || stoptime.interpolated_stoptime_unix_seconds != null}
-										{#if !(stoptime.rt_departure_time == null && stoptime.strike_departure == true)}
-											<span
-												style:color={`${stoptime.rt_departure_time || stoptime.rt_arrival_time ? '#42a7c5' : ''}`}
-												class="text-[0px] font-semibold"
-											>
-												<TimeDiff
-													diff={(stoptime.rt_departure_time ||
-														stoptime.scheduled_departure_time_unix_seconds ||
-														stoptime.interpolated_stoptime_unix_seconds) -
-														current_time / 1000}
-													show_brackets={false}
-													show_seconds={show_seconds}
-												/>
-											</span>
-										{/if}
-									{/if}
-									{#if stoptime.rt_departure_time}
-										<svg
-											class="inline ml-1 w-3 h-3 translate-y-1"
-											height="24"
-											viewBox="0 -960 960 960"
-											width="24"
-											fill={'#42a7c5'}
-											><path
-												d="M200-120q-33 0-56.5-23.5T120-200q0-33 23.5-56.5T200-280q33 0 56.5 23.5T280-200q0 33-23.5 56.5T200-120Zm480 0q0-117-44-218.5T516-516q-76-76-177.5-120T120-680v-120q142 0 265 53t216 146q93 93 146 216t53 265H680Zm-240 0q0-67-25-124.5T346-346q-44-44-101.5-69T120-440v-120q92 0 171.5 34.5T431-431q60 60 94.5 139.5T560-120H440Z"
-											/></svg
-										>
-										<span class="ml-2"></span>
-										{#if stoptime.rt_departure_diff != null}
-										<DelayDiff diff={stoptime.rt_departure_diff} show_seconds={show_seconds} />
-										{/if}
-									{:else}
-										<svg
-											class="inline ml-1 w-3 h-3 translate-y-1"
-											height="24"
-											viewBox="0 -960 960 960"
-											width="24"
-											fill={'white'}
-											><path
-												d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"
-											/></svg
-										>
-									{/if}
-									<div class="ml-auto text-sm">
-										<div class="text-sm text-right">
-											<p class="text-right">
-												<span class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400">{$_('departure')}</span>
-												{#if stoptime.rt_departure_time}
-													<span
-														class={`${stoptime.strike_departure == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
-													>
-														{new Date(
-															(stoptime.scheduled_departure_time_unix_seconds ||
-																stoptime.interpolated_stoptime_unix_seconds) * 1000
-														).toLocaleTimeString('en-UK', {
-															timeZone: stoptime.timezone || trip_data.tz,
-															hour: '2-digit',
-															minute: '2-digit',
-															second: show_seconds ? '2-digit' : undefined
-														})}
-													</span>
-													<span class="text-seashore font-medium">
-														{new Date(stoptime.rt_departure_time * 1000).toLocaleTimeString(
-															'en-UK',
-															{
-																timeZone: stoptime.timezone || trip_data.tz,
-																hour: '2-digit',
-																minute: '2-digit',
-																second: show_seconds ? '2-digit' : undefined
-															}
-														)}
-													</span>
-												{:else}
-													{new Date(
-														(stoptime.scheduled_departure_time_unix_seconds ||
-															stoptime.interpolated_stoptime_unix_seconds) * 1000
-													).toLocaleTimeString('en-UK', {
-														timeZone: stoptime.timezone || trip_data.tz,
-														hour: '2-digit',
-														minute: '2-digit',
-														second: show_seconds ? '2-digit' : undefined
-													})}
-												{/if}
-											</p>
-										</div>
-									</div>
-								</div>
-							{/if}
+						{#if timezones.filter((x) => x != null).length > 1}
+							<p class="text-xs text-gray-900 dark:text-gray-400">
+								{$_('timezone')}: {stoptime.timezone || trip_data.tz}
+							</p>
+						{/if}
 
-							{#if timezones.filter((x) => x != null).length > 1}
-								<p class="text-xs text-gray-900 dark:text-gray-400">
-									{$_('timezone')}: {stoptime.timezone || trip_data.tz}
-								</p>
-							{/if}
+						{#if stoptime.rt_platform_string}
+							<p class="text-xs text-gray-900 dark:text-gray-400">
+								{$_('platform')}: {stoptime.rt_platform_string}
+							</p>
+						{/if}
 
-							{#if stoptime.rt_platform_string}
-								<p class="text-xs text-gray-900 dark:text-gray-400">
-									{$_('platform')}: {stoptime.rt_platform_string}
-								</p>
-							{/if}
-
-							<!--<p class="text-sm">
+						<!--<p class="text-sm">
 									index of stop seq: {stoptime.gtfs_stop_sequence}
 								</p>-->
-						</div>
 					</div>
-				{/if}
-			{/each}
+				</div>
+			{/if}
+		{/each}
 
-			<!--
+		<!--
 			<br/>
 
 			<NativeLands chateau={trip_selected.chateau_id} />
 
 			<br/>-->
-
-			
-		</div>
-	{/if}
-
+	</div>
+{/if}
