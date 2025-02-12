@@ -1171,6 +1171,8 @@
 			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
 			hash: 'pos',
 			pixelRatio: window.devicePixelRatio * 1.4,
+			preserveDrawingBuffer: false,
+			fadeDuration: 100,
 			style: style, // stylesheet location
 			center: centerinit, // starting position [lng, lat]
 			zoom: zoominit // starting zoom (must be greater than 8.1)
