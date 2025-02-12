@@ -67,17 +67,18 @@
 		show_topo = value;
 	})
 
-	let centerinit = [-117.6969, 33.6969];
+	let centerinit: LngLatLike = [-117.6969, 33.6969];
 
 	let zoominit = 9;
-
+	
+	/*
 	const decode = (textToDecode: string) => {
 		try {
 			return new TextDecoder().decode(decodeToAry(textToDecode));
 		} catch (e) {
 			return 'Decode failed: Invalid input';
 		}
-	};
+	};*/
 	init_locales();
 	init_stores();
 	let sidebarOpen: string = 'middle';
@@ -1408,8 +1409,10 @@
 
 	{#key top_margin_collapser_sidebar}
 		<div
-			class="fixed hidden md:flex p-1 flex items-center rounded-r-md bg-white dark:bg-darksky text-black dark:text-white"
-			
+			class="fixed hidden md:flex p-1 items-center rounded-r-md bg-white dark:bg-darksky text-black dark:text-white"
+			role="button"
+			aria-label="Toggle sidebar"
+			tabindex="0"
 			on:click={() => {
 				if (sidebarOpen == 'full') {
 					sidebarOpen = 'none';
