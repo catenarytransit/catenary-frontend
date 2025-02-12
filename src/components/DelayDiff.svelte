@@ -69,7 +69,7 @@
 	locale.subscribe((x) => (this_locale = x));
 
 	$: if (diff) {
-		if (diff < 60) {
+		if (diff <= 60) {
 			textclass = 'text-[0px] text-yellow-600 dark:text-yellow-400 font-semibold';
 		}
 
