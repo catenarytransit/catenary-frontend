@@ -31,6 +31,10 @@
 			if (l.startsWith('ko')) {
 				return '시간';
 			}
+
+			if (l.startsWith('ja')) {
+				return '時間';
+			}
 		}
 
 		return 'h';
@@ -47,6 +51,10 @@
 			if (l.startsWith('ko')) {
 				return '분';
 			}
+
+			if (l.startsWith('ja')) {
+				return '分';
+			}
 		}
 
 		return 'min';
@@ -62,6 +70,10 @@
 			}
 			if (l.startsWith('ko')) {
 				return '초';
+			}
+
+			if (l.startsWith('ja')) {
+				return '秒';
 			}
 		}
 
