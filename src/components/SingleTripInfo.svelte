@@ -676,7 +676,7 @@
 					</p>{/if}
 
 					{#if vehicle_data.occupancy_status != null}
-					<p class="text-xs">{$_("occupancy_status")}:
+					<p class={`text-xs ${ vehicle_data.occupancy_status == 3 ? "text-amber-600 dark:text-amber-400" : ""} ${[4,5,6,8].includes(vehicle_data.occupancy_status)} ? "text-red-600 dark:text-red-500" : ""`}>{$_("occupancy_status")}:
 						
 						{#if  vehicle_data.occupancy_status == 0} 
 							{$_("occupancy_status_empty")}
