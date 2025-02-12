@@ -1467,6 +1467,7 @@
 			aria-label="Layers"
 			on:click={togglelayerfeature}
 			on:keypress={togglelayerfeature}
+			role="button"
 			class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 		>
 			<span
@@ -1480,6 +1481,7 @@
 			on:click={gonorth}
 			on:keypress={gonorth}
 			on:touchstart={gonorth}
+			role="button"
 			aria-label="Reset Map to North"
 			class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
 		>

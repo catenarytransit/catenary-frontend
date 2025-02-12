@@ -501,7 +501,7 @@
 			update_realtime_data();
 
 			update_vehicle_rt();
-		}, 5_000);
+		}, 3_000);
 
 		bigfetchtimeout = setInterval(() => {
 			if (trip_selected) {
