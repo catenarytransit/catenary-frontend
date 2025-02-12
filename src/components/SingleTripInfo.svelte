@@ -664,16 +664,41 @@
 					show_brackets={false}
 					diff={vehicle_data.timestamp - current_time / 1000}
 					/></p>
-
+					{#if vehicle_data.position?.speed != null}
 					<p class="text-xs">{$_("speed")}:
-						{#if vehicle_data.position?.speed != null}
+						
 						{#if usunits}
 							{(vehicle_data.position?.speed * 2.23694 ).toFixed(2) } mph
 						{:else}
 							{(vehicle_data.position?.speed * 3.6).toFixed(2) } km/h
 						{/if}
+						
+					</p>{/if}
+
+					{#if vehicle_data.occupancy_status != null}
+					<p class="text-xs">{$_("occupancy_status")}:
+						
+						{#if  vehicle_data.occupancy_status == 0} 
+							{$_("occupancy_status_empty")}
+						{:else if vehicle_data.occupancy_status == 1}
+							{$_("occupancy_status_many_seats_available")}
+						{:else if vehicle_data.occupancy_status == 2}
+							{$_("occupancy_status_few_seats_available")}
+						{:else if vehicle_data.occupancy_status == 3}
+							{$_("occupancy_status_standing_room_only")}
+						{:else if vehicle_data.occupancy_status == 4}
+							{$_("occupancy_status_crushed_standing_room_only")}
+						{:else if vehicle_data.occupancy_status == 5}
+							{$_("occupancy_status_full")}
+						{:else if vehicle_data.occupancy_status == 6}
+							{$_("occupancy_status_not_accepting_passengers")}
+						{:else if vehicle_data.occupancy_status == 7}
+							{$_("occupancy_status_no_data")}
+						{:else if vehicle_data.occupancy_status == 8}
+							{$_("occupancy_status_not_boardable")}
 						{/if}
-					</p>
+						
+					</p>{/if}
 			</div>
 			{/if}
 

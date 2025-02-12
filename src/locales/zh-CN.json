@@ -101,5 +101,15 @@
 "dark_theme": "暗模式",
 "light_theme": "亮模式",
 "12_hour_clock": "十二小時制",
-"topo": "地形"
+"topo": "地形",
+"occupancy_status": "拥挤状况",
+"occupancy_status_empty": "空",
+"occupancy_status_many_seats_available": "空座充足",
+"occupancy_status_few_seats_available": "空座有限",
+"occupancy_status_standing_room_only": "仅站立",
+"occupancy_status_crushed_standing_room_only": "站立拥挤",
+"occupancy_status_full": "满员",
+"occupancy_status_not_accepting_passengers": "不接客",
+"occupancy_status_no_data_available": "无数据",
+"occupancy_status_not_boardable": "不可上车"
 }

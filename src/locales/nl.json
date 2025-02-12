@@ -103,5 +103,15 @@
 	"dark_theme": "Donker",
 	"light_theme": "Licht",
 	"12_hour_clock": "12-uurs klok",
-	"topo": "Topografie"
+	"topo": "Topografie",
+	"occupancy_status": "drukte status",
+	"occupancy_status_empty": "Leeg",
+	"occupancy_status_many_seats_available": "Veel zitplaatsen beschikbaar",
+	"occupancy_status_few_seats_available": "Weinig zitplaatsen beschikbaar",
+	"occupancy_status_standing_room_only": "Alleen staanplaatsen beschikbaar",
+	"occupancy_status_crushed_standing_room_only": "Alleen staanplaatsen (zeer druk)",
+	"occupancy_status_full": "Vol",
+	"occupancy_status_not_accepting_passengers": "Geen passagiers meer opnemen",
+	"occupancy_status_no_data_available": "Geen gegevens beschikbaar",
+	"occupancy_status_not_boardable": "Niet instapbaar"
 }

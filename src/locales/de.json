@@ -98,5 +98,15 @@
 	"dark_theme": "Dunkel",
 	"light_theme": "Hell",
 	"12_hour_clock": "2-mal-12-Stunden-Zählung",
-	"topo": "Topographie"
+	"topo": "Topographie",
+	"occupancy_status": "Belegungsstatus",
+	"occupancy_status_empty": "Leer",
+	"occupancy_status_many_seats_available": "Viele freie Sitze",
+	"occupancy_status_few_seats_available": "Wenige freie Sitze",
+	"occupancy_status_standing_room_only": "Nur Stehplätze",
+	"occupancy_status_crushed_standing_room_only": "Sehr überfüllter Stehbereich",
+	"occupancy_status_full": "Voll",
+	"occupancy_status_not_accepting_passengers": "Keine Fahrgäste zulassen",
+	"occupancy_status_no_data_available": "Keine Daten verfügbar",
+	"occupancy_status_not_boardable": "Nicht bestiegbar"
 }

@@ -104,6 +104,7 @@
 	"light_theme": "Light",
 	"12_hour_clock": "12-hour clock",
 	"topo": "Topography",
+	"occupancy_status": "Occupancy status",
 	"occupancy_status_empty": "Empty",
 	"occupancy_status_many_seats_available": "Many seats available",
 	"occupancy_status_few_seats_available": "Few seats available",

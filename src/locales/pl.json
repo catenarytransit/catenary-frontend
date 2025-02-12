@@ -103,5 +103,15 @@
 	"dark_theme": "Ciemny",
 	"light_theme": "Jasny",
 	"12_hour_clock": "Zegar 12-godzinny",
-	"topo": "Topografia"
+	"topo": "Topografia",
+	"occupancy_status": "status zatłoczenia",
+	"occupancy_status_empty": "Pusty",
+	"occupancy_status_many_seats_available": "Wiele dostępnych miejsc siedzących",
+	"occupancy_status_few_seats_available": "Niewiele dostępnych miejsc siedzących",
+	"occupancy_status_standing_room_only": "Tylko miejsca do stania",
+	"occupancy_status_crushed_standing_room_only": "Skrajnie zatłoczony, tylko miejsca do stania",
+	"occupancy_status_full": "Pełny",
+	"occupancy_status_not_accepting_passengers": "Nie przyjmuje pasażerów",
+	"occupancy_status_no_data_available": "Brak dostępnych danych",
+	"occupancy_status_not_boardable": "Nie nadaje się do wejścia"
 }

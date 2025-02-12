@@ -103,5 +103,15 @@
 	"dark_theme": "ダーク",
 	"light_theme": "ライト",
 	"12_hour_clock": "12時間制",
-	"topo": "地形"
+	"topo": "地形",
+	"occupancy_status": "混雑度:",
+	"occupancy_status_empty": "空",
+	"occupancy_status_many_seats_available": "座席多数利用可能",
+	"occupancy_status_few_seats_available": "座席わずか利用可能",
+	"occupancy_status_standing_room_only": "立ちのみ",
+	"occupancy_status_crushed_standing_room_only": "極混み（立ちのみ）",
+	"occupancy_status_full": "満室",
+	"occupancy_status_not_accepting_passengers": "乗客受付停止",
+	"occupancy_status_no_data_available": "データなし",
+	"occupancy_status_not_boardable": "乗車不可"
 }

@@ -103,5 +103,15 @@
 	"dark_theme": "Dorcha",
 	"light_theme": "Geal",
 	"12_hour_clock": "Uaireadóir 12 uair",
-	"topo": "Tóipheagrafaíocht"
+	"topo": "Tóipheagrafaíocht",
+	"occupancy_status": "Stádas Líonraíochta",
+	"occupancy_status_empty": "Folamh",
+	"occupancy_status_many_seats_available": "Go leor suíochán ar fáil",
+	"occupancy_status_few_seats_available": "Beag suíochán ar fáil",
+	"occupancy_status_standing_room_only": "Níl ach spás seasamh ar fáil",
+	"occupancy_status_crushed_standing_room_only": "Seasamh brúite amháin",
+	"occupancy_status_full": "Lán",
+	"occupancy_status_not_accepting_passengers": "Níl pasáistí á nglacadh",
+	"occupancy_status_no_data_available": "Níl aon sonraí ar fáil",
+	"occupancy_status_not_boardable": "Ní féidir dul ar bord"
 }

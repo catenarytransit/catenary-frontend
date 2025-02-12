@@ -103,5 +103,15 @@
 	"dark_theme": "Scuro",
 	"light_theme": "Chiaro",
 	"12_hour_clock": "Orologio a 12 ore",
-	"topo": "Topografia"
+	"topo": "Topografia",
+	"occupancy_status": "Stato di occupazione",
+	"occupancy_status_empty": "Vuoto",
+	"occupancy_status_many_seats_available": "Molti posti disponibili",
+	"occupancy_status_few_seats_available": "Pochi posti disponibili",
+	"occupancy_status_standing_room_only": "Solo in piedi",
+	"occupancy_status_crushed_standing_room_only": "Solo in piedi, ammassato",
+	"occupancy_status_full": "Pieno",
+	"occupancy_status_not_accepting_passengers": "Non accetta passeggeri",
+	"occupancy_status_no_data_available": "Nessun dato disponibile",
+	"occupancy_status_not_boardable": "Non imbarcabile"
 }
