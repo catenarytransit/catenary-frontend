@@ -69,6 +69,13 @@
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 	import NativeLands from './NativeLands.svelte';
 
+	function fix_vehicle_number(chateau_id: string, vehicle_id: string) {
+		if (chateau_id == "translink-queensland-au") {
+			return vehicle_id.split('_')[1];
+		} else {
+return vehicle_id;		}
+	}
+
 	let show_seconds = get(show_seconds_store);
 
 	show_seconds_store.subscribe((value) => {
@@ -602,7 +609,10 @@
 				text_color={trip_data.text_color}
 				route_id={trip_data.route_id}
 				chateau_id={trip_selected.chateau_id}
-				vehicle={trip_data.vehicle?.label || trip_data.vehicle?.id}
+				vehicle={fix_vehicle_number(
+				trip_selected.chateau_id,
+				(trip_data.vehicle?.label || trip_data.vehicle?.id
+				))}
 				arrow={true}
 				text={fixHeadsignText(
 					trip_data.trip_headsign,
