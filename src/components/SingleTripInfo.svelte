@@ -95,9 +95,9 @@
 	async function update_vehicle_rt() {
 		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
 		if (trip_data) {
-			if (trip_data.vehicle?.label || trip_data.vehicle?.id) {
+			if (trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id) {
 			let url = new URL(
-				`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id}`
+				`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id}`
 			);
 
 			await fetch(url.toString()).then(async (response) => {
