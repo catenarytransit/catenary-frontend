@@ -20,7 +20,7 @@
     {
       "id": "background",
       "type": "background",
-      "paint": {"background-color": "#f5f3f4"}
+      "paint": {"background-color": "#f8f4f0"}
     },
     {
       "id": "landcover-land",
@@ -50,15 +50,42 @@
       }
     },
     {
+      "id": "landcover-moss-wetland-mangroves",
+      "type": "fill",
+      "source": "esa-worldcover-polygons",
+      "source-layer": "globallandcover",
+      "minzoom": 0,
+      "filter": [
+        "any",
+        ["==", "class", "moss"],
+        ["==", "class", "wetland"],
+        ["==", "class", "mangroves"]
+      ],
+      "paint": {
+        "fill-color": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          0,
+          "#d2f8e0",
+          8,
+          "#d2f8e0",
+          11,
+          "#d2f8e0"
+        ],
+        "fill-opacity": {"stops": [[6, 1], [9, 0.4]]}
+      }
+    },
+    {
       "id": "landcover_wetland",
       "type": "fill",
       "source": "openmaptiles",
       "source-layer": "landcover",
-      "minzoom": 12,
+      "minzoom": 9,
       "filter": ["==", ["get", "class"], "wetland"],
       "paint": {
         "fill-antialias": true,
-        "fill-opacity": 0.8,
+        "fill-opacity": 1,
         "fill-pattern": "mbicons:wetland",
         "fill-translate-anchor": "map"
       }
@@ -266,31 +293,6 @@
       }
     },
     {
-      "id": "landcover-moss-wetland-mangroves",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "filter": [
-        "any",
-        ["==", "class", "moss"],
-        ["==", "class", "wetland"],
-        ["==", "class", "mangroves"]
-      ],
-      "paint": {
-        "fill-color": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          0,
-          "#CCD0CB",
-          8,
-          "#CCD0CB",
-          11,
-          "#F5F0E5"
-        ]
-      }
-    },
-    {
       "id": "landcover-moss-wetland-mangroves-outline",
       "type": "line",
       "source": "esa-worldcover-polygons",
@@ -379,6 +381,14 @@
       "paint": {"fill-color": "#f0e6d1"}
     },
     {
+      "id": "landuse_pitch",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "landuse",
+      "filter": ["==", ["get", "class"], "pitch"],
+      "paint": {"fill-color": "#90a764"}
+    },
+    {
       "id": "landuse_track",
       "type": "fill",
       "source": "openmaptiles",
@@ -414,14 +424,6 @@
         "fill-color": "rgba(176, 213, 154, 1)",
         "fill-opacity": 0.5
       }
-    },
-    {
-      "id": "landuse_pitch",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "filter": ["==", ["get", "class"], "pitch"],
-      "paint": {"fill-color": "#90a764"}
     },
     {
       "id": "waterway_tunnel",
@@ -514,6 +516,7 @@
         true,
         false
       ],
+      "layout": {"visibility": "visible"},
       "paint": {"fill-color": "#D7E3ED", "fill-opacity": 0.7}
     },
     {
@@ -534,19 +537,15 @@
         ["==", ["get", "class"], "runway"]
       ],
       "paint": {
-        "line-color": "#c1ced9",
+        "line-color": "#f0ede9",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
           ["zoom"],
           11,
           3,
-          15,
-          10,
-          16,
           20,
-          20,
-          100
+          16
         ]
       }
     },
@@ -568,19 +567,15 @@
         ["==", ["get", "class"], "taxiway"]
       ],
       "paint": {
-        "line-color": "#c4d5df",
+        "line-color": "#f0ede9",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
           ["zoom"],
           11,
           0.5,
-          14,
-          3,
-          16,
           20,
-          20,
-          50
+          6
         ]
       }
     },
@@ -798,7 +793,7 @@
         ["match", ["get", "class"], ["path", "pedestrian"], true, false]
       ],
       "paint": {
-        "line-color": "#031c00",
+        "line-color": "hsl(0,0%,100%)",
         "line-dasharray": [1, 0.75],
         "line-width": [
           "interpolate",
@@ -1102,7 +1097,7 @@
       }
     },
     {
-      "id": "pedestrian_area_pattern",
+      "id": "road_area_pattern",
       "type": "fill",
       "source": "openmaptiles",
       "source-layer": "transportation",
@@ -1115,7 +1110,7 @@
       ],
       "paint": {
         "fill-pattern": "mbicons:pedestrian-polygon",
-        "fill-antialias": true,
+        "fill-antialias": false,
         "fill-opacity": 1
       }
     },
@@ -2315,6 +2310,7 @@
         ["!=", ["get", "disputed"], 1],
         ["!", ["has", "claimed_by"]]
       ],
+      "layout": {"visibility": "visible"},
       "paint": {
         "line-color": "rgba(94, 94, 94, 1)",
         "line-dasharray": [1, 1],
@@ -2334,7 +2330,11 @@
         ["!=", ["get", "disputed"], 1],
         ["!", ["has", "claimed_by"]]
       ],
-      "layout": {"line-cap": "round", "line-join": "round"},
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
       "paint": {
         "line-color": "hsl(248,1%,41%)",
         "line-opacity": ["interpolate", ["linear"], ["zoom"], 0, 0.4, 4, 1],
@@ -2351,6 +2351,7 @@
         ["!=", ["get", "maritime"], 1],
         ["==", ["get", "disputed"], 1]
       ],
+      "layout": {"visibility": "visible"},
       "paint": {
         "line-color": "hsl(248,1%,41%)",
         "line-dasharray": [1, 2],
@@ -2491,7 +2492,7 @@
         "text-field": [
           "case",
           ["has", "name:nonlatin"],
-          ["get", "name"],
+          ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
         "text-font": ["Noto Sans Italic"],
@@ -2551,7 +2552,7 @@
         "text-field": [
           "case",
           ["has", "name:nonlatin"],
-          ["get", "name"],
+          ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
         "text-font": ["Noto Sans Italic"],
@@ -2610,7 +2611,7 @@
         "text-field": [
           "case",
           ["has", "name:nonlatin"],
-          ["get", "name"],
+          ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
         "text-font": ["Noto Sans Italic"],
@@ -2748,7 +2749,7 @@
         "text-field": [
           "case",
           ["has", "name:nonlatin"],
-          ["get", "name"],
+          ["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
         "text-font": ["Noto Sans Regular"],
@@ -2880,7 +2881,7 @@
       "minzoom": 10,
       "filter": ["all", ["has", "iata"]],
       "layout": {
-        "icon-image": "mbicons:airport",
+        "icon-image": "mbicons:airport_circle",
         "icon-size": 1,
         "text-anchor": "top",
         "text-field": [
@@ -2920,7 +2921,7 @@
         "text-field": [
           "case",
           ["has", "name:nonlatin"],
-          ["get", "name"],
+          ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
         "text-font": ["Noto Sans Italic"],
