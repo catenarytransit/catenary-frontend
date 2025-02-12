@@ -29,6 +29,10 @@
 			if (l.startsWith('ko')) {
 				return '시간';
 			}
+
+			if (l.startsWith('ja')) {
+				return '時間';
+			}
 		}
 
 		return 'h';
@@ -45,6 +49,10 @@
 			if (l.startsWith('ko')) {
 				return '분';
 			}
+
+			if (l.startsWith('ja')) {
+				return '分';
+			}
 		}
 
 		return 'min';
@@ -60,6 +68,10 @@
 			}
 			if (l.startsWith('ko')) {
 				return '초';
+			}
+
+			if (l.startsWith('ja')) {
+				return '秒';
 			}
 		}
 
@@ -88,12 +100,12 @@
 
 <span class={textclass}>
 	<span>
-		{#if diff < -20}<span class="text-sm">{$_('early')}</span>
-		{/if}{#if diff > 20}<span class="text-sm">{$_('late')}</span>
-		{/if}{#if diff >= -20 && diff <= 20}<span class="text-sm font-semibold text-[#58A738]"
+		{#if diff < -20}<span class="text-xs">{$_('early')}</span>
+		{/if}{#if diff > 20}<span class="text-xs">{$_('late')}</span>
+		{/if}{#if diff >= -20 && diff <= 20}<span class="text-xs font-semibold text-[#58A738]"
 				>{$_('ontime')}</span
 			>{/if}
-		<span class="text-sm"> &nbsp; </span>
+		<span class="text-xs">&nbsp;</span>
 	</span>
 
 	{#if diff < -20 || diff > 20}
