@@ -9,7 +9,8 @@ async function make_fire_names(map: maplibregl.Map) {
 
 	
 	const darkMode = determineDarkModeToBool();
-
+	
+	/*
 	map.addLayer({
 		'id': 'firenameslabel',
 		'type': 'symbol',
@@ -29,7 +30,7 @@ async function make_fire_names(map: maplibregl.Map) {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
 		},
 		minzoom: 6,
-	});
+	});*/
 
 	map.addLayer({
 		'id': 'firenameslabelwd',
@@ -74,7 +75,7 @@ function generateArrayInFormat(key: string, array: string[]) {
 
 
 export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<string[]>) {
-	console.log('load wildfire data');
+	//console.log('load wildfire data');
 
 	const darkMode = determineDarkModeToBool();
 
@@ -90,7 +91,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const los_angeles_fire_evac = 'https://fireboundscache.catenarymaps.org/data/los_angeles_evac.json';
 
-	const firenamesurl = 'https://fireboundscache.catenarymaps.org/manual_data/firenames.json';
+	const firenamesmanual_url = 'https://fireboundscache.catenarymaps.org/manual_data/firenames.json';
 
 	const fire_evac_manual = 'https://fireboundscache.catenarymaps.org/manual_data/evac.json';
 
@@ -129,13 +130,13 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		.then((cleaned_data: any) => {
 			//combine all evacuation_orders_arr in every object in the array into a single array
 
-			console.log('refreshing evac sources from watchduty')
+			//console.log('refreshing evac sources from watchduty')
 
 			let combined_evacuation_orders_arr = cleaned_data.map((fire) => fire.evacuation_orders_arr).flat().filter((x) => typeof x === 'string');
 
 			let combined_evacuation_warnings_arr = cleaned_data.map((fire) => fire.evacuation_warnings_arr).flat().filter((x) => typeof x === 'string');
 
-			console.log('set evac to ',  generateArrayInFormat("zone_name", combined_evacuation_orders_arr))
+			//console.log('set evac to ',  generateArrayInFormat("zone_name", combined_evacuation_orders_arr))
 
 			map.setFilter('zones-fill-watchduty-go', generateArrayInFormat("zone_name", combined_evacuation_orders_arr));
 			map.setFilter('zones-fill-watchduty-warning', generateArrayInFormat("zone_name", combined_evacuation_warnings_arr));
@@ -158,7 +159,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			}
 			);
 
-			console.log('fire points', fires_points)
+			//console.log('fire points', fires_points)
 
 			map.getSource('firenames_wd').setData({
 				"type": "FeatureCollection",
@@ -230,11 +231,12 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		data: viirs_mw_url
 	})
 
+	/*
 
 	map.addSource('firenames', {
 		type: 'geojson',
-		data: firenamesurl
-	})
+		data: firenamesmanual_url
+	})*/
 
 	map.addSource('firenames_wd', {
 		type: 'geojson',
@@ -244,10 +246,11 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		}
 	})
 
+	/*
 	map.addSource('fire_evac_manual', {
 		type: 'geojson',
 		data: fire_evac_manual
-	})
+	})*/
 
 	make_fire_names(map);
 
@@ -274,7 +277,7 @@ refresh_watchduty_evacs();
 
 		fetch_and_update_layer('los_angeles_city_fire_evac', los_angeles_fire_evac);
 
-		fetch_and_update_layer('firenames', firenamesurl);
+	//	fetch_and_update_layer('firenames', firenamesmanual_url);
 
 		fetch_and_update_layer('fire_evac_manual', fire_evac_manual);
 
