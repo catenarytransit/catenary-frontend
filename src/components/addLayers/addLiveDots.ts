@@ -150,13 +150,13 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 				  [
 					6,
 					[
-					  "Barlow Medium"
+					  "Barlow-Medium"
 					]
 				  ],
 				  [
 					10,
 					[
-					  "Barlow SemiBold"
+					  "Barlow-SemiBold"
 					]
 				  ]
 				]
@@ -250,9 +250,9 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-font': [
 				'step',
 				['zoom'],
-				['literal', ['Barlow Regular']],
+				['literal', ['Barlow-Regular']],
 				9,
-				['literal', ['Barlow Bold']]
+				['literal', ['Barlow-Bold']]
 			],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8.5, 11, 13, 13, 16],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]

@@ -624,7 +624,7 @@
 										</span>
 
 										<p
-											class="font-medium text-sm leading-none md:leading-tight"
+											class="font-medium text-sm leading-none"
 											style:color={trip.departure_realtime ? '#42a7c5' : ''}
 										>
 											{new Intl.DateTimeFormat('en-GB', {
@@ -643,10 +643,12 @@
 										{/if}
 
 										{#if trip.departure_realtime != null && trip.departure_schedule != null}
-											<DelayDiff
+											<p class="leading-none">
+												<DelayDiff
 												show_seconds={false}
 												diff={trip.departure_realtime - trip.departure_schedule}
 											/>
+											</p>
 										{/if}
 
 										{#if trip.platform}

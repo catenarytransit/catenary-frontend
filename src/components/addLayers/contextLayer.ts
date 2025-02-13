@@ -83,7 +83,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			//'text-field': ['coalesce', ['get', 'route_label']],
 			'text-field': ['get', 'route_label'],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-font': ['literal', ['Open Sans Regular', 'Arial Unicode MS Regular']],
+			'text-font': ['literal', ['Barlow Regular']],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 5, 9, 9, 10, 11, 12, 13, 15],
 			'text-ignore-placement': false,
 			'text-allow-overlap': false,

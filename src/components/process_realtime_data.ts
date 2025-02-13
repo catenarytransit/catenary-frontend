@@ -402,6 +402,32 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						}
 					}
 
+					let crowd_symbol = "";
+
+					if (vehicle_data.occupancy_status == 0) {
+						crowd_symbol = "∅";
+					}
+
+					if (vehicle_data.occupancy_status == 1) {
+						crowd_symbol = "▢";
+					}
+
+					if (vehicle_data.occupancy_status == 2) {
+						crowd_symbol = "▣";
+					}
+
+					if (vehicle_data.occupancy_status == 3) {
+						crowd_symbol = "▦";
+					}
+
+					if (vehicle_data.occupancy_status == 4) {
+						crowd_symbol = "☹";
+					}
+
+					if (vehicle_data.occupancy_status == 5) {
+						crowd_symbol = "█ ";
+					}
+
 					return {
 						type: 'Feature',
 						properties: {
@@ -437,7 +463,9 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							text_color: text_colour,
 							trip_id: vehicle_data.trip?.trip_id,
 							start_time: vehicle_data.trip?.start_time,
-							start_date: vehicle_data.trip?.start_date
+							start_date: vehicle_data.trip?.start_date,
+							crowd_symbol: crowd_symbol,
+							occupancy_status: vehicle_data.occupancy_status
 						},
 						geometry: {
 							type: 'Point',

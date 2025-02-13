@@ -73,7 +73,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium']
+			'text-font': ['Barlow-Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
