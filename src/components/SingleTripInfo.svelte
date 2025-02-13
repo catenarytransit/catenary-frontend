@@ -771,9 +771,9 @@
 					<div class="mr-3 md:mr-4"></div>
 
 					<div
-						class={`w-full py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ''}`}
+						class={`w-full py-1 sm:py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ''}`}
 					>
-						<p class=" text-base">
+						<p class="text-sm sm:text-base">
 							<span
 								class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 								>{fixStationName(stoptime.name)}</span
