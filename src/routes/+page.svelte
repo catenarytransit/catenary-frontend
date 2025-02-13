@@ -660,7 +660,8 @@
 		}
 	}
 
-	let get_layers_from_local = localStorage.getItem(layersettingsnamestorage);
+	if (typeof window != 'undefined') {
+		let get_layers_from_local = localStorage.getItem(layersettingsnamestorage);
 
 if (get_layers_from_local) {
 	let parsed = JSON.parse(get_layers_from_local);
@@ -671,20 +672,8 @@ if (get_layers_from_local) {
 		runSettingsAdapt();
 	}
 }
-
-	if (typeof window != 'undefined') {
-		let fetchitem =
-			(embedmode && urlParams.get('framework-layers')
-				? atob(urlParams.get('framework-layers') as string)
-				: null) || localStorage.getItem(layersettingsnamestorage);
-		if (fetchitem != null) {
-			let cachedJsonObject = JSON.parse(fetchitem);
-
-			if (cachedJsonObject != null) {
-				layersettings = cachedJsonObject;
-			}
-		}
 	}
+
 
 	function getSidebarOpenPercentage() {
 		if (window.innerWidth >= 640) {
