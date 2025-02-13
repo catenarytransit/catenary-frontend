@@ -19,6 +19,20 @@ const geobearingiconsize = [
 	0.5
 ];
 
+const geobearingoffset = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	9,
+	['literal', [0, -80]],
+	13,
+	['literal', [0, -60]],
+	15,
+	['literal', [0, -60]],
+	17,
+	['literal', [0, -50]]
+];
+
 export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: boolean, layerspercategory: any) {
 	// const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.18, 10.5, 0.25, 12, 0.47, 15, 1];
 
@@ -51,19 +65,7 @@ export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: bo
 	//usergeo
 
 
-	const geobearingoffset = [
-		'interpolate',
-		['linear'],
-		['zoom'],
-		9,
-		['literal', [0, -80]],
-		13,
-		['literal', [0, -60]],
-		15,
-		['literal', [0, -60]],
-		17,
-		['literal', [0, -50]]
-	];
+	
 	
 
 	map.addLayer({

@@ -1161,11 +1161,15 @@ if (get_layers_from_local) {
 
 				if (chateaus_source) {
 					chateaus_source.setData(json);
+				} else {
+					console.log('source doesn\'t exist')
 				}
 
 				chateaus_store.set(json);
 			})
 			.catch((err) => console.error(err));
+
+
 
 		const map = new maplibregl.Map({
 			container: 'map',

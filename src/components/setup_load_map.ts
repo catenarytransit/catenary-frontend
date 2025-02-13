@@ -76,10 +76,58 @@ export async function setup_load_map(
 		}
 
 		const chateauData = get(chateaus_store);
-		map.addSource('chateaus', { type: 'geojson', data: chateauData || emptyGeoJSON });
+		map.addSource('chateaus', { type: 'geojson',
+			 data: chateauData || emptyGeoJSON });
 
 		[...RAIL_SHAPES, ...STOP_SOURCES].forEach(({ id, url }) => {
 			map.addSource(id, { type: 'vector', url });
+		});
+
+		if (get(chateaus_store) !== null) {
+			map.getSource('chateaus').setData(get(chateaus_store));
+		}
+
+		map.addLayer({
+			id: 'chateaus_calc',
+			type: 'fill',
+			source: 'chateaus',
+			paint: {
+				'fill-color': '#ffffff',
+				'fill-opacity': 0
+			}
+		});
+
+
+		map.addSource('buses', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: []
+			}
+		});
+
+		map.addSource('localrail', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: []
+			}
+		});
+
+		map.addSource('intercityrail', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: []
+			}
+		});
+
+		map.addSource('other', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: []
+			}
 		});
 
 		RASTER_SOURCES.forEach(({ id, url }) => {
@@ -90,7 +138,8 @@ export async function setup_load_map(
 			});
 		});
 
-		makeFireMap(map, chateaus_in_frame);
+		//makeFireMap(map, chateaus_in_frame);
+		console.log('setup load map start')
 		addShapes(map, darkMode, layerspercategory);
 		addStopsLayers(map, darkMode, layerspercategory);
 		makeContextLayerDataset(map);
@@ -166,8 +215,9 @@ function addStationLayers(map: maplibregl.Map, layerspercategory: any, darkMode:
 			'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
 			'icon-ignore-placement': false,
 			'icon-allow-overlap': true,
-			minzoom: minZoom
-		}
+		},
+		
+		minzoom: minZoom
 	}, layerspercategory.bus.stops);
 
 	map.addLayer({
@@ -183,13 +233,14 @@ function addStationLayers(map: maplibregl.Map, layerspercategory: any, darkMode:
 			'text-radial-offset': 1,
 			'text-allow-overlap': true,
 			'text-font': ['Barlow-Bold'],
-			minzoom: window.innerWidth >= 1023 ? 17.5 : 17
 		},
 		paint: {
 			'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
 			'text-halo-width': darkMode ? 0.4 : 0.2
-		}
+		},
+		
+		minzoom: window.innerWidth >= 1023 ? 17.5 : 17
 	}, layerspercategory.bus.stops);
 }
 

@@ -455,8 +455,12 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 //	console.log('rerendering', category, 'with', features);
 
-	source.setData({
-		type: 'FeatureCollection',
-		features: features
-	});
+	if (source) {
+		source.setData({
+			type: 'FeatureCollection',
+			features: features
+		});
+	} else {
+		console.error('no source for', source_name);
+	}
 }
