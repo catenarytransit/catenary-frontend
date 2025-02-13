@@ -136,6 +136,14 @@ export async function setup_load_map(
 
 		recompute_map_padding();
 		runSettingsAdapt();
+
+		setTimeout(() => {
+			runSettingsAdapt();
+		}, 500);
+
+		setTimeout(() => {
+			runSettingsAdapt();
+		}, 1000);
 	});
 
 	map.on('remove', () => {

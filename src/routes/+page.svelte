@@ -660,6 +660,18 @@
 		}
 	}
 
+	let get_layers_from_local = localStorage.getItem(layersettingsnamestorage);
+
+if (get_layers_from_local) {
+	let parsed = JSON.parse(get_layers_from_local);
+
+	if (parsed) {
+		layersettings = parsed;
+
+		runSettingsAdapt();
+	}
+}
+
 	if (typeof window != 'undefined') {
 		let fetchitem =
 			(embedmode && urlParams.get('framework-layers')
