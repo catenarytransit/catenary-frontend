@@ -342,7 +342,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
             ],*/
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
-			'text-font': ['literal', ['Barlow Medium']],
+			'text-font': ['literal', ['Barlow-Medium']],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 7, 10, 9, 11, 11, 13, 12],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
@@ -430,7 +430,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
             ],*/
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-radial-offset': 0,
-			'text-font': ['literal', ['Barlow Medium']],
+			'text-font': ['literal', ['Barlow-Medium']],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 8, 11, 14, 13, 15],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},

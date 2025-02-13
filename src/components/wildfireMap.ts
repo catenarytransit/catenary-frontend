@@ -22,7 +22,7 @@ async function make_fire_names(map: maplibregl.Map) {
 			'text-offset': [0, 1],
 			'text-anchor': 'top',
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 6, 12, 14],
-			'text-font': ['Barlow Medium'],
+			'text-font': ['Barlow-Medium'],
 			'text-ignore-placement': true,
 			"icon-ignore-placement": true
 		},
@@ -43,7 +43,7 @@ async function make_fire_names(map: maplibregl.Map) {
 			'text-offset': [0, 1],
 			'text-anchor': 'top',
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 6, 12, 14],
-			'text-font': ['Barlow Medium'],
+			'text-font': ['Barlow-Medium'],
 			'text-ignore-placement': true,
 			"icon-ignore-placement": true
 			
@@ -591,7 +591,7 @@ refresh_watchduty_evacs();
 		layout: {
 			'text-field': ['concat', ['get', 'attr_IncidentName'], ' FIRE'],
 			'text-size': 10,
-			'text-font': ['Barlow Medium']
+			'text-font': ['Barlow-Medium']
 		},
 		minzoom: 5
 	});
@@ -615,7 +615,7 @@ refresh_watchduty_evacs();
 				9,
 				13
 			  ],
-			'text-font': ['Barlow Bold']
+			'text-font': ['Barlow-Bold']
 		},
 		minzoom: 6
 	});*/
@@ -645,7 +645,7 @@ refresh_watchduty_evacs();
 				9,
 				12.5
 			  ],
-			'text-font': ['Barlow Bold']
+			'text-font': ['Barlow-Bold']
 		},
 		minzoom: 6
 	});
@@ -666,7 +666,7 @@ refresh_watchduty_evacs();
 				12,
 				10
 			  ],
-			'text-font': ['Barlow Bold']
+			'text-font': ['Barlow-Bold']
 		},
 		paint: {
 			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
@@ -690,7 +690,7 @@ refresh_watchduty_evacs();
 				12,
 				13
 			  ],
-			'text-font': ['Barlow Bold']
+			'text-font': ['Barlow-Bold']
 		},
 		paint: {
 			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
@@ -723,7 +723,7 @@ refresh_watchduty_evacs();
 				9,
 				13
 			  ],
-			'text-font': ['Barlow Bold']
+			'text-font': ['Barlow-Bold']
 		},
 		minzoom: 6
 	});

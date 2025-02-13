@@ -128,7 +128,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium']
+			'text-font': ['Barlow-Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -200,7 +200,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow Medium']
+			'text-font': ['Barlow-Medium']
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -270,7 +270,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['literal', ['Barlow Medium']]
+			'text-font': ['literal', ['Barlow-Medium']]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -321,7 +321,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['literal', ['Barlow Bold']]
+			'text-font': ['literal', ['Barlow-Bold']]
 		},
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
