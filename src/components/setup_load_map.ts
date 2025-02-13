@@ -83,11 +83,11 @@ export async function setup_load_map(
 		});
 
 		RASTER_SOURCES.forEach(({ id, url }) => {
-			map.addSource(id, {
-				type: 'raster',
-				tiles: [`https:
-				tileSize: 256
-			});
+		  map.addSource(id, {
+		    type: 'raster',
+		    tiles: [`https://{switch:a,b,c}.foamertiles.com/tiles/${url}/{z}/{x}/{y}.png`],
+		    tileSize: 256
+		  });
 		});
 
 		makeFireMap(map, chateaus_in_frame);
