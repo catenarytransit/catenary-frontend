@@ -17,7 +17,7 @@
 
 	const offbutton = '';
 
-	const TIME_CUTOFF = 43200;
+	const TIME_CUTOFF = 64800;
 	const TIME_PREVIOUS_CUTOFF = 10 * 60;
 
 	function sort_directions_group(x: any): [[string, any]] {
