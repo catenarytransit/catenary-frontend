@@ -21,6 +21,7 @@ import {calculateGamma} from './colour/computeBrightness';
 import { fixHeadsignText, fixRouteName } from './agencyspecific';
 import { adjustGamma } from './colour/readjustGamma';
 import { determineDarkModeToBool } from './determineDarkModeToBool';
+import { occupancy_to_symbol } from './occupancy_to_symbol';
 function category_name_to_source_name(category: string): string {
 	switch (category) {
 		case 'bus':
@@ -402,31 +403,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						}
 					}
 
-					let crowd_symbol = "";
-
-					if (vehicle_data.occupancy_status == 0) {
-						crowd_symbol = "∅";
-					}
-
-					if (vehicle_data.occupancy_status == 1) {
-						crowd_symbol = "▢";
-					}
-
-					if (vehicle_data.occupancy_status == 2) {
-						crowd_symbol = "▣";
-					}
-
-					if (vehicle_data.occupancy_status == 3) {
-						crowd_symbol = "▦";
-					}
-
-					if (vehicle_data.occupancy_status == 4) {
-						crowd_symbol = "☹";
-					}
-
-					if (vehicle_data.occupancy_status == 5) {
-						crowd_symbol = "█ ";
-					}
+					let crowd_symbol = occupancy_to_symbol(vehicle_data.occupancy_status);
 
 					return {
 						type: 'Feature',

@@ -66,6 +66,7 @@
 	import { hexToRgb } from '../utils/colour';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 	import NativeLands from './NativeLands.svelte';
+	import { occupancy_to_symbol } from './occupancy_to_symbol';
 
 	function fix_vehicle_number(chateau_id: string, vehicle_id: string) {
 		if (chateau_id == 'translink-queensland-au') {
@@ -685,7 +686,7 @@
 						class={`text-xs ${vehicle_data.occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_data.occupancy_status)} ? "text-red-600 dark:text-red-500" : ""`}
 					>
 						{$_('occupancy_status')}:
-
+						<span class="rounded-full px-0.5 py-0.5">{occupancy_to_symbol(vehicle_data.occupancy_status)}</span>
 						{#if vehicle_data.occupancy_status == 0}
 							{$_('occupancy_status_empty')}
 						{:else if vehicle_data.occupancy_status == 1}

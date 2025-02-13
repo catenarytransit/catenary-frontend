@@ -20,6 +20,8 @@ export function interpretLabelsToCode(label: any, usunits: boolean) {
 		arrayofinfo.push(['get', 'headsign']);
 	}
 
+	arrayofinfo.push(['get', 'crowd_symbol']);
+
 	if (label.speed) {
 		//round to 0.1 place
 		let unitmultiplier = 36;

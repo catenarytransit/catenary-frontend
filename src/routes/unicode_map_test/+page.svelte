@@ -10,7 +10,7 @@
           container: 'map',
          
 		  pixelRatio: window.devicePixelRatio * 1.4,
-          style: '/light-style-glyph-test.json', // stylesheet location
+          style: '/dark-style.json', // stylesheet location
           center: [-117.8427,33.646], // starting position [lng, lat]
           zoom: 14 // starting zoom
         });
@@ -43,6 +43,11 @@
             'text-field': '𔐃𔐈𔐀𔐄𔙆f🐟f▦✺╬∅█☹',
             'text-font': ['NotoSans-Regular'],
             
+          },
+          paint: {
+            'text-color': 'white',
+            'text-halo-color': 'black',
+            'text-halo-width': 1
           }
         })
 
