@@ -97,37 +97,11 @@ export async function setup_load_map(
 			}
 		});
 
-
-		map.addSource('buses', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		map.addSource('localrail', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		map.addSource('intercityrail', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		map.addSource('other', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
+		["buses", "localrail", "intercityrail", "other"].forEach(category => {
+			map.addSource(category, {
+				type: 'geojson',
+				data: emptyGeoJSON
+			});
 		});
 
 		RASTER_SOURCES.forEach(({ id, url }) => {
