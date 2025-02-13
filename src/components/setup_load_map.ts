@@ -24,6 +24,28 @@ import { makeGpsLayer } from './makeGpsLayer';
 import { makeContextLayerDataset } from './addLayers/contextLayer';
 import { start_location_watch, update_geolocation_source } from '../user_location_lib';
 
+const RASTER_SOURCES = [
+	{ id: 'foamertiles', url: 'standard' },
+	{ id: 'maxspeedtiles', url: 'maxspeed' },
+	{ id: 'signallingtiles', url: 'signals' },
+	{ id: 'electrificationtiles', url: 'electrification' },
+	{ id: 'gaugetiles', url: 'gauge' }
+];
+
+const RAIL_SHAPES = [
+	{ id: 'intercityrailshapes', url: 'https://birch1.catenarymaps.org/shapes_intercity_rail' },
+	{ id: 'localcityrailshapes', url: 'https://birch2.catenarymaps.org/shapes_local_rail' },
+	{ id: 'othershapes', url: 'https://birch3.catenarymaps.org/shapes_ferry' },
+	{ id: 'busshapes', url: 'https://birch4.catenarymaps.org/shapes_bus' }
+];
+
+const STOP_SOURCES = [
+	{ id: 'busstops', url: 'https://birch6.catenarymaps.org/busstops' },
+	{ id: 'stationfeatures', url: 'https://birch7.catenarymaps.org/station_features' },
+	{ id: 'railstops', url: 'https://birch5.catenarymaps.org/railstops' },
+	{ id: 'otherstops', url: 'https://birch8.catenarymaps.org/otherstops' }
+];
+
 export async function setup_load_map(
 	map: maplibregl.Map,
 	runSettingsAdapt: () => void,
@@ -35,13 +57,17 @@ export async function setup_load_map(
 	pending_chateau_rt_request: Record<string, number>,
 	recompute_map_padding: () => void
 ) {
+	let updateInterval: NodeJS.Timeout;
+	const minZoomThreshold = window.innerWidth >= 1023 ? 14 : 15;
+
 	map.on('load', async () => {
+
 		recompute_map_padding();
 		clearbottomright();
 
-		addGeoRadius(map);
-		makeGpsLayer(map);
-		// Add new sources and layers
+		const emptyGeoJSON = { type: 'FeatureCollection', features: [] };
+
+		[addGeoRadius, makeGpsLayer].forEach(fn => fn(map));
 		update_geolocation_source();
 
 		if (localStorage.getItem('showzombiebuses') === 'true') {
@@ -49,372 +75,47 @@ export async function setup_load_map(
 			runSettingsAdapt();
 		}
 
-		map.addSource('chateaus', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
+		const chateauData = get(chateaus_store);
+		map.addSource('chateaus', { type: 'geojson', data: chateauData || emptyGeoJSON });
+
+		[...RAIL_SHAPES, ...STOP_SOURCES].forEach(({ id, url }) => {
+			map.addSource(id, { type: 'vector', url });
 		});
 
-		if (get(chateaus_store) !== null) {
-			map.getSource('chateaus').setData(get(chateaus_store));
-		}
-
-		map.addLayer({
-			id: 'chateaus_calc',
-			type: 'fill',
-			source: 'chateaus',
-			paint: {
-				'fill-color': '#ffffff',
-				'fill-opacity': 0
-			}
-		});
-
-		
-
-		map.addSource('intercityrailshapes', {
-			type: 'vector',
-			url: 'https://birch1.catenarymaps.org/shapes_intercity_rail'
-		});
-
-		map.addSource('localcityrailshapes', {
-			type: 'vector',
-			url: 'https://birch2.catenarymaps.org/shapes_local_rail'
-		});
-
-		map.addSource('othershapes', {
-			type: 'vector',
-			url: 'https://birch3.catenarymaps.org/shapes_ferry'
-		});
-
-		map.addSource('busshapes', {
-			type: 'vector',
-			url: 'https://birch4.catenarymaps.org/shapes_bus'
-		});
-
-		map.addSource('busstops', {
-			type: 'vector',
-			url: 'https://birch6.catenarymaps.org/busstops'
-		});
-
-		map.addSource('stationfeatures', {
-			type: 'vector',
-			url: 'https://birch7.catenarymaps.org/station_features'
-		});
-
-		map.addSource('railstops', {
-			type: 'vector',
-			url: 'https://birch5.catenarymaps.org/railstops'
-		});
-
-		map.addSource('otherstops', {
-			type: 'vector',
-			url: 'https://birch8.catenarymaps.org/otherstops'
-		});
-
-		map.addSource('foamertiles', {
-			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
-			 'https://b.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
-			 'https://c.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png'],
-			tileSize: 256
-		});
-
-		map.addSource('maxspeedtiles', {
-			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png',
-			'https://b.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png',
-			'https://c.tiles.openrailwaymap.org/maxspeed/{z}/{x}/{y}.png'
-			],
-			tileSize: 256
-		});
-
-		map.addSource('signallingtiles', {
-			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png',
-			'https://b.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png',
-			'https://c.tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png'
-			],
-			tileSize: 256
-		});
-
-		map.addSource('electrificationtiles', {
-			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png',
-			'https://b.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png',
-			'https://c.tiles.openrailwaymap.org/electrification/{z}/{x}/{y}.png'
-			],
-			tileSize: 256
-		});
-
-		map.addSource('gaugetiles', {
-			type: 'raster',
-			tiles: ['https://a.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png',
-			'https://b.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png',
-			'https://c.tiles.openrailwaymap.org/gauge/{z}/{x}/{y}.png'
-			],
-			tileSize: 256
+		RASTER_SOURCES.forEach(({ id, url }) => {
+			map.addSource(id, {
+				type: 'raster',
+				tiles: [`https:
+				tileSize: 256
+			});
 		});
 
 		makeFireMap(map, chateaus_in_frame);
-
-		map.addLayer({
-			id: 'foamershapes',
-			type: 'raster',
-			source: 'foamertiles',
-			layout: {
-				visibility: 'none'
-			},
-			paint: {
-				//'raster-emissive-strength': 0.8
-			}
-		});
-
-		map.addLayer({
-			id: 'maxspeedshapes',
-			type: 'raster',
-			source: 'maxspeedtiles',
-			layout: {
-				visibility: 'none'
-			},
-			paint: {
-				//'raster-emissive-strength': 0.8
-			}
-		});
-
-		map.addLayer({
-			id: 'signallingshapes',
-			type: 'raster',
-			source: 'signallingtiles',
-			layout: {
-				visibility: 'none'
-			},
-			paint: {
-				//'raster-emissive-strength': 0.8
-			}
-		});
-
-		map.addLayer({
-			id: 'electrificationshapes',
-			type: 'raster',
-			source: 'electrificationtiles',
-			layout: {
-				visibility: 'none'
-			},
-			paint: {
-				//'raster-emissive-strength': 0.8
-			}
-		});
-
-		map.addLayer({
-			id: 'gaugeshapes',
-			type: 'raster',
-			source: 'gaugetiles',
-			layout: {
-				visibility: 'none'
-			},
-			paint: {
-				//'raster-emissive-strength': 0.8
-			}
-		});
-
 		addShapes(map, darkMode, layerspercategory);
-
 		addStopsLayers(map, darkMode, layerspercategory);
-
-		map.loadImage('/station-enter.png').then((image) => {
-			map.addImage('station-enter', image.data);
-
-			map.addLayer(
-				{
-					id: 'stationenter',
-					type: 'symbol',
-					source: 'stationfeatures',
-					filter: ['all', ['==', 2, ['get', 'location_type']]],
-					'source-layer': 'data',
-					paint: {
-						//'symbol-emissive-strength': 1
-					},
-					layout: {
-						'icon-image': 'station-enter',
-						'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
-						'icon-ignore-placement': false,
-						'icon-allow-overlap': true
-					},
-
-					minzoom: window?.innerWidth >= 1023 ? 14 : 15
-				},
-				layerspercategory.bus.stops
-			);
-
-			map.addLayer(
-				{
-					id: 'stationenterlabel',
-					filter: ['all', ['==', 2, ['get', 'location_type']]],
-					type: 'symbol',
-					source: 'stationfeatures',
-					'source-layer': 'data',
-
-					layout: {
-						'text-field': ['get', 'name'],
-						'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-						'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 8, 19, 9.5],
-						'text-radial-offset': 1,
-						'text-ignore-placement': false,
-						//'icon-ignore-placement': false,
-						'text-allow-overlap': true,
-						//'symbol-avoid-edges': false,
-						'text-font': ['Barlow-Bold']
-					},
-					paint: {
-						'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
-						'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-						'text-halo-width': darkMode ? 0.4 : 0.2,
-						//'text-emissive-strength': 1
-					},
-					minzoom: window?.innerWidth >= 1023 ? 17.5 : 17
-				},
-				layerspercategory.bus.stops
-			);
-		});
-
-		map.addSource('buses', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		map.addSource('localrail', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		map.addSource('intercityrail', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		map.addSource('other', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
-
-		make_custom_icon_source(map);
-		add_bunny_layer(map, layerspercategory);
-
 		makeContextLayerDataset(map);
-
 		makeCircleLayers(map, darkMode, layerspercategory);
-		console.log('making bearing arrow pointers');
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
 
-		runSettingsAdapt();
+		const [stationImage, geoNavImage] = await Promise.all([
+			map.loadImage('/station-enter.png'),
+			map.loadImage('/geo-nav.png')
+		]);
 
-		map.addSource('user_geolocation', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: [
-					{
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: [0, 0]
-						},
-						properties: {}
-					}
-				]
-			}
-		});
+		if (stationImage) {
+			map.addImage('station-enter', stationImage.data);
+			addStationLayers(map, layerspercategory, darkMode, minZoomThreshold);
+		}
 
-		map.addSource('userpositionacc', {
-			type: 'geojson',
-			data: {
-				type: 'FeatureCollection',
-				features: []
-			}
-		});
+		if (geoNavImage) {
+			map.addImage('geonav', geoNavImage.data);
+			addGeolocationLayers(map);
+		}
 
-		map.addLayer({
-			id: 'userpositionacclayer',
-			type: 'fill',
-			source: 'userpositionacc',
-			paint: {
-				'fill-color': '#38bdf8',
-				'fill-opacity': ['get', 'opacity'],
-				//'fill-emissive-strength': 1
-			}
-		});
+		const initialChateauData = determineFeedsUsingChateaus(map);
+		chateaus_in_frame.set(Array.from(initialChateauData.chateaus));
 
-		runSettingsAdapt();
-
-		map.loadImage('/geo-circle.png')
-			.then((image) => {
-				map.addImage('geocircle', image.data);
-
-				map.addLayer({
-					id: 'nobearing_position',
-					type: 'symbol',
-					source: 'user_geolocation', // reference the data source
-					layout: {
-						'icon-image': 'geocircle', // reference the image
-						'icon-size': 0.1,
-						visibility: 'none',
-						'icon-allow-overlap': true,
-						'icon-ignore-placement': true,
-						'text-allow-overlap': true,
-						'text-ignore-placement': true
-					},
-					paint: {
-						'icon-opacity': 0.8,
-						//'icon-emissive-strength': 1
-					}
-				});
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	
-
-		const geo_nav = await map.loadImage('/geo-nav.png');
-
-		map.addImage('geonav', geo_nav.data);
-
-		map.addLayer({
-			id: 'bearing_position',
-			type: 'symbol',
-			source: 'user_geolocation', // reference the data source
-			layout: {
-				'icon-image': 'geonav', // reference the image
-				'icon-size': 0.13,
-				'icon-rotate': ['get', 'heading'],
-				visibility: 'none'
-			},
-			paint: {
-				'icon-opacity': 0.8,
-				//'icon-emissive-strength': 1
-			}
-		});
-
-		const chateau_feed_results = determineFeedsUsingChateaus(map);
-		chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-
-		setInterval(() => {
-			//const chateau_feed_results = determineFeedsUsingChateaus(map);
-			//chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			//console.log('fetching realtime locations now');
+		updateInterval = setInterval(() => {
 			fetch_realtime_vehicle_locations(
 				layersettings,
 				chateaus_in_frame,
@@ -434,13 +135,76 @@ export async function setup_load_map(
 		);
 
 		recompute_map_padding();
-
-
 		runSettingsAdapt();
+	});
 
-		setTimeout(() => {
-			recompute_map_padding();
-			runSettingsAdapt();
-		}, 1);
+	map.on('remove', () => {
+		clearInterval(updateInterval);
+		RASTER_SOURCES.forEach(({ id }) => map.removeSource(id));
+		RAIL_SHAPES.forEach(({ id }) => map.removeSource(id));
+		STOP_SOURCES.forEach(({ id }) => map.removeSource(id));
+	});
+}
+
+function addStationLayers(map: maplibregl.Map, layerspercategory: any, darkMode: boolean, minZoom: number) {
+	map.addLayer({
+		id: 'stationenter',
+		type: 'symbol',
+		source: 'stationfeatures',
+		filter: ['all', ['==', 2, ['get', 'location_type']]],
+		'source-layer': 'data',
+		layout: {
+			'icon-image': 'station-enter',
+			'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.2, 15, 0.2, 16, 0.25, 18, 0.4],
+			'icon-ignore-placement': false,
+			'icon-allow-overlap': true,
+			minzoom: minZoom
+		}
+	}, layerspercategory.bus.stops);
+
+	map.addLayer({
+		id: 'stationenterlabel',
+		type: 'symbol',
+		source: 'stationfeatures',
+		filter: ['all', ['==', 2, ['get', 'location_type']]],
+		'source-layer': 'data',
+		layout: {
+			'text-field': ['get', 'name'],
+			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 15, 5, 17, 8, 19, 9.5],
+			'text-radial-offset': 1,
+			'text-allow-overlap': true,
+			'text-font': ['Barlow-Bold'],
+			minzoom: window.innerWidth >= 1023 ? 17.5 : 17
+		},
+		paint: {
+			'text-color': darkMode ? '#bae6fd' : '#1d4ed8',
+			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
+			'text-halo-width': darkMode ? 0.4 : 0.2
+		}
+	}, layerspercategory.bus.stops);
+}
+
+function addGeolocationLayers(map: maplibregl.Map) {
+	map.addSource('user_geolocation', {
+		type: 'geojson',
+		data: { type: 'FeatureCollection', features: [{
+			type: 'Feature',
+			geometry: { type: 'Point', coordinates: [0, 0] },
+			properties: {}
+		}]}
+	});
+
+	map.addLayer({
+		id: 'bearing_position',
+		type: 'symbol',
+		source: 'user_geolocation',
+		layout: {
+			'icon-image': 'geonav',
+			'icon-size': 0.13,
+			'icon-rotate': ['get', 'heading'],
+			visibility: 'none'
+		},
+		paint: { 'icon-opacity': 0.8 }
 	});
 }
