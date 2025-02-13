@@ -631,7 +631,7 @@
 
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 
-		<p class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
+		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'}`}>
 			Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
 				<span>{' | Block '}{trip_data.block_id}</span>
 			{/if}
@@ -768,7 +768,7 @@
 						{/if}
 					</div>
 
-					<div class="mr-4"></div>
+					<div class="mr-3 md:mr-4"></div>
 
 					<div
 						class={`w-full py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ''}`}
