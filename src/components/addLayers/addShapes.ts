@@ -207,6 +207,15 @@ export function addShapes(
 					['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
 					['==', ['coalesce', ['get', 'route_label']], 'Silver']
 				]
+			],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'nyct', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
 			]
 		],
 		paint: {
