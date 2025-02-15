@@ -1310,7 +1310,7 @@ if (get_layers_from_local) {
 				paint: {
 					"line-color": darkMode ? "rgba(140, 140, 128, 40%)" : "rgba(0,0,0, 30%)",
 					// level = highest index in thresholds array the elevation is a multiple of
-					"line-width": ["match", ["get", "level"], 1, 1, 0.5],
+					"line-width": ["match", ["get", "level"], 1, 1.3, 0.3],
 				},
 				layout: {
 					'visibility': 'none'
