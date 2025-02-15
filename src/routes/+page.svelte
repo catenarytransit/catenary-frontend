@@ -1296,8 +1296,7 @@ if (get_layers_from_local) {
 					layout: {
 						visibility: "none"
 					},
-				},
-				'contours-layer'
+				}
 			);
 
 			map.addLayer({
