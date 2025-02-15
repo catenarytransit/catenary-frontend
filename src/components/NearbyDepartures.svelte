@@ -667,6 +667,16 @@
 			{/each}
 		</div>
 
+		{#if departure_list_filtered.length == 0 && first_load == true && !loading}
+			<br/>
+
+			<p>No departures.</p>
+
+			<img src="/premium_photo-1671611799147-68a4f9b3f0e1.avif" alt="No departures found" />
+
+			
+		{/if}
+
 		<!--Testing advert
 	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2140162638544192"
 		crossorigin="anonymous"></script>
