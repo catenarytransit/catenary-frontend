@@ -1256,7 +1256,6 @@ if (get_layers_from_local) {
 			map.addSource('dem', {
 				type: 'raster-dem',
 				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 256,
 			});
 
 			map.addSource("contour-source", {
