@@ -1175,7 +1175,7 @@ if (get_layers_from_local) {
 			hash: 'pos',
 			pixelRatio: window.devicePixelRatio * 1.4,
 			preserveDrawingBuffer: false,
-			maxPitch: 80,
+			maxPitch: 70,
 			fadeDuration: 100,
 			style: style, // stylesheet location
 			center: centerinit, // starting position [lng, lat]
@@ -1248,7 +1248,7 @@ if (get_layers_from_local) {
 			}
 
 			map.setProjection({ type: ["interpolate", ["linear"], ["zoom"],
-			12, "vertical-perspective", 14, "mercator"] });
+			13, "vertical-perspective", 14, "mercator"] });
 			skyRefresh(map, darkMode);
 
 			demSource.setupMaplibre(maplibregl);
