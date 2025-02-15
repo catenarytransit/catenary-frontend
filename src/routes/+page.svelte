@@ -1256,7 +1256,32 @@ if (get_layers_from_local) {
 			map.addSource('dem', {
 				type: 'raster-dem',
 				tiles: [demSource.sharedDemProtocolUrl],
+				tileSize: 256,
 			});
+
+			map.addSource("contour-source", {
+				type: "vector",
+				tiles: [
+					demSource.contourProtocolUrl({
+					// convert meters to feet, default=1 for meters
+					thresholds: {
+						// zoom: [minor, major]
+						11: [100, 500],
+						12: [50, 250],
+						14: [20, 100],
+						15: [10, 50],
+					},
+					// optional, override vector tile parameters:
+					contourLayer: "contours",
+					elevationKey: "ele",
+					levelKey: "level",
+					extent: 4096,
+					buffer: 1,
+					}),
+				],
+				maxzoom: 15,
+			
+				});
 
 			map.addLayer(
 				{
@@ -1265,8 +1290,8 @@ if (get_layers_from_local) {
 					source: 'dem',
 
 					paint: {
-						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
-						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffffee',
+						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.6)',
+						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
 						'hillshade-exaggeration': 1,
 					},
@@ -1277,14 +1302,51 @@ if (get_layers_from_local) {
 				'waterway_tunnel'
 			);
 
+			map.addLayer({
+				id: "contours-layer",
+				type: "line",
+				source: "contour-source",
+				"source-layer": "contours",
+				paint: {
+					"line-color": darkMode ? "rgba(255, 255, 255, 40%)" : "rgba(0,0,0, 30%)",
+					// level = highest index in thresholds array the elevation is a multiple of
+					"line-width": ["match", ["get", "level"], 1, 1, 0.5],
+				},
+				layout: {
+					'visibility': 'none'
+				},
+				}, 'waterway_tunnel');
+
+				map.addLayer({
+				id: "contour-labels",
+				type: "symbol",
+				source: "contour-source",
+				"source-layer": "contours",
+				filter: [">", ["get", "level"], 0],
+				layout: {
+					"symbol-placement": "line",
+					"text-size": 10,
+					"text-field": ["concat", ["number-format", ["get", "ele"], {}], "m"],
+					"text-font": ["Barlow-Bold"],
+				},
+				paint: {
+					"text-halo-color": darkMode ?  'black' :  "white",
+					"text-halo-width": 1,
+					'text-color': darkMode ? "white": "black"
+				},
+				}, 'waterway_tunnel');
+
 				show_topo_global_store.subscribe((value:boolean) => {
 					if (value === true) {
 						map.setLayoutProperty('hillshade', "visibility", "visible");
-
-					
+						map.setLayoutProperty('contour-labels', "visibility", "visible");
+						map.setLayoutProperty("contours-layer", "visibility", "visible");
 					map.setTerrain({source: 'dem', exaggeration: 1});
 					} else {
 						map.setLayoutProperty('hillshade', "visibility", "none");
+						
+						map.setLayoutProperty('contour-labels', "visibility", "none");
+						map.setLayoutProperty("contours-layer", "visibility", "none");
 
 						map.setTerrain({source: 'dem', exaggeration: 0});
 					}
