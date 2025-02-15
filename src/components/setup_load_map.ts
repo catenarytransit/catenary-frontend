@@ -110,6 +110,66 @@ export async function setup_load_map(
 			});
 		});
 
+		map.addLayer({
+			id: 'foamershapes',
+			type: 'raster',
+			source: 'foamertiles',
+			layout: {
+				visibility: 'none'
+			},
+			paint: {
+				//'raster-emissive-strength': 0.8
+			}
+		});
+
+		map.addLayer({
+			id: 'maxspeedshapes',
+			type: 'raster',
+			source: 'maxspeedtiles',
+			layout: {
+				visibility: 'none'
+			},
+			paint: {
+				//'raster-emissive-strength': 0.8
+			}
+		});
+
+		map.addLayer({
+			id: 'signallingshapes',
+			type: 'raster',
+			source: 'signallingtiles',
+			layout: {
+				visibility: 'none'
+			},
+			paint: {
+				//'raster-emissive-strength': 0.8
+			}
+		});
+
+		map.addLayer({
+			id: 'electrificationshapes',
+			type: 'raster',
+			source: 'electrificationtiles',
+			layout: {
+				visibility: 'none'
+			},
+			paint: {
+				//'raster-emissive-strength': 0.8
+			}
+		});
+
+		map.addLayer({
+			id: 'gaugeshapes',
+			type: 'raster',
+			source: 'gaugetiles',
+			layout: {
+				visibility: 'none'
+			},
+			paint: {
+				//'raster-emissive-strength': 0.8
+			}
+		});
+
 		//makeFireMap(map, chateaus_in_frame);
 		console.log('setup load map start');
 		addShapes(map, darkMode, layerspercategory);

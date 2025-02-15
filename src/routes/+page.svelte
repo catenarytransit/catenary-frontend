@@ -1253,7 +1253,8 @@ if (get_layers_from_local) {
 
 			map.addSource('dem', {
 				type: 'raster-dem',
-				tiles: ["https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp"],
+				tiles: [demSource.sharedDemProtocolUrl],
+				tileSize: 256
 			});
 
 			map.addSource("contour-source", {
@@ -1280,7 +1281,8 @@ if (get_layers_from_local) {
 			
 				});
 
-			map.addLayer(
+				
+				map.addLayer(
 				{
 					id: 'hillshade',
 					type: 'hillshade',
@@ -1295,7 +1297,7 @@ if (get_layers_from_local) {
 						visibility: "none"
 					},
 				},
-				'waterway_tunnel'
+				'contours-layer'
 			);
 
 			map.addLayer({
@@ -1337,14 +1339,17 @@ if (get_layers_from_local) {
 						map.setLayoutProperty('hillshade', "visibility", "visible");
 						map.setLayoutProperty('contour-labels', "visibility", "visible");
 						map.setLayoutProperty("contours-layer", "visibility", "visible");
-					map.setTerrain({source: 'dem', exaggeration: 1});
+
+					//map.setTerrain({source: 'dem', exaggeration: 1});
 					} else {
 						map.setLayoutProperty('hillshade', "visibility", "none");
+
+						//map.removeLayer('hillshade');
 						
 						map.setLayoutProperty('contour-labels', "visibility", "none");
 						map.setLayoutProperty("contours-layer", "visibility", "none");
 
-						map.setTerrain(null);
+						//map.setTerrain(null);
 					}
 				});
 
