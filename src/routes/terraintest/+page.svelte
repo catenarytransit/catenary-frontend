@@ -36,7 +36,7 @@
 				tileSize: 512
 			});
 
-			//map.setTerrain({ source: 'hillshade', exaggeration: 1 });
+			map.setTerrain({ source: 'hillshade', exaggeration: 1 });
 
 			map.addLayer(
 				{

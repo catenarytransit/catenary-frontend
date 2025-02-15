@@ -1215,10 +1215,12 @@ if (get_layers_from_local) {
 		
 		
 		const demSource = new mlcontour.DemSource({
-				url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
-				encoding: 'terrarium',
-				cacheSize: 512,
-				maxzoom: 13,
+				//url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
+				url: "https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp",
+				//url: "https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=B265xPhJaYe2kWHOLHTG",
+				encoding: 'mapbox',
+				cacheSize: 2048,
+				maxzoom: 14,
 				// offload contour line computation to a web worker
 				worker: true
 			});
@@ -1251,38 +1253,50 @@ if (get_layers_from_local) {
 
 			demSource.setupMaplibre(maplibregl);
 
-			map.addSource('hillshade', {
+			map.addSource('dem', {
 				type: 'raster-dem',
 				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 256
 			});
+
+			map.addSource('maptiler-dem',
+				{
+					type: 'raster-dem',
+				url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=B265xPhJaYe2kWHOLHTG',
+				
+				}
+			)
 
 			map.addLayer(
 				{
 					id: 'hillshade',
 					type: 'hillshade',
-					source: 'hillshade',
+					source: 'dem',
 
 					paint: {
 						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
 						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffffee',
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
-						'hillshade-exaggeration': 0.2,
+						'hillshade-exaggeration': 1,
 					},
 					layout: {
 						visibility: "none"
 					},
 				},
-				'water'
+				'waterway_tunnel'
 			);
 
 				show_topo_global_store.subscribe((value:boolean) => {
 					if (value === true) {
 						map.setLayoutProperty('hillshade', "visibility", "visible");
+
+					
+					map.setTerrain({source: 'dem', exaggeration: 1});
 					} else {
 						map.setLayoutProperty('hillshade', "visibility", "none");
+
+						map.setTerrain({source: 'dem', exaggeration: 0});
 					}
-				})
+				});
 
 			setTimeout(() => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
