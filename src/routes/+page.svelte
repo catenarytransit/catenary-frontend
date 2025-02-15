@@ -1298,7 +1298,8 @@ if (get_layers_from_local) {
 					layout: {
 						visibility: "none"
 					},
-				}
+				},
+				'waterway_tunnel'
 			);
 
 			map.addLayer({
