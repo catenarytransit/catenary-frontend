@@ -96,6 +96,8 @@
 
 	let db_vehicle_label: string | null = null;
 
+	let all_exact_stoptimes: boolean = true;
+
 	let last_inactive_stop_idx = -1;
 
 	async function update_vehicle_rt() {
@@ -152,6 +154,8 @@
 					let next_stoptimes_cleaned: any[] = stoptimes_cleaned_dataset;
 
 					let new_stop_times_queue = data.stoptimes;
+
+					
 
 					next_stoptimes_cleaned.forEach((existing_stop_time: any) => {
 						let new_stop_time_to_use_idx = new_stop_times_queue.findIndex((new_stop_time: any) => {
@@ -463,6 +467,17 @@
 						index = index + 1;
 					});
 
+					let all_timepoints_empty = data.stoptimes.every((stoptime: any) => stoptime.timepoint == null);
+
+					if (all_timepoints_empty) {
+						all_exact_stoptimes = true;
+					} else {
+						let all_timepoints_true = data.stoptimes.every((stoptime: any) => 
+						stoptime.timepoint == true
+					);
+						all_exact_stoptimes = all_timepoints_true;
+					}						
+
 					stoptimes_cleaned_dataset = stoptimes_cleaned;
 
 					console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
@@ -710,6 +725,19 @@
 			</div>
 		{/if}
 
+		{#if all_exact_stoptimes == true}
+		<div class="flex flex-row">
+			<div class="rounded-2xl  flex flex-row text-xs  dark:bg-opacity-70 mr-auto">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class='h-5 w-5 align-middle'><title>timeline-clock</title><path
+					fill="currentColor" d="M4 2V8H2V2H4M2 22V16H4V22H2M5 12C5 13.11 4.11 14 3 14C1.9 14 1 13.11 1 12C1 10.9 1.9 10 3 10C4.11 10 5 10.9 5 12M16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C12.4 20 9.36 17.62 8.35 14.35L6 12L8.35 9.65C9.36 6.38 12.4 4 16 4M15 13L19.53 15.79L20.33 14.5L16.5 12.2V7H15V13Z" /></svg>
+				
+				<span class="align-middle my-auto ml-1 font-semibold">
+					All scheduled departures are exact.
+				</span>
+			</div>
+		</div>
+		{/if}
+
 		<AlertBox {alerts} />
 
 		{#key trip_data}
@@ -774,10 +802,12 @@
 						class={`w-full py-1 sm:py-2 pr-1 lg:pr-2  ${i <= last_inactive_stop_idx ? ' opacity-70' : ''}`}
 					>
 						<p class="text-sm sm:text-base">
+							{#if stoptime.name}
 							<span
 								class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 								>{fixStationName(stoptime.name)}</span
 							>
+							{/if}
 
 							{#if stop_id_to_alert_ids[stoptime.stop_id]}
 								<img src="/icons/service_alert.svg" alt="(i)" class="w-4 h-4 inline mr-1" />
@@ -790,6 +820,18 @@
 							{#if stoptime.code}
 								<span class="text-gray-800 dark:text-gray-200 font-extralight">{stoptime.code}</span
 								>
+							{/if}
+
+							{#if all_exact_stoptimes == false}
+							{#if stoptime.timepoint == true}
+							<div class="text-xs inline-block align-middle">
+
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  class='h-4 w-4 text-gray-800 dark:text-gray-300'
+								><title>timeline-clock-outline</title>
+								<path  fill="currentColor"
+								 d="M4 2V8H2V2H4M2 22V16H4V22H2M5 12C5 13.11 4.11 14 3 14C1.9 14 1 13.11 1 12C1 10.9 1.9 10 3 10C4.11 10 5 10.9 5 12M16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C12.4 20 9.36 17.62 8.35 14.35L6 12L8.35 9.65C9.36 6.38 12.4 4 16 4M16 6C12.69 6 10 8.69 10 12C10 15.31 12.69 18 16 18C19.31 18 22 15.31 22 12C22 8.69 19.31 6 16 6M15 13V8H16.5V12.2L19.5 14L18.68 15.26L15 13Z" /></svg>
+								 </div>
+						{/if}
 							{/if}
 						</p>
 
