@@ -1344,7 +1344,7 @@ if (get_layers_from_local) {
 						map.setLayoutProperty('contour-labels', "visibility", "none");
 						map.setLayoutProperty("contours-layer", "visibility", "none");
 
-						map.setTerrain({source: 'dem', exaggeration: 0});
+						map.setTerrain(null);
 					}
 				});
 
