@@ -1258,14 +1258,6 @@ if (get_layers_from_local) {
 				tiles: [demSource.sharedDemProtocolUrl],
 			});
 
-			map.addSource('maptiler-dem',
-				{
-					type: 'raster-dem',
-				url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=B265xPhJaYe2kWHOLHTG',
-				
-				}
-			)
-
 			map.addLayer(
 				{
 					id: 'hillshade',
