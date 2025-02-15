@@ -12,6 +12,7 @@
 	import polyline from '@mapbox/polyline';
 	import AlertBox from './serviceAlerts.svelte';
 	import { writable, get } from 'svelte/store';
+	import stringifyObject from 'stringify-object';
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
