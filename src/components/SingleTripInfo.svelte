@@ -698,7 +698,7 @@
 
 				{#if vehicle_data.occupancy_status != null}
 					<p
-						class={`text-xs ${vehicle_data.occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_data.occupancy_status) ? "text-red-600 dark:text-red-500" : ""}`}
+						class={`text-xs ${vehicle_data.occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_data.occupancy_status) ? "text-red-600 dark:text-red-400" : ""}`}
 					>
 						{$_('occupancy_status')}:
 						<span class="rounded-full px-0.5 py-0.5">{occupancy_to_symbol(vehicle_data.occupancy_status)}</span>
