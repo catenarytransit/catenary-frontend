@@ -1169,8 +1169,6 @@ if (get_layers_from_local) {
 			})
 			.catch((err) => console.error(err));
 
-
-
 		const map = new maplibregl.Map({
 			container: 'map',
 			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
@@ -1255,7 +1253,7 @@ if (get_layers_from_local) {
 
 			map.addSource('dem', {
 				type: 'raster-dem',
-				tiles: [demSource.sharedDemProtocolUrl],
+				tiles: ["https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp"],
 			});
 
 			map.addSource("contour-source", {
@@ -1287,7 +1285,6 @@ if (get_layers_from_local) {
 					id: 'hillshade',
 					type: 'hillshade',
 					source: 'dem',
-
 					paint: {
 						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.6)',
 						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
