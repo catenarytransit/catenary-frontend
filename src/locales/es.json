@@ -109,5 +109,6 @@
 	"occupancy_status_full": "Lleno",
 	"occupancy_status_not_accepting_passengers": "No acepta pasajeros",
 	"occupancy_status_no_data_available": "No hay datos disponibles",
-	"occupancy_status_not_boardable": "No permite embarque"
+	"occupancy_status_not_boardable": "No permite embarque",
+	"deleted": "Eliminado"
 }
