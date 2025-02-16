@@ -642,6 +642,10 @@
 											<p class="text-red-500 leading-none md:leading-tight">{$_('cancelled')}</p>
 										{/if}
 
+										{#if trip.deleted}
+											<p class="text-red-500 leading-none md:leading-tight">{$_('deleted')}</p>
+										{/if}
+
 										{#if trip.departure_realtime != null && trip.departure_schedule != null}
 											<p class="leading-none">
 												<DelayDiff

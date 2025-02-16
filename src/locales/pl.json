@@ -113,5 +113,6 @@
 	"occupancy_status_full": "Pełny",
 	"occupancy_status_not_accepting_passengers": "Nie przyjmuje pasażerów",
 	"occupancy_status_no_data_available": "Brak dostępnych danych",
-	"occupancy_status_not_boardable": "Nie nadaje się do wejścia"
+	"occupancy_status_not_boardable": "Nie nadaje się do wejścia",
+	"deleted": "Usunięto"
 }

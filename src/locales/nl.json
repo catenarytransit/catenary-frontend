@@ -113,5 +113,6 @@
 	"occupancy_status_full": "Vol",
 	"occupancy_status_not_accepting_passengers": "Geen passagiers meer opnemen",
 	"occupancy_status_no_data_available": "Geen gegevens beschikbaar",
-	"occupancy_status_not_boardable": "Niet instapbaar"
+	"occupancy_status_not_boardable": "Niet instapbaar",
+	"deleted": "Verwijderd"
 }
