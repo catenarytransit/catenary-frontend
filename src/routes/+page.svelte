@@ -1169,6 +1169,8 @@ if (get_layers_from_local) {
 			})
 			.catch((err) => console.error(err));
 
+			maplibregl.setWorkerCount(4);
+
 		const map = new maplibregl.Map({
 			container: 'map',
 			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
@@ -1181,6 +1183,8 @@ if (get_layers_from_local) {
 			center: centerinit, // starting position [lng, lat]
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
+
+	
 
 		mapglobal = map;
 
@@ -1247,8 +1251,7 @@ if (get_layers_from_local) {
 				map.setCenter(centerinit);
 			}
 
-			map.setProjection({ type: ["interpolate", ["linear"], ["zoom"],
-			13, "vertical-perspective", 14, "mercator"] });
+			map.setProjection({ type: "globe" });
 			skyRefresh(map, darkMode);
 
 			demSource.setupMaplibre(maplibregl);
@@ -1290,7 +1293,7 @@ if (get_layers_from_local) {
 					type: 'hillshade',
 					source: 'dem',
 					paint: {
-						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.6)',
+						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
 						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
 						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
 						'hillshade-exaggeration': 1,
@@ -1336,13 +1339,45 @@ if (get_layers_from_local) {
 				},
 				}, 'waterway_tunnel');
 
+				if (darkMode == true) {
+					map.setSky({
+            		'sky-color': "hsl(214, 20%, 19%)",
+            'sky-horizon-blend': 0.4,
+            'horizon-color': [
+  "interpolate",
+  ["exponential", 1.2],
+  ["zoom"],
+  5.5,
+  "hsla(214, 15%, 19%, 0.2)",
+  6,
+  "hsla(214, 15%, 21%, 0.2)"
+],
+            'horizon-fog-blend': 0.3,
+            'fog-color': [
+  "interpolate",
+  ["exponential", 1.2],
+  ["zoom"],
+  5.5,
+  "hsl(214, 15%, 10%)",
+  6,
+  "hsl(214, 30%, 5%)"
+],
+            'fog-ground-blend': 0.9
+       			 });
+				} else {
+
+				}
+				
+
 				show_topo_global_store.subscribe((value:boolean) => {
 					if (value === true) {
 						map.setLayoutProperty('hillshade', "visibility", "visible");
 						map.setLayoutProperty('contour-labels', "visibility", "visible");
 						map.setLayoutProperty("contours-layer", "visibility", "visible");
 
-					//map.setTerrain({source: 'dem', exaggeration: 1});
+					if (window.innerWidth >= 768 || window.innerHeight >= 768) {
+						map.setTerrain({source: 'dem', exaggeration: 1});
+					}
 					} else {
 						map.setLayoutProperty('hillshade', "visibility", "none");
 
@@ -1351,7 +1386,7 @@ if (get_layers_from_local) {
 						map.setLayoutProperty('contour-labels', "visibility", "none");
 						map.setLayoutProperty("contours-layer", "visibility", "none");
 
-						//map.setTerrain(null);
+						map.setTerrain(null);
 					}
 				});
 
