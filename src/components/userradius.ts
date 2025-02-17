@@ -32,6 +32,7 @@ export function addGeoRadius(map: maplibregl.Map) {
 			source: 'km_source',
 			layout: {
 				'text-field': ['get', 'label'],
+				'text-font': ['Barlow-Bold'],
 				'symbol-placement': 'line',
 				'text-size': 8,
 				'symbol-spacing': 150,

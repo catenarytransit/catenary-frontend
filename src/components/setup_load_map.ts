@@ -64,9 +64,11 @@ export async function setup_load_map(
 		recompute_map_padding();
 		clearbottomright();
 
+		addGeoRadius(map);
+		makeGpsLayer(map);
+
 		const emptyGeoJSON = { type: 'FeatureCollection', features: [] };
 
-		[addGeoRadius, makeGpsLayer].forEach((fn) => fn(map));
 		update_geolocation_source();
 
 		if (localStorage.getItem('showzombiebuses') === 'true') {
@@ -178,9 +180,10 @@ export async function setup_load_map(
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
 
-		const [stationImage, geoNavImage] = await Promise.all([
+		const [stationImage, geoNavImage, geoCircleImage] = await Promise.all([
 			map.loadImage('/station-enter.png'),
-			map.loadImage('/geo-nav.png')
+			map.loadImage('/geo-nav.png'),
+			map.loadImage("/geo-circle.png")
 		]);
 
 		if (stationImage) {
@@ -191,6 +194,28 @@ export async function setup_load_map(
 		if (geoNavImage) {
 			map.addImage('geonav', geoNavImage.data);
 			addGeolocationLayers(map);
+		}
+
+		if (geoCircleImage) {
+			map.addImage('geocircle', geoCircleImage.data);
+			map.addLayer({
+				id: 'nobearing_position',
+				type: 'symbol',
+				source: 'user_geolocation', // reference the data source
+				layout: {
+					'icon-image': 'geocircle', // reference the image
+					'icon-size': 0.1,
+					visibility: 'none',
+					'icon-allow-overlap': true,
+					'icon-ignore-placement': true,
+					'text-allow-overlap': true,
+					'text-ignore-placement': true
+				},
+				paint: {
+					'icon-opacity': 0.8,
+					//'icon-emissive-strength': 1
+				}
+			});
 		}
 
 		const initialChateauData = determineFeedsUsingChateaus(map);
