@@ -1244,11 +1244,13 @@
 
 				demSource.setupMaplibre(maplibregl);
 
-				map.addSource('dem', {
+				
+				  map.addSource('dem', {
 					type: 'raster-dem',
 					tiles: [demSource.sharedDemProtocolUrl],
 					tileSize: 256
 				});
+				
 
 				map.addSource('contour-source', {
 					type: 'vector',
@@ -1279,9 +1281,9 @@
 						type: 'hillshade',
 						source: 'dem',
 						paint: {
-							'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 30%)',
+							'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 20%, 60%)',
 							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
-							'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
+							'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 70%)' : '#ffffff77',
 							'hillshade-exaggeration': 1
 						},
 						layout: {
