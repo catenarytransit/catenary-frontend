@@ -15,7 +15,7 @@
 	import { init_stores } from '../components/init_stores';
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
-	import {start_location_watch} from '../user_location_lib';
+	import { start_location_watch } from '../user_location_lib';
 
 	import {
 		data_stack_store,
@@ -65,12 +65,12 @@
 
 	show_topo_global_store.subscribe((value) => {
 		show_topo = value;
-	})
+	});
 
 	let centerinit: LngLatLike = [-117.6969, 33.6969];
 
 	let zoominit = 9;
-	
+
 	/*
 	const decode = (textToDecode: string) => {
 		try {
@@ -593,10 +593,7 @@
 					interpretLabelsToCode(this_layer_settings.label, usunits)
 				);
 
-				let hidevehiclecommand = ['all', 
-                                ['!=', '', ['get', 'trip_id']],
-                                ['has', 'trip_id']
-                                ];
+				let hidevehiclecommand = ['all', ['!=', '', ['get', 'trip_id']], ['has', 'trip_id']];
 
 				let regularpointers = [
 					'all',
@@ -663,17 +660,16 @@
 	if (typeof window != 'undefined') {
 		let get_layers_from_local = localStorage.getItem(layersettingsnamestorage);
 
-if (get_layers_from_local) {
-	let parsed = JSON.parse(get_layers_from_local);
+		if (get_layers_from_local) {
+			let parsed = JSON.parse(get_layers_from_local);
 
-	if (parsed) {
-		layersettings = parsed;
+			if (parsed) {
+				layersettings = parsed;
 
-		runSettingsAdapt();
+				runSettingsAdapt();
+			}
+		}
 	}
-}
-	}
-
 
 	function getSidebarOpenPercentage() {
 		if (window.innerWidth >= 640) {
@@ -692,8 +688,7 @@ if (get_layers_from_local) {
 
 				if (sidebar) {
 					return `${32 - dragger + sidebar.offsetHeight}px`;
-				}
-				else {
+				} else {
 					return '32px';
 				}
 			}
@@ -708,39 +703,37 @@ if (get_layers_from_local) {
 
 	function recompute_map_padding() {
 		let sidebar = document.getElementById('catenary-sidebar');
-		
+
 		if (sidebar) {
 			if (mapglobal) {
-			
-			if (innerWidth < 640) {
-			let padding = { bottom: sidebar.offsetHeight, left: 0 };
-			if (mapglobal) {
-				
-			mapglobal.easeTo({ padding: padding, duration: 200 });
-			}
-		} else {
-			if (innerWidth < 768) {
-				let padding = { left: sidebar.offsetWidth, bottom: 0 };
-				mapglobal.easeTo({ padding: padding, duration: 200 });
-			} else {
-				if (sidebarOpen == 'full') {
-					let padding = {
-						left: sidebar.offsetWidth,
-						bottom: 0
-					};
-					mapglobal.easeTo({ padding: padding, duration: 200 });
+				if (innerWidth < 640) {
+					let padding = { bottom: sidebar.offsetHeight, left: 0 };
+					if (mapglobal) {
+						mapglobal.easeTo({ padding: padding, duration: 200 });
+					}
 				} else {
-					let padding = { left: 0 };
-					mapglobal.easeTo({ padding: padding, duration: 200 });
+					if (innerWidth < 768) {
+						let padding = { left: sidebar.offsetWidth, bottom: 0 };
+						mapglobal.easeTo({ padding: padding, duration: 200 });
+					} else {
+						if (sidebarOpen == 'full') {
+							let padding = {
+								left: sidebar.offsetWidth,
+								bottom: 0
+							};
+							mapglobal.easeTo({ padding: padding, duration: 200 });
+						} else {
+							let padding = { left: 0 };
+							mapglobal.easeTo({ padding: padding, duration: 200 });
+						}
+					}
 				}
 			}
-		}
-		}
 		}
 	}
 
 	function mousemovesidebar(e: TouchEvent | MouseEvent) {
-		if (last_sidebar_interval_id) {	
+		if (last_sidebar_interval_id) {
 			clearInterval(last_sidebar_interval_id);
 		}
 		//	console.log('sidebar mouse move' ,e)
@@ -821,7 +814,7 @@ if (get_layers_from_local) {
 		let sidebar = document.getElementById('catenary-sidebar');
 
 		if (sidebar) {
-		start_of_move_sidebar_height = sidebar.offsetHeight;
+			start_of_move_sidebar_height = sidebar.offsetHeight;
 		}
 
 		console.log('start moving sidebar');
@@ -847,74 +840,74 @@ if (get_layers_from_local) {
 		if (sidebar) {
 			last_sidebar_release = performance.now();
 
-		let sidebar_width = sidebar.offsetWidth || 0;
+			let sidebar_width = sidebar.offsetWidth || 0;
 
-		if (last_sidebar_interval_id != null) {
-			clearInterval(last_sidebar_interval_id);
-		}
+			if (last_sidebar_interval_id != null) {
+				clearInterval(last_sidebar_interval_id);
+			}
 
-		recompute_map_padding();
+			recompute_map_padding();
 
-		last_sidebar_interval_id = setInterval(() => {
-			if (window.innerWidth < 768) {
-				translate_x_sidebar_number = 0;
-				translate_x_sidebar = '0px';
-				let target = 0.55 * window.innerHeight;
+			last_sidebar_interval_id = setInterval(() => {
+				if (window.innerWidth < 768) {
+					translate_x_sidebar_number = 0;
+					translate_x_sidebar = '0px';
+					let target = 0.55 * window.innerHeight;
 
-				if (sidebarOpen == 'full') {
-					target = window.innerHeight - dragger;
-				} else {
-					if (sidebarOpen == 'none') {
-						target = dragger;
+					if (sidebarOpen == 'full') {
+						target = window.innerHeight - dragger;
+					} else {
+						if (sidebarOpen == 'none') {
+							target = dragger;
+						}
 					}
-				}
 
-				if (sidebar_height_number > innerHeight) {
-					sidebar_height_number = innerHeight;
-				}
+					if (sidebar_height_number > innerHeight) {
+						sidebar_height_number = innerHeight;
+					}
 
-				if (sidebar_height_number < dragger) {
-					sidebar_height_number = dragger;
-				}
+					if (sidebar_height_number < dragger) {
+						sidebar_height_number = dragger;
+					}
 
-				if (sidebar_height_number < target) {
-					sidebar_height_number += 0.15 * (target - sidebar_height_number);
-					sidebar_height_output = sidebar_height_number + 'px';
-				} else {
-					if (sidebar_height_number > target) {
-						sidebar_height_number -= 0.15 * (sidebar_height_number - target);
+					if (sidebar_height_number < target) {
+						sidebar_height_number += 0.15 * (target - sidebar_height_number);
 						sidebar_height_output = sidebar_height_number + 'px';
 					} else {
-						clearInterval(last_sidebar_interval_id);
+						if (sidebar_height_number > target) {
+							sidebar_height_number -= 0.15 * (sidebar_height_number - target);
+							sidebar_height_output = sidebar_height_number + 'px';
+						} else {
+							clearInterval(last_sidebar_interval_id);
+						}
+					}
+				} else {
+					if (sidebarOpen == 'full') {
+						if (translate_x_sidebar_number < -0.001) {
+							translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
+							translate_x_sidebar = `${translate_x_sidebar_number}px`;
+
+							collapser_left_offset_number = sidebar_width - Math.abs(translate_x_sidebar_number);
+							collapser_left_offset = `${collapser_left_offset_number}px`;
+						} else {
+							clearInterval(last_sidebar_interval_id);
+						}
+					}
+
+					if (sidebarOpen == 'none') {
+						if (translate_x_sidebar_number > 0 - sidebar_width) {
+							translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
+
+							translate_x_sidebar = `${translate_x_sidebar_number}px`;
+
+							collapser_left_offset_number -= 0.1 * Math.abs(sidebar_width);
+							collapser_left_offset = `${collapser_left_offset_number}px`;
+						} else {
+							clearInterval(last_sidebar_interval_id);
+						}
 					}
 				}
-			} else {
-				if (sidebarOpen == 'full') {
-					if (translate_x_sidebar_number < -0.001) {
-						translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
-						translate_x_sidebar = `${translate_x_sidebar_number}px`;
-
-						collapser_left_offset_number = sidebar_width - Math.abs(translate_x_sidebar_number);
-						collapser_left_offset = `${collapser_left_offset_number}px`;
-					} else {
-						clearInterval(last_sidebar_interval_id);
-					}
-				}
-
-				if (sidebarOpen == 'none') {
-					if (translate_x_sidebar_number > 0 - sidebar_width) {
-						translate_x_sidebar_number -= 0.1 * Math.abs(sidebar_width);
-
-						translate_x_sidebar = `${translate_x_sidebar_number}px`;
-
-						collapser_left_offset_number -= 0.1 * Math.abs(sidebar_width);
-						collapser_left_offset = `${collapser_left_offset_number}px`;
-					} else {
-						clearInterval(last_sidebar_interval_id);
-					}
-				}
-			}
-		}, 0.5);
+			}, 0.5);
 		}
 	}
 
@@ -1080,146 +1073,142 @@ if (get_layers_from_local) {
 
 	try {
 		onMount(() => {
-		//#region On the fly IP geolocation
+			//#region On the fly IP geolocation
 
-		let cachegeostored = localStorage.getItem('cacheipgeolocation');
+			let cachegeostored = localStorage.getItem('cacheipgeolocation');
 
-		if (cachegeostored) {
-			const [long, lat] = cachegeostored.split(',');
-			centerinit = [parseFloat(long), parseFloat(lat)];
-			if (mapglobal) {
-				mapglobal.setCenter(centerinit);
-				mapglobal.setZoom(14);
-			}
-		} else {
-			try {
-				/**
-				 * Use GeoLite2 database on Catenary servers
-				 *
-				 * adding a pin with this provided lat/long would prob freak a few people out
-				 * and even mapping sites (google, bing, etc) don't do it either on default
-				 * -q
-				 */
-				fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
-					.then((response) => response.json())
-					// the text will be `lat,long`
-					.then((geo_api_response) => {
-						console.log('ip addr', geo_api_response);
-						if (geo_api_response.geo_resp) {
-							centerinit = [
-								geo_api_response.geo_resp.longitude,
-								geo_api_response.geo_resp.latitude
-							];
-
-							// set the center of the map to the user's location
-							// in case the map is already initialized (rare), set the center to the user's location
-							if (mapglobal) {
-								mapglobal.setCenter(centerinit);
-							}
-
-							// store the user's location in localStorage, as we do with regular browser provided geolocation
-							localStorage.setItem(
-								'cacheipgeolocation',
-								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-							);
-						}
-					});
-			} catch (e) {
-				console.error('Failed to get IP location, defaulting to LA');
-			}
-		}
-
-		// #endregion
-
-		// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
-		// https://birch.catenarymaps.org/getchateaus
-		fetch(
-			'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json'
-		)
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (json) {
-				chateaus = json;
-
-				json.features.forEach((feature: any) => {
-					const this_realtime_feeds_list: string[] = feature.properties.realtime_feeds;
-					const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
-
-					this_realtime_feeds_list.forEach((realtime) => {
-						feed_id_to_chateau_lookup[realtime] = feature.properties.chateau;
-					});
-
-					chateau_to_realtime_feed_lookup[feature.properties.chateau] = this_realtime_feeds_list;
-
-					this_schedule_feeds_list.forEach(
-						(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
-					);
-				});
-
-				let chateaus_source = mapglobal.getSource('chateaus');
-
-				if (chateaus_source) {
-					chateaus_source.setData(json);
-				} else {
-					console.log('source doesn\'t exist')
+			if (cachegeostored) {
+				const [long, lat] = cachegeostored.split(',');
+				centerinit = [parseFloat(long), parseFloat(lat)];
+				if (mapglobal) {
+					mapglobal.setCenter(centerinit);
+					mapglobal.setZoom(14);
 				}
+			} else {
+				try {
+					/**
+					 * Use GeoLite2 database on Catenary servers
+					 *
+					 * adding a pin with this provided lat/long would prob freak a few people out
+					 * and even mapping sites (google, bing, etc) don't do it either on default
+					 * -q
+					 */
+					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+						.then((response) => response.json())
+						// the text will be `lat,long`
+						.then((geo_api_response) => {
+							console.log('ip addr', geo_api_response);
+							if (geo_api_response.geo_resp) {
+								centerinit = [
+									geo_api_response.geo_resp.longitude,
+									geo_api_response.geo_resp.latitude
+								];
 
-				chateaus_store.set(json);
-			})
-			.catch((err) => console.error(err));
+								// set the center of the map to the user's location
+								// in case the map is already initialized (rare), set the center to the user's location
+								if (mapglobal) {
+									mapglobal.setCenter(centerinit);
+								}
+
+								// store the user's location in localStorage, as we do with regular browser provided geolocation
+								localStorage.setItem(
+									'cacheipgeolocation',
+									`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+								);
+							}
+						});
+				} catch (e) {
+					console.error('Failed to get IP location, defaulting to LA');
+				}
+			}
+
+			// #endregion
+
+			// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
+			// https://birch.catenarymaps.org/getchateaus
+			fetch(
+				'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json'
+			)
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (json) {
+					chateaus = json;
+
+					json.features.forEach((feature: any) => {
+						const this_realtime_feeds_list: string[] = feature.properties.realtime_feeds;
+						const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
+
+						this_realtime_feeds_list.forEach((realtime) => {
+							feed_id_to_chateau_lookup[realtime] = feature.properties.chateau;
+						});
+
+						chateau_to_realtime_feed_lookup[feature.properties.chateau] = this_realtime_feeds_list;
+
+						this_schedule_feeds_list.forEach(
+							(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
+						);
+					});
+
+					let chateaus_source = mapglobal.getSource('chateaus');
+
+					if (chateaus_source) {
+						chateaus_source.setData(json);
+					} else {
+						console.log("source doesn't exist");
+					}
+
+					chateaus_store.set(json);
+				})
+				.catch((err) => console.error(err));
 
 			maplibregl.setWorkerCount(4);
 
-		const map = new maplibregl.Map({
-			container: 'map',
-			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
-			hash: 'pos',
-			pixelRatio: window.devicePixelRatio * 1.4,
-			preserveDrawingBuffer: false,
-			maxPitch: 70,
-			fadeDuration: 100,
-			style: style, // stylesheet location
-			center: centerinit, // starting position [lng, lat]
-			zoom: zoominit // starting zoom (must be greater than 8.1)
-		});
+			const map = new maplibregl.Map({
+				container: 'map',
+				light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
+				hash: 'pos',
+				pixelRatio: window.devicePixelRatio * 1.4,
+				preserveDrawingBuffer: false,
+				maxPitch: 70,
+				fadeDuration: 100,
+				style: style, // stylesheet location
+				center: centerinit, // starting position [lng, lat]
+				zoom: zoominit // starting zoom (must be greater than 8.1)
+			});
 
-	
+			mapglobal = map;
 
-		mapglobal = map;
+			function remove_listener() {
+				media.removeEventListener('change', updatePixelRatio);
+			}
 
-		function remove_listener() {
-			media.removeEventListener('change', updatePixelRatio);
-		};
+			const updatePixelRatio = () => {
+				map.setPixelRatio(window.devicePixelRatio * 1.4);
+			};
+			const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+			const media = matchMedia(mqString);
+			media.addEventListener('change', updatePixelRatio);
 
-		const updatePixelRatio = () => {
-			map.setPixelRatio(window.devicePixelRatio * 1.4);
-		};
-		const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-		const media = matchMedia(mqString);
-		media.addEventListener('change', updatePixelRatio);
-		
+			//map tile bounds
 
-		//map tile bounds
+			if (urlParams.get('tilebounds')) {
+				map.showTileBoundaries = true;
+				//  map.showParseStatus = true;
+			}
 
-		if (urlParams.get('tilebounds')) {
-			map.showTileBoundaries = true;
-			//  map.showParseStatus = true;
-		}
+			map_pointer_store.set(map);
 
-		map_pointer_store.set(map);
+			if (markedPointCoords) {
+				new maplibregl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
+			}
 
-		if (markedPointCoords) {
-			new maplibregl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
-		}
+			if (darkMode) {
+			}
 
-		if (darkMode) {
-		}
-		
-		
-		const demSource = new mlcontour.DemSource({
+			const demSource = new mlcontour.DemSource({
 				//url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
-				url: "https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp",
+				url: 'https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp',
 				//url: "https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=B265xPhJaYe2kWHOLHTG",
 				encoding: 'mapbox',
 				cacheSize: 2048,
@@ -1228,253 +1217,253 @@ if (get_layers_from_local) {
 				worker: true
 			});
 
-		map.on('load', () => {
-			console.log('map coords', map.getCenter());
+			map.on('load', () => {
+				console.log('map coords', map.getCenter());
 
-			fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+				fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
 					.then((response) => response.json())
 					// the text will be `lat,long`
 					.then((geo_api_response) => {
 						console.log('ip addr', geo_api_response);
 						localStorage.setItem(
-								'cacheipgeolocation',
-								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-							);
-					}
-			);
+							'cacheipgeolocation',
+							`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+						);
+					});
 
-			let coords = map.getCenter();
+				let coords = map.getCenter();
 
-			if (coords.lng == -117.6969 && coords.lat == 33.6969) {
-				console.log('change to ', centerinit);
+				if (coords.lng == -117.6969 && coords.lat == 33.6969) {
+					console.log('change to ', centerinit);
 
-				map.setCenter(centerinit);
-			}
+					map.setCenter(centerinit);
+				}
 
-			map.setProjection({ type: "globe" });
-			skyRefresh(map, darkMode);
+				map.setProjection({ type: 'globe' });
+				skyRefresh(map, darkMode);
 
-			demSource.setupMaplibre(maplibregl);
+				demSource.setupMaplibre(maplibregl);
 
-			map.addSource('dem', {
-				type: 'raster-dem',
-				tiles: [demSource.sharedDemProtocolUrl],
-				tileSize: 256
-			});
-
-			map.addSource("contour-source", {
-				type: "vector",
-				tiles: [
-					demSource.contourProtocolUrl({
-					// convert meters to feet, default=1 for meters
-					thresholds: {
-						// zoom: [minor, major]
-						11: [100, 500],
-						12: [50, 250],
-						14: [20, 100],
-						15: [10, 50],
-					},
-					// optional, override vector tile parameters:
-					contourLayer: "contours",
-					elevationKey: "ele",
-					levelKey: "level",
-					extent: 4096,
-					buffer: 1,
-					}),
-				],
-				maxzoom: 15,
-			
+				map.addSource('dem', {
+					type: 'raster-dem',
+					tiles: [demSource.sharedDemProtocolUrl],
+					tileSize: 256
 				});
 
-				
+				map.addSource('contour-source', {
+					type: 'vector',
+					tiles: [
+						demSource.contourProtocolUrl({
+							// convert meters to feet, default=1 for meters
+							thresholds: {
+								// zoom: [minor, major]
+								11: [100, 500],
+								12: [50, 250],
+								14: [20, 100],
+								15: [10, 50]
+							},
+							// optional, override vector tile parameters:
+							contourLayer: 'contours',
+							elevationKey: 'ele',
+							levelKey: 'level',
+							extent: 4096,
+							buffer: 1
+						})
+					],
+					maxzoom: 15
+				});
+
 				map.addLayer(
-				{
-					id: 'hillshade',
-					type: 'hillshade',
-					source: 'dem',
-					paint: {
-						'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
-						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
-						'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
-						'hillshade-exaggeration': 1,
+					{
+						id: 'hillshade',
+						type: 'hillshade',
+						source: 'dem',
+						paint: {
+							'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
+							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
+							'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
+							'hillshade-exaggeration': 1
+						},
+						layout: {
+							visibility: 'none'
+						}
 					},
-					layout: {
-						visibility: "none"
+					'waterway_tunnel'
+				);
+
+				map.addLayer(
+					{
+						id: 'contours-layer',
+						type: 'line',
+						source: 'contour-source',
+						'source-layer': 'contours',
+						paint: {
+							'line-color': darkMode ? 'rgba(140, 140, 128, 30%)' : 'rgba(0,0,0, 30%)',
+							// level = highest index in thresholds array the elevation is a multiple of
+							'line-width': ['match', ['get', 'level'], 1, 1.3, 0.3]
+						},
+						layout: {
+							visibility: 'none'
+						}
 					},
-				},
-				'waterway_tunnel'
-			);
+					'waterway_tunnel'
+				);
 
-			map.addLayer({
-				id: "contours-layer",
-				type: "line",
-				source: "contour-source",
-				"source-layer": "contours",
-				paint: {
-					"line-color": darkMode ? "rgba(140, 140, 128, 30%)" : "rgba(0,0,0, 30%)",
-					// level = highest index in thresholds array the elevation is a multiple of
-					"line-width": ["match", ["get", "level"], 1, 1.3, 0.3],
-				},
-				layout: {
-					'visibility': 'none'
-				},
-				}, 'waterway_tunnel');
-
-				map.addLayer({
-				id: "contour-labels",
-				type: "symbol",
-				source: "contour-source",
-				"source-layer": "contours",
-				filter: [">", ["get", "level"], 0],
-				layout: {
-					"symbol-placement": "line",
-					"text-size": 10,
-					"text-field": ["concat", ["number-format", ["get", "ele"], {}], "m"],
-					"text-font": ["Barlow-Bold"],
-				},
-				paint: {
-					"text-halo-color": darkMode ?  'black' :  "white",
-					"text-halo-width": 1,
-					'text-color': darkMode ? "white": "black"
-				},
-				}, 'waterway_tunnel');
+				map.addLayer(
+					{
+						id: 'contour-labels',
+						type: 'symbol',
+						source: 'contour-source',
+						'source-layer': 'contours',
+						filter: ['>', ['get', 'level'], 0],
+						layout: {
+							'symbol-placement': 'line',
+							'text-size': 10,
+							'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
+							'text-font': ['Barlow-Bold']
+						},
+						paint: {
+							'text-halo-color': darkMode ? 'black' : 'white',
+							'text-halo-width': 1,
+							'text-color': darkMode ? 'white' : 'black'
+						}
+					},
+					'waterway_tunnel'
+				);
 
 				if (darkMode == true) {
 					map.setSky({
-            		'sky-color': "hsl(214, 20%, 19%)",
-            'sky-horizon-blend': 0.4,
-            'horizon-color': [
-  "interpolate",
-  ["exponential", 1.2],
-  ["zoom"],
-  5.5,
-  "hsla(214, 15%, 19%, 0.2)",
-  6,
-  "hsla(214, 15%, 21%, 0.2)"
-],
-            'horizon-fog-blend': 0.3,
-            'fog-color': [
-  "interpolate",
-  ["exponential", 1.2],
-  ["zoom"],
-  5.5,
-  "hsl(214, 15%, 10%)",
-  6,
-  "hsl(214, 30%, 5%)"
-],
-            'fog-ground-blend': 0.9
-       			 });
+						'sky-color': 'hsl(214, 20%, 19%)',
+						'sky-horizon-blend': 0.4,
+						'horizon-color': [
+							'interpolate',
+							['exponential', 1.2],
+							['zoom'],
+							5.5,
+							'hsla(214, 15%, 19%, 0.2)',
+							6,
+							'hsla(214, 15%, 21%, 0.2)'
+						],
+						'horizon-fog-blend': 0.3,
+						'fog-color': [
+							'interpolate',
+							['exponential', 1.2],
+							['zoom'],
+							5.5,
+							'hsl(214, 15%, 10%)',
+							6,
+							'hsl(214, 30%, 5%)'
+						],
+						'fog-ground-blend': 0.9
+					});
 				} else {
-
 				}
-				
 
-				show_topo_global_store.subscribe((value:boolean) => {
+				show_topo_global_store.subscribe((value: boolean) => {
 					if (value === true) {
-						map.setLayoutProperty('hillshade', "visibility", "visible");
-						map.setLayoutProperty('contour-labels', "visibility", "visible");
-						map.setLayoutProperty("contours-layer", "visibility", "visible");
+						map.setLayoutProperty('hillshade', 'visibility', 'visible');
+						map.setLayoutProperty('contour-labels', 'visibility', 'visible');
+						map.setLayoutProperty('contours-layer', 'visibility', 'visible');
 
-					if (window.innerWidth >= 768 || window.innerHeight >= 768) {
-						map.setTerrain({source: 'dem', exaggeration: 1});
-					}
+						if (window.innerWidth >= 768 || window.innerHeight >= 768) {
+							map.setTerrain({ source: 'dem', exaggeration: 1 });
+						}
 					} else {
-						map.setLayoutProperty('hillshade', "visibility", "none");
+						map.setLayoutProperty('hillshade', 'visibility', 'none');
 
 						//map.removeLayer('hillshade');
-						
-						map.setLayoutProperty('contour-labels', "visibility", "none");
-						map.setLayoutProperty("contours-layer", "visibility", "none");
+
+						map.setLayoutProperty('contour-labels', 'visibility', 'none');
+						map.setLayoutProperty('contours-layer', 'visibility', 'none');
 
 						map.setTerrain(null);
 					}
 				});
 
-			setTimeout(() => {
+				setTimeout(() => {
+					let chateau_feed_results = determineFeedsUsingChateaus(map);
+					chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+
+					runSettingsAdapt();
+				}, 0);
+
+				setTimeout(() => {
+					runSettingsAdapt();
+				}, 1000);
+
+				setTimeout(() => {
+					let chateau_feed_results = determineFeedsUsingChateaus(map);
+					chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+				}, 4000);
+
+				setTimeout(() => {
+					let chateau_feed_results = determineFeedsUsingChateaus(map);
+					chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+				}, 5000);
+			});
+
+			maplibregl.setRTLTextPlugin(
+				'/mapbox-gl-rtl-text.min.js',
+				true // Lazy load the plugin
+			);
+
+			mapglobal = map;
+
+			//updates the debug window with the current map lng and lat
+			function updateData() {
+				mapzoom = map.getZoom();
+				maplng = map.getCenter().lng;
+				maplat = map.getCenter().lat;
+
+				current_map_heading = map.getBearing();
+			}
+
+			map.on('move', (events) => {
+				updateData();
+				lock_on_gps_store.set(false);
+			});
+
+			map.on('moveend', (events) => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
 				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			});
 
-				runSettingsAdapt();
-			}, 0);
+			map.on('touchmove', (events) => {
+				lasttimeofnorth = 0;
+			});
 
-			setTimeout(() => {
-				runSettingsAdapt();
-			}, 1000);
+			map.on('mousemove', (events) => {
+				lasttimeofnorth = 0;
+			});
 
-			setTimeout(() => {
+			map.on('zoomend', (events) => {
 				let chateau_feed_results = determineFeedsUsingChateaus(map);
-			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			}, 4000);
+				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			});
 
-			setTimeout(() => {
-				let chateau_feed_results = determineFeedsUsingChateaus(map);
-			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			}, 5000);
+			console.log('setting up load map');
+
+			setup_load_map(
+				map,
+				runSettingsAdapt,
+				darkMode,
+				layerspercategory,
+				chateaus_in_frame,
+				layersettings,
+				chateau_to_realtime_feed_lookup,
+				pending_chateau_rt_request,
+				recompute_map_padding
+			);
+
+			console.log('setting up click handler');
+
+			setup_click_handler(map, layerspercategory, setSidebarOpen);
 		});
-
-		maplibregl.setRTLTextPlugin(
-			'/mapbox-gl-rtl-text.min.js',
-			true // Lazy load the plugin
-		);
-
-		mapglobal = map;
-
-		//updates the debug window with the current map lng and lat
-		function updateData() {
-			mapzoom = map.getZoom();
-			maplng = map.getCenter().lng;
-			maplat = map.getCenter().lat;
-
-			current_map_heading = map.getBearing();
-		}
-
-		map.on('move', (events) => {
-			updateData();
-			lock_on_gps_store.set(false);
-		});
-
-		map.on('moveend', (events) => {
-			let chateau_feed_results = determineFeedsUsingChateaus(map);
-			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-		});
-
-		map.on('touchmove', (events) => {
-			lasttimeofnorth = 0;
-		});
-
-		map.on('mousemove', (events) => {
-			lasttimeofnorth = 0;
-		});
-
-		map.on('zoomend', (events) => {
-			let chateau_feed_results = determineFeedsUsingChateaus(map);
-			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-		});
-
-		console.log('setting up load map');
-
-		
-		setup_load_map(
-			map,
-			runSettingsAdapt,
-			darkMode,
-			layerspercategory,
-			chateaus_in_frame,
-			layersettings,
-			chateau_to_realtime_feed_lookup,
-			pending_chateau_rt_request,
-			recompute_map_padding
-		);
-
-		console.log('setting up click handler');
-
-		setup_click_handler(map, layerspercategory, setSidebarOpen);
-		
-	});
 	} catch (e) {
 		console.error(e);
 	}
 </script>
+
 <svelte:head>
 	<!-- Primary Meta Tags -->
 	<title>Catenary Maps</title>
@@ -1515,496 +1504,495 @@ if (get_layers_from_local) {
 	/>
 </svelte:head>
 <svelte:boundary>
+	<div class="w-full">
+		<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 
-<div class="w-full">
-	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
+		{#key top_margin_collapser_sidebar}
+			<div
+				class="fixed hidden md:flex p-1 items-center rounded-r-md bg-white dark:bg-darksky text-black dark:text-white"
+				role="button"
+				aria-label="Toggle sidebar"
+				tabindex="0"
+				on:click={() => {
+					if (sidebarOpen == 'full') {
+						sidebarOpen = 'none';
+						moveToPos({});
+					} else {
+						sidebarOpen = 'full';
+						moveToPos({});
+					}
+				}}
+				on:keydown={() => {
+					if (sidebarOpen == 'full') {
+						sidebarOpen = 'none';
+						moveToPos({});
+					} else {
+						sidebarOpen = 'full';
+						moveToPos({});
+					}
+				}}
+				style={`left: ${collapser_left_offset}; top: ${top_margin_collapser_sidebar};`}
+			>
+				{#if sidebarOpen == 'none'}
+					<span class="material-symbols-outlined block my-auto"> chevron_right </span>
+				{/if}
+				{#if sidebarOpen == 'full'}
+					<span class="material-symbols-outlined block my-auto"> chevron_left </span>
+				{/if}
+			</div>
+		{/key}
 
-	{#key top_margin_collapser_sidebar}
-		<div
-			class="fixed hidden md:flex p-1 items-center rounded-r-md bg-white dark:bg-darksky text-black dark:text-white"
-			role="button"
-			aria-label="Toggle sidebar"
-			tabindex="0"
-			on:click={() => {
-				if (sidebarOpen == 'full') {
-					sidebarOpen = 'none';
-					moveToPos({});
-				} else {
-					sidebarOpen = 'full';
-					moveToPos({});
-				}
-			}}
-			on:keydown={() => {
-				if (sidebarOpen == 'full') {
-					sidebarOpen = 'none';
-					moveToPos({});
-				} else {
-					sidebarOpen = 'full';
-					moveToPos({});
-				}
-			}}
-			style={`left: ${collapser_left_offset}; top: ${top_margin_collapser_sidebar};`}
-		>
-			{#if sidebarOpen == 'none'}
-				<span class="material-symbols-outlined block my-auto"> chevron_right </span>
-			{/if}
-			{#if sidebarOpen == 'full'}
-				<span class="material-symbols-outlined block my-auto"> chevron_left </span>
+		{#if !$isLoading}
+			<div
+				id="catenary-sidebar"
+				style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
+				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-xs md:backdrop-blur-sm md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
+			>
+				<div
+					class="flex md:hidden py-2 flex-row"
+					on:mousedown={startmovesidebar}
+					on:touchstart={startmovesidebar}
+					aria-label="Move sidebar"
+					role="none"
+				>
+					<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
+				</div>
+				<SidebarInternals {usunits} {latest_item_on_stack} {darkMode} />
+			</div>
+		{/if}
+	</div>
+	{#if !$isLoading}
+		<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
+			<div
+				aria-label="Layers"
+				on:click={togglelayerfeature}
+				on:keypress={togglelayerfeature}
+				role="button"
+				class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+			>
+				<span
+					class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
+				>
+					layers
+				</span>
+			</div>
+
+			<div
+				on:click={gonorth}
+				on:keypress={gonorth}
+				on:touchstart={gonorth}
+				role="button"
+				aria-label="Reset Map to North"
+				class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
+			>
+				<img
+					src={current_map_heading < 7 && current_map_heading > -7
+						? darkMode === true
+							? '/icons/north.svg'
+							: '/icons/light_north.svg'
+						: '/icons/compass.svg'}
+					class="h-7"
+					style={`transform: rotate(${0 - current_map_heading}deg)`}
+				/>
+			</div>
+
+			{#if !desktopapp}
+				{#key sidebar_height_output}
+					{#if geolocation != null}
+						{#if typeof geolocation.coords == 'object'}
+							{#if typeof geolocation.coords.speed == 'number'}
+								<div
+									on:click={(e) => {
+										e.preventDefault();
+									}}
+									class="leading-tight md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5"
+									style={`font-size: 0px;bottom: ${gpsbutton_bottom_offset_calc()}`}
+								>
+									<p class="leading-none">
+										{#if geolocation}
+											{#if usunits}
+												<span class="font-semibold text-sm"
+													>{(2.23694 * geolocation.coords.speed).toFixed(1).split('.')[0]}</span
+												>
+											{:else}
+												<span class="font-semibold text-sm"
+													>{(3.6 * geolocation.coords.speed).toFixed(1).split('.')[0]}</span
+												>
+											{/if}
+											{#if ['fr', 'de', 'it', 'es', 'se'].includes(current_locale.split('-')[0])}
+												<span class="text-sm">,</span>
+											{:else}
+												<span class="text-sm">.</span>
+											{/if}
+											{#if usunits}
+												<span class="text-sm"
+													>{(2.23694 * geolocation.coords.speed).toFixed(1).split('.')[1]}</span
+												>
+											{:else}
+												<span class="text-sm"
+													>{(3.6 * geolocation.coords.speed).toFixed(1).split('.')[1]}</span
+												>
+											{/if}
+											{#if usunits}<br />
+												<span class="text-xs">mph</span>
+											{:else}<br />
+												<span class="text-xs">km/h</span>
+											{/if}
+										{/if}
+									</p>
+								</div>
+							{/if}
+						{/if}
+					{/if}
+					<div
+						on:click={gpsbutton}
+						on:keydown={gpsbutton}
+						on:touchstart={gpsbutton}
+						style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
+						class="{lockongps
+							? ' text-blue-500 dark:text-blue-300'
+							: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
+					>
+						<span class="material-symbols-outlined align-middle text-lg select-none">
+							{#if lockongps == true}my_location{:else}location_searching{/if}
+						</span>
+					</div>
+				{/key}
 			{/if}
 		</div>
-	{/key}
+	{/if}
 
 	{#if !$isLoading}
 		<div
-			id="catenary-sidebar"
-			style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-			class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-90 backdrop-blur-xs md:backdrop-blur-sm md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
+			class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
+				? ''
+				: 'hidden'}"
 		>
-			<div
-				class="flex md:hidden py-2 flex-row"
-				on:mousedown={startmovesidebar}
-				on:touchstart={startmovesidebar}
-				aria-label="Move sidebar"
-				role="none"
-			>
-				<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
+			<div class="flex flex-row align-middle">
+				<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
+				<div class="ml-auto">
+					<CloseButton
+						onclose={() => {
+							layersettingsBox = false;
+						}}
+						moreclasses=""
+						parentclass=""
+					/>
+				</div>
 			</div>
-			<SidebarInternals {usunits} {latest_item_on_stack} {darkMode} />
+			<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
+				<Layerselectionbox
+					text={$_('headingIntercityRail')}
+					changesetting={() => {
+						selectedSettingsTab = 'intercityrail';
+					}}
+					cssclass={`${
+						selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
+					} w-1/2 py-1 px-1`}
+				/>
+
+				<Layerselectionbox
+					text={$_('headingLocalRail')}
+					changesetting={() => {
+						selectedSettingsTab = 'localrail';
+					}}
+					cssclass={`${
+						selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
+					} w-1/2 py-1 px-1`}
+				/>
+
+				<Layerselectionbox
+					text={$_('headingBus')}
+					changesetting={() => {
+						selectedSettingsTab = 'bus';
+					}}
+					cssclass={`${
+						selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
+					} w-1/2 py-1 px-1`}
+				/>
+
+				<Layerselectionbox
+					text={$_('headingOther')}
+					changesetting={() => {
+						selectedSettingsTab = 'other';
+					}}
+					cssclass={`${
+						selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
+					} w-1/2 py-1 px-1`}
+				/>
+
+				<div
+					on:click={() => {
+						selectedSettingsTab = 'more';
+					}}
+					on:keydown={() => {
+						selectedSettingsTab = 'more';
+					}}
+					class={`${
+						selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
+					} w-1/2 py-1 px-1`}
+				>
+					<p class="w-full align-center text-center">{$_('headingMisc')}</p>
+				</div>
+			</div>
+
+			{#if selectedSettingsTab === 'more'}
+				<div class="flex flex-row gap-x-1 flex-wrap">
+					<Layerbutton
+						bind:layersettings
+						selectedSettingsTab="more"
+						change="foamermode"
+						nestedchange="infra"
+						name={$_('orminfra')}
+						urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						selectedSettingsTab="more"
+						change="foamermode"
+						nestedchange="maxspeed"
+						name={$_('ormspeeds')}
+						urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						selectedSettingsTab="more"
+						change="foamermode"
+						nestedchange="signalling"
+						name={$_('ormsignalling')}
+						urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						selectedSettingsTab="more"
+						change="foamermode"
+						nestedchange="electrification"
+						name={$_('ormelectrification')}
+						urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						selectedSettingsTab="more"
+						change="foamermode"
+						nestedchange="gauge"
+						name={$_('ormgauge')}
+						urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
+						{runSettingsAdapt}
+					/>
+					<Layerbutton
+						bind:layersettings
+						selectedSettingsTab="more"
+						change="foamermode"
+						nestedchange="dummy"
+						name={$_('none')}
+						urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
+						{runSettingsAdapt}
+					/>
+				</div>
+
+				<div>
+					<input
+						on:click={(x) => {
+							show_zombie_buses_store.update((value) => !value);
+
+							localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+							runSettingsAdapt();
+						}}
+						on:keydown={(x) => {
+							show_zombie_buses_store.update((value) => !value);
+
+							localStorage.setItem('showzombiebuses', String(showzombiebuses));
+
+							runSettingsAdapt();
+						}}
+						checked={showzombiebuses}
+						id="show-zombie-buses"
+						type="checkbox"
+						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+					/>
+					<label for="show-zombie-buses" class="ml-2">{$_('showtripless')}</label>
+				</div>
+				<div>
+					<input
+						on:click={(x) => {
+							show_my_location_store.update((value) => !value);
+
+							localStorage.setItem('show-my-location', String(show_my_location));
+
+							runSettingsAdapt();
+						}}
+						on:keydown={(x) => {
+							show_my_location_store.update((value) => !value);
+
+							localStorage.setItem('show-my-location', String(show_my_location));
+
+							runSettingsAdapt();
+						}}
+						checked={show_my_location}
+						id="show-my-location"
+						type="checkbox"
+						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+					/>
+					<label for="show-my-location" class="ml-2">{$_('showmylocation')}</label>
+				</div>
+
+				<div>
+					<input
+						on:click={(x) => {
+							show_topo_global_store.update((value) => !value);
+
+							localStorage.setItem('show-topo', String(get(show_topo_global_store)));
+
+							runSettingsAdapt();
+						}}
+						on:keydown={(x) => {
+							show_topo_global_store.update((value) => !value);
+
+							localStorage.setItem('show-topo', String(get(show_topo_global_store)));
+
+							runSettingsAdapt();
+						}}
+						checked={show_topo}
+						id="show-topo-toggle"
+						type="checkbox"
+						class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+					/>
+					<label for="show-topo-toggle" class="ml-2">{$_('topo')}</label>
+				</div>
+			{/if}
+
+			{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
+				<div class="flex flex-row gap-x-1">
+					<Layerbutton
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="shapes"
+						name={$_('routes')}
+						urlicon="/routesicon.svg"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="labelshapes"
+						name={$_('labels')}
+						urlicon="/labelsicon.svg"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="stops"
+						name={$_('stops')}
+						urlicon="/stopsicon.svg"
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="stoplabels"
+						name={$_('stopnames')}
+						urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
+						{runSettingsAdapt}
+					/>
+
+					<Layerbutton
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="visible"
+						name={$_('vehicles')}
+						urlicon="/vehiclesicon.svg"
+						{runSettingsAdapt}
+					/>
+				</div>
+				<div class="flex flex-row gap-x-1">
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="route"
+						name={$_('showroute')}
+						symbol="route"
+						{runSettingsAdapt}
+					/>
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="trip"
+						name={$_('showtrip')}
+						symbol="mode_of_travel"
+						{runSettingsAdapt}
+					/>
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="vehicle"
+						name={$_('showvehicle')}
+						symbol="train"
+						{runSettingsAdapt}
+					/>
+
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="headsign"
+						name={$_('headsign')}
+						symbol="sports_score"
+						{runSettingsAdapt}
+					/>
+
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="speed"
+						name={$_('showspeed')}
+						symbol="speed"
+						{runSettingsAdapt}
+					/>
+				</div>
+			{/if}
 		</div>
 	{/if}
-</div>
-{#if !$isLoading}
-	<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
-		<div
-			aria-label="Layers"
-			on:click={togglelayerfeature}
-			on:keypress={togglelayerfeature}
-			role="button"
-			class="!cursor-pointer bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
-		>
-			<span
-				class="!cursor-pointer material-symbols-outlined align-middle my-auto mx-auto select-none"
-			>
-				layers
-			</span>
-		</div>
 
-		<div
-			on:click={gonorth}
-			on:keypress={gonorth}
-			on:touchstart={gonorth}
-			role="button"
-			aria-label="Reset Map to North"
-			class="bg-white z-10 h-10 w-10 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center"
-		>
-			<img
-				src={current_map_heading < 7 && current_map_heading > -7
-					? darkMode === true
-						? '/icons/north.svg'
-						: '/icons/light_north.svg'
-					: '/icons/compass.svg'}
-				class="h-7"
-				style={`transform: rotate(${0 - current_map_heading}deg)`}
-			/>
-		</div>
+	<style>
+		* {
+			cursor: default;
+			font-family: 'Barlow', sans-serif;
+			user-select: none;
+		}
 
-		{#if !desktopapp}
-			{#key sidebar_height_output}
-				{#if geolocation != null}
-					{#if typeof geolocation.coords == 'object'}
-						{#if typeof geolocation.coords.speed == 'number'}
-							<div
-								on:click={(e) => {
-									e.preventDefault();
-								}}
-								class="leading-tight md:text-base rounded-lg text-black bg-white dark:text-white border border-gray-500 dark:bg-slate-800 shadow-sm shadow-slate-400 dark:shadow-slate-700 px-1 py-0.5"
-								style={`font-size: 0px;bottom: ${gpsbutton_bottom_offset_calc()}`}
-							>
-								<p class="leading-none">
-									{#if geolocation}
-										{#if usunits}
-											<span class="font-semibold text-sm"
-												>{(2.23694 * geolocation.coords.speed).toFixed(1).split('.')[0]}</span
-											>
-										{:else}
-											<span class="font-semibold text-sm"
-												>{(3.6 * geolocation.coords.speed).toFixed(1).split('.')[0]}</span
-											>
-										{/if}
-										{#if ['fr', 'de', 'it', 'es', 'se'].includes(current_locale.split('-')[0])}
-											<span class="text-sm">,</span>
-										{:else}
-											<span class="text-sm">.</span>
-										{/if}
-										{#if usunits}
-											<span class="text-sm"
-												>{(2.23694 * geolocation.coords.speed).toFixed(1).split('.')[1]}</span
-											>
-										{:else}
-											<span class="text-sm"
-												>{(3.6 * geolocation.coords.speed).toFixed(1).split('.')[1]}</span
-											>
-										{/if}
-										{#if usunits}<br />
-											<span class="text-xs">mph</span>
-										{:else}<br />
-											<span class="text-xs">km/h</span>
-										{/if}
-									{/if}
-								</p>
-							</div>
-						{/if}
-					{/if}
-				{/if}
-				<div
-					on:click={gpsbutton}
-					on:keydown={gpsbutton}
-					on:touchstart={gpsbutton}
-					style={`bottom: ${gpsbutton_bottom_offset_calc()}`}
-					class="{lockongps
-						? ' text-blue-500 dark:text-blue-300'
-						: ' text-black dark:text-gray-50'} select-none bg-white text-gray-900 z-50 fixed right-4 h-16 w-16 rounded-full dark:bg-gray-900 dark:text-gray-50 pointer-events-auto flex justify-center items-center clickable"
-				>
-					<span class="material-symbols-outlined align-middle text-lg select-none">
-						{#if lockongps == true}my_location{:else}location_searching{/if}
-					</span>
-				</div>
-			{/key}
-		{/if}
-	</div>
-{/if}
+		.material-symbols-outlined {
+			font-family: 'Material Symbols Outlined', sans-serif;
+		}
 
-{#if !$isLoading}
-	<div
-		class="z-50 dark:shadow-slate-800 shadow-lg fixed bottom-0 w-full rounded-t-lg sm:w-fit sm:bottom-4 sm:right-4 bg-white dark:bg-gray-900 dark:text-gray-50 bg-opacity-90 dark:bg-opacity-90 sm:rounded-lg z-50 px-3 py-2 {layersettingsBox
-			? ''
-			: 'hidden'}"
-	>
-		<div class="flex flex-row align-middle">
-			<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
-			<div class="ml-auto">
-				<CloseButton
-					onclose={() => {
-						layersettingsBox = false;
-					}}
-					moreclasses=""
-					parentclass=""
-				/>
-			</div>
-		</div>
-		<div class="rounded-xl mx-0 my-2 flex flex-row w-full text-black dark:text-white">
-			<Layerselectionbox
-				text={$_('headingIntercityRail')}
-				changesetting={() => {
-					selectedSettingsTab = 'intercityrail';
-				}}
-				cssclass={`${
-					selectedSettingsTab === 'intercityrail' ? enabledlayerstyle : disabledlayerstyle
-				} w-1/2 py-1 px-1`}
-			/>
+		.lineNumber {
+			font-size: 1.2rem;
+			font-weight: 600;
+			padding: 5px;
+			border-radius: var(--radius);
+		}
 
-			<Layerselectionbox
-				text={$_('headingLocalRail')}
-				changesetting={() => {
-					selectedSettingsTab = 'localrail';
-				}}
-				cssclass={`${
-					selectedSettingsTab === 'localrail' ? enabledlayerstyle : disabledlayerstyle
-				} w-1/2 py-1 px-1`}
-			/>
+		.lineLogo {
+			margin-bottom: 15px;
+		}
 
-			<Layerselectionbox
-				text={$_('headingBus')}
-				changesetting={() => {
-					selectedSettingsTab = 'bus';
-				}}
-				cssclass={`${
-					selectedSettingsTab === 'bus' ? enabledlayerstyle : disabledlayerstyle
-				} w-1/2 py-1 px-1`}
-			/>
-
-			<Layerselectionbox
-				text={$_('headingOther')}
-				changesetting={() => {
-					selectedSettingsTab = 'other';
-				}}
-				cssclass={`${
-					selectedSettingsTab === 'other' ? enabledlayerstyle : disabledlayerstyle
-				} w-1/2 py-1 px-1`}
-			/>
-
-			<div
-				on:click={() => {
-					selectedSettingsTab = 'more';
-				}}
-				on:keydown={() => {
-					selectedSettingsTab = 'more';
-				}}
-				class={`${
-					selectedSettingsTab === 'more' ? enabledlayerstyle : disabledlayerstyle
-				} w-1/2 py-1 px-1`}
-			>
-				<p class="w-full align-center text-center">{$_('headingMisc')}</p>
-			</div>
-		</div>
-
-		{#if selectedSettingsTab === 'more'}
-			<div class="flex flex-row gap-x-1 flex-wrap">
-				<Layerbutton
-					bind:layersettings
-					selectedSettingsTab="more"
-					change="foamermode"
-					nestedchange="infra"
-					name={$_('orminfra')}
-					urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					selectedSettingsTab="more"
-					change="foamermode"
-					nestedchange="maxspeed"
-					name={$_('ormspeeds')}
-					urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					selectedSettingsTab="more"
-					change="foamermode"
-					nestedchange="signalling"
-					name={$_('ormsignalling')}
-					urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					selectedSettingsTab="more"
-					change="foamermode"
-					nestedchange="electrification"
-					name={$_('ormelectrification')}
-					urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					selectedSettingsTab="more"
-					change="foamermode"
-					nestedchange="gauge"
-					name={$_('ormgauge')}
-					urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
-					{runSettingsAdapt}
-				/>
-				<Layerbutton
-					bind:layersettings
-					selectedSettingsTab="more"
-					change="foamermode"
-					nestedchange="dummy"
-					name={$_('none')}
-					urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
-					{runSettingsAdapt}
-				/>
-			</div>
-
-			<div>
-				<input
-					on:click={(x) => {
-						show_zombie_buses_store.update((value) => !value);
-
-						localStorage.setItem('showzombiebuses', String(showzombiebuses));
-
-						runSettingsAdapt();
-					}}
-					on:keydown={(x) => {
-						show_zombie_buses_store.update((value) => !value);
-
-						localStorage.setItem('showzombiebuses', String(showzombiebuses));
-
-						runSettingsAdapt();
-					}}
-					checked={showzombiebuses}
-					id="show-zombie-buses"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="show-zombie-buses" class="ml-2">{$_('showtripless')}</label>
-			</div>
-			<div>
-				<input
-					on:click={(x) => {
-						show_my_location_store.update((value) => !value);
-
-						localStorage.setItem('show-my-location', String(show_my_location));
-
-						runSettingsAdapt();
-					}}
-					on:keydown={(x) => {
-						show_my_location_store.update((value) => !value);
-
-						localStorage.setItem('show-my-location', String(show_my_location));
-
-						runSettingsAdapt();
-					}}
-					checked={show_my_location}
-					id="show-my-location"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="show-my-location" class="ml-2">{$_('showmylocation')}</label>
-			</div>
-
-			<div>
-				<input
-					on:click={(x) => {
-						show_topo_global_store.update((value) => !value);
-
-						localStorage.setItem('show-topo', String(get(show_topo_global_store)));
-
-						runSettingsAdapt();
-					}}
-					on:keydown={(x) => {
-						show_topo_global_store.update((value) => !value);
-
-						localStorage.setItem('show-topo', String(get(show_topo_global_store)));
-
-						runSettingsAdapt();
-					}}
-					checked={show_topo}
-					id="show-topo-toggle"
-					type="checkbox"
-					class="align-middle my-auto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-				/>
-				<label for="show-topo-toggle" class="ml-2">{$_('topo')}</label>
-			</div>
-		{/if}
-
-		{#if ['other', 'bus', 'intercityrail', 'localrail'].includes(selectedSettingsTab)}
-			<div class="flex flex-row gap-x-1">
-				<Layerbutton
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="shapes"
-					name={$_('routes')}
-					urlicon="/routesicon.svg"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="labelshapes"
-					name={$_('labels')}
-					urlicon="/labelsicon.svg"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="stops"
-					name={$_('stops')}
-					urlicon="/stopsicon.svg"
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="stoplabels"
-					name={$_('stopnames')}
-					urlicon={darkMode ? '/dark-stop-name.png' : '/light-stop-name.png'}
-					{runSettingsAdapt}
-				/>
-
-				<Layerbutton
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="visible"
-					name={$_('vehicles')}
-					urlicon="/vehiclesicon.svg"
-					{runSettingsAdapt}
-				/>
-			</div>
-			<div class="flex flex-row gap-x-1">
-				<Realtimelabel
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="route"
-					name={$_('showroute')}
-					symbol="route"
-					{runSettingsAdapt}
-				/>
-				<Realtimelabel
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="trip"
-					name={$_('showtrip')}
-					symbol="mode_of_travel"
-					{runSettingsAdapt}
-				/>
-				<Realtimelabel
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="vehicle"
-					name={$_('showvehicle')}
-					symbol="train"
-					{runSettingsAdapt}
-				/>
-
-				<Realtimelabel
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="headsign"
-					name={$_('headsign')}
-					symbol="sports_score"
-					{runSettingsAdapt}
-				/>
-
-				<Realtimelabel
-					bind:layersettings
-					bind:selectedSettingsTab
-					change="speed"
-					name={$_('showspeed')}
-					symbol="speed"
-					{runSettingsAdapt}
-				/>
-			</div>
-		{/if}
-	</div>
-{/if}
-
-<style>
-	* {
-		cursor: default;
-		font-family: 'Barlow', sans-serif;
-		user-select: none;
-	}
-
-	.material-symbols-outlined {
-		font-family: 'Material Symbols Outlined', sans-serif;
-	}
-
-	.lineNumber {
-		font-size: 1.2rem;
-		font-weight: 600;
-		padding: 5px;
-		border-radius: var(--radius);
-	}
-
-	.lineLogo {
-		margin-bottom: 15px;
-	}
-
-	.material-symbols-outlined-big {
-		font-variation-settings:
-			'FILL' 0,
-			'wght' 400,
-			'GRAD' 0,
-			'opsz' 64;
-	}
-</style>
+		.material-symbols-outlined-big {
+			font-variation-settings:
+				'FILL' 0,
+				'wght' 400,
+				'GRAD' 0,
+				'opsz' 64;
+		}
+	</style>
 </svelte:boundary>
