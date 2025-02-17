@@ -1279,7 +1279,7 @@
 						type: 'hillshade',
 						source: 'dem',
 						paint: {
-							'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 0.3)',
+							'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 60%, 30%)',
 							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
 							'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 12%)' : '#222222aa',
 							'hillshade-exaggeration': 1
