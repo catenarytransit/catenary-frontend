@@ -262,14 +262,16 @@
 		
 
 		<p class="px-3 text-xl my-1">Directions</p>
-		<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll min-h-[100px]">
-			{#each Object.entries(route_data.direction_patterns) as direction, index}
+		<div class="flex flex-col mr-2 ml-2">
+			{#each Object.entries(route_data.direction_patterns).sort((a,b) => (a[1].direction_pattern.headsign_or_destination < b[1].direction_pattern.headsign_or_destination)) as direction, index}
 				<div
 					on:click={() => (change_active_pattern(direction[1].direction_pattern.direction_pattern_id))}
-					class={` text-sm  hover:bg-seashore p-2 m-1 mb-2 flex rounded-md min-w-36  leading-tight ${direction[1].direction_pattern.direction_pattern_id == activePattern ? 'bg-seashore' : 'bg-white dark:bg-slate-800'}`}
+					class={`border border-gray-500 py-1 px-1 text-sm  hover:bg-seashore flex rounded-md min-w-36  leading-tight ${direction[1].direction_pattern.direction_pattern_id == activePattern ? 'bg-seashore' : 'bg-white dark:bg-slate-800'}`}
 				>
-					<span class="material-symbols-outlined">chevron_right</span>
-					{titleCase(direction[1].direction_pattern.headsign_or_destination)}
+					<p>
+						<span>{titleCase(direction[1].direction_pattern.headsign_or_destination)}</span>
+					<span class="text-xs">{" ("}{direction[1].rows.length}{" "}{$_("stops")}{" )"}</span>
+					</p>
 				</div>
 			{/each}
 		</div>
