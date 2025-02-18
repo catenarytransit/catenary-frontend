@@ -230,12 +230,29 @@
 	function skyRefresh(map: maplibregl.Map, darkMode: boolean) {
 		if (darkMode) {
 			map.setSky({
-				'sky-color': '#000000',
-				'sky-horizon-blend': 1,
-				'horizon-color': '#ffffff',
-				'horizon-fog-blend': 0.5,
-				'fog-ground-blend': 0.5,
-				'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 2, 0.4, 7, 0.1, 9, 0]
+				'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 2, 0.4, 7, 0.1, 9, 0],
+				'sky-color': 'hsl(214, 20%, 19%)',
+						'sky-horizon-blend': 0.4,
+						'horizon-color': [
+							'interpolate',
+							['exponential', 1.2],
+							['zoom'],
+							5.5,
+							'hsla(214, 15%, 19%, 0.2)',
+							6,
+							'hsla(214, 15%, 21%, 0.2)'
+						],
+						'horizon-fog-blend': 0.3,
+						'fog-color': [
+							'interpolate',
+							['exponential', 1.2],
+							['zoom'],
+							5.5,
+							'hsl(214, 15%, 10%)',
+							6,
+							'hsl(214, 30%, 5%)'
+						],
+						'fog-ground-blend': 0.9
 			});
 		} else {
 			map.setSky({
@@ -1281,9 +1298,9 @@
 						type: 'hillshade',
 						source: 'dem',
 						paint: {
-							'hillshade-shadow-color': darkMode ? 'hsla(202, 37%, 0%, 50%)' : 'hsla(202, 37%, 20%, 60%)',
-							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 51%)' : '#ffffff33',
-							'hillshade-accent-color': darkMode ? 'hsla(203, 39%, 50%, 50%)' : '#ffffff77',
+							'hillshade-shadow-color': darkMode ? 'hsla(202, 37%, 0%, 30%)' : 'hsla(202, 37%, 20%, 60%)',
+							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 21%)' : '#ffffff33',
+							'hillshade-accent-color': darkMode ? 'hsla(203, 39%, 50%, 20%)' : '#ffffff77',
 							'hillshade-exaggeration': 1
 						},
 						layout: {
@@ -1332,34 +1349,6 @@
 					},
 					'waterway_tunnel'
 				);
-
-				if (darkMode == true) {
-					map.setSky({
-						'sky-color': 'hsl(214, 20%, 19%)',
-						'sky-horizon-blend': 0.4,
-						'horizon-color': [
-							'interpolate',
-							['exponential', 1.2],
-							['zoom'],
-							5.5,
-							'hsla(214, 15%, 19%, 0.2)',
-							6,
-							'hsla(214, 15%, 21%, 0.2)'
-						],
-						'horizon-fog-blend': 0.3,
-						'fog-color': [
-							'interpolate',
-							['exponential', 1.2],
-							['zoom'],
-							5.5,
-							'hsl(214, 15%, 10%)',
-							6,
-							'hsl(214, 30%, 5%)'
-						],
-						'fog-ground-blend': 0.9
-					});
-				} else {
-				}
 
 				show_topo_global_store.subscribe((value: boolean) => {
 					if (value === true) {
