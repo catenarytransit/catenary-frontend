@@ -1281,9 +1281,9 @@
 						type: 'hillshade',
 						source: 'dem',
 						paint: {
-							'hillshade-shadow-color': darkMode ? 'hsl(202, 37%, 0%)' : 'hsla(202, 37%, 20%, 60%)',
-							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 0.51)' : '#ffffff33',
-							'hillshade-accent-color': darkMode ? 'hsl(203, 39%, 70%)' : '#ffffff77',
+							'hillshade-shadow-color': darkMode ? 'hsla(202, 37%, 0%, 50%)' : 'hsla(202, 37%, 20%, 60%)',
+							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 51%)' : '#ffffff33',
+							'hillshade-accent-color': darkMode ? 'hsla(203, 39%, 50%, 50%)' : '#ffffff77',
 							'hillshade-exaggeration': 1
 						},
 						layout: {
