@@ -307,7 +307,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		minzoom: 4,
 		filter: ["all", ["==", ['get', 'routeType'], 0]],
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 8, 2, 10, 2.5, 11, 4.5, 16, 10],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 8, 2, 10, 2.5, 11, 4.5, 13, 5, 16, 10],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.6, 10, 1],
