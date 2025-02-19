@@ -24,19 +24,32 @@ export function fetch_realtime_vehicle_locations(
 	const categories_to_request: string[] = [];
 
 	if (layersettings.bus.visible) {
+		if (map.getZoom() > 6) {
+			
 		categories_to_request.push('bus');
+		}
+
+		
 	}
 
+	if (map.getZoom() > 3) {
 	if (layersettings.intercityrail.visible) {
 		categories_to_request.push('rail');
 	}
-
-	if (layersettings.localrail.visible) {
-		categories_to_request.push('metro');
 	}
+
+	if (map.getZoom() > 4) {
+		if (layersettings.localrail.visible) {
+			categories_to_request.push('metro');
+		}
+	}
+
+	if (map.getZoom() > 3) {
+		
 
 	if (layersettings.other.visible) {
 		categories_to_request.push('other');
+	}
 	}
 
 	const realtime_chateaus_in_frame = get(chateaus_in_frame).filter((chateau_id: string) => {

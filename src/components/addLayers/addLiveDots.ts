@@ -56,13 +56,15 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['literal', [0, -60]]
 	];
 
-	const pointing_shell_light_image = await map.loadImage('/icons/pointing-shell-light.png');
+	const [pointing_shell_light_image, pointing_filled_image, pointing_shell_image] =
+		await Promise.all([
+			map.loadImage('/icons/pointing-shell-light.png'),
+			map.loadImage('/icons/pointing-filled.png'),
+			map.loadImage('/icons/pointing-shell.png')
+		]);
+
 	map.addImage('pointingshelllight', pointing_shell_light_image.data);
-
-	const pointing_filled_image = await map.loadImage('/icons/pointing-filled.png');
 	map.addImage('pointingcoloured', pointing_filled_image.data, { sdf: true });
-
-	const pointing_shell_image = await map.loadImage('/icons/pointing-shell.png');
 	map.addImage('pointingshell', pointing_shell_image.data);
 
 	console.log('shells loaded');
@@ -80,7 +82,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
-		minzoom: 8.5
+		minzoom: 6
 	});
 
 	map.addLayer({
@@ -294,7 +296,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'icon-color': ['get', 'contrastdarkmodebearing'],
 			'icon-opacity': 1
 		},
-		minZoom: 2,
+		minZoom: 4.5,
 		layout: {
 			'icon-image': 'pointingcoloured',
 			'icon-allow-overlap': true,
