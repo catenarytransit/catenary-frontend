@@ -309,7 +309,10 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'circle',
 		source: 'localrail',
 		minzoom: 4,
-		filter: ["all", ["==", ['get', 'routeType'], 0]],
+		filter: ["all", ['any',
+			["==", ['get', 'routeType'], 0],
+			["==", ['get', 'routeType'], 5]
+		]],
 		paint: {
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 8, 2, 10, 2.5, 11, 4.5, 13, 5, 16, 10],
 			'circle-color': ['get', 'color'],
@@ -324,7 +327,10 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		id: layerspercategory.tram.pointing,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all', ["==", ['get', 'routeType'], 0], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		filter: ['all', ['any',
+			["==", ['get', 'routeType'], 0],
+			["==", ['get', 'routeType'], 5]
+		], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 		paint: {
 			'icon-color': ['get', 'contrastdarkmodebearing'],
 			'icon-opacity': 0.6
@@ -345,7 +351,10 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		id: layerspercategory.tram.pointingshell,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all',  ["==", ['get', 'routeType'], 0], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		filter: ['all',  ['any',
+			["==", ['get', 'routeType'], 0],
+			["==", ['get', 'routeType'], 5]
+		], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 		paint: {
 			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
 		},
@@ -366,6 +375,10 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'symbol',
 		source: 'localrail',
 		minzoom: 6,
+		filter: ['all',  ['any',
+			["==", ['get', 'routeType'], 0],
+			["==", ['get', 'routeType'], 5]
+		]],
 		layout: {
 			'text-field': ['get', 'maptag'],
 			/*'text-field': [
