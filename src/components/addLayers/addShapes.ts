@@ -177,9 +177,9 @@ export function addShapes(
 		minzoom: 3
 	});
 
-	//LOCAL RAIL
+	//metro
 	map.addLayer({
-		id: layerspercategory.localrail.shapes,
+		id: layerspercategory.metro.shapes,
 		type: 'line',
 		source: 'localcityrailshapes',
 		'source-layer': 'data',
@@ -187,7 +187,6 @@ export function addShapes(
 			'all',
 			[
 				'any',
-				['==', 0, ['get', 'route_type']],
 				['==', 1, ['get', 'route_type']],
 				['==', 5, ['get', 'route_type']],
 				['==', 12, ['get', 'route_type']]
@@ -228,7 +227,7 @@ export function addShapes(
 	});
 
 	map.addLayer({
-		id: layerspercategory.localrail.labelshapes,
+		id: layerspercategory.metro.labelshapes,
 		type: 'symbol',
 		source: 'localcityrailshapes',
 		'source-layer': 'data',
@@ -236,7 +235,6 @@ export function addShapes(
 			'all',
 			[
 				'any',
-				['==', 0, ['get', 'route_type']],
 				['==', 1, ['get', 'route_type']],
 				['==', 5, ['get', 'route_type']],
 				['==', 12, ['get', 'route_type']]
@@ -280,6 +278,104 @@ export function addShapes(
 		},
 		minzoom: 6
 	});
+
+		//tram
+		map.addLayer({
+			id: layerspercategory.tram.shapes,
+			type: 'line',
+			source: 'localcityrailshapes',
+			'source-layer': 'data',
+			filter: [
+				'all',
+				[
+					'any',
+					['==', 0, ['get', 'route_type']],
+				],
+				[
+					'!',
+					[
+						'all',
+						['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+						['==', ['coalesce', ['get', 'route_label']], 'Event']
+					]
+				],
+				[
+					'!',
+					[
+						'all',
+						['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+						['==', ['coalesce', ['get', 'route_label']], 'Silver']
+					]
+				],
+				[
+					'!', 
+						[
+							'all',
+							['==', 'nyct', ['get', 'chateau']],
+							['==', true, ['get', 'stop_to_stop_generated']]
+						]
+					
+				]
+			],
+			paint: {
+				'line-color': ['concat', '#', ['get', 'color']],
+				'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 9, 2],
+				'line-opacity': 1,
+				//'line-emissive-strength': 1
+			},
+			minzoom: 6
+		});
+	
+		map.addLayer({
+			id: layerspercategory.metro.labelshapes,
+			type: 'tram',
+			source: 'localcityrailshapes',
+			'source-layer': 'data',
+			filter: [
+				'all',
+				[
+					'any',
+					['==', 0, ['get', 'route_type']],
+				],
+				[
+					'!',
+					[
+						'all',
+						['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+						['==', ['coalesce', ['get', 'route_label']], 'Event']
+					]
+				],
+				[
+					'!',
+					[
+						'all',
+						['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
+						['==', ['coalesce', ['get', 'route_label']], 'Silver']
+					]
+				]
+			],
+			layout: {
+				'symbol-placement': 'line',
+				'text-field': ['coalesce', ['get', 'route_label']],
+				//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+				'text-font': ['Barlow-Bold'],
+				'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
+				'text-ignore-placement': false,
+				'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
+				'text-allow-overlap': false,
+				'text-pitch-alignment': 'viewport',
+				visibility: 'none'
+			},
+			paint: {
+				'text-color': ['concat', '#', ['get', 'text_color']],
+				//'text-emissive-strength': 1,
+				'text-halo-color': ['concat', '#', ['get', 'color']],
+				'text-halo-width': 1,
+				'text-halo-blur': 1
+				//'text-opacity': ['interpolate', ['linear'], ['zoom'], 3, 0, 3.5, 0.8, 4, 1]
+			},
+			minzoom: 6
+		});
 
 	//INTERCITY RAIL
 

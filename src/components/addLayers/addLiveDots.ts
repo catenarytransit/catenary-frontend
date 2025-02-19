@@ -56,6 +56,36 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['literal', [0, -60]]
 	];
 
+	const trambearingiconsize = [
+		'interpolate',
+		['linear'],
+		['zoom'],
+		6,
+		0.10,
+		8,
+		0.12,
+		9,
+		0.14,
+		11,
+		0.10,
+		12,
+		0.2,
+		15,
+		0.3
+	];
+
+	const trambearingoffset = [
+		'interpolate',
+		['linear'],
+		['zoom'],
+		9,
+		['literal', [0, -80]],
+		13,
+		['literal', [0, -60]],
+		15,
+		['literal', [0, -60]]
+	];
+
 	const pointing_shell_light_image = await map.loadImage('/icons/pointing-shell-light.png');
 	map.addImage('pointingshelllight', pointing_shell_light_image.data);
 
@@ -268,49 +298,29 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		}
 	});
 
-	//LOCAL RAIL
+	//Trams
 
 	map.addLayer({
-		id: layerspercategory.localrail.livedots,
+		id: layerspercategory.tram.livedots,
 		type: 'circle',
 		source: 'localrail',
 		minzoom: 4,
+		filter: ["all", ["==", ['get', 'routeType'], 0]],
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 8, 3, 10, 4, 11, 6, 16, 12],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 8, 2, 10, 2.5, 11, 4.5, 16, 10],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
-			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 10, 1.2],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.6, 10, 1],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.7]
 		}
 	});
 
 	map.addLayer({
-		id: layerspercategory.intercityrail.pointing,
-		source: 'intercityrail',
-		type: 'symbol',
-		filter: ['all', ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
-		paint: {
-			'icon-color': ['get', 'contrastdarkmodebearing'],
-			'icon-opacity': 1
-		},
-		minZoom: 2,
-		layout: {
-			'icon-image': 'pointingcoloured',
-			'icon-allow-overlap': true,
-			'icon-ignore-placement': true,
-			'icon-rotate': ['get', 'bearing'],
-			'icon-rotation-alignment': 'map',
-			'icon-offset': railbearingoffset,
-			'icon-size': railbearingiconsize
-		}
-	});
-
-	map.addLayer({
-		id: layerspercategory.localrail.pointing,
+		id: layerspercategory.tram.pointing,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all', ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		filter: ['all', ["==", ['get', 'routeType'], 0], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 		paint: {
 			'icon-color': ['get', 'contrastdarkmodebearing'],
 			'icon-opacity': 0.6
@@ -321,14 +331,34 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'icon-ignore-placement': true,
 			'icon-rotate': ['get', 'bearing'],
 			'icon-rotation-alignment': 'map',
-			'icon-offset': railbearingoffset,
-			'icon-size': railbearingiconsize
+			'icon-offset': trambearingoffset,
+			'icon-size': trambearingiconsize
+		},
+		minzoom: 4.5
+	});
+	
+	map.addLayer({
+		id: layerspercategory.tram.pointingshell,
+		source: 'localrail',
+		type: 'symbol',
+		filter: ['all',  ["==", ['get', 'routeType'], 0], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		paint: {
+			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
+		},
+		layout: {
+			'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-rotate': ['get', 'bearing'],
+			'icon-rotation-alignment': 'map',
+			'icon-offset': trambearingoffset,
+			'icon-size': trambearingiconsize
 		},
 		minzoom: 4.5
 	});
 
 	map.addLayer({
-		id: layerspercategory.localrail.labeldots,
+		id: layerspercategory.tram.labeldots,
 		type: 'symbol',
 		source: 'localrail',
 		minzoom: 6,
@@ -357,20 +387,131 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		}
 	});
 
-	//INTERCITY
+	//Metros
 
+	map.addLayer({
+		id: layerspercategory.metro.livedots,
+		type: 'circle',
+		source: 'localrail',
+		minzoom: 4,
+		filter: ['all',  ["==", ['get', 'routeType'], 1]],
+		paint: {
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 8, 3, 10, 4, 11, 6, 16, 12],
+			'circle-color': ['get', 'color'],
+			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 10, 1.2],
+			//'circle-emissive-strength': 1,
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.7]
+		}
+	});	
+
+	map.addLayer({
+		id: layerspercategory.metro.pointing,
+		source: 'localrail',
+		type: 'symbol',
+		filter: ['all',["==", ['get', 'routeType'], 1], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		paint: {
+			'icon-color': ['get', 'contrastdarkmodebearing'],
+			'icon-opacity': 0.6
+		},
+		layout: {
+			'icon-image': 'pointingcoloured',
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-rotate': ['get', 'bearing'],
+			'icon-rotation-alignment': 'map',
+			'icon-offset': railbearingoffset,
+			'icon-size': railbearingiconsize
+		},
+		minzoom: 4.5
+	});
+
+	
+	map.addLayer({
+		id: layerspercategory.metro.pointingshell,
+		source: 'localrail',
+		type: 'symbol',
+		filter: ['all',["==", ['get', 'routeType'], 1], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		paint: {
+			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
+		},
+		layout: {
+			'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-rotate': ['get', 'bearing'],
+			'icon-rotation-alignment': 'map',
+			'icon-offset': railbearingoffset,
+			'icon-size': railbearingiconsize
+		},
+		minzoom: 4.5
+	});
+
+	map.addLayer({
+		id: layerspercategory.metro.labeldots,
+		type: 'symbol',
+		source: 'localrail',
+		minzoom: 6,
+		filter: ['all',  ["==", ['get', 'routeType'], 1]],
+		layout: {
+			'text-field': ['get', 'maptag'],
+			/*'text-field': [
+                "concat",
+                ['get', 'maptag'],
+                " | ",
+                ['get', 'vehicleId']
+            ],*/
+			'text-variable-anchor': ['top'],
+			'text-radial-offset': 0,
+			'text-font': ['literal', ['Barlow-Medium']],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 7, 10, 9, 11, 11, 13, 12],
+			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
+		},
+		paint: {
+			'text-color': textColorOfMapLabels(darkMode),
+			//'text-halo-color': '#ededed',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
+			'text-halo-width': 2.4,
+			'text-halo-blur': 1,
+			//'text-emissive-strength': 1,
+			'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
+		}
+	});
+
+	//INTERCITY
 	map.addLayer({
 		id: layerspercategory.intercityrail.livedots,
 		type: 'circle',
 		source: 'intercityrail',
 		minzoom: 1.2,
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 2.5, 6, 4, 8, 6, 11, 7, 16, 10],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 2, 2.5, 6, 4, 8, 5, 11, 6, 16, 10],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-width': 1.1,
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 11, 0.7]
+		}
+	});
+
+	map.addLayer({
+		id: layerspercategory.intercityrail.pointing,
+		source: 'intercityrail',
+		type: 'symbol',
+		filter: ['all', ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		paint: {
+			'icon-color': ['get', 'contrastdarkmodebearing'],
+			'icon-opacity': 1
+		},
+		minZoom: 2,
+		layout: {
+			'icon-image': 'pointingcoloured',
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-rotate': ['get', 'bearing'],
+			'icon-rotation-alignment': 'map',
+			'icon-offset': railbearingoffset,
+			'icon-size': railbearingiconsize
 		}
 	});
 
@@ -392,26 +533,6 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'icon-offset': railbearingoffset,
 			'icon-size': railbearingiconsize
 		}
-	});
-
-	map.addLayer({
-		id: layerspercategory.localrail.pointingshell,
-		source: 'localrail',
-		type: 'symbol',
-		filter: ['all', ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
-		paint: {
-			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
-		},
-		layout: {
-			'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
-			'icon-allow-overlap': true,
-			'icon-ignore-placement': true,
-			'icon-rotate': ['get', 'bearing'],
-			'icon-rotation-alignment': 'map',
-			'icon-offset': railbearingoffset,
-			'icon-size': railbearingiconsize
-		},
-		minzoom: 4.5
 	});
 
 

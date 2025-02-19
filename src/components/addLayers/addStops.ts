@@ -87,7 +87,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 	//LOCAL RAIL
 
 	map.addLayer({
-		id: layerspercategory.localrail.stops,
+		id: layerspercategory.metro.stops,
 		type: 'circle',
 		source: 'railstops',
 		'source-layer': 'data',
@@ -115,7 +115,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 	});
 
 	map.addLayer({
-		id: layerspercategory.localrail.labelstops,
+		id: layerspercategory.metro.labelstops,
 		type: 'symbol',
 		source: 'railstops',
 		'source-layer': 'data',
@@ -152,7 +152,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 	// TRAMS
 
 	map.addLayer({
-		id: 'tramstops',
+		id: layerspercategory.tram.stops,
 		type: 'circle',
 		source: 'railstops',
 		'source-layer': 'data',
@@ -187,7 +187,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 	});
 
 	map.addLayer({
-		id: 'tramstopslabel',
+		id: layerspercategory.tram.stops,
 		type: 'symbol',
 		source: 'railstops',
 		'source-layer': 'data',
