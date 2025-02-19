@@ -439,118 +439,140 @@
 	}
 
 	function changeCategory(category: string, categoryvalues: Record<string, any>, this_layer_settings: any) {
+		if (mapglobal) {
+			
+			let shape = mapglobal.getLayer(categoryvalues.shapes);
 
-				let shape = mapglobal.getLayer(categoryvalues.shapes);
+
+//console.log('processing settings',eachcategory, this_layer_settings)
+
+if (shape) {
+	if (this_layer_settings.shapes) {
+		mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
+	} else {
+		mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
+	}
+
+	if (this_layer_settings.labelshapes) {
+		mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'visible');
+	} else {
+		mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
+	}
+
+	if (category === 'other') {
+		if (this_layer_settings.shapes) {
+			mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
+		} else {
+			mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'none');
+		}
+	}
+} else {
+	console.error('could not fetch shapes layer', category);
+}
+
+let stoplayer = mapglobal.getLayer(categoryvalues.stops);
+if (stoplayer) {
+
+	if (this_layer_settings.stops) {
+		mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
+	} else {
+		mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
+	}
+} else {
+	console.error('no stop layer found for', category);
+}
+
+let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
+if (stopslabellayer) {
+	if (this_layer_settings.stoplabels) {
+		mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
+	} else {
+		mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
+	}
+} else {
+	console.error('no stops label layer found for ', category);
+}
+
+let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
+let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
+
+[
+	categoryvalues.pointing,
+	categoryvalues.pointingshell,
+	categoryvalues.labeldots,
+	categoryvalues.livedots
+].forEach((x) => {
+	if (mapglobal?.getLayer(x)) {
+		let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
+		mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
+	} else {
+		console.error('could not find layer', x);
+	}
+});
+
+mapglobal.setLayoutProperty(
+	categoryvalues.labeldots,
+	'text-field',
+	interpretLabelsToCode(this_layer_settings.label, usunits)
+);
+
+let pointerfilter = [
+	'all',
+	['!=', 0, ['get', 'bearing']],
+	['==', true, ['get', 'has_bearing']]
+];
+
+let vehicle_filter = ['all'];
+
+if (showzombiebuses == false) {
+	vehicle_filter.push(['!=', '', ['get', 'trip_id']]);
+	vehicle_filter.push(['has', 'trip_id']);
+
+	pointerfilter.push(['==', true, ['get', 'has_bearing']]);
+}
 
 
-				//console.log('processing settings',eachcategory, this_layer_settings)
+if (categoryvalues.livedots === "tram") {
+	pointerfilter.push(['any',
+		['==', ['get', 'route_type'], 0],
+		['==', ['get', 'route_type'], 5]
+	])
 
-				if (shape) {
-					if (this_layer_settings.shapes) {
-						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
-					} else {
-						mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
-					}
+	vehicle_filter.push(['any',
+		['==', ['get', 'route_type'], 0],
+		['==', ['get', 'route_type'], 5]
+	])
+} else {
+	if (categoryvalues.livedots === "metro") {
+	pointerfilter.push(['any',
+		['==', ['get', 'route_type'], 1],
+		['==', ['get', 'route_type'], 7]
+	])
 
-					if (this_layer_settings.labelshapes) {
-						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'visible');
-					} else {
-						mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
-					}
+	vehicle_filter.push(['any',
+		['==', ['get', 'route_type'], 1],
+		['==', ['get', 'route_type'], 7]
+	])
+}
+}
 
-					if (category === 'other') {
-						if (this_layer_settings.shapes) {
-							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
-						} else {
-							mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'none');
-						}
-					}
-				} else {
-					console.error('could not fetch shapes layer', category);
-				}
 
-				let stoplayer = mapglobal.getLayer(categoryvalues.stops);
-				if (stoplayer) {
+if (mapglobal.getLayer(categoryvalues.livedots)) {
+	//console.log('vehicle filter', category, vehicle_filter);
 
-					if (this_layer_settings.stops) {
-						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
-					} else {
-						mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
-					}
-				} else {
-					console.error('no stop layer found for', category);
-				}
+//console.log('existing filter for category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
 
-				let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
-				if (stopslabellayer) {
-					if (this_layer_settings.stoplabels) {
-						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
-					} else {
-						mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
-					}
-				} else {
-					console.error('no stops label layer found for ', category);
-				}
+mapglobal?.setFilter(categoryvalues.pointing, pointerfilter);
+mapglobal?.setFilter(categoryvalues.pointingshell, pointerfilter);
 
-				let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
-				let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
+mapglobal?.setFilter(categoryvalues.livedots, vehicle_filter);
+mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
+//console.log('new filter category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
+}
 
-				[
-					categoryvalues.pointing,
-					categoryvalues.pointingshell,
-					categoryvalues.labeldots,
-					categoryvalues.livedots
-				].forEach((x) => {
-					if (mapglobal?.getLayer(x)) {
-						let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
-						mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
-					} else {
-						console.error('could not find layer', x);
-					}
-				});
-
-				mapglobal.setLayoutProperty(
-					categoryvalues.labeldots,
-					'text-field',
-					interpretLabelsToCode(this_layer_settings.label, usunits)
-				);
-
-				let hidevehiclecommand = ['all', ['!=', '', ['get', 'trip_id']], ['has', 'trip_id']];
-
-				let regularpointers = [
-					'all',
-					['!=', 0, ['get', 'bearing']],
-					['==', true, ['get', 'has_bearing']]
-				];
-				let hidevehiclecommandpointers = [
-					'all',
-					['!=', '', ['get', 'trip_id']],
-					['!=', 0, ['get', 'bearing']],
-					['==', true, ['get', 'has_bearing']]
-				];
-
-				if (dotcirclelayer && mapglobal) {
-					if (showzombiebuses === true) {
-						if (mapglobal.getLayer(categoryvalues.livedots)) {
-							mapglobal.setFilter(categoryvalues.livedots, undefined);
-							mapglobal.setFilter(categoryvalues.labeldots, undefined);
-						}
-						if (mapglobal.getLayer(categoryvalues.pointing)) {
-							mapglobal.setFilter(categoryvalues.pointing, regularpointers);
-							mapglobal.setFilter(categoryvalues.pointingshell, regularpointers);
-						}
-					} else {
-						if (mapglobal.getLayer(categoryvalues.livedots)) {
-							mapglobal.setFilter(categoryvalues.livedots, hidevehiclecommand);
-							mapglobal.setFilter(categoryvalues.labeldots, hidevehiclecommand);
-						}
-
-						if (mapglobal.getLayer(categoryvalues.pointing)) {
-							mapglobal.setFilter(categoryvalues.pointing, hidevehiclecommandpointers);
-							mapglobal.setFilter(categoryvalues.pointingshell, hidevehiclecommandpointers);
-						}
-					}
-				}
+		} else {
+			console.error('no map found');
+		}
 	}
 
 	function runSettingsAdapt() {

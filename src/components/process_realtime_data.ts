@@ -414,7 +414,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							color: colour,
 							chateau: chateau_id,
 							//int representing enum
-							routeType: vehicle_data.route_type,
+							route_type: vehicle_data.route_type,
 							//keep to gtfs lookup
 							tripIdLabel: tripIdLabel,
 							//keep to degrees as gtfs specs

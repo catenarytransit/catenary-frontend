@@ -200,7 +200,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow-Medium']
+			'text-font': ['step', ['zoom'], ['literal', ['Barlow-Regular']], 12, ['literal', ['Barlow-Medium']]]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -225,7 +225,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 			],
 			['!', ['in', 2, ['get', 'children_route_types']]],
 		],
-		minzoom: 11
+		minzoom: 10
 	});
 
 	//INTERCITY RAIL
