@@ -69,6 +69,8 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 
 	console.log('shells loaded');
 
+	let shortest_screen_width = Math.min(window.screen.width, window.screen.height);
+
 	map.addLayer({
 		id: layerspercategory.bus.livedots,
 		type: 'circle',
@@ -82,7 +84,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
-		minzoom: 6
+		minzoom: shortest_screen_width < 768 ? 8 : 7
 	});
 
 	map.addLayer({

@@ -23,30 +23,29 @@ export function fetch_realtime_vehicle_locations(
 ) {
 	const categories_to_request: string[] = [];
 
-	if (layersettings.bus.visible) {
-		if (map.getZoom() > 6) {
-			
-		categories_to_request.push('bus');
-		}
+	let shortest_screen_width = Math.min(window.screen.width, window.screen.height);
 
-		
+	let bus_threshold = shortest_screen_width < 768 ? 7 : 6;
+
+	if (layersettings.bus.visible) {
+		if (map.getZoom() >= bus_threshold) {	
+		categories_to_request.push('bus');
+		}	
 	}
 
-	if (map.getZoom() > 3) {
+	if (map.getZoom() >= 3) {
 	if (layersettings.intercityrail.visible) {
 		categories_to_request.push('rail');
 	}
 	}
 
-	if (map.getZoom() > 4) {
+	if (map.getZoom() >= 4) {
 		if (layersettings.localrail.visible) {
 			categories_to_request.push('metro');
 		}
 	}
 
-	if (map.getZoom() > 3) {
-		
-
+	if (map.getZoom() >= 3) {
 	if (layersettings.other.visible) {
 		categories_to_request.push('other');
 	}
