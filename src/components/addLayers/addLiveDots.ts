@@ -37,9 +37,9 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		9,
 		0.18,
 		11,
-		0.22,
+		0.20,
 		12,
-		0.3,
+		0.25,
 		15,
 		0.5
 	];
@@ -81,9 +81,9 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		9,
 		['literal', [0, -80]],
 		13,
-		['literal', [0, -60]],
+		['literal', [0, -45]],
 		15,
-		['literal', [0, -60]]
+		['literal', [0, -50]]
 	];
 
 	const [pointing_shell_light_image, pointing_filled_image, pointing_shell_image] =
@@ -334,7 +334,17 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 		paint: {
 			'icon-color': ['get', 'contrastdarkmodebearing'],
-			'icon-opacity': 0.6
+			'icon-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				9,
+				0.4,
+				11,
+				0.5,
+				13,
+				0.6
+			]
 		},
 		layout: {
 			'icon-image': 'pointingcoloured',
@@ -357,7 +367,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			["==", ['get', 'route_type'], 5]
 		], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 		paint: {
-			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
+			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.3, 11.5, 0.4, 12, 0.5]
 		},
 		layout: {
 			'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',

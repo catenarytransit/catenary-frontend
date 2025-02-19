@@ -159,10 +159,10 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 		layout: {},
 		paint: {
 			'circle-color':  getCircleInside(darkMode),
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 12, 3, 15, 4],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 10, 1, 12, 3, 15, 4],
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
-			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
+			'circle-stroke-opacity': ['step', ['zoom'], 0.4, 11, 0.5, 15, 0.6],
 			'circle-opacity': 0.8,
 			//'circle-emissive-strength': 1
 		},
