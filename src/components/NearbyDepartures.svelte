@@ -185,6 +185,8 @@
 				stops_table = hit_nearby_deps_cache.stop;
 				departure_list = hit_nearby_deps_cache.departures;
 			}
+
+			refilter();
 		}
 
 		getNearbyDepartures();
@@ -520,7 +522,7 @@
 
 					{#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group]}
 						{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).length > 0}
-							<p class="font-medium -translate-x-1 mt-1 md:mt-3 mb-1">
+							<p class="font-medium -translate-x-1 mt-1 mb-1 leading-tight">
 								<span class="material-symbols-outlined text-md align-middle -translate-y-0.5"
 									>chevron_right</span
 								>

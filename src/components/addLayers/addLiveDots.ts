@@ -87,22 +87,27 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 	];
 
 	const pointing_shell_light_image = await map.loadImage('/icons/pointing-shell-light.png');
+	const [pointing_shell_light_image, pointing_filled_image, pointing_shell_image] =
+		await Promise.all([
+			map.loadImage('/icons/pointing-shell-light.png'),
+			map.loadImage('/icons/pointing-filled.png'),
+			map.loadImage('/icons/pointing-shell.png')
+		]);
+
 	map.addImage('pointingshelllight', pointing_shell_light_image.data);
-
-	const pointing_filled_image = await map.loadImage('/icons/pointing-filled.png');
 	map.addImage('pointingcoloured', pointing_filled_image.data, { sdf: true });
-
-	const pointing_shell_image = await map.loadImage('/icons/pointing-shell.png');
 	map.addImage('pointingshell', pointing_shell_image.data);
 
 	console.log('shells loaded');
+
+	let shortest_screen_width = Math.min(window.screen.width, window.screen.height);
 
 	map.addLayer({
 		id: layerspercategory.bus.livedots,
 		type: 'circle',
 		source: 'buses',
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1.6, 9, 1.7, 10, 2, 16, 6],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1.2, 8, 1.6, 9, 1.7, 10, 2, 16, 6],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.3, 9, 0.5, 13, 0.9],
@@ -110,7 +115,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
-		minzoom: 8.5
+		minzoom: shortest_screen_width < 768 ? 8 : 7
 	});
 
 	map.addLayer({
