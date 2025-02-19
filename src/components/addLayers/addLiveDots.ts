@@ -86,7 +86,6 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['literal', [0, -60]]
 	];
 
-	const pointing_shell_light_image = await map.loadImage('/icons/pointing-shell-light.png');
 	const [pointing_shell_light_image, pointing_filled_image, pointing_shell_image] =
 		await Promise.all([
 			map.loadImage('/icons/pointing-shell-light.png'),
