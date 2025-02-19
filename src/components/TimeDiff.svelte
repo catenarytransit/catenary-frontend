@@ -106,10 +106,10 @@
 		<span class={large ? "text-sm" : "text-xs"}>{locale_min_marking(this_locale)}</span>
 	{/if}
 	{#if show_seconds}
-		{#if Math.abs(diff) > 0}
+		
 			<span class={large ? "text-base" : "text-sm"}>{s.toFixed(0)}</span>
 			<span class={large ? "text-sm" : "text-xs"}>{locale_s_marking(this_locale)}</span>
-		{/if}
+		
 	{/if}
 	
 	{#if show_brackets}
