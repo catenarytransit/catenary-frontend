@@ -649,13 +649,13 @@
 
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 
-		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'}`}>
+		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'} leading-none`}>
 			Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
 				<span>{' | Block '}{trip_data.block_id}</span>
 			{/if}
 		</p>
 
-		<p class={`${window_height_known < 600 ? ' text-xs' : ' text-sm'}`}>
+		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'} leading-none`}>
 			{#if timezones.filter((x) => x != null).length == 1}
 				{$_('timezone')}: {timezones[0]}
 			{:else}
