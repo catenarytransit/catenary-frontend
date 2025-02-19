@@ -185,6 +185,8 @@
 				stops_table = hit_nearby_deps_cache.stop;
 				departure_list = hit_nearby_deps_cache.departures;
 			}
+
+			refilter();
 		}
 
 		getNearbyDepartures();
