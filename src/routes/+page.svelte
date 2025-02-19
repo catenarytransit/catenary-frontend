@@ -1169,7 +1169,7 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 			// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
 			// https://birch.catenarymaps.org/getchateaus
 			fetch(
-				'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json'
+				'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus_simp.json'
 			)
 				.then(function (response) {
 					return response.json();
