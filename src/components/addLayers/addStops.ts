@@ -187,7 +187,7 @@ export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: a
 	});
 
 	map.addLayer({
-		id: layerspercategory.tram.stops,
+		id: layerspercategory.tram.labelstops,
 		type: 'symbol',
 		source: 'railstops',
 		'source-layer': 'data',

@@ -14,6 +14,8 @@ const subdomains = [
 	"https://birch_rt1.catenarymaps.org",
 ];
 
+let store_of_pending_requests: Writable<Record<string, number>> = writable({});
+
 export function fetch_realtime_vehicle_locations(
 	layersettings: Record<string, any>,
 	chateaus_in_frame: Writable<string[]>,
@@ -127,7 +129,8 @@ myHeaders.append("Content-Type", "application/json");
 		.then((response) => response.json())
 		.then((result) => {
 			process_realtime_vehicle_locations_v2(result, map);
-		});
+		})
+		.catch((error) => console.log('error', error));
 	  }
 	  
 }

@@ -188,24 +188,7 @@ export function addShapes(
 			[
 				'any',
 				['==', 1, ['get', 'route_type']],
-				['==', 5, ['get', 'route_type']],
 				['==', 12, ['get', 'route_type']]
-			],
-			[
-				'!',
-				[
-					'all',
-					['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-					['==', ['coalesce', ['get', 'route_label']], 'Event']
-				]
-			],
-			[
-				'!',
-				[
-					'all',
-					['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-					['==', ['coalesce', ['get', 'route_label']], 'Silver']
-				]
 			],
 			[
 				'!', 
@@ -236,25 +219,8 @@ export function addShapes(
 			[
 				'any',
 				['==', 1, ['get', 'route_type']],
-				['==', 5, ['get', 'route_type']],
 				['==', 12, ['get', 'route_type']]
 			],
-			[
-				'!',
-				[
-					'all',
-					['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-					['==', ['coalesce', ['get', 'route_label']], 'Event']
-				]
-			],
-			[
-				'!',
-				[
-					'all',
-					['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
-					['==', ['coalesce', ['get', 'route_label']], 'Silver']
-				]
-			]
 		],
 		layout: {
 			'symbol-placement': 'line',
@@ -290,6 +256,7 @@ export function addShapes(
 				[
 					'any',
 					['==', 0, ['get', 'route_type']],
+					['==', 5, ['get', 'route_type']],
 				],
 				[
 					'!',
@@ -327,8 +294,8 @@ export function addShapes(
 		});
 	
 		map.addLayer({
-			id: layerspercategory.metro.labelshapes,
-			type: 'tram',
+			id: layerspercategory.tram.labelshapes,
+			type: 'symbol',
 			source: 'localcityrailshapes',
 			'source-layer': 'data',
 			filter: [
@@ -336,6 +303,7 @@ export function addShapes(
 				[
 					'any',
 					['==', 0, ['get', 'route_type']],
+					['==', 5, ['get', 'route_type']],
 				],
 				[
 					'!',
