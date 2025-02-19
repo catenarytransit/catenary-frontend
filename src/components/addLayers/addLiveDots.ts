@@ -84,7 +84,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
-		minzoom: shortest_screen_width < 768 ? 7 : 6
+		minzoom: shortest_screen_width < 768 ? 8 : 7
 	});
 
 	map.addLayer({

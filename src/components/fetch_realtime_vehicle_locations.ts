@@ -25,7 +25,7 @@ export function fetch_realtime_vehicle_locations(
 
 	let shortest_screen_width = Math.min(window.screen.width, window.screen.height);
 
-	let bus_threshold = shortest_screen_width < 768 ? 7 : 6;
+	let bus_threshold = shortest_screen_width < 768 ? 7.5 : 6.5;
 
 	if (layersettings.bus.visible) {
 		if (map.getZoom() >= bus_threshold) {	
