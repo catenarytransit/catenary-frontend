@@ -76,7 +76,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'circle',
 		source: 'buses',
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1.6, 9, 1.7, 10, 2, 16, 6],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1.2, 8, 1.6, 9, 1.7, 10, 2, 16, 6],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.3, 9, 0.5, 13, 0.9],
@@ -84,7 +84,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
 		},
-		minzoom: shortest_screen_width < 768 ? 8 : 7
+		minzoom: shortest_screen_width < 768 ? 7 : 6
 	});
 
 	map.addLayer({
