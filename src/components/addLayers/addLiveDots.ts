@@ -377,7 +377,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
 			'text-font': ['literal', ['Barlow-Medium']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 7, 10, 9, 11, 11, 13, 12],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 4, 9, 6, 10, 7, 11, 9, 13, 10],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
