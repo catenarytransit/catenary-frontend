@@ -20,8 +20,6 @@ export function interpretLabelsToCode(label: any, usunits: boolean) {
 		arrayofinfo.push(['get', 'headsign']);
 	}
 
-	arrayofinfo.push(['get', 'crowd_symbol']);
-
 	if (label.speed) {
 		//round to 0.1 place
 		let unitmultiplier = 36;
@@ -32,6 +30,10 @@ export function interpretLabelsToCode(label: any, usunits: boolean) {
 		//arrayofinfo.push(['case', true, ['/', ['round', ['*', ['get', 'speed'], unitmultiplier]], 10]])
 		arrayofinfo.push(['get', 'speed']);
 		//arrayofinfo.push(['get', 'speedtype'])
+	}
+
+	if (label.occupancy) {
+		arrayofinfo.push(['get', 'crowd_symbol']);
 	}
 
 	return ['concat', ...interleave(arrayofinfo, '|')];

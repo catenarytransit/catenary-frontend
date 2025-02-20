@@ -101,7 +101,7 @@
 	let previous_click_on_sidebar_dragger: number | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
 	let layersettingsBox = false;
-	const layersettingsnamestorage = 'layersettingsv5';
+	const layersettingsnamestorage = 'layersettingsv6';
 	let currently_holding_sidebar_grabber: boolean = false;
 	let maplat: number, maplng: number, mapzoom: number;
 	let translate_x_sidebar: string = '0px';
@@ -232,27 +232,27 @@
 			map.setSky({
 				'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 2, 0.4, 7, 0.1, 9, 0],
 				'sky-color': 'hsl(214, 20%, 19%)',
-						'sky-horizon-blend': 0.4,
-						'horizon-color': [
-							'interpolate',
-							['exponential', 1.2],
-							['zoom'],
-							5.5,
-							'hsla(214, 15%, 19%, 0.2)',
-							6,
-							'hsla(214, 15%, 21%, 0.2)'
-						],
-						'horizon-fog-blend': 0.3,
-						'fog-color': [
-							'interpolate',
-							['exponential', 1.2],
-							['zoom'],
-							5.5,
-							'hsl(214, 15%, 10%)',
-							6,
-							'hsl(214, 30%, 5%)'
-						],
-						'fog-ground-blend': 0.9
+				'sky-horizon-blend': 0.4,
+				'horizon-color': [
+					'interpolate',
+					['exponential', 1.2],
+					['zoom'],
+					5.5,
+					'hsla(214, 15%, 19%, 0.2)',
+					6,
+					'hsla(214, 15%, 21%, 0.2)'
+				],
+				'horizon-fog-blend': 0.3,
+				'fog-color': [
+					'interpolate',
+					['exponential', 1.2],
+					['zoom'],
+					5.5,
+					'hsl(214, 15%, 10%)',
+					6,
+					'hsl(214, 30%, 5%)'
+				],
+				'fog-ground-blend': 0.9
 			});
 		} else {
 			map.setSky({
@@ -370,7 +370,8 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: false,
+				occupancy: true
 			}
 		},
 		localrail: {
@@ -385,7 +386,8 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: false,
+				occupancy: true
 			}
 		},
 		intercityrail: {
@@ -400,7 +402,8 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: false,
+				occupancy: true
 			}
 		},
 		other: {
@@ -415,7 +418,8 @@
 				vehicle: false,
 				headsign: false,
 				direction: false,
-				speed: false
+				speed: false,
+				occupancy: true
 			}
 		},
 		more: {
@@ -438,138 +442,140 @@
 		layersettingsBox = !layersettingsBox;
 	}
 
-	function changeCategory(category: string, categoryvalues: Record<string, any>, this_layer_settings: any) {
+	function changeCategory(
+		category: string,
+		categoryvalues: Record<string, any>,
+		this_layer_settings: any
+	) {
 		if (mapglobal) {
-			
 			let shape = mapglobal.getLayer(categoryvalues.shapes);
 
+			//console.log('processing settings',eachcategory, this_layer_settings)
 
-//console.log('processing settings',eachcategory, this_layer_settings)
+			if (shape) {
+				if (this_layer_settings.shapes) {
+					mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
+				}
 
-if (shape) {
-	if (this_layer_settings.shapes) {
-		mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'visible');
-	} else {
-		mapglobal.setLayoutProperty(categoryvalues.shapes, 'visibility', 'none');
-	}
+				if (this_layer_settings.labelshapes) {
+					mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
+				}
 
-	if (this_layer_settings.labelshapes) {
-		mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'visible');
-	} else {
-		mapglobal.setLayoutProperty(categoryvalues.labelshapes, 'visibility', 'none');
-	}
+				if (category === 'other') {
+					if (this_layer_settings.shapes) {
+						mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
+					} else {
+						mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'none');
+					}
+				}
+			} else {
+				console.error('could not fetch shapes layer', category);
+			}
 
-	if (category === 'other') {
-		if (this_layer_settings.shapes) {
-			mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'visible');
-		} else {
-			mapglobal.setLayoutProperty('ferryshapes', 'visibility', 'none');
-		}
-	}
-} else {
-	console.error('could not fetch shapes layer', category);
-}
+			let stoplayer = mapglobal.getLayer(categoryvalues.stops);
+			if (stoplayer) {
+				if (this_layer_settings.stops) {
+					mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
+				}
+			} else {
+				console.error('no stop layer found for', category);
+			}
 
-let stoplayer = mapglobal.getLayer(categoryvalues.stops);
-if (stoplayer) {
+			let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
+			if (stopslabellayer) {
+				if (this_layer_settings.stoplabels) {
+					mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
+				} else {
+					mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
+				}
+			} else {
+				console.error('no stops label layer found for ', category);
+			}
 
-	if (this_layer_settings.stops) {
-		mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'visible');
-	} else {
-		mapglobal.setLayoutProperty(categoryvalues.stops, 'visibility', 'none');
-	}
-} else {
-	console.error('no stop layer found for', category);
-}
+			let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
+			let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
 
-let stopslabellayer = mapglobal.getLayer(categoryvalues.labelstops);
-if (stopslabellayer) {
-	if (this_layer_settings.stoplabels) {
-		mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'visible');
-	} else {
-		mapglobal.setLayoutProperty(categoryvalues.labelstops, 'visibility', 'none');
-	}
-} else {
-	console.error('no stops label layer found for ', category);
-}
+			[
+				categoryvalues.pointing,
+				categoryvalues.pointingshell,
+				categoryvalues.labeldots,
+				categoryvalues.livedots
+			].forEach((x) => {
+				if (mapglobal?.getLayer(x)) {
+					let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
+					mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
+				} else {
+					console.error('could not find layer', x);
+				}
+			});
 
-let dotcirclelayer = mapglobal.getLayer(categoryvalues.livedots);
-let dotlabel = mapglobal.getLayer(categoryvalues.labeldots);
+			mapglobal.setLayoutProperty(
+				categoryvalues.labeldots,
+				'text-field',
+				interpretLabelsToCode(this_layer_settings.label, usunits)
+			);
 
-[
-	categoryvalues.pointing,
-	categoryvalues.pointingshell,
-	categoryvalues.labeldots,
-	categoryvalues.livedots
-].forEach((x) => {
-	if (mapglobal?.getLayer(x)) {
-		let resulting_vis = this_layer_settings.visible ? 'visible' : 'none';
-		mapglobal.setLayoutProperty(x, 'visibility', resulting_vis);
-	} else {
-		console.error('could not find layer', x);
-	}
-});
+			let pointerfilter = [
+				'all',
+				['!=', 0, ['get', 'bearing']],
+				['==', true, ['get', 'has_bearing']]
+			];
 
-mapglobal.setLayoutProperty(
-	categoryvalues.labeldots,
-	'text-field',
-	interpretLabelsToCode(this_layer_settings.label, usunits)
-);
+			let vehicle_filter = ['all'];
 
-let pointerfilter = [
-	'all',
-	['!=', 0, ['get', 'bearing']],
-	['==', true, ['get', 'has_bearing']]
-];
+			if (showzombiebuses == false) {
+				vehicle_filter.push(['!=', '', ['get', 'trip_id']]);
+				vehicle_filter.push(['has', 'trip_id']);
 
-let vehicle_filter = ['all'];
+				pointerfilter.push(['==', true, ['get', 'has_bearing']]);
+			}
 
-if (showzombiebuses == false) {
-	vehicle_filter.push(['!=', '', ['get', 'trip_id']]);
-	vehicle_filter.push(['has', 'trip_id']);
+			if (categoryvalues.livedots === 'tram') {
+				pointerfilter.push([
+					'any',
+					['==', ['get', 'route_type'], 0],
+					['==', ['get', 'route_type'], 5]
+				]);
 
-	pointerfilter.push(['==', true, ['get', 'has_bearing']]);
-}
+				vehicle_filter.push([
+					'any',
+					['==', ['get', 'route_type'], 0],
+					['==', ['get', 'route_type'], 5]
+				]);
+			} else {
+				if (categoryvalues.livedots === 'metro') {
+					pointerfilter.push([
+						'any',
+						['==', ['get', 'route_type'], 1],
+						['==', ['get', 'route_type'], 7]
+					]);
 
+					vehicle_filter.push([
+						'any',
+						['==', ['get', 'route_type'], 1],
+						['==', ['get', 'route_type'], 7]
+					]);
+				}
+			}
 
-if (categoryvalues.livedots === "tram") {
-	pointerfilter.push(['any',
-		['==', ['get', 'route_type'], 0],
-		['==', ['get', 'route_type'], 5]
-	])
+			if (mapglobal.getLayer(categoryvalues.livedots)) {
+				//console.log('vehicle filter', category, vehicle_filter);
 
-	vehicle_filter.push(['any',
-		['==', ['get', 'route_type'], 0],
-		['==', ['get', 'route_type'], 5]
-	])
-} else {
-	if (categoryvalues.livedots === "metro") {
-	pointerfilter.push(['any',
-		['==', ['get', 'route_type'], 1],
-		['==', ['get', 'route_type'], 7]
-	])
+				//console.log('existing filter for category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
 
-	vehicle_filter.push(['any',
-		['==', ['get', 'route_type'], 1],
-		['==', ['get', 'route_type'], 7]
-	])
-}
-}
+				mapglobal?.setFilter(categoryvalues.pointing, pointerfilter);
+				mapglobal?.setFilter(categoryvalues.pointingshell, pointerfilter);
 
-
-if (mapglobal.getLayer(categoryvalues.livedots)) {
-	//console.log('vehicle filter', category, vehicle_filter);
-
-//console.log('existing filter for category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
-
-mapglobal?.setFilter(categoryvalues.pointing, pointerfilter);
-mapglobal?.setFilter(categoryvalues.pointingshell, pointerfilter);
-
-mapglobal?.setFilter(categoryvalues.livedots, vehicle_filter);
-mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
-//console.log('new filter category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
-}
-
+				mapglobal?.setFilter(categoryvalues.livedots, vehicle_filter);
+				mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
+				//console.log('new filter category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
+			}
 		} else {
 			console.error('no map found');
 		}
@@ -652,21 +658,16 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 				}
 			}
 
-			
-
 			Object.entries(layerspercategory).forEach((eachcategory) => {
-
-					
 				let category_name = eachcategory[0];
 				let category_values = eachcategory[1];
 
-				if (category_name == "metro" || category_name == "tram") {
-				let this_layer_settings = layersettings["localrail"];
-					changeCategory("metro", category_values, this_layer_settings);
-					changeCategory("tram", category_values, this_layer_settings);
+				if (category_name == 'metro' || category_name == 'tram') {
+					let this_layer_settings = layersettings['localrail'];
+					changeCategory('metro', category_values, this_layer_settings);
+					changeCategory('tram', category_values, this_layer_settings);
 				} else {
-					
-				let this_layer_settings = layersettings[category_name];
+					let this_layer_settings = layersettings[category_name];
 					changeCategory(category_name, category_values, this_layer_settings);
 				}
 			});
@@ -1139,24 +1140,24 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 						.then((geo_api_response) => {
 							if (geo_api_response) {
 								console.log('ip addr', geo_api_response);
-							if (typeof geo_api_response.geo_resp == "object") {
-								centerinit = [
-									geo_api_response.geo_resp.longitude,
-									geo_api_response.geo_resp.latitude
-								];
+								if (typeof geo_api_response.geo_resp == 'object') {
+									centerinit = [
+										geo_api_response.geo_resp.longitude,
+										geo_api_response.geo_resp.latitude
+									];
 
-								// set the center of the map to the user's location
-								// in case the map is already initialized (rare), set the center to the user's location
-								if (mapglobal) {
-									mapglobal.setCenter(centerinit);
+									// set the center of the map to the user's location
+									// in case the map is already initialized (rare), set the center to the user's location
+									if (mapglobal) {
+										mapglobal.setCenter(centerinit);
+									}
+
+									// store the user's location in localStorage, as we do with regular browser provided geolocation
+									localStorage.setItem(
+										'cacheipgeolocation',
+										`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+									);
 								}
-
-								// store the user's location in localStorage, as we do with regular browser provided geolocation
-								localStorage.setItem(
-									'cacheipgeolocation',
-									`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-								);
-							}
 							}
 						});
 				} catch (e) {
@@ -1269,11 +1270,10 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 						console.log('ip addr', geo_api_response);
 						if (geo_api_response.geo_resp) {
 							localStorage.setItem(
-							'cacheipgeolocation',
-							`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-						);
-						}	
-						
+								'cacheipgeolocation',
+								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+							);
+						}
 					});
 
 				let coords = map.getCenter();
@@ -1289,13 +1289,11 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 
 				demSource.setupMaplibre(maplibregl);
 
-				
-				  map.addSource('dem', {
+				map.addSource('dem', {
 					type: 'raster-dem',
 					tiles: [demSource.sharedDemProtocolUrl],
 					tileSize: 256
 				});
-				
 
 				map.addSource('contour-source', {
 					type: 'vector',
@@ -1326,7 +1324,9 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 						type: 'hillshade',
 						source: 'dem',
 						paint: {
-							'hillshade-shadow-color': darkMode ? 'hsla(202, 37%, 0%, 30%)' : 'hsla(202, 37%, 20%, 60%)',
+							'hillshade-shadow-color': darkMode
+								? 'hsla(202, 37%, 0%, 30%)'
+								: 'hsla(202, 37%, 20%, 60%)',
 							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 21%)' : '#ffffff33',
 							'hillshade-accent-color': darkMode ? 'hsla(203, 39%, 50%, 20%)' : '#ffffff77',
 							'hillshade-exaggeration': 1
@@ -1688,7 +1688,7 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 				: 'hidden'}"
 		>
 			<div class="flex flex-row align-middle">
-				<h2 class="font-bold text-gray-800 dark:text-gray-200">Layers</h2>
+				<h2 class="font-bold text-gray-800 dark:text-gray-200">{$_("layers")}</h2>
 				<div class="ml-auto">
 					<CloseButton
 						onclose={() => {
@@ -1979,16 +1979,23 @@ mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
 						symbol="speed"
 						{runSettingsAdapt}
 					/>
+
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="occupancy"
+						name={$_('occupancy')}
+						symbol="group"
+						{runSettingsAdapt}
+					/>
 				</div>
 			{/if}
 		</div>
 	{/if}
 
 	<style>
-		* {
-			cursor: default;
+		body {
 			font-family: 'Barlow', sans-serif;
-			user-select: none;
 		}
 
 		.material-symbols-outlined {

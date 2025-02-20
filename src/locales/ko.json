@@ -112,5 +112,6 @@
 	"occupancy_status_not_accepting_passengers": "Not accepting passengers",
 	"occupancy_status_no_data_available": "No data available",
 	"occupancy_status_not_boardable": "Not boardable",
-	"deleted": "삭제됨"
+	"deleted": "삭제됨",
+	"headsign": "행선안내판"
 }

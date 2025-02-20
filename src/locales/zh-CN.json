@@ -112,5 +112,8 @@
 "occupancy_status_not_accepting_passengers": "不接客",
 "occupancy_status_no_data_available": "无数据",
 "occupancy_status_not_boardable": "不可上车",
-"deleted": "已删除"
+"deleted": "已删除",
+	"occupancy": "占用",
+	"layers": "图层",
+	"headsign": "线路牌"
 }

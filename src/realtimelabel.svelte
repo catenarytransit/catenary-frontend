@@ -22,19 +22,15 @@
 				class:border-blue-500={layersettings[selectedSettingsTab].label[change] == true}
 				class:dark:border-blue-50={layersettings[selectedSettingsTab].label[change] == true}
 				class:border-transparent={layersettings[selectedSettingsTab].label[change] == false}
-				class={`bg-[#f5f1f0] dark:bg-[#1C2738] rounded-xl border-2 w-14 h-14 flex items-center align-center`}
+				class={`bg-[#f5f1f0] dark:bg-[#1C2738] rounded-xl border-2 md:w-12 md:h-12 md:w-13 md:h-13 flex items-center align-center`}
 			>
 				<div class="mx-auto">
-					<span class="material-symbols-outlined bakaka content-center">
+					<span class="material-symbols-outlined content-center text-xl md:text-2xl">
 						{symbol}
 					</span>
 				</div>
 			</div>
-			<div class=" align-center items-center"><p class="text-sm text-center">{name}</p></div>
+			<div class=" align-center items-center"><p class="text-sm text-center font-[Barlow_Semi_Condensed]">{name}</p></div>
 		</div>
 
-		<style>
-			.bakaka {
-				font-size: 36px !important;
-			}
-		</style>{/if}{/if}
+		{/if}{/if}
