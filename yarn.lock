@@ -1719,10 +1719,10 @@
   dependencies:
     import-meta-resolve "^4.1.0"
 
-"@sveltejs/adapter-cloudflare@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-cloudflare/-/adapter-cloudflare-5.0.2.tgz#9ea250a0e0faf234622dc8052d9d2ac3f977c0aa"
-  integrity sha512-jlNRYFQ5mfmHmBqF79GhbFty/BTU+HZvgaT1uDREQmUcngT5j8yV85pxCOORl1r7rIVd0silRNBD5RJFsU5UUg==
+"@sveltejs/adapter-cloudflare@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-cloudflare/-/adapter-cloudflare-5.0.3.tgz#aa19fdec756825c6e6efa68ed56aee1dac33cedf"
+  integrity sha512-jRJmt3JtGp5ockFxoDLKPisK0RPGnitNfHS9+xhRTpRaBV7jS/fQfAmpaey7rwKWaDUnkoHx0DV0WvISHNfUEA==
   dependencies:
     "@cloudflare/workers-types" "^4.20241106.0"
     esbuild "^0.24.0"
