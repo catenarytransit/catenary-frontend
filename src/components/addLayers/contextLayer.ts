@@ -210,7 +210,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			['!=', 3, ['get', 'stop_route_type']],
 			['!=', 2, ['get', 'stop_route_type']],
 		],
-		minzoom: 8
+		minzoom: 9
 	});
 
 	map.addLayer({
