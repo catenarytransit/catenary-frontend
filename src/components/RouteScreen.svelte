@@ -143,7 +143,21 @@
 								return {
 									type: 'Feature',
 									properties: {
-										label: route_data.stops[eachstoptime.stop_id].displayname,
+										label: route_data.stops[eachstoptime.stop_id].name
+												.replace('Station ', '')
+												.replace(' Station', '')
+												.replace(', Bahnhof', '')
+												.replace(' Banhhof', '')
+												.replace('Estación de tren ', '')
+												.replace(' Metrolink', '')
+												.replace('Northbound', 'N.B.')
+												.replace('Eastbound', 'E.B.')
+												.replace('Southbound', 'S.B.')
+												.replace('Westbound', 'W.B.')
+												.replace(' (Railway) ', '')
+												.replace(' Light Rail', '')
+												.replace(" Amtrak", "")
+												.replace(" Transportation Center", ""),
 										stop_id: eachstoptime.stop_id,
 										chateau: eachstoptime.chateau_id,
 										stop_route_type: route_data.route_type,

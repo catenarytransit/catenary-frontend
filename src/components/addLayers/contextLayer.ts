@@ -186,8 +186,8 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			//'text-field': ['coalesce', ['get', 'route_types']],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 13],
-			'text-radial-offset': 0.5,
-			//'text-ignore-placement': false,
+			'text-radial-offset': 0.2,
+			'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
@@ -236,13 +236,19 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			'text-field': ['get', 'label'],
 			//'text-field': ['coalesce', ['get', 'route_types']],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 13, 8, 14],
-			'text-radial-offset': 0.5,
-			//'text-ignore-placement': false,
+			'text-size': ['interpolate', ['linear'], ['zoom'], 4, 10, 6, 12, 8, 14],
+			'text-radial-offset': 0.2,
+			'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['Barlow-Medium']
+			'text-font': [
+				'step',
+				['zoom'],
+				['literal', ['Barlow-Regular']],
+				6,
+				['literal', ['Barlow-Medium']]
+			]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
@@ -254,7 +260,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			'all',
 			['==', 2, ['get', 'stop_route_type']],
 		],
-		minzoom: 4
+		minzoom: 3
 	});
 }
 

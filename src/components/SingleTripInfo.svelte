@@ -342,7 +342,7 @@
 												.replace('Southbound', 'S.B.')
 												.replace('Westbound', 'W.B.')
 												.replace(' (Railway) ', '')
-												.replace(' Light Rail', ''),
+												.replace(' Light Rail', '').replace(" Amtrak", ""),
 											stop_id: eachstoptime.stop_id,
 											chateau: trip_selected.chateau_id,
 											stop_route_type: trip_data.route_type
