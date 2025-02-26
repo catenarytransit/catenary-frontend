@@ -1,5 +1,8 @@
 import type { Map } from 'maplibre-gl';
 import { layerspercategory } from '../layernames';
+import {default_interrail_filter, 
+
+	default_bus_filter, default_metro_filter, default_tram_filter} from './makeFiltersForStop';
 
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
 const internationalIntercityCircleSize = [
@@ -45,12 +48,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'circle-emissive-strength': 1
 		},
 		minzoom: window?.innerWidth >= 768 ? 13 : 11.5,
-		filter: [
-			'all',
-			['!', ['in', 1, ['get', 'route_types']]],
-			['!', ['in', 0, ['get', 'route_types']]],
-			['!', ['in', 2, ['get', 'route_types']]]
-		]
+		filter: default_bus_filter,
 	});
 
 	map.addLayer({
@@ -58,12 +56,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		type: 'symbol',
 		source: 'busstops',
 		'source-layer': 'data',
-		filter: [
-			'all',
-			['!', ['in', 1, ['get', 'route_types']]],
-			['!', ['in', 0, ['get', 'route_types']]],
-			['!', ['in', 2, ['get', 'route_types']]],
-		],
+		filter: default_bus_filter,
 		layout: {
 			'text-field': ['get', 'displayname'],
 			//'text-field': ['coalesce', ['get', 'route_types']],
@@ -103,16 +96,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 9,
-		filter: [
-			'all',
-			//['==', null, ['get', 'parent_station']],
-			[
-				'any',
-				['in', 1, ['get', 'route_types']],
-				['in', 1, ['get', 'children_route_types']],
-			],
-			['!', ['in', 2, ['get', 'children_route_types']]]
-		],
+		filter: default_metro_filter,
 	});
 
 	map.addLayer({
@@ -137,16 +121,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-halo-width': 1,
 			//'text-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			//['==', null, ['get', 'parent_station']],
-			[
-				'any',
-				['in', 1, ['get', 'route_types']],
-				['in', 1, ['get', 'children_route_types']],
-			],
-			['!', ['in', 2, ['get', 'children_route_types']]]
-		],
+		filter:default_metro_filter,
 		minzoom: 10.2
 	});
 
@@ -168,23 +143,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 9,
-		filter: [
-			'all',
-			//['==', null, ['get', 'parent_station']],
-			["!",
-				[
-					'any',
-					['in', 1, ['get', 'route_types']],
-					['in', 1, ['get', 'children_route_types']],
-				]
-			],
-			[
-				'any',
-				['in', 0, ['get', 'route_types']],
-				['in', 0, ['get', 'children_route_types']],
-			],
-			['!', ['in', 2, ['get', 'children_route_types']]],
-		]
+		filter: default_tram_filter
 	});
 
 	map.addLayer({
@@ -209,23 +168,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-halo-width': 1,
 			//'text-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			//['==', null, ['get', 'parent_station']],
-			["!",
-				[
-					'any',
-					['in', 1, ['get', 'route_types']],
-					['in', 1, ['get', 'children_route_types']],
-				]
-			],
-			[
-				'any',
-				['in', 0, ['get', 'route_types']],
-				['in', 0, ['get', 'children_route_types']],
-			],
-			['!', ['in', 2, ['get', 'children_route_types']]],
-		],
+		filter: default_tram_filter,
 		minzoom: 10
 	});
 
@@ -247,14 +190,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 7.7,
-		filter: [
-			'all',
-			[
-				'all',
-				['any', ['>', ['zoom'], 15], ['==', null, ['get', 'parent_station']]],
-				['any', ['in', 2, ['get', 'route_types']], ['in', 2, ['get', 'children_route_types']]]
-			]
-		]
+		filter: default_interrail_filter
 	});
 
 	map.addLayer({
@@ -279,11 +215,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-halo-width': 1,
 			//'text-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			['any', ['>', ['zoom'], 15], ['==', null, ['get', 'parent_station']]],
-			['any', ['in', 2, ['get', 'route_types']], ['in', 2, ['get', 'children_route_types']]]
-		],
+		filter: default_interrail_filter,
 		minzoom: 7.7
 	});
 
