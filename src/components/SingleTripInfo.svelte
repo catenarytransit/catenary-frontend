@@ -14,7 +14,7 @@
 	import { writable, get } from 'svelte/store';
 	import stringifyObject from 'stringify-object';
 	import BullseyeArrow from './svg_icons/bullseye_arrow.svelte';
-	import {refilter_stops} from './makeFiltersForStop';
+	import { refilter_stops } from './makeFiltersForStop';
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
@@ -64,9 +64,7 @@
 		map_pointer_store,
 		show_gtfs_ids_store,
 		ui_theme_store,
-
 		stops_to_hide_store
-
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { hexToRgb } from '../utils/colour';
@@ -161,8 +159,6 @@
 					let next_stoptimes_cleaned: any[] = stoptimes_cleaned_dataset;
 
 					let new_stop_times_queue = data.stoptimes;
-
-					
 
 					next_stoptimes_cleaned.forEach((existing_stop_time: any) => {
 						let new_stop_time_to_use_idx = new_stop_times_queue.findIndex((new_stop_time: any) => {
@@ -262,8 +258,6 @@
 		if (updatetimecounter != null) {
 			clearInterval(updatetimecounter);
 		}
-
-		
 	});
 
 	export let trip_selected: SingleTrip;
@@ -336,21 +330,22 @@
 									return {
 										type: 'Feature',
 										properties: {
-											label: eachstoptime.name.replace("Station ", "")
-                    .replace(" Station", "")
-                    .replace(", Bahnhof", "")
-                    .replace(" Banhhof", "")
-                    .replace("Estación de tren ", "")
-                    .replace(" Metrolink", "")
-                    .replace("Northbound", "N.B.")
-                    .replace("Eastbound", "E.B.")
-                    .replace("Southbound", "S.B.")
-                    .replace("Westbound", "W.B.")
-                    .replace(" (Railway) ", "")
-                    .replace(" Light Rail", ""),
+											label: eachstoptime.name
+												.replace('Station ', '')
+												.replace(' Station', '')
+												.replace(', Bahnhof', '')
+												.replace(' Banhhof', '')
+												.replace('Estación de tren ', '')
+												.replace(' Metrolink', '')
+												.replace('Northbound', 'N.B.')
+												.replace('Eastbound', 'E.B.')
+												.replace('Southbound', 'S.B.')
+												.replace('Westbound', 'W.B.')
+												.replace(' (Railway) ', '')
+												.replace(' Light Rail', ''),
 											stop_id: eachstoptime.stop_id,
 											chateau: trip_selected.chateau_id,
-											stop_route_type: trip_data.route_type,
+											stop_route_type: trip_data.route_type
 										},
 										geometry: {
 											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
@@ -494,16 +489,18 @@
 						index = index + 1;
 					});
 
-					let all_timepoints_empty = data.stoptimes.every((stoptime: any) => stoptime.timepoint == null);
+					let all_timepoints_empty = data.stoptimes.every(
+						(stoptime: any) => stoptime.timepoint == null
+					);
 
 					if (all_timepoints_empty) {
 						all_exact_stoptimes = true;
 					} else {
-						let all_timepoints_true = data.stoptimes.every((stoptime: any) => 
-						stoptime.timepoint == true
-					);
+						let all_timepoints_true = data.stoptimes.every(
+							(stoptime: any) => stoptime.timepoint == true
+						);
 						all_exact_stoptimes = all_timepoints_true;
-					}						
+					}
 
 					stoptimes_cleaned_dataset = stoptimes_cleaned;
 
@@ -729,10 +726,12 @@
 
 				{#if vehicle_data.occupancy_status != null}
 					<p
-						class={`text-xs ${vehicle_data.occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_data.occupancy_status) ? "text-red-600 dark:text-red-400" : ""}`}
+						class={`text-xs ${vehicle_data.occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_data.occupancy_status) ? 'text-red-600 dark:text-red-400' : ''}`}
 					>
 						{$_('occupancy_status')}:
-						<span class="rounded-full px-0.5 py-0.5">{occupancy_to_symbol(vehicle_data.occupancy_status)}</span>
+						<span class="rounded-full px-0.5 py-0.5"
+							>{occupancy_to_symbol(vehicle_data.occupancy_status)}</span
+						>
 						{#if vehicle_data.occupancy_status == 0}
 							{$_('occupancy_status_empty')}
 						{:else if vehicle_data.occupancy_status == 1}
@@ -757,16 +756,20 @@
 		{/if}
 
 		{#if all_exact_stoptimes == true}
-		<div class="flex flex-row">
-			<div class="rounded-2xl  flex flex-row text-xs  dark:bg-opacity-70 mr-auto">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class='h-5 w-5 align-middle'><title>timeline-clock</title><path
-					fill="currentColor" d="M4 2V8H2V2H4M2 22V16H4V22H2M5 12C5 13.11 4.11 14 3 14C1.9 14 1 13.11 1 12C1 10.9 1.9 10 3 10C4.11 10 5 10.9 5 12M16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C12.4 20 9.36 17.62 8.35 14.35L6 12L8.35 9.65C9.36 6.38 12.4 4 16 4M15 13L19.53 15.79L20.33 14.5L16.5 12.2V7H15V13Z" /></svg>
-				
-				<span class="align-middle my-auto ml-1 font-semibold">
-					All scheduled departures are exact.
-				</span>
+			<div class="flex flex-row">
+				<div class="rounded-2xl flex flex-row text-xs dark:bg-opacity-70 mr-auto">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 align-middle"
+						><title>timeline-clock</title><path
+							fill="currentColor"
+							d="M4 2V8H2V2H4M2 22V16H4V22H2M5 12C5 13.11 4.11 14 3 14C1.9 14 1 13.11 1 12C1 10.9 1.9 10 3 10C4.11 10 5 10.9 5 12M16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C12.4 20 9.36 17.62 8.35 14.35L6 12L8.35 9.65C9.36 6.38 12.4 4 16 4M15 13L19.53 15.79L20.33 14.5L16.5 12.2V7H15V13Z"
+						/></svg
+					>
+
+					<span class="align-middle my-auto ml-1 font-semibold">
+						All scheduled departures are exact.
+					</span>
+				</div>
 			</div>
-		</div>
 		{/if}
 
 		<AlertBox {alerts} />
@@ -834,10 +837,10 @@
 					>
 						<p class="text-sm sm:text-base">
 							{#if stoptime.name}
-							<span
-								class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
-								>{fixStationName(stoptime.name)}</span
-							>
+								<span
+									class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
+									>{fixStationName(stoptime.name)}</span
+								>
 							{/if}
 
 							{#if stop_id_to_alert_ids[stoptime.stop_id]}
@@ -854,25 +857,24 @@
 							{/if}
 
 							{#if all_exact_stoptimes == false}
-							{#if stoptime.timepoint == true}
-							<div class="text-xs inline-block align-middle">
-
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  class='h-4 w-4 text-gray-800 dark:text-gray-300'
-								><title>timeline-clock-outline</title>
-								<path  fill="currentColor"
-								 d="M4 2V8H2V2H4M2 22V16H4V22H2M5 12C5 13.11 4.11 14 3 14C1.9 14 1 13.11 1 12C1 10.9 1.9 10 3 10C4.11 10 5 10.9 5 12M16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C12.4 20 9.36 17.62 8.35 14.35L6 12L8.35 9.65C9.36 6.38 12.4 4 16 4M16 6C12.69 6 10 8.69 10 12C10 15.31 12.69 18 16 18C19.31 18 22 15.31 22 12C22 8.69 19.31 6 16 6M15 13V8H16.5V12.2L19.5 14L18.68 15.26L15 13Z" /></svg>
-								 </div>
-						{/if}
+								{#if stoptime.timepoint == true}
+									<div class="text-xs inline-block align-middle">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 24 24"
+											class="h-4 w-4 text-gray-800 dark:text-gray-300"
+											><title>timeline-clock-outline</title>
+											<path
+												fill="currentColor"
+												d="M4 2V8H2V2H4M2 22V16H4V22H2M5 12C5 13.11 4.11 14 3 14C1.9 14 1 13.11 1 12C1 10.9 1.9 10 3 10C4.11 10 5 10.9 5 12M16 4C20.42 4 24 7.58 24 12C24 16.42 20.42 20 16 20C12.4 20 9.36 17.62 8.35 14.35L6 12L8.35 9.65C9.36 6.38 12.4 4 16 4M16 6C12.69 6 10 8.69 10 12C10 15.31 12.69 18 16 18C19.31 18 22 15.31 22 12C22 8.69 19.31 6 16 6M15 13V8H16.5V12.2L19.5 14L18.68 15.26L15 13Z"
+											/></svg
+										>
+									</div>
+								{/if}
 							{/if}
 						</p>
 
-						<StopTimeNumber
-						show_seconds={show_seconds}
-						stoptime={stoptime}
-						trip_data={trip_data}
-						current_time={current_time}
-						/>
-
+						<StopTimeNumber {show_seconds} {stoptime} {trip_data} {current_time} />
 
 						{#if timezones.filter((x) => x != null).length > 1}
 							<p class="text-xs text-gray-900 dark:text-gray-400">
