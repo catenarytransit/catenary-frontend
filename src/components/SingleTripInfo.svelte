@@ -352,7 +352,7 @@
 							map.getSource('stops_context').setData(stop_source_new);
 
 							stops_to_hide_store.set({
-								[trip_selected.chateau_id]: stops_features.map((eachstop: any) => eachstop.properties.stop_id)
+								[trip_selected.chateau_id]: data.stoptimes.map((eachstop: any) => eachstop.stop_id)
 							});
 
 							refilter_stops();

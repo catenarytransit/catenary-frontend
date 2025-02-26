@@ -13,7 +13,7 @@ export const default_bus_filter = [
 export function make_stops_filter_part_for_chateau(chateau: string, stop_array: string[]) {
     let filter_part = ['!', [
         'all',
-        ['in', ['get', 'gtfs_id'],  ["literal", ...stop_array]],
+        ['in', ['get', 'gtfs_id'],  ["literal", [...stop_array]]],
         ['==', ['get', 'chateau'], chateau]
     ]];
     return filter_part;
@@ -31,23 +31,25 @@ export function refilter_stops() {
         new_bus_filter.push(make_stops_filter_part_for_chateau(chateau, stops_to_hide[chateau]));
     }
 
+    console.log("new filter for stops", new_bus_filter);
+
     if (layerspercategory.bus.stops) {
         map_pointer.setFilter(layerspercategory.bus.stops, new_bus_filter);
         map_pointer.setFilter(layerspercategory.bus.labelstops, new_bus_filter);
     }
 
     if (layerspercategory.intercityrail.stops) {
-        map_pointer.setFilter(layerspercategory.intercityrail.stops, new_bus_filter);
+      //  map_pointer.setFilter(layerspercategory.intercityrail.stops, new_bus_filter);
         map_pointer.setFilter(layerspercategory.intercityrail.labelstops, new_bus_filter);
     }
 
     if (layerspercategory.metro.stops) {
-        map_pointer.setFilter(layerspercategory.metro.stops, new_bus_filter);
+       // map_pointer.setFilter(layerspercategory.metro.stops, new_bus_filter);
         map_pointer.setFilter(layerspercategory.metro.labelstops, new_bus_filter);
     }
 
     if (layerspercategory.tram.stops) {
-        map_pointer.setFilter(layerspercategory.tram.stops, new_bus_filter);
+      //  map_pointer.setFilter(layerspercategory.tram.stops, new_bus_filter);
         map_pointer.setFilter(layerspercategory.tram.labelstops, new_bus_filter);
     }
 }
