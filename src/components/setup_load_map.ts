@@ -174,8 +174,8 @@ export async function setup_load_map(
 
 		//makeFireMap(map, chateaus_in_frame);
 		console.log('setup load map start');
-		addShapes(map, darkMode, layerspercategory);
-		addStopsLayers(map, darkMode, layerspercategory);
+		addShapes(map, darkMode);
+		addStopsLayers(map, darkMode);
 		makeContextLayerDataset(map);
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);

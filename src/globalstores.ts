@@ -25,32 +25,30 @@ export const realtime_vehicle_locations_store: Writable<
 });
 
 export interface CategoryHash {
-	bus: number,
-	rail: number,
-	metro: number,
-	other: number
+	bus: number;
+	rail: number;
+	metro: number;
+	other: number;
 }
 
 export const realtime_vehicle_route_cache_store: Writable<
 	Record<string, Record<string, Record<string, any>>>
 > = writable({});
-export const realtime_vehicle_route_cache_hash_store: Writable<
-	Record<string, CategoryHash>
-> = writable({});
-export const realtime_vehicle_locations_last_updated_store: Writable<
-	Record<string, CategoryHash>
-> = writable({});
+export const realtime_vehicle_route_cache_hash_store: Writable<Record<string, CategoryHash>> =
+	writable({});
+export const realtime_vehicle_locations_last_updated_store: Writable<Record<string, CategoryHash>> =
+	writable({});
 export const lock_on_gps_store = writable(false);
 
 export interface NearbySelectionFilterRouteType {
-	bus: boolean,
-	metro: boolean,
-	rail: boolean,
-	other: boolean
+	bus: boolean;
+	metro: boolean;
+	rail: boolean;
+	other: boolean;
 }
 
 export const nearby_departures_filter: Writable<NearbySelectionFilterRouteType> = writable({
-	bus:true,
+	bus: true,
 	metro: true,
 	rail: true,
 	other: true
@@ -60,7 +58,7 @@ export const nearby_departures_filter: Writable<NearbySelectionFilterRouteType> 
 export const dark_mode_store = writable(false);
 
 // system, light, dark
-export const ui_theme_store:Writable<string> = writable('system');
+export const ui_theme_store: Writable<string> = writable('system');
 
 export const show_zombie_buses_store = writable(false);
 
@@ -81,8 +79,8 @@ export const nearby_deps_cache_gps: Writable<any | null> = writable(null);
 export const nearby_pick_state_store: Writable<number> = writable(0);
 
 export interface UserPicksNearby {
-	longitude: number,
-	latitude: number
+	longitude: number;
+	latitude: number;
 }
 
 export const nearby_user_picks_store: Writable<UserPicksNearby | null> = writable(null);
@@ -92,3 +90,6 @@ export const chateaus_store: Writable<any | null> = writable(null);
 export const show_seconds_store = writable(false);
 
 export const show_topo_global_store = writable(false);
+
+//chateau -> Vec<stop_id>
+export const stops_to_hide_store: Writable<Record<string, string[]>> = writable({});

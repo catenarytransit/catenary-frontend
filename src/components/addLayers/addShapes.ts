@@ -1,7 +1,8 @@
+import { layerspercategory } from '../layernames';
+
 export function addShapes(
 	map: maplibregl.Map,
 	darkMode: boolean,
-	layerspercategory: Record<string, any>
 ) {
 	const urlParams = new URLSearchParams(window.location.search);
 

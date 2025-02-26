@@ -1,4 +1,5 @@
 import type { Map } from 'maplibre-gl';
+import { layerspercategory } from '../layernames';
 
 const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
 const internationalIntercityCircleSize = [
@@ -25,7 +26,7 @@ export function bus_stop_stop_color(darkMode: boolean) {
 	return darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333';
 }
 
-export function addStopsLayers(map: Map, darkMode: boolean, layerspercategory: any) {
+export function addStopsLayers(map: Map, darkMode: boolean) {
 	//BUS
 
 	map.addLayer({

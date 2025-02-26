@@ -14,6 +14,7 @@
 	import { writable, get } from 'svelte/store';
 	import stringifyObject from 'stringify-object';
 	import BullseyeArrow from './svg_icons/bullseye_arrow.svelte';
+	import {refilter_stops} from './makeFiltersForStop';
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
@@ -62,7 +63,10 @@
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
 		show_gtfs_ids_store,
-		ui_theme_store
+		ui_theme_store,
+
+		stops_to_hide_store
+
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { hexToRgb } from '../utils/colour';
@@ -258,6 +262,8 @@
 		if (updatetimecounter != null) {
 			clearInterval(updatetimecounter);
 		}
+
+		
 	});
 
 	export let trip_selected: SingleTrip;
@@ -344,6 +350,12 @@
 							let stop_source_new = { type: 'FeatureCollection', features: stops_features };
 
 							map.getSource('stops_context').setData(stop_source_new);
+
+							stops_to_hide_store.set({
+								[trip_selected.chateau_id]: stops_features.map((eachstop: any) => eachstop.properties.stop_id)
+							});
+
+							refilter_stops();
 
 							update_vehicle_rt();
 						}
@@ -584,6 +596,10 @@
 			clearInterval(fetchtimeout);
 			clearInterval(updatetimecounter);
 			clearInterval(bigfetchtimeout);
+
+			stops_to_hide_store.set({});
+
+			refilter_stops();
 		};
 	});
 </script>

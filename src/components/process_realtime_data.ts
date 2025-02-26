@@ -42,7 +42,7 @@ export function process_realtime_vehicle_locations_v2(
 	response_from_birch_vehicles_2: any,
 	map: maplibregl.Map
 ) {
-	let rerender_category:string[] = [];
+	let rerender_category:Set<string> = new Set();	
 
 	realtime_vehicle_locations_store.update((realtime_vehicle_locations) => {
 
@@ -60,7 +60,7 @@ export function process_realtime_vehicle_locations_v2(
 
 					if (category_data.vehicle_positions) {
 						realtime_vehicle_locations[category][chateau_id]= category_data.vehicle_positions;
-						rerender_category.push(category);
+						rerender_category.add(category);
 					}
 					
 					} else {
