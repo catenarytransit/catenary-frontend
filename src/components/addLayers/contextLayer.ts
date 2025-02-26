@@ -187,7 +187,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 13],
 			'text-radial-offset': 0.2,
-			//'text-ignore-placement': true,
+			'text-ignore-placement': false,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
