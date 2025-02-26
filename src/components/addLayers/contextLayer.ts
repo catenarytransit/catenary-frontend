@@ -168,12 +168,12 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		layout: {},
 		paint: {
 			'circle-color': '#ffffff',
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 2, 10, 4, 13, 5],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1.3, 10, 3, 13, 5],
 			'circle-stroke-color': '#1a1a1a',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': 0.9,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1],
-			//'circle-emissive-strength': 1
+			//'circle-emisive-strength': 1
 		},
 		filter: [
 			'all',
