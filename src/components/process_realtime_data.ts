@@ -42,6 +42,8 @@ export function process_realtime_vehicle_locations_v2(
 	response_from_birch_vehicles_2: any,
 	map: maplibregl.Map
 ) {
+	let rerender_category:string[] = [];
+
 	realtime_vehicle_locations_store.update((realtime_vehicle_locations) => {
 
 		Object.entries(response_from_birch_vehicles_2.chateaus)
@@ -58,6 +60,7 @@ export function process_realtime_vehicle_locations_v2(
 
 					if (category_data.vehicle_positions) {
 						realtime_vehicle_locations[category][chateau_id]= category_data.vehicle_positions;
+						rerender_category.push(category);
 					}
 					
 					} else {
@@ -156,13 +159,12 @@ export function process_realtime_vehicle_locations_v2(
 		}
 	);		
 
-	//console.log('rerendering all categories');
-
 	
-	rerender_category_live_dots("metro", map);
-	rerender_category_live_dots("rail", map);
-	rerender_category_live_dots("bus", map);
-	rerender_category_live_dots("other", map);
+	console.log('rerendering', rerender_category);
+
+	rerender_category.forEach((category) => {
+		rerender_category_live_dots(category, map);
+	});
 }
 
 export function rerender_category_live_dots(category: string, map: maplibregl.Map) {
