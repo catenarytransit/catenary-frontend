@@ -336,9 +336,21 @@
 									return {
 										type: 'Feature',
 										properties: {
-											label: eachstoptime.name,
+											label: eachstoptime.name.replace("Station ", "")
+                    .replace(" Station", "")
+                    .replace(", Bahnhof", "")
+                    .replace(" Banhhof", "")
+                    .replace("Estación de tren ", "")
+                    .replace(" Metrolink", "")
+                    .replace("Northbound", "N.B.")
+                    .replace("Eastbound", "E.B.")
+                    .replace("Southbound", "S.B.")
+                    .replace("Westbound", "W.B.")
+                    .replace(" (Railway) ", "")
+                    .replace(" Light Rail", ""),
 											stop_id: eachstoptime.stop_id,
-											chateau: trip_selected.chateau_id
+											chateau: trip_selected.chateau_id,
+											stop_route_type: trip_data.route_type,
 										},
 										geometry: {
 											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
@@ -651,7 +663,7 @@
 			icon={fixHeadsignIcon(trip_data.trip_headsign)}
 			run_number={fixRunNumber(
 				trip_selected.chateau_id,
-				trip_selected.route_type || 3,
+				trip_data.route_type,
 				trip_data.route_id,
 				trip_data.trip_short_name,
 				trip_data.vehicle?.label || trip_data.vehicle?.id,

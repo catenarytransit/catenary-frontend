@@ -54,3 +54,8 @@ export function refilter_stops() {
     }
 }
 }
+
+export function delete_filter_stops_background() {
+    stops_to_hide_store.set({});
+    refilter_stops();
+}

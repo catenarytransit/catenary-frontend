@@ -54,11 +54,15 @@
 		show_my_location_store,
 		show_gtfs_ids_store,
 		custom_icons_category_to_layer_id,
-		map_pointer_store
+		map_pointer_store,
+
+		stops_to_hide_store
+
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 	import NativeLands from './NativeLands.svelte';
+	import { refilter_stops,delete_filter_stops_background } from './makeFiltersForStop';
 
 	let activePattern: string = '';
 
@@ -111,7 +115,7 @@
 							properties: {
 								text_color: route_data.text_color,
 								color: route_data.color,
-								route_label: route_data.route_short_name || route_data.route_long_name
+								route_label: route_data.route_short_name || route_data.route_long_name,
 							}
 						};
 
@@ -139,9 +143,10 @@
 								return {
 									type: 'Feature',
 									properties: {
-										label: route_data.stops[eachstoptime.stop_id].name,
+										label: route_data.stops[eachstoptime.stop_id].displayname,
 										stop_id: eachstoptime.stop_id,
 										chateau: eachstoptime.chateau_id,
+										stop_route_type: route_data.route_type,
 									},
 									geometry: {
 										coordinates: [route_data.stops[eachstoptime.stop_id].longitude, route_data.stops[eachstoptime.stop_id].latitude],
@@ -156,6 +161,16 @@
 							};
 
 							map.getSource('stops_context').setData(stop_source_new);
+
+							//hide from background
+
+							stops_to_hide_store.set(
+								{
+									[route_data.chateau_id]: route_data.direction_patterns[pattern].rows.map((eachstoptime: any) => eachstoptime.stop_id)
+								}
+							);
+
+							refilter_stops();
 		}
 
 		
@@ -224,6 +239,11 @@
 	$: if (routestack) {
 		fetch_route_selected();
 	}
+
+	onMount(() => {
+
+		delete_filter_stops_background();
+	})
 
 </script>
 
