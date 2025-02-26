@@ -10,6 +10,44 @@ export const default_bus_filter = [
     ['!', ['in', 2, ['get', 'route_types']]]
 ];
 
+export const default_metro_filter = [
+    'all',
+    //['==', null, ['get', 'parent_station']],
+    [
+        'any',
+        ['in', 1, ['get', 'route_types']],
+        ['in', 1, ['get', 'children_route_types']],
+    ],
+    ['!', ['in', 2, ['get', 'children_route_types']]]
+];
+
+export const default_tram_filter = [
+    'all',
+    //['==', null, ['get', 'parent_station']],
+    ["!",
+        [
+            'any',
+            ['in', 1, ['get', 'route_types']],
+            ['in', 1, ['get', 'children_route_types']],
+        ]
+    ],
+    [
+        'any',
+        ['in', 0, ['get', 'route_types']],
+        ['in', 0, ['get', 'children_route_types']],
+    ],
+    ['!', ['in', 2, ['get', 'children_route_types']]],
+];
+
+export const default_interrail_filter = [
+    'all',
+    [
+        'all',
+        ['any', ['>', ['zoom'], 15], ['==', null, ['get', 'parent_station']]],
+        ['any', ['in', 2, ['get', 'route_types']], ['in', 2, ['get', 'children_route_types']]]
+    ]
+];
+
 export function make_stops_filter_part_for_chateau(chateau: string, stop_array: string[]) {
     let filter_part = ['!', [
         'all',
@@ -24,11 +62,18 @@ export function refilter_stops() {
     if (map_pointer) {
     
     let new_bus_filter = structuredClone(default_bus_filter);
+    let new_metro_filter = structuredClone(default_metro_filter);
+    let new_tram_filter = structuredClone(default_tram_filter);
+    let new_rail_filter = structuredClone(default_interrail_filter);
 
     let stops_to_hide = get(stops_to_hide_store);
 
     for (let chateau in stops_to_hide) {
-        new_bus_filter.push(make_stops_filter_part_for_chateau(chateau, stops_to_hide[chateau]));
+        let a = make_stops_filter_part_for_chateau(chateau, stops_to_hide[chateau]);
+        new_bus_filter.push(a);
+        new_metro_filter.push(a);
+        new_tram_filter.push(a);
+        new_rail_filter.push(a);
     }
 
     console.log("new filter for stops", new_bus_filter);
@@ -40,17 +85,17 @@ export function refilter_stops() {
 
     if (layerspercategory.intercityrail.stops) {
       //  map_pointer.setFilter(layerspercategory.intercityrail.stops, new_bus_filter);
-        map_pointer.setFilter(layerspercategory.intercityrail.labelstops, new_bus_filter);
+        map_pointer.setFilter(layerspercategory.intercityrail.labelstops, new_rail_filter);
     }
 
     if (layerspercategory.metro.stops) {
        // map_pointer.setFilter(layerspercategory.metro.stops, new_bus_filter);
-        map_pointer.setFilter(layerspercategory.metro.labelstops, new_bus_filter);
+        map_pointer.setFilter(layerspercategory.metro.labelstops, new_metro_filter);
     }
 
     if (layerspercategory.tram.stops) {
       //  map_pointer.setFilter(layerspercategory.tram.stops, new_bus_filter);
-        map_pointer.setFilter(layerspercategory.tram.labelstops, new_bus_filter);
+        map_pointer.setFilter(layerspercategory.tram.labelstops,  new_tram_filter);
     }
 }
 }
