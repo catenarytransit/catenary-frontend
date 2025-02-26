@@ -191,7 +191,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			'text-field': ['get', 'label'],
 			//'text-field': ['coalesce', ['get', 'route_types']],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 13],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 8, 10, 9, 12],
 			'text-radial-offset': 0.2,
 			'text-ignore-placement': false,
 			//'icon-ignore-placement': false,
@@ -210,7 +210,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			['!=', 3, ['get', 'stop_route_type']],
 			['!=', 2, ['get', 'stop_route_type']],
 		],
-		minzoom: 6
+		minzoom: 8
 	});
 
 	map.addLayer({
