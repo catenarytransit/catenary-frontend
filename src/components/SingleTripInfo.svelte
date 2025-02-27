@@ -508,7 +508,8 @@
 					init_loaded = Date.now();
 					console.log('refresh component');
 				} catch (e: any) {
-					error = text;
+					console.error(e);
+					error = e + '\n' + text;
 					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 				}
 			})
