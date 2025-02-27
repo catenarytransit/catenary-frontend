@@ -69,7 +69,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
-			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
 		minzoom: 3
 	});
@@ -134,11 +134,12 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			//'text-field': ['coalesce', ['get', 'route_types']],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 11, 10, 13, 10, 14, 13],
-			'text-radial-offset': 0.5,
+			'text-radial-offset': 0.3,
 			//'text-ignore-placement': false,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
+			
 			'text-font': [
 				'step',
 				['zoom'],
@@ -151,7 +152,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
-			'text-halo-width': 0.2,
+			'text-halo-width': 1,
 			//'text-emissive-strength': 1
 		},
 		filter: [
@@ -202,7 +203,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
-			'text-halo-width': 0.2,
+			'text-halo-width': 1,
 			//'text-emissive-strength': 1
 		},
 		filter: [
@@ -259,7 +260,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
-			'text-halo-width': 0.2,
+			'text-halo-width': 1,
 			//'text-emissive-strength': 1
 		},
 		filter: [
