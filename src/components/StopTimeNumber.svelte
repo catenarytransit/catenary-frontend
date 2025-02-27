@@ -64,7 +64,10 @@
 			show_brackets={false}
 		/>
 		{#if shared_rt_time}
-			<DelayDiff diff={stoptime.rt_arrival_time - stoptime.scheduled_arrival_time_unix_seconds} {show_seconds} />
+			<DelayDiff diff={stoptime.rt_arrival_time - (
+				stoptime.scheduled_arrival_time_unix_seconds ||
+				stoptime.interpolated_stoptime_unix_seconds
+			)} {show_seconds} />
 		{/if}
 
 		<div class="ml-auto text-sm">
@@ -117,7 +120,10 @@
             show_brackets={false}
         />
         {#if stoptime.rt_departure_time}
-            <DelayDiff diff={stoptime.rt_departure_time - stoptime.scheduled_departure_time_unix_seconds} {show_seconds} />
+            <DelayDiff diff={stoptime.rt_departure_time - (
+				stoptime.scheduled_departure_time_unix_seconds ||
+				stoptime.interpolated_stoptime_unix_seconds
+			)} {show_seconds} />
         {/if}
 
         <div class="ml-auto text-sm">
