@@ -520,12 +520,12 @@
 					console.log('refresh component');
 				} catch (e: any) {
 					console.error(e);
-					error = e + '\n' + text;
 					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 				}
 			})
 			.catch((e) => {
 				console.error(e);
+				console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 			});
 	}
 
