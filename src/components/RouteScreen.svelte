@@ -275,6 +275,7 @@
 				long_name={route_data.long_name}
 				url={route_data.url}
 				{darkMode}
+				route_type={route_data.route_type}
 			/>
 		</div>
 

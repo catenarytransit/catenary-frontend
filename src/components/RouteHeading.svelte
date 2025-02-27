@@ -34,11 +34,12 @@
 
 	export let window_height_known: number = window.innerHeight || 500;
 
+	export let route_type: number;
+
 	onMount(() => {
 		window.addEventListener('resize', () => {
-		window_height_known = window.innerHeight;
-	});
-
+			window_height_known = window.innerHeight;
+		});
 	});
 	let pdf_url: string | undefined;
 
@@ -54,7 +55,10 @@
 </script>
 
 {#if !compact}
-	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} `} style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}>
+	<h2
+		class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} `}
+		style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}
+	>
 		{#if run_number}
 			<span
 				style={`background-color: ${color}; color: ${text_color};`}
@@ -73,7 +77,9 @@
 		{/if}
 	</h2>
 
-	<h2 class={`${window_height_known < 600 ? 'text-base' : 'text-base md:text-lg my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''} leading-tight`}>
+	<h2
+		class={`${window_height_known < 600 ? 'text-base' : 'text-base md:text-lg my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''} leading-tight`}
+	>
 		{#if arrow}
 			<span class="material-symbols-outlined text-2xl align-middle">chevron_right</span>
 		{/if}
@@ -86,10 +92,21 @@
 			{/if}
 		</span>
 		{#if vehicle && vehicle != run_number}
-			<span style:background-color={color} style:color={text_color} class="text-sm align-middle ml-1 bg-seashore dark:bg-darksky text-white px-1 rounded-md translate-y-0.5 inline-block"
-				>
+			<span
+				style:background-color={color}
+				style:color={text_color}
+				class="text-sm align-middle ml-1 bg-seashore dark:bg-darksky text-white px-1 rounded-md translate-y-0.5 inline-block"
+			>
 				<span class="material-symbols-outlined !text-sm align-middle -translate-y-[0.03rem]"
-					>directions_bus</span
+					>{#if route_type == 0}
+						tram
+					{:else if route_type == 1}
+						subway
+					{:else if route_type == 2}
+						train
+					{:else}
+						directions_bus
+					{/if}</span
 				>
 				{vehicle}</span
 			>

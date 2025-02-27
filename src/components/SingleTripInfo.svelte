@@ -670,6 +670,7 @@
 			long_name={trip_data.route_long_name}
 			{darkMode}
 			disable_pdf={true}
+			route_type={trip_data.route_type}
 		/>
 
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
