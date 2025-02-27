@@ -180,7 +180,7 @@
 
 							stops_to_hide_store.set(
 								{
-									[route_data.chateau_id]: route_data.direction_patterns[pattern].rows.map((eachstoptime: any) => eachstoptime.stop_id)
+									[routestack.chateau_id]: route_data.direction_patterns[pattern].rows.map((eachstoptime: any) => eachstoptime.stop_id)
 								}
 							);
 
