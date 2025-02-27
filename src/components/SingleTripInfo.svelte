@@ -314,7 +314,10 @@
 
 						if (map != null) {
 							//console.log('map is not null');
-							map.getSource('transit_shape_context').setData(geojson_source_new);
+							let transit_shape_context = map.getSource('transit_shape_context');
+							if (transit_shape_context) {
+								transit_shape_context.setData(geojson_source_new);
+							}
 
 							let already_seen_stop_ids: string[] = [];
 
@@ -356,7 +359,10 @@
 
 							let stop_source_new = { type: 'FeatureCollection', features: stops_features };
 
-							map.getSource('stops_context').setData(stop_source_new);
+							let stops_context = map.getSource('stops_context');
+							if (stops_context) {
+								stops_context.setData(stop_source_new);
+							}
 
 							stops_to_hide_store.set({
 								[trip_selected.chateau_id]: data.stoptimes.map((eachstop: any) => eachstop.stop_id)
