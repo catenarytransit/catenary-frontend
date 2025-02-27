@@ -68,8 +68,9 @@ export function refilter_stops() {
 
     let stops_to_hide = get(stops_to_hide_store);
 
-    for (const [chateau, stops_to_hide_chateau] in Object.entries(stops_to_hide)) {
-        console.log("chateau", chateau);
+    for (const chateau in stops_to_hide) {
+        let stops_to_hide_chateau = stops_to_hide[chateau];
+        console.log("chateau", chateau, "stops_to_hide_chateau", stops_to_hide_chateau);
         let a = make_stops_filter_part_for_chateau(chateau, stops_to_hide_chateau);
         new_bus_filter.push(a);
         new_metro_filter.push(a);

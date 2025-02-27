@@ -364,11 +364,16 @@
 								stops_context.setData(stop_source_new);
 							}
 
-							stops_to_hide_store.set({
+							try {
+
+								stops_to_hide_store.set({
 								[trip_selected.chateau_id]: data.stoptimes.map((eachstop: any) => eachstop.stop_id)
 							});
 
 							refilter_stops();
+							} catch (e) {
+								console.error(e);
+							}
 
 							update_vehicle_rt();
 						}
