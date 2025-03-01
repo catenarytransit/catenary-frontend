@@ -87,6 +87,7 @@ async function checkForUpdates() {
 function scheduleUpdates() {
   setInterval(checkForUpdates, CHECK_FOR_UPDATES_INTERVAL);
   checkForUpdates(); // Run immediately on service worker activation.
+  
 }
 
 self.addEventListener('activate', (event) => {
