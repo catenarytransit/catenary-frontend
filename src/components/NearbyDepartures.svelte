@@ -141,9 +141,10 @@
 		for (let i = 0; i < temp_len; i++) {
 			//for each entry in directions obj, sort the trip
 
-			let directions_list = Object.keys(temp[i].directions);
+			let directions_list_names = Object.keys(temp[i].directions);
 
-			directions_list.forEach((direction_name) => {
+			directions_list_names.forEach((direction_name) => {
+			//	console.log('sorting', temp[i].directions[direction_name].trips);
 				 temp[i].directions[direction_name].trips.sort((a, b) => (a.departure_realtime || a.departure_schedule) > (b.departure_realtime || b.departure_schedule));
 			});
 		}
