@@ -129,10 +129,26 @@
 	});
 
 	function refilter() {
-		departure_list_filtered = departure_list
+		let temp = departure_list
 			.filter((x) => x.chateau_id != 'greyhound~flix')
 			.filter((x) => Object.keys(x.directions).length > 0)
 			.filter((x) => filter_for_route_type(x.route_type, nearby_departures_filter_local));
+
+		console.log('temp', temp);
+
+		let temp_len = temp.length;
+
+		for (let i = 0; i < temp_len; i++) {
+			//for each entry in directions obj, sort the trip
+
+			let directions_list = Object.keys(temp[i].directions);
+
+			directions_list.forEach((direction_name) => {
+				 temp[i].directions[direction_name].trips.sort((a, b) => (a.departure_realtime || a.departure_schedule) > (b.departure_realtime || b.departure_schedule));
+			});
+		}
+
+		departure_list_filtered = temp;
 	}
 
 	let current_time: number = 0;
@@ -540,7 +556,7 @@
 						<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
 							{#each direction_group.trips
 								.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF)
-								.sort((a, b) => (a.departure_realtime || a.departure_schedule) > (b.departure_realtime || b.departure_schedule)) as trip}
+								 as trip}
 								<button
 									aria-label={`Go to ${fixHeadsignText(direction_group.headsign, route_group.route_id)} at ${fixStationName(
 										stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
