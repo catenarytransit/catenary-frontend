@@ -1769,65 +1769,10 @@
 			</div>
 
 			{#if selectedSettingsTab === 'more'}
-				<div class="flex flex-row gap-x-1 flex-wrap">
-					<Layerbutton
-						bind:layersettings
-						selectedSettingsTab="more"
-						change="foamermode"
-						nestedchange="infra"
-						name={$_('orminfra')}
-						urlicon="https://b.tiles.openrailwaymap.org/standard/14/2866/6611.png"
-						{runSettingsAdapt}
-					/>
-
-					<Layerbutton
-						bind:layersettings
-						selectedSettingsTab="more"
-						change="foamermode"
-						nestedchange="maxspeed"
-						name={$_('ormspeeds')}
-						urlicon="https://b.tiles.openrailwaymap.org/maxspeed/14/2866/6611.png"
-						{runSettingsAdapt}
-					/>
-
-					<Layerbutton
-						bind:layersettings
-						selectedSettingsTab="more"
-						change="foamermode"
-						nestedchange="signalling"
-						name={$_('ormsignalling')}
-						urlicon="https://b.tiles.openrailwaymap.org/signals/14/2866/6611.png"
-						{runSettingsAdapt}
-					/>
-
-					<Layerbutton
-						bind:layersettings
-						selectedSettingsTab="more"
-						change="foamermode"
-						nestedchange="electrification"
-						name={$_('ormelectrification')}
-						urlicon="https://b.tiles.openrailwaymap.org/electrification/14/2866/6611.png"
-						{runSettingsAdapt}
-					/>
-
-					<Layerbutton
-						bind:layersettings
-						selectedSettingsTab="more"
-						change="foamermode"
-						nestedchange="gauge"
-						name={$_('ormgauge')}
-						urlicon="https://b.tiles.openrailwaymap.org/gauge/14/2866/6611.png"
-						{runSettingsAdapt}
-					/>
-					<Layerbutton
-						bind:layersettings
-						selectedSettingsTab="more"
-						change="foamermode"
-						nestedchange="dummy"
-						name={$_('none')}
-						urlicon="https://b.tiles.openrailwaymap.org/standard/3/2/1.png"
-						{runSettingsAdapt}
-					/>
+				<div class="
+				
+				">
+					
 				</div>
 
 				<div>
