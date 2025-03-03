@@ -138,17 +138,6 @@
 
 		let temp_len = temp.length;
 
-		for (let i = 0; i < temp_len; i++) {
-			//for each entry in directions obj, sort the trip
-
-			let directions_list_names = Object.keys(temp[i].directions);
-
-			directions_list_names.forEach((direction_name) => {
-			//	console.log('sorting', temp[i].directions[direction_name].trips);
-				 temp[i].directions[direction_name].trips.sort((a, b) => (a.departure_realtime || a.departure_schedule) > (b.departure_realtime || b.departure_schedule));
-			});
-		}
-
 		departure_list_filtered = temp;
 	}
 
@@ -366,9 +355,23 @@
 									...new_directions[direction.headsign].trips,
 									...direction.trips
 								];
+
+								
 							} else {
 								new_directions[direction.headsign] = direction;
+
+								
 							}
+
+							
+								
+							new_directions[direction.headsign].trips = 
+								
+								new_directions[direction.headsign].trips.toSorted((a, b) => 
+								(a.departure_realtime || a.departure_schedule)  -  (b.departure_realtime, b.departure_schedule)
+								)
+
+							
 						});
 
 						route_group.directions = new_directions;
