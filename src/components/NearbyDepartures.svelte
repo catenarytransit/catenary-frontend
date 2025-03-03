@@ -510,7 +510,7 @@
 		<div class="flex flex-col">
 			{#each departure_list_filtered as route_group}
 				<div
-					class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-3 mx-3 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}
+					class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-1 mx-1 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}
 				>
 					<p
 						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`}
@@ -592,15 +592,15 @@
 									}}
 								>
 									<div class="text-center">
-										{#if route_group.route_type == 2 && trip.trip_short_name}
+										{#if [2,4].includes(route_group.route_type) && trip.trip_short_name}
 											<p
-												class="text-md inline-block font-medium px-1 rounded-sm leading-none md:leading-tight"
+												class=" inline-block font-medium px-1 rounded-sm leading-none md:leading-tight"
 												style:background-color={route_group.color}
 												style:color={route_group.text_color}
 											>
 												{trip.trip_short_name}
 											</p>
-											<br />
+											
 										{/if}
 
 										<span
