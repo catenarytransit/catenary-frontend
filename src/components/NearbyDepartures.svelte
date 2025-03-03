@@ -516,7 +516,7 @@
 					class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-1 mx-1 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}
 				>
 					<p
-						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}`}
+						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'} ml-1`}
 						style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}
 					>
 						{#if route_group.short_name}
