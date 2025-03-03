@@ -594,7 +594,7 @@
 									<div class="text-center">
 										{#if [2,4].includes(route_group.route_type) && trip.trip_short_name}
 											<p
-												class=" inline-block font-medium px-1 rounded-sm leading-none md:leading-tight"
+												class="  font-medium px-1 rounded-sm leading-none md:leading-tight"
 												style:background-color={route_group.color}
 												style:color={route_group.text_color}
 											>
@@ -628,17 +628,7 @@
 														d="M200-120q-33 0-56.5-23.5T120-200q0-33 23.5-56.5T200-280q33 0 56.5 23.5T280-200q0 33-23.5 56.5T200-120Zm480 0q0-117-44-218.5T516-516q-76-76-177.5-120T120-680v-120q142 0 265 53t216 146q93 93 146 216t53 265H680Zm-240 0q0-67-25-124.5T346-346q-44-44-101.5-69T120-440v-120q92 0 171.5 34.5T431-431q60 60 94.5 139.5T560-120H440Z"
 													/></svg
 												>
-											{:else}
-												<svg
-													class="inline ml-0.5 w-3 h-3"
-													height="24"
-													viewBox="0 -960 960 960"
-													width="24"
-													fill={darkMode ? 'white' : 'black'}
-													><path
-														d="M440-120v-264L254-197l-57-57 187-186H120v-80h264L197-706l57-57 186 187v-264h80v264l186-187 57 57-187 186h264v80H576l187 186-57 57-186-187v264h-80Z"
-													/></svg
-												>
+											
 											{/if}
 										</span>
 
