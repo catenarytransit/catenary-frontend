@@ -32,7 +32,7 @@
 
 	setInterval(() => {
 		current_time = Date.now();
-	}, 300);
+	}, 500);
 
 	import {
 		ui_theme_store,
