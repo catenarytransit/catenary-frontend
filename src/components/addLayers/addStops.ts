@@ -4,7 +4,7 @@ import {default_interrail_filter,
 
 	default_bus_filter, default_metro_filter, default_tram_filter} from '../makeFiltersForStop';
 
-const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 8, 12, 12];
+const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 7, 12, 12];
 const internationalIntercityCircleSize = [
 	'interpolate',
 	['linear'],
@@ -218,7 +218,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'text-emissive-strength': 1
 		},
 		filter: default_interrail_filter,
-		minzoom: 7.7
+		minzoom: 8
 	});
 
 	//OTHER
