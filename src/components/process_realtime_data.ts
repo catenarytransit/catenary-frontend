@@ -225,6 +225,10 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						}
 					}
 
+					if (headsign.contains("Line  - ") && chateau_id == "metro~losangeles") {
+						headsign = headsign.split("-")[1].trim();
+					}
+
 					const routeId = vehicle_data.trip?.route_id;
 					let maptag = '';
 
