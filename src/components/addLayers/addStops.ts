@@ -186,7 +186,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': 0.8,
+			'circle-opacity': ['step', ['zoom'], 0.6, 13, 0.8],
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 7.7,
@@ -207,7 +207,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['literal', ['Barlow-Medium']]
+			'text-font': ['step', ['zoom'], ['literal', ['Barlow-Regular']], 8.5, ['literal', ['Barlow-Medium']]],
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
@@ -216,7 +216,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'text-emissive-strength': 1
 		},
 		filter: default_interrail_filter,
-		minzoom: 7.7
+		minzoom: 7
 	});
 
 	//OTHER
