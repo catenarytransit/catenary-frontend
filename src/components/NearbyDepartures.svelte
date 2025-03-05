@@ -363,13 +363,14 @@
 								
 							}
 
-							
+							if (new_directions[direction.headsign].trips) {
 								
 							new_directions[direction.headsign].trips = 
 								
 								new_directions[direction.headsign].trips.toSorted((a, b) => 
 								(a.departure_realtime || a.departure_schedule)  -  (b.departure_realtime, b.departure_schedule)
 								)
+						}
 
 							
 						});
