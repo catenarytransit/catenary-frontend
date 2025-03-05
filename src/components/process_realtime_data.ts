@@ -225,7 +225,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						}
 					}
 
-					if (headsign.contains("Line  - ") && chateau_id == "metro~losangeles") {
+					if (headsign.includes("Line  - ") && chateau_id == "metro~losangeles") {
 						headsign = headsign.split("-")[1].trim();
 					}
 
