@@ -10,7 +10,9 @@ const internationalIntercityCircleSize = [
 	['linear'],
 	['zoom'],
 	7,
-	2.8,
+	2,
+	8,
+	2.7,
 	12,
 	5,
 	15,
@@ -189,7 +191,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'circle-opacity': ['step', ['zoom'], 0.6, 13, 0.8],
 			//'circle-emissive-strength': 1
 		},
-		minzoom: 7.7,
+		minzoom: 7.5,
 		filter: default_interrail_filter
 	});
 
@@ -216,7 +218,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'text-emissive-strength': 1
 		},
 		filter: default_interrail_filter,
-		minzoom: 7
+		minzoom: 7.7
 	});
 
 	//OTHER
