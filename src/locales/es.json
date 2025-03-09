@@ -68,7 +68,7 @@
 	"ontime": "A tiempo",
 	"defaultlang": "Idioma predeterminado",
 	"hidepreviousstops": "Ocultar paradas anteriores",
-	"showxpreviousstops_pt1": "Mostrar",
+	"shownpreviousstops": "Mostrar {n} {n, plural, =1 {parada} other{paradas}} anteriores",
 	"platform": "Plataforma",
 	"show_gtfs_ids": "Mostrar IDs GTFS",
 	"alert_cause_unknown_cause": "Causa desconocida",
