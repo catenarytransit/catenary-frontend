@@ -183,7 +183,6 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-field': ['get', 'maptag'],
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-radial-offset': 0.2,
-		//	//'text-emissive-strength': 1,
 			'text-font': {
 				"stops": [
 				  [
