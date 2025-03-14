@@ -16,7 +16,10 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
-	import {bus_label_with_headsign, bus_label_no_headsign} from '../components/addLayers/addLiveDots';
+	import {
+		bus_label_with_headsign,
+		bus_label_no_headsign
+	} from '../components/addLayers/addLiveDots';
 
 	import {
 		data_stack_store,
@@ -530,78 +533,42 @@
 
 			if (categoryvalues.labeldots === layerspercategory.bus.labeldots) {
 				if (this_layer_settings.label.headsign) {
-					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_with_headsign);
+					mapglobal.setLayoutProperty(
+						layerspercategory.bus.labeldots,
+						'text-size',
+						bus_label_with_headsign
+					);
 
 					let shortest_side = get_shortest_screen_dimension();
 
-					if (shortest_side < 1000) {
-						mapglobal.setLayoutProperty(
-						categoryvalues.labeldots,
-						'text-font',
-						{
-				"stops": [
-				  [
-					6,
-					[
-					  "Barlow-Medium"
-					]
-				  ],
-				  [
-					11,
-					[
-					  "Barlow-SemiBold"
-					]
-				  ]
-				]
-			  },
-					);
+					if (shortest_side >= 1000) {
+						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'text-font', {
+							stops: [
+								[6, ['Barlow-Medium']],
+								[11, ['Barlow-SemiBold']]
+							]
+						});
 					} else {
-						mapglobal.setLayoutProperty(
-						categoryvalues.labeldots,
-						'text-font',
-						{
-				"stops": [
-				  [
-					6,
-					[
-					  "Barlow-Regular"
-					]
-				  ],
-				  [
-					11,
-					[
-					  "Barlow-Medium"
-					]
-				  ]
-				]
-			  },
-					);
+						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'text-font', {
+							stops: [
+								[6, ['Barlow-Regular']],
+								[11, ['Barlow-Medium']]
+							]
+						});
 					}
-
-					
 				} else {
-					mapglobal.setLayoutProperty(
-						categoryvalues.labeldots,
-						'text-font',
-						{
-				"stops": [
-				  [
-					6,
-					[
-					  "Barlow-Medium"
-					]
-				  ],
-				  [
-					11,
-					[
-					  "Barlow-SemiBold"
-					]
-				  ]
-				]
-			  },
-					);
+					mapglobal.setLayoutProperty(categoryvalues.labeldots, 'text-font', {
+						stops: [
+							[6, ['Barlow-Medium']],
+							[11, ['Barlow-SemiBold']]
+						]
+					});
 
-					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_no_headsign);
+					mapglobal.setLayoutProperty(
+						layerspercategory.bus.labeldots,
+						'text-size',
+						bus_label_no_headsign
+					);
 				}
 			}
 
@@ -1204,17 +1171,17 @@
 
 	try {
 		onMount(() => {
-			if ("serviceWorker" in navigator) {
-			navigator.serviceWorker
-				.register("/sw.js", { scope: "/" })
-				.then((registration) => {
-				// registration worked
-				console.log("Registration succeeded.");
-				})
-				.catch((error) => {
-				// registration failed
-				console.error(`Registration failed with ${error}`);
-				});
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker
+					.register('/sw.js', { scope: '/' })
+					.then((registration) => {
+						// registration worked
+						console.log('Registration succeeded.');
+					})
+					.catch((error) => {
+						// registration failed
+						console.error(`Registration failed with ${error}`);
+					});
 			}
 
 			//#region On the fly IP geolocation
@@ -1791,7 +1758,7 @@
 				: 'hidden'}"
 		>
 			<div class="flex flex-row align-middle">
-				<h2 class="font-bold text-gray-800 dark:text-gray-200">{$_("layers")}</h2>
+				<h2 class="font-bold text-gray-800 dark:text-gray-200">{$_('layers')}</h2>
 				<div class="ml-auto">
 					<CloseButton
 						onclose={() => {
@@ -1859,11 +1826,11 @@
 			</div>
 
 			{#if selectedSettingsTab === 'more'}
-				<div class="
+				<div
+					class="
 				
-				">
-					
-				</div>
+				"
+				></div>
 
 				<div>
 					<input
