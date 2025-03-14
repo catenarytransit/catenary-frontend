@@ -193,7 +193,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 					]
 				  ],
 				  [
-					10,
+					11,
 					[
 					  "Barlow-SemiBold"
 					]

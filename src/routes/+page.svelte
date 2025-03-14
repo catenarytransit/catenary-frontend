@@ -519,7 +519,49 @@
 			if (categoryvalues.labeldots === layerspercategory.bus.labeldots) {
 				if (this_layer_settings.label.headsign) {
 					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_with_headsign);
+
+					mapglobal.setLayoutProperty(
+						categoryvalues.labeldots,
+						'text-font',
+						{
+				"stops": [
+				  [
+					6,
+					[
+					  "Barlow-Regular"
+					]
+				  ],
+				  [
+					10,
+					[
+					  "Barlow-Medium"
+					]
+				  ]
+				]
+			  },
+					);
 				} else {
+					mapglobal.setLayoutProperty(
+						categoryvalues.labeldots,
+						'text-font',
+						{
+				"stops": [
+				  [
+					6,
+					[
+					  "Barlow-Medium"
+					]
+				  ],
+				  [
+					10,
+					[
+					  "Barlow-SemiBold"
+					]
+				  ]
+				]
+			  },
+					);
+
 					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_no_headsign);
 				}
 			}
