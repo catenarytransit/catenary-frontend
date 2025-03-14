@@ -541,18 +541,18 @@
 
 					let shortest_side = get_shortest_screen_dimension();
 
-					if (shortest_side >= 1000) {
+					if (shortest_side >= 1600) {
 						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'text-font', {
 							stops: [
 								[6, ['Barlow-Medium']],
-								[11, ['Barlow-SemiBold']]
+								[12, ['Barlow-SemiBold']]
 							]
 						});
 					} else {
 						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'text-font', {
 							stops: [
 								[6, ['Barlow-Regular']],
-								[11, ['Barlow-Medium']]
+								[12, ['Barlow-Medium']]
 							]
 						});
 					}

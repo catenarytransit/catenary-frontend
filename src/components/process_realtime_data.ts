@@ -403,9 +403,9 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 					if (typeof vehicle_data.position.speed == 'number') {
 						if (usunits == true) {
-							speedstr = `${(vehicle_data.position.speed * 2.23694).toFixed(1)} mph`;
+							speedstr = `${(vehicle_data.position.speed * 2.23694).toFixed(1)} ᵐᵖʰ`;
 						} else {
-							speedstr = `${(vehicle_data.position.speed * 3.6).toFixed(1)} km/h`;
+							speedstr = `${(vehicle_data.position.speed * 3.6).toFixed(1)} ㎞/ʰ`;
 						}
 					}
 
