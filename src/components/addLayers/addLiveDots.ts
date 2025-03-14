@@ -8,7 +8,7 @@ export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
 }
 
 export const bus_label_no_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];
-export const bus_label_with_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 6, 13, 9, 15, 11];
+export const bus_label_with_headsign = ['interpolate', ['linear'], ['zoom'], 9, 4, 11, 5, 13, 9, 15, 11];
 
 export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory: any) {
 	const busbearingoffset = [
