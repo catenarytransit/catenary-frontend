@@ -439,6 +439,18 @@
 		}
 	};
 
+	function get_shortest_screen_dimension() {
+		if (typeof window != 'undefined') {
+			if (window.innerWidth < window.innerHeight) {
+				return window.innerWidth;
+			} else {
+				return window.innerHeight;
+			}
+		} else {
+			return 0;
+		}
+	}
+
 	function togglelayerfeature() {
 		layersettingsBox = !layersettingsBox;
 	}
@@ -520,7 +532,31 @@
 				if (this_layer_settings.label.headsign) {
 					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_with_headsign);
 
-					mapglobal.setLayoutProperty(
+					let shortest_side = get_shortest_screen_dimension();
+
+					if (shortest_side < 1000) {
+						mapglobal.setLayoutProperty(
+						categoryvalues.labeldots,
+						'text-font',
+						{
+				"stops": [
+				  [
+					6,
+					[
+					  "Barlow-Medium"
+					]
+				  ],
+				  [
+					11,
+					[
+					  "Barlow-SemiBold"
+					]
+				  ]
+				]
+			  },
+					);
+					} else {
+						mapglobal.setLayoutProperty(
 						categoryvalues.labeldots,
 						'text-font',
 						{
@@ -540,6 +576,9 @@
 				]
 			  },
 					);
+					}
+
+					
 				} else {
 					mapglobal.setLayoutProperty(
 						categoryvalues.labeldots,
