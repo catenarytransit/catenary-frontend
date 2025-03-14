@@ -7,6 +7,9 @@ function textColorOfMapLabels(darkMode: boolean) {
 export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
 }
 
+export const bus_label_no_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];
+export const bus_label_with_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 6, 13, 9, 15, 11];
+
 export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory: any) {
 	const busbearingoffset = [
 		'interpolate',
@@ -195,7 +198,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 				  ]
 				]
 			  },
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 14],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13],
 			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
 		},
 		minzoom: 9,
@@ -401,7 +404,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
 			'text-font': ['literal', ['Barlow-Medium']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 4, 9, 6, 10, 7, 11, 9, 13, 10],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 4, 9, 6, 10, 7, 11, 9, 13, 10, 15, 14],
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {

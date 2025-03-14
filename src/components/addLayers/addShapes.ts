@@ -87,7 +87,7 @@ export function addShapes(
 				: ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-font': ['literal', ['Barlow-Regular']],
-			'text-size': ['interpolate', ['linear'], ['zoom'],  10, 5, 11, 8, 13, 10],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 10, 5, 11, 7, 13, 10],
 			'text-ignore-placement': false,
 			'text-allow-overlap': false,
 			'text-pitch-alignment': 'viewport',

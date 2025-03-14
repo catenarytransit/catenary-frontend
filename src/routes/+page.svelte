@@ -16,6 +16,7 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
+	import {bus_label_with_headsign, bus_label_no_headsign} from '../components/addLayers/addLiveDots';
 
 	import {
 		data_stack_store,
@@ -514,6 +515,14 @@
 					console.error('could not find layer', x);
 				}
 			});
+
+			if (categoryvalues.labeldots === layerspercategory.bus.labeldots) {
+				if (this_layer_settings.label.headsign) {
+					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_with_headsign);
+				} else {
+					mapglobal.setLayoutProperty(layerspercategory.bus.labeldots, 'text-size', bus_label_no_headsign);
+				}
+			}
 
 			mapglobal.setLayoutProperty(
 				categoryvalues.labeldots,
