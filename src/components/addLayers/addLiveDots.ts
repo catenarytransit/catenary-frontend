@@ -211,7 +211,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
 			'text-halo-width': darkMode == true ? 2.4 : 1,
 			'text-halo-blur': 1,
-			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 1]
+			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.9, 11, 0.95, 12, 1]
 		}
 	});
 
