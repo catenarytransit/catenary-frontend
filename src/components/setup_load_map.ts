@@ -172,7 +172,7 @@ export async function setup_load_map(
 			}
 		});
 
-		//makeFireMap(map, chateaus_in_frame);
+		makeFireMap(map, chateaus_in_frame);
 		console.log('setup load map start');
 		addShapes(map, darkMode);
 		addStopsLayers(map, darkMode);

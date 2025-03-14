@@ -124,7 +124,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'text-emissive-strength': 1
 		},
 		filter:default_metro_filter,
-		minzoom: 10.2
+		minzoom: 10.5
 	});
 
 	// TRAMS
@@ -171,7 +171,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'text-emissive-strength': 1
 		},
 		filter: default_tram_filter,
-		minzoom: 10
+		minzoom: 11
 	});
 
 	//INTERCITY RAIL
