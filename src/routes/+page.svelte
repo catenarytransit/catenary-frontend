@@ -552,7 +552,7 @@
 						mapglobal.setLayoutProperty(categoryvalues.labeldots, 'text-font', {
 							stops: [
 								[6, ['Barlow-Regular']],
-								[13, ['Barlow-Medium']]
+								[14.5, ['Barlow-Medium']]
 							]
 						});
 					}
