@@ -37,6 +37,8 @@
 	import { getLocaleStorageOrNav } from '../i18n';
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
 	import {locales_options, locales_options_lookup} from '../i18n';
+	
+	import VehicleInfo from './vehicle_info.svelte';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 	export let usunits: boolean;
@@ -310,6 +312,13 @@ Chateau: <span class="font-mono text-semibold">{latest_item_on_stack.data.chatea
 				
 			</p>
 			<p>Vehicle ID: <span  class="font-mono text-semibold">{latest_item_on_stack.data.vehicle_id}</span></p>
+
+			<VehicleInfo
+			chateau={latest_item_on_stack.data.chateau_id}
+			label={latest_item_on_stack.data.vehicle_id}
+			route_id={null}
+		/>
+
 		</div>
 	{/if}
 	{#if latest_item_on_stack.data instanceof SingleTrip}

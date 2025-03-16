@@ -72,6 +72,7 @@
 	import NativeLands from './NativeLands.svelte';
 	import { occupancy_to_symbol } from './occupancy_to_symbol';
 	import StopTimeNumber from './StopTimeNumber.svelte';
+	import VehicleInfo from './vehicle_info.svelte';
 
 	function fix_vehicle_number(chateau_id: string, vehicle_id: string) {
 		if (chateau_id == 'translink-queensland-au') {
@@ -709,7 +710,7 @@
 	>
 		{#if show_gtfs_ids}
 			<div class="font-mono px-3">
-				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
+				<div class="text-xs md:text-sm font-mono text-gray-500 dark:text-gray-400 leading-none">
 					Château: <span class="font-bold">{trip_selected.chateau_id}</span>
 					<br />
 					Route: <span class="font-bold">{trip_selected.route_id}</span>
@@ -719,15 +720,16 @@
 
 		{#if vehicle_data}
 			<div>
-				<p class="text-xs">
+				<span class="text-xs">
 					{$_('lastupdated')}: <TimeDiff
 						show_seconds={true}
 						show_brackets={false}
 						diff={vehicle_data.timestamp - current_time / 1000}
 					/>
-				</p>
+				</span>
 				{#if vehicle_data.position?.speed != null}
-					<p class="text-xs">
+					<span class="text-xs">
+						<span class='px-2'>{''}</span>
 						{$_('speed')}:
 
 						{#if usunits}
@@ -735,7 +737,7 @@
 						{:else}
 							{(vehicle_data.position?.speed * 3.6).toFixed(2)} km/h
 						{/if}
-					</p>{/if}
+					</span>{/if}
 
 				{#if vehicle_data.occupancy_status != null}
 					<p
@@ -767,6 +769,14 @@
 					</p>{/if}
 			</div>
 		{/if}
+
+		<div class="pb-1">
+			<VehicleInfo
+			chateau={trip_selected.chateau_id}
+			label={trip_data.vehicle?.label || trip_data.vehicle?.id}
+			route_id={trip_data.route_id}
+		/>
+		</div>
 
 		{#if all_exact_stoptimes == true}
 			<div class="flex flex-row">
