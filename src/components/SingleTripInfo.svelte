@@ -663,7 +663,7 @@
 			chateau_id={trip_selected.chateau_id}
 			vehicle={fix_vehicle_number(
 				trip_selected.chateau_id,
-				trip_data.vehicle?.label || trip_data.vehicle?.id
+				trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id
 			)}
 			arrow={true}
 			text={fixHeadsignText(
@@ -773,7 +773,7 @@
 		<div class="pb-1">
 			<VehicleInfo
 			chateau={trip_selected.chateau_id}
-			label={trip_data.vehicle?.label || trip_data.vehicle?.id}
+			label={trip_selected.vehicle_id || trip_data.vehicle?.label || trip_data.vehicle?.id}
 			route_id={trip_data.route_id}
 		/>
 		</div>
