@@ -114,5 +114,9 @@
 	"deleted": "Supprimé",
 	"occupancy": "Occupation",
 	"layers": "Couches",
-	"headsign": "Girouette"
+	"headsign": "Girouette",
+	"clockwise_abbrievation": "SH",
+	"anticlockwise_abbrievation": "SAH",
+	"clockwise": "Sens horaire",
+	"anticlockwise": "Sens antihoraire"
 }

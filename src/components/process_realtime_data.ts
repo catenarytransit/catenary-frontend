@@ -22,6 +22,7 @@ import { fixHeadsignText, fixRouteName } from './agencyspecific';
 import { adjustGamma } from './colour/readjustGamma';
 import { determineDarkModeToBool } from './determineDarkModeToBool';
 import { occupancy_to_symbol } from './occupancy_to_symbol';
+import { _ } from 'svelte-i18n';
 function category_name_to_source_name(category: string): string {
 	switch (category) {
 		case 'bus':
@@ -439,8 +440,8 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							contrastlightmode: contrastlightmode,
 							routeId: routeId,
 							headsign: fixHeadsignText(headsign, maptag)
-								.replace('Counterclockwise', 'ACW')
-								.replace('Clockwise', 'CW'),
+								.replace('Counterclockwise', translate('anticlockwise_abbrievation'))
+								.replace('Clockwise', translate('clockwise_abbrievation')),
 							timestamp: vehicle_data.timestamp,
 							id: rt_id,
 							text_color: text_colour,
@@ -470,3 +471,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 		console.error('no source for', source_name);
 	}
 }
+
+function translate(key: string, options?: Record<string, any>): string {
+	return get(_)(key, options);
+  }

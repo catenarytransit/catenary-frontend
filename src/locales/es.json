@@ -109,5 +109,9 @@
 	"occupancy_status_not_accepting_passengers": "No acepta pasajeros",
 	"occupancy_status_no_data_available": "No hay datos disponibles",
 	"occupancy_status_not_boardable": "No permite embarque",
-	"deleted": "Eliminado"
+	"deleted": "Eliminado",
+	"clockwise_abbrievation": "HOR",
+	"anticlockwise_abbrievation": "AHO",
+	"clockwise": "Sentido horario",
+	"anticlockwise": "sentido antihorario"
 }

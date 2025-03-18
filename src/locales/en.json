@@ -116,5 +116,9 @@
 	"deleted": "Deleted",
 	"crowdedness": "Crowdedness",
 	"occupancy": "Occupancy",
-	"layers": "Layers"
+	"layers": "Layers",
+	"clockwise_abbrievation": "CW",
+	"anticlockwise_abbrievation": "ACW",
+	"clockwise": "Clockwise",
+	"anticlockwise": "Anticlockwise"
 }

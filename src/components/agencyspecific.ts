@@ -1,4 +1,10 @@
+import { get } from 'svelte/store';
 import {titleCase} from '../utils/titleCase';
+import { _ } from 'svelte-i18n';
+
+function translate(key: string, options?: Record<string, any>): string {
+	return get(_)(key, options);
+  }
 
 export function fixHeadsignIcon(headsign: string): string | null {
 	let fixPatterns = {
@@ -30,10 +36,13 @@ export function fixRouteName(chateau: string, route: string, rid: string): strin
 		// @ts-ignore
 		return (
 			fixPatterns[chateau][rid] ||
-			fixPatterns[chateau]['*'] ||
-			route.replace('Counterclockwise', 'Anticlockwise')
+			fixPatterns[chateau]['*'] || route
 		);
 	} else {
+		route = route
+		.replace('Counterclockwise', translate("anticlockwise_abbrievation"))
+		.replace('Clockwise', translate("clockwise_abbrievation"));
+
 		return route;
 	}
 }
@@ -99,6 +108,8 @@ export function fixRouteNameLong(chateau: string, route: string, rid: string): s
 			.replace('Transportation Center', 'TC')
 			.replace('Transit Center', 'TC')
 			.replace('Transit Ctr', 'TC')
+			.replace("Counterclockwise", translate("anticlockwise"))
+			.replace("Clockwise", translate("clockwise"))
 			.trim();
 	}
 }
@@ -121,6 +132,9 @@ export function fixHeadsignText(name: string | null, route: string | null) {
 	if (name == null) {
 		return "";
 	}
+
+	name = name.replace("Counterclockwise", translate("anticlockwise"));
+	name = name.replace("Clockwise", translate("clockwise"));
 
 	if (route != null) {
 		if (name.startsWith(route)) {
@@ -164,7 +178,9 @@ export function fixStationName(name: string) {
 		'San Diego - Santa Fe Depot': 'Santa Fe Depot',
 		'San Diego - Old Town': 'Old Town',
 		'Burbank Airport - North (Av Line) Metrolink Station': 'Burbank Airport North',
-		'Burbank Airport - South (Vc Line) Metrolink Station': 'Burbank Airport South'
+		'Burbank Airport - South (Vc Line) Metrolink Station': 'Burbank Airport South',
+		'University Center South': "University Centre South",
+		'University Center North': "University Centre North",
 	};
 
 	return (
