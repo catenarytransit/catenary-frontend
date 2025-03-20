@@ -689,7 +689,7 @@
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 
 		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'} leading-none`}>
-			Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
+			{$_("tripid")} {trip_selected.trip_id}{#if trip_data.block_id != null}
 			<span>{" | "}</span>	
 			<span
 			on:click={() => {
@@ -702,7 +702,7 @@
 					return x;
 				})
 			}}
-			class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer">{$_('block')}{trip_data.block_id}</span>
+			class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer">{$_('block')} {trip_data.block_id}</span>
 			{/if}
 		</p>
 
