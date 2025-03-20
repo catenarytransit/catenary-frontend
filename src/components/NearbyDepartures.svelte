@@ -598,7 +598,7 @@
 									<div class="text-center">
 										{#if [2,4].includes(route_group.route_type) && trip.trip_short_name}
 											<p
-												class="  font-medium px-1 rounded-sm leading-none md:leading-tight"
+												class=" {trip.trip_short_name.length > 10 ? 'text-sm font-regular' : 'font-medium'} px-1 rounded-sm leading-none md:leading-tight"
 												style:background-color={route_group.color}
 												style:color={route_group.text_color}
 											>
