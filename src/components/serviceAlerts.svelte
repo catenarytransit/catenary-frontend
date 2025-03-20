@@ -72,7 +72,7 @@
 											)
 											.replaceAll(/\<(\/)?p\>/g, '')
 											.replaceAll(/\<(\/)?b\>/g, '')
-                                                                                        .replaceAll("https://rt.scmetro.org ", "Catenary Maps")
+                                                                                        .replaceAll("https://rt.scmetro.org ", "Catenary Maps ")
 											.replaceAll(
 												/(\[)?accessibility icon(\])?/g,
 												'<span class="bg-blue-200 dark:bg-gray-500 w-3 h-3 rounded-full inline"><span class="text-xs material-symbols-outlined ">accessible</span></span>'
