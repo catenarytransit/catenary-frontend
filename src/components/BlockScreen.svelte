@@ -25,12 +25,7 @@
     }, 1000);
 
     function getData() {
-        fetch(`https://birch.catenarymaps.org/get_block?chateau=${chateau}&block_id=${block_id}&service_date=${service_date}`,
-            {
-                method: 'GET',
-                mode: 'cors',
-            }
-        )
+        fetch(`https://birch.catenarymaps.org/get_block?chateau=${chateau}&block_id=${block_id}&service_date=${service_date}`)
             .then((response) => response.text())
             .then((text) => {
                 let data = JSON.parse(text);
