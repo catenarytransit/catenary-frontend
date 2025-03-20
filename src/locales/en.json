@@ -120,5 +120,8 @@
 	"clockwise_abbrievation": "CW",
 	"anticlockwise_abbrievation": "ACW",
 	"clockwise": "Clockwise",
-	"anticlockwise": "Anticlockwise"
+	"anticlockwise": "Anticlockwise",
+	"tripid"	: "Trip ID",
+	"block": "Block",
+	"duration": "Duration"
 }

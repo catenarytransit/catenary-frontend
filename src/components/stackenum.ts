@@ -6,7 +6,8 @@ export class StackInterface {
 		| StopStack
 		| NearbyDeparturesStack
 		| MapSelectionScreen
-		| SettingsStack;
+		| SettingsStack
+		| BlockStack;
 
 	constructor(
 		data:
@@ -17,6 +18,7 @@ export class StackInterface {
 			| NearbyDeparturesStack
 			| MapSelectionScreen
 			| SettingsStack
+			| BlockStack
 	) {
 		this.data = data;
 	}
@@ -35,6 +37,18 @@ export class MapSelectionOption {
 
 	constructor(data: StopMapSelector | RouteMapSelector | VehicleMapSelector) {
 		this.data = data;
+	}
+}
+
+export class BlockStack {
+	public chateau_id: string;
+	public block_id: string;
+	public service_date: string;
+
+	constructor(chateau_id: string, block_id: string, service_date: string) {
+		this.chateau_id = chateau_id;
+		this.block_id = block_id;
+		this.service_date = service_date;
 	}
 }
 

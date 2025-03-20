@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { json } from '@sveltejs/kit';
-	import { SingleTrip } from '../components/stackenum';
+	import { BlockStack, SingleTrip, StackInterface } from '../components/stackenum';
 	import { onDestroy, onMount } from 'svelte';
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
@@ -690,7 +690,19 @@
 
 		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'} leading-none`}>
 			Trip ID {trip_selected.trip_id}{#if trip_data.block_id != null}
-				<span>{' | Block '}{trip_data.block_id}</span>
+			<span>{" | "}</span>	
+			<span
+			on:click={() => {
+				data_stack_store.update((x) => {
+					console.log(trip_selected.chateau_id, trip_data.block_id, trip_data.service_date);
+					x.push(new StackInterface(
+						new BlockStack(trip_selected.chateau_id, trip_data.block_id, trip_data.service_date)
+					))
+
+					return x;
+				})
+			}}
+			class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer">{'Block '}{trip_data.block_id}</span>
 			{/if}
 		</p>
 

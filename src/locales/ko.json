@@ -112,5 +112,6 @@
 	"occupancy_status_no_data_available": "데이터 없음",
 	"occupancy_status_not_boardable": "탑승 불가",
 	"deleted": "삭제됨",
-	"headsign": "행선안내판"
+	"headsign": "행선안내판",
+	"duration": "지속 시간"
 }

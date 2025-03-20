@@ -8,6 +8,23 @@
 	<a href="https://catenarymaps.org" target="_blank" rel="author">
 		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
 	</a>
+
+	<!-- Back button that shows if more than one item on stack -->
+
+	{#if $data_stack_store.length > 1}
+		<button
+			class="text-seashore cursor-pointer mx-1"
+			on:click={() => {
+				data_stack_store.update((x) => {
+					x.pop();
+					return x;
+				});
+			}}
+			aria-label="Back"
+			><span class="material-symbols-outlined block"> arrow_back </span>
+		</button>
+	{/if}
+
 	<button
 		class="text-seashore cursor-pointer mx-1"
 		on:click={() => {

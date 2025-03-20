@@ -113,5 +113,6 @@
 	"clockwise_abbrievation": "HOR",
 	"anticlockwise_abbrievation": "AHO",
 	"clockwise": "Sentido horario",
-	"anticlockwise": "sentido antihorario"
+	"anticlockwise": "sentido antihorario",
+	"duration": "Duración"
 }

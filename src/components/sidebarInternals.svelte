@@ -11,7 +11,8 @@
 		RouteStack,
 		StopStack,
 		RouteMapSelector,
-		VehicleSelectedStack
+		VehicleSelectedStack,
+		BlockStack
 	} from '../components/stackenum';
 	import HomeButton from './SidebarParts/home_button.svelte';
 	import BackButton from './SidebarParts/back_button.svelte';
@@ -37,6 +38,7 @@
 	import { getLocaleStorageOrNav } from '../i18n';
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
 	import {locales_options, locales_options_lookup} from '../i18n';
+	import BlockScreen from './BlockScreen.svelte';
 	
 	import VehicleInfo from './vehicle_info.svelte';
 	export let latest_item_on_stack: StackInterface | null;
@@ -300,6 +302,13 @@
 	{/if}
 	{#if latest_item_on_stack.data instanceof SettingsStack}
 		<SettingsMenu/>
+	{/if}
+	{#if latest_item_on_stack.data instanceof BlockStack}
+		<BlockScreen 
+			chateau={latest_item_on_stack.data.chateau_id}
+			block_id={latest_item_on_stack.data.block_id}
+			service_date={latest_item_on_stack.data.service_date}
+		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">

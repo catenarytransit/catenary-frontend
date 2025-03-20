@@ -118,5 +118,8 @@
 	"clockwise_abbrievation": "SH",
 	"anticlockwise_abbrievation": "SAH",
 	"clockwise": "Sens horaire",
-	"anticlockwise": "Sens antihoraire"
+	"anticlockwise": "Sens antihoraire",
+	"tripid": "ID de voyage",
+	"block": "Roulement",
+	"duration": "Durée"
 }

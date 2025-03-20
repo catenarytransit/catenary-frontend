@@ -113,5 +113,6 @@
 	"clockwise_abbrievation": "Rechtsdrehend",
 	"anticlockwise_abbrievation": "Linksdrehend",
 	"clockwise": "Rechtsdrehend",
-	"anticlockwise": "Linksdrehend"
+	"anticlockwise": "Linksdrehend",
+	"duration": "Dauer"
 }
