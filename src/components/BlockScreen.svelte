@@ -25,7 +25,7 @@
     }, 1000);
 
     function getData() {
-        fetch(`http://birch.catenarymaps.org/get_block?chateau=${chateau}&block_id=${block_id}&service_date=${service_date}`,
+        fetch(`https://birch.catenarymaps.org/get_block?chateau=${chateau}&block_id=${block_id}&service_date=${service_date}`,
             {
                 method: 'GET',
                 mode: 'cors',
