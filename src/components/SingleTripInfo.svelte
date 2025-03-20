@@ -702,7 +702,7 @@
 					return x;
 				})
 			}}
-			class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer">{'Block '}{trip_data.block_id}</span>
+			class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer">{$_('block')}{trip_data.block_id}</span>
 			{/if}
 		</p>
 
