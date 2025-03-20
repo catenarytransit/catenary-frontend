@@ -102,7 +102,7 @@
     {#if block_data}
         <div class='flex gap-y-1  py-1 flex-col align-center'>
             {#each block_data.trips as trip, index}
-                <div class={`border-t border-gray-300 dark:border-slate-700 py-1 align-center ${current_time > trip.end_time ? 'text-gray-800 dark:text-gray-200': ""}`}>
+                <div class={`border-t border-gray-300 dark:border-slate-700 py-1 align-center ${current_time > trip.end_time ? 'text-gray-800 dark:text-gray-300': ""}`}>
 
                     {#if block_data.routes[trip.route_id] && !single_route}
                     <p class=' align-center'>
