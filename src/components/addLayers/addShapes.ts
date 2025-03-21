@@ -36,8 +36,8 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 0.7, 12, 1, 14, 2.6],
-			'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.1, 11, 0.3],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 10, 0.7, 12, 1, 14, 2.6],
+			'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.08, 8, 0.1, 11, 0.3],
 			
 			////'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6.5, 0.5, 7.2, 0.5, 10, 0.5, 10, 0.5],
