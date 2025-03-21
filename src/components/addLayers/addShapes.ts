@@ -200,8 +200,8 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.5, 5, 0.7, 7, 1.5, 9, 2.5],
-			'line-opacity': 1,
+			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.4, 5, 0.7, 7, 1, 9, 2, 11, 2.5],
+			'line-opacity': 0.9,
 			//'line-emissive-strength': 1
 		},
 		minzoom: 3
@@ -403,7 +403,13 @@ export function addShapes(
 			'symbol-placement': 'line',
 			'text-field': ['coalesce', ['get', 'route_label']],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-font': ['Barlow-Bold'],
+			'text-font': [
+				'step',
+				['zoom'],
+				['literal', ['Barlow-Semibold']],
+				7,
+				['literal', ['Barlow-Bold']]
+			],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 
