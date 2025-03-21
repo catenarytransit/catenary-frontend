@@ -178,6 +178,26 @@ export function addShapes(
 		minzoom: 3
 	});
 
+	map.addLayer({
+		id: layerspercategory.intercityrail.shapes,
+		type: 'line',
+		source: 'intercityrailshapes',
+		'source-layer': 'data',
+		filter: [
+			'all',
+			['any', ['==', 2, ['get', 'route_type']]],
+			['!', ['all', ['==', ['get', 'chateau'], 'gotransit'], ['==', ['get', 'shape_id'], 'UNGL']]]
+			//  ['!=', ['get', 'chateau'], "amtrak"],
+		],
+		paint: {
+			'line-color': ['concat', '#', ['get', 'color']],
+			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.5, 5, 0.7, 7, 1.5, 9, 2.5],
+			'line-opacity': 1,
+			//'line-emissive-strength': 1
+		},
+		minzoom: 3
+	});
+
 	//metro
 	map.addLayer({
 		id: layerspercategory.metro.shapes,
@@ -348,25 +368,7 @@ export function addShapes(
 
 	//INTERCITY RAIL
 
-	map.addLayer({
-		id: layerspercategory.intercityrail.shapes,
-		type: 'line',
-		source: 'intercityrailshapes',
-		'source-layer': 'data',
-		filter: [
-			'all',
-			['any', ['==', 2, ['get', 'route_type']]],
-			['!', ['all', ['==', ['get', 'chateau'], 'gotransit'], ['==', ['get', 'shape_id'], 'UNGL']]]
-			//  ['!=', ['get', 'chateau'], "amtrak"],
-		],
-		paint: {
-			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.5, 5, 0.7, 7, 1.5, 9, 2.5],
-			'line-opacity': 1,
-			//'line-emissive-strength': 1
-		},
-		minzoom: 3
-	});
+
 
 	map.addLayer({
 		id: layerspercategory.intercityrail.labelshapes,
