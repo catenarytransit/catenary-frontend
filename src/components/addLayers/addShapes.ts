@@ -186,7 +186,16 @@ export function addShapes(
 		filter: [
 			'all',
 			['any', ['==', 2, ['get', 'route_type']]],
-			['!', ['all', ['==', ['get', 'chateau'], 'gotransit'], ['==', ['get', 'shape_id'], 'UNGL']]]
+			['!', ['all', ['==', ['get', 'chateau'], 'gotransit'], ['==', ['get', 'shape_id'], 'UNGL']]],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'amtrak', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			]
 			//  ['!=', ['get', 'chateau'], "amtrak"],
 		],
 		paint: {
@@ -378,7 +387,16 @@ export function addShapes(
 		filter: [
 			'all',
 			['any', ['==', 2, ['get', 'route_type']]],
-			['!', ['all', ['==', ['get', 'chateau'], 'gotransit'], ['==', ['get', 'shape_id'], 'UNGL']]]
+			['!', ['all', ['==', ['get', 'chateau'], 'gotransit'], ['==', ['get', 'shape_id'], 'UNGL']]],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'amtrak', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			]
 			//     ['!=', ['get', 'chateau'], "amtrak"]
 		],
 		layout: {
