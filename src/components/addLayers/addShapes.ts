@@ -32,6 +32,15 @@ export function addShapes(
 					['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 				]
 			],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'flixbus', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			],
 			['!=', ['get', 'onestop_feed_id'], 'f-u0-blablacar']
 		],
 		paint: {
@@ -68,6 +77,15 @@ export function addShapes(
 					['==', 'f-9mu-mts', ['get', 'onestop_feed_id']],
 					['==', ['coalesce', ['get', 'route_label']], 'Old Town to Airport Shuttle']
 				]
+			],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'flixbus', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
 			],
 			//   ['!=', ['get', 'onestop_feed_id'], 'f-9-flixbus'],
 			['!=', ['get', 'onestop_feed_id'], 'f-u0-blablacar']
