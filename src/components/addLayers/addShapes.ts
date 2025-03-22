@@ -431,7 +431,7 @@ export function addShapes(
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 6, 6, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 
-			'symbol-spacing': ['step', ['zoom'], 20, 6, 40, 9, 70, 13, 80, 15, 100],
+			'symbol-spacing': ['step', ['zoom'], 30, 6, 40, 9, 70, 13, 80, 15, 100],
 			'text-allow-overlap': false,
 			visibility: 'none',
 
