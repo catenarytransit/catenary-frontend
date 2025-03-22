@@ -1279,7 +1279,7 @@
 
 			const map = new maplibregl.Map({
 				canvasContextAttributes: {
-					antialias: get_shortest_screen_dimension() > 800 ? true : false,
+					antialias: true,
 					powerPreference: 'high-performance',
 				},
 				container: 'map',
