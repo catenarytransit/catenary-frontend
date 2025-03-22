@@ -110,7 +110,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-field': ['get', 'displayname'],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 12, 10, 14, 12],
-			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.35, 12, 0.6],
+			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.30, 12, 0.6],
 			//'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
