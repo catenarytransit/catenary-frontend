@@ -1287,7 +1287,7 @@
 				hash: 'pos',
 				pixelRatio: window.devicePixelRatio * get_shortest_screen_dimension() > 800 ? 2 : 1.5,
 				preserveDrawingBuffer: false,
-				maxPitch: 70,
+				maxPitch: window.innerHeight / window.innerWidth > 1.5 ? 60 : 85,
 				fadeDuration: 100,
 				style: style, // stylesheet location
 				center: centerinit, // starting position [lng, lat]
