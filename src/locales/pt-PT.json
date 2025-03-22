@@ -123,5 +123,6 @@
 	"anticlockwise": "Sentido Anti-Horário",
 	"tripid"	: "ID da Viagem",
 	"block": "Bloco",
-	"duration": "Duração"
+	"duration": "Duração",
+	"allexact": "Todas as partidas programadas são exatas."
 }
