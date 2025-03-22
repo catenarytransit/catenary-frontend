@@ -123,5 +123,6 @@
 	"anticlockwise": "Anticlockwise",
 	"tripid"	: "Trip ID",
 	"block": "Block",
-	"duration": "Duration"
+	"duration": "Duration",
+	"allexact": "All scheduled departures are exact."
 }

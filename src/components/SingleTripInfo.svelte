@@ -801,7 +801,7 @@
 					>
 
 					<span class="align-middle my-auto ml-1 font-semibold">
-						All scheduled departures are exact.
+						{$_("allexact")}
 					</span>
 				</div>
 			</div>

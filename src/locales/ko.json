@@ -113,5 +113,15 @@
 	"occupancy_status_not_boardable": "탑승 불가",
 	"deleted": "삭제됨",
 	"headsign": "행선안내판",
-	"duration": "지속 시간"
+	"duration": "지속 시간",
+	"allexact": "모든 예정된 출발이 정확합니다.",
+	"crowdedness": "혼잡도",
+	"occupancy": "승차",
+	"layers": "레이어",
+	"clockwise_abbrievation": "CW",
+	"anticlockwise_abbrievation": "ACW",
+	"clockwise": "시계 방향",
+	"anticlockwise": "반 시계 방향",
+	"tripid"	: "여행 ID",
+	"block": "블록"
 }

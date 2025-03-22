@@ -114,5 +114,14 @@
 "deleted": "已删除",
 	"occupancy": "占用",
 	"layers": "图层",
-	"headsign": "线路牌"
+	"headsign": "线路牌",
+	"crowdedness": "拥挤度",
+	"clockwise_abbrievation": "顺时针",
+	"anticlockwise_abbrievation": "逆时针",
+	"clockwise": "顺时针",
+	"anticlockwise": "逆时针",
+	"tripid"	: "行程ID",
+	"block": "区间",
+	"duration": "时长",
+	"allexact": "所有计划班次均准点"
 }

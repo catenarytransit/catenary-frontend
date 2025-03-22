@@ -121,5 +121,6 @@
 	"anticlockwise": "Sens antihoraire",
 	"tripid": "ID de voyage",
 	"block": "Roulement",
-	"duration": "Durée"
+	"duration": "Durée",
+	"allexact": "Tous les départs prévus sont exacts."
 }
