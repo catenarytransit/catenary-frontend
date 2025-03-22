@@ -90,7 +90,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		layout: {},
 		paint: {
 			'circle-color': getCircleInside(darkMode),
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 1, 12, 3.5, 15, 5],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 12, 3.5, 15, 5],
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'],0.4, 10.5, 0.8, 11, 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
@@ -143,7 +143,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		layout: {},
 		paint: {
 			'circle-color':  getCircleInside(darkMode),
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 10, 1, 12, 3, 15, 4],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 0.9, 10, 1, 12, 3, 15, 4],
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.4, 11, 0.5, 15, 0.6],
