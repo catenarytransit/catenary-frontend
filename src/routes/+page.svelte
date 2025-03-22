@@ -1278,6 +1278,10 @@
 			maplibregl.setWorkerCount(4);
 
 			const map = new maplibregl.Map({
+				canvasContextAttributes: {
+					antialias: get_shortest_screen_dimension() > 800 ? true : false,
+					powerPreference: 'high-performance',
+				},
 				container: 'map',
 				light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
 				hash: 'pos',
