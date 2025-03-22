@@ -219,7 +219,12 @@ export function addShapes(
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
 			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.4, 5, 0.7, 7, 1, 9, 2, 11, 2.5],
-			'line-opacity': 0.9,
+			'line-opacity': [
+				'case',
+				['==', true, ['get', 'stop_to_stop_generated']],
+				0.2,
+				0.9
+			],
 			//'line-emissive-strength': 1
 		},
 		minzoom: 3
@@ -431,7 +436,7 @@ export function addShapes(
 			'text-size': ['interpolate', ['linear'], ['zoom'], 3, 6, 6, 7, 9, 9, 13, 11],
 			'text-ignore-placement': false,
 
-			'symbol-spacing': ['step', ['zoom'], 30, 6, 40, 9, 70, 13, 80, 15, 100],
+			'symbol-spacing': ['step', ['zoom'], 30, 6, 40, 9, 70, 13, 80, 15, 100] ,
 			'text-allow-overlap': false,
 			visibility: 'none',
 
