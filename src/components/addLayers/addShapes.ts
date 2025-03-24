@@ -131,7 +131,17 @@ export function addShapes(
 		type: 'line',
 		source: 'othershapes',
 		'source-layer': 'data',
-		filter: ['all', ['any', ['==', 6, ['get', 'route_type']], ['==', 7, ['get', 'route_type']]]],
+		filter: ['all', 
+			[
+				'!', 
+					[
+						'all',
+						['==', 'schweiz', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			],
+			['any', ['==', 6, ['get', 'route_type']], ['==', 7, ['get', 'route_type']]]],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2, 9, 3],
@@ -154,7 +164,16 @@ export function addShapes(
 				['==', 4, ['get', 'route_type']],
 				['==', 6, ['get', 'route_type']],
 				['==', 7, ['get', 'route_type']]
-			]
+			],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'schweiz', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			],
 		],
 		layout: {
 			'symbol-placement': 'line',
@@ -185,7 +204,8 @@ export function addShapes(
 		type: 'line',
 		source: 'othershapes',
 		'source-layer': 'data',
-		filter: ['all', ['==', 4, ['get', 'route_type']]],
+		filter: ['all', ['==', 4, ['get', 'route_type']],
+		["!=", ['get', 'chateau'], "schweiz"]],
 		paint: {
 			'line-dasharray': [1, 1],
 			'line-color': ['concat', '#', ['get', 'color']],
@@ -424,7 +444,14 @@ export function addShapes(
 		],
 		layout: {
 			'symbol-placement': 'line',
-			'text-field': ['coalesce', ['get', 'route_label']],
+			'text-field': urlParams.get('debug')
+			? [
+					'concat',
+					['get', 'onestop_feed_id'],
+					'|',
+					['coalesce', ['get', 'route_label']]
+				]
+			:  ['get', 'route_label'],
 			//'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-font': [
 				'step',
