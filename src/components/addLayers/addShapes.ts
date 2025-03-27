@@ -204,15 +204,14 @@ export function addShapes(
 		type: 'line',
 		source: 'othershapes',
 		'source-layer': 'data',
-		filter: ['all', ['==', 4, ['get', 'route_type']],
-		["!=", ['get', 'chateau'], "schweiz"]],
+		filter: ['all', ['==', 4, ['get', 'route_type']]],
 		paint: {
-			'line-dasharray': [1, 1],
+			'line-dasharray': [1, 2],
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1, 7, 2, 14, 3],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 10, 1.5, 14, 3],
 			'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
 			//'line-emissive-strength': 1
-		},
+		},s
 		minzoom: 3
 	});
 
