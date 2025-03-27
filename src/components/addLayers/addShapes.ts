@@ -211,7 +211,7 @@ export function addShapes(
 			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 10, 1.5, 14, 3],
 			'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.8, 7, 0.9],
 			//'line-emissive-strength': 1
-		},s
+		},
 		minzoom: 3
 	});
 
