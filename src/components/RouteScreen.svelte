@@ -284,9 +284,11 @@
 		}
 			<div class="font-mono px-3">
 				<div class="text-sm font-mono text-gray-500 dark:text-gray-400">
-					Chateau: <span class="font-bold">{routestack.chateau_id}</span>
+					Château: <span class="font-bold">{routestack.chateau_id}</span>
 					<br/>
 					Route: <span class="font-bold">{routestack.route_id.replace(/^\"/, "").replace(/\"$/, "")}</span>
+					<br/>
+					Feed ID: <span class="font-bold">{route_data.onestop_feed_id}</span>
 				</div>
 
 			</div>
