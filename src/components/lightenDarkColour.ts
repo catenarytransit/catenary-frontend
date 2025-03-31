@@ -34,7 +34,12 @@ export function lightenColour(inputstring: string): string {
 			}
 		}
 
-		hsl.l = Math.min(100, hsl.l);
+		hsl.l = 100;
+
+		console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
+
+		hsl.s = Math.max(100, Math.min(hsl.s + 40, 100));
+
 		const newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
 
 		contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(

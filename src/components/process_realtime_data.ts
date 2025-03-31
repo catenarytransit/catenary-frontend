@@ -381,7 +381,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 								}
 							}
 
-							hsl.l = Math.min(100, hsl.l);
+							hsl.l = Math.min(hsl.l * 1.5, 100);
 							const newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
 
 							const newdarkbearingline = hslToRgb(
