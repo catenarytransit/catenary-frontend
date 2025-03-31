@@ -67,13 +67,13 @@ export function darkenColour(inputstring: string): string {
 
 		//
 		if (hsl.l > 60) {
-			hsl.l = (0.5 * (hsl.l - 60)) + 60
+			hsl.l = Math.min(100, (40 + Math.sqrt(25 * hsl.l)))
 		}
 
 		const newrgb = hslToRgb(hsl.h, hsl.s, hsl.l);
 
 		contrastlightmode = `#${componentToHex(newrgb.r)}${componentToHex(
-			newkrgb.g
+			newrgb.g
 		)}${componentToHex(newrgb.b)}`;
 	}
 

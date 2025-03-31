@@ -535,7 +535,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 				6,
 				'#ffffff'
 			] : '#3a3a3a',
-			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 3, 0.2, 5, 1, 7, 1.5],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 3, 0.6, 5, 1, 7, 1.5],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 4, 0.4, 7, 0.6, 11, 0.7]
 		}
