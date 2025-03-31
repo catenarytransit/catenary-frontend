@@ -307,7 +307,12 @@ export function addShapes(
 			visibility: 'none'
 		},
 		paint: {
-			'text-color': ['concat', '#', ['get', 'text_color']],
+			'text-color': [
+				'case',
+				["==", ['get', 'color'], '000000'],
+				'#ffffff',
+				['concat', '#', ['get', 'text_color']]
+			],
 			//'text-emissive-strength': 1,
 			'text-halo-color': ['concat', '#', ['get', 'color']],
 			'text-halo-width': 1,
