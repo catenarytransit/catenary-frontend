@@ -68,7 +68,7 @@ export function darkenColour(inputstring: string): string {
 		// console.log('hsl', hsl)
 
 		//
-		if (hsl.l > 60) {
+		if (hsl.l < 50) {
 			hsl.l = (0.5 * (hsl.l - 60)) + 60
 		}
 
