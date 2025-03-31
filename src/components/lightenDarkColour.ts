@@ -35,7 +35,7 @@ export function lightenColour(inputstring: string): string {
 		}
 
 		if (hsl.l < 60) {
-                hsl.l = hsl.l + ((100-hsl.l) * 0.5);
+                hsl.l = hsl.l + ((100-hsl.l) * 0.4);
 		}
 		
 		//console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
