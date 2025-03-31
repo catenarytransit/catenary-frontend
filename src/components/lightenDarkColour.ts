@@ -34,9 +34,9 @@ export function lightenColour(inputstring: string): string {
 			}
 		}
 
-		hsl.l = 100;
-
-		console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
+                hsl.l = hsl.l + ((100-hsl.l) * 0.6);
+		
+		//console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
 
 		hsl.s = Math.max(100, Math.min(hsl.s + 40, 100));
 
