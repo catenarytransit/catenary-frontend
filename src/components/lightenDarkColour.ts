@@ -34,9 +34,11 @@ export function lightenColour(inputstring: string): string {
 			}
 		}
 
-		hsl.l = 100;
-
-		console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
+		if (hsl.l < 60) {
+                hsl.l = hsl.l + ((100-hsl.l) * 0.4);
+		}
+		
+		//console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
 
 		hsl.s = Math.max(100, Math.min(hsl.s + 40, 100));
 
@@ -66,8 +68,8 @@ export function darkenColour(inputstring: string): string {
 		// console.log('hsl', hsl)
 
 		//
-		if (hsl.l > 60) {
-			hsl.l = Math.min(100, (40 + Math.sqrt(25 * hsl.l)))
+		if (hsl.l < 50) {
+			hsl.l = (0.5 * (hsl.l - 60)) + 60
 		}
 
 		const newrgb = hslToRgb(hsl.h, hsl.s, hsl.l);
