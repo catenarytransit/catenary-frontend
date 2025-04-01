@@ -40,7 +40,7 @@ export function lightenColour(inputstring: string): string {
 		
 		//console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
 
-		hsl.s = Math.max(100, Math.min(hsl.s + 40, 100));
+		//hsl.s = Math.max(100, Math.min(hsl.s + 40, 100));
 
 		const newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
 
