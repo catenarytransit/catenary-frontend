@@ -66,9 +66,9 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['linear'],
 		['zoom'],
 		6,
-		0.10,
+		0.090,
 		8,
-		0.12,
+		0.11,
 		9,
 		0.14,
 		11,
@@ -319,10 +319,10 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		]],
 		paint: {
 			//['interpolate', ['linear'], ['zoom'], 6, 3, 8, 3, 10, 4, 11, 6, 16, 12],
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2, 8, 2.5, 10, 4, 11, 4.5, 13, 6, 15, 6, 16, 10],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 1.8, 8, 2.3, 10, 4, 11, 4.5, 13, 6, 15, 6, 16, 10],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
-			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.6, 10, 1],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.5, 9, 0.6, 10, 1],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.7]
 		}
