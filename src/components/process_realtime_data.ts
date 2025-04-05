@@ -190,6 +190,13 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 				//	console.log('vehicle data', vehicle_data)
 
 					let vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
+					
+					if (chateau_id == 'new-south-wales') {
+						if (vehiclelabel.includes(" to ")) {
+							vehiclelabel = vehicle_data.vehicle?.id || '';
+						}
+					}
+
 					let colour = '#aaaaaa';
 					let text_colour: string = '#000000';
 
