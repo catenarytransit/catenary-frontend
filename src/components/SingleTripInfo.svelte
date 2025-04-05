@@ -647,7 +647,8 @@
 			>
 		</p>
 	</div>
-{:else if is_loading_trip_data}
+	{/if}
+{#if is_loading_trip_data}
 	{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
 		<div class="w-full p-3 flex flex-col gap-y-2">
 			<div class="h-5 w-1/2 bg-slate-400 dark:bg-slate-800 rounded-lg animate-pulse"></div>
