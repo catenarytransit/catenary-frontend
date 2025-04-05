@@ -521,6 +521,7 @@
 					console.log('refresh component');
 				} catch (e: any) {
 					console.error(e);
+					error = e;
 					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 				}
 			})
