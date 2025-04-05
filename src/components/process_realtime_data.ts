@@ -223,6 +223,10 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							if (headsign === headsign.toUpperCase()) {
 								headsign = titleCase(headsign);
 							}
+
+							if (chateau_id == "new-south-wales") {
+								headsign = headsign.replace(" Station", "");
+							}
 						}
 					}
 
