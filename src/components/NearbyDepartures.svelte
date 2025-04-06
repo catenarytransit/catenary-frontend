@@ -366,18 +366,18 @@
 
 								
 							}
-
-							if (new_directions[direction.headsign].trips) {
-								
-							new_directions[direction.headsign].trips = 
-								
-								new_directions[direction.headsign].trips.toSorted((a, b) => 
-								(a.departure_realtime || a.departure_schedule)  -  (b.departure_realtime, b.departure_schedule)
-								)
-						}
-
-							
 						});
+
+						//for each value in the directions object
+
+						for (const [key, value] of Object.entries(new_directions)) {
+							//sort the trips by departure time in place
+							new_directions[key].trips.sort(
+								(a: any, b: any) =>
+									(a.departure_realtime || a.departure_schedule) -
+									(b.departure_realtime || b.departure_schedule)
+							);
+						}
 
 						route_group.directions = new_directions;
 					});
