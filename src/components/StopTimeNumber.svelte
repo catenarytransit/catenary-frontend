@@ -183,7 +183,6 @@
 		{#if shared_rt_time && shared_scheduled_time}
 			<DelayDiff diff={shared_rt_time - shared_scheduled_time} {show_seconds} />
 		{/if}
-
 		<div class="ml-auto text-sm">
 			<div class="text-sm text-right">
 				<p class="text-right">
@@ -231,8 +230,8 @@
 	</div>
 {/if}
 
-<p>
-	{#if debug_mode}
+
+	{#if debug_mode}<p>
 		<span class="text-sm">shared time rt:{shared_rt_time} | sched: {shared_scheduled_time}</span>
-	{/if}
-</p>
+	</p>{/if}
+
