@@ -349,7 +349,7 @@
 												.replace('Station ', '')
 												.replace(' Station', '')
 												.replace(', Bahnhof', '')
-												.replace(' Banhhof', '')
+												.replace(' Bahnhof', '')
 												.replace('Estación de tren ', '')
 												.replace(' Metrolink', '')
 												.replace('Northbound', 'N.B.')
