@@ -170,12 +170,17 @@
     <!--UNIFIED TIME-->
 
 	<div class="flex flex-row items-center space-x-1">
+		{
+			#if shared_rt_time || shared_scheduled_time
+			
+		}
 		<TimeDiff
-			diff={(shared_rt_time || shared_scheduled_time) - current_time_secs}
-			{show_seconds}
-			show_brackets={false}
-		/>
-		{#if shared_rt_time}
+		diff={(shared_rt_time || shared_scheduled_time) - current_time_secs}
+		{show_seconds}
+		show_brackets={false}
+	/>
+		{/if}
+		{#if shared_rt_time && shared_scheduled_time}
 			<DelayDiff diff={shared_rt_time - shared_scheduled_time} {show_seconds} />
 		{/if}
 
@@ -190,6 +195,8 @@
 							<BullseyeArrow class_name="w-4 h-4 inline-block text-[#58A738]" />
 						{/if}
 						{#if shared_rt_time != shared_scheduled_time}{/if}
+						{#if shared_scheduled_time} 
+
 						{#if shared_rt_time != shared_scheduled_time}
 							<span
 								class={`${(shared_rt_time != shared_scheduled_time) == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
@@ -201,6 +208,7 @@
 								/>
 							</span>
 						{/if}
+						{/if}
 						<span class="text-seashore font-medium">
 							<Clock
 								timezone={stoptime.timezone || trip_data.tz}
@@ -209,11 +217,13 @@
 							/>
 						</span>
 					{:else}
+					{#if shared_scheduled_time}
 						<Clock
 							timezone={stoptime.timezone || trip_data.tz}
 							time_seconds={shared_scheduled_time}
 							{show_seconds}
 						/>
+						{/if}
 					{/if}
 				</p>
 			</div>
