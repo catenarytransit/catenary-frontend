@@ -153,9 +153,11 @@
 
 	let marker_reference: maplibregl.Marker | null = null;
 
+	let amount_of_ms_total_server_side: number | null = null;
+
 	export let window_height_known: number = 500;
 
-	let show_filter_menu: bool = false;
+	let show_filter_menu: boolean = false;
 
 	onMount(() => {
 		if (typeof window != 'undefined') {
@@ -346,6 +348,8 @@
 					stops_table = data.stop;
 					let temp_departure_list = data.departures;
 
+					amount_of_ms_total_server_side = data.debug.total_time_ms;
+
 					temp_departure_list.forEach((route_group: any) => {
 						let new_directions: Record<string, any> = {};
 
@@ -431,6 +435,11 @@
 			</div>
 		</div>
 
+		{#if amount_of_ms_total_server_side != null}
+		<div class="align-middle ml-1 my-auto">
+			<p class="text-gray-800 dark:text-gray-300 text-sm">{amount_of_ms_total_server_side} ms</p>
+		</div>
+		{/if}
 		<!--
 <h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3 `}>
 		{$_('nearbydepartures')}
