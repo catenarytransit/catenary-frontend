@@ -320,9 +320,20 @@
 								transit_shape_context.setData(geojson_source_new);
 							}
 
-							let already_seen_stop_ids: string[] = [];
 
-							let stops_features = data.stoptimes
+							
+						}
+					} else {
+						let transit_shape_context = map.getSource('transit_shape_context');
+						transit_shape_context.setData( { type: 'FeatureCollection', features: [] });
+
+					}
+
+					if (map != null) {
+
+						let already_seen_stop_ids: string[] = [];
+
+						let stops_features = data.stoptimes
 								.filter((eachstoptime: any) => {
 									if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
 										already_seen_stop_ids.push(eachstoptime.stop_id);
@@ -377,7 +388,6 @@
 							}
 
 							update_vehicle_rt();
-						}
 					}
 
 					//load alerts in
