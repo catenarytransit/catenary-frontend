@@ -54,6 +54,9 @@
 	}
 </script>
 
+	{#if shared_scheduled_time || shared_rt_time}
+	
+
 {#if show_both_departure_and_arrival}
 	<!--ARRIVAL SECTION-->
 
@@ -229,7 +232,7 @@
 		</div>
 	</div>
 {/if}
-
+{/if}
 
 	{#if debug_mode}<p>
 		<span class="text-sm">shared time rt:{shared_rt_time} | sched: {shared_scheduled_time}</span>
