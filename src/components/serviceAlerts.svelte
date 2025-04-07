@@ -127,6 +127,7 @@
 										show_seconds={false}
 										show_brackets={true}
 										show_plus={true}
+										show_days={true}
 									/>
 								</p>
 							{/if}
@@ -151,6 +152,7 @@
 										show_seconds={false}
 										show_brackets={true}
 										show_plus={true}
+										show_days={true}
 									/>
 								</p>
 							{/if}
