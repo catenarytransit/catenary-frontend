@@ -11,7 +11,11 @@
 
 	$: locale.subscribe((value) => {
 		if (value) {
-			locale_code = value;
+			if (locale_code.startsWith("en")) {
+				locale_code = "en-UK"
+			} else {
+				locale_code = value;
+			}
 		}
 	});
 
