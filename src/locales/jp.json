@@ -116,5 +116,6 @@
 	"deleted": "削除され",
 	"duration": "所要時間",
 	"starting_time": "開始時間",
-	"ending_time": "終了時間"
+	"ending_time": "終了時間",
+	"service_alerts": "警告"
 }
