@@ -7,12 +7,12 @@
 
 	//get locale from the store
 
-	let locale_code: string = 'en-UK';
+	let locale_code: string = 'en-CA';
 
 	$: locale.subscribe((value) => {
 		if (value) {
 			if (locale_code.startsWith("en")) {
-				locale_code = "en-UK"
+				locale_code = "en-CA"
 			} else {
 				locale_code = value;
 			}
