@@ -11,8 +11,8 @@
 
 	$: locale.subscribe((value) => {
 		if (value) {
-			if (locale_code.startsWith("en")) {
-				locale_code = "en-CA"
+			if (locale_code.startsWith('en')) {
+				locale_code = 'en-CA';
 			} else {
 				locale_code = value;
 			}
@@ -41,7 +41,7 @@
 	<div class="border-[#F99C24] border leading-snug mb-3 p-2 rounded-md">
 		<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-2" />
 		<span class="text-[#F99C24] font-semibold text-lg align-middle"
-			>{$_("service_alerts", {
+			>{$_('service_alerts', {
 				values: {
 					n: Object.keys(alerts).length
 				}
@@ -92,7 +92,7 @@
 											)
 											.replaceAll(/\<(\/)?p\>/g, '')
 											.replaceAll(/\<(\/)?b\>/g, '')
-                                                                                        .replaceAll("https://rt.scmetro.org ", "Catenary Maps ")
+											.replaceAll('https://rt.scmetro.org ', 'Catenary Maps ')
 											.replaceAll(
 												/(\[)?accessibility icon(\])?/g,
 												'<span class="bg-blue-200 dark:bg-gray-500 w-3 h-3 rounded-full inline"><span class="text-xs material-symbols-outlined ">accessible</span></span>'
@@ -102,63 +102,57 @@
 							</div>
 						{/each}
 					{/if}
+				{/each}{#if alert.active_period.length > 0}
+					{#each alert.active_period as active_period}
+						{#if active_period.start != null}
+							<p class="text-xs">
+								{$_('starting_time')}:
+								{#if default_tz}
+									{new Date(active_period.start * 1000).toLocaleString(locale_code, {
+										timeZone: default_tz,
+										hour12: false
+									})}
+								{:else}
+									{new Date(active_period.start * 1000).toLocaleString(locale_code, {
+										hour12: false
+									})}
+								{/if}
 
-					{#if alert.active_period.length > 0}
-							{#each alert.active_period as active_period  }
-							{#if active_period.start != null}
-								<p class="text-xs">
-									{$_("starting_time")}:
-									{#if default_tz}
-										{new Date(active_period.start * 1000).toLocaleString(locale_code, {
-											timeZone: default_tz,
-											hour12: false
-											
-										})}
-									{:else}
-										{new Date(active_period.start * 1000).toLocaleString(locale_code,
-											{
-												hour12: false
-											}
-										)}
-									{/if}
+								<TimeDiff
+									diff={active_period.start - new Date().getTime() / 1000}
+									show_seconds={false}
+									show_brackets={true}
+									show_plus={true}
+									show_days={true}
+								/>
+							</p>
+						{/if}
 
-									<TimeDiff
-										diff={active_period.start - new Date().getTime() / 1000}
-										show_seconds={false}
-										show_brackets={true}
-										show_plus={true}
-										show_days={true}
-									/>
-								</p>
-							{/if}
+						{#if active_period.end != null}
+							<p class="text-xs">
+								{$_('ending_time')}:
+								{#if default_tz}
+									{new Date(active_period.end * 1000).toLocaleString(locale_code, {
+										timeZone: default_tz,
+										hour12: false
+									})}
+								{:else}
+									{new Date(active_period.end * 1000).toLocaleString(locale_code, {
+										hour12: false
+									})}
+								{/if}
 
-							{#if active_period.end != null}
-								<p class="text-xs">
-									{$_("ending_time")}:
-									{#if default_tz}
-										{new Date(active_period.end * 1000).toLocaleString(locale_code, {
-											timeZone: default_tz,
-											hour12: false
-										})}
-									{:else}
-										{new Date(active_period.end * 1000).toLocaleString(locale_code,
-											{
-												hour12: false
-											})}
-									{/if}
-
-									<TimeDiff
-										diff={active_period.end - new Date().getTime() / 1000}
-										show_seconds={false}
-										show_brackets={true}
-										show_plus={true}
-										show_days={true}
-									/>
-								</p>
-							{/if}
-							{/each}
-					{/if}
-				{/each}
+								<TimeDiff
+									diff={active_period.end - new Date().getTime() / 1000}
+									show_seconds={false}
+									show_brackets={true}
+									show_plus={true}
+									show_days={true}
+								/>
+							</p>
+						{/if}
+					{/each}
+				{/if}
 			</div>
 		{/each}
 	</div>
