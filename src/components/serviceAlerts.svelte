@@ -137,6 +137,7 @@
 									{#if default_tz}
 										{new Date(active_period.end * 1000).toLocaleString(locale_code, {
 											timeZone: default_tz,
+											hour12: false
 										})}
 									{:else}
 										{new Date(active_period.end * 1000).toLocaleString(locale_code,
