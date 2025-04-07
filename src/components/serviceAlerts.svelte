@@ -122,6 +122,7 @@
 										diff={active_period.start - new Date().getTime() / 1000}
 										show_seconds={false}
 										show_brackets={true}
+										show_plus={true}
 									/>
 								</p>
 							{/if}
@@ -144,6 +145,7 @@
 										diff={active_period.end - new Date().getTime() / 1000}
 										show_seconds={false}
 										show_brackets={true}
+										show_plus={true}
 									/>
 								</p>
 							{/if}

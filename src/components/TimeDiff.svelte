@@ -15,6 +15,8 @@
 	let m: number = 0;
 	let s: number = 0;
 
+	export let show_plus : boolean = false;
+
 	setInterval;
 
 	let this_locale: string | null | undefined = null;
@@ -94,8 +96,7 @@
 
 <span class={large ? "" : "text-[0px]"}>
 	<span class={large ? "text-lg" : "text-sm"}>
-		{#if show_brackets}{'['}{/if}
-		{#if diff < 0}{"-"}{/if}{#if diff > 0}{""}{/if}
+		{#if show_brackets}{'['}{/if}{#if diff < 0}{"-"}{/if}{#if diff > 0}{show_plus ? "+" : ""}{/if}
 	</span>
 	{#if h > 0}
 		<span class={large ? "text-sm" : "text-sm"}>{h}</span>
