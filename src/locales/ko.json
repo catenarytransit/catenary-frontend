@@ -123,5 +123,7 @@
 	"clockwise": "시계 방향",
 	"anticlockwise": "반 시계 방향",
 	"tripid"	: "여행 ID",
-	"block": "블록"
+	"block": "블록",
+	"starting_time": "시작 시간",
+	"ending_time": "종료 시간"
 }

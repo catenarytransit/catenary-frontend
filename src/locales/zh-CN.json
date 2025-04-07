@@ -123,5 +123,7 @@
 	"tripid"	: "行程ID",
 	"block": "区间",
 	"duration": "时长",
-	"allexact": "所有计划班次均准点"
+	"allexact": "所有计划班次均准点",
+	"starting_time": "开始时间",
+	"ending_time": "结束时间"
 }

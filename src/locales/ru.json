@@ -113,5 +113,7 @@
 	"occupancy_status_not_accepting_passengers": "Не принимает пассажиров",
 	"occupancy_status_no_data_available": "Нет данных",
 	"occupancy_status_not_boardable": "Невозможно посадить",
-	"deleted": "Удалено"
+	"deleted": "Удалено",
+	"starting_time": "Время начала",
+	"ending_time": "Время окончания"
 }

@@ -113,5 +113,7 @@
 	"occupancy_status_not_accepting_passengers": "Non accetta passeggeri",
 	"occupancy_status_no_data_available": "Nessun dato disponibile",
 	"occupancy_status_not_boardable": "Non imbarcabile",
-	"deleted": "Eliminato"
+	"deleted": "Eliminato",
+	"starting_time": "Ora di inizio",
+	"ending_time": "Ora di fine"
 }
