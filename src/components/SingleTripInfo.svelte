@@ -825,7 +825,7 @@
 		{/if}
 
 		<AlertBox {alerts} 
-		default_tz={trip_data.tz}
+		default_tz={trip_data.tz || null}
 		/>
 
 		{#key trip_data}
