@@ -122,5 +122,9 @@
 	"tripid": "ID de voyage",
 	"block": "Roulement",
 	"duration": "Durée",
-	"allexact": "Tous les départs prévus sont exacts."
+	"allexact": "Tous les départs prévus sont exacts.",
+	"service_alerts": "{n, plural, =1 {Alerte de service} other{Alertes de service}}",
+	"starting_time": "heure de début",
+	"ending_time": "heure de fin",
+	"showmylocation": "Afficher ma position"
 }

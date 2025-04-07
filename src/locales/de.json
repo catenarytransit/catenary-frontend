@@ -114,5 +114,6 @@
 	"anticlockwise_abbrievation": "Linksdrehend",
 	"clockwise": "Rechtsdrehend",
 	"anticlockwise": "Linksdrehend",
-	"duration": "Dauer"
+	"duration": "Dauer",
+	"service_alerts": "Service {n, plural, =1 {Meldung} other{Meldungen}}"
 }

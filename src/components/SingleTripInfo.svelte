@@ -109,6 +109,7 @@
 	async function update_vehicle_rt() {
 		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
 		if (trip_data) {
+			
 			if (trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id) {
 				let url = new URL(
 					`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id}`
@@ -823,7 +824,9 @@
 			</div>
 		{/if}
 
-		<AlertBox {alerts} />
+		<AlertBox {alerts} 
+		default_tz={trip_data.tz}
+		/>
 
 		{#key trip_data}
 			{#if show_previous_stops && last_inactive_stop_idx > -1}

@@ -97,6 +97,7 @@
 	"alert_effect_stop_moved": "Stop moved",
 	"alert_effect_no_effect": "No effect",
 	"alert_effect_accessibility_issue": "Accessibility issue",
+	"service_alerts": "Service {n, plural, =1 {Alert} other{Alerts}}",
 	"show_seconds_in_trips": "Show seconds in trips",
 	"system_theme": "System",
 	"dark_theme": "Dark",
@@ -124,5 +125,7 @@
 	"tripid"	: "Trip ID",
 	"block": "Block",
 	"duration": "Duration",
-	"allexact": "All scheduled departures are exact."
+	"allexact": "All scheduled departures are exact.",
+	"starting_time": "Starting time",
+	"ending_time": "Ending time"
 }

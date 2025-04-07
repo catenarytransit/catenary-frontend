@@ -1,7 +1,19 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
+	import { _, locale } from 'svelte-i18n';
 	import { cause_id_str, effect_id_str } from './alert_id_to_str_key';
+	import TimeDiff from './TimeDiff.svelte';
 	export let alerts = {};
+	export let default_tz: string | null = null;
+
+	//get locale from the store
+
+	let locale_code: string = 'en-UK';
+
+	$: locale.subscribe((value) => {
+		if (value) {
+			locale_code = value;
+		}
+	});
 
 	$: languagelist = Object.values(alerts)
 		.map((alert) => {
@@ -25,7 +37,11 @@
 	<div class="border-[#F99C24] border leading-snug mb-3 p-2 rounded-md">
 		<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-2" />
 		<span class="text-[#F99C24] font-semibold text-lg align-middle"
-			>Service Alert{Object.keys(alerts).length > 1 ? 's' : ''}</span
+			>{$_("service_alerts", {
+				values: {
+					n: Object.keys(alerts).length
+				}
+			})}</span
 		>
 		<div class="py-0.5"></div>
 		{#each Object.values(alerts) as alert}
@@ -81,6 +97,57 @@
 								{/each}
 							</div>
 						{/each}
+					{/if}
+
+					{#if alert.active_period.length > 0}
+							{#each alert.active_period as active_period  }
+							{#if active_period.start != null}
+								<p class="text-xs">
+									{$_("starting_time")}:
+									{#if default_tz}
+										{new Date(active_period.start * 1000).toLocaleString(locale_code, {
+											timeZone: default_tz,
+											hour12: false
+											
+										})}
+									{:else}
+										{new Date(active_period.start * 1000).toLocaleString(locale_code,
+											{
+												hour12: false
+											}
+										)}
+									{/if}
+
+									<TimeDiff
+										diff={active_period.start - new Date().getTime() / 1000}
+										show_seconds={false}
+										show_brackets={true}
+									/>
+								</p>
+							{/if}
+
+							{#if active_period.end != null}
+								<p class="text-xs">
+									{$_("ending_time")}:
+									{#if default_tz}
+										{new Date(active_period.end * 1000).toLocaleString(locale_code, {
+											timeZone: default_tz,
+										})}
+									{:else}
+										{new Date(active_period.end * 1000).toLocaleString(locale_code,
+											{
+												hour12: false
+											})}
+									{/if}
+
+									<TimeDiff
+										diff={active_period.end - new Date().getTime() / 1000}
+										show_seconds={false}
+										show_brackets={true}
+									/>
+								</p>
+							{/if}
+							{/each}
 					{/if}
 				{/each}
 			</div>
