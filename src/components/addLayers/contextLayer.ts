@@ -52,7 +52,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		type: 'line',
 		source: 'transit_shape_context',
 		paint: {
-			'line-color': darkMode ? '#111133' : '#ffffff',
+			'line-color': '#ffffff',
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 6, 14, 9],
 			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
