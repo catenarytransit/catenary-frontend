@@ -16,6 +16,8 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
+	import {getLocationFromLocalStorage,
+		saveLocationToLocalStorage} from '../components/previously_known_location';
 	import {
 		bus_label_with_headsign,
 		bus_label_no_headsign
@@ -1337,7 +1339,13 @@
 			map.on('load', () => {
 				console.log('map coords', map.getCenter());
 
-				fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+				let prev_known_location = getLocationFromLocalStorage();
+
+				if (prev_known_location) {
+					map.setCenter([prev_known_location.latitude, prev_known_location.longitude]);
+					map.setZoom(15);
+				} else {
+					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
 					.then((response) => response.json())
 					// the text will be `lat,long`
 					.then((geo_api_response) => {
@@ -1349,6 +1357,7 @@
 							);
 						}
 					});
+				}
 
 				let coords = map.getCenter();
 

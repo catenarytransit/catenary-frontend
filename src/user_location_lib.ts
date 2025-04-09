@@ -4,6 +4,9 @@ export const permission_to_geolocate = 'permission_to_geolocate';
 import { get } from 'svelte/store';
 import { createGeoJSONCircle, componentToHex } from './geoMathsAssist';
 
+import { writable } from 'svelte/store';
+import {saveLocationToLocalStorage} from './components/previously_known_location';
+
 let geolocation: GeolocationPosition | null;
 
 geolocation_store.subscribe((g) => {
@@ -57,6 +60,16 @@ export function update_geolocation_source() {
 	const map = get(map_pointer_store);
 
 	if (map != null) {
+
+		if (geolocation?.coords) {
+			
+		saveLocationToLocalStorage({
+			time: Date.now(),
+			latitude: geolocation?.coords.latitude,
+			longitude: geolocation?.coords.longitude
+		});
+		}
+
 		
 	const show_my_location = get(show_my_location_store);
 
