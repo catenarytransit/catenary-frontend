@@ -47,6 +47,14 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		}
 	});
 
+	map.addSource('transit_shape_context_detour', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: []
+		}
+	});
+
 	map.addLayer({
 		id: 'contextlinebacking',
 		type: 'line',
@@ -57,6 +65,22 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			'line-opacity': 0.9
 			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+		},
+		minzoom: 3
+	});
+
+	map.addLayer({
+		id: 'contextlinedetour',
+		type: 'line',
+		source: 'transit_shape_context_detour',
+		paint: {
+			'line-color': ['get', 'color'],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
+			'line-dasharray': [2, 3],
+			'line-opacity': 0.8
+			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
+			//'line-emissive-strength': 1
+			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
 		minzoom: 3
 	});

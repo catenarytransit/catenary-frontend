@@ -1196,7 +1196,7 @@
 
 			if (prev_known_location) {
 				if (mapglobal) {
-					mapglobal.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
+					//mapglobal.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
 				}
 				centerinit = [prev_known_location.longitude, prev_known_location.latitude];
 			} else {
@@ -1353,7 +1353,7 @@
 				let prev_known_location = getLocationFromLocalStorage();
 
 				if (prev_known_location) {
-					map.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
+					//map.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
 					map.setZoom(15);
 				} else {
 					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')

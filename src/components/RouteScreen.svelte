@@ -107,7 +107,7 @@
 
 		if (shape_id) {
 			if (route_data.shapes_polyline[shape_id]) {
-				let geojson_polyline_geo = polyline.toGeoJSON(route_data.shapes_polyline[shape_id], 6);
+				let geojson_polyline_geo = polyline.toGeoJSON(route_data.shapes_polyline[shape_id]);
 
 						let geojson_polyline = {
 							geometry: geojson_polyline_geo,
