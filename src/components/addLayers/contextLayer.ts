@@ -56,18 +56,19 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 	});
 
 	map.addLayer({
-		id: 'contextlinebacking',
+		id: 'contextlinebackingdetour',
 		type: 'line',
-		source: 'transit_shape_context',
+		source: 'transit_shape_context_detour',
 		paint: {
-			'line-color': '#ffffff',
+			'line-color': '#eb9cfc',
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 4, 14, 8],
-			'line-opacity': 0.9
+			'line-opacity': 0.8
 			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
 		minzoom: 3
 	});
+
 
 	map.addLayer({
 		id: 'contextlinedetour',
@@ -81,6 +82,20 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+		},
+		minzoom: 3
+	});
+
+	map.addLayer({
+		id: 'contextlinebacking',
+		type: 'line',
+		source: 'transit_shape_context',
+		paint: {
+			'line-color': '#ffffff',
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 4, 14, 8],
+			'line-opacity': 0.9
+			//'line-emissive-strength': 1
+			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
 		minzoom: 3
 	});
