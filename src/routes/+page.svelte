@@ -16,8 +16,10 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
-	import {getLocationFromLocalStorage,
-		saveLocationToLocalStorage} from '../components/previously_known_location';
+	import {
+		getLocationFromLocalStorage,
+		saveLocationToLocalStorage
+	} from '../components/previously_known_location';
 	import {
 		bus_label_with_headsign,
 		bus_label_no_headsign
@@ -1190,50 +1192,59 @@
 
 			let cachegeostored = localStorage.getItem('cacheipgeolocation');
 
-			if (cachegeostored) {
-				const [long, lat] = cachegeostored.split(',');
-				centerinit = [parseFloat(long), parseFloat(lat)];
+			let prev_known_location = getLocationFromLocalStorage();
+
+			if (prev_known_location) {
 				if (mapglobal) {
-					mapglobal.setCenter(centerinit);
-					mapglobal.setZoom(13);
+					mapglobal.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
 				}
+				centerinit = [prev_known_location.longitude, prev_known_location.latitude];
 			} else {
-				try {
-					/**
-					 * Use GeoLite2 database on Catenary servers
-					 *
-					 * adding a pin with this provided lat/long would prob freak a few people out
-					 * and even mapping sites (google, bing, etc) don't do it either on default
-					 * -q
-					 */
-					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
-						.then((response) => response.json())
-						// the text will be `lat,long`
-						.then((geo_api_response) => {
-							if (geo_api_response) {
-								console.log('ip addr', geo_api_response);
-								if (typeof geo_api_response.geo_resp == 'object') {
-									centerinit = [
-										geo_api_response.geo_resp.longitude,
-										geo_api_response.geo_resp.latitude
-									];
+				if (cachegeostored) {
+					const [long, lat] = cachegeostored.split(',');
+					centerinit = [parseFloat(long), parseFloat(lat)];
+					if (mapglobal) {
+						mapglobal.setCenter(centerinit);
+						mapglobal.setZoom(13);
+					}
+				} else {
+					try {
+						/**
+						 * Use GeoLite2 database on Catenary servers
+						 *
+						 * adding a pin with this provided lat/long would prob freak a few people out
+						 * and even mapping sites (google, bing, etc) don't do it either on default
+						 * -q
+						 */
+						fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+							.then((response) => response.json())
+							// the text will be `lat,long`
+							.then((geo_api_response) => {
+								if (geo_api_response) {
+									console.log('ip addr', geo_api_response);
+									if (typeof geo_api_response.geo_resp == 'object') {
+										centerinit = [
+											geo_api_response.geo_resp.longitude,
+											geo_api_response.geo_resp.latitude
+										];
 
-									// set the center of the map to the user's location
-									// in case the map is already initialized (rare), set the center to the user's location
-									if (mapglobal) {
-										mapglobal.setCenter(centerinit);
+										// set the center of the map to the user's location
+										// in case the map is already initialized (rare), set the center to the user's location
+										if (mapglobal) {
+											mapglobal.setCenter(centerinit);
+										}
+
+										// store the user's location in localStorage, as we do with regular browser provided geolocation
+										localStorage.setItem(
+											'cacheipgeolocation',
+											`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+										);
 									}
-
-									// store the user's location in localStorage, as we do with regular browser provided geolocation
-									localStorage.setItem(
-										'cacheipgeolocation',
-										`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-									);
 								}
-							}
-						});
-				} catch (e) {
-					console.error('Failed to get IP location, defaulting to LA');
+							});
+					} catch (e) {
+						console.error('Failed to get IP location, defaulting to LA');
+					}
 				}
 			}
 
@@ -1282,7 +1293,7 @@
 			const map = new maplibregl.Map({
 				canvasContextAttributes: {
 					antialias: true,
-					powerPreference: 'high-performance',
+					powerPreference: 'high-performance'
 				},
 				container: 'map',
 				light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
@@ -1342,21 +1353,21 @@
 				let prev_known_location = getLocationFromLocalStorage();
 
 				if (prev_known_location) {
-					map.setCenter([prev_known_location.longitude , prev_known_location.latitude]);
+					map.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
 					map.setZoom(15);
 				} else {
 					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
-					.then((response) => response.json())
-					// the text will be `lat,long`
-					.then((geo_api_response) => {
-						console.log('ip addr', geo_api_response);
-						if (geo_api_response.geo_resp) {
-							localStorage.setItem(
-								'cacheipgeolocation',
-								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-							);
-						}
-					});
+						.then((response) => response.json())
+						// the text will be `lat,long`
+						.then((geo_api_response) => {
+							console.log('ip addr', geo_api_response);
+							if (geo_api_response.geo_resp) {
+								localStorage.setItem(
+									'cacheipgeolocation',
+									`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+								);
+							}
+						});
 				}
 
 				let coords = map.getCenter();
