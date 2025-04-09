@@ -60,9 +60,9 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		type: 'line',
 		source: 'transit_shape_context_detour',
 		paint: {
-			'line-color': '#eb9cfc',
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 4, 14, 8],
-			'line-opacity': 0.8
+			'line-color': '#fb9cac',
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3, 14, 6],
+			'line-opacity': 0.5
 			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
@@ -76,9 +76,9 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		source: 'transit_shape_context_detour',
 		paint: {
 			'line-color': ['get', 'color'],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
-			'line-dasharray': [2, 3],
-			'line-opacity': 0.8
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.2, 14, 5],
+			'line-dasharray': [1, 2],
+			'line-opacity': 0.9
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
