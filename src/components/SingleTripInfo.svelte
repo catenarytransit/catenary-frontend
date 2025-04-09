@@ -561,7 +561,7 @@
 			update_realtime_data();
 
 			update_vehicle_rt();
-		}, 3_000);
+		}, 1_000);
 
 		bigfetchtimeout = setInterval(() => {
 			if (trip_selected) {
@@ -569,7 +569,7 @@
 			}
 
 			update_vehicle_rt();
-		}, 60_000);
+		}, 30_000);
 
 		updatetimecounter = setInterval(() => {
 			current_time = Date.now();
