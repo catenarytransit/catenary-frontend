@@ -127,5 +127,7 @@
 	"duration": "Duration",
 	"allexact": "All scheduled departures are exact.",
 	"starting_time": "Starting time",
-	"ending_time": "Ending time"
+	"ending_time": "Ending time",
+	"trip_modified": "Trip modified",
+	"new_rt_shape": "Realtime detour map route drawn"
 }

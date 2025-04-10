@@ -50,7 +50,7 @@
 	"division": "Division",
 	"driver": "Conducteur",
 	"delay": "Retard",
-	"provider": "Provideur de data",
+	"provider": "Provideur de données",
 	"lastupdated": "Dernière mise à jour",
 	"comingsoon": "À venir",
 	"now": "Maintenant",
@@ -63,7 +63,7 @@
 	"departure": "Départ",
 	"arrival": "Arrivée",
 	"cancelled": "Annulé",
-	"skipped": "Iginoré",
+	"skipped": "Ignoré",
 	"early": "Tôt",
 	"late": "Tard",
 	"ontime": "À l'heure",
@@ -126,5 +126,7 @@
 	"service_alerts": "{n, plural, =1 {Alerte de service} other{Alertes de service}}",
 	"starting_time": "heure de début",
 	"ending_time": "heure de fin",
-	"showmylocation": "Afficher ma position"
+	"showmylocation": "Afficher ma position",
+	"trip_modified": "Voyage modifié",
+	"new_rt_shape": "Itinéraire de déviation en temps réel tracé"
 }

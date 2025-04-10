@@ -853,7 +853,7 @@
 			#if trip_data.rt_shape
 		}
 
-			<p class="italic">NEW SHAPE USED, DETOUR IN EFFECT</p>
+		<div class="text-white bg-orange-500 rounded-sm my-1 py-1 px-2 text-sm">{$_("new_rt_shape")}</div>
 
 		{/if}
 
