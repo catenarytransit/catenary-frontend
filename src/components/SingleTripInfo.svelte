@@ -386,7 +386,8 @@
 												.replace(' Light Rail', '').replace(" Amtrak", ""),
 											stop_id: eachstoptime.stop_id,
 											chateau: trip_selected.chateau_id,
-											stop_route_type: trip_data.route_type
+											stop_route_type: trip_data.route_type,
+											cancelled: eachstoptime.schedule_relationship == 1
 										},
 										geometry: {
 											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
@@ -853,7 +854,7 @@
 			#if trip_data.rt_shape
 		}
 
-		<div class="text-orange-500 italics rounded-sm  text-sm">{$_("new_rt_shape")}</div>
+		<div class="text-orange-500 italics text-semibold text-sm">{$_("new_rt_shape")}</div>
 
 		{/if}
 
@@ -960,6 +961,10 @@
 						</p>
 
 						<StopTimeNumber {show_seconds} {stoptime} {trip_data} {current_time} />
+
+						{#if stoptime.replaced_stop}
+							<p>{$_("replaced_stop")}</p>
+						{/if}
 
 						{#if timezones.filter((x) => x != null).length > 1}
 							<p class="text-xs text-gray-900 dark:text-gray-400">

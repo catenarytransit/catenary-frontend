@@ -128,5 +128,6 @@
 	"ending_time": "heure de fin",
 	"showmylocation": "Afficher ma position",
 	"trip_modified": "Voyage modifié",
-	"new_rt_shape": "Itinéraire de déviation en temps réel tracé"
+	"new_rt_shape": "Itinéraire de déviation en temps réel tracé",
+	"replaced_stop": "Arrêt remplacé"
 }

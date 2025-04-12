@@ -15,7 +15,7 @@ import {
 import { determineDarkModeToBool } from '../determineDarkModeToBool';
 import { writable, get } from 'svelte/store';
 
-export function makeContextLayerDataset(map: maplibregl.Map) {
+export async function makeContextLayerDataset(map: maplibregl.Map) {
 	let darkMode = determineDarkModeToBool();
 
 	const urlParams =
@@ -144,6 +144,44 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		minzoom: 3
 	});
 
+	//add png icon cancelledstops.png
+
+	let cancelled_stops_image = await map.loadImage(
+		'/icons/cancelledstop.png');
+
+
+
+	map.addImage(
+		'cancelledstops',
+		cancelled_stops_image.data
+	);
+
+	map.addLayer({
+		id: 'contextbusstopscancelled',
+		type: 'symbol',
+		source: 'stops_context',
+		paint: {	
+		},
+		layout: {
+			'icon-image': 'cancelledstops',
+			'icon-size': ['interpolate', ['linear'], ['zoom'], 8, 0.02, 10, 0.03, 13, 0.05],
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-rotation-alignment': 'viewport',
+			'icon-pitch-alignment': 'viewport',
+			'icon-offset': [0, 0],
+			'icon-rotate': 0,
+			'icon-optional': false,
+			'icon-keep-upright': false,
+		},
+		filter: [
+			'all',
+			['==', 3, ['get', 'stop_route_type']],
+			['==', true, ['get', 'cancelled']]
+		],
+		minzoom: 9.5
+	});
+
 	map.addLayer({
 		id: 'contextbusstops',
 		type: 'circle',
@@ -161,6 +199,7 @@ export function makeContextLayerDataset(map: maplibregl.Map) {
 		filter: [
 			'all',
 			['==', 3, ['get', 'stop_route_type']],
+			['!=', true, ['get', 'cancelled']]
 		],
 		minzoom: 9.5
 	});
