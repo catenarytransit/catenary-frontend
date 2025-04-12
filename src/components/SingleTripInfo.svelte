@@ -853,7 +853,7 @@
 			#if trip_data.rt_shape
 		}
 
-		<div class="text-white bg-orange-500 rounded-sm my-1 py-1 px-2 text-sm">{$_("new_rt_shape")}</div>
+		<div class="text-orange-500 italics rounded-sm  text-sm">{$_("new_rt_shape")}</div>
 
 		{/if}
 
