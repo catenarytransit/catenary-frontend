@@ -340,7 +340,7 @@
 			service_date={latest_item_on_stack.data.service_date}
 		/>
 	{/if}
-	{#if latest_item_on_stack.data instanceof StopMapSelector}
+	{#if latest_item_on_stack.data instanceof StopStack}
 		<HomeButton/>
 		<p>TODO! Feature in progress.</p>
 		<p>À FAIRE ! Fonctionnalité en cours.</p>
