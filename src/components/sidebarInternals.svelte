@@ -12,6 +12,7 @@
 		StopStack,
 		RouteMapSelector,
 		VehicleSelectedStack,
+		StopMapSelector,
 		BlockStack
 	} from '../components/stackenum';
 	import HomeButton from './SidebarParts/home_button.svelte';
@@ -295,6 +296,35 @@
 					{/each}
 				</div>
 			{/if}
+
+			{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof StopMapSelector).length > 0}
+				<h3 class="text-xl my-2">{$_('stops')}</h3>
+				<div class="flex flex-col gap-y-1 md:gap-y-2">
+					{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof StopMapSelector) as option}
+						<div
+							class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-darksky hover:dark:bg-hover text-sm md:text-base leading-snug rounded-lg bg-opacity-80"
+							on:click={() => {
+								data_stack_store.update((data_stack) => {
+									data_stack.push(
+										new StackInterface(
+											new StopStack(
+												option.data.chateau_id,
+												option.data.stop_id,
+											)
+										)
+									);
+
+									return data_stack;
+								});
+							}}
+						>
+							{
+								option.data.stop_name
+							}
+						</div>
+					{/each}
+				</div>
+			{/if}
 			<br />
 			<br />
 			<br />
@@ -309,6 +339,11 @@
 			block_id={latest_item_on_stack.data.block_id}
 			service_date={latest_item_on_stack.data.service_date}
 		/>
+	{/if}
+	{#if latest_item_on_stack.data instanceof StopMapSelector}
+		<HomeButton/>
+		<p>TODO! Feature in progress.</p>
+		<p>À FAIRE ! Fonctionnalité en cours.</p>
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">

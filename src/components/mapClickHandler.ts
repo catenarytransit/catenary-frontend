@@ -10,7 +10,8 @@ import {
 	VehicleMapSelector,
 	RouteStack,
 	StopStack,
-	RouteMapSelector
+	RouteMapSelector,
+	StopMapSelector
 } from './stackenum';
 
 export function setup_click_handler(
@@ -117,10 +118,41 @@ export function setup_click_handler(
 
 			// console.log('selected shapes', selected_routes_raw);
 
+			const selected_stops_raw = selectedFeatures.filter(
+				(x: any) =>
+					x.source === 'busstops' ||
+					x.source === 'railstops' ||
+					x.source === 'otherstops'
+			);
+
+
+			const selected_stops_key_unique = new Set();
+
+			const selected_stops = selected_stops_raw
+				.map((x: any) => {
+					const key = x.properties.chateau + x.properties.gtfs_id;
+
+					if (selected_stops_key_unique.has(key)) {
+						return null;
+					}
+
+					selected_stops_key_unique.add(key);
+
+					return new MapSelectionOption(
+						new StopMapSelector(
+							x.properties.chateau,
+							x.properties.gtfs_id,
+							x.properties.displayname,
+						)
+					);
+				})
+				.filter((x: MapSelectionOption | null) => x != null);
+
 			let MapSelectionOptions = new Array<MapSelectionOption>();
 
 			MapSelectionOptions = MapSelectionOptions.concat(selected_vehicles);
 			MapSelectionOptions = MapSelectionOptions.concat(selected_routes);
+			MapSelectionOptions = MapSelectionOptions.concat(selected_stops);
 
 			if (MapSelectionOptions.length > 0) {
 				const data_stack = get(data_stack_store);
@@ -141,6 +173,7 @@ export function setup_click_handler(
 
 				setSidebarOpen();
 			}
+			
 		} catch (e) {
 			console.error(e);
 		}
