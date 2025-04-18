@@ -46,6 +46,8 @@
 	export let darkMode: boolean;
 	export let usunits: boolean;
 
+	let stops_preview_data = null;
+
 	let show_gtfs_ids = get(show_gtfs_ids_store);
 
 	show_gtfs_ids_store.subscribe((value) => {
@@ -60,6 +62,51 @@
 		} else {
 			simpleRouteMode = false;
 		}
+	}
+
+	//when latest item on stack changes, run queryStopsPreview
+
+	$: {
+		if (latest_item_on_stack != null) {
+			if (latest_item_on_stack.data instanceof MapSelectionScreen) {
+				queryStopsPreview();
+			}
+		}
+	}
+
+	function queryStopsPreview() {
+		let chateaus_to_query = {};
+
+		latest_item_on_stack.data.arrayofoptions.forEach((option) => {
+			if (option.data instanceof StopMapSelector) {
+				if (option.data.chateau_id in chateaus_to_query) {
+					chateaus_to_query[option.data.chateau_id].push(option.data.stop_id);
+				} else {
+					chateaus_to_query[option.data.chateau_id] = [option.data.stop_id];
+				}
+			}
+		});
+
+		fetch("https://birch.catenarymaps.org/stop_preview", {
+			body: JSON.stringify({
+				chateaus: chateaus_to_query
+			}),
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			method: 'POST'
+		})
+		.then((response => {
+			if (response.ok) {
+				return response.json();
+			} else {
+				throw new Error('Network response was not ok');
+			}
+		}))
+		.then((data) => {
+			console.log('stops preview', data);
+			stops_preview_data = data;
+		});
 	}
 </script>
 
@@ -318,9 +365,73 @@
 								});
 							}}
 						>
+						<div>
 							{
-								option.data.stop_name
+								#if show_gtfs_ids
 							}
+							
+								<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
+							>{option.data.chateau_id}</span
+						>  
+							{
+								#if option.data.stop_id
+							
+							}
+						<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
+						>{option.data.stop_id}</span
+					>  
+							
+							{/if}{/if}
+						</div>
+
+							<p>
+								{
+									option.data.stop_name
+								}
+							</p>
+
+						
+							{#if stops_preview_data}
+								{
+									#if stops_preview_data.stops[option.data.chateau_id] && stops_preview_data.stops[option.data.chateau_id][option.data.stop_id]
+								}
+									<div>
+								{
+									#if stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].level_id
+								}
+								<span class="text-sm">Level {stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].level_id}</span>
+								{
+									/if
+								}
+								{
+									#if stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].platform_code
+								}
+								<span class="text-sm">Platform {stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].platform_code}</span>
+								{
+									/if
+								}
+								
+							</div>
+
+							<div class="flex flex-row gap-x-0.5 w-full flex-wrap gap-y-1">
+								{#each stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].routes as route_id}
+									{#if stops_preview_data.routes[option.data.chateau_id][route_id]}
+										<div class="px-1 py-1 text-xs rounded-sm"
+										style={`background-color: ${darkMode ? lightenColour(stops_preview_data.routes[option.data.chateau_id][route_id].color) : stops_preview_data.routes[option.data.chateau_id][route_id].colour}; color: ${stops_preview_data.routes[option.data.chateau_id][route_id].text_color};`}>
+											{#if stops_preview_data.routes[option.data.chateau_id][route_id].short_name}
+																						<span class="font-medium">{stops_preview_data.routes[option.data.chateau_id][route_id].short_name} </span>
+																						{/if}
+																						{#if stops_preview_data.routes[option.data.chateau_id][route_id].long_name}
+																						{stops_preview_data.routes[option.data.chateau_id][route_id].long_name}
+																						{/if}
+										</div>
+									{/if}
+								{/each}
+							</div>
+								{
+									/if
+								}
+								{/if}
 						</div>
 					{/each}
 				</div>
