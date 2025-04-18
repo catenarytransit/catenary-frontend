@@ -126,5 +126,6 @@
 	"block": "블록",
 	"starting_time": "시작 시간",
 	"ending_time": "종료 시간",
-	"service_alerts": "서비스 경고"
+	"service_alerts": "서비스 경고",
+	"level": "층"
 }
