@@ -416,7 +416,7 @@
 							<div class="flex flex-row gap-x-0.5 w-full flex-wrap gap-y-1">
 								{#each stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].routes as route_id}
 									{#if stops_preview_data.routes[option.data.chateau_id][route_id]}
-										<div class="px-1 py-1 text-xs rounded-sm"
+										<div class="px-1 py-0.5 md:py-1 text-xs rounded-sm"
 										style={`background-color: ${darkMode ? lightenColour(stops_preview_data.routes[option.data.chateau_id][route_id].color) : stops_preview_data.routes[option.data.chateau_id][route_id].colour}; color: ${stops_preview_data.routes[option.data.chateau_id][route_id].text_color};`}>
 											{#if stops_preview_data.routes[option.data.chateau_id][route_id].short_name}
 																						<span class="font-medium">{stops_preview_data.routes[option.data.chateau_id][route_id].short_name} </span>
