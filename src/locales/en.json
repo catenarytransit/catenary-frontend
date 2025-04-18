@@ -130,5 +130,6 @@
 	"ending_time": "Ending time",
 	"trip_modified": "Trip modified",
 	"new_rt_shape": "Realtime detour map route drawn",
-	"replaced_stop": "Replaced stop"
+	"replaced_stop": "Replaced stop",
+	"level": "Level"
 }

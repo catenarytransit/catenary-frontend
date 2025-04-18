@@ -399,14 +399,14 @@
 								{
 									#if stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].level_id
 								}
-								<span class="text-sm">Level {stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].level_id}</span>
+								<span class="text-sm">{$_("level")} {stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].level_id}</span>
 								{
 									/if
 								}
 								{
 									#if stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].platform_code
 								}
-								<span class="text-sm">Platform {stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].platform_code}</span>
+								<span class="text-sm">{$_("platform")} {stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].platform_code}</span>
 								{
 									/if
 								}

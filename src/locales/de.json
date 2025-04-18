@@ -117,5 +117,6 @@
 	"duration": "Dauer",
 	"service_alerts": "Service {n, plural, =1 {Meldung} other{Meldungen}}",
 	"starting_time": "Startzeit",
-	"ending_time": "Endzeit"
+	"ending_time": "Endzeit",
+	"level": "Ebene"
 }
