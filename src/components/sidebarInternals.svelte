@@ -420,10 +420,10 @@
 										style={`background-color: ${darkMode ? lightenColour(stops_preview_data.routes[option.data.chateau_id][route_id].color) : stops_preview_data.routes[option.data.chateau_id][route_id].colour}; color: ${stops_preview_data.routes[option.data.chateau_id][route_id].text_color};`}>
 											{#if stops_preview_data.routes[option.data.chateau_id][route_id].short_name}
 																						<span class="font-medium">{stops_preview_data.routes[option.data.chateau_id][route_id].short_name} </span>
-																						{/if}
-																						{#if stops_preview_data.routes[option.data.chateau_id][route_id].long_name}
-																						{stops_preview_data.routes[option.data.chateau_id][route_id].long_name}
-																						{/if}
+																						{:else}{#if stops_preview_data.routes[option.data.chateau_id][route_id].long_name}
+																						{stops_preview_data.routes[option.data.chateau_id][route_id].long_name.replace(" Line", "")}
+																						{/if}{/if}
+																						
 										</div>
 									{/if}
 								{/each}
