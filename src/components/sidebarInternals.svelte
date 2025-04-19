@@ -384,7 +384,7 @@
 											{#if stops_preview_data.routes[option.data.chateau_id][route_id]}
 												<div
 													class="px-1 py-0.5 md:py-1 text-xs rounded-sm"
-													style={`background-color: ${darkMode ? lightenColour(stops_preview_data.routes[option.data.chateau_id][route_id].color) : stops_preview_data.routes[option.data.chateau_id][route_id].colour}; color: ${stops_preview_data.routes[option.data.chateau_id][route_id].text_color};`}
+													style={`background-color: ${stops_preview_data.routes[option.data.chateau_id][route_id].color}; color: ${stops_preview_data.routes[option.data.chateau_id][route_id].text_color};`}
 												>
 													{#if stops_preview_data.routes[option.data.chateau_id][route_id].short_name}
 														<span class="font-medium"
