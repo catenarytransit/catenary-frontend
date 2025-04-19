@@ -97,7 +97,7 @@
 	}
 
 	import type { NearbySelectionFilterRouteType } from '../globalstores';
-	import { SingleTrip, StackInterface } from './stackenum';
+	import { SingleTrip, StackInterface, StopStack } from './stackenum';
 	import { t } from 'svelte-i18n';
 	import {
 		fixHeadsignText,
@@ -558,6 +558,21 @@
 								>
 								{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
 								<span
+								on:click={() => {
+									data_stack_store.update((stack) => {
+											stack.push(
+												new StackInterface(
+													new StopStack(
+														route_group.chateau_id,
+														direction_group.trips[0].stop_id
+													)
+												)
+											);
+
+											return stack;
+										});
+								}}
+
 									class="text-sm bg-white dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1"
 								>
 									<span class="material-symbols-outlined !text-sm align-middle">distance</span>
