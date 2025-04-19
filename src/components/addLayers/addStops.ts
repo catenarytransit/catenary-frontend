@@ -109,7 +109,24 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		source: 'railstops',
 		'source-layer': 'data',
 		layout: {
-			'text-field': ['get', 'displayname'],
+			'text-field': [
+				'concat',
+				['get', 'displayname'],
+				[
+					'case',
+					['has', 'level_id'],
+					'; ',
+					''
+				],
+				['get', 'level_id'],
+				[
+					'case',
+					['has', 'platform_code'],
+					'; ',
+					''
+				],
+				['get', 'platform_code']
+			],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 12, 10, 14, 12],
 			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.30, 12, 0.6],
@@ -162,7 +179,24 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		source: 'railstops',
 		'source-layer': 'data',
 		layout: {
-			'text-field': ['get', 'displayname'],
+			'text-field': [
+				'concat',
+				['get', 'displayname'],
+				[
+					'case',
+					['has', 'level_id'],
+					'; ',
+					''
+				],
+				['get', 'level_id'],
+				[
+					'case',
+					['has', 'platform_code'],
+					'; ',
+					''
+				],
+				['get', 'platform_code']
+			],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 7, 11, 7, 12, 9, 14, 10],
 			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.3, 12, 0.5],
@@ -209,7 +243,24 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		source: 'railstops',
 		'source-layer': 'data',
 		layout: {
-			'text-field': ['get', 'displayname'],
+			'text-field': [
+				'concat',
+				['get', 'displayname'],
+				[
+					'case',
+					['has', 'level_id'],
+					'; ',
+					''
+				],
+				['get', 'level_id'],
+				[
+					'case',
+					['has', 'platform_code'],
+					'; ',
+					''
+				],
+				['get', 'platform_code']
+			],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': internationalIntercityLabelSize,
 			'text-radial-offset': 0.2,

@@ -115,5 +115,6 @@
 	"clockwise": "Sentido horario",
 	"anticlockwise": "sentido antihorario",
 	"duration": "Duración",
-	"service_alerts": "{n, plural, =1 {Alerta de servicio} other{Alertas de servicio}}"
+	"service_alerts": "{n, plural, =1 {Alerta de servicio} other{Alertas de servicio}}",
+	"level": "Nivel"
 }

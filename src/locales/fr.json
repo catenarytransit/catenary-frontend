@@ -70,7 +70,6 @@
 	"defaultlang": "Langage par défaut",
 	"hidepreviousstops": "Masquer les arrêts précédents",
 	"shownpreviousstops": "Afficher les {n} {n, plural, =1 {arrêt précédent} other{arrêts précédents}}",
-	"platform": "quai",
 	"show_gtfs_ids": "Afficher les identifiants GTFS",
 	"alert_cause_unknown_cause": "Cause inconnue",
 	"alert_cause_other_cause": "Autre cause",
@@ -128,5 +127,8 @@
 	"ending_time": "heure de fin",
 	"showmylocation": "Afficher ma position",
 	"trip_modified": "Voyage modifié",
-	"new_rt_shape": "Itinéraire de déviation en temps réel tracé"
+	"new_rt_shape": "Itinéraire de déviation en temps réel tracé",
+	"replaced_stop": "Arrêt remplacé",
+	"level": "Niveau",
+	"platform": "Quai"
 }
