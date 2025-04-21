@@ -823,8 +823,8 @@
 						{/if}
 					</p>{/if}
 
-				{#if vehicle_data.occupancy_percentage != null}
-				<p>{$_('occupancy_status')}: {vehicle_data.occupancy_percentage}%</p>
+				{#if vehicle_data.occupancy_percentage != null && vehicle_data.occupancy_percentage != 0}
+				<p class="text-xs">{$_('occupancy_percentage')}: {vehicle_data.occupancy_percentage}%</p>
 				{/if}
 			</div>
 		{/if}
