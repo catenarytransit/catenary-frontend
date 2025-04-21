@@ -1354,7 +1354,7 @@
 
 				if (prev_known_location) {
 					//map.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
-					map.setZoom(15);
+					//map.setZoom(15);
 				} else {
 					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
 						.then((response) => response.json())
