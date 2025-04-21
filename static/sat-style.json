@@ -9,6 +9,16 @@
     "esa-worldcover-polygons": {
       "type": "vector",
       "url": "https://tiles.swiss-map.cc/esa-worldcover-polygons-v2.json"
+    },
+    "google-sat": {
+      "type": "raster",
+      "tiles": [
+        "https://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+        "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+        "https://mt2.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+        "https://mt3.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+      ],
+      "tileSize": 180
     }
   },
   "sprite": [
@@ -23,290 +33,12 @@
       "paint": {"background-color": "rgba(15, 22, 31, 1)"}
     },
     {
-      "id": "landcover-land",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "maxzoom": 10,
-      "filter": ["any", ["==", "class", "land"]],
-      "layout": {"visibility": "visible"},
+      "id": "satellite",
+      "type": "raster",
+      "source": "google-sat",
       "paint": {
-        "fill-color": {
-          "stops": [
-            [5, "rgba(24, 57, 58, 1)"],
-            [6, "rgba(24, 37, 58, 1)"],
-            [10, "rgba(24, 37, 58, 1)"]
-          ]
-        },
-        "fill-opacity": {"stops": [[7, 1], [10, 0.1]]}
-      }
-    },
-    {
-      "id": "landcover_wetland",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landcover",
-      "minzoom": 12,
-      "filter": ["==", ["get", "class"], "wetland"],
-      "paint": {
-        "fill-antialias": true,
-        "fill-opacity": 0.1,
-        "fill-translate-anchor": "map",
-        "fill-pattern": "mbicons:wetland",
-        "fill-color": "#000000"
-      }
-    },
-    {
-      "id": "landcover-land-crop",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "filter": ["any", ["==", "class", "crop"]],
-      "paint": {
-        "fill-color": "rgba(23, 63, 65, 1)",
-        "fill-opacity": {"stops": [[6, 1], [7, 0.3], [10, 0.1]]}
-      }
-    },
-    {
-      "id": "landcover-barren",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "filter": ["any", ["==", "class", "barren"]],
-      "paint": {"fill-color": "#232d39"}
-    },
-    {
-      "id": "landcover-snow",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "maxzoom": 24,
-      "filter": ["any", ["==", "class", "snow"]],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(125, 125, 125, 1)"}
-    },
-    {
-      "id": "landcover-forest",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "maxzoom": 24,
-      "filter": ["any", ["==", "class", "forest"]],
-      "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": {"stops": [[6, "#0d2c31"], [8, "#0e2d32"]]},
-        "fill-opacity": {"stops": [[9, 1], [12, 0.2]]},
-        "fill-antialias": false
-      }
-    },
-    {
-      "id": "landcover-moss-wetland-mangroves",
-      "type": "fill",
-      "source": "esa-worldcover-polygons",
-      "source-layer": "globallandcover",
-      "filter": ["any", ["==", "class", "moss"], ["==", "class", "wetland"]],
-      "paint": {"fill-color": "#1b2934"}
-    },
-    {
-      "id": "landuse_residential",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "maxzoom": 12,
-      "filter": ["==", ["get", "class"], "residential"],
-      "paint": {
-        "fill-color": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          9,
-          "hsla(200,3%,15%,0.84)",
-          12,
-          "hsla(200,27%,10%,0.49)"
-        ],
-        "fill-antialias": false,
-        "fill-opacity": 0
-      }
-    },
-    {
-      "id": "park",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "park",
-      "minzoom": 0,
-      "maxzoom": 24,
-      "paint": {
-        "fill-color": "rgba(27, 56, 30, 1)",
-        "fill-opacity": 0.1,
-        "fill-outline-color": "rgba(23, 50, 24, 1)"
-      }
-    },
-    {
-      "id": "park_outline",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "park",
-      "minzoom": 5,
-      "paint": {
-        "line-color": "rgba(34, 86, 77, 1)",
-        "line-dasharray": [1, 1.5],
-        "line-opacity": 0.5
-      }
-    },
-    {
-      "id": "landuse_cemetery",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "filter": ["==", ["get", "class"], "cemetery"],
-      "paint": {"fill-color": "rgba(57, 61, 57, 1)", "fill-opacity": 0.2}
-    },
-    {
-      "id": "landuse_hospital",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "filter": ["==", ["get", "class"], "hospital"],
-      "paint": {"fill-color": "rgba(78, 61, 70, 1)"}
-    },
-    {
-      "id": "landuse_school",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "filter": ["==", ["get", "class"], "school"],
-      "paint": {"fill-color": "rgba(28, 28, 31, 1)"}
-    },
-    {
-      "id": "landuse_track",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "filter": ["==", ["get", "class"], "track"],
-      "paint": {"fill-color": "rgba(115, 71, 56, 1)"}
-    },
-    {
-      "id": "landcover_grass",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landcover",
-      "filter": ["==", ["get", "class"], "grass"],
-      "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-antialias": false,
-        "fill-color": {"stops": [[6, "#154043"], [10, "#0e2d32"]]},
-        "fill-opacity": {
-          "property": "",
-          "type": "exponential",
-          "stops": [
-            [{"zoom": 6, "value": 0}, 0.3],
-            [{"zoom": 10, "value": 0}, 0.3]
-          ]
-        }
-      }
-    },
-    {
-      "id": "landcover_wood",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landcover",
-      "minzoom": 10,
-      "filter": ["==", ["get", "class"], "wood"],
-      "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-antialias": false,
-        "fill-color": "rgba(4, 42, 13, 0.7)",
-        "fill-opacity": 0.4
-      }
-    },
-    {
-      "id": "landcover_ice",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landcover",
-      "filter": ["==", ["get", "class"], "ice"],
-      "paint": {
-        "fill-antialias": false,
-        "fill-color": "rgba(106, 136, 146, 1)",
-        "fill-opacity": 1
-      }
-    },
-    {
-      "id": "landuse_pitch",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landuse",
-      "filter": ["==", ["get", "class"], "pitch"],
-      "paint": {"fill-color": "rgba(19, 78, 72, 1)"}
-    },
-    {
-      "id": "waterway_tunnel",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "waterway",
-      "filter": ["==", ["get", "brunnel"], "tunnel"],
-      "paint": {
-        "line-color": "rgba(10, 45, 83, 1)",
-        "line-dasharray": [3, 3],
-        "line-gap-width": ["interpolate", ["linear"], ["zoom"], 12, 0, 20, 6],
-        "line-opacity": 1,
-        "line-width": [
-          "interpolate",
-          ["exponential", 1.4],
-          ["zoom"],
-          8,
-          1,
-          20,
-          2
-        ]
-      }
-    },
-    {
-      "id": "waterway_river",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "waterway",
-      "filter": [
-        "all",
-        ["==", ["get", "class"], "river"],
-        ["!=", ["get", "brunnel"], "tunnel"]
-      ],
-      "layout": {"line-cap": "round"},
-      "paint": {
-        "line-color": "rgba(1, 35, 60, 1)",
-        "line-width": [
-          "interpolate",
-          ["exponential", 1.2],
-          ["zoom"],
-          11,
-          0.5,
-          20,
-          6
-        ]
-      }
-    },
-    {
-      "id": "waterway_other",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "waterway",
-      "filter": [
-        "all",
-        ["!=", ["get", "class"], "river"],
-        ["!=", ["get", "brunnel"], "tunnel"]
-      ],
-      "layout": {"line-cap": "round"},
-      "paint": {
-        "line-color": "rgba(7, 57, 102, 1)",
-        "line-width": [
-          "interpolate",
-          ["exponential", 1.3],
-          ["zoom"],
-          13,
-          0.5,
-          20,
-          6
-        ]
+        "raster-brightness-max": {"stops": [[6, 1], [6, 0.8], [11, 0.75]]},
+        "raster-brightness-min": 0
       }
     },
     {
@@ -315,96 +47,20 @@
       "source": "openmaptiles",
       "source-layer": "water",
       "filter": ["!=", ["get", "brunnel"], "tunnel"],
-      "paint": {"fill-color": "#000e29"}
-    },
-    {
-      "id": "landcover_sand",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "landcover",
-      "filter": ["==", ["get", "class"], "sand"],
-      "paint": {"fill-color": "rgba(72, 70, 57, 1)", "fill-opacity": 0.34}
-    },
-    {
-      "id": "aeroway_fill",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "aeroway",
-      "minzoom": 11,
-      "filter": [
-        "match",
-        ["geometry-type"],
-        ["Polygon", "MultiPolygon"],
-        true,
-        false
-      ],
-      "paint": {"fill-color": "rgba(25, 25, 21, 1)", "fill-opacity": 0.7}
-    },
-    {
-      "id": "aeroway_runway",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "aeroway",
-      "minzoom": 11,
-      "filter": [
-        "all",
-        [
-          "match",
-          ["geometry-type"],
-          ["LineString", "MultiLineString"],
-          true,
-          false
-        ],
-        ["==", ["get", "class"], "runway"]
-      ],
       "paint": {
-        "line-color": "#4a5f78",
-        "line-width": [
+        "fill-color": "rgba(12, 25, 110, 1)",
+        "fill-opacity": [
           "interpolate",
-          ["exponential", 1.2],
+          ["linear"],
           ["zoom"],
-          11,
-          3,
-          15,
-          10,
-          16,
-          20,
-          20,
-          100
-        ]
-      }
-    },
-    {
-      "id": "aeroway_taxiway",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "aeroway",
-      "minzoom": 11,
-      "filter": [
-        "all",
-        [
-          "match",
-          ["geometry-type"],
-          ["LineString", "MultiLineString"],
-          true,
-          false
-        ],
-        ["==", ["get", "class"], "taxiway"]
-      ],
-      "paint": {
-        "line-color": "#4a5f78",
-        "line-width": [
-          "interpolate",
-          ["exponential", 1.2],
-          ["zoom"],
-          11,
-          0.5,
-          14,
-          3,
-          16,
-          20,
-          20,
-          50
+          0,
+          1,
+          2,
+          0.8,
+          5,
+          0.3,
+          7,
+          0
         ]
       }
     },
@@ -1056,8 +712,8 @@
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
-        "line-color": "rgba(35, 54, 76, 1)",
-        "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.5, 1],
+        "line-color": "rgba(72, 72, 73, 1)",
+        "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.5, 0],
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -1087,7 +743,7 @@
       "layout": {
         "line-cap": "round",
         "line-join": "round",
-        "visibility": "visible"
+        "visibility": "none"
       },
       "paint": {
         "line-color": "rgba(71, 99, 134, 1)",
@@ -1151,9 +807,13 @@
         ["==", ["get", "class"], "motorway"],
         ["!=", ["get", "ramp"], 1]
       ],
-      "layout": {"line-cap": "round", "line-join": "round"},
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round",
+        "visibility": "visible"
+      },
       "paint": {
-        "line-color": "#4a5f78",
+        "line-color": {"stops": [[6, "#4a5f78"], [10, "#4a5f78"]]},
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -1166,7 +826,8 @@
           1.75,
           20,
           22
-        ]
+        ],
+        "line-opacity": {"stops": [[6, 0], [10, 0]]}
       }
     },
     {
@@ -1189,7 +850,7 @@
       ],
       "layout": {"line-join": "round"},
       "paint": {
-        "line-color": "#344c59",
+        "line-color": "rgba(164, 164, 164, 1)",
         "line-dasharray": [1, 0.7],
         "line-width": [
           "interpolate",
@@ -1314,7 +975,7 @@
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
-        "line-color": "#324e71",
+        "line-color": "rgba(100, 100, 100, 1)",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -1326,7 +987,8 @@
           20,
           18
         ],
-        "line-translate-anchor": "map"
+        "line-translate-anchor": "map",
+        "line-opacity": {"stops": [[6, 1], [10, 0.2]]}
       }
     },
     {
@@ -1341,7 +1003,7 @@
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
-        "line-color": "#4a5f78",
+        "line-color": "rgba(121, 126, 132, 1)",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -1355,7 +1017,7 @@
           20,
           13
         ],
-        "line-opacity": {"stops": [[6, 0.5], [9, 1]]}
+        "line-opacity": {"stops": [[6, 0.8], [9, 0.2]]}
       }
     },
     {
@@ -1415,7 +1077,8 @@
           1,
           20,
           18
-        ]
+        ],
+        "line-opacity": {"stops": [[6, 0.2], [10, 0.1]]}
       }
     },
     {
@@ -1784,7 +1447,7 @@
         ["match", ["get", "class"], ["path", "pedestrian"], true, false]
       ],
       "paint": {
-        "line-color": "#4a5f78",
+        "line-color": "rgba(195, 195, 195, 1)",
         "line-dasharray": [1, 0.3],
         "line-width": [
           "interpolate",
@@ -2088,48 +1751,6 @@
       }
     },
     {
-      "id": "building",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "building",
-      "minzoom": 13,
-      "maxzoom": 24,
-      "paint": {
-        "fill-color": "rgba(38, 55, 79, 1)",
-        "fill-outline-color": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13,
-          "hsla(35,6%,79%,0.32)",
-          14,
-          "hsl(35,6%,79%)"
-        ],
-        "fill-antialias": false,
-        "fill-opacity": {"stops": [[13, 0.3], [15, 0.4], [16, 0.6]]}
-      }
-    },
-    {
-      "id": "building-outline",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "building",
-      "minzoom": 13,
-      "paint": {
-        "line-color": "rgba(18, 18, 19, 1)",
-        "line-width": {"stops": [[13, 0.5], [14, 0.8]]}
-      }
-    },
-    {
-      "id": "pool",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "water",
-      "minzoom": 13,
-      "filter": ["==", ["get", "class"], "swimming_pool"],
-      "paint": {"fill-color": "#2a2a6a"}
-    },
-    {
       "id": "boundary_3",
       "type": "line",
       "source": "openmaptiles",
@@ -2206,10 +1827,7 @@
           ["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": [
-          "Barlow-Italic",
-          "NotoSans-Italic"
-        ],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-letter-spacing": 0.2,
         "text-max-width": 5,
         "text-size": 14
@@ -2239,7 +1857,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-letter-spacing": 0.2,
         "text-max-width": 5,
         "text-size": ["interpolate", ["linear"], ["zoom"], 0, 10, 8, 14]
@@ -2271,7 +1889,7 @@
           ["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-letter-spacing": 0.2,
         "text-max-width": 5,
         "text-size": 14
@@ -2303,7 +1921,7 @@
           ["get", "name"],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-max-width": 9,
         "text-offset": [0, 0.6],
         "text-size": 12,
@@ -2382,7 +2000,7 @@
           ["get", "name"],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-max-width": 9,
         "text-offset": [0, 0.6],
         "text-size": 12,
@@ -2479,7 +2097,7 @@
         ],
         "text-anchor": "top",
         "text-field": ["get", "name"],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-max-width": 9,
         "text-offset": [0, 0.6],
         "text-size": 12,
@@ -2508,7 +2126,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-max-width": 9,
         "text-offset": [0.9, 0],
         "text-size": 12
@@ -2535,7 +2153,7 @@
           ["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "map",
         "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
       },
@@ -2570,7 +2188,7 @@
           ["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "map",
         "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
       },
@@ -2644,7 +2262,7 @@
         "symbol-placement": ["step", ["zoom"], "point", 11, "line"],
         "symbol-spacing": 200,
         "text-field": ["to-string", ["get", "ref"]],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "viewport",
         "text-size": 8,
         "visibility": "none"
@@ -2680,7 +2298,7 @@
         "symbol-placement": ["step", ["zoom"], "point", 7, "line", 8, "line"],
         "symbol-spacing": 200,
         "text-field": ["to-string", ["get", "ref"]],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "viewport",
         "text-size": 10,
         "visibility": "none"
@@ -2717,7 +2335,7 @@
         "symbol-placement": ["step", ["zoom"], "point", 11, "line"],
         "symbol-spacing": 200,
         "text-field": ["to-string", ["get", "ref"]],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "viewport",
         "text-size": 10,
         "visibility": "none"
@@ -2740,7 +2358,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-max-width": 9,
         "text-offset": [0, 0.6],
         "text-optional": true,
@@ -2774,7 +2392,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-letter-spacing": 0.1,
         "text-max-width": 9,
         "text-size": ["interpolate", ["linear"], ["zoom"], 8, 9, 12, 10],
@@ -2806,7 +2424,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-max-width": 8,
         "text-size": [
           "interpolate",
@@ -2844,7 +2462,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-max-width": 8,
         "text-size": [
           "interpolate",
@@ -2878,7 +2496,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Italic","NotoSans-Italic"],
+        "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-letter-spacing": 0.2,
         "text-max-width": 9,
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 8, 14],
@@ -2914,7 +2532,7 @@
           ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]],
           ["coalesce", ["get", "name"], ["get", "name_en"]]
         ],
-        "text-font": ["Barlow-Regular","NotoSans-Regular"],
+        "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-max-width": 8,
         "text-offset": [0, -0.1],
         "text-size": [
@@ -2954,7 +2572,7 @@
         "icon-size": 0.5,
         "text-anchor": "bottom",
         "text-field": ["get", "name"],
-        "text-font": ["Barlow-Bold","NotoSans-Bold"],
+        "text-font": ["Barlow-Bold", "NotoSans-Bold"],
         "text-max-width": 8,
         "text-offset": [0, -0.2],
         "text-size": [
@@ -2990,7 +2608,7 @@
       ],
       "layout": {
         "text-field": ["get", "name"],
-        "text-font": ["Barlow-Bold","NotoSans-Bold"],
+        "text-font": ["Barlow-Bold", "NotoSans-Bold"],
         "text-max-width": 6.25,
         "text-size": ["interpolate", ["linear"], ["zoom"], 3, 9, 7, 17]
       },
@@ -3014,7 +2632,7 @@
       ],
       "layout": {
         "text-field": ["get", "name"],
-        "text-font": ["Barlow-Bold","NotoSans-Bold"],
+        "text-font": ["Barlow-Bold", "NotoSans-Bold"],
         "text-max-width": 6.25,
         "text-size": ["interpolate", ["linear"], ["zoom"], 2, 9, 5, 17]
       },
