@@ -934,7 +934,7 @@
         "match",
         ["geometry-type"],
         ["Polygon", "MultiPolygon"],
-        true,
+        ["match", ["get", "subclass"], "pedestrian", true, false],
         false
       ],
       "layout": {"visibility": "visible"},

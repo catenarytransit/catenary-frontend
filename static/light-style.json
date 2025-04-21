@@ -1097,7 +1097,7 @@
       }
     },
     {
-      "id": "road_area_pattern",
+      "id": "pedestrian_area_pattern",
       "type": "fill",
       "source": "openmaptiles",
       "source-layer": "transportation",
@@ -1105,11 +1105,11 @@
         "match",
         ["geometry-type"],
         ["Polygon", "MultiPolygon"],
-        true,
+        ["match", ["get", "subclass"], "pedestrian", true, false],
         false
       ],
       "paint": {
-        "fill-color": "#dddddd",
+        "fill-color": "#f7f7f7",
         "fill-antialias": false,
         "fill-opacity": 1
       }
