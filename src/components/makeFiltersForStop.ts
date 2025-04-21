@@ -13,7 +13,7 @@ export const default_bus_filter = [
 export const default_metro_filter = [
     'all',
     ['case',
-        ['<', ['zoom'], 16],
+        ['<', ['zoom'], 15],
         ['==', null, ['get', 'parent_station']],
         true // Default case: don't filter
     ],
@@ -28,7 +28,7 @@ export const default_metro_filter = [
 export const default_tram_filter = [
     'all',
     ['case',
-        ['<', ['zoom'], 16],
+        ['<', ['zoom'], 15],
         ['==', null, ['get', 'parent_station']],
         true // Default case: don't filter
     ],
@@ -50,7 +50,7 @@ export const default_tram_filter = [
 export const default_interrail_filter = [
     'all',
     ['case',
-        ['<', ['zoom'], 14],
+        ['<', ['zoom'], 13.5],
         ['==', null, ['get', 'parent_station']],
         true // Default case: don't filter
     ],

@@ -1109,7 +1109,7 @@
         false
       ],
       "paint": {
-        "fill-pattern": "mbicons:pedestrian-polygon",
+        "fill-color": "#dddddd",
         "fill-antialias": false,
         "fill-opacity": 1
       }
