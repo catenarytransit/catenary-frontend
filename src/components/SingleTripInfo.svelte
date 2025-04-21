@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { json, text } from '@sveltejs/kit';
-	import { BlockStack, SingleTrip, StackInterface } from '../components/stackenum';
+	import { BlockStack, SingleTrip, StackInterface, StopStack } from '../components/stackenum';
 	import { onDestroy, onMount } from 'svelte';
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
@@ -924,7 +924,16 @@
 						<p class="text-sm sm:text-base">
 							{#if stoptime.name}
 								<span
-									class={` ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
+							on:click={() => {
+								//add the stop to the data stack
+
+								data_stack_store.update((x) => {
+									x.push(new StackInterface(new StopStack(trip_selected.chateau_id, stoptime.stop_id)));
+									return x;
+								});
+							}}
+
+									class={`underline decoration-sky-500/60 hover:decoration-sky-500 cursor-pointer ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 									>{fixStationName(stoptime.name)}</span
 								>
 							{/if}

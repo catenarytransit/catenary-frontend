@@ -4,7 +4,7 @@
 	import { SettingsStack, StackInterface } from '../stackenum';
 </script>
 
-<div class=" md:mt-3  md:mb-1 select-none">
+<div class=" md:mt-3 md:mb-1 select-none">
 	<a href="https://catenarymaps.org" target="_blank" rel="author">
 		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
 	</a>
@@ -39,6 +39,11 @@
 				});
 
 				map.getSource('stops_context')?.setData({
+					type: 'FeatureCollection',
+					features: []
+				});
+
+				map?.getSource('transit_shape_context_detour').setData({
 					type: 'FeatureCollection',
 					features: []
 				});

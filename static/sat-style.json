@@ -37,7 +37,7 @@
       "type": "raster",
       "source": "google-sat",
       "paint": {
-        "raster-brightness-max": {"stops": [[6, 1], [6, 0.8], [11, 0.75]]},
+        "raster-brightness-max": {"stops": [[6, 1], [6, 0.8], [11, 0.7]]},
         "raster-brightness-min": 0
       }
     },

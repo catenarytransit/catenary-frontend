@@ -125,6 +125,11 @@
 						};
 
 		map.getSource('transit_shape_context').setData(geojson_source_new);
+
+		map?.getSource('transit_shape_context_detour').setData({
+			type: 'FeatureCollection',
+			features: []
+		});
 			}
 
 			//now work on stops
