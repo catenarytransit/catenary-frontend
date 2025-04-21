@@ -126,5 +126,6 @@
 	"duration": "Duração",
 	"allexact": "Todas as partidas programadas são exatas.",
 	"starting_time": "Hora de início",
-	"ending_time": "Hora de fim"
+	"ending_time": "Hora de fim",
+	"occupancy_percentage": "Percentagem de ocupação"
 }
