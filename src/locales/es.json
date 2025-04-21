@@ -116,5 +116,6 @@
 	"anticlockwise": "sentido antihorario",
 	"duration": "Duración",
 	"service_alerts": "{n, plural, =1 {Alerta de servicio} other{Alertas de servicio}}",
-	"level": "Nivel"
+	"level": "Nivel",
+	"occupancy_percentage": "Porcentaje de ocupación"
 }

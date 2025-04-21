@@ -115,7 +115,6 @@
 	"occupancy_status_no_data_available": "No data available",
 	"occupancy_status_not_boardable": "Not boardable",
 	"deleted": "Deleted",
-	"crowdedness": "Crowdedness",
 	"occupancy": "Occupancy",
 	"layers": "Layers",
 	"clockwise_abbrievation": "CW",
@@ -131,5 +130,6 @@
 	"trip_modified": "Trip modified",
 	"new_rt_shape": "Realtime detour map route drawn",
 	"replaced_stop": "Replaced stop",
-	"level": "Level"
+	"level": "Level",
+	"occupancy_percentage": "Occupancy percentage"
 }
