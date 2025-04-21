@@ -822,6 +822,10 @@
 							{$_('occupancy_status_not_boardable')}
 						{/if}
 					</p>{/if}
+
+				{#if vehicle_data.occupancy_percentage != null}
+				<p>{$_('occupancy_status')}: {vehicle_data.occupancy_percentage}%</p>
+				{/if}
 			</div>
 		{/if}
 
