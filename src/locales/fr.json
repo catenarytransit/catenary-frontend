@@ -130,6 +130,7 @@
 	"new_rt_shape": "Itinéraire de déviation en temps réel tracé",
 	"replaced_stop": "Arrêt remplacé",
 	"level": "Niveau",
-	"platform": "Quai",
+	"platform": "quai",
+	"Platform": "Quai",
 	"occupancy_percentage": "Pourcentage d'occupation"
 }
