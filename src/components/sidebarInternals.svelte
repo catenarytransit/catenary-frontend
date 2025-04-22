@@ -42,6 +42,7 @@
 	import BlockScreen from './BlockScreen.svelte';
 
 	import VehicleInfo from './vehicle_info.svelte';
+	import StopScreen from './StopScreen.svelte';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 	export let usunits: boolean;
@@ -422,9 +423,10 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof StopStack}
-		<HomeButton />
-		<p>TODO! Feature in progress.</p>
-		<p>À FAIRE ! Fonctionnalité en cours.</p>
+		<StopScreen
+			chateau={latest_item_on_stack.data.chateau_id}
+			stop_id={latest_item_on_stack.data.stop_id}
+		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
