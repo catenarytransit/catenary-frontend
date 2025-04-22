@@ -937,7 +937,7 @@
 								});
 							}}
 
-									class={`underline decoration-sky-500/60 hover:decoration-sky-500 cursor-pointer ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
+									class={`underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 									>{fixStationName(stoptime.name)}</span
 								>
 							{/if}
