@@ -696,7 +696,7 @@
 											<p
 												class="text-xs text-gray-800 dark:text-gray-200 leading-none md:leading-tight"
 											>
-												{$_("platform")} {trip.platform.replace("Track ", "").trim()}
+												{$_("platform")} {trip.platform.replace("Track", "").trim()}
 											</p>
 										{/if}
 									</div>
