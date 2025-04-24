@@ -127,5 +127,9 @@
 	"allexact": "Todas as partidas programadas são exatas.",
 	"starting_time": "Hora de início",
 	"ending_time": "Hora de fim",
-	"occupancy_percentage": "Percentagem de ocupação"
+	"occupancy_percentage": "Percentagem de ocupação",
+	"service_alerts": "Avisos de Serviço {n, plural, =1 {Alerta} other{Alertas}}",
+	"trip_modified": "Viagem modificada",
+	"new_rt_shape": "Rota de desvio em tempo real desenhada",
+	"level": "Nível"
 }
