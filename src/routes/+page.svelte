@@ -63,6 +63,7 @@
 	import CloseButton from '../components/CloseButton.svelte';
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import { determineDarkModeToBool } from '../components/determineDarkModeToBool';
+	import { checkClockSync } from '../components/checkClockSync';
 
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -1348,6 +1349,8 @@
 			});
 
 			map.on('load', () => {
+				checkClockSync();
+
 				console.log('map coords', map.getCenter());
 
 				let prev_known_location = getLocationFromLocalStorage();

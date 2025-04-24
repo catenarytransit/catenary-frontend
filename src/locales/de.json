@@ -123,7 +123,7 @@
 	"headsign": "Zielanzeige",
 	"clickonanyitemfromthislist": "Klicken Sie auf einen beliebigen Eintrag aus dieser Liste",
 	"hidepreviousstops": "Vorherige Haltestellen ausblenden",
-	"shownpreviousstops": "{n} vorherige {n, plural, =1 {Haltestelle} other{Haltestellen} anzeigen}",
+	"shownpreviousstops": "{n} vorherige {n, plural, =1 {Haltestelle} other{Haltestellen}} anzeigen",
 	"Platform": "Bahnsteig",
 	"layers": "Ebenen",
 	"tripid": "Fahrt-ID",
