@@ -119,5 +119,17 @@
 	"starting_time": "Startzeit",
 	"ending_time": "Endzeit",
 	"level": "Ebene",
-	"occupancy_percentage": "Belegungsprozentsatz"
+	"occupancy_percentage": "Belegungsprozentsatz",
+	"headsign": "Zielanzeige",
+	"clickonanyitemfromthislist": "Klicken Sie auf einen beliebigen Eintrag aus dieser Liste",
+	"hidepreviousstops": "Vorherige Haltestellen ausblenden",
+	"shownpreviousstops": "{n} vorherige {n, plural, =1 {Haltestelle} other{Haltestellen} anzeigen}",
+	"Platform": "Bahnsteig",
+	"layers": "Ebenen",
+	"tripid": "Fahrt-ID",
+	"block": "Umlauf",
+	"allexact": "Alle geplanten Abfahrten sind exakt.",
+	"trip_modified": "Fahrt geändert",
+	"new_rt_shape": "Echtzeit-Umleitungskarte gezeichnet",
+	"replaced_stop": "Ersetzte Haltestelle"
 }
