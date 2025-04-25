@@ -185,6 +185,13 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 		.map(([chateau_id, chateau_vehicles_list]) =>
 				Object.entries(chateau_vehicles_list)
 				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
+				.filter(([rt_id, vehicle_data]) => {
+					if (vehicle_data.position.latitude == 34.05573 && vehicle_data.position.longitude == -118.23351) {
+						return false;
+					} else {
+						return true;
+					}
+				})
 				.map(([rt_id, vehicle_data]) => {
 
 				//	console.log('vehicle data', vehicle_data)
