@@ -90,7 +90,7 @@
                             <span class="text-slate-600 dark:text-gray-400 line-through">
                                 <Clock
                                     timezone={stoptime.timezone || trip_data.tz}
-                                    time_seconds={stoptime.scheduled_arrival_time_unix_seconds}
+                                    time_seconds={stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
                                     {show_seconds}
                                 />
                             </span>
@@ -105,7 +105,7 @@
                     {:else}
                         <Clock
                             timezone={stoptime.timezone || trip_data.tz}
-                            time_seconds={stoptime.scheduled_arrival_time_unix_seconds}
+                            time_seconds={stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
                             {show_seconds}
                         />
                     {/if}
@@ -146,7 +146,7 @@
                             <span class="text-slate-600 dark:text-gray-400 line-through">
                                 <Clock
                                     timezone={stoptime.timezone || trip_data.tz}
-                                    time_seconds={stoptime.scheduled_departure_time_unix_seconds}
+                                    time_seconds={stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
                                     {show_seconds}
                                 />
                             </span>
@@ -161,7 +161,7 @@
                     {:else}
                         <Clock
                             timezone={stoptime.timezone || trip_data.tz}
-                            time_seconds={stoptime.scheduled_departure_time_unix_seconds}
+                            time_seconds={stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
                             {show_seconds}
                         />
                     {/if}
