@@ -129,16 +129,13 @@
 	});
 
 	function refilter() {
-		let temp = departure_list
-			.filter((x) => x.chateau_id != 'greyhound~flix')
-			.filter((x) => Object.keys(x.directions).length > 0)
-			.filter((x) => filter_for_route_type(x.route_type, nearby_departures_filter_local));
-
-		console.log('temp', temp);
-
-		let temp_len = temp.length;
-
-		departure_list_filtered = temp;
+		departure_list_filtered = departure_list.filter(x => 
+			x.chateau_id != 'greyhound~flix' && 
+			Object.keys(x.directions).length > 0 && 
+			filter_for_route_type(x.route_type, nearby_departures_filter_local)
+		);
+		
+		console.log('filtered departures', departure_list_filtered.length);
 	}
 
 	let current_time: number = 0;
@@ -359,12 +356,8 @@
 									...new_directions[direction.headsign].trips,
 									...direction.trips
 								];
-
-								
 							} else {
 								new_directions[direction.headsign] = direction;
-
-								
 							}
 						});
 
@@ -436,9 +429,9 @@
 		</div>
 
 		{#if amount_of_ms_total_server_side != null}
-		<div class="align-middle ml-1 my-auto">
-			<p class="text-gray-800 dark:text-gray-300 text-sm">{amount_of_ms_total_server_side} ms</p>
-		</div>
+			<div class="align-middle ml-1 my-auto">
+				<p class="text-gray-800 dark:text-gray-300 text-sm">{amount_of_ms_total_server_side} ms</p>
+			</div>
 		{/if}
 		<!--
 <h2 class={`${window_height_known < 600 ? 'text-lg' : ' text-lg md:text-xl mb-1'} font-medium text-gray-800 dark:text-gray-300 px-3 `}>
@@ -558,21 +551,17 @@
 								>
 								{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
 								<span
-								on:click={() => {
-									data_stack_store.update((stack) => {
+									on:click={() => {
+										data_stack_store.update((stack) => {
 											stack.push(
 												new StackInterface(
-													new StopStack(
-														route_group.chateau_id,
-														direction_group.trips[0].stop_id
-													)
+													new StopStack(route_group.chateau_id, direction_group.trips[0].stop_id)
 												)
 											);
 
 											return stack;
 										});
-								}}
-
+									}}
 									class="text-sm bg-white dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1"
 								>
 									<span class="material-symbols-outlined !text-sm align-middle">distance</span>
@@ -583,9 +572,7 @@
 							</p>
 						{/if}
 						<div class="flex flex-row gap-x-1 overflow-x-auto catenary-scroll">
-							{#each direction_group.trips
-								.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF)
-								 as trip}
+							{#each direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF) as trip}
 								<button
 									aria-label={`Go to ${fixHeadsignText(direction_group.headsign, route_group.route_id)} at ${fixStationName(
 										stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
@@ -620,15 +607,16 @@
 									}}
 								>
 									<div class="text-center">
-										{#if [2,4].includes(route_group.route_type) && trip.trip_short_name}
+										{#if [2, 4].includes(route_group.route_type) && trip.trip_short_name}
 											<p
-												class=" {trip.trip_short_name.length > 10 ? 'text-sm font-regular' : 'font-medium'} px-1 rounded-sm leading-none md:leading-tight"
+												class=" {trip.trip_short_name.length > 10
+													? 'text-sm font-regular'
+													: 'font-medium'} px-1 rounded-sm leading-none md:leading-tight"
 												style:background-color={route_group.color}
 												style:color={route_group.text_color}
 											>
 												{trip.trip_short_name}
 											</p>
-											
 										{/if}
 
 										<span
@@ -656,7 +644,6 @@
 														d="M200-120q-33 0-56.5-23.5T120-200q0-33 23.5-56.5T200-280q33 0 56.5 23.5T280-200q0 33-23.5 56.5T200-120Zm480 0q0-117-44-218.5T516-516q-76-76-177.5-120T120-680v-120q142 0 265 53t216 146q93 93 146 216t53 265H680Zm-240 0q0-67-25-124.5T346-346q-44-44-101.5-69T120-440v-120q92 0 171.5 34.5T431-431q60 60 94.5 139.5T560-120H440Z"
 													/></svg
 												>
-											
 											{/if}
 										</span>
 
@@ -686,9 +673,9 @@
 										{#if trip.departure_realtime != null && trip.departure_schedule != null}
 											<p class="leading-none">
 												<DelayDiff
-												show_seconds={false}
-												diff={trip.departure_realtime - trip.departure_schedule}
-											/>
+													show_seconds={false}
+													diff={trip.departure_realtime - trip.departure_schedule}
+												/>
 											</p>
 										{/if}
 
@@ -696,7 +683,8 @@
 											<p
 												class="text-xs text-gray-800 dark:text-gray-200 leading-none md:leading-tight"
 											>
-												{$_("platform")} {trip.platform.replace("Track", "").trim()}
+												{$_('platform')}
+												{trip.platform.replace('Track', '').trim()}
 											</p>
 										{/if}
 									</div>
@@ -709,13 +697,11 @@
 		</div>
 
 		{#if departure_list_filtered.length == 0 && first_load == true && !loading}
-			<br/>
+			<br />
 
 			<p>No departures.</p>
 
 			<img src="/premium_photo-1671611799147-68a4f9b3f0e1.avif" alt="No departures found" />
-
-			
 		{/if}
 
 		<!--Testing advert
