@@ -607,7 +607,7 @@
 														route_group.chateau_id,
 														trip.trip_id,
 														route_group.route_id,
-														null,
+														trip.gtfs_frequency_start_time,
 														trip.gtfs_schedule_start_day.replace(/-/g, ''),
 														null,
 														route_group.route_type
