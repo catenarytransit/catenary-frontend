@@ -31,6 +31,9 @@ export interface CategoryHash {
 	other: number;
 }
 
+export const current_orm_layer_type_store: Writable<string | null> = writable(null);
+export const current_orm_layer_theme_is_dark_mode_store: Writable<boolean | null> = writable(null);
+
 export const realtime_vehicle_route_cache_store: Writable<
 	Record<string, Record<string, Record<string, any>>>
 > = writable({});

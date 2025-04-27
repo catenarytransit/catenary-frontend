@@ -131,5 +131,6 @@
 	"new_rt_shape": "Realtime detour map route drawn",
 	"replaced_stop": "Replaced stop",
 	"level": "Level",
-	"occupancy_percentage": "Occupancy percentage"
+	"occupancy_percentage": "Occupancy percentage",
+	"noormdata": "Hide Open Railway Map data"
 }

@@ -132,5 +132,6 @@
 	"trip_modified": "Viagem modificada",
 	"new_rt_shape": "Rota de desvio em tempo real desenhada",
 	"level": "Nível",
-	"replaced_stop": "paragem substituída"
+	"replaced_stop": "paragem substituída",
+	"noormdata": "Ocultar dados do Open Railway Map"
 }

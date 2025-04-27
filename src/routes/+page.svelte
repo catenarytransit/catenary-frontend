@@ -42,7 +42,8 @@
 		chateaus_store,
 		show_gtfs_ids_store,
 		ui_theme_store,
-		show_topo_global_store
+		show_topo_global_store,
+		current_orm_layer_type_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
 	import {
@@ -55,6 +56,7 @@
 		StopStack,
 		RouteMapSelector
 	} from '../components/stackenum';
+	import {switch_orm_layers} from '../components/openrailwaymap';
 	import { setup_click_handler } from '../components/mapClickHandler';
 	import { setup_load_map } from '../components/setup_load_map';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
@@ -79,6 +81,8 @@
 	let centerinit: LngLatLike = [-117.6969, 33.6969];
 
 	let zoominit = 9;
+
+
 
 	/*
 	const decode = (textToDecode: string) => {
@@ -135,6 +139,8 @@
 	const lockonconst = 14.5;
 	let firstmove = false;
 	let secondrequestlockgps = false;
+
+	let current_orm_layer_type : string|null = null;
 
 	if (typeof window !== 'undefined') {
 		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
@@ -287,6 +293,15 @@
 	}
 
 	let mapglobal: maplibregl.Map | null = null;
+
+	current_orm_layer_type_store.subscribe((value) => {
+	current_orm_layer_type = value;
+
+	if (mapglobal) {
+		switch_orm_layers(mapglobal, value, darkMode);
+	}
+	});
+
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -1351,6 +1366,8 @@
 			map.on('load', () => {
 				checkClockSync();
 
+				switch_orm_layers(map, "infrastructure", true);
+
 				console.log('map coords', map.getCenter());
 
 				let prev_known_location = getLocationFromLocalStorage();
@@ -1854,10 +1871,61 @@
 
 			{#if selectedSettingsTab === 'more'}
 				<div
-					class="
+					class="flex flex-col"
+				>
+				<!--radio group that changes  current_orm_layer_type-->
 				
-				"
-				></div>
+				<!--First option, null-->
+
+				<p class="font-bold">ORM</p>
+
+				<div>
+					<input
+						on:click={(x) => {
+							current_orm_layer_type_store.update((value) => null);
+						}}
+						on:keydown={(x) => {
+							current_orm_layer_type_store.update((value) => null);
+						}}
+						type="radio"
+						class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
+						name="orm-layer-type"
+						value="null"
+						id="no-orm-data"
+						checked={current_orm_layer_type == null}
+					/>
+					<label
+						
+						for="no-orm-data"
+						class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+						>{$_('noormdata')}</label
+					>
+				</div>
+
+				<div>
+					<input
+						on:click={(x) => {
+							current_orm_layer_type_store.update((value) => "infrastructure");
+						}}
+						on:keydown={(x) => {
+							current_orm_layer_type_store.update((value) => "infrastructure");
+						}}
+						type="radio"
+						class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
+						name="orm-layer-type"
+						value="null"
+						id="orm-infra"
+						checked={current_orm_layer_type == "infrastructure"}
+					/>
+					<label
+						
+						for="orm-infra"
+						class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+						>{$_('orminfra')}</label
+					>
+				</div>
+
+			</div>
 
 				<div>
 					<input
