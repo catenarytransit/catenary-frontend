@@ -89,7 +89,12 @@ function applyStyle(map: maplibregl.Map, style: any, dark_mode: boolean, layer_t
     style.layers.forEach((layer: any) => {
         const newLayer = {...layer};
         newLayer.id = "orm_" + layer.id;
-        map.addLayer(newLayer, "busshapes");
+
+        if (newLayer.id == "orm_railway_switch" || newLayer.id == 'orm_railway_text_stations_high') {
+            map.addLayer(newLayer);
+        } else { 
+            map.addLayer(newLayer, "intercityrailshapes");
+        }
     });
     
     // Update stores
