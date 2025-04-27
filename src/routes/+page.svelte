@@ -1366,7 +1366,7 @@
 			map.on('load', () => {
 				checkClockSync();
 
-				switch_orm_layers(map, "infrastructure", true);
+				switch_orm_layers(map, get(current_orm_layer_type_store), true);
 
 				console.log('map coords', map.getCenter());
 
