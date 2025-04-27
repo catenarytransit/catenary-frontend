@@ -1913,7 +1913,7 @@
 						type="radio"
 						class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
 						name="orm-layer-type"
-						value="null"
+						value="infrastructure"
 						id="orm-infra"
 						checked={current_orm_layer_type == "infrastructure"}
 					/>
