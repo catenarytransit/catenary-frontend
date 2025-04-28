@@ -176,7 +176,7 @@ export async function setup_load_map(
 		console.log('setup load map start');
 		addShapes(map, darkMode);
 		addStopsLayers(map, darkMode);
-		makeContextLayerDataset(map);
+		await makeContextLayerDataset(map);
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
 
