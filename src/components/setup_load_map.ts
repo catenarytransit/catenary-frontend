@@ -230,7 +230,7 @@ export async function setup_load_map(
 				map
 			);
 			garbageCollectNotInView(chateaus_in_frame);
-		}, 1000);
+		}, 700);
 
 		fetch_realtime_vehicle_locations(
 			layersettings,
