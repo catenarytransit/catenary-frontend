@@ -52,7 +52,7 @@ export function addShapes(
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6.5, 0.5, 7.2, 0.5, 10, 0.5, 10, 0.5],
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
-		minzoom: 7.5
+		minzoom: 8
 	});
 
 	map.addLayer({
@@ -122,7 +122,7 @@ export function addShapes(
 			'text-halo-blur': 0,
 			//'line-emissive-strength': 1
 		},
-		minzoom: 10
+		minzoom: 11
 	});
 
 	//OTHER SHAPES
