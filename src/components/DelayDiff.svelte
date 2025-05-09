@@ -94,12 +94,6 @@
 			textclass = 'text-red-600 dark:text-red-400 ';
 		}
 
-
-		if (diff >= 120) {
-			textclass = 'text-lime-600 dark:text-lime-400 ';
-		}
-
-
 		if (diff >= 180) {
 			textclass = 'text-yellow-600 dark:text-yellow-400 ';
 		}
