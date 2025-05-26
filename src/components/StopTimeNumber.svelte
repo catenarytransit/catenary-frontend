@@ -66,7 +66,7 @@
 			{show_seconds}
 			show_brackets={false}
 		/>
-		{#if shared_rt_time}
+		{#if stoptime.rt_arrival_time}
 			<DelayDiff diff={stoptime.rt_arrival_time - (
 				stoptime.scheduled_arrival_time_unix_seconds ||
 				stoptime.interpolated_stoptime_unix_seconds
