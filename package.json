@@ -46,7 +46,7 @@
     "@jill64/sentry-sveltekit-cloudflare": "^2.0.6",
     "@mapbox/polyline": "^1.2.1",
     "@sentry/sveltekit": "^8.54.0",
-    "@sentry/vite-plugin": "^3.2.3",
+    "@sentry/vite-plugin": "^3.4.0",
     "@sveltejs/adapter-cloudflare": "^5.0.2",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tailwindcss/postcss": "^4.0.5",
