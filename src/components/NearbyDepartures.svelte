@@ -130,7 +130,6 @@
 
 	function refilter() {
 		departure_list_filtered = departure_list.filter(x => 
-			x.chateau_id != 'greyhound~flix' && 
 			Object.keys(x.directions).length > 0 && 
 			filter_for_route_type(x.route_type, nearby_departures_filter_local)
 		);

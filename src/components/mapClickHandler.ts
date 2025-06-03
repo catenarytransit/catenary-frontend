@@ -32,7 +32,7 @@ export function setup_click_handler(
 
 		try {
 			const selectedFeatures = map.queryRenderedFeatures(clickBbox, { layers: interactiveLayers });
-			// console.log('selectedFeatures', selectedFeatures);
+			console.log('selectedFeatures', map.queryRenderedFeatures(clickBbox));
 
 			const selected_vehicles_raw = selectedFeatures.filter(
 				(x: Record<string, any>) =>
