@@ -272,13 +272,14 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 								colour = route.route_colour;
 								text_colour = route.route_text_colour;
 							} else {
-								console.log(
+								/*console.log(
 									'Could not find route for ',
 									chateau_id,
 									category,
 									routeId,
 									realtime_vehicle_route_cache[chateau_id][category]
 								);
+								*/
 							}
 							text_colour;
 							switch (maptag) {
