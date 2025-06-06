@@ -1366,6 +1366,19 @@
 			map.on('load', () => {
 				checkClockSync();
 
+				// Assuming 'map' is your MapLibre GL JS map instance
+				map.on('webglcontextlost', (event) => {
+					console.log('WebGL context lost.');
+				});
+
+				map.on('webglcontextrestored', (event) => {
+					console.log('WebGL context restored.');
+					// A timeout may be necessary to ensure the canvas is fully ready.
+					setTimeout(() => {
+						map.resize();
+					}, 0);
+				});
+
 				switch_orm_layers(map, get(current_orm_layer_type_store), true);
 
 				console.log('map coords', map.getCenter());
