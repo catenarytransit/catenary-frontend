@@ -29,7 +29,8 @@ export function start_location_watch() {
 				const options = {
 					enableHighAccuracy: false,
 					timeout: 5000,
-					maximumAge: 0,
+					// 30 seconds
+					maximumAge: 30_000,
 				  };
 				  
 				 const id = navigator.geolocation.watchPosition(success, () => {}, options);
