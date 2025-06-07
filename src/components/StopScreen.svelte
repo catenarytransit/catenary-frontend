@@ -107,11 +107,9 @@
 
                 <h2 class="text-lg font-bold">{data_from_server.primary.stop_name}</h2>
 
-                <br/>
-
 					{#if events_filtered}
 						{#each events_filtered as event}
-							<div class="mx-1 my-2 border-b-1 border-gray-500">
+							<div class="mx-1 py-1 border-b-1 border-gray-500">
 								<p>{event.headsign}</p>
 
 								<div class="flex flex-row">
@@ -141,7 +139,6 @@
 									<p>{$_('vehicle')}: {event.vehicle_number}</p>
 								{/if}
 							</div>
-							<br />
 						{/each}
 					{/if}
 				{:else}
