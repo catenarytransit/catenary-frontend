@@ -42,10 +42,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@jill64/sentry-sveltekit-cloudflare": "^2.0.6",
     "@mapbox/polyline": "^1.2.1",
-    "@sentry/sveltekit": "^8.55.0",
-    "@sentry/vite-plugin": "^3.5.0",
     "@sveltejs/adapter-cloudflare": "^5.1.0",
     "@sveltejs/vite-plugin-svelte": "^5.1.0",
     "@tailwindcss/postcss": "^4.1.8",
