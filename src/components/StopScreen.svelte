@@ -31,7 +31,7 @@
                 if (data.events) {
                     events_filtered = data_from_server.events.filter((event) => (event.realtime_departure || event.scheduled_departure) > ((Date.now() / 1000) - 600))
 
-                    events_filtered.sort((a,b) => (a.realtime_departure || a.scheduled_departure) - (b.realtime_departure || b.scheduled_departure))
+                   // events_filtered.sort((a,b) => (a.realtime_departure || a.scheduled_departure) - (b.realtime_departure || b.scheduled_departure))
                 }
             })
             .catch(error => {
