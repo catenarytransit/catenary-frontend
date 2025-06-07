@@ -100,9 +100,15 @@
 <div class="h-full">
 	<HomeButton />
 	<div class=" catenary-scroll overflow-y-auto pb-64 h-full pr-2">
+
 		<div class="flex flex-col">
 			<div>
 				{#if data_from_server}
+
+                <h2 class="text-lg font-bold">{data_from_server.primary.stop_name}</h2>
+
+                <br/>
+
 					{#if events_filtered}
 						{#each events_filtered as event}
 							<div class="mx-1 my-2 border-b-1 border-gray-500">
