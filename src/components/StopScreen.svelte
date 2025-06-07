@@ -19,7 +19,9 @@
         console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
       
 
-        fetch("https://birch.catenarymaps.org/departures_at_stop?stop_id=" + stop_id + "&chateau_id=" + chateau)
+        fetch("https://birch.catenarymaps.org/departures_at_stop?stop_id=" + stop_id + "&chateau_id=" + chateau, {
+            mode: 'cors'
+        })
             .then(response => response.json())
             .then(data => {
                 console.log('Fetched data:', data);
