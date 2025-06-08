@@ -28,6 +28,7 @@
 	import DelayDiff from './DelayDiff.svelte';
 	import { _ } from 'svelte-i18n';
 	import Clock from './Clock.svelte';
+	import StopScreenRow from './StopScreenRow.svelte';
 
 	let show_seconds = get(show_seconds_store);
 
@@ -113,31 +114,20 @@
 								<div class="">
 									<p>
 										{#if data_from_server.routes[event.chateau][event.route_id].short_name}
-										<span class="font-bold px-0.5 mx-1 py-0.5"
+										<span class="rounded-xs font-bold px-0.5 mx-1 py-0.5"
 										style={`background: ${data_from_server.routes[event.chateau][event.route_id].color}`}
 										>{data_from_server.routes[event.chateau][event.route_id].short_name}</span>
 										{/if}
 										{event.headsign}</p>
 								</div>
 
-								<div class="flex flex-row">
-									Departure:
-									<TimeDiff
-										large={false}
-										show_brackets={false}
-										show_seconds={false}
-										diff={(event.realtime_departure || event.scheduled_departure) -
-											current_time / 1000}
-									/>
+								<StopScreenRow event={event}
+								data_from_server={data_from_server}
+								current_time={current_time}
+								show_seconds={show_seconds}
+								/>
 
-									<div class={`ml-auto`}>
-										<Clock
-											timezone={data_from_server.primary.timezone}
-											time_seconds={event.realtime_departure || event.scheduled_departure}
-											{show_seconds}
-										/>
-									</div>
-								</div>
+								
 
 								{#if event.platform_string_realtime}
 									<p>{event.platform_string_realtime}</p>
