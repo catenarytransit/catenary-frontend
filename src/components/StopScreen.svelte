@@ -29,6 +29,7 @@
 	import { _ } from 'svelte-i18n';
 	import Clock from './Clock.svelte';
 	import StopScreenRow from './StopScreenRow.svelte';
+	import { SingleTrip, StackInterface } from './stackenum';
 
 	let show_seconds = get(show_seconds_store);
 
@@ -110,7 +111,24 @@
 
 					{#if events_filtered}
 						{#each events_filtered as event}
-							<div class="mx-1 py-1 border-b-1 border-gray-500">
+							<div class="mx-1 py-1 border-b-1 border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800"
+							on:click={() => {
+								data_stack_store.update((x) => {
+									x.push(new StackInterface (
+										new SingleTrip(
+											event.chateau,
+											event.trip_id,
+											event.route_id,
+											null,
+											event.trip_service_date,
+											null,
+											null
+										)
+									));
+									return x;
+								});
+							}}
+							>
 								<div class="">
 									<p>
 										{#if data_from_server.routes[event.chateau][event.route_id].short_name}
@@ -136,8 +154,6 @@
 								current_time={current_time}
 								show_seconds={show_seconds}
 								/>
-
-								
 
 								{#if event.platform_string_realtime}
 									<p>{event.platform_string_realtime}</p>
