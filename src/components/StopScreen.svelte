@@ -110,7 +110,15 @@
 					{#if events_filtered}
 						{#each events_filtered as event}
 							<div class="mx-1 py-1 border-b-1 border-gray-500">
-								<p>{event.headsign}</p>
+								<div class="">
+									<p>
+										{#if data_from_server.routes[event.chateau][event.route_id].short_name}
+										<span class="font-bold px-0.5 mx-1 py-0.5"
+										style={`background: ${data_from_server.routes[event.chateau][event.route_id].color}`}
+										>{data_from_server.routes[event.chateau][event.route_id].short_name}</span>
+										{/if}
+										{event.headsign}</p>
+								</div>
 
 								<div class="flex flex-row">
 									Departure:
