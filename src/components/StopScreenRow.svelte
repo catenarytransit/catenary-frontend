@@ -9,7 +9,6 @@
     export let data_from_server:any;
     export let current_time:number;
     export let show_seconds:boolean;
-
 </script>
 <div class="flex flex-row">
 									{$_('departure')}:
