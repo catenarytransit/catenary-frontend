@@ -121,7 +121,7 @@
 										>{data_from_server.routes[event.chateau][event.route_id].short_name}</span>
 										{:else}
 										{#if data_from_server.routes[event.chateau][event.route_id].long_name}
-										<span class="rounded-xs font-bold px-0.5 mx-1 py-0.5"
+										<span class="rounded-xs font-semibold px-0.5 mx-1 py-0.5"
 										style={`background: ${data_from_server.routes[event.chateau][event.route_id].color};
 										color: ${data_from_server.routes[event.chateau][event.route_id].text_color};
 										`}
