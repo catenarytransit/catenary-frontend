@@ -146,6 +146,11 @@
 										>{data_from_server.routes[event.chateau][event.route_id].long_name}</span>
 										{/if}
 										{/if}
+{#if event.trip_short_name}
+										<span class="font-bold"
+										>{event.trip_short_name}</span>
+										{/if}
+
 										{event.headsign}</p>
 								</div>
 
