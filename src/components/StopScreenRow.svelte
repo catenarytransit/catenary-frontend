@@ -9,6 +9,12 @@
     export let data_from_server:any;
     export let current_time:number;
     export let show_seconds:boolean;
+
+    $: shared_rt_time = event.rt_departure_time || event.rt_arrival_time;
+
+    $: shared_scheduled_time =
+		event.scheduled_departure_time_unix_seconds ||
+		event.scheduled_arrival_time_unix_seconds;
 </script>
 <div class="flex flex-row">
 									{$_('departure')}:

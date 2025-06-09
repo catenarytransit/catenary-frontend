@@ -281,6 +281,7 @@
 				url={route_data.url}
 				{darkMode}
 				route_type={route_data.route_type}
+				gtfs_desc={route_data.gtfs_desc}
 			/>
 		</div>
 

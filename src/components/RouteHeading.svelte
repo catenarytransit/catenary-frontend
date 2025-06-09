@@ -36,6 +36,8 @@
 
 	export let route_type: number;
 
+	export let gtfs_desc: string|null = null;
+
 	onMount(() => {
 		window.addEventListener('resize', () => {
 			window_height_known = window.innerHeight;
@@ -74,6 +76,10 @@
 			<span class={`${short_name ? 'font-normal ml-1' : 'font-bold'}`}
 				>{fixRouteNameLong(chateau_id, long_name, route_id)}</span
 			>
+		{/if}
+
+		{#if gtfs_desc}
+		<span>{gtfs_desc}</span>
 		{/if}
 	</h2>
 
