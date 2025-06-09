@@ -77,11 +77,12 @@
 				>{fixRouteNameLong(chateau_id, long_name, route_id)}</span
 			>
 		{/if}
+	</h2>
 
+	
 		{#if gtfs_desc}
 		<span>{gtfs_desc}</span>
 		{/if}
-	</h2>
 
 	<h2
 		class={`${window_height_known < 600 ? 'text-base' : 'text-base md:text-lg my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''} leading-tight`}
