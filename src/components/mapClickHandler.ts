@@ -21,7 +21,7 @@ export function setup_click_handler(
 ) {
 	// Precompute interactive layers array
 	map.on('click', (e) => {
-
+		console.log('click')
 		var interactiveLayers = Object.values(layerspercategory)
 			.flatMap((category) => Object.values(category))
 			.filter(Boolean);
@@ -163,9 +163,9 @@ export function setup_click_handler(
 				})
 				.filter((x: MapSelectionOption | null) => x != null);
 
-			selected_stops.concat(
+			selected_stops.push(...
 				context_stop_raw.map((x: any) => {
-					const key = x.properties.chateau + x.properties.gtfs_id;
+					const key = x.properties.chateau + x.properties.stop_id;
 
 					if (selected_stops_key_unique.has(key)) {
 						return null;
@@ -176,8 +176,8 @@ export function setup_click_handler(
 					return new MapSelectionOption(
 						new StopMapSelector(
 							x.properties.chateau,
-							x.properties.gtfs_id,
-							x.properties.displayname,
+							x.properties.stop_id,
+							x.properties.label,
 						)
 					);
 				}).filter((x: MapSelectionOption | null) => x != null)
