@@ -451,7 +451,7 @@
 
 	{#if !first_attempt_sent && current_nearby_pick_state == 0}
 		<p class="italic px-3 pb-2">{$_("waitingforgps")}...</p>
-		<p class="italix px-3 pt-1 text-xs"></p>
+		<p class="italic px-3 pt-1 text-xs">{$_("gpsdisclaimer")}</p>
 	{/if}
 
 	<div class="w-full">
