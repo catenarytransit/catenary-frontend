@@ -20,18 +20,32 @@ export function setup_click_handler(
 	setSidebarOpen: () => void
 ) {
 	// Precompute interactive layers array
-	const interactiveLayers = Object.values(layerspercategory)
-		.flatMap((category) => Object.values(category))
-		.filter(Boolean);
-
 	map.on('click', (e) => {
+
+		var interactiveLayers = Object.values(layerspercategory)
+			.flatMap((category) => Object.values(category))
+			.filter(Boolean);
+
+		console.log('interactiveLayers', interactiveLayers)
+
+		let current_layers = map.getStyle().layers;
+
+		console.log('current_layers', current_layers)
+
+		for (const layer of current_layers) {
+			if (layer.source == 'stops_context') {
+				interactiveLayers.push(layer.id);
+				console.log('push', layer.id)
+			}
+		}
+
 		const clickBbox: [maplibregl.PointLike, maplibregl.PointLike] = [
 			[e.point.x - 5, e.point.y - 5],
 			[e.point.x + 5, e.point.y + 5]
 		];
 
 		try {
-			const selectedFeatures = map.queryRenderedFeatures(clickBbox, { layers: [...interactiveLayers, "stops_context"] });
+			const selectedFeatures = map.queryRenderedFeatures(clickBbox, { layers: interactiveLayers });
 			console.log('selectedFeatures', map.queryRenderedFeatures(clickBbox));
 
 			const selected_vehicles_raw = selectedFeatures.filter(
@@ -125,7 +139,7 @@ export function setup_click_handler(
 					x.source === 'otherstops'
 			);
 
-			const context_stop_raw = selectedFeatures.filter((x:any) => x.source === "stops_context");
+			const context_stop_raw = selectedFeatures.filter((x: any) => x.source === "stops_context");
 
 			const selected_stops_key_unique = new Set();
 
@@ -149,25 +163,25 @@ export function setup_click_handler(
 				})
 				.filter((x: MapSelectionOption | null) => x != null);
 
-				selected_stops.concat(
-					context_stop_raw.map((x: any) => {
-						const key = x.properties.chateau + x.properties.gtfs_id;
+			selected_stops.concat(
+				context_stop_raw.map((x: any) => {
+					const key = x.properties.chateau + x.properties.gtfs_id;
 
-						if (selected_stops_key_unique.has(key)) {
-							return null;
-						}
+					if (selected_stops_key_unique.has(key)) {
+						return null;
+					}
 
-						selected_stops_key_unique.add(key);
+					selected_stops_key_unique.add(key);
 
-						return new MapSelectionOption(
-							new StopMapSelector(
-								x.properties.chateau,
-								x.properties.gtfs_id,
-								x.properties.displayname,
-							)
-						);
-					}).filter((x: MapSelectionOption | null) => x != null)
-				);
+					return new MapSelectionOption(
+						new StopMapSelector(
+							x.properties.chateau,
+							x.properties.gtfs_id,
+							x.properties.displayname,
+						)
+					);
+				}).filter((x: MapSelectionOption | null) => x != null)
+			);
 
 			let MapSelectionOptions = new Array<MapSelectionOption>();
 
@@ -194,7 +208,7 @@ export function setup_click_handler(
 
 				setSidebarOpen();
 			}
-			
+
 		} catch (e) {
 			console.error(e);
 		}

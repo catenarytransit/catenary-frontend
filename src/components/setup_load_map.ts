@@ -23,6 +23,7 @@ import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
 import { makeGpsLayer } from './makeGpsLayer';
 import { makeContextLayerDataset } from './addLayers/contextLayer';
 import { start_location_watch, update_geolocation_source } from '../user_location_lib';
+import { setup_click_handler } from '../components/mapClickHandler';
 
 const RASTER_SOURCES = [
 	{ id: 'foamertiles', url: 'standard' },
@@ -55,7 +56,8 @@ export async function setup_load_map(
 	layersettings: Record<string, any>,
 	chateau_to_realtime_feed_lookup: Record<string, any>,
 	pending_chateau_rt_request: Record<string, number>,
-	recompute_map_padding: () => void
+	recompute_map_padding: () => void,
+	setSidebarOpen: () => void,
 ) {
 	let updateInterval: NodeJS.Timeout;
 	const minZoomThreshold = window.innerWidth >= 1023 ? 14 : 15;
@@ -111,6 +113,11 @@ export async function setup_load_map(
 		await makeContextLayerDataset(map);
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
+
+		
+			console.log('setting up click handler');
+
+			setup_click_handler(map, layerspercategory, setSidebarOpen);
 
 		const [stationImage, geoNavImage, geoCircleImage] = await Promise.all([
 			map.loadImage('/station-enter.png'),

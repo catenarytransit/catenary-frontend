@@ -1652,12 +1652,10 @@
 				layersettings,
 				chateau_to_realtime_feed_lookup,
 				pending_chateau_rt_request,
-				recompute_map_padding
+				recompute_map_padding,
+				setSidebarOpen
 			);
 
-			console.log('setting up click handler');
-
-			setup_click_handler(map, layerspercategory, setSidebarOpen);
 		});
 	} catch (e) {
 		console.error(e);
