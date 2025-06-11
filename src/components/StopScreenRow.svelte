@@ -24,7 +24,13 @@
 		show_brackets={false}
 		show_seconds={false}
 		diff={(shared_rt_time || shared_scheduled_time) - current_time / 1000}
-	/>
+	/> 
+
+    <span class="ml-1">
+        {#if shared_rt_time}
+			<DelayDiff diff={shared_rt_time - shared_scheduled_time} {show_seconds} />
+		{/if}
+    </span>
 
 	{#if shared_rt_time}
 		<div class={`ml-auto`}>
