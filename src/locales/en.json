@@ -132,5 +132,7 @@
 	"replaced_stop": "Replaced stop",
 	"level": "Level",
 	"occupancy_percentage": "Occupancy percentage",
-	"noormdata": "Hide Open Railway Map data"
+	"noormdata": "Hide Open Railway Map data",
+	"waitingforgps": "waiting for GPS",
+	"gpsdisclaimer": "If the wait is too long, check if this site has browser permissions to access your location, and verify your GPS signal is strong."
 }
