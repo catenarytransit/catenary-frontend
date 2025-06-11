@@ -9,46 +9,6 @@
     "openmaptiles": {
       "type": "vector",
       "url": "https://tiles.openfreemap.org/planet"
-    },
-    "openrailwaymap_low": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/railway_line_high",
-      "promoteId": "id"
-    },
-    "standard_railway_text_stations_low": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_low",
-      "promoteId": "id"
-    },
-    "standard_railway_text_stations_med": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_med",
-      "promoteId": "id"
-    },
-    "high": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/high",
-      "promoteId": "id"
-    },
-    "openrailwaymap_standard": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard",
-      "promoteId": "id"
-    },
-    "openrailwaymap_speed": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/speed",
-      "promoteId": "id"
-    },
-    "openrailwaymap_signals": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/signals",
-      "promoteId": "id"
-    },
-    "openrailwaymap_electrification": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/electrification",
-      "promoteId": "id"
     }
   },
   "sprite": [

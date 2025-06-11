@@ -6,7 +6,8 @@ const ormStyleCache = writable<Record<string, any>>({});
 
 // Function to preload all ORM style files
 export async function preloadORMStyles() {
-    if (typeof window === "undefined") {
+   try {
+     if (typeof window === "undefined") {
         return;
     }
     
@@ -36,10 +37,14 @@ export async function preloadORMStyles() {
     } catch (error) {
         console.error("Failed to preload ORM styles:", error);
     }
+   } catch (e) {
+    console.error(e);
+   }
 }
 
 export function switch_orm_layers(map: maplibregl.Map, layer_type: string | null, dark_mode: boolean) {
-    if (typeof window === "undefined") {
+    try {
+        if (typeof window === "undefined") {
         return;
     }
 
@@ -80,12 +85,19 @@ export function switch_orm_layers(map: maplibregl.Map, layer_type: string | null
                 ormStyleCache.set(updatedCache);
                 
                 applyStyle(map, style, dark_mode, layer_type);
+            })
+            .catch((e) => {
+                console.error(e);
             });
+    }
+    } catch (e) {
+        console.error(e);
     }
 }
 
 function applyStyle(map: maplibregl.Map, style: any, dark_mode: boolean, layer_type: string) {
-    // Add each layer to the map, prefix with 'orm_'
+    try {
+        // Add each layer to the map, prefix with 'orm_'
     style.layers.forEach((layer: any) => {
         const newLayer = {...layer};
         newLayer.id = "orm_" + layer.id;
@@ -100,4 +112,7 @@ function applyStyle(map: maplibregl.Map, style: any, dark_mode: boolean, layer_t
     // Update stores
     current_orm_layer_theme_is_dark_mode_store.set(dark_mode);
     current_orm_layer_type_store.set(layer_type);
+    } catch (e) {
+        console.error(e);
+    }
 }

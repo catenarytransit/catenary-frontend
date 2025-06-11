@@ -1366,6 +1366,60 @@
 			map.on('load', () => {
 				checkClockSync();
 
+				const orm_sources = {
+					    "openrailwaymap_low": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/railway_line_high",
+      "promoteId": "id"
+    },
+    "standard_railway_text_stations_low": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_low",
+      "promoteId": "id"
+    },
+    "standard_railway_text_stations_med": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_med",
+      "promoteId": "id"
+    },
+    "high": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/high",
+      "promoteId": "id"
+    },
+    "openrailwaymap_standard": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard",
+      "promoteId": "id"
+    },
+    "openrailwaymap_speed": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/speed",
+      "promoteId": "id"
+    },
+    "openrailwaymap_signals": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/signals",
+      "promoteId": "id"
+    },
+    "openrailwaymap_electrification": {
+      "type": "vector",
+      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/electrification",
+      "promoteId": "id"
+    }
+				};
+
+				try {
+						for (const [key, value] of Object.entries(orm_sources)) {
+							console.log(`${key}: ${value}`);
+
+							map.addSource(key, value);
+						}
+
+				} catch (e) {
+					console.error(e);
+				}
+
 				// Assuming 'map' is your MapLibre GL JS map instance
 				map.on('webglcontextlost', (event) => {
 					console.log('WebGL context lost.');
