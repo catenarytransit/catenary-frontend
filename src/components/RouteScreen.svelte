@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { json } from '@sveltejs/kit';
-	import { RouteStack, SingleTrip } from './stackenum';
+	import { RouteStack, SingleTrip, StackInterface } from './stackenum';
 	import { onDestroy, onMount } from 'svelte';
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
@@ -323,7 +323,38 @@
 		>
 			{#if activePattern != ''}
 				{#each route_data.direction_patterns[activePattern].rows as stop, index}
-					<span class="relative px-3">
+					<span class="relative px-3 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer"
+
+						on:click={() => {
+							map_pointer_store.update((stack) => {
+								
+								stack.push(new StackInterface(
+									new StopStack(
+										routestack.chateau_id,
+										stop.stop_id
+									)
+								))
+
+								return stack;
+							});
+						}}
+
+						on:keydown={(e) => {
+							if (e.key == 'Enter') {
+								map_pointer_store.update((stack) => {
+								
+								stack.push(new StackInterface(
+									new StopStack(
+										routestack.chateau_id,
+										stop.stop_id
+									)
+								))
+
+								return stack;
+							});
+							}
+						}}
+					>
 						{#if index != route_data.direction_patterns[activePattern].rows.length - 1}
 							<div
 								class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-7 z-30 rounded-xl`}
@@ -337,9 +368,9 @@
 						<span class="text-sm relative ml-[16px] translate-y-px"
 							>{fixStationName(route_data.stops[stop.stop_id].name)}</span
 						>
-						{#if stop.code} 
-						<span class="text-sm relative ml-0 translate-y-px font-light"
-							>{fixStationName(route_data.stops[stop.stop_id].code)}</span
+						{#if route_data.stops[stop.stop_id].code} 
+						<span class="text-sm relative ml-1 translate-y-px font-light dark:text-gray-400 text-gray-700"
+							>{" ["}{fixStationName(route_data.stops[stop.stop_id].code)}{"]"}</span
 						>
 						{/if}
 						{#if show_gtfs_ids}
