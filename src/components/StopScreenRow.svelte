@@ -17,7 +17,7 @@
 		event.scheduled_departure;
 </script>
 
-<div class="flex flex-row">
+<div class={`flex flex-row`}>
 	{$_('departure')}:
 	<TimeDiff
 		large={false}
