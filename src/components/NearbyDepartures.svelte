@@ -518,12 +518,25 @@
 					class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-1 mx-1 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}
 				>
 					<p
-						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'} ml-1`}
+						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'} ml-1 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer`}
 						style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}
+						on:click={() => {
+									data_stack_store.update((stack) => {
+										stack.push(
+											new StackInterface(
+												new StopStack(route_group.chateau_id, route_group.route_id)
+									)
+										);
+
+										return stack;
+									});
+								}}
 					>
 						{#if route_group.short_name}
-							<span class="font-bold mr-1"
-								>{fixRouteName(
+							<span class="font-bold mr-1  "
+								
+							>
+								{fixRouteName(
 									route_group.chateau_id,
 									route_group.short_name,
 									route_group.route_id

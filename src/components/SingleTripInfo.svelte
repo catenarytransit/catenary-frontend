@@ -727,6 +727,7 @@
 			{darkMode}
 			disable_pdf={true}
 			route_type={trip_data.route_type}
+			make_clickable_route_name={true}
 		/>
 
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { json } from '@sveltejs/kit';
-	import { RouteStack, SingleTrip, StackInterface } from './stackenum';
+	import { RouteStack, SingleTrip, StackInterface, StopStack  } from './stackenum';
 	import { onDestroy, onMount } from 'svelte';
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';

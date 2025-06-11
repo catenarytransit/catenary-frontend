@@ -9,6 +9,25 @@
 		schedule_pdf_needs_hydration
 	} from './pdf_schedules';
 	import { onMount } from 'svelte';
+		import {
+		data_stack_store,
+		on_sidebar_trigger_store,
+		realtime_vehicle_locations_last_updated_store,
+		realtime_vehicle_locations_store,
+		realtime_vehicle_route_cache_hash_store,
+		realtime_vehicle_route_cache_store,
+		lock_on_gps_store,
+		usunits_store,
+		show_zombie_buses_store,
+		show_my_location_store,
+		show_gtfs_ids_store,
+		custom_icons_category_to_layer_id,
+		map_pointer_store,
+
+		stops_to_hide_store
+
+	} from '../globalstores';
+	import { RouteStack, SingleTrip, StackInterface, StopStack  } from './stackenum';
 
 	export let color: string;
 	export let text_color: string;
@@ -38,6 +57,8 @@
 
 	export let gtfs_desc: string|null = null;
 
+	export let make_clickable_route_name: boolean = false;
+
 	onMount(() => {
 		window.addEventListener('resize', () => {
 			window_height_known = window.innerHeight;
@@ -58,8 +79,21 @@
 
 {#if !compact}
 	<h2
-		class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} `}
+		class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} ${
+			make_clickable_route_name ? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500  ' : ''
+		}`}
 		style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}
+
+		on:click={() => {
+			if (make_clickable_route_name) {
+				data_stack_store.update((stack) => {
+
+					stack.push(new StackInterface(new RouteStack(chateau_id, route_id)));
+					return stack;
+				});
+			}
+		}}
+
 	>
 		{#if run_number}
 			<span
