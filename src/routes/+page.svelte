@@ -1411,7 +1411,7 @@
 
 				try {
 						for (const [key, value] of Object.entries(orm_sources)) {
-							console.log(`${key}: ${value}`);
+							console.log(`${key}`, value);
 
 							map.addSource(key, value);
 						}
