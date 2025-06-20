@@ -47,6 +47,14 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		}
 	});
 
+	map.addSource('transit_shape_context_for_stop', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: []
+		}
+	});
+
 	map.addSource('transit_shape_context_detour', {
 		type: 'geojson',
 		data: {
@@ -107,6 +115,34 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		paint: {
 			'line-color': ['get', 'color'],
 			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
+			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
+			//'line-emissive-strength': 1
+			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+		},
+		minzoom: 3
+	});
+
+	map.addLayer({
+		id: 'contextlinebackingforstop',
+		type: 'line',
+		source: 'transit_shape_context_for_stop',
+		paint: {
+			'line-color': '#ffffff',
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 4, 14, 6],
+			'line-opacity': 0.9
+			//'line-emissive-strength': 1
+			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
+		},
+		minzoom: 3
+	});
+
+	map.addLayer({
+		id: 'contextlineforstop',
+		type: 'line',
+		source: 'transit_shape_context_for_stop',
+		paint: {
+			'line-color': ['get', 'color'],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3, 14, 5],
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
@@ -347,6 +383,31 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			['==', 2, ['get', 'stop_route_type']],
 		],
 		minzoom: 3
+	});
+
+	map.addSource('redpin', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: []
+		}
+	});
+
+	const pinimg = await map.loadImage('/icons/Google_Maps_pin.png');
+
+	map.addImage('pinimg', pinimg.data);
+
+	map.addLayer({
+		'id': 'pinicon',
+		'type': 'symbol',
+		'source': 'redpin',
+		'layout': {
+			'icon-image': 'pinimg',
+			'icon-size': 0.2,
+			'icon-offset': [0, -80],
+			'icon-ignore-placement': true,
+			'icon-allow-overlap': true
+		}
 	});
 }
 

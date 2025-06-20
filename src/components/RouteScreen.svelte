@@ -228,7 +228,7 @@
 			let text = await response.text();
 			try {
 				const data = JSON.parse(text);
-				console.log('route data', data);
+				//console.log('route data', data);
 				loaded = true;
 
 				route_data = data;
@@ -326,7 +326,7 @@
 					<span class="relative px-3 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer"
 
 						on:click={() => {
-							map_pointer_store.update((stack) => {
+							data_stack_store.update((stack) => {
 								
 								stack.push(new StackInterface(
 									new StopStack(
@@ -341,7 +341,7 @@
 
 						on:keydown={(e) => {
 							if (e.key == 'Enter') {
-								map_pointer_store.update((stack) => {
+								data_stack_store.update((stack) => {
 								
 								stack.push(new StackInterface(
 									new StopStack(

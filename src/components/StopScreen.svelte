@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import HomeButton from './SidebarParts/home_button.svelte';
-
+	import maplibregl from 'maplibre-gl';
+	import polyline from '@mapbox/polyline';
 	import { writable, get } from 'svelte/store';
 	import {
 		data_stack_store,
@@ -47,6 +48,8 @@
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
 
+		let global_map_pointer = get(map_pointer_store);
+
 		fetch(
 			'https://birch.catenarymaps.org/departures_at_stop?stop_id=' +
 				stop_id +
@@ -68,6 +71,67 @@
 							(event.realtime_departure || event.scheduled_departure) > Date.now() / 1000 - 600
 					);
 
+					global_map_pointer.getSource('redpin')
+					.setData({
+						'type': "FeatureCollection",
+						features: [
+							{
+							"type": "Feature",
+							"properties": {},
+							"geometry": {
+								"coordinates": [
+								data_from_server.primary.stop_lon,
+								data_from_server.primary.stop_lat,
+								],
+								"type": "Point"
+							}
+							}
+						]
+					})
+
+					//console.log(data_from_server.routes);
+
+					let geojson_shapes_list = [];
+
+					for (const [chateau_id, routes] of Object.entries(data_from_server.routes)) {
+						for (const [route_id, route] of Object.entries(routes)) {
+							for (const shape_id of route.shapes_list) {
+								if (data_from_server.shapes[chateau_id]) {
+									if (data_from_server.shapes[chateau_id][shape_id]) {
+										geojson_shapes_list.push({
+											geometry: polyline.toGeoJSON(data_from_server.shapes[chateau_id][shape_id]),
+											properties: {
+												color: route.color
+											}
+										})
+									}
+								}
+							}
+						}
+					}
+
+					global_map_pointer.getSource('transit_shape_context_for_stop').setData(
+						{
+							'type': 'FeatureCollection',
+							features: geojson_shapes_list
+						}
+					);
+
+					global_map_pointer.getSource('transit_shape_context').setData(
+						{
+							'type': 'FeatureCollection',
+							features: []
+						}
+					);
+
+					global_map_pointer.getSource('stops_context').setData(
+						{
+							'type': 'FeatureCollection',
+							features: []
+						}
+					);
+
+				
 					// events_filtered.sort((a,b) => (a.realtime_departure || a.scheduled_departure) - (b.realtime_departure || b.scheduled_departure))
 				}
 			})
@@ -89,9 +153,17 @@
 			fetch_stop_data();
 		}, 10000);
 
-		() => {
+		return () => {
 			if (interval_fetch) {
 				clearInterval(interval_fetch);
+
+				global_map_pointer.getSource('redpin')
+					.setData({
+						'type': "FeatureCollection",
+						features: [
+							
+						]
+					})
 			}
 		};
 	});

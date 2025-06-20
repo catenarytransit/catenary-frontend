@@ -295,6 +295,14 @@
 					is_loading_trip_data = false;
 					trip_data = data;
 
+					map.getSource('transit_shape_context_for_stop').setData(
+						{
+							'type': 'FeatureCollection',
+							features: []
+						}
+					);
+
+
 					if (data.shape_polyline) {
 						let geojson_polyline_geo = polyline.toGeoJSON(data.shape_polyline);
 
