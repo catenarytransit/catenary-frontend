@@ -151,7 +151,14 @@
 										>{event.trip_short_name}</span>
 										{/if}
 
-										{event.headsign}</p>
+										{event.headsign} 
+									
+										
+									</p>
+
+									{#if event.last_stop}
+									<p><span class="ml-1 text-xs font-bold align-middle"> {$_("last_stop")}</span></p>
+								{/if}
 								</div>
 
 								<StopScreenRow event={event}

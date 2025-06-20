@@ -18,7 +18,7 @@
 </script>
 
 <div class={`flex flex-row`}>
-	{$_('departure')}:
+	{event.last_stop ? $_('arrival') : $_('departure')}:
 	<TimeDiff
 		large={false}
 		show_brackets={false}

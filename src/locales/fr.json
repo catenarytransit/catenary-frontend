@@ -135,5 +135,6 @@
 	"occupancy_percentage": "Pourcentage d'occupation",
 	"noormdata": "Masquer les données d'Open Railway Map",
 	"waitingforgps": "en attende de système mondial de positionnement",
-	"gpsdisclaimer": "Si l'attente est trop longue, vérifiez si ce site a les permissions de navigateur pour accéder à votre position et vérifiez que votre signal GPS est fort."
+	"gpsdisclaimer": "Si l'attente est trop longue, vérifiez si ce site a les permissions de navigateur pour accéder à votre position et vérifiez que votre signal GPS est fort.",
+	"last_stop": "dernier arrêt"
 }
