@@ -205,10 +205,10 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		.catch((err) => console.error(err));
 	}
 
-//	map.addSource('evacuation_ca_fire', {
-//		type: 'geojson',
-//		data: evacuation_fire_url
-	//});
+	map.addSource('evacuation_ca_fire', {
+		type: 'geojson',
+		data: evacuation_fire_url
+	});
 	
 	map.addSource('los_angeles_city_fire_evac', {
 		type: 'geojson',
@@ -273,7 +273,7 @@ refresh_watchduty_evacs();
 
 	setInterval(() => {
 		refresh_watchduty_evacs();
-		//fetch_and_update_layer('evacuation_ca_fire', evacuation_fire_url);
+		fetch_and_update_layer('evacuation_ca_fire', evacuation_fire_url);
 
 		fetch_and_update_layer('los_angeles_city_fire_evac', los_angeles_fire_evac);
 
@@ -441,7 +441,7 @@ refresh_watchduty_evacs();
 		},
 		minzoom: 5
 	});
-/*
+
 	map.addLayer({
 		source: 'evacuation_ca_fire',
 		id: 'evacuation_ca_fire_bounds',
@@ -470,7 +470,7 @@ refresh_watchduty_evacs();
 			]
 		},
 		minzoom: 5
-	});*/
+	});
 
 	map.addLayer({
 		source: 'los_angeles_city_fire_evac',
@@ -596,7 +596,7 @@ refresh_watchduty_evacs();
 		minzoom: 5
 	});
 */
-/*
+
 	map.addLayer({
 		source: 'evacuation_ca_fire',
 		id: 'evacuation_ca_fire_txt',
@@ -618,7 +618,7 @@ refresh_watchduty_evacs();
 			'text-font': ['Barlow-Bold']
 		},
 		minzoom: 6
-	});*/
+	});
 
 	map.addLayer({
 		source: 'los_angeles_city_fire_evac',
