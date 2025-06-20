@@ -7,14 +7,14 @@ Current site URL: https://maps.catenarymaps.org
 ## Install Dependenices
 
 ```bash
-bun install
+npm install --force
 ```
 
 ## Build and Run catenary-frontend
 
 ```bash
-bun run build
-bun run preview
+npm run build
+npm run preview
 ```
 
 ### Developers

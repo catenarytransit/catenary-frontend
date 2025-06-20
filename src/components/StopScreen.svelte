@@ -129,7 +129,7 @@
 								});
 							}}
 							>
-								<div class="">
+								<div class={` ${((event.realtime_departure || event.scheduled_departure) < current_time / 1000) && (event.scheduled_departure < current_time / 1000) ? "opacity-80" : ""}`}>
 									<p>
 										{#if data_from_server.routes[event.chateau][event.route_id].short_name}
 										<span class="rounded-xs font-bold px-0.5 mx-1 py-0.5"

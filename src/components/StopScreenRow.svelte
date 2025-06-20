@@ -17,12 +17,12 @@
 		event.scheduled_departure;
 </script>
 
-<div class="flex flex-row">
+<div class={`flex flex-row`}>
 	{$_('departure')}:
 	<TimeDiff
 		large={false}
 		show_brackets={false}
-		show_seconds={false}
+		show_seconds={show_seconds}
 		diff={(shared_rt_time || shared_scheduled_time) - current_time / 1000}
 	/> 
 
