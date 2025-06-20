@@ -101,7 +101,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 //		type: 'geojson',
 //		data: national_usa_fire_arcgis_url
 	//});
-
+/*
 	map.addSource("watchduty_proxy", {
 		'type': 'vector',
 		'tiles': [watchduty_proxy],
@@ -110,7 +110,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		// left, bottom, right, top
 		"bounds": [-180, 11, -63, 50]
 	});
-	
+	*/
 	function refresh_watchduty_source() {
 		/*
 		map.removeSource('watchduty_proxy');
@@ -167,7 +167,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			});
 		});
 	}
-
+/*
 	map.addLayer({
 		'id': 'zones-fill-watchduty-go',
 		source: "watchduty_proxy",
@@ -190,7 +190,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 			"fill-opacity": 0.35
 		},
 		filter: ["==", "a", "b"]
-	});
+	});*/
 
 	function fetch_and_update_layer(source_id:string, url:string) {
 		fetch(url)
@@ -649,7 +649,7 @@ refresh_watchduty_evacs();
 		},
 		minzoom: 6
 	});
-
+/*
 	map.addLayer({
 		'id': 'zones-fill-watchduty-warning-txt',
 		source: "watchduty_proxy",
@@ -696,7 +696,7 @@ refresh_watchduty_evacs();
 			'text-color': darkMode ? '#ccaaaa' : '#cc0000'
 		},
 		filter: ["==", "a", "b"]
-	});
+	});*/
 
 	map.addLayer({
 		source: 'fire_evac_manual',
