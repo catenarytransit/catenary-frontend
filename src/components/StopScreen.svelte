@@ -154,6 +154,8 @@
 		}, 10000);
 
 		return () => {
+			let global_map_pointer = get(map_pointer_store);
+
 			if (interval_fetch) {
 				clearInterval(interval_fetch);
 
