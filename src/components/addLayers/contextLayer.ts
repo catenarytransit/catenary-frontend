@@ -128,8 +128,8 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		source: 'transit_shape_context_for_stop',
 		paint: {
 			'line-color': '#ffffff',
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 4, 14, 6],
-			'line-opacity': 0.9
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 4, 11, 5, 14, 7],
+			'line-opacity': 0.8
 			//'line-emissive-strength': 1
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
@@ -142,7 +142,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		source: 'transit_shape_context_for_stop',
 		paint: {
 			'line-color': ['get', 'color'],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3, 14, 5],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2.8, 11, 4, 14, 5],
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
