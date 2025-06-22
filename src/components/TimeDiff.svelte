@@ -124,7 +124,7 @@
 </script>
 
 <span class={large ? "" : "text-[0px]"}>
-	<span class={large ? "text-lg" : "text-sm"}>
+	<span class={large ? "text-lg font-bold" : "text-sm font-bold"}>
 		{#if show_brackets}{'['}{/if}{#if diff < 0}{"-"}{/if}{#if diff > 0}{show_plus ? "+" : ""}{/if}
 	</span>
 	{#if d > 0}
