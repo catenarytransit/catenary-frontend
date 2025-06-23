@@ -145,7 +145,9 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 			map.setFilter('zones-fill-watchduty-warning-txt', generateArrayInFormat("zone_name", combined_evacuation_warnings_arr));
 
-			const fires_points = cleaned_data.filter((fire) => fire.is_active == true).map((fire) => {
+			const fires_points = cleaned_data.filter((fire) => fire.is_active == true)
+			.filter((fire) => fire.data != null && fire.data.manual_deactivation_started != true)
+			.map((fire) => {
 				return {
 					"type": "Feature",
 					"geometry": {
@@ -153,7 +155,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 						"coordinates": [fire.lng, fire.lat]
 					},
 					"properties": {
-						"name": fire.name
+						"name": fire.name,
 					}
 				}
 			}
