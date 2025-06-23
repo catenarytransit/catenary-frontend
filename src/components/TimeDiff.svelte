@@ -124,8 +124,12 @@
 </script>
 
 <span class={large ? "" : "text-[0px]"}>
-	<span class={large ? "text-lg font-bold" : "text-sm font-bold"}>
-		{#if show_brackets}{'['}{/if}{#if diff < 0}{"-"}{/if}{#if diff > 0}{show_plus ? "+" : ""}{/if}
+	<span class={large ? "text-lg " : "text-sm"}>
+		{#if show_brackets}{'['}{/if}
+
+<span class="font-bold">
+{#if diff < 0}{"-"}{/if}{#if diff > 0}{show_plus ? "+" : ""}{/if}
+</span>
 	</span>
 	{#if d > 0}
 		<span class={large ? "text-lg" : "text-sm"}>{d}</span>
