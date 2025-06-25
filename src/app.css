@@ -4,12 +4,13 @@
 
 .catenary-scroll {
 	--sb-track-color: #F3F3F3;
-	--sb-thumb-color: #00AB9B;
+	--sb-thumb-color: var(--color-seashore);
 	--sb-size: 16px;
 }
 
 .dark .catenary-scroll {
 	--sb-track-color: #0a233f;
+	--sb-thumb-color: var(--color-seashoredark);
 }
 
 body::-webkit-scrollbar {
@@ -91,9 +92,14 @@ body {
 	background-color: #000000;
 }
 
+:root {
+	--color-seashoredark: #a5ece5;
+}
+
 @theme {
 	--color-darksky: #0a233f;
 	--color-seashore: #00AB9B;
+	--color-seashoredark: #a5ece5;
 	--color-background: #06121f;
 	--color-hover: #1a334f;
 

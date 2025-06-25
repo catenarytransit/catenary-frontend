@@ -46,7 +46,7 @@
 					/>
 				</span>
 			{/if}
-			<span class="text-seashore font-medium">
+			<span class="text-seashore dark:text-seashoredark font-medium">
 				<Clock
 					timezone={data_from_server.primary.timezone}
 					time_seconds={shared_rt_time}

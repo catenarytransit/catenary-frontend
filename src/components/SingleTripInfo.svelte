@@ -881,7 +881,7 @@
 					on:click={() => {
 						show_previous_stops = false;
 					}}
-					class="cursor-pointer text-md font-medium text-seashore mb-2"
+					class="cursor-pointer text-md font-medium text-seashore dark:text-seashoredark mb-2"
 				>
 					&darr;
 					{$_('hidepreviousstops')}
@@ -892,7 +892,7 @@
 					on:click={() => {
 						show_previous_stops = true;
 					}}
-					class="cursor-pointer text-md font-medium text-seashore mb-2"
+					class="cursor-pointer text-md font-medium text-seashore dark:text-seashoredark mb-2"
 				>
 					&uarr;
 					{$_('shownpreviousstops', { values: { n: last_inactive_stop_idx + 1 } })}

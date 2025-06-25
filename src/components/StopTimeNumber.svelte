@@ -95,7 +95,7 @@
                                 />
                             </span>
                         {/if}
-                        <span class="text-seashore font-medium">
+                        <span class="text-seashore dark:text-seashoredark font-medium">
                             <Clock
                                 timezone={stoptime.timezone || trip_data.tz}
                                 time_seconds={stoptime.rt_arrival_time}
@@ -151,7 +151,7 @@
                                 />
                             </span>
                         {/if}
-                        <span class="text-seashore font-medium">
+                        <span class="text-seashore dark:text-seashoredark font-medium">
                             <Clock
                                 timezone={stoptime.timezone || trip_data.tz}
                                 time_seconds={stoptime.rt_departure_time}
@@ -211,7 +211,7 @@
 							</span>
 						{/if}
 						{/if}
-						<span class="text-seashore font-medium">
+						<span class="text-seashore dark:text-seashoredark font-medium">
 							<Clock
 								timezone={stoptime.timezone || trip_data.tz}
 								time_seconds={shared_rt_time}

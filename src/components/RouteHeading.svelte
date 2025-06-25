@@ -158,7 +158,7 @@
 		{#if pdf_url != null}
 			<a target="_blank" href={pdf_url}>
 				<div
-					class="px-2 py-0.5 my-1 border-seashore text-seashore flex flex-row align-middle justify-center rounded-xl border-2 hover:text-white hover:bg-seashore hover:transition-colors"
+					class="px-2 py-0.5 my-1 border-seashore dark:border-seashoredark text-seashore dark:text-seashoredark flex flex-row align-middle justify-center rounded-xl border-2 hover:text-white hover:bg-seashore hover:transition-colors"
 				>
 					<span class="material-symbols-outlined font-medium text-2xl align-middle">
 						attachment
@@ -170,7 +170,7 @@
 		{#if url != null}
 			<a target="_blank" href={url}>
 				<div
-					class="px-2 py-0.5 my-1 border-seashore text-seashore flex flex-row align-middle justify-center rounded-xl border-2 hover:text-white hover:bg-seashore hover:transition-colors"
+					class="px-2 py-0.5 my-1 border-seashore dark:border-seashoredark text-seashore dark:text-seashoredark flex flex-row align-middle justify-center rounded-xl border-2 hover:text-white hover:bg-seashore hover:transition-colors"
 				>
 					<span class="material-symbols-outlined font-medium text-2xl align-middle"> globe </span>
 					<span class="font-medium text-base md:text-lg pl-2">URL</span>

@@ -51,7 +51,7 @@
 				<p>{$locale}</p>
 			<select
 				bind:value={$locale}
-				class="text-black bg-white dark:bg-slate-900 dark:text-white p-1 border-2 my-1 border-seashore rounded-md"
+				class="text-black bg-white dark:bg-slate-900 dark:text-white p-1 border-2 my-1 border-seashore dark:border-seashoredark rounded-md"
 			>
 				{#each $locales as locale}
 					<option value={locale} class="text-black bg-white dark:bg-slate-900 dark:text-white"

@@ -13,7 +13,7 @@
 
 	{#if $data_stack_store.length > 1}
 		<button
-			class="text-seashore cursor-pointer mx-1"
+			class="text-seashore dark:text-seashoredark cursor-pointer mx-1"
 			on:click={() => {
 				data_stack_store.update((x) => {
 					x.pop();
@@ -26,7 +26,7 @@
 	{/if}
 
 	<button
-		class="text-seashore cursor-pointer mx-1"
+		class="text-seashore dark:text-seashoredark cursor-pointer mx-1"
 		on:click={() => {
 			data_stack_store.set([]);
 			let map = get(map_pointer_store);
@@ -53,7 +53,7 @@
 		><span class="material-symbols-outlined block"> home </span>
 	</button>
 	<button
-		class="text-seashore cursor-pointer mx-2"
+		class="text-seashore dark:text-seashoredark cursor-pointer mx-2"
 		on:click={() => {
 			data_stack_store.update((x) => {
 				x.push(new StackInterface(new SettingsStack()));

@@ -473,7 +473,7 @@
 			/>
 		</a>
 		<button
-			class="text-seashore cursor-pointer mx-1"
+			class="text-seashore dark:text-seashoredark cursor-pointer mx-1"
 			on:click={() => {
 				window.location.reload();
 			}}
@@ -481,7 +481,7 @@
 			><span class="material-symbols-outlined block"> refresh </span>
 		</button>
 		<button
-			class="text-seashore cursor-pointer mx-2"
+			class="text-seashore dark:text-seashoredark cursor-pointer mx-2"
 			on:click={() => {
 				data_stack_store.update((x) => {
 					x.push(new StackInterface(new SettingsStack()));
