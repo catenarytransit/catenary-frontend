@@ -484,7 +484,7 @@
 	],
 	"start_url": "/?utm_source=pwa",
 	"background_color": "#0a233f",
-	"theme_color": "#42a7c5",
+	"theme_color": "#00AB9B",
 	"description": "Catenary helps connect people and communities with powerful transit data and algorithms.",
 	"lang": "en",
 	"prefer_related_applications": false

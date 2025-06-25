@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .catenary-scroll {
-	--sb-track-color: #e1ecfb;
-	--sb-thumb-color: #42a7c5;
+	--sb-track-color: #F3F3F3;
+	--sb-thumb-color: #00AB9B;
 	--sb-size: 16px;
 }
 
@@ -93,7 +93,7 @@ body {
 
 @theme {
 	--color-darksky: #0a233f;
-	--color-seashore: #42a7c5;
+	--color-seashore: #00AB9B;
 	--color-background: #06121f;
 	--color-hover: #1a334f;
 

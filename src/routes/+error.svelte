@@ -5,12 +5,12 @@
 </script>
 
     <div class="flex flex-col max-w-md mx-auto h-screen justify-center items-center">
-        <img src="https://maps.catenarymaps.org/logo.svg" alt="Catenary Maps" class="logo w-48">
+        <img src="/logo.svg" alt="Catenary Maps" class="logo w-48">
     
     <div class="flex flex-col">
         <h1 class="error-code text-center">404</h1>
         <p class="message text-center">
-            Oh no! It seems this is a ghost station.
+            Looks like you&apos;ve stumbled upon a ghost station. Spooky.
         </p>
         <a href="https://maps.catenarymaps.org" class=" mx-auto text-center home-button">Return to Central Station</a>
     </div>
@@ -23,7 +23,6 @@
             font-size: 8rem;
             font-weight: 700;
             color: #2d4059;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             margin-bottom: -10px;
         }
 
