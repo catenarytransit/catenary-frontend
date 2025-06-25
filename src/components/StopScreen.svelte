@@ -196,7 +196,17 @@
 		<div class="flex flex-col">
 			<div>
 				{#if data_from_server}
-					<h2 class="text-lg font-bold">{data_from_server.primary.stop_name}</h2>
+					
+				
+				<div class='flex flex-row ml-1'><h2 class="text-lg font-bold">{data_from_server.primary.stop_name}</h2>
+
+					<p class='ml-auto align-middle '><Clock
+						time_seconds={current_time / 1000}
+						show_seconds={true}
+						timezone={data_from_server.primary.timezone}
+						/></p></div>
+
+					<p class="text-sm ml-1">{data_from_server.primary.timezone}</p>
 
 					{#if dates_to_events_filtered}
 
