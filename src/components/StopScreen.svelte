@@ -66,7 +66,7 @@
 		)
 			.then((response) => response.json())
 			.then((data) => {
-				console.log('Fetched data:', data);
+			//	console.log('Fetched data:', data);
 
 				data_from_server = data;
 
@@ -77,7 +77,7 @@
 					);
 
 					for (const event of events_filtered) {
-						console.log('event', event);
+						//console.log('event', event);
 
 						let date_ca = new Date(
 							(event.realtime_departure ||
@@ -88,7 +88,7 @@
 							timeZone: data_from_server.primary.timezone
 						});
 
-						console.log('canadian date format',date_ca)
+					//	console.log('canadian date format',date_ca)
 
 						if (dates_to_events_filtered[date_ca] == undefined) {
 							dates_to_events_filtered[date_ca] = [];
@@ -97,7 +97,7 @@
 						dates_to_events_filtered[date_ca].push(event);
 					}
 
-					console.log(dates_to_events_filtered);
+					//console.log(dates_to_events_filtered);
 
 					global_map_pointer.getSource('redpin').setData({
 						type: 'FeatureCollection',
