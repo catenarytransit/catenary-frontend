@@ -1,3 +1,4 @@
+
 export function timezone_to_locale(input_lang: string, timezone: string): string {
     if (input_lang.startsWith("en")) {
         switch (timezone) {
@@ -36,7 +37,16 @@ export function timezone_to_locale(input_lang: string, timezone: string): string
             default:
                 return "en-UK";
         }
-    } else {
+    }
+    else if (input_lang.startsWith('fr')) {
+        switch (timezone) {
+            case "America/Montreal":
+                return "fr-CA";
+            default:
+                return "input_lang";
+        }
+    }
+    else {
         return input_lang;
     }
 }
