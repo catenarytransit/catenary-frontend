@@ -21,6 +21,18 @@ export function timezone_to_locale(input_lang: string, timezone: string): string
                 return "en-CA";
             case "Europe/London":
                 return "en-UK";
+            case "Australia/Sydney":
+                return "en-AU";
+            case "Australia/Adelaide":
+                return "en-AU";
+            case "Australia/Brisbane":
+                return "en-AU";
+            case "Australia/Melbourne":
+                return "en-AU";
+            case "Pacific/Auckland":
+                return "en-NZ";
+            case "Europe/Dublin":
+                return "en-IE";
             default:
                 return "en-UK";
         }
