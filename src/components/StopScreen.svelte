@@ -211,11 +211,9 @@
 					{#if dates_to_events_filtered}
 
 						{#each Object.keys(dates_to_events_filtered) as date_code}
-						
 							<p class='text-md font-semibold mt-3 mb-1 mx-3'>
-									
-								
-								{new Date(date_code).toLocaleDateString(timezone_to_locale($locale, data_from_server.primary.timezone), {
+						
+								{new Date(date_code).toLocaleDateString(timezone_to_locale(get(locale), data_from_server.primary.timezone), {
 									year: 'numeric',
 									month: 'numeric',
 									day: 'numeric',
