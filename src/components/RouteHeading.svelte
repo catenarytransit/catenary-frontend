@@ -9,7 +9,7 @@
 		schedule_pdf_needs_hydration
 	} from './pdf_schedules';
 	import { onMount } from 'svelte';
-		import {
+	import {
 		data_stack_store,
 		on_sidebar_trigger_store,
 		realtime_vehicle_locations_last_updated_store,
@@ -23,11 +23,9 @@
 		show_gtfs_ids_store,
 		custom_icons_category_to_layer_id,
 		map_pointer_store,
-
 		stops_to_hide_store
-
 	} from '../globalstores';
-	import { RouteStack, SingleTrip, StackInterface, StopStack  } from './stackenum';
+	import { RouteStack, SingleTrip, StackInterface, StopStack } from './stackenum';
 
 	export let color: string;
 	export let text_color: string;
@@ -55,7 +53,7 @@
 
 	export let route_type: number;
 
-	export let gtfs_desc: string|null = null;
+	export let gtfs_desc: string | null = null;
 
 	export let make_clickable_route_name: boolean = false;
 
@@ -79,21 +77,8 @@
 
 {#if !compact}
 	<h2
-		class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} ${
-			make_clickable_route_name ? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500  ' : ''
-		}`}
+		class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'}`}
 		style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}
-
-		on:click={() => {
-			if (make_clickable_route_name) {
-				data_stack_store.update((stack) => {
-
-					stack.push(new StackInterface(new RouteStack(chateau_id, route_id)));
-					return stack;
-				});
-			}
-		}}
-
 	>
 		{#if run_number}
 			<span
@@ -102,21 +87,36 @@
 			>
 		{/if}
 
-		{#if short_name}
-			<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>
-		{/if}
+		<span
+			class={`${
+				make_clickable_route_name
+					? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500  '
+					: ''
+			}`}
+			on:click={() => {
+				if (make_clickable_route_name) {
+					data_stack_store.update((stack) => {
+						stack.push(new StackInterface(new RouteStack(chateau_id, route_id)));
+						return stack;
+					});
+				}
+			}}
+		>
+			{#if short_name}
+				<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>
+			{/if}
 
-		{#if long_name}
-			<span class={`${short_name ? 'font-normal ml-1' : 'font-bold'}`}
-				>{fixRouteNameLong(chateau_id, long_name, route_id)}</span
-			>
-		{/if}
+			{#if long_name}
+				<span class={`${short_name ? 'font-normal ml-1' : 'font-bold'}`}
+					>{fixRouteNameLong(chateau_id, long_name, route_id)}</span
+				>
+			{/if}
+		</span>
 	</h2>
 
-	
-		{#if gtfs_desc}
+	{#if gtfs_desc}
 		<span>{gtfs_desc}</span>
-		{/if}
+	{/if}
 
 	<h2
 		class={`${window_height_known < 600 ? 'text-base' : 'text-base md:text-lg my-0.5'}  font-medium ${arrow ? '-translate-x-1.5' : ''} leading-tight`}
