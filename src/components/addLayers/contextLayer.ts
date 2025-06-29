@@ -393,7 +393,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		}
 	});
 
-	const pinimg = await map.loadImage('/icons/Google_Maps_pin.png');
+	const pinimg = await map.loadImage('/icons/newpin.png');
 
 	map.addImage('pinimg', pinimg.data);
 
@@ -403,8 +403,8 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		'source': 'redpin',
 		'layout': {
 			'icon-image': 'pinimg',
-			'icon-size': 0.2,
-			'icon-offset': [0, -80],
+			'icon-size': 0.15,
+			'icon-offset': [0, -100],
 			'icon-ignore-placement': true,
 			'icon-allow-overlap': true
 		}
