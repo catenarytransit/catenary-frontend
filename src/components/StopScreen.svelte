@@ -35,6 +35,8 @@
 
 	let show_seconds = get(show_seconds_store);
 
+	let locale_inside_component = get(locale);
+
 	show_seconds_store.subscribe((value) => {
 		show_seconds = value;
 	});
@@ -211,9 +213,12 @@
 					{#if dates_to_events_filtered}
 
 						{#each Object.keys(dates_to_events_filtered) as date_code}
-							<p class='text-md font-semibold mt-3 mb-1 mx-3'>
+
 						
-								{new Date(date_code).toLocaleDateString(timezone_to_locale(get(locale), data_from_server.primary.timezone), {
+							<p class='text-md font-semibold mt-3 mb-1 mx-3'>
+
+						
+								{new Date(date_code).toLocaleDateString(timezone_to_locale(locale_inside_component, data_from_server.primary.timezone), {
 									year: 'numeric',
 									month: 'numeric',
 									day: 'numeric',

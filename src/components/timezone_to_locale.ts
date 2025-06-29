@@ -43,7 +43,7 @@ export function timezone_to_locale(input_lang: string, timezone: string): string
             case "America/Montreal":
                 return "fr-CA";
             default:
-                return "input_lang";
+                return input_lang;
         }
     }
     else {
