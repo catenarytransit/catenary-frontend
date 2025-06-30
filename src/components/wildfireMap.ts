@@ -38,9 +38,9 @@ async function make_fire_names(map: maplibregl.Map) {
 		'source': 'firenames_wd',
 		'layout': {
 			'icon-image': 'fireicon',
-			'icon-size': ['interpolate', ["linear"], ['get', 'ha'], 0, 0.02, 100, 0.04, 1000, 0.06],
+			'icon-size': ['interpolate', ["linear"], ['get', 'ha'], 0, 0.03, 100, 0.05, 1000, 0.06],
 			'text-field': ['concat', ['get', 'name'], " ", ['get', "ha_rounded"], "ha"],
-			'text-offset': [0, 1],
+			'text-offset': [0, 1.5],
 			'text-anchor': 'top',
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 6, 12, 14],
 			'text-font': ['Barlow-Medium'],
