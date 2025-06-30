@@ -10,9 +10,8 @@ import {
 	realtime_vehicle_locations_last_updated_store
 } from '../globalstores';
 
-const subdomains = [
-	"https://birch_rt1.catenarymaps.org",
-];
+import jsonwebworkerpkg from '@cheprasov/json-web-worker';
+const { jsonWebWorker, parse, stringify } = jsonwebworkerpkg;
 
 let store_of_pending_requests: Writable<Record<string, number>> = writable({});
 
@@ -32,15 +31,15 @@ export function fetch_realtime_vehicle_locations(
 	let zoom = map.getZoom();
 
 	if (layersettings.bus.visible) {
-		if (zoom >= bus_threshold) {	
-		categories_to_request.push('bus');
-		}	
+		if (zoom >= bus_threshold) {
+			categories_to_request.push('bus');
+		}
 	}
 
 	if (zoom >= 3) {
-	if (layersettings.intercityrail.visible) {
-		categories_to_request.push('rail');
-	}
+		if (layersettings.intercityrail.visible) {
+			categories_to_request.push('rail');
+		}
 	}
 
 	if (zoom >= 4) {
@@ -50,9 +49,9 @@ export function fetch_realtime_vehicle_locations(
 	}
 
 	if (zoom >= 3) {
-	if (layersettings.other.visible) {
-		categories_to_request.push('other');
-	}
+		if (layersettings.other.visible) {
+			categories_to_request.push('other');
+		}
 	}
 
 	const realtime_chateaus_in_frame = get(chateaus_in_frame).filter((chateau_id: string) => {
@@ -114,7 +113,7 @@ export function fetch_realtime_vehicle_locations(
 	});
 
 	const myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+	myHeaders.append("Content-Type", "application/json");
 
 	const requestOptions = {
 		method: "POST",
@@ -122,15 +121,16 @@ myHeaders.append("Content-Type", "application/json");
 		body: raw,
 		redirect: "follow",
 		mode: 'cors'
-	  };
+	};
 
-	  if (categories_to_request.length > 0) {
+	if (categories_to_request.length > 0) {
 		fetch("https://birch.catenarymaps.org/bulk_realtime_fetch_v1", requestOptions)
-		.then((response) => response.json())
-		.then((result) => {
-			process_realtime_vehicle_locations_v2(result, map);
-		})
-		.catch((error) => console.log('error', error));
-	  }
-	  
+			.then((response) => response.text())
+			.then((text) => jsonWebWorker.parse(text))
+			.then((result) => {
+				process_realtime_vehicle_locations_v2(result, map);
+			})
+			.catch((error) => console.log('error', error));
+	}
+
 }
