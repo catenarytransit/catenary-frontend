@@ -41,6 +41,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@cheprasov/json-web-worker": "^1.0.0",
     "@mapbox/polyline": "^1.2.1",
     "@sveltejs/adapter-cloudflare": "^5.1.0",
     "@sveltejs/vite-plugin-svelte": "^5.1.0",

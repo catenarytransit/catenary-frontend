@@ -98,6 +98,8 @@
 
 	import type { NearbySelectionFilterRouteType } from '../globalstores';
 	import { SingleTrip, StackInterface, StopStack } from './stackenum';
+	import jsonwebworkerpkg from '@cheprasov/json-web-worker';
+	const { jsonWebWorker, parse, stringify } = jsonwebworkerpkg;
 	import { t } from 'svelte-i18n';
 	import {
 		fixHeadsignText,
@@ -339,7 +341,8 @@
 			let signal = abort_controller.signal;
 
 			fetch(url, { signal: signal })
-				.then((response) => response.json())
+				.then((response) => response.text())
+				.then((text) => jsonWebWorker.parse(text))
 				.then((data) => {
 					stops_table = data.stop;
 					let temp_departure_list = data.departures;
