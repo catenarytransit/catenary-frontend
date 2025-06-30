@@ -38,8 +38,8 @@ async function make_fire_names(map: maplibregl.Map) {
 		'source': 'firenames_wd',
 		'layout': {
 			'icon-image': 'fireicon',
-			'icon-size': 0.04,
-			'text-field': ['get', 'name'],
+			'icon-size': ['interpolate', ["linear"], ['get', 'ha'], 0, 0.02, 100, 0.04, 1000, 0.06],
+			'text-field': ['concat', ['get', 'name'], " ", ['get', "ha_rounded"], "ha"],
 			'text-offset': [0, 1],
 			'text-anchor': 'top',
 			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 6, 12, 14],
@@ -156,6 +156,9 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 					},
 					"properties": {
 						"name": fire.name,
+						"acreage": fire.data.acreage,
+						"ha": fire.data.acreage * 0.4046,
+						"ha_rounded": (fire.data.acreage * 0.4046).toFixed(1)
 					}
 				}
 			}
