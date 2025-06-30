@@ -1499,6 +1499,7 @@
 					maxzoom: 15
 				});
 
+				
 				map.addLayer(
 					{
 						id: 'hillshade',
@@ -1528,7 +1529,8 @@
 						paint: {
 							'line-color': darkMode ? 'rgba(140, 140, 128, 30%)' : 'rgba(0,0,0, 30%)',
 							// level = highest index in thresholds array the elevation is a multiple of
-							'line-width': ['match', ['get', 'level'], 1, 1.3, 0.3]
+							'line-width': ['match', ['get', 'level'], 1, 1.3, 0.3],
+							
 						},
 						layout: {
 							visibility: 'none'
@@ -1548,7 +1550,8 @@
 							'symbol-placement': 'line',
 							'text-size': 10,
 							'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
-							'text-font': ['Barlow-Bold']
+							'text-font': ['Barlow-Bold'],
+							'text-pitch-alignment': 'viewport'
 						},
 						paint: {
 							'text-halo-color': darkMode ? 'black' : 'white',
@@ -1565,9 +1568,9 @@
 						map.setLayoutProperty('contour-labels', 'visibility', 'visible');
 						map.setLayoutProperty('contours-layer', 'visibility', 'visible');
 
-						if (window.innerWidth >= 768 || window.innerHeight >= 768) {
+						//if (window.innerWidth >= 768 || window.innerHeight >= 768) {
 							map.setTerrain({ source: 'dem', exaggeration: 1 });
-						}
+						//}
 					} else {
 						map.setLayoutProperty('hillshade', 'visibility', 'none');
 
