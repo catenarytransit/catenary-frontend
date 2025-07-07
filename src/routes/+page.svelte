@@ -1308,7 +1308,7 @@
 
 			const map = new maplibregl.Map({
 				canvasContextAttributes: {
-					antialias: false,
+					antialias: true,
 					powerPreference: 'high-performance',
 					desynchronized: true,
 				},
