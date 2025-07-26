@@ -16,6 +16,7 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
+	import SearchBar from '../components/search/SearchBar.svelte';
 	import {
 		getLocationFromLocalStorage,
 		saveLocationToLocalStorage
@@ -81,8 +82,6 @@
 	let centerinit: LngLatLike = [-117.6969, 33.6969];
 
 	let zoominit = 9;
-
-
 
 	/*
 	const decode = (textToDecode: string) => {
@@ -1749,7 +1748,7 @@
 			<div
 				id="catenary-sidebar"
 				style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 dark:bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-70 backdrop-blur-xs md:backdrop-blur-sm md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
+				class="z-30 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 dark:bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-70 backdrop-blur-xs md:backdrop-blur-sm md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
 			>
 				<div
 					class="flex md:hidden py-2 flex-row"
@@ -1760,10 +1759,17 @@
 				>
 					<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
 				</div>
+
 				<SidebarInternals {usunits} {latest_item_on_stack} {darkMode} />
 			</div>
 		{/if}
+		
 	</div>
+
+	<div class="fixed top-2 left-3 z-40" id="search_bar_outer">
+		<SearchBar/>
+	</div>
+
 	{#if !$isLoading}
 		<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 			<div

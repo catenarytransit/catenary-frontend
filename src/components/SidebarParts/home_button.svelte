@@ -4,10 +4,8 @@
 	import { SettingsStack, StackInterface } from '../stackenum';
 </script>
 
-<div class=" md:mt-3 md:mb-1 select-none">
-	<a href="https://catenarymaps.org" target="_blank" rel="author">
-		<img src="/logo.svg" alt="Catenary" class="h-5 inline align-middle pl-3 mr-2 -translate-y-2" />
-	</a>
+<div class=" md:mt-3 md:mb-1 select-none flex flex-row">
+	
 
 	<!-- Back button that shows if more than one item on stack -->
 
@@ -23,6 +21,10 @@
 			aria-label="Back"
 			><span class="material-symbols-outlined block"> arrow_back </span>
 		</button>
+	{:else}
+		<div class="mx-1">
+			<span class="material-symbols-outlined block mx-1 cursor-pointer text-gray-100 dark:text-gray-800"> arrow_back </span>
+		</div>
 	{/if}
 
 	<button

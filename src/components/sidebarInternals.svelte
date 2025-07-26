@@ -111,6 +111,8 @@
 	}
 </script>
 
+<div class="md:mt-12"></div>
+
 {#if latest_item_on_stack != null}
 	{#if latest_item_on_stack.data instanceof MapSelectionScreen}
 		<HomeButton />
@@ -464,7 +466,7 @@
 {:else if false}
 	<p>Loading home page</p>
 {:else}
-	<div class=" md:mt-3 md:mb-1">
+	<!--<div class=" md:mt-3 md:mb-1">
 		<a href="https://catenarymaps.org">
 			<img
 				src="/logo.svg"
@@ -491,7 +493,7 @@
 			aria-label="Settings"
 			><span class="material-symbols-outlined block"> settings </span>
 		</button>
-	</div>
+	</div>-->
 	<div class="py-1 flex flex-col h-full">
 		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} {darkMode} /></div>
 	</div>
