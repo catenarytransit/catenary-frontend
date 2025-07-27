@@ -31,6 +31,18 @@ geolocation_store.subscribe((g) => {
 	geolocation = g;
 });
 
+export function show_back_button_recalc() {
+	if (window.innerWidth < 768) {
+		if (get(autocomplete_focus_state) == true) {
+			show_back_button = true;
+		} else {
+			show_back_button = false;
+		}
+	} else {
+		show_back_button = false;
+	}
+}
+
 //on desktop, either the input is still selected
 export const autocomplete_focus_state: Writable<boolean> = writable(false);
 

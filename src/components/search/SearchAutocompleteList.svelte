@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { get } from "svelte/store";
-    import {latest_query_data, autocomplete_focus_state} from "./search_data";
+    import {latest_query_data, autocomplete_focus_state, show_back_button_recalc } from "./search_data";
     import {
 		data_stack_store,
 		on_sidebar_trigger_store,
@@ -22,6 +22,7 @@
 		current_orm_layer_type_store
 	} from '../../globalstores';
     import StopRankingInfo from './StopRankingInfo.svelte';
+
     let latest_query_data_local = get(latest_query_data);
     
     import {StopStack, StackInterface} from '../stackenum';
@@ -58,6 +59,7 @@
                                 console.log("on click triggered");
 
                                 autocomplete_focus_state.set(false);
+                                show_back_button_recalc();
     }}
 >
 

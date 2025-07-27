@@ -39,7 +39,7 @@ import {
 	import { text_input_store } from './search_data';
 	import {get} from 'svelte/store'
 
-	import { new_query, autocomplete_focus_state } from './search_data';
+	import { new_query, autocomplete_focus_state, show_back_button_recalc } from './search_data';
 
 	let show_back_button = false;
 
@@ -77,22 +77,6 @@ function on_blur_input(event) {
 	}
 
 	show_back_button_recalc();
-}
-
-
-
-function show_back_button_recalc() {
-	if (window.innerWidth < 768) {
-		if (get(autocomplete_focus_state) == true) {
-			show_back_button = true;
-		} else {
-			show_back_button = false;
-		}
-	} else {
-		
-	show_back_button = false;
-	}
-
 }
 
 </script>
