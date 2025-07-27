@@ -104,10 +104,7 @@ function show_back_button_recalc() {
 		<button
 		class="text-seashore dark:text-seashoredark text-sm cursor-pointer mx-2 inline-block align-middle"
 		on:click={() => {
-			data_stack_store.update((x) => {
-				x.push(new StackInterface(new SettingsStack()));
-				return x;
-			});
+			autocomplete_focus_state.set(false);
 		}}
 		aria-label="Settings"
 		><span class="material-symbols-outlined inline-block align-middle"> arrow_back </span>
