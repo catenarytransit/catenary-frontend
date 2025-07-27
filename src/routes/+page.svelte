@@ -978,11 +978,11 @@
 				if (window.innerWidth < 768) {
 					if (sidebarOpen == 'full') {
 						if (translate_y_searchbar > -50) {
-							translate_y_searchbar += -1;
+							translate_y_searchbar += -3;
 						}
 				} else {
 					if (translate_y_searchbar < 0) {
-						translate_y_searchbar += 1;
+						translate_y_searchbar += 3;
 					}
 				}
 
