@@ -959,6 +959,8 @@
 
 		moveToPos({});
 
+		recompute_map_padding();
+
 		setTimeout(() => {
 			recompute_map_padding();
 		}, 300);
