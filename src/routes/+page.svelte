@@ -958,16 +958,6 @@
 		}
 
 		moveToPos({});
-
-		recompute_map_padding();
-
-		setTimeout(() => {
-			recompute_map_padding();
-		}, 300);
-
-		setTimeout(() => {
-			recompute_map_padding();
-		}, 500);
 	}
 
 	function moveToPos(values: any) {
@@ -1056,10 +1046,6 @@
 					}
 				}
 			}, 0.5);
-
-			setTimeout(() => {
-				recompute_map_padding();
-			}, 500);
 		}
 	}
 
