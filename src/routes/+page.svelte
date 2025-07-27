@@ -16,6 +16,8 @@
 	import { refreshUIMaplibre } from '../components/transitionDarkAndLight';
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
+	import SearchBar from '../components/search/SearchBar.svelte';
+	import {autocomplete_focus_state} from '../components/search/search_data'
 	import {
 		getLocationFromLocalStorage,
 		saveLocationToLocalStorage
@@ -66,6 +68,7 @@
 	import Layerselectionbox from '../components/layerselectionbox.svelte';
 	import { determineDarkModeToBool } from '../components/determineDarkModeToBool';
 	import { checkClockSync } from '../components/checkClockSync';
+	import SearchAutocompleteList from '../components/search/SearchAutocompleteList.svelte';
 
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
@@ -81,8 +84,6 @@
 	let centerinit: LngLatLike = [-117.6969, 33.6969];
 
 	let zoominit = 9;
-
-
 
 	/*
 	const decode = (textToDecode: string) => {
@@ -122,6 +123,12 @@
 	let collapser_left_offset_number: number = 380;
 	let collapser_left_offset: string = '380px';
 	let top_margin_collapser_sidebar: string = '0px';
+
+	let autocomplete_focus_state_local = get(autocomplete_focus_state);
+
+	autocomplete_focus_state.subscribe((new_data) => {
+		autocomplete_focus_state_local = new_data;
+	});
 
 	let geolocation: GeolocationPosition | null;
 
@@ -1749,7 +1756,7 @@
 			<div
 				id="catenary-sidebar"
 				style="height: {sidebar_height_output}; transform: translateX({translate_x_sidebar});"
-				class="z-40 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 dark:bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-70 backdrop-blur-xs md:backdrop-blur-sm md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
+				class="z-20 rounded-t-2xl md:rounded-none fixed bottom-0 w-full sm:w-2/5 md:h-full md:w-[380px] bg-white dark:bg-slate-900 bg-opacity-70 dark:bg-opacity-70 md:bg-opacity-80 md:dark:bg-opacity-70 backdrop-blur-xs md:backdrop-blur-sm md:fixed md:left-0 md:top-0 md:bottom-0 text-black dark:text-white flex flex-col select-text"
 			>
 				<div
 					class="flex md:hidden py-2 flex-row"
@@ -1760,12 +1767,43 @@
 				>
 					<div class="mx-auto rounded-lg px-8 py-1 bg-sky-500 dark:bg-sky-400"></div>
 				</div>
+
 				<SidebarInternals {usunits} {latest_item_on_stack} {darkMode} />
 			</div>
 		{/if}
+		
 	</div>
+
+	<div class="fixed top-2 left-3 right-3 sm:right-auto z-40" id="search_bar_outer">
+		<SearchBar/>
+	</div>
+
+
+	{#if autocomplete_focus_state_local == true}
+		<div
+		id="desktop_autocomplete_box"
+		 class="hidden md:fixed md:block z-40 top-12 left-3 w-[350px] bg-gray-100 dark:bg-gray-900 rounded-sm border border-gray-500">
+			<SearchAutocompleteList
+				length={10}
+			/>
+		</div>
+	{/if}
+
+
+	{#if autocomplete_focus_state_local == true}
+		<div class="fixed top-0 bottom-0 left-0 right-0 sm:right-1/2 h-full md:hidden z-30  bg-gray-100 dark:bg-gray-900 px-3 ">
+			<div class="relative top-12 w-full">
+			<SearchAutocompleteList
+				length={10}
+			/>
+
+			<p class='text-xs dark:text-gray-200'>Catenary Search Beta</p>
+		</div>
+			</div>
+	{/if}
+
 	{#if !$isLoading}
-		<div class="fixed top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
+		<div class="fixed top-12 sm:top-4 right-4 flex flex-col gap-y-2 pointer-events-none">
 			<div
 				aria-label="Layers"
 				on:click={togglelayerfeature}
