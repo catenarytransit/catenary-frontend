@@ -107,6 +107,14 @@
 
 					//console.log(dates_to_events_filtered);
 
+					global_map_pointer.flyTo({
+						center: [
+										data_from_server.primary.stop_lon,
+										data_from_server.primary.stop_lat
+									],
+									zoom: 14
+					})
+
 					global_map_pointer.getSource('redpin').setData({
 						type: 'FeatureCollection',
 						features: [
