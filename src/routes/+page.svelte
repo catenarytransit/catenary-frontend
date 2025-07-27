@@ -120,6 +120,7 @@
 	let maplat: number, maplng: number, mapzoom: number;
 	let translate_x_sidebar: string = '0px';
 	let translate_x_sidebar_number: number = 0;
+	let translate_y_searchbar: number = 0;
 	let collapser_left_offset_number: number = 380;
 	let collapser_left_offset: string = '380px';
 	let top_margin_collapser_sidebar: string = '0px';
@@ -975,6 +976,16 @@
 
 			last_sidebar_interval_id = setInterval(() => {
 				if (window.innerWidth < 768) {
+					if (sidebarOpen == 'full') {
+						if (translate_y_searchbar > -50) {
+							translate_y_searchbar += -3;
+						}
+				} else {
+					if (translate_y_searchbar < 0) {
+						translate_y_searchbar += 3;
+					}
+				}
+
 					translate_x_sidebar_number = 0;
 					translate_x_sidebar = '0px';
 					let target = 0.55 * window.innerHeight;
@@ -1007,6 +1018,8 @@
 						}
 					}
 				} else {
+					translate_y_searchbar = 0;
+
 					if (sidebarOpen == 'full') {
 						if (translate_x_sidebar_number < -0.001) {
 							translate_x_sidebar_number += 0.1 * Math.abs(translate_x_sidebar_number);
@@ -1774,7 +1787,7 @@
 		
 	</div>
 
-	<div class="fixed top-2 left-3 right-3 sm:right-auto z-40" id="search_bar_outer">
+	<div class="fixed top-2 left-3 right-3 sm:right-auto z-40" id="search_bar_outer" style="transform: translateY({translate_y_searchbar}px);">
 		<SearchBar/>
 	</div>
 

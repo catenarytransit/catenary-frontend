@@ -98,16 +98,13 @@ function show_back_button_recalc() {
 </script>
 
 {#if !$isLoading}
-<div class="rounded-full py-1 px-2 bg-white-500 border border-gray-500 dark:bg-gray-900 dark:text-white w-full sm:w-2/5 md:w-[350px]">
+<div class="rounded-full py-1 px-2 bg-white-500 border border-gray-500 bg-white dark:bg-gray-900 dark:text-white w-full sm:w-2/5 md:w-[350px]">
     <div class="flex flex-row gap-x-1 align-middle items-center">
         {#if show_back_button == true}
 		<button
 		class="text-seashore dark:text-seashoredark text-sm cursor-pointer mx-2 inline-block align-middle"
 		on:click={() => {
-			data_stack_store.update((x) => {
-				x.push(new StackInterface(new SettingsStack()));
-				return x;
-			});
+			autocomplete_focus_state.set(false);
 		}}
 		aria-label="Settings"
 		><span class="material-symbols-outlined inline-block align-middle"> arrow_back </span>
