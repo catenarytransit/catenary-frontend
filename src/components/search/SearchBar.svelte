@@ -120,6 +120,16 @@ function on_blur_input(event) {
 			aria-label="Settings"
 			><span class="material-symbols-outlined inline-block align-middle"> settings </span>
 		</button>
+		{:else}
+		<button
+			class="text-seashore dark:text-seashoredark text-sm cursor-pointer mx-2 inline-block align-middle"
+			on:click={() => {
+				text_input = "";
+				text_input_store.set("");
+			}}
+			aria-label="Settings"
+			><span class="material-symbols-outlined inline-block align-middle"> cancel </span>
+		</button>
 		{/if}
     </div>
 </div>
