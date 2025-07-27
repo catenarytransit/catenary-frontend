@@ -39,9 +39,13 @@ import {
 	import { text_input_store } from './search_data';
 	import {get} from 'svelte/store'
 
-	import { new_query, autocomplete_focus_state, show_back_button_recalc } from './search_data';
+	import { new_query, autocomplete_focus_state, show_back_button_recalc, show_back_button_store } from './search_data';
 
 	let show_back_button = false;
+
+	show_back_button_store.subscribe((new_state) => {
+		show_back_button = true;
+	});
 
 	
 let text_input = get(text_input_store);

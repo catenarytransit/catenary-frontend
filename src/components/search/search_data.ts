@@ -25,6 +25,8 @@ export const latest_query_data: Writable<SearchQueryResponse | null> = writable(
 
 let geolocation: GeolocationPosition | null;
 
+export const show_back_button_store: Writable<boolean> = writable(false);
+
 export const text_input_store: Writable<string> = writable("");
 
 geolocation_store.subscribe((g) => {
@@ -34,12 +36,12 @@ geolocation_store.subscribe((g) => {
 export function show_back_button_recalc() {
 	if (window.innerWidth < 768) {
 		if (get(autocomplete_focus_state) == true) {
-			show_back_button = true;
+			show_back_button_store.set(true);
 		} else {
-			show_back_button = false;
+			show_back_button_store.set(false);
 		}
 	} else {
-		show_back_button = false;
+		show_back_button_store.set(false);
 	}
 }
 
