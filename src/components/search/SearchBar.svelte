@@ -62,7 +62,19 @@ function focus_on_input(event) {
 }
 
 function on_blur_input(event) {
-	
+	console.log("search bar blurred", event);
+
+	if (window.innerWidth >= 768) {
+		const destinationElement = event.relatedTarget;
+
+		const desktop_autocomplete_box = document.getElementById("desktop_autocomplete_box");
+
+		if (desktop_autocomplete_box) {
+			if (!(desktop_autocomplete_box.contains(destinationElement))) {
+				autocomplete_focus_state.set(false);
+			}
+		}
+	}
 
 	show_back_button_recalc();
 }
@@ -86,7 +98,7 @@ function show_back_button_recalc() {
 </script>
 
 {#if !$isLoading}
-<div class="rounded-full py-1 px-2 bg-white-500 border border-gray-500 dark:bg-gray-900 dark:text-white w-full md:w-[350px]">
+<div class="rounded-full py-1 px-2 bg-white-500 border border-gray-500 dark:bg-gray-900 dark:text-white w-full sm:w-2/5 md:w-[350px]">
     <div class="flex flex-row gap-x-1 align-middle items-center">
         {#if show_back_button == true}
 		<button

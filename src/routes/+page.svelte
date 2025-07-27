@@ -1780,7 +1780,9 @@
 
 
 	{#if autocomplete_focus_state_local == true}
-		<div class="hidden md:fixed md:block z-40 top-12 left-3 w-[350px] bg-gray-100 dark:bg-gray-900 rounded-sm border border-gray-500">
+		<div
+		id="desktop_autocomplete_box"
+		 class="hidden md:fixed md:block z-40 top-12 left-3 w-[350px] bg-gray-100 dark:bg-gray-900 rounded-sm border border-gray-500">
 			<SearchAutocompleteList
 				length={10}
 			/>
@@ -1789,8 +1791,8 @@
 
 
 	{#if autocomplete_focus_state_local == true}
-		<div class="fixed top-0 bottom-0 left-0 right-0 sm:right-1/2 w-full h-full md:hidden z-30  bg-gray-100 dark:bg-gray-900 px-3 ">
-			<div class="relative top-12">
+		<div class="fixed top-0 bottom-0 left-0 right-0 sm:right-1/2 h-full md:hidden z-30  bg-gray-100 dark:bg-gray-900 px-3 ">
+			<div class="relative top-12 w-full">
 			<SearchAutocompleteList
 				length={10}
 			/>
