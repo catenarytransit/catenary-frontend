@@ -1056,6 +1056,10 @@
 					}
 				}
 			}, 0.5);
+
+			setTimeout(() => {
+				recompute_map_padding();
+			}, 500);
 		}
 	}
 
