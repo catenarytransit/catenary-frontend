@@ -1787,7 +1787,7 @@
 		
 	</div>
 
-	<div class="fixed top-2 left-3 right-3 sm:right-auto z-40" id="search_bar_outer" style="translate: translateY({translate_y_searchbar}px);">
+	<div class="fixed top-2 left-3 right-3 sm:right-auto z-40" id="search_bar_outer" style="transform: translateY({translate_y_searchbar}px);">
 		<SearchBar/>
 	</div>
 
