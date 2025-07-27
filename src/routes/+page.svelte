@@ -833,8 +833,16 @@
 		if (sidebar) {
 			if (mapglobal) {
 				if (innerWidth < 640) {
-					let padding = { bottom: sidebar.offsetHeight, left: 0 };
+					let bottom_padding = sidebar.offsetHeight;
+
+					if (sidebarOpen == 'none') {
+						bottom_padding = 0;
+					}
+
+					let padding = { bottom: bottom_padding, left: 0 };
 					if (mapglobal) {
+
+
 						mapglobal.easeTo({ padding: padding, duration: 200 });
 					}
 				} else {
