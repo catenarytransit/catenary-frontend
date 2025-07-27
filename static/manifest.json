@@ -6,7 +6,7 @@
 	"display": "standalone",
 	"scope": "https://maps.catenarymaps.org",
 	"categories": ["utilities", "travel", "navigation"],
-	"orientation": "natural",
+	"orientation": "any",
 	"icons": [
 		{
 			"src": "/appimages/default.png",
