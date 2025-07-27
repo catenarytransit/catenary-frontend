@@ -73,10 +73,13 @@ function on_blur_input(event) {
 	if (window.innerWidth >= 768) {
 		const destinationElement = event.relatedTarget;
 
+		console.log('destination element', destinationElement);
+
 		const desktop_autocomplete_box = document.getElementById("desktop_autocomplete_box");
 
 		if (desktop_autocomplete_box) {
 			if (!(desktop_autocomplete_box.contains(destinationElement))) {
+				console.log('clicked outside automcomplete');
 				autocomplete_focus_state.set(false);
 			}
 		}
@@ -106,7 +109,7 @@ function on_blur_input(event) {
 		{/if}
         <input type="text" 
 		on:input={handle_text_change}
-		on:focus={focus_on_input}
+		on:focusout={focus_on_input}
 		on:blur={on_blur_input}
 		bind:value={text_input} class="w-full focus:outline-none" placeholder={$_("search_here")}/>
         
