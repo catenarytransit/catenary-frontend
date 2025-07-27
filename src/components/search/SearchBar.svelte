@@ -44,7 +44,7 @@ import {
 	let show_back_button = false;
 
 	show_back_button_store.subscribe((new_state) => {
-		show_back_button = true;
+		show_back_button = new_state;
 	});
 
 	
@@ -57,6 +57,8 @@ function handle_text_change(event) {
 	new_query(text_input);
 
 	autocomplete_focus_state.set(true);
+
+	show_back_button_recalc();
 }
 
 function focus_on_input(event) {
