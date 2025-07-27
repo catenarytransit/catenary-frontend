@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 
 import { show_my_location_store, geolocation_store, map_pointer_store } from '../../globalstores';
@@ -25,18 +25,34 @@ export const latest_query_data: Writable<SearchQueryResponse | null> = writable(
 
 let geolocation: GeolocationPosition | null;
 
+export const text_input_store: Writable<string> = writable("");
+
 geolocation_store.subscribe((g) => {
 	geolocation = g;
 });
 
+//on desktop, either the input is still selected
+export const autocomplete_focus_state: Writable<boolean> = writable(false);
+
 export function new_query(text: string) {
-    fetch(`https://birch.catenarymaps.org/text_search_v1?text=${text}&user_lat=${geolocation?.coords?.latitude}&user_lon=${geolocation.coords.longitude}`)
+
+    let map = get(map_pointer_store);
+
+    const centerCoordinates = map.getCenter();
+    const zoom = Math.round(map.getZoom());
+
+    fetch(`https://birch.catenarymaps.org/text_search_v1?text=${text}&user_lat=${geolocation?.coords?.latitude}&user_lon=${geolocation.coords.longitude}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`)
         .then(response => response.json())
         .then((data) => {
             data_store_text_queries.update((existing_map) => {
                 existing_map[text] = data;
                 return existing_map;
             });
-            latest_query_data.set(data);
+
+            if (get(text_input_store) == text) {  
+                latest_query_data.set(data);
+            }
+
+            //console.log("latest query data", get(latest_query_data));
         });
 }

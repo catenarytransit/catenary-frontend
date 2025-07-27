@@ -425,10 +425,12 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof StopStack}
+		{#key latest_item_on_stack.data.stop_id}
 		<StopScreen
 			chateau={latest_item_on_stack.data.chateau_id}
 			stop_id={latest_item_on_stack.data.stop_id}
 		/>
+		{/key}
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
@@ -460,8 +462,10 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
+	{#key latest_item_on_stack.data}
 		<HomeButton />
 		<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
+	{/key}
 	{/if}
 {:else if false}
 	<p>Loading home page</p>

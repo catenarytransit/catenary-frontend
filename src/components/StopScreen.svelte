@@ -55,6 +55,8 @@
 	let interval_fetch: NodeJS.Timeout | null = null;
 	let data_from_server = null;
 
+	let last_stop_id_fetched = "";
+
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
 
@@ -194,6 +196,10 @@
 	});
 
 	$: if (chateau || stop_id) fetch_stop_data();
+
+	$: if (stop_id) {
+		fetch_stop_data();
+	}
 </script>
 
 <div class="h-full">

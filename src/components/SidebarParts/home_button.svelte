@@ -4,12 +4,10 @@
 	import { SettingsStack, StackInterface } from '../stackenum';
 </script>
 
-<div class=" md:mt-3 md:mb-1 select-none flex flex-row">
-	
-
+<div class=" md:mt-0 md:mb-1 select-none flex flex-row">
 	<!-- Back button that shows if more than one item on stack -->
 
-	{#if $data_stack_store.length > 1}
+	{#if $data_stack_store.length > 0}
 		<button
 			class="text-seashore dark:text-seashoredark cursor-pointer mx-1"
 			on:click={() => {
@@ -53,16 +51,5 @@
 		}}
 		aria-label="Home"
 		><span class="material-symbols-outlined block"> home </span>
-	</button>
-	<button
-		class="text-seashore dark:text-seashoredark cursor-pointer mx-2"
-		on:click={() => {
-			data_stack_store.update((x) => {
-				x.push(new StackInterface(new SettingsStack()));
-				return x;
-			});
-		}}
-		aria-label="Settings"
-		><span class="material-symbols-outlined block"> settings </span>
 	</button>
 </div>
