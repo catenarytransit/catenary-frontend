@@ -839,6 +839,10 @@
 						bottom_padding = 0;
 					}
 
+					if (sidebarOpen == 'middle') {
+						bottom_padding = window.innerHeight / 2;
+					}
+
 					let padding = { bottom: bottom_padding, left: 0 };
 					if (mapglobal) {
 
