@@ -98,7 +98,7 @@ function show_back_button_recalc() {
 </script>
 
 {#if !$isLoading}
-<div class="rounded-full py-1 px-2 bg-white-500 border border-gray-500 dark:bg-gray-900 dark:text-white w-full sm:w-2/5 md:w-[350px]">
+<div class="rounded-full py-1 px-2 bg-white-500 border border-gray-500 bg-white dark:bg-gray-900 dark:text-white w-full sm:w-2/5 md:w-[350px]">
     <div class="flex flex-row gap-x-1 align-middle items-center">
         {#if show_back_button == true}
 		<button
