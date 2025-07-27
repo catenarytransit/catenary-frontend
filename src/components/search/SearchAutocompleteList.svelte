@@ -64,6 +64,7 @@
     <StopRankingInfo
         stop={latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id]}
         stops_section={latest_query_data_local.stops_section}
+        stop_ranked={stop_ranked}
     />
 </div>    
 

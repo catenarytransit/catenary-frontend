@@ -1797,7 +1797,7 @@
 				length={10}
 			/>
 
-			<p class='text-xs dark:text-gray-200'>Catenary Search Beta</p>
+			<p class='text-xs dark:text-gray-200'>Catenary Search Beta.</p>
 		</div>
 			</div>
 	{/if}
