@@ -93,6 +93,8 @@ function on_blur_input(event) {
 		class="text-seashore dark:text-seashoredark text-sm cursor-pointer mx-2 inline-block align-middle"
 		on:click={() => {
 			autocomplete_focus_state.set(false);
+			show_back_button = false;
+			show_back_button_recalc();
 		}}
 		aria-label="Settings"
 		><span class="material-symbols-outlined inline-block align-middle"> arrow_back </span>
