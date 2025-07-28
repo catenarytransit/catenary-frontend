@@ -1221,21 +1221,7 @@
 
 	start_location_watch();
 
-	try {
-		onMount(() => {
-			if ('serviceWorker' in navigator) {
-				navigator.serviceWorker
-					.register('/sw.js', { scope: '/' })
-					.then((registration) => {
-						// registration worked
-						console.log('Registration succeeded.');
-					})
-					.catch((error) => {
-						// registration failed
-						console.error(`Registration failed with ${error}`);
-					});
-			}
-
+	async function new_map() {
 			//#region On the fly IP geolocation
 
 			let cachegeostored = localStorage.getItem('cacheipgeolocation');
@@ -1463,7 +1449,7 @@
 					console.log('WebGL context restored.');
 					// A timeout may be necessary to ensure the canvas is fully ready.
 					setTimeout(() => {
-						map.resize();
+						new_map();
 					}, 0);
 				});
 
@@ -1692,7 +1678,24 @@
 				recompute_map_padding,
 				setSidebarOpen
 			);
+	}
 
+	try {
+		onMount(() => {
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker
+					.register('/sw.js', { scope: '/' })
+					.then((registration) => {
+						// registration worked
+						console.log('Registration succeeded.');
+					})
+					.catch((error) => {
+						// registration failed
+						console.error(`Registration failed with ${error}`);
+					});
+			}
+
+			new_map();
 		});
 	} catch (e) {
 		console.error(e);
