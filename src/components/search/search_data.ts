@@ -58,7 +58,25 @@ export function new_query(text: string) {
     const centerCoordinates = map.getCenter();
     const zoom = Math.round(map.getZoom());
 
-    fetch(`https://birch.catenarymaps.org/text_search_v1?text=${text}&user_lat=${geolocation?.coords?.latitude}&user_lon=${geolocation.coords.longitude}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`)
+    let geolocation_active = false;
+
+    if (geolocation) {
+        if (geolocation.coords) {
+            if (typeof geolocation.coords.latitude == "number") {
+                geolocation_active = true;
+            }
+        }
+    }
+
+    let url = "";
+
+    if (geolocation_active) {
+        url = `https://birch.catenarymaps.org/text_search_v1?text=${text}&user_lat=${geolocation?.coords?.latitude}&user_lon=${geolocation.coords.longitude}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
+    } else {
+        url = `https://birch.catenarymaps.org/text_search_v1?text=${text}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
+    }
+
+    fetch(url)
         .then(response => response.json())
         .then((data) => {
             data_store_text_queries.update((existing_map) => {
