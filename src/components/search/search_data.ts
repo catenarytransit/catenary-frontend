@@ -29,6 +29,8 @@ export const show_back_button_store: Writable<boolean> = writable(false);
 
 export const text_input_store: Writable<string> = writable("");
 
+export const text_input_matches_current_result: Writable<boolean> = writable(true);
+
 geolocation_store.subscribe((g) => {
 	geolocation = g;
 });
@@ -49,8 +51,9 @@ export function show_back_button_recalc() {
 export const autocomplete_focus_state: Writable<boolean> = writable(false);
 
 export function new_query(text: string) {
-
     let map = get(map_pointer_store);
+
+    text_input_matches_current_result.set(false);
 
     const centerCoordinates = map.getCenter();
     const zoom = Math.round(map.getZoom());
@@ -65,6 +68,11 @@ export function new_query(text: string) {
 
             if (get(text_input_store) == text) {  
                 latest_query_data.set(data);
+                text_input_matches_current_result.set(true);
+            } else {
+                if (get(text_input_matches_current_result) == false) {
+                    latest_query_data.set(data);
+                }
             }
 
             //console.log("latest query data", get(latest_query_data));

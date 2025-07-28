@@ -17,7 +17,7 @@
 	import { layerspercategory } from '../components/layernames';
 	import { start_location_watch } from '../user_location_lib';
 	import SearchBar from '../components/search/SearchBar.svelte';
-	import {autocomplete_focus_state} from '../components/search/search_data'
+	import { autocomplete_focus_state } from '../components/search/search_data';
 	import {
 		getLocationFromLocalStorage,
 		saveLocationToLocalStorage
@@ -58,7 +58,7 @@
 		StopStack,
 		RouteMapSelector
 	} from '../components/stackenum';
-	import {switch_orm_layers} from '../components/openrailwaymap';
+	import { switch_orm_layers } from '../components/openrailwaymap';
 	import { setup_click_handler } from '../components/mapClickHandler';
 	import { setup_load_map } from '../components/setup_load_map';
 	import { interpretLabelsToCode } from '../components/rtLabelsToMapboxStyle';
@@ -148,7 +148,7 @@
 	let firstmove = false;
 	let secondrequestlockgps = false;
 
-	let current_orm_layer_type : string|null = null;
+	let current_orm_layer_type: string | null = null;
 
 	if (typeof window !== 'undefined') {
 		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
@@ -303,13 +303,12 @@
 	let mapglobal: maplibregl.Map | null = null;
 
 	current_orm_layer_type_store.subscribe((value) => {
-	current_orm_layer_type = value;
+		current_orm_layer_type = value;
 
-	if (mapglobal) {
-		switch_orm_layers(mapglobal, value, darkMode);
-	}
+		if (mapglobal) {
+			switch_orm_layers(mapglobal, value, darkMode);
+		}
 	});
-
 
 	const urlParams =
 		typeof window !== 'undefined'
@@ -845,8 +844,6 @@
 
 					let padding = { bottom: bottom_padding, left: 0 };
 					if (mapglobal) {
-
-
 						mapglobal.easeTo({ padding: padding, duration: 200 });
 					}
 				} else {
@@ -992,11 +989,11 @@
 						if (translate_y_searchbar > -50) {
 							translate_y_searchbar += -3;
 						}
-				} else {
-					if (translate_y_searchbar < 0) {
-						translate_y_searchbar += 3;
+					} else {
+						if (translate_y_searchbar < 0) {
+							translate_y_searchbar += 3;
+						}
 					}
-				}
 
 					translate_x_sidebar_number = 0;
 					translate_x_sidebar = '0px';
@@ -1222,462 +1219,459 @@
 	start_location_watch();
 
 	async function new_map() {
-			//#region On the fly IP geolocation
+		//#region On the fly IP geolocation
 
-			let cachegeostored = localStorage.getItem('cacheipgeolocation');
+		let cachegeostored = localStorage.getItem('cacheipgeolocation');
 
-			let prev_known_location = getLocationFromLocalStorage();
+		let prev_known_location = getLocationFromLocalStorage();
 
-			if (prev_known_location) {
+		if (prev_known_location) {
+			if (mapglobal) {
+				//mapglobal.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
+			}
+			centerinit = [prev_known_location.longitude, prev_known_location.latitude];
+		} else {
+			if (cachegeostored) {
+				const [long, lat] = cachegeostored.split(',');
+				centerinit = [parseFloat(long), parseFloat(lat)];
 				if (mapglobal) {
-					//mapglobal.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
+					mapglobal.setCenter(centerinit);
+					mapglobal.setZoom(13);
 				}
-				centerinit = [prev_known_location.longitude, prev_known_location.latitude];
 			} else {
-				if (cachegeostored) {
-					const [long, lat] = cachegeostored.split(',');
-					centerinit = [parseFloat(long), parseFloat(lat)];
-					if (mapglobal) {
-						mapglobal.setCenter(centerinit);
-						mapglobal.setZoom(13);
-					}
-				} else {
-					try {
-						/**
-						 * Use GeoLite2 database on Catenary servers
-						 *
-						 * adding a pin with this provided lat/long would prob freak a few people out
-						 * and even mapping sites (google, bing, etc) don't do it either on default
-						 * -q
-						 */
-						fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
-							.then((response) => response.json())
-							// the text will be `lat,long`
-							.then((geo_api_response) => {
-								if (geo_api_response) {
-									console.log('ip addr', geo_api_response);
-									if (typeof geo_api_response.geo_resp == 'object') {
-										centerinit = [
-											geo_api_response.geo_resp.longitude,
-											geo_api_response.geo_resp.latitude
-										];
-
-										// set the center of the map to the user's location
-										// in case the map is already initialized (rare), set the center to the user's location
-										if (mapglobal) {
-											mapglobal.setCenter(centerinit);
-										}
-
-										// store the user's location in localStorage, as we do with regular browser provided geolocation
-										localStorage.setItem(
-											'cacheipgeolocation',
-											`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-										);
-									}
-								}
-							});
-					} catch (e) {
-						console.error('Failed to get IP location, defaulting to LA');
-					}
-				}
-			}
-
-			// #endregion
-
-			// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
-			// https://birch.catenarymaps.org/getchateaus
-			fetch(
-				'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus_simp.json'
-			)
-				.then(function (response) {
-					return response.json();
-				})
-				.then(function (json) {
-					chateaus = json;
-
-					json.features.forEach((feature: any) => {
-						const this_realtime_feeds_list: string[] = feature.properties.realtime_feeds;
-						const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
-
-						this_realtime_feeds_list.forEach((realtime) => {
-							feed_id_to_chateau_lookup[realtime] = feature.properties.chateau;
-						});
-
-						chateau_to_realtime_feed_lookup[feature.properties.chateau] = this_realtime_feeds_list;
-
-						this_schedule_feeds_list.forEach(
-							(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
-						);
-					});
-
-					let chateaus_source = mapglobal.getSource('chateaus');
-
-					if (chateaus_source) {
-						chateaus_source.setData(json);
-					} else {
-						console.log("source doesn't exist");
-					}
-
-					chateaus_store.set(json);
-				})
-				.catch((err) => console.error(err));
-
-			maplibregl.setWorkerCount(4);
-
-			const map = new maplibregl.Map({
-				canvasContextAttributes: {
-					antialias: true,
-					powerPreference: 'high-performance',
-					desynchronized: true,
-				},
-				container: 'map',
-				light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
-				hash: 'pos',
-				pixelRatio: window.devicePixelRatio * get_shortest_screen_dimension() > 800 ? 2 : 1.5,
-				preserveDrawingBuffer: false,
-				maxPitch: window.innerHeight / window.innerWidth > 1.5 ? 60 : 85,
-				validateStyle: false,
-				fadeDuration: 100,
-				style: style, // stylesheet location
-				center: centerinit, // starting position [lng, lat]
-				zoom: zoominit // starting zoom (must be greater than 8.1)
-			});
-
-			mapglobal = map;
-
-			function remove_listener() {
-				media.removeEventListener('change', updatePixelRatio);
-			}
-
-			const updatePixelRatio = () => {
-				map.setPixelRatio(window.devicePixelRatio * 1.4);
-			};
-			const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-			const media = matchMedia(mqString);
-			media.addEventListener('change', updatePixelRatio);
-
-			//map tile bounds
-
-			if (urlParams.get('tilebounds')) {
-				map.showTileBoundaries = true;
-				//  map.showParseStatus = true;
-			}
-
-			map_pointer_store.set(map);
-
-			if (markedPointCoords) {
-				new maplibregl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
-			}
-
-			if (darkMode) {
-			}
-
-			const demSource = new mlcontour.DemSource({
-				//url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
-				url: 'https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp',
-				//url: "https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=B265xPhJaYe2kWHOLHTG",
-				encoding: 'mapbox',
-				cacheSize: 2048,
-				maxzoom: 14,
-				// offload contour line computation to a web worker
-				worker: true
-			});
-
-			map.on('load', () => {
-				checkClockSync();
-
-				const orm_sources = {
-					    "openrailwaymap_low": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/railway_line_high",
-      "promoteId": "id"
-    },
-    "standard_railway_text_stations_low": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_low",
-      "promoteId": "id"
-    },
-    "standard_railway_text_stations_med": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_med",
-      "promoteId": "id"
-    },
-    "high": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/high",
-      "promoteId": "id"
-    },
-    "openrailwaymap_standard": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/standard",
-      "promoteId": "id"
-    },
-    "openrailwaymap_speed": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/speed",
-      "promoteId": "id"
-    },
-    "openrailwaymap_signals": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/signals",
-      "promoteId": "id"
-    },
-    "openrailwaymap_electrification": {
-      "type": "vector",
-      "url": "https://birch.catenarymaps.org/openrailwaymap_proxy/electrification",
-      "promoteId": "id"
-    }
-				};
-
 				try {
-						for (const [key, value] of Object.entries(orm_sources)) {
-							console.log(`${key}`, value);
-
-							map.addSource(key, value);
-						}
-
-				} catch (e) {
-					console.error(e);
-				}
-
-				// Assuming 'map' is your MapLibre GL JS map instance
-				map.on('webglcontextlost', (event) => {
-					console.log('WebGL context lost.');
-				});
-
-				map.on('webglcontextrestored', (event) => {
-					console.log('WebGL context restored.');
-					// A timeout may be necessary to ensure the canvas is fully ready.
-					setTimeout(() => {
-						new_map();
-					}, 0);
-				});
-
-				switch_orm_layers(map, get(current_orm_layer_type_store), true);
-
-				console.log('map coords', map.getCenter());
-
-				let prev_known_location = getLocationFromLocalStorage();
-
-				if (prev_known_location) {
-					//map.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
-					//map.setZoom(15);
-				} else {
+					/**
+					 * Use GeoLite2 database on Catenary servers
+					 *
+					 * adding a pin with this provided lat/long would prob freak a few people out
+					 * and even mapping sites (google, bing, etc) don't do it either on default
+					 * -q
+					 */
 					fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
 						.then((response) => response.json())
 						// the text will be `lat,long`
 						.then((geo_api_response) => {
-							console.log('ip addr', geo_api_response);
-							if (geo_api_response.geo_resp) {
-								localStorage.setItem(
-									'cacheipgeolocation',
-									`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
-								);
+							if (geo_api_response) {
+								console.log('ip addr', geo_api_response);
+								if (typeof geo_api_response.geo_resp == 'object') {
+									centerinit = [
+										geo_api_response.geo_resp.longitude,
+										geo_api_response.geo_resp.latitude
+									];
+
+									// set the center of the map to the user's location
+									// in case the map is already initialized (rare), set the center to the user's location
+									if (mapglobal) {
+										mapglobal.setCenter(centerinit);
+									}
+
+									// store the user's location in localStorage, as we do with regular browser provided geolocation
+									localStorage.setItem(
+										'cacheipgeolocation',
+										`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+									);
+								}
 							}
 						});
+				} catch (e) {
+					console.error('Failed to get IP location, defaulting to LA');
 				}
+			}
+		}
 
-				let coords = map.getCenter();
+		// #endregion
 
-				if (coords.lng == -117.6969 && coords.lat == 33.6969) {
-					console.log('change to ', centerinit);
+		// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
+		// https://birch.catenarymaps.org/getchateaus
+		fetch(
+			'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus_simp.json'
+		)
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (json) {
+				chateaus = json;
 
-					map.setCenter(centerinit);
-				}
+				json.features.forEach((feature: any) => {
+					const this_realtime_feeds_list: string[] = feature.properties.realtime_feeds;
+					const this_schedule_feeds_list: string[] = feature.properties.schedule_feeds;
 
-				map.setProjection({ type: 'globe' });
-				skyRefresh(map, darkMode);
+					this_realtime_feeds_list.forEach((realtime) => {
+						feed_id_to_chateau_lookup[realtime] = feature.properties.chateau;
+					});
 
-				demSource.setupMaplibre(maplibregl);
+					chateau_to_realtime_feed_lookup[feature.properties.chateau] = this_realtime_feeds_list;
 
-				map.addSource('dem', {
-					type: 'raster-dem',
-					tiles: [demSource.sharedDemProtocolUrl],
-					tileSize: 256
+					this_schedule_feeds_list.forEach(
+						(sched) => (feed_id_to_chateau_lookup[sched] = feature.properties.chateau)
+					);
 				});
 
-				map.addSource('contour-source', {
+				let chateaus_source = mapglobal.getSource('chateaus');
+
+				if (chateaus_source) {
+					chateaus_source.setData(json);
+				} else {
+					console.log("source doesn't exist");
+				}
+
+				chateaus_store.set(json);
+			})
+			.catch((err) => console.error(err));
+
+		maplibregl.setWorkerCount(4);
+
+		const map = new maplibregl.Map({
+			canvasContextAttributes: {
+				antialias: true,
+				powerPreference: 'high-performance',
+				desynchronized: true
+			},
+			container: 'map',
+			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
+			hash: 'pos',
+			pixelRatio: window.devicePixelRatio * get_shortest_screen_dimension() > 800 ? 2 : 1.5,
+			preserveDrawingBuffer: false,
+			maxPitch: window.innerHeight / window.innerWidth > 1.5 ? 60 : 85,
+			validateStyle: false,
+			fadeDuration: 100,
+			style: style, // stylesheet location
+			center: centerinit, // starting position [lng, lat]
+			zoom: zoominit // starting zoom (must be greater than 8.1)
+		});
+
+		mapglobal = map;
+
+		function remove_listener() {
+			media.removeEventListener('change', updatePixelRatio);
+		}
+
+		const updatePixelRatio = () => {
+			map.setPixelRatio(window.devicePixelRatio * 1.4);
+		};
+		const mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+		const media = matchMedia(mqString);
+		media.addEventListener('change', updatePixelRatio);
+
+		//map tile bounds
+
+		if (urlParams.get('tilebounds')) {
+			map.showTileBoundaries = true;
+			//  map.showParseStatus = true;
+		}
+
+		map_pointer_store.set(map);
+
+		if (markedPointCoords) {
+			new maplibregl.Marker().setLngLat([markedPointCoords[2], markedPointCoords[1]]).addTo(map);
+		}
+
+		if (darkMode) {
+		}
+
+		const demSource = new mlcontour.DemSource({
+			//url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
+			url: 'https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp',
+			//url: "https://api.maptiler.com/tiles/terrain-rgb-v2/{z}/{x}/{y}.webp?key=B265xPhJaYe2kWHOLHTG",
+			encoding: 'mapbox',
+			cacheSize: 2048,
+			maxzoom: 14,
+			// offload contour line computation to a web worker
+			worker: true
+		});
+
+		map.on('load', () => {
+			checkClockSync();
+
+			const orm_sources = {
+				openrailwaymap_low: {
 					type: 'vector',
-					tiles: [
-						demSource.contourProtocolUrl({
-							// convert meters to feet, default=1 for meters
-							thresholds: {
-								// zoom: [minor, major]
-								11: [100, 500],
-								12: [50, 250],
-								14: [20, 100],
-								15: [10, 50]
-							},
-							// optional, override vector tile parameters:
-							contourLayer: 'contours',
-							elevationKey: 'ele',
-							levelKey: 'level',
-							extent: 4096,
-							buffer: 1
-						})
-					],
-					maxzoom: 15
-				});
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/railway_line_high',
+					promoteId: 'id'
+				},
+				standard_railway_text_stations_low: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_low',
+					promoteId: 'id'
+				},
+				standard_railway_text_stations_med: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_med',
+					promoteId: 'id'
+				},
+				high: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/high',
+					promoteId: 'id'
+				},
+				openrailwaymap_standard: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard',
+					promoteId: 'id'
+				},
+				openrailwaymap_speed: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/speed',
+					promoteId: 'id'
+				},
+				openrailwaymap_signals: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/signals',
+					promoteId: 'id'
+				},
+				openrailwaymap_electrification: {
+					type: 'vector',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/electrification',
+					promoteId: 'id'
+				}
+			};
 
-				
-				map.addLayer(
-					{
-						id: 'hillshade',
-						type: 'hillshade',
-						source: 'dem',
-						paint: {
-							'hillshade-shadow-color': darkMode
-								? 'hsla(202, 37%, 0%, 30%)'
-								: 'hsla(202, 37%, 20%, 60%)',
-							'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 21%)' : '#ffffff33',
-							'hillshade-accent-color': darkMode ? 'hsla(203, 39%, 50%, 20%)' : '#ffffff77',
-							'hillshade-exaggeration': 1
-						},
-						layout: {
-							visibility: 'none'
-						}
-					},
-					'waterway_tunnel'
-				);
+			try {
+				for (const [key, value] of Object.entries(orm_sources)) {
+					console.log(`${key}`, value);
 
-				map.addLayer(
-					{
-						id: 'contours-layer',
-						type: 'line',
-						source: 'contour-source',
-						'source-layer': 'contours',
-						paint: {
-							'line-color': darkMode ? 'rgba(140, 140, 128, 30%)' : 'rgba(0,0,0, 30%)',
-							// level = highest index in thresholds array the elevation is a multiple of
-							'line-width': ['match', ['get', 'level'], 1, 1.3, 0.3],
-							
-						},
-						layout: {
-							visibility: 'none'
-						}
-					},
-					'waterway_tunnel'
-				);
-
-				map.addLayer(
-					{
-						id: 'contour-labels',
-						type: 'symbol',
-						source: 'contour-source',
-						'source-layer': 'contours',
-						filter: ['>', ['get', 'level'], 0],
-						layout: {
-							'symbol-placement': 'line',
-							'text-size': 10,
-							'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
-							'text-font': ['Barlow-Bold'],
-							'text-pitch-alignment': 'viewport'
-						},
-						paint: {
-							'text-halo-color': darkMode ? 'black' : 'white',
-							'text-halo-width': 1,
-							'text-color': darkMode ? 'white' : 'black'
-						}
-					},
-					'waterway_tunnel'
-				);
-
-				show_topo_global_store.subscribe((value: boolean) => {
-					if (value === true) {
-						map.setLayoutProperty('hillshade', 'visibility', 'visible');
-						map.setLayoutProperty('contour-labels', 'visibility', 'visible');
-						map.setLayoutProperty('contours-layer', 'visibility', 'visible');
-
-						//if (window.innerWidth >= 768 || window.innerHeight >= 768) {
-							map.setTerrain({ source: 'dem', exaggeration: 1 });
-						//}
-					} else {
-						map.setLayoutProperty('hillshade', 'visibility', 'none');
-
-						//map.removeLayer('hillshade');
-
-						map.setLayoutProperty('contour-labels', 'visibility', 'none');
-						map.setLayoutProperty('contours-layer', 'visibility', 'none');
-
-						map.setTerrain(null);
-					}
-				});
-
-				setTimeout(() => {
-					let chateau_feed_results = determineFeedsUsingChateaus(map);
-					chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-
-					runSettingsAdapt();
-				}, 0);
-
-				setTimeout(() => {
-					runSettingsAdapt();
-				}, 1000);
-
-				setTimeout(() => {
-					let chateau_feed_results = determineFeedsUsingChateaus(map);
-					chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-				}, 4000);
-
-				setTimeout(() => {
-					let chateau_feed_results = determineFeedsUsingChateaus(map);
-					chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-				}, 5000);
-			});
-
-			maplibregl.setRTLTextPlugin(
-				'/mapbox-gl-rtl-text.min.js',
-				true // Lazy load the plugin
-			);
-
-			mapglobal = map;
-
-			//updates the debug window with the current map lng and lat
-			function updateData() {
-				mapzoom = map.getZoom();
-				maplng = map.getCenter().lng;
-				maplat = map.getCenter().lat;
-
-				current_map_heading = map.getBearing();
+					map.addSource(key, value);
+				}
+			} catch (e) {
+				console.error(e);
 			}
 
-			map.on('move', (events) => {
-				updateData();
-				lock_on_gps_store.set(false);
+			// Assuming 'map' is your MapLibre GL JS map instance
+			map.on('webglcontextlost', (event) => {
+				console.log('WebGL context lost.');
 			});
 
-			map.on('moveend', (events) => {
-				let chateau_feed_results = determineFeedsUsingChateaus(map);
-				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			map.on('webglcontextrestored', (event) => {
+				console.log('WebGL context restored.');
+				// A timeout may be necessary to ensure the canvas is fully ready.
+				setTimeout(() => {
+					new_map();
+				}, 0);
 			});
 
-			map.on('touchmove', (events) => {
-				lasttimeofnorth = 0;
+			switch_orm_layers(map, get(current_orm_layer_type_store), true);
+
+			console.log('map coords', map.getCenter());
+
+			let prev_known_location = getLocationFromLocalStorage();
+
+			if (prev_known_location) {
+				//map.setCenter([prev_known_location.longitude, prev_known_location.latitude]);
+				//map.setZoom(15);
+			} else {
+				fetch('https://birch.catenarymaps.org/ip_addr_to_geo/')
+					.then((response) => response.json())
+					// the text will be `lat,long`
+					.then((geo_api_response) => {
+						console.log('ip addr', geo_api_response);
+						if (geo_api_response.geo_resp) {
+							localStorage.setItem(
+								'cacheipgeolocation',
+								`${geo_api_response.geo_resp.longitude},${geo_api_response.geo_resp.latitude}`
+							);
+						}
+					});
+			}
+
+			let coords = map.getCenter();
+
+			if (coords.lng == -117.6969 && coords.lat == 33.6969) {
+				console.log('change to ', centerinit);
+
+				map.setCenter(centerinit);
+			}
+
+			map.setProjection({ type: 'globe' });
+			skyRefresh(map, darkMode);
+
+			demSource.setupMaplibre(maplibregl);
+
+			map.addSource('dem', {
+				type: 'raster-dem',
+				tiles: [demSource.sharedDemProtocolUrl],
+				tileSize: 256
 			});
 
-			map.on('mousemove', (events) => {
-				lasttimeofnorth = 0;
+			map.addSource('contour-source', {
+				type: 'vector',
+				tiles: [
+					demSource.contourProtocolUrl({
+						// convert meters to feet, default=1 for meters
+						thresholds: {
+							// zoom: [minor, major]
+							11: [100, 500],
+							12: [50, 250],
+							14: [20, 100],
+							15: [10, 50]
+						},
+						// optional, override vector tile parameters:
+						contourLayer: 'contours',
+						elevationKey: 'ele',
+						levelKey: 'level',
+						extent: 4096,
+						buffer: 1
+					})
+				],
+				maxzoom: 15
 			});
 
-			map.on('zoomend', (events) => {
-				let chateau_feed_results = determineFeedsUsingChateaus(map);
-				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
-			});
-
-			console.log('setting up load map');
-
-			setup_load_map(
-				map,
-				runSettingsAdapt,
-				darkMode,
-				layerspercategory,
-				chateaus_in_frame,
-				layersettings,
-				chateau_to_realtime_feed_lookup,
-				pending_chateau_rt_request,
-				recompute_map_padding,
-				setSidebarOpen
+			map.addLayer(
+				{
+					id: 'hillshade',
+					type: 'hillshade',
+					source: 'dem',
+					paint: {
+						'hillshade-shadow-color': darkMode
+							? 'hsla(202, 37%, 0%, 30%)'
+							: 'hsla(202, 37%, 20%, 60%)',
+						'hillshade-highlight-color': darkMode ? 'hsla(203, 35%, 53%, 21%)' : '#ffffff33',
+						'hillshade-accent-color': darkMode ? 'hsla(203, 39%, 50%, 20%)' : '#ffffff77',
+						'hillshade-exaggeration': 1
+					},
+					layout: {
+						visibility: 'none'
+					}
+				},
+				'waterway_tunnel'
 			);
+
+			map.addLayer(
+				{
+					id: 'contours-layer',
+					type: 'line',
+					source: 'contour-source',
+					'source-layer': 'contours',
+					paint: {
+						'line-color': darkMode ? 'rgba(140, 140, 128, 30%)' : 'rgba(0,0,0, 30%)',
+						// level = highest index in thresholds array the elevation is a multiple of
+						'line-width': ['match', ['get', 'level'], 1, 1.3, 0.3]
+					},
+					layout: {
+						visibility: 'none'
+					}
+				},
+				'waterway_tunnel'
+			);
+
+			map.addLayer(
+				{
+					id: 'contour-labels',
+					type: 'symbol',
+					source: 'contour-source',
+					'source-layer': 'contours',
+					filter: ['>', ['get', 'level'], 0],
+					layout: {
+						'symbol-placement': 'line',
+						'text-size': 10,
+						'text-field': ['concat', ['number-format', ['get', 'ele'], {}], 'm'],
+						'text-font': ['Barlow-Bold'],
+						'text-pitch-alignment': 'viewport'
+					},
+					paint: {
+						'text-halo-color': darkMode ? 'black' : 'white',
+						'text-halo-width': 1,
+						'text-color': darkMode ? 'white' : 'black'
+					}
+				},
+				'waterway_tunnel'
+			);
+
+			show_topo_global_store.subscribe((value: boolean) => {
+				if (value === true) {
+					map.setLayoutProperty('hillshade', 'visibility', 'visible');
+					map.setLayoutProperty('contour-labels', 'visibility', 'visible');
+					map.setLayoutProperty('contours-layer', 'visibility', 'visible');
+
+					//if (window.innerWidth >= 768 || window.innerHeight >= 768) {
+					map.setTerrain({ source: 'dem', exaggeration: 1 });
+					//}
+				} else {
+					map.setLayoutProperty('hillshade', 'visibility', 'none');
+
+					//map.removeLayer('hillshade');
+
+					map.setLayoutProperty('contour-labels', 'visibility', 'none');
+					map.setLayoutProperty('contours-layer', 'visibility', 'none');
+
+					map.setTerrain(null);
+				}
+			});
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+
+				runSettingsAdapt();
+			}, 0);
+
+			setTimeout(() => {
+				runSettingsAdapt();
+			}, 1000);
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			}, 4000);
+
+			setTimeout(() => {
+				let chateau_feed_results = determineFeedsUsingChateaus(map);
+				chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+			}, 5000);
+		});
+
+		maplibregl.setRTLTextPlugin(
+			'/mapbox-gl-rtl-text.min.js',
+			true // Lazy load the plugin
+		);
+
+		mapglobal = map;
+
+		//updates the debug window with the current map lng and lat
+		function updateData() {
+			mapzoom = map.getZoom();
+			maplng = map.getCenter().lng;
+			maplat = map.getCenter().lat;
+
+			current_map_heading = map.getBearing();
+		}
+
+		map.on('move', (events) => {
+			updateData();
+			lock_on_gps_store.set(false);
+		});
+
+		map.on('moveend', (events) => {
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+		});
+
+		map.on('touchmove', (events) => {
+			lasttimeofnorth = 0;
+		});
+
+		map.on('mousemove', (events) => {
+			lasttimeofnorth = 0;
+		});
+
+		map.on('zoomend', (events) => {
+			let chateau_feed_results = determineFeedsUsingChateaus(map);
+			chateaus_in_frame.set(Array.from(chateau_feed_results.chateaus));
+		});
+
+		console.log('setting up load map');
+
+		setup_load_map(
+			map,
+			runSettingsAdapt,
+			darkMode,
+			layerspercategory,
+			chateaus_in_frame,
+			layersettings,
+			chateau_to_realtime_feed_lookup,
+			pending_chateau_rt_request,
+			recompute_map_padding,
+			setSidebarOpen
+		);
 	}
 
 	try {
@@ -1799,35 +1793,35 @@
 				<SidebarInternals {usunits} {latest_item_on_stack} {darkMode} />
 			</div>
 		{/if}
-		
 	</div>
 
-	<div class="fixed top-2 left-3 right-3 sm:right-auto z-40" id="search_bar_outer" style="transform: translateY({translate_y_searchbar}px);">
-		<SearchBar/>
+	<div
+		class="fixed top-2 left-3 right-3 sm:right-auto z-40"
+		id="search_bar_outer"
+		style="transform: translateY({translate_y_searchbar}px);"
+	>
+		<SearchBar />
 	</div>
-
 
 	{#if autocomplete_focus_state_local == true}
 		<div
-		id="desktop_autocomplete_box"
-		 class="hidden md:fixed md:block z-40 top-12 left-3 w-[350px] bg-gray-100 dark:bg-gray-900 rounded-sm border border-gray-500">
-			<SearchAutocompleteList
-				length={10}
-			/>
+			id="desktop_autocomplete_box"
+			class="hidden md:fixed md:block z-40 top-12 left-3 w-[350px] bg-gray-100 dark:bg-gray-900 rounded-sm border border-gray-500"
+		>
+			<SearchAutocompleteList length={10} />
 		</div>
 	{/if}
 
-
 	{#if autocomplete_focus_state_local == true}
-		<div class="fixed top-0 bottom-0 left-0 right-0 sm:right-1/2 h-full md:hidden z-30  bg-gray-100 dark:bg-gray-900 px-3 ">
+		<div
+			class="fixed top-0 bottom-0 left-0 right-0 sm:right-1/2 h-full md:hidden z-30 bg-gray-100 dark:bg-gray-900 px-3"
+		>
 			<div class="relative top-12 w-full">
-			<SearchAutocompleteList
-				length={10}
-			/>
+				<SearchAutocompleteList length={10} />
 
-			<p class='text-xs dark:text-gray-200'>Catenary Search Beta.</p>
-		</div>
+				<p class="text-xs dark:text-gray-200">Catenary Search Beta.</p>
 			</div>
+		</div>
 	{/if}
 
 	{#if !$isLoading}
@@ -2006,62 +2000,55 @@
 			</div>
 
 			{#if selectedSettingsTab === 'more'}
-				<div
-					class="flex flex-col"
-				>
-				<!--radio group that changes  current_orm_layer_type-->
-				
-				<!--First option, null-->
+				<div class="flex flex-col">
+					<!--radio group that changes  current_orm_layer_type-->
 
-				<p class="font-bold">ORM</p>
+					<!--First option, null-->
 
-				<div>
-					<input
-						on:click={(x) => {
-							current_orm_layer_type_store.update((value) => null);
-						}}
-						on:keydown={(x) => {
-							current_orm_layer_type_store.update((value) => null);
-						}}
-						type="radio"
-						class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
-						name="orm-layer-type"
-						value="null"
-						id="no-orm-data"
-						checked={current_orm_layer_type == null}
-					/>
-					<label
-						
-						for="no-orm-data"
-						class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-						>{$_('noormdata')}</label
-					>
+					<p class="font-bold">ORM</p>
+
+					<div>
+						<input
+							on:click={(x) => {
+								current_orm_layer_type_store.update((value) => null);
+							}}
+							on:keydown={(x) => {
+								current_orm_layer_type_store.update((value) => null);
+							}}
+							type="radio"
+							class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
+							name="orm-layer-type"
+							value="null"
+							id="no-orm-data"
+							checked={current_orm_layer_type == null}
+						/>
+						<label
+							for="no-orm-data"
+							class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+							>{$_('noormdata')}</label
+						>
+					</div>
+
+					<div>
+						<input
+							on:click={(x) => {
+								current_orm_layer_type_store.update((value) => 'infrastructure');
+							}}
+							on:keydown={(x) => {
+								current_orm_layer_type_store.update((value) => 'infrastructure');
+							}}
+							type="radio"
+							class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
+							name="orm-layer-type"
+							value="infrastructure"
+							id="orm-infra"
+							checked={current_orm_layer_type == 'infrastructure'}
+						/>
+						<label for="orm-infra" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+							>{$_('orminfra')}</label
+						>
+					</div>
 				</div>
-
-				<div>
-					<input
-						on:click={(x) => {
-							current_orm_layer_type_store.update((value) => "infrastructure");
-						}}
-						on:keydown={(x) => {
-							current_orm_layer_type_store.update((value) => "infrastructure");
-						}}
-						type="radio"
-						class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600"
-						name="orm-layer-type"
-						value="infrastructure"
-						id="orm-infra"
-						checked={current_orm_layer_type == "infrastructure"}
-					/>
-					<label
-						
-						for="orm-infra"
-						class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-						>{$_('orminfra')}</label
-					>
-				</div>
-
-			</div>
 
 				<div>
 					<input
