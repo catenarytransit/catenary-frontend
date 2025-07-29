@@ -244,6 +244,7 @@
 
 					stoptimes_cleaned_dataset = next_stoptimes_cleaned;
 					init_loaded = Date.now();
+					label_stops_on_map();
 					//console.log('single trip rt update', stoptimes_cleaned_dataset);
 				}
 			} catch (e: any) {
@@ -265,6 +266,83 @@
 	export let trip_selected: SingleTrip;
 
 	export let darkMode: boolean = determineDarkModeToBool();
+
+	function label_stops_on_map() {
+		let map = get(map_pointer_store);
+
+		let already_seen_stop_ids: string[] = [];
+
+		let stops_features = stoptimes_cleaned_dataset.filter((eachstoptime: any) => {
+									if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
+										already_seen_stop_ids.push(eachstoptime.stop_id);
+										return true;
+									}
+
+									// for now, show duplicate stops
+									return true;
+									//return false;
+								})
+								.map((eachstoptime: any) => {
+									let time_temp = eachstoptime.rt_departure?.time || eachstoptime.rt_arrival?.time || eachstoptime.scheduled_departure_time_unix_seconds || eachstoptime.scheduled_arrival_time_unix_seconds;
+
+									let time_text = new Date(
+										time_temp * 1000
+									).toLocaleTimeString('en-UK', {
+										timeZone: time_temp.timezone,
+										hour: '2-digit',
+										minute: '2-digit',
+									});
+
+									let label = `${time_text} ${eachstoptime.name
+												.replace('Station ', '')
+												.replace(' Station', '')
+												.replace(', Bahnhof', '')
+												.replace(' Bahnhof', '')
+												.replace('Estación de tren ', '')
+												.replace(' Metrolink', '')
+												.replace('Northbound', 'N.B.')
+												.replace('Eastbound', 'E.B.')
+												.replace('Southbound', 'S.B.')
+												.replace('Westbound', 'W.B.')
+												.replace(' (Railway) ', '')
+												.replace(' Light Rail', '').replace(" Amtrak", "")}`;
+
+									return {
+										type: 'Feature',
+										properties: {
+											label: label,
+											stop_id: eachstoptime.stop_id,
+											chateau: trip_selected.chateau_id,
+											stop_route_type: trip_data.route_type,
+											cancelled: eachstoptime.schedule_relationship == 1
+										},
+										geometry: {
+											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
+											type: 'Point'
+										}
+									};
+								});
+
+							let stop_source_new = { type: 'FeatureCollection', features: stops_features };
+
+							let stops_context = map.getSource('stops_context');
+							if (stops_context) {
+								stops_context.setData(stop_source_new);
+							} else {
+								console.error('stops_context source missing');
+							}
+
+							try {
+
+								stops_to_hide_store.set({
+								[trip_selected.chateau_id]: stoptimes_cleaned_dataset.map((eachstop: any) => eachstop.stop_id)
+							});
+
+							refilter_stops();
+							} catch (e) {
+								console.error(e);
+							}
+	}
 
 	async function fetch_trip_selected() {
 		let map = get(map_pointer_store);
@@ -365,62 +443,7 @@
 
 					if (map != null) {
 
-						let already_seen_stop_ids: string[] = [];
-
-						let stops_features = data.stoptimes
-								.filter((eachstoptime: any) => {
-									if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
-										already_seen_stop_ids.push(eachstoptime.stop_id);
-										return true;
-									}
-									return false;
-								})
-								.map((eachstoptime: any) => {
-									return {
-										type: 'Feature',
-										properties: {
-											label: eachstoptime.name
-												.replace('Station ', '')
-												.replace(' Station', '')
-												.replace(', Bahnhof', '')
-												.replace(' Bahnhof', '')
-												.replace('Estación de tren ', '')
-												.replace(' Metrolink', '')
-												.replace('Northbound', 'N.B.')
-												.replace('Eastbound', 'E.B.')
-												.replace('Southbound', 'S.B.')
-												.replace('Westbound', 'W.B.')
-												.replace(' (Railway) ', '')
-												.replace(' Light Rail', '').replace(" Amtrak", ""),
-											stop_id: eachstoptime.stop_id,
-											chateau: trip_selected.chateau_id,
-											stop_route_type: trip_data.route_type,
-											cancelled: eachstoptime.schedule_relationship == 1
-										},
-										geometry: {
-											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
-											type: 'Point'
-										}
-									};
-								});
-
-							let stop_source_new = { type: 'FeatureCollection', features: stops_features };
-
-							let stops_context = map.getSource('stops_context');
-							if (stops_context) {
-								stops_context.setData(stop_source_new);
-							}
-
-							try {
-
-								stops_to_hide_store.set({
-								[trip_selected.chateau_id]: data.stoptimes.map((eachstop: any) => eachstop.stop_id)
-							});
-
-							refilter_stops();
-							} catch (e) {
-								console.error(e);
-							}
+						
 
 							update_vehicle_rt();
 					}
@@ -564,6 +587,7 @@
 					console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
 					init_loaded = Date.now();
 					console.log('refresh component');
+					label_stops_on_map();
 				} catch (e: any) {
 					console.error(e);
 					error = text;
