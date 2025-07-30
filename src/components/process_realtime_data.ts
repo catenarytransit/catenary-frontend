@@ -443,23 +443,26 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 					let delay_label = "";
 
-					if (vehicle_data.trip?.delay != undefined) {
+					if (vehicle_data.trip) {
+						if (vehicle_data.trip?.delay != undefined) {
 						let prefix = "+";
 
 						if (vehicle_data.trip?.delay < 0) {
 							prefix = "-";
 						}
 
-						let abs = Math.abs(vehicle_data.trip?.delay);
+						let abs = Math.abs(vehicle_data.trip.delay);
 
 						let minutes = Math.floor(abs / 60);
 
 						let hours = Math.floor(minutes / 60);
-						minutes = hours % 60;
+						minutes = minutes % 60;
 
 						delay_label = `${prefix}${hours > 0 ? `${hours}h` : ``}${minutes}m`;
 
 					}
+					}
+					
 
 					return {
 						type: 'Feature',
@@ -499,7 +502,8 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							start_date: vehicle_data.trip?.start_date,
 							crowd_symbol: crowd_symbol,
 							occupancy_status: vehicle_data.occupancy_status,
-							delay_label: delay_label
+							delay_label: delay_label,
+							delay: vehicle_data.trip?.delay,
 						},
 						geometry: {
 							type: 'Point',
