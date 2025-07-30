@@ -443,7 +443,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 					let delay_label = "";
 
-					if (vehicle_data.trip?.delay) {
+					if (vehicle_data.trip?.delay != undefined) {
 						let prefix = "+";
 
 						if (vehicle_data.trip?.delay < 0) {
