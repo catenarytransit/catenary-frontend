@@ -55,6 +55,8 @@
 	let interval_fetch: NodeJS.Timeout | null = null;
 	let data_from_server = null;
 
+	let last_stop_id_fetched = "";
+
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
 
@@ -104,6 +106,14 @@
 					}
 
 					//console.log(dates_to_events_filtered);
+
+					global_map_pointer.flyTo({
+						center: [
+										data_from_server.primary.stop_lon,
+										data_from_server.primary.stop_lat
+									],
+									zoom: 14
+					})
 
 					global_map_pointer.getSource('redpin').setData({
 						type: 'FeatureCollection',
@@ -194,6 +204,10 @@
 	});
 
 	$: if (chateau || stop_id) fetch_stop_data();
+
+	$: if (stop_id) {
+		fetch_stop_data();
+	}
 </script>
 
 <div class="h-full">

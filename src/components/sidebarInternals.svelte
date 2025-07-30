@@ -111,6 +111,8 @@
 	}
 </script>
 
+<div class="md:mt-12"></div>
+
 {#if latest_item_on_stack != null}
 	{#if latest_item_on_stack.data instanceof MapSelectionScreen}
 		<HomeButton />
@@ -289,46 +291,6 @@
 				</div>
 			{/if}
 
-			{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
-				<h3 class="text-xl my-2">{$_('routes')}</h3>
-				<div class="flex flex-col gap-y-1 md:gap-y-2">
-					{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
-						<div
-							class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-darksky hover:dark:bg-hover text-sm md:text-base leading-snug rounded-lg bg-opacity-80"
-							on:click={() => {
-								data_stack_store.update((data_stack) => {
-									data_stack.push(
-										new StackInterface(new RouteStack(option.data.chateau_id, option.data.route_id))
-									);
-
-									return data_stack;
-								});
-							}}
-						>
-							{#if show_gtfs_ids}
-								<p>
-									<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
-										>{option.data.chateau_id}</span
-									>
-									{#if option.data.route_id}
-										<span
-											class="font-mono text-xs dark:text-gray-400 text-gray-500 ml-1 font-semibold"
-											>{option.data.route_id.replace(/^\"/, '').replace(/\"$/, '')}</span
-										>
-									{/if}
-								</p>
-							{/if}
-							{#if option.data.name}
-								<span
-									style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-									>{option.data.name}</span
-								>
-							{/if}
-						</div>
-					{/each}
-				</div>
-			{/if}
-
 			{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof StopMapSelector).length > 0}
 				<h3 class="text-xl my-2">{$_('stops')}</h3>
 				<div class="flex flex-col gap-y-1 md:gap-y-2">
@@ -407,6 +369,46 @@
 					{/each}
 				</div>
 			{/if}
+
+			{#if latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector).length > 0}
+				<h3 class="text-xl my-2">{$_('routes')}</h3>
+				<div class="flex flex-col gap-y-1 md:gap-y-2">
+					{#each latest_item_on_stack.data.arrayofoptions.filter((x) => x.data instanceof RouteMapSelector) as option}
+						<div
+							class="px-1 py-0.5 md:px-2 md:py-2 bg-gray-100 hover:bg-blue-100 dark:bg-darksky hover:dark:bg-hover text-sm md:text-base leading-snug rounded-lg bg-opacity-80"
+							on:click={() => {
+								data_stack_store.update((data_stack) => {
+									data_stack.push(
+										new StackInterface(new RouteStack(option.data.chateau_id, option.data.route_id))
+									);
+
+									return data_stack;
+								});
+							}}
+						>
+							{#if show_gtfs_ids}
+								<p>
+									<span class="font-mono text-xs dark:text-gray-400 text-gray-500"
+										>{option.data.chateau_id}</span
+									>
+									{#if option.data.route_id}
+										<span
+											class="font-mono text-xs dark:text-gray-400 text-gray-500 ml-1 font-semibold"
+											>{option.data.route_id.replace(/^\"/, '').replace(/\"$/, '')}</span
+										>
+									{/if}
+								</p>
+							{/if}
+							{#if option.data.name}
+								<span
+									style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+									>{option.data.name}</span
+								>
+							{/if}
+						</div>
+					{/each}
+				</div>
+			{/if}
 			<br />
 			<br />
 			<br />
@@ -423,10 +425,12 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof StopStack}
+		{#key latest_item_on_stack.data.stop_id}
 		<StopScreen
 			chateau={latest_item_on_stack.data.chateau_id}
 			stop_id={latest_item_on_stack.data.stop_id}
 		/>
+		{/key}
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
@@ -458,13 +462,15 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
+	{#key latest_item_on_stack.data}
 		<HomeButton />
 		<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
+	{/key}
 	{/if}
 {:else if false}
 	<p>Loading home page</p>
 {:else}
-	<div class=" md:mt-3 md:mb-1">
+	<!--<div class=" md:mt-3 md:mb-1">
 		<a href="https://catenarymaps.org">
 			<img
 				src="/logo.svg"
@@ -491,7 +497,7 @@
 			aria-label="Settings"
 			><span class="material-symbols-outlined block"> settings </span>
 		</button>
-	</div>
+	</div>-->
 	<div class="py-1 flex flex-col h-full">
 		<div class="flex flex-col h-full select-text"><NearbyDepartures {usunits} {darkMode} /></div>
 	</div>

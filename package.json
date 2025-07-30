@@ -52,6 +52,7 @@
     "base65536": "^4.0.3",
     "geolocation": "^0.2.0",
     "gtfs-realtime-bindings": "^1.1.1",
+    "haversine-distance": "^1.2.4",
     "maplibre-contour": "^0.1.0",
     "maplibre-gl": "^5.6.0",
     "moment": "^2.30.1",

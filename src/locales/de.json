@@ -131,5 +131,6 @@
 	"allexact": "Alle geplanten Abfahrten sind exakt.",
 	"trip_modified": "Fahrt geändert",
 	"new_rt_shape": "Echtzeit-Umleitungskarte gezeichnet",
-	"replaced_stop": "Ersetzte Haltestelle"
+	"replaced_stop": "Ersetzte Haltestelle",
+	"search_here": "Hier suchen"
 }

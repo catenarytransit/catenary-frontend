@@ -161,7 +161,7 @@ export function process_realtime_vehicle_locations_v2(
 	);		
 
 	
-	console.log('rerendering', rerender_category);
+	//console.log('rerendering', rerender_category);
 
 	rerender_category.forEach((category) => {
 		rerender_category_live_dots(category, map);
