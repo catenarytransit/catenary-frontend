@@ -395,7 +395,8 @@
 				headsign: false,
 				direction: false,
 				speed: false,
-				occupancy: true
+				occupancy: true,
+				delay: true
 			}
 		},
 		localrail: {
@@ -411,7 +412,8 @@
 				headsign: false,
 				direction: false,
 				speed: false,
-				occupancy: true
+				occupancy: true,
+				delay: true,
 			}
 		},
 		intercityrail: {
@@ -427,7 +429,8 @@
 				headsign: false,
 				direction: false,
 				speed: false,
-				occupancy: true
+				occupancy: true,
+				delay: true,
 			}
 		},
 		other: {
@@ -443,7 +446,8 @@
 				headsign: false,
 				direction: false,
 				speed: false,
-				occupancy: true
+				occupancy: true,
+				delay: true,
 			}
 		},
 		more: {
@@ -2166,6 +2170,15 @@
 						change="occupancy"
 						name={$_('occupancy')}
 						symbol="group"
+						{runSettingsAdapt}
+					/>
+
+					<Realtimelabel
+						bind:layersettings
+						bind:selectedSettingsTab
+						change="delay"
+						name={$_('delay')}
+						symbol="timer"
 						{runSettingsAdapt}
 					/>
 				</div>

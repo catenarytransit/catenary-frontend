@@ -36,5 +36,9 @@ export function interpretLabelsToCode(label: any, usunits: boolean) {
 		arrayofinfo.push(['get', 'crowd_symbol']);
 	}
 
+	if (label.delay) {
+		arrayofinfo.push(['get', 'delay_label']);
+	}
+
 	return ['concat', ...interleave(arrayofinfo, '|')];
 }
