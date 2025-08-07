@@ -115,7 +115,7 @@
 	let previous_click_on_sidebar_dragger: number | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
 	let layersettingsBox = false;
-	const layersettingsnamestorage = 'layersettingsv6';
+	const layersettingsnamestorage = 'layersettingsv7';
 	let currently_holding_sidebar_grabber: boolean = false;
 	let maplat: number, maplng: number, mapzoom: number;
 	let translate_x_sidebar: string = '0px';
