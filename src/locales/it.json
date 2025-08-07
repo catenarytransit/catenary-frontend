@@ -115,5 +115,13 @@
 	"occupancy_status_not_boardable": "Non imbarcabile",
 	"deleted": "Eliminato",
 	"starting_time": "Ora di inizio",
-	"ending_time": "Ora di fine"
+	"ending_time": "Ora di fine",
+	"search_here": "Cerca qui",
+	"last_stop": "ultima fermata",
+	"clockwise_abbrievation": "SO",
+	"anticlockwise_abbrievation": "SA",
+	"clockwise": "senso orario",
+	"anticlockwise": "senso antiorario",
+	"layers": "Strati",
+	"service_alerts": "Avvisi di servizio"
 }

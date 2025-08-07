@@ -127,5 +127,10 @@
 	"starting_time": "시작 시간",
 	"ending_time": "종료 시간",
 	"service_alerts": "서비스 경고",
-	"level": "층"
+	"level": "층",
+	"search_here": "여기서 검색",
+	"last_stop": "마지막 정류장",
+	"noormdata": "열린 철도 지도 데이터 숨기기",
+	"occupancy_percentage": "점유율",
+	"gpsdisclaimer": "대기 시간이 너무 길다면, 이 사이트에 귀하의 위치에 접근할 수 있는 브라우저 권한이 있는지 확인하고, GPS 신호가 강한지 확인하세요."
 }
