@@ -27,10 +27,11 @@
     
     import {StopStack, StackInterface} from '../stackenum';
 
-    export let length = 10;
+    export let length = 16;
 
     latest_query_data.subscribe((new_data) => {
         latest_query_data_local = new_data;
+        console.log("new data in search", new_data);
     });
 
     let geolocation: GeolocationPosition | null;

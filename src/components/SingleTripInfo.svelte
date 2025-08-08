@@ -590,7 +590,7 @@
 					label_stops_on_map();
 				} catch (e: any) {
 					console.error(e);
-					error = text;
+					error = e;
 					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 				}
 			})
