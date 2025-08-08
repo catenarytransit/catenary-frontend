@@ -592,6 +592,8 @@
 					console.error(e);
 					error = e;
 					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
+
+					fetch_trip_selected()
 				}
 			})
 			.catch((e) => {
