@@ -52,10 +52,12 @@
 
 	let current_time = 0;
 
+	let fly_to_already = false;
+
 	let interval_fetch: NodeJS.Timeout | null = null;
 	let data_from_server = null;
 
-	let last_stop_id_fetched = "";
+	let last_stop_id_fetched = '';
 
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
@@ -107,13 +109,14 @@
 
 					//console.log(dates_to_events_filtered);
 
-					global_map_pointer.flyTo({
-						center: [
-										data_from_server.primary.stop_lon,
-										data_from_server.primary.stop_lat
-									],
-									zoom: 14
-					})
+					if (fly_to_already == false) {
+						global_map_pointer.flyTo({
+							center: [data_from_server.primary.stop_lon, data_from_server.primary.stop_lat],
+							zoom: 14
+						});
+
+						fly_to_already = true;
+					}
 
 					global_map_pointer.getSource('redpin').setData({
 						type: 'FeatureCollection',
