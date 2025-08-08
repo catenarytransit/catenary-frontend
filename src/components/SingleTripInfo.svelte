@@ -587,6 +587,7 @@
 					console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
 					init_loaded = Date.now();
 					console.log('refresh component');
+					error = null;
 					label_stops_on_map();
 				} catch (e: any) {
 					console.error(e);
