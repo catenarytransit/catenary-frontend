@@ -7,6 +7,10 @@ async function make_fire_names(map: maplibregl.Map) {
 
 	map.addImage('fireicon', image.data);
 
+	const image_greyed = await map.loadImage('/fire_1f525_greyed.png');
+
+	map.addImage('fireicongreyed', image_greyed.data);
+
 	
 	const darkMode = determineDarkModeToBool();
 	
@@ -37,8 +41,16 @@ async function make_fire_names(map: maplibregl.Map) {
 		'type': 'symbol',
 		'source': 'firenames_wd',
 		'layout': {
-			'icon-image': 'fireicon',
-			'icon-size': ['interpolate', ["linear"], ['get', 'ha'], 0, 0.03, 100, 0.05, 1000, 0.06],
+			'icon-image': ["case",
+				["has", "containment"],
+				["case",
+					[">=", ["get", "containment"], 90],
+					'fireicongreyed',
+					'fireicon'
+				],
+				'fireicon'
+			],
+			'icon-size': ['interpolate', ["linear"], ['get', 'ha'], 0, 0.03, 100, 0.04, 1000, 0.05, 5000, 0.06],
 			'text-field': ['concat', ['get', 'name'], " ", ['get', "ha_rounded"], "ha"],
 			'text-offset': [0, 1.5],
 			'text-anchor': 'top',
@@ -51,7 +63,7 @@ async function make_fire_names(map: maplibregl.Map) {
 		paint: {
 			'text-color': darkMode ? '#ffaaaa' : '#aa0000',
 		},
-		minzoom: 6,
+		minzoom: 5.5,
 	});
 }
 
@@ -158,7 +170,8 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 						"name": fire.name,
 						"acreage": fire.data.acreage,
 						"ha": fire.data.acreage * 0.4046,
-						"ha_rounded": (fire.data.acreage * 0.4046).toFixed(1)
+						"ha_rounded": (fire.data.acreage * 0.4046).toFixed(1),
+						"containment": fire.data.containment
 					}
 				}
 			}
