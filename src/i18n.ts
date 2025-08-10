@@ -1,7 +1,8 @@
 import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
 //sort like Google / YouTube
-const locale_list = ["ca", "da", "de", "en", "es", "fr", "lb", "ga", "it", "nl", "pl", "pt-PT", "sv", "ru", "uk", "zh-CN", "zh-TW", "ja", "ko"];
+const locale_list = ["ca", "da", "de", "et", "en", "es", "fr", "lb", "ga", "hr", "it", "lt", "lv", "nl", "hu", "no", "pl", "pt-PT",
+	"sk", "sl", "sr", "fi", "sv", "ru", "uk", "el", "zh-CN", "zh-TW", "ja", "ko"];
 
 for (let i = 0; i < locale_list.length; i++) {
 	register(locale_list[i], () => import(`./locales/${locale_list[i]}.json`));
@@ -48,6 +49,16 @@ export const locales_options: Record<string, string> = {
 	ro: 'Română',
 	uk: 'Українська',
 	sv: 'Svenska',
+	fi: 'Suomi',
+	sl: 'Slovenščina',
+	no: 'Norsk',
+	sr: "Srpski",
+	hu: "Magyar",
+	lv: "Latviešu valoda",
+	"et": "Eesti",
+	"hr": "Hrvatski",
+	el: "Ελληνικά",
+	lt: "Lietuvių"
 };
 
 export const locales_options_lookup: Record<string, string> = {
@@ -72,4 +83,14 @@ export const locales_options_lookup: Record<string, string> = {
 	ro: 'Română',
 	uk: 'Українська',
 	sv: 'Svenska',
+	fi: 'Suomi',
+	sl: 'Slovenščina',
+	no: 'Norsk',
+	sr: "Srpski",
+	hu: "Magyar",
+	lv: "Latviešu valoda",
+	"et": "Eesti",
+	"hr": "Hrvatski",
+	el: "Ελληνικά",
+	lt: "Lietuvių"
 };
