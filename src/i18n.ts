@@ -58,7 +58,8 @@ export const locales_options: Record<string, string> = {
 	"et": "Eesti",
 	"hr": "Hrvatski",
 	el: "Ελληνικά",
-	lt: "Lietuvių"
+	lt: "Lietuvių",
+	sk: "Slovenčina"
 };
 
 export const locales_options_lookup: Record<string, string> = {
@@ -92,5 +93,6 @@ export const locales_options_lookup: Record<string, string> = {
 	"et": "Eesti",
 	"hr": "Hrvatski",
 	el: "Ελληνικά",
-	lt: "Lietuvių"
+	lt: "Lietuvių",
+	sk: "Slovenčina"
 };
