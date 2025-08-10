@@ -471,7 +471,8 @@ refresh_watchduty_evacs();
 				'#dd3300',
 				['==', ['get', 'STATUS'], 'Evacuation Warning'],
 				'#cc9900',
-				'#ff0000'
+				['==', ['get', 'STATUS'], 'Evacuation/Advisory Lifted'],
+				'#10b000'
 			],
 			'fill-opacity': [
 				'interpolate',
