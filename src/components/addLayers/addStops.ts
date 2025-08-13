@@ -4,15 +4,16 @@ import {default_interrail_filter,
 
 	default_bus_filter, default_metro_filter, default_tram_filter} from '../makeFiltersForStop';
 
-const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 7, 12, 12];
+const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'],
+ 6, 6, 13, 12];
 const internationalIntercityCircleSize = [
 	'interpolate',
 	['linear'],
 	['zoom'],
 	7,
-	1.5,
+	1,
 	8,
-	2.5,
+	2,
 	9,
 	3,
 	12,
