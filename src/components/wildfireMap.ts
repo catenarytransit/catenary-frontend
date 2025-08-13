@@ -44,7 +44,7 @@ async function make_fire_names(map: maplibregl.Map) {
 			'icon-image': ["case",
 				["has", "containment"],
 				["case",
-					[">=", ["get", "containment"], 90],
+					[">=", ["get", "containment"], 80],
 					'fireicongreyed',
 					'fireicon'
 				],
@@ -472,7 +472,8 @@ refresh_watchduty_evacs();
 				['==', ['get', 'STATUS'], 'Evacuation Warning'],
 				'#cc9900',
 				['==', ['get', 'STATUS'], 'Evacuation/Advisory Lifted'],
-				'#10b000'
+				'#10b000',
+				'#cc9900',
 			],
 			'fill-opacity': [
 				'interpolate',
