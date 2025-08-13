@@ -44,7 +44,7 @@ async function make_fire_names(map: maplibregl.Map) {
 			'icon-image': ["case",
 				["has", "containment"],
 				["case",
-					[">=", ["get", "containment"], 90],
+					[">=", ["get", "containment"], 80],
 					'fireicongreyed',
 					'fireicon'
 				],
