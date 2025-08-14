@@ -202,7 +202,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13],
 			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
 		},
-		minzoom: 9,
+		minzoom: 10,
 		paint: {
 			'text-color': textColorOfMapLabels(darkMode),
 			//'text-color': ['get', 'color'],
