@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { get } from "svelte/store";
-    import {latest_query_data, autocomplete_focus_state, show_back_button_recalc } from "./search_data";
+    import {latest_query_data, text_input_store, autocomplete_focus_state, show_back_button_recalc } from "./search_data";
     import {
 		data_stack_store,
 		on_sidebar_trigger_store,
@@ -24,6 +24,9 @@
     import StopRankingInfo from './StopRankingInfo.svelte';
 
     let latest_query_data_local = get(latest_query_data);
+    let text_input = get(text_input_store);
+
+    text_input_store.subscribe((n) => text_input=n);
     
     import {StopStack, StackInterface} from '../stackenum';
 
@@ -43,6 +46,8 @@
 
 <div id='search_autocomplete_a'>
     
+{#if text_input.length > 0}
+
     {#if latest_query_data_local}
 {#each latest_query_data_local.stops_section.ranking.slice(0,length) as stop_ranked}
 
@@ -73,5 +78,6 @@
 </div>    
 
 {/each}
+{/if}
 {/if}
 </div>
