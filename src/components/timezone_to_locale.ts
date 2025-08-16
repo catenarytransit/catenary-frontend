@@ -1,6 +1,10 @@
 
 export function timezone_to_locale(input_lang: string, timezone: string): string {
     if (input_lang.startsWith("en")) {
+        if (input_lang.includes("Canada")) {
+            return "en-CA";
+        }
+
         switch (timezone) {
             case "America/Los_Angeles":
                 return "en-US";
