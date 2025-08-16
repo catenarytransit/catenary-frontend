@@ -59,6 +59,8 @@
 
 	let last_stop_id_fetched = '';
 
+	let show_previous_departures = false;
+
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
 
@@ -80,10 +82,12 @@
 
 				data_from_server = data;
 
+				let dates_to_events_filtered_temp = {};
+
 				if (data.events) {
 					events_filtered = data_from_server.events.filter(
 						(event) =>
-							(event.realtime_departure || event.scheduled_departure) > Date.now() / 1000 - 600
+							(event.realtime_departure || event.scheduled_departure) > (Date.now() / 1000) - 1800
 					);
 
 					for (const event of events_filtered) {
@@ -100,12 +104,14 @@
 
 						//	console.log('canadian date format',date_ca)
 
-						if (dates_to_events_filtered[date_ca] == undefined) {
-							dates_to_events_filtered[date_ca] = [];
+						if (dates_to_events_filtered_temp[date_ca] == undefined) {
+							dates_to_events_filtered_temp[date_ca] = [];
 						}
 
-						dates_to_events_filtered[date_ca].push(event);
+						dates_to_events_filtered_temp[date_ca].push(event);
 					}
+
+					dates_to_events_filtered = dates_to_events_filtered_temp;
 
 					//console.log(dates_to_events_filtered);
 
@@ -215,6 +221,7 @@
 
 <div class="h-full">
 	<HomeButton />
+
 	<div class=" catenary-scroll overflow-y-auto pb-64 h-full pr-2">
 		<div class="flex flex-col">
 			<div>
@@ -233,9 +240,32 @@
 
 					<p class="text-sm ml-1">{data_from_server.primary.timezone}</p>
 
+					<div 
+					class="px-3 py-3 font-bold"
+					on:click={() => {
+						show_previous_departures = !show_previous_departures;
+					}}>
+				<p class="align-middle flex flex-row">
+					<span class="inline-block align-bottom">
+							{#if show_previous_departures}
+					<span class="material-symbols-outlined">
+					keyboard_arrow_up
+					</span>
+					{:else}
+					<span class="material-symbols-outlined">
+					keyboard_arrow_down
+					</span>
+					{/if}
+					</span>
+						<span>
+							{$_("previous_departures")}
+						</span>
+				</p>
+					</div>
+
 					{#if dates_to_events_filtered}
 						{#each Object.keys(dates_to_events_filtered) as date_code}
-							<p class="text-md font-semibold mt-3 mb-1 mx-3">
+							<p class="text-md font-semibold mt-0 mb-1 mx-3">
 								{new Date(date_code).toLocaleDateString(
 									timezone_to_locale(locale_inside_component, data_from_server.primary.timezone),
 									{
@@ -248,7 +278,16 @@
 								)}
 							</p>
 
-							{#each dates_to_events_filtered[date_code] as event}
+							{#each dates_to_events_filtered[date_code]
+								.filter((event) => {
+									let cutoff = 60;
+
+									if (show_previous_departures == true) {
+										cutoff = 1800;
+									}
+
+									return (event.realtime_departure || event.scheduled_departure) >= ((current_time / 1000) - cutoff)
+								}) as event}
 								<div
 									class="mx-1 py-1 border-b-1 border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800"
 									on:click={() => {

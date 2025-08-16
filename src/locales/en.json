@@ -136,5 +136,6 @@
 	"waitingforgps": "waiting for GPS",
 	"gpsdisclaimer": "If the wait is too long, check if this site has browser permissions to access your location, and verify your GPS signal is strong.",
 	"last_stop": "last stop",
-	"search_here": "Search here"
+	"search_here": "Search here",
+	"previous_departures": "Previous departures"
 }
