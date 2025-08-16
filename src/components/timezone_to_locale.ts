@@ -50,6 +50,12 @@ export function timezone_to_locale(input_lang: string, timezone: string): string
         switch (timezone) {
             case "America/Montreal":
                 return "fr-CA";
+             case "America/Edmonton":
+                return "fr-CA";
+            case "America/Toronto":
+                return "fr-CA";
+            case "America/Halifax":
+                return "fr-CA";
             default:
                 return input_lang;
         }
