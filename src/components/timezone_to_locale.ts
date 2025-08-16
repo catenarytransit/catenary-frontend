@@ -43,6 +43,10 @@ export function timezone_to_locale(input_lang: string, timezone: string): string
         }
     }
     else if (input_lang.startsWith('fr')) {
+        if (input_lang.includes("Canada")) {
+            return "fr-CA";
+        }
+
         switch (timezone) {
             case "America/Montreal":
                 return "fr-CA";
