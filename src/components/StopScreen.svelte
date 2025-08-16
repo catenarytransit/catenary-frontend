@@ -241,7 +241,7 @@
 					<p class="text-sm ml-1">{data_from_server.primary.timezone}</p>
 
 					<div 
-					class="px-3 py-3 font-bold"
+					class="px-0 py-3 font-bold"
 					on:click={() => {
 						show_previous_departures = !show_previous_departures;
 					}}>

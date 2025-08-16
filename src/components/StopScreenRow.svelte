@@ -35,7 +35,7 @@
 	{#if shared_rt_time}
 		<div class={`ml-auto`}>
 			{#if shared_rt_time == shared_scheduled_time}
-				<BullseyeArrow class_name="w-4 h-4 inline-block align-middle text-[#58A738]" />
+				<BullseyeArrow class_name={`w-4 h-4 inline-block align-middle text-[#58A738]`} />
 			{/if}
 			{#if shared_rt_time != shared_scheduled_time}
 				<span class="text-slate-600 dark:text-gray-400 line-through">
@@ -46,7 +46,7 @@
 					/>
 				</span>
 			{/if}
-			<span class="text-seashore dark:text-seashoredark font-medium">
+			<span class={"text-seashore dark:text-seashoredark font-medium" + `${ shared_rt_time < (current_time / 1000) ? 'opacity-70' : '' }`}>
 				<Clock
 					timezone={data_from_server.primary.timezone}
 					time_seconds={shared_rt_time}
@@ -55,7 +55,7 @@
 			</span>
 		</div>
 	{:else}
-		<div class={`ml-auto`}>
+		<div class={`ml-auto ${ shared_scheduled_time < (current_time / 1000) ? 'opacity-70' : '' }`}>
 			<Clock
 				timezone={data_from_server.primary.timezone}
 				time_seconds={shared_scheduled_time}
