@@ -42,6 +42,8 @@
           show_gtfs_ids = value;
         });
 
+        const buildDate = _BUILD_DATE;
+
 </script>
 
 <HomeButton />
@@ -156,4 +158,5 @@
 				/>
 				<p>{$_('show_seconds_in_trips')}</p>
 			</div>
+                        <p><br>{$_('softwarebuilddate')}: {buildDate}</p>
 		</div>

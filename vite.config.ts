@@ -20,5 +20,8 @@ export default defineConfig({
 	build: {
 		sourcemap: true,
 		minify: true
-	}
+	},
+        define: {
+                _BUILD_DATE: JSON.stringify(new Date().toISOString())
+        }
 });

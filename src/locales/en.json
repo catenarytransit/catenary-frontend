@@ -59,6 +59,7 @@
 	"clickonanyvehicleorroutegetstarted": "Click on any vehicle or route to get started.",
 	"clickonanyitemfromthislist": "Click on any item from this list",
 	"softwareversion": "Software version",
+        "softwarebuilddate": "Build date",
 	"itemsselected": "items selected",
 	"timezone": "Timezone",
 	"departure": "Departure",
