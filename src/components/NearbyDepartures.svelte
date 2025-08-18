@@ -97,7 +97,7 @@
 	}
 
 	import type { NearbySelectionFilterRouteType } from '../globalstores';
-	import { SingleTrip, StackInterface, StopStack } from './stackenum';
+	import { SingleTrip, StackInterface, StopStack, RouteStack } from './stackenum';
 	import jsonwebworkerpkg from '@cheprasov/json-web-worker';
 	const { jsonWebWorker, parse, stringify } = jsonwebworkerpkg;
 	import { t } from 'svelte-i18n';
@@ -528,7 +528,7 @@
 									data_stack_store.update((stack) => {
 										stack.push(
 											new StackInterface(
-												new StopStack(route_group.chateau_id, route_group.route_id)
+												new RouteStack(route_group.chateau_id, route_group.route_id)
 									)
 										);
 
