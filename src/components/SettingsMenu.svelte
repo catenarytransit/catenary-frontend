@@ -163,8 +163,8 @@
 		/>
 		<p>{$_('show_seconds_in_trips')}</p>
 	</div>
-	<a href="https://github.com/catenarytransit/catenary-frontend/commit/{commitId}"
-		><br />Deployed Commit: <u>{commitId.substring(0, 7)}</u></a
-	>
+	<a href="https://github.com/catenarytransit/catenary-frontend/commit/{commitId}">
+		<br />Deployed Commit: <u>{commitId.substring(0, 7)}</u>
+	</a>
 	<p>Commit Date: {commitDate}</p>
 </div>
