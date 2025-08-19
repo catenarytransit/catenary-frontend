@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "node scripts/get-commit-id.js && vite build",
     "cloudflarebuild": "mv cloudflare-svelte.config.js svelte.config.js && vite build",
     "preview": "vite preview --port 16172",
     "betapreview": "vite preview --port 16173",

@@ -6,6 +6,8 @@
     
 	import {locales_options, locales_options_lookup} from '../i18n';
 
+        import { commitId } from '../data/commitId.js';
+
 	let this_locale: string | undefined | null;
 	import { getLocaleStorageOrNav } from '../i18n';
 	import { init_stores } from './init_stores';
@@ -149,6 +151,7 @@
 					type="checkbox"
 					class="accent-seashore"
 					checked={show_seconds}
+
 					on:click={(e) => {
 						show_seconds_store.set(e.target.checked);
 					}}
@@ -159,4 +162,5 @@
 				<p>{$_('show_seconds_in_trips')}</p>
 			</div>
                         <p><br>{$_('softwarebuilddate')}: {buildDate}</p>
+                        <a href="https://github.com/catenarytransit/catenary-frontend/commit/{commitId}">Deployed Commit <u>{commitId.substring(0, 7)}</u></a>
 		</div>
