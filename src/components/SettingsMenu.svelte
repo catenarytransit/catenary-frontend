@@ -12,8 +12,6 @@
 
 	import { locales_options, locales_options_lookup } from '../i18n';
 
-	import { commitId, commitDate } from '../data/commitId.js';
-
 	let this_locale: string | undefined | null;
 	import { getLocaleStorageOrNav } from '../i18n';
 	import { init_stores } from './init_stores';
@@ -49,6 +47,9 @@
 	show_gtfs_ids_store.subscribe((value) => {
 		show_gtfs_ids = value;
 	});
+
+	const commitID = _COMMIT_ID;
+	const commitDate = _COMMIT_DATE;
 </script>
 
 <HomeButton />
@@ -163,8 +164,8 @@
 		/>
 		<p>{$_('show_seconds_in_trips')}</p>
 	</div>
-	<a href="https://github.com/catenarytransit/catenary-frontend/commit/{commitId}">
-		<br />Deployed Commit: <u>{commitId.substring(0, 7)}</u>
+	<a href="https://github.com/catenarytransit/catenary-frontend/commit/{commitID}">
+		<br />Deployed Commit: <u>{commitID.substring(0, 7)}</u>
 	</a>
 	<p>Commit Date: {commitDate}</p>
 </div>
