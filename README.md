@@ -17,6 +17,12 @@ npm run build
 npm run preview
 ```
 
+or
+
+```bash
+npm run dev
+```
+
 ### Developers
 
 Catenary Maps Web version. 
