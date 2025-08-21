@@ -60,6 +60,7 @@
 	let last_stop_id_fetched = '';
 
 	let show_previous_departures = false;
+    let previous_count = 0;
 
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
@@ -89,6 +90,12 @@
 						(event) =>
 							(event.realtime_departure || event.scheduled_departure) > Date.now() / 1000 - 1800
 					);
+
+                    previous_count = events_filtered.filter(
+						(event) =>
+							(event.realtime_departure || event.scheduled_departure) < (Date.now() / 1000) - 60
+       
+					).length;
 
 					for (const event of events_filtered) {
 						//console.log('event', event);
@@ -240,6 +247,7 @@
 
 					<p class="text-sm ml-1">{data_from_server.primary.timezone}</p>
 
+<<<<<<< HEAD
 					<button
 						class="px-0 py-3 font-bold"
 						on:click={() => {
@@ -260,6 +268,31 @@
 						</p>
 					</button>
 
+=======
+				{#if previous_count > 0}	<div 
+					class="px-0 py-3 font-bold"
+					on:click={() => {
+						show_previous_departures = !show_previous_departures;
+					}}>
+				<p class="align-middle flex flex-row">
+					<span class="inline-block align-bottom">
+							{#if show_previous_departures}
+					<span class="material-symbols-outlined">
+					keyboard_arrow_up
+					</span>
+					{:else}
+					<span class="material-symbols-outlined">
+					keyboard_arrow_down
+					</span>
+					{/if}
+					</span>
+						<span>
+							{$_("previous_departures")}
+						</span>
+				</p>
+					</div>
+                    {/if}
+>>>>>>> 55c8c89a345606364d876ebbb46c378fc9f460a0
 					{#if dates_to_events_filtered}
 						{#each Object.keys(dates_to_events_filtered) as date_code}
 							<p class="text-md font-semibold mt-0 mb-1 mx-3">
