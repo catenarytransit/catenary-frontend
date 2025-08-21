@@ -58,6 +58,8 @@
 	"clickonanyvehicleorroutegetstarted": "Cliquez sur n’importe quel véhicule ou itinéraire pour commencer.",
 	"clickonanyitemfromthislist": "Cliquez sur n'importe quel élément de cette liste.",
 	"softwareversion": "version du logiciel",
+	"commitdate": "Jour de commit",
+	"commitid": "ID de commit",
 	"itemsselected": "articles sélectionnés",
 	"timezone": "Fuseau horaire",
 	"departure": "Départ",
@@ -140,3 +142,4 @@
 	"search_here": "Rechercher ici",
 	"previous_departures": "Départs précédents"
 }
+
