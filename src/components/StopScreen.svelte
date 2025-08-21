@@ -247,7 +247,7 @@
 					<p class="text-sm ml-1">{data_from_server.primary.timezone}</p>
 
 					{#if previous_count > 0}
-						<div
+						<button
 							class="px-0 py-3 font-bold"
 							on:click={() => {
 								show_previous_departures = !show_previous_departures;
@@ -265,7 +265,7 @@
 									{$_('previous_departures')}
 								</span>
 							</p>
-						</div>
+						</button>
 					{/if}
 					{#if dates_to_events_filtered}
 						{#each Object.keys(dates_to_events_filtered) as date_code}
