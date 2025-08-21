@@ -60,7 +60,7 @@
 	let last_stop_id_fetched = '';
 
 	let show_previous_departures = false;
-    let previous_count = 0;
+	let previous_count = 0;
 
 	function fetch_stop_data() {
 		console.log('Fetching data for chateau:', chateau, 'stop_id:', stop_id);
@@ -88,13 +88,12 @@
 				if (data.events) {
 					events_filtered = data_from_server.events.filter(
 						(event) =>
-							(event.realtime_departure || event.scheduled_departure) > (Date.now() / 1000) - 1800
+							(event.realtime_departure || event.scheduled_departure) > Date.now() / 1000 - 1800
 					);
 
-                    previous_count = events_filtered.filter(
+					previous_count = events_filtered.filter(
 						(event) =>
-							(event.realtime_departure || event.scheduled_departure) < (Date.now() / 1000) - 60
-       
+							(event.realtime_departure || event.scheduled_departure) < Date.now() / 1000 - 60
 					).length;
 
 					for (const event of events_filtered) {
@@ -247,29 +246,27 @@
 
 					<p class="text-sm ml-1">{data_from_server.primary.timezone}</p>
 
-				{#if previous_count > 0}	<div 
-					class="px-0 py-3 font-bold"
-					on:click={() => {
-						show_previous_departures = !show_previous_departures;
-					}}>
-				<p class="align-middle flex flex-row">
-					<span class="inline-block align-bottom">
-							{#if show_previous_departures}
-					<span class="material-symbols-outlined">
-					keyboard_arrow_up
-					</span>
-					{:else}
-					<span class="material-symbols-outlined">
-					keyboard_arrow_down
-					</span>
+					{#if previous_count > 0}
+						<button
+							class="px-0 py-3 font-bold"
+							on:click={() => {
+								show_previous_departures = !show_previous_departures;
+							}}
+						>
+							<p class="align-middle flex flex-row">
+								<span class="inline-block align-bottom">
+									{#if show_previous_departures}
+										<span class="material-symbols-outlined"> keyboard_arrow_up </span>
+									{:else}
+										<span class="material-symbols-outlined"> keyboard_arrow_down </span>
+									{/if}
+								</span>
+								<span>
+									{$_('previous_departures')}
+								</span>
+							</p>
+						</button>
 					{/if}
-					</span>
-						<span>
-							{$_("previous_departures")}
-						</span>
-				</p>
-					</div>
-                    {/if}
 					{#if dates_to_events_filtered}
 						{#each Object.keys(dates_to_events_filtered) as date_code}
 							<p class="text-md font-semibold mt-0 mb-1 mx-3">
@@ -285,16 +282,15 @@
 								)}
 							</p>
 
-							{#each dates_to_events_filtered[date_code]
-								.filter((event) => {
-									let cutoff = 60;
+							{#each dates_to_events_filtered[date_code].filter((event) => {
+								let cutoff = 60;
 
-									if (show_previous_departures == true) {
-										cutoff = 1800;
-									}
+								if (show_previous_departures == true) {
+									cutoff = 1800;
+								}
 
-									return (event.realtime_departure || event.scheduled_departure) >= ((current_time / 1000) - cutoff)
-								}) as event}
+								return (event.realtime_departure || event.scheduled_departure) >= current_time / 1000 - cutoff;
+							}) as event}
 								<div
 									class="mx-1 py-1 border-b-1 border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800"
 									on:click={() => {
