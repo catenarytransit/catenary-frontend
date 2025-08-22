@@ -2595,12 +2595,7 @@
       ],
       "layout": {
         "symbol-placement": "line",
-        "text-field": [
-          "case",
-          ["has", "name:nonlatin"],
-          ["concat", ["get", "name:latin"], " ", ["get", "name:nonlatin"]],
-          ["coalesce", ["get", "name"], ["get", "name_en"]]
-        ],
+        "text-field": ["get", "name"],
         "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "map",
         "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
