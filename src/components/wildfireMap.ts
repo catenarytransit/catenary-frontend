@@ -93,7 +93,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 
 	const watchduty_proxy = "https://birchfire.catenarymaps.org/watchduty_tiles_proxy/{z}/{x}/{y}";
 
-	const evacuation_fire_url = "https://github.com/catenarytransit/fire-bounds-cache/raw/refs/heads/main/data/evac_california.json";
+	const evacuation_fire_url = "https://fireboundscache.catenarymaps.org/data/evac_california.json";
 
 	const modis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/modis.json";
 
@@ -101,13 +101,13 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	//const national_usa_fire_arcgis_url =	'https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/wfigs_fire_bounds.json';
 	const california_firis_arcgis_url = "https://raw.githubusercontent.com/catenarytransit/fire-bounds-cache/refs/heads/main/data/ca_fire_bounds.json";
 
-	const los_angeles_fire_evac = 'https://github.com/catenarytransit/fire-bounds-cache/raw/refs/heads/main/data/los_angeles_evac.json';
+	const los_angeles_fire_evac = 'https://fireboundscache.catenarymaps.org/data/los_angeles_evac.json';
 
 	const firenamesmanual_url = 'https://fireboundscache.catenarymaps.org/manual_data/firenames.json';
 
 	const fire_evac_manual = 'https://fireboundscache.catenarymaps.org/manual_data/evac.json';
 
-	const fire_evac_codes_california = "https://github.com/catenarytransit/fire-bounds-cache/raw/refs/heads/main/data/watchduty_events.json";
+	const fire_evac_codes_california = "https://fireboundscache.catenarymaps.org/data/watchduty_events.json";
 	
 //	map.addSource('arcgisfire', {
 //		type: 'geojson',
