@@ -164,7 +164,10 @@
 		/>
 		<p>{$_('show_seconds_in_trips')}</p>
 	</div>
-	<a href="https://github.com/catenarytransit/catenary-frontend/commit/{commitID}">
+	<a
+		target={'_blank'}
+		href="https://github.com/catenarytransit/catenary-frontend/commit/{commitID}"
+	>
 		<br />{$_('commitid')}: <u>{commitID.substring(0, 7)}</u>
 	</a>
 	<p>{$_('commitdate')}: {commitDate}</p>
