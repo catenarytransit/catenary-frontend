@@ -71,6 +71,7 @@
 	"hidepreviousstops": "隱藏之前的停靠站",
 	"shownpreviousstops": "顯示前 {n, number} 個之前的站點",
 	"platform": "站台",
+	"Platform": "站台",
 	"show_gtfs_ids": "顯示 GTFS ID",
 	"alert_cause_unknown_cause": "未知原因",
 "alert_cause_other_cause": "其他原因",
@@ -114,5 +115,7 @@
 	"deleted": "已刪除",
 	"headsign": "線路牌",
 	"starting_time": "開始時間",
-	"ending_time": "結束時間"
+	"ending_time": "結束時間",
+	"commitdate": "Git 提交日期時間",
+	"search_here": "在此處搜尋"
 }
