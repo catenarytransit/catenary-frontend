@@ -50,6 +50,7 @@
 
     {#if latest_query_data_local}
 {#each latest_query_data_local.stops_section.ranking.slice(0,length) as stop_ranked}
+{#if !(latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id].parent_station)}
 
 <div class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
     on:click={() => {
@@ -76,7 +77,7 @@
     />
     {/key}
 </div>    
-
+{/if}
 {/each}
 {/if}
 {/if}
