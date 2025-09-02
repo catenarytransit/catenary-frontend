@@ -1016,7 +1016,9 @@
       "filter": [
         "all",
         ["match", ["get", "brunnel"], ["bridge", "tunnel"], false, true],
-        ["match", ["get", "class"], ["service", "track"], true, false]
+        ["match", ["get", "class"], ["service", "track"], true, false],
+        ["!=", ["get", "foot"], "designated"],
+        ["!=", ["get", "surface"], "unpaved"]
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
@@ -1208,7 +1210,7 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "minzoom": 14,
+      "minzoom": 11,
       "filter": [
         "all",
         [
@@ -1274,11 +1276,15 @@
       "filter": [
         "all",
         ["match", ["get", "brunnel"], ["bridge", "tunnel"], false, true],
-        ["match", ["get", "class"], ["service", "track"], true, false]
+        ["match", ["get", "class"], ["service", "track"], true, false],
+        ["!=", ["get", "foot"], "designated"],
+        ["!=", ["get", "surface"], "unpaved"]
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
-        "line-color": "rgba(50, 78, 113, 1)",
+        "line-color": {
+          "stops": [[6, "rgba(68, 68, 68, 1)"], [10, "rgba(97, 104, 127, 1)"]]
+        },
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -1289,7 +1295,31 @@
           2,
           20,
           7.5
-        ]
+        ],
+        "line-opacity": {"stops": [[6, 1], [10, 1]]}
+      }
+    },
+    {
+      "id": "road_service_track-trails-only",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": ["all", ["==", ["get", "surface"], "unpaved"]],
+      "layout": {"line-cap": "round", "line-join": "round"},
+      "paint": {
+        "line-color": "rgba(91, 89, 72, 1)",
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.2],
+          ["zoom"],
+          15.5,
+          1,
+          16,
+          2,
+          20,
+          7.5
+        ],
+        "line-opacity": {"stops": [[6, 1], [10, 1]]}
       }
     },
     {
