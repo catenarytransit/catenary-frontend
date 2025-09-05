@@ -248,6 +248,21 @@
       "paint": {"fill-color": "rgba(19, 78, 72, 1)"}
     },
     {
+      "id": "aeroway_fill",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "aeroway",
+      "minzoom": 11,
+      "filter": [
+        "match",
+        ["geometry-type"],
+        ["Polygon", "MultiPolygon"],
+        true,
+        false
+      ],
+      "paint": {"fill-color": "rgba(25, 25, 21, 1)", "fill-opacity": 0.7}
+    },
+    {
       "id": "waterway_tunnel",
       "type": "line",
       "source": "openmaptiles",
@@ -332,21 +347,6 @@
       "source-layer": "landcover",
       "filter": ["==", ["get", "class"], "sand"],
       "paint": {"fill-color": "rgba(72, 70, 57, 1)", "fill-opacity": 0.34}
-    },
-    {
-      "id": "aeroway_fill",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "aeroway",
-      "minzoom": 11,
-      "filter": [
-        "match",
-        ["geometry-type"],
-        ["Polygon", "MultiPolygon"],
-        true,
-        false
-      ],
-      "paint": {"fill-color": "rgba(25, 25, 21, 1)", "fill-opacity": 0.7}
     },
     {
       "id": "aeroway_runway",

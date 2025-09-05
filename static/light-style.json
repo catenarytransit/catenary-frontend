@@ -14,8 +14,14 @@
   "sprite": [
     {"id": "ofm", "url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm"},
     {"id": "mbicons", "url": "https://moreicons.pages.dev/sprite"},
-    {"id": "orm", "url": "https://maps.catenarymaps.org/sprite/symbols"},
-    {"id": "ormsdf", "url": "https://maps.catenarymaps.org/sdf_sprite/symbols"}
+    {
+      "id": "orm",
+      "url": "https://maps.catenarymaps.org/orm_sprite_symbols/symbols"
+    },
+    {
+      "id": "ormsdf",
+      "url": "https://maps.catenarymaps.org/orm_sdf_sprite_symbols/symbols"
+    }
   ],
   "glyphs": "https://tipo.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
   "layers": [
@@ -2793,7 +2799,7 @@
         "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "viewport",
         "text-size": 10,
-        "visibility": "visible"
+        "visibility": "none"
       }
     },
     {
