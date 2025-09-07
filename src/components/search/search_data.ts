@@ -20,8 +20,10 @@ interface StopsRanking {
 }
 
 export const data_store_text_queries: Writable<Record<string, SearchQueryResponse>> = writable({});
+export const nominatim_response_queries: Writable<Record<string, Object[]>> = writable({});
 
 export const latest_query_data: Writable<SearchQueryResponse | null> = writable(null);
+export const latest_nominatim_data: Writable<Object[] | null> = writable(null);
 
 let geolocation: GeolocationPosition | null;
 
@@ -75,6 +77,29 @@ export function new_query(text: string) {
     } else {
         url = `https://birch.catenarymaps.org/text_search_v1?text=${text}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
     }
+
+    fetch("https://nominatim1.catenarymaps.org/search?dedupe=1&q=" + text, {
+        "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "",
+        },
+        "method": "GET",
+        "mode": "cors"
+    }) .then(response => response.json())
+        .then((data) => {
+
+            nominatim_response_queries.update((existing_map) => {
+                nominatim_response_queries[text] = data;
+
+                return existing_map;
+            });
+
+            if (get(text_input_store) == text) {
+                latest_nominatim_data.set(data);
+            }
+
+        });
 
     fetch(url)
         .then(response => response.json())

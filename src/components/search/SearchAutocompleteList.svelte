@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { map_pointer_store } from './../../globalstores.ts';
 	import { get } from "svelte/store";
-    import {latest_query_data, text_input_store, autocomplete_focus_state, show_back_button_recalc } from "./search_data";
+    import {latest_query_data, text_input_store, autocomplete_focus_state, show_back_button_recalc,
+        latest_nominatim_data
+     } from "./search_data";
     import {
 		data_stack_store,
 		on_sidebar_trigger_store,
@@ -13,7 +16,6 @@
 		show_zombie_buses_store,
 		show_my_location_store,
 		custom_icons_category_to_layer_id,
-		map_pointer_store,
 		geolocation_store,
 		chateaus_store,
 		show_gtfs_ids_store,
@@ -25,6 +27,13 @@
 
     let latest_query_data_local = get(latest_query_data);
     let text_input = get(text_input_store);
+
+    let latest_nominatim_data_local = get(latest_nominatim_data);
+
+    latest_nominatim_data.subscribe((n) => {
+        latest_nominatim_data_local = n;
+        console.log(n);
+    });
 
     text_input_store.subscribe((n) => text_input=n);
     
@@ -45,8 +54,40 @@
 </script>
 
 <div id='search_autocomplete_a'>
+
     
 {#if text_input.length > 0}
+
+    {#if latest_nominatim_data_local}
+       {#each latest_nominatim_data_local.filter((x) => (x.addresstype != "railway" && x.type != "bus_stop")).slice(0,length) as nom_item}
+         <div 
+         on:click={() => {
+            let map = get(map_pointer_store);
+
+            if (nom_item.boundingbox) {
+                map.fitBounds(
+                    [
+            [nom_item.boundingbox[2], nom_item.boundingbox[0]],
+            [nom_item.boundingbox[3],nom_item.boundingbox[1]]
+        ]
+                )
+            } else {
+                map.flyTo(
+                    {
+                        center: [
+                            nom_item.lon,nom_item.lat
+                        ]
+                    }
+                )
+            }
+         }}
+         class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <p class="font-medium">{nom_item.name} <span class='font-light text-xs'>{nom_item.addresstype}</span></p>
+            <p class="text-xs">{nom_item.display_name}</p>
+            
+        </div>
+       {/each}
+    {/if}
 
     {#if latest_query_data_local}
 {#each latest_query_data_local.stops_section.ranking.slice(0,length) as stop_ranked}
