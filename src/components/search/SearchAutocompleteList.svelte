@@ -70,7 +70,10 @@
             [nom_item.boundingbox[2], nom_item.boundingbox[0]],
             [nom_item.boundingbox[3],nom_item.boundingbox[1]]
         ]
-                )
+                );
+
+                
+                                autocomplete_focus_state.set(false);
             } else {
                 map.flyTo(
                     {
@@ -78,7 +81,10 @@
                             nom_item.lon,nom_item.lat
                         ]
                     }
-                )
+                );
+
+                
+                                autocomplete_focus_state.set(false);
             }
          }}
          class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
