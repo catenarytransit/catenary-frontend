@@ -53,16 +53,19 @@
     });
 </script>
 
-<div id='search_autocomplete_a'>
+<div id='search_autocomplete_a flex flex-col'>
 
     
 {#if text_input.length > 0}
 
     {#if latest_nominatim_data_local}
        {#each latest_nominatim_data_local.filter((x) => (x.addresstype != "railway" && x.type != "bus_stop")).slice(0,length) as nom_item}
-         <div 
+         <button 
+         
          on:click={() => {
             let map = get(map_pointer_store);
+            
+            autocomplete_focus_state.set(false);
 
             if (nom_item.boundingbox) {
                 map.fitBounds(
@@ -73,7 +76,6 @@
                 );
 
                 
-                                autocomplete_focus_state.set(false);
             } else {
                 map.flyTo(
                     {
@@ -84,14 +86,13 @@
                 );
 
                 
-                                autocomplete_focus_state.set(false);
             }
          }}
-         class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+         class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full flex flex-col content-start items-start">
             <p class="font-medium dark:text-white">{nom_item.name} <span class='font-light text-xs'>{nom_item.addresstype}</span></p>
             <p class="text-xs dark:text-white">{nom_item.display_name}</p>
             
-        </div>
+        </button>
        {/each}
     {/if}
 
@@ -99,7 +100,7 @@
 {#each latest_query_data_local.stops_section.ranking.slice(0,length) as stop_ranked}
 {#if !(latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id].parent_station)}
 
-<div class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+<button class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full flex flex-col content-start items-start align-left"
     on:click={() => {
        data_stack_store.update((data_stack) => {
 									data_stack.push(
@@ -123,7 +124,7 @@
         stop_ranked={stop_ranked}
     />
     {/key}
-</div>    
+</button>    
 {/if}
 {/each}
 {/if}
