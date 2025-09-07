@@ -88,8 +88,8 @@
             }
          }}
          class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
-            <p class="font-medium">{nom_item.name} <span class='font-light text-xs'>{nom_item.addresstype}</span></p>
-            <p class="text-xs">{nom_item.display_name}</p>
+            <p class="font-medium dark:text-white">{nom_item.name} <span class='font-light text-xs'>{nom_item.addresstype}</span></p>
+            <p class="text-xs dark:text-white">{nom_item.display_name}</p>
             
         </div>
        {/each}
