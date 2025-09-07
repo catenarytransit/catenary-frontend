@@ -88,9 +88,11 @@
                 
             }
          }}
-         class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full flex flex-col content-start items-start">
-            <p class="font-medium dark:text-white">{nom_item.name} <span class='font-light text-xs'>{nom_item.addresstype}</span></p>
-            <p class="text-xs dark:text-white">{nom_item.display_name}</p>
+         class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full">
+            <div class="align-start  flex flex-col content-start items-start text-left">
+                <p class="font-medium dark:text-white">{nom_item.name} <span class='font-light text-xs'>{nom_item.addresstype}</span></p>
+            <p class="text-xs dark:text-white " >{nom_item.display_name}</p>
+            </div>
             
         </button>
        {/each}
