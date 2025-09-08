@@ -37,7 +37,7 @@
 
     text_input_store.subscribe((n) => text_input=n);
     
-    import {StopStack, StackInterface} from '../stackenum';
+    import {StopStack, StackInterface, OsmItemStack} from '../stackenum';
 
     export let length = 16;
 
@@ -62,10 +62,22 @@
        {#each latest_nominatim_data_local.filter((x) => (x.addresstype != "railway" && x.type != "bus_stop")).slice(0,length) as nom_item}
          <button 
          
+
+          
+
          on:click={() => {
             let map = get(map_pointer_store);
             
             autocomplete_focus_state.set(false);
+
+             data_stack_store.update((data_stack) => {
+									data_stack.push(
+										
+    new StackInterface(new OsmItemStack(nom_item.osm_id, nom_item.class))
+									);
+
+									return data_stack;
+								});
 
             if (nom_item.boundingbox) {
                 map.fitBounds(
@@ -87,6 +99,9 @@
 
                 
             }
+
+             autocomplete_focus_state.set(false);
+                                show_back_button_recalc();
          }}
          class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full">
             <div class="align-start  flex flex-col content-start items-start text-left">

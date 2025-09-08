@@ -13,7 +13,8 @@
 		RouteMapSelector,
 		VehicleSelectedStack,
 		StopMapSelector,
-		BlockStack
+		BlockStack,
+		OsmItemStack
 	} from '../components/stackenum';
 	import HomeButton from './SidebarParts/home_button.svelte';
 	import BackButton from './SidebarParts/back_button.svelte';
@@ -26,6 +27,7 @@
 	import { getLocaleFromNavigator, locale, locales, _ } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
+	import OsmItemInfo from './OsmItemInfo.svelte';
 	import {
 		fixHeadsignIcon,
 		fixRouteName,
@@ -460,6 +462,19 @@
 			routetype={latest_item_on_stack.data.route_type}
 			trip_selected={latest_item_on_stack.data}
 		/>
+	{/if}
+	{
+		#if latest_item_on_stack.data instanceof OsmItemStack
+	}
+		<HomeButton />
+		<OsmItemInfo
+			osm_class={
+				latest_item_on_stack.data.osm_class
+			}
+			osm_id={
+				latest_item_on_stack.data.osm_id
+			}
+			/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
 	{#key latest_item_on_stack.data}

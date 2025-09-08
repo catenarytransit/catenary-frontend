@@ -7,7 +7,8 @@ export class StackInterface {
 		| NearbyDeparturesStack
 		| MapSelectionScreen
 		| SettingsStack
-		| BlockStack;
+		| BlockStack
+		| OsmItemStack;
 
 	constructor(
 		data:
@@ -19,6 +20,7 @@ export class StackInterface {
 			| MapSelectionScreen
 			| SettingsStack
 			| BlockStack
+			| OsmItemStack
 	) {
 		this.data = data;
 	}
@@ -37,6 +39,16 @@ export class MapSelectionOption {
 
 	constructor(data: StopMapSelector | RouteMapSelector | VehicleMapSelector) {
 		this.data = data;
+	}
+}
+
+export class OsmItemStack {
+	public osm_id: string;
+	public osm_class: string;
+
+	constructor(osm_id: string, osm_class: string) {
+		this.osm_id = osm_id;
+		this.osm_class = osm_class;
 	}
 }
 
