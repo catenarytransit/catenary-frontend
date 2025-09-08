@@ -53,7 +53,7 @@
 </script>
 
 <div>
-	<p class="dark:text-white cursor-pointer  flex flex-col content-start items-start">{stop.name} 
+	<p class="dark:text-white cursor-pointer  flex flex-col content-start items-start text-left">{stop.name} 
         {#if stop.code}
         <span class='font-light'>{" "}{stop.code}</span>
     {/if}</p>
