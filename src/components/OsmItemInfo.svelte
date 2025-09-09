@@ -7,6 +7,7 @@
 
     export let osm_id: string;
     export let osm_class: string;
+    export let osm_type: string | null;
 
     let nominatim_data_saved = null;
 
@@ -16,7 +17,7 @@
 
         let global_map_pointer = get(map_pointer_store);
 
-        fetch("https://birch.catenarymaps.org/nominatim_details?osm_id=" + osm_id,
+        fetch("https://birch.catenarymaps.org/nominatim_details?osm_id=" + osm_id + "&osmtype=" + osm_type,
             {
                 "mode": "cors"
             }

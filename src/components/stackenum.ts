@@ -45,10 +45,12 @@ export class MapSelectionOption {
 export class OsmItemStack {
 	public osm_id: string;
 	public osm_class: string;
+	public osm_type: string | null;
 
-	constructor(osm_id: string, osm_class: string) {
+	constructor(osm_id: string, osm_class: string, osm_type: string | null) {
 		this.osm_id = osm_id;
 		this.osm_class = osm_class;
+		this.osm_type = osm_type;
 	}
 }
 

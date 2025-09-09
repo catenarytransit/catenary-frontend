@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { map_pointer_store } from './../../globalstores.ts';
+	import { map_pointer_store } from './../../globalstores';
 	import { get } from "svelte/store";
     import {latest_query_data, text_input_store, autocomplete_focus_state, show_back_button_recalc,
         latest_nominatim_data
@@ -71,12 +71,19 @@
             autocomplete_focus_state.set(false);
 
              data_stack_store.update((data_stack) => {
-									data_stack.push(
-										
-    new StackInterface(new OsmItemStack(nom_item.osm_id, nom_item.class))
-									);
+									
+                
+                    let nom_type_cleaned = null;
 
-									return data_stack;
+                    switch (nom_item.osm_type) {
+        case "relation": nom_type_cleaned == "R";
+        case "way": nom_type_cleaned ==  "W";
+        case "node": nom_type_cleaned == "N";
+        default: nom_type_cleaned == null;
+    };
+
+                data_stack.push(new StackInterface(new OsmItemStack(nom_item.osm_id, nom_item.class, nom_type_cleaned)));
+return data_stack;
 								});
 
             if (nom_item.boundingbox) {
