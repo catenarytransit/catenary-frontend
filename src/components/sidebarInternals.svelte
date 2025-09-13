@@ -475,7 +475,7 @@
 				latest_item_on_stack.data.osm_id
 			}
 			osm_type={
-				latest_item_on_stack.osm_type
+				latest_item_on_stack.data.osm_type
 			}
 			/>
 	{/if}
