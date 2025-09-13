@@ -17,7 +17,17 @@
 
         let global_map_pointer = get(map_pointer_store);
 
-        fetch("https://birch.catenarymaps.org/nominatim_details?osm_id=" + osm_id + "&osmtype=" + osm_type + "&osm_class=" + osm_class,
+        let url = "https://birch.catenarymaps.org/nominatim_details?osm_id=" + osm_id;
+
+        if (osm_type) {
+            url = url + "&osmtype=" + osm_type;
+        }
+
+        if (osm_type) {
+            url = url + "&osm_class=" + osm_class;
+        }
+
+        fetch(url,
             {
                 "mode": "cors"
             }
