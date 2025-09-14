@@ -370,8 +370,10 @@
 
 				let success = true;
 
+				var data;
+
 				try {
-					const data = JSON.parse(text);
+					data = JSON.parse(text);
 
 					
 				} catch (e) {
