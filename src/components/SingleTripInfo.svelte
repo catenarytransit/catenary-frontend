@@ -367,8 +367,23 @@
 		await fetch(url.toString())
 			.then(async (response) => {
 				let text = await response.text();
+
+				let success = true;
+
 				try {
 					const data = JSON.parse(text);
+
+					
+				} catch (e) {
+
+					success = false;
+
+					error = text;
+				}
+
+				if (success == true) {
+					try {
+					
 					//	console.log('trip data', data);
 					is_loading_trip_data = false;
 					trip_data = data;
@@ -596,6 +611,8 @@
 
 					fetch_trip_selected()
 				}
+				}
+				
 			})
 			.catch((e) => {
 				console.error(e);
