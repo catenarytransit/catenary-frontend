@@ -68,9 +68,10 @@
 
         {#if nominatim_data_saved.localname}
         <h1 class='font-medium'>{nominatim_data_saved.localname}</h1>
-            
-
+        
         {/if}
+
+        <p class="py-1 text-xs">Centroid: <span class="font-mono">{nominatim_data_saved.centroid.coordinates[0].toFixed(7)}, {nominatim_data_saved.centroid.coordinates[1].toFixed(7)}</span></p>
 
         {#if nominatim_data_saved.names}
         
