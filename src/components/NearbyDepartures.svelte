@@ -131,11 +131,12 @@
 	});
 
 	function refilter() {
-		departure_list_filtered = departure_list.filter(x => 
-			Object.keys(x.directions).length > 0 && 
-			filter_for_route_type(x.route_type, nearby_departures_filter_local)
+		departure_list_filtered = departure_list.filter(
+			(x) =>
+				Object.keys(x.directions).length > 0 &&
+				filter_for_route_type(x.route_type, nearby_departures_filter_local)
 		);
-		
+
 		console.log('filtered departures', departure_list_filtered.length);
 	}
 
@@ -354,15 +355,15 @@
 
 						Object.values(route_group.directions).forEach((direction_group: any) => {
 							Object.values(direction_group).forEach((headsign_group: any) => {
-											if (new_directions[headsign_group.headsign]) {
-											new_directions[headsign_group.headsign].trips = [
-												...new_directions[headsign_group.headsign].trips,
-												...headsign_group.trips
-											];
-										} else {
-											new_directions[headsign_group.headsign] = headsign_group;
-										}
-							})
+								if (new_directions[headsign_group.headsign]) {
+									new_directions[headsign_group.headsign].trips = [
+										...new_directions[headsign_group.headsign].trips,
+										...headsign_group.trips
+									];
+								} else {
+									new_directions[headsign_group.headsign] = headsign_group;
+								}
+							});
 						});
 
 						//for each value in the directions object
@@ -455,8 +456,8 @@
 	</div>
 
 	{#if !first_attempt_sent && current_nearby_pick_state == 0}
-		<p class="italic px-3 pb-2">{$_("waitingforgps")}...</p>
-		<p class="italic px-3 pt-1 text-xs">{$_("gpsdisclaimer")}</p>
+		<p class="italic px-3 pb-2">{$_('waitingforgps')}...</p>
+		<p class="italic px-3 pt-1 text-xs">{$_('gpsdisclaimer')}</p>
 	{/if}
 
 	<div class="w-full">
@@ -527,21 +528,17 @@
 						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'} ml-1 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer`}
 						style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}
 						on:click={() => {
-									data_stack_store.update((stack) => {
-										stack.push(
-											new StackInterface(
-												new RouteStack(route_group.chateau_id, route_group.route_id)
-									)
-										);
+							data_stack_store.update((stack) => {
+								stack.push(
+									new StackInterface(new RouteStack(route_group.chateau_id, route_group.route_id))
+								);
 
-										return stack;
-									});
-								}}
+								return stack;
+							});
+						}}
 					>
 						{#if route_group.short_name}
-							<span class="font-bold mr-1  "
-								
-							>
+							<span class="font-bold mr-1">
 								{fixRouteName(
 									route_group.chateau_id,
 									route_group.short_name,
@@ -675,9 +672,7 @@
 											{/if}
 										</span>
 
-										<p
-											class="font-medium text-sm leading-none"
-										>
+										<p class="font-medium text-sm leading-none">
 											{new Intl.DateTimeFormat('en-GB', {
 												hour: 'numeric',
 												minute: 'numeric',
