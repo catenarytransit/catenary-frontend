@@ -330,7 +330,7 @@
 		if (lat != 0 && lng != 0) {
 			first_attempt_sent = true;
 
-			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoords?lat=${lat}&lon=${lng}`;
+			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoordsv2?lat=${lat}&lon=${lng}`;
 
 			if (abort_controller) {
 				abort_controller.abort();
@@ -352,15 +352,17 @@
 					temp_departure_list.forEach((route_group: any) => {
 						let new_directions: Record<string, any> = {};
 
-						Object.values(route_group.directions).forEach((direction: any) => {
-							if (new_directions[direction.headsign]) {
-								new_directions[direction.headsign].trips = [
-									...new_directions[direction.headsign].trips,
-									...direction.trips
-								];
-							} else {
-								new_directions[direction.headsign] = direction;
-							}
+						Object.values(route_group.directions).forEach((direction_group: any) => {
+							Object.values(direction_group).forEach((headsign_group: any) => {
+											if (new_directions[headsign_group.headsign]) {
+											new_directions[headsign_group.headsign].trips = [
+												...new_directions[headsign_group.headsign].trips,
+												...headsign_group.trips
+											];
+										} else {
+											new_directions[headsign_group.headsign] = headsign_group;
+										}
+							})
 						});
 
 						//for each value in the directions object
