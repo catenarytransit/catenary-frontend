@@ -288,7 +288,7 @@
 									let time_text = new Date(
 										time_temp * 1000
 									).toLocaleTimeString('en-UK', {
-										timeZone: time_temp.timezone,
+										timeZone: eachstoptime.timezone,
 										hour: '2-digit',
 										minute: '2-digit',
 									});
