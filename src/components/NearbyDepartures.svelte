@@ -176,6 +176,15 @@
 
 					marker_reference.on('dragend', onDragEnd);
 				}
+
+				//clear the old stops stops_context
+				let stops_context = map.getSource('stops_context');
+				if (stops_context) {
+					stops_context.setData({
+						type: 'FeatureCollection',
+						features: []
+					});
+				}
 			}
 		}
 
