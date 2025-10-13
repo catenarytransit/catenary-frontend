@@ -18,6 +18,7 @@
 	import { start_location_watch } from '../user_location_lib';
 	import SearchBar from '../components/search/SearchBar.svelte';
 	import { autocomplete_focus_state } from '../components/search/search_data';
+	import { add_image_pedestrian_pattern } from '../components/pedestrian_layer';
 	import {
 		getLocationFromLocalStorage,
 		saveLocationToLocalStorage
@@ -1386,6 +1387,8 @@
 
 		map.on('load', () => {
 			checkClockSync();
+
+			add_image_pedestrian_pattern(map);
 
 			const orm_sources = {
 				openrailwaymap_low: {

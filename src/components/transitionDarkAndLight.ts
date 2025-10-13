@@ -17,14 +17,19 @@ import {
     show_gtfs_ids_store
 } from '../globalstores';
 import {changeContextTheme} from './addLayers/contextLayer';
-
+import { add_image_pedestrian_pattern } from './pedestrian_layer';
 import {get} from 'svelte/store';
 
 export function refreshUIMaplibre() {
+
+
     let map = get(map_pointer_store);
     let darkMode = false;
 
     if (map) {
+        
+    add_image_pedestrian_pattern(map);
+
         if (get(ui_theme_store) == "system") {
             const checkIsDarkSchemePreferred = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
 
@@ -112,6 +117,14 @@ export function refreshUIMaplibre() {
 
                         for (let paint_key in new_layers_into_obj[layer.id].paint) {
                             map.setPaintProperty(layer.id, paint_key, new_layers_into_obj[layer.id].paint[paint_key]);
+                        }
+
+                        if (layer.id == "pedestrian_area_pattern") {
+                            if (darkMode == false) {
+                                map.setPaintProperty("pedestrian_area_pattern", "fill-pattern", "pattern-ped");
+                            } else {
+                                map.setPaintProperty("pedestrian_area_pattern", "fill-pattern", null);
+                            }
                         }
 
                     }
