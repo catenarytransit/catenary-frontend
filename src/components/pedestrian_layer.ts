@@ -39,8 +39,16 @@ export async function add_image_pedestrian_pattern(map) {
 
        if (dark_mode == true) {
         map.setPaintProperty("pedestrian_area_pattern", "fill-pattern", null);
+        map.setPaintProperty("ped-area", "fill-pattern", null);
        } else {
         map.setPaintProperty("pedestrian_area_pattern", "fill-pattern", [
+  "step",
+  ["zoom"],
+  "pattern-ped-xs",
+  17,
+  "pattern-ped"
+]);
+   map.setPaintProperty("ped-area", "fill-pattern", [
   "step",
   ["zoom"],
   "pattern-ped-xs",
