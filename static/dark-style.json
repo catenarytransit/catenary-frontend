@@ -947,6 +947,23 @@
       "paint": {"fill-color": "rgba(0, 89, 30, 1)", "fill-opacity": 0.5}
     },
     {
+      "id": "ped-area-line",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "all",
+        ["==", "subclass", "footway"],
+        ["==", "$type", "Polygon"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "line-color": "rgba(27, 27, 29, 1)",
+        "line-width": 1,
+        "line-offset": -0.3
+      }
+    },
+    {
       "id": "ped-area",
       "type": "fill",
       "source": "openmaptiles",
@@ -958,6 +975,21 @@
       ],
       "layout": {"visibility": "visible"},
       "paint": {"fill-color": "rgba(49, 49, 49, 1)", "fill-opacity": 0.5}
+    },
+    {
+      "id": "pedestrian_area_pattern-line",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "match",
+        ["geometry-type"],
+        ["Polygon", "MultiPolygon"],
+        ["match", ["get", "subclass"], "pedestrian", true, false],
+        false
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"line-color": "rgba(24, 24, 25, 1)", "line-offset": -0.5}
     },
     {
       "id": "pedestrian_area_pattern",

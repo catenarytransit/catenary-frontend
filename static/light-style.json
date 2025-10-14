@@ -28,7 +28,7 @@
     {
       "id": "background",
       "type": "background",
-      "paint": {"background-color": "#f8f4f0"}
+      "paint": {"background-color": "#f4f4f4"}
     },
     {
       "id": "landcover-land",
@@ -1323,39 +1323,6 @@
       }
     },
     {
-      "id": "road_path_pedestrian",
-      "type": "line",
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "minzoom": 10,
-      "filter": [
-        "all",
-        [
-          "match",
-          ["geometry-type"],
-          ["LineString", "MultiLineString"],
-          true,
-          false
-        ],
-        ["match", ["get", "brunnel"], ["bridge", "tunnel"], false, true],
-        ["match", ["get", "class"], ["path", "pedestrian"], true, false]
-      ],
-      "layout": {"line-join": "round"},
-      "paint": {
-        "line-color": "#3daa81",
-        "line-dasharray": [1, 0.7],
-        "line-width": [
-          "interpolate",
-          ["exponential", 1.2],
-          ["zoom"],
-          14,
-          1,
-          23,
-          3
-        ]
-      }
-    },
-    {
       "id": "road_motorway_link",
       "type": "line",
       "source": "openmaptiles",
@@ -1397,7 +1364,7 @@
       ],
       "layout": {"line-cap": "round", "line-join": "round"},
       "paint": {
-        "line-color": "#fff",
+        "line-color": "rgba(198, 201, 210, 1)",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -1692,6 +1659,103 @@
         "icon-image": "arrow",
         "icon-rotate": 180,
         "symbol-placement": "line"
+      }
+    },
+    {
+      "id": "pedestrian_area_pattern-line",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "match",
+        ["geometry-type"],
+        ["Polygon", "MultiPolygon"],
+        ["match", ["get", "subclass"], "pedestrian", true, false],
+        false
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"line-color": "rgba(168, 168, 168, 1)", "line-offset": -0.5}
+    },
+    {
+      "id": "pedestrian_area_pattern",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "match",
+        ["geometry-type"],
+        ["Polygon", "MultiPolygon"],
+        ["match", ["get", "subclass"], "pedestrian", true, false],
+        false
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "fill-color": "#fefefe",
+        "fill-antialias": false,
+        "fill-opacity": 1
+      }
+    },
+    {
+      "id": "ped-area",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "all",
+        ["==", "subclass", "footway"],
+        ["==", "$type", "Polygon"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(255, 255, 255, 1)"}
+    },
+    {
+      "id": "ped-area-line",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "filter": [
+        "all",
+        ["==", "subclass", "footway"],
+        ["==", "$type", "Polygon"]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "line-color": "rgba(198, 198, 198, 1)",
+        "line-width": 1,
+        "line-offset": -0.3
+      }
+    },
+    {
+      "id": "road_path_pedestrian",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "transportation",
+      "minzoom": 10,
+      "filter": [
+        "all",
+        [
+          "match",
+          ["geometry-type"],
+          ["LineString", "MultiLineString"],
+          true,
+          false
+        ],
+        ["match", ["get", "brunnel"], ["bridge", "tunnel"], false, true],
+        ["match", ["get", "class"], ["path", "pedestrian"], true, false]
+      ],
+      "layout": {"line-join": "round"},
+      "paint": {
+        "line-color": "#3daa81",
+        "line-dasharray": [1, 0.7],
+        "line-width": [
+          "interpolate",
+          ["exponential", 1.2],
+          ["zoom"],
+          14,
+          1,
+          23,
+          3
+        ]
       }
     },
     {
@@ -2242,38 +2306,6 @@
           8
         ]
       }
-    },
-    {
-      "id": "pedestrian_area_pattern",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "filter": [
-        "match",
-        ["geometry-type"],
-        ["Polygon", "MultiPolygon"],
-        ["match", ["get", "subclass"], "pedestrian", true, false],
-        false
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "#fefefe",
-        "fill-antialias": false,
-        "fill-opacity": 1
-      }
-    },
-    {
-      "id": "ped-area",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "transportation",
-      "filter": [
-        "all",
-        ["==", "subclass", "footway"],
-        ["==", "$type", "Polygon"]
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(255, 255, 255, 1)"}
     },
     {
       "id": "building",
