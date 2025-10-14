@@ -54,187 +54,196 @@
 	}
 </script>
 
-	{#if shared_scheduled_time || shared_rt_time}
-	
+{#if shared_scheduled_time || shared_rt_time}
+	{#if show_both_departure_and_arrival}
+		<!--ARRIVAL SECTION-->
 
-{#if show_both_departure_and_arrival}
-	<!--ARRIVAL SECTION-->
+		<div class="flex flex-row items-center space-x-1">
+			<TimeDiff
+				diff={(stoptime.rt_arrival_time || stoptime.scheduled_arrival_time_unix_seconds) -
+					current_time_secs}
+				{show_seconds}
+				show_brackets={false}
+			/>
+			{#if stoptime.rt_arrival_time}
+				{#if stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
+					<DelayDiff
+						diff={stoptime.rt_arrival_time -
+							(stoptime.scheduled_arrival_time_unix_seconds ||
+								stoptime.interpolated_stoptime_unix_seconds)}
+						{show_seconds}
+					/>
+				{/if}
+			{/if}
 
-	<div class="flex flex-row items-center space-x-1">
-		<TimeDiff
-			diff={(stoptime.rt_arrival_time || stoptime.scheduled_arrival_time_unix_seconds) - current_time_secs}
-			{show_seconds}
-			show_brackets={false}
-		/>
-		{#if stoptime.rt_arrival_time}
-			<DelayDiff diff={stoptime.rt_arrival_time - (
-				stoptime.scheduled_arrival_time_unix_seconds ||
-				stoptime.interpolated_stoptime_unix_seconds
-			)} {show_seconds} />
-		{/if}
+			<div class="ml-auto text-sm">
+				<div class="text-sm text-right">
+					<p class="text-right">
+						<span
+							class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+						>
+							{$_('arrival')}</span
+						>
 
-		<div class="ml-auto text-sm">
-			<div class="text-sm text-right">
-				<p class="text-right">
-					<span
-						class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
-					>
-						{$_('arrival')}</span
-					>
-
-                    {#if stoptime.rt_arrival_time}
-                        {#if stoptime.rt_arrival_time == stoptime.scheduled_arrival_time_unix_seconds}
-                            <BullseyeArrow class_name="w-4 h-4 inline-block align-middle text-[#58A738]" />
-                        {/if}
-                        {#if stoptime.rt_arrival_time != stoptime.scheduled_arrival_time_unix_seconds}
-                            <span class="text-slate-600 dark:text-gray-400 line-through">
-                                <Clock
-                                    timezone={stoptime.timezone || trip_data.tz}
-                                    time_seconds={stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
-                                    {show_seconds}
-                                />
-                            </span>
-                        {/if}
-                        <span class="text-seashore dark:text-seashoredark font-medium">
-                            <Clock
-                                timezone={stoptime.timezone || trip_data.tz}
-                                time_seconds={stoptime.rt_arrival_time}
-                                {show_seconds}
-                            />
-                        </span>
-                    {:else}
-                        <Clock
-                            timezone={stoptime.timezone || trip_data.tz}
-                            time_seconds={stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
-                            {show_seconds}
-                        />
-                    {/if}
-				</p>
-			</div>
-		</div>
-	</div>
-
-	<!--DEPARTURE SECTION-->
-
-    <div class="flex flex-row items-center space-x-1">
-        <TimeDiff
-            diff={(stoptime.rt_departure_time || stoptime.scheduled_departure_time_unix_seconds) - current_time_secs}
-            {show_seconds}
-            show_brackets={false}
-        />
-        {#if stoptime.rt_departure_time}
-            <DelayDiff diff={stoptime.rt_departure_time - (
-				stoptime.scheduled_departure_time_unix_seconds ||
-				stoptime.interpolated_stoptime_unix_seconds
-			)} {show_seconds} />
-        {/if}
-
-        <div class="ml-auto text-sm">
-            <div class="text-sm text-right">
-                <p class="text-right">
-                    <span
-                        class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
-                    >
-                        {$_('departure')}</span
-                    >
-
-                    {#if stoptime.rt_departure_time}
-                        {#if stoptime.rt_departure_time == stoptime.scheduled_departure_time_unix_seconds}
-                            <BullseyeArrow class_name="w-4 h-4 inline-block align-middle text-[#58A738]" />
-                        {/if}
-                        {#if stoptime.rt_departure_time != stoptime.scheduled_departure_time_unix_seconds}
-                            <span class="text-slate-600 dark:text-gray-400 line-through">
-                                <Clock
-                                    timezone={stoptime.timezone || trip_data.tz}
-                                    time_seconds={stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
-                                    {show_seconds}
-                                />
-                            </span>
-                        {/if}
-                        <span class="text-seashore dark:text-seashoredark font-medium">
-                            <Clock
-                                timezone={stoptime.timezone || trip_data.tz}
-                                time_seconds={stoptime.rt_departure_time}
-                                {show_seconds}
-                            />
-                        </span>
-                    {:else}
-                        <Clock
-                            timezone={stoptime.timezone || trip_data.tz}
-                            time_seconds={stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
-                            {show_seconds}
-                        />
-                    {/if}
-                </p>
-            </div>
-        </div>
-    </div>
-{:else}
-    <!--UNIFIED TIME-->
-
-	<div class="flex flex-row items-center space-x-1">
-		{
-			#if shared_rt_time || shared_scheduled_time
-			
-		}
-		<TimeDiff
-		diff={(shared_rt_time || shared_scheduled_time) - current_time_secs}
-		{show_seconds}
-		show_brackets={false}
-	/>
-		{/if}
-		{#if shared_rt_time && shared_scheduled_time}
-			<DelayDiff diff={shared_rt_time - shared_scheduled_time} {show_seconds} />
-		{/if}
-		<div class="ml-auto text-sm">
-			<div class="text-sm text-right">
-				<p class="text-right">
-					<span
-						class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
-					></span>
-					{#if shared_rt_time}
-						{#if shared_rt_time == shared_scheduled_time}
-							<BullseyeArrow class_name="w-4 h-4 inline-block text-[#58A738]" />
-						{/if}
-						{#if shared_rt_time != shared_scheduled_time}{/if}
-						{#if shared_scheduled_time} 
-
-						{#if shared_rt_time != shared_scheduled_time}
-							<span
-								class={`${(shared_rt_time != shared_scheduled_time) == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
-							>
+						{#if stoptime.rt_arrival_time}
+							{#if stoptime.rt_arrival_time == stoptime.scheduled_arrival_time_unix_seconds}
+								<BullseyeArrow class_name="w-4 h-4 inline-block align-middle text-[#58A738]" />
+							{/if}
+							{#if stoptime.rt_arrival_time != stoptime.scheduled_arrival_time_unix_seconds}
+								{#if stoptime.scheduled_arrival_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
+									<span class="text-slate-600 dark:text-gray-400 line-through">
+										<Clock
+											timezone={stoptime.timezone || trip_data.tz}
+											time_seconds={stoptime.scheduled_arrival_time_unix_seconds ||
+												stoptime.interpolated_stoptime_unix_seconds}
+											{show_seconds}
+										/>
+									</span>
+								{/if}
+							{/if}
+							<span class="text-seashore dark:text-seashoredark font-medium">
 								<Clock
 									timezone={stoptime.timezone || trip_data.tz}
-									time_seconds={shared_scheduled_time}
+									time_seconds={stoptime.rt_arrival_time}
 									{show_seconds}
 								/>
 							</span>
-						{/if}
-						{/if}
-						<span class="text-seashore dark:text-seashoredark font-medium">
+						{:else}
 							<Clock
 								timezone={stoptime.timezone || trip_data.tz}
-								time_seconds={shared_rt_time}
+								time_seconds={stoptime.scheduled_arrival_time_unix_seconds ||
+									stoptime.interpolated_stoptime_unix_seconds}
 								{show_seconds}
 							/>
-						</span>
-					{:else}
-					{#if shared_scheduled_time}
-						<Clock
-							timezone={stoptime.timezone || trip_data.tz}
-							time_seconds={shared_scheduled_time}
-							{show_seconds}
-						/>
 						{/if}
-					{/if}
-				</p>
+					</p>
+				</div>
 			</div>
 		</div>
-	</div>
-{/if}
+
+		<!--DEPARTURE SECTION-->
+
+		<div class="flex flex-row items-center space-x-1">
+			<TimeDiff
+				diff={(stoptime.rt_departure_time || stoptime.scheduled_departure_time_unix_seconds) -
+					current_time_secs}
+				{show_seconds}
+				show_brackets={false}
+			/>
+			{#if stoptime.rt_departure_time}
+				{#if stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
+					<DelayDiff
+						diff={stoptime.rt_departure_time -
+							(stoptime.scheduled_departure_time_unix_seconds ||
+								stoptime.interpolated_stoptime_unix_seconds)}
+						{show_seconds}
+					/>
+				{/if}
+			{/if}
+
+			<div class="ml-auto text-sm">
+				<div class="text-sm text-right">
+					<p class="text-right">
+						<span
+							class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+						>
+							{$_('departure')}</span
+						>
+
+						{#if stoptime.rt_departure_time}
+							{#if stoptime.rt_departure_time == stoptime.scheduled_departure_time_unix_seconds}
+								<BullseyeArrow class_name="w-4 h-4 inline-block align-middle text-[#58A738]" />
+							{/if}
+							{#if stoptime.rt_departure_time != stoptime.scheduled_departure_time_unix_seconds}
+								<span class="text-slate-600 dark:text-gray-400 line-through">
+									{#if stoptime.scheduled_departure_time_unix_seconds || stoptime.interpolated_stoptime_unix_seconds}
+										<Clock
+											timezone={stoptime.timezone || trip_data.tz}
+											time_seconds={stoptime.scheduled_departure_time_unix_seconds ||
+												stoptime.interpolated_stoptime_unix_seconds}
+											{show_seconds}
+										/>
+									{/if}
+								</span>
+							{/if}
+							<span class="text-seashore dark:text-seashoredark font-medium">
+								<Clock
+									timezone={stoptime.timezone || trip_data.tz}
+									time_seconds={stoptime.rt_departure_time}
+									{show_seconds}
+								/>
+							</span>
+						{:else}
+							<Clock
+								timezone={stoptime.timezone || trip_data.tz}
+								time_seconds={stoptime.scheduled_departure_time_unix_seconds ||
+									stoptime.interpolated_stoptime_unix_seconds}
+								{show_seconds}
+							/>
+						{/if}
+					</p>
+				</div>
+			</div>
+		</div>
+	{:else}
+		<!--UNIFIED TIME-->
+
+		<div class="flex flex-row items-center space-x-1">
+			{#if shared_rt_time || shared_scheduled_time}
+				<TimeDiff
+					diff={(shared_rt_time || shared_scheduled_time) - current_time_secs}
+					{show_seconds}
+					show_brackets={false}
+				/>
+			{/if}
+			{#if shared_rt_time && shared_scheduled_time}
+				<DelayDiff diff={shared_rt_time - shared_scheduled_time} {show_seconds} />
+			{/if}
+			<div class="ml-auto text-sm">
+				<div class="text-sm text-right">
+					<p class="text-right">
+						<span
+							class="text-xs align-middle mr-1 inline-block -translate-y-0.5 text-slate-600 dark:text-gray-400"
+						></span>
+						{#if shared_rt_time}
+							{#if shared_rt_time == shared_scheduled_time}
+								<BullseyeArrow class_name="w-4 h-4 inline-block text-[#58A738]" />
+							{/if}
+							{#if shared_rt_time != shared_scheduled_time}{/if}
+							{#if shared_scheduled_time}
+								{#if shared_rt_time != shared_scheduled_time}
+									<span
+										class={`${(shared_rt_time != shared_scheduled_time) == true ? 'text-slate-600 dark:text-gray-400 line-through' : ''}`}
+									>
+										<Clock
+											timezone={stoptime.timezone || trip_data.tz}
+											time_seconds={shared_scheduled_time}
+											{show_seconds}
+										/>
+									</span>
+								{/if}
+							{/if}
+							<span class="text-seashore dark:text-seashoredark font-medium">
+								<Clock
+									timezone={stoptime.timezone || trip_data.tz}
+									time_seconds={shared_rt_time}
+									{show_seconds}
+								/>
+							</span>
+						{:else if shared_scheduled_time}
+							<Clock
+								timezone={stoptime.timezone || trip_data.tz}
+								time_seconds={shared_scheduled_time}
+								{show_seconds}
+							/>
+						{/if}
+					</p>
+				</div>
+			</div>
+		</div>
+	{/if}
 {/if}
 
-	{#if debug_mode}<p>
+{#if debug_mode}<p>
 		<span class="text-sm">shared time rt:{shared_rt_time} | sched: {shared_scheduled_time}</span>
 	</p>{/if}
-
