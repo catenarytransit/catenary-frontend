@@ -63,6 +63,6 @@
     "svelte-toasts": "^1.1.2",
     "tailwind": "^4.0.0",
     "toastify-js": "^1.12.0",
-    "wrangler": "^3.114.15"
+    "wrangler": "^4.43.0"
   }
 }
