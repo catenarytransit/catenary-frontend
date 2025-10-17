@@ -43,139 +43,137 @@
 		<div class="flex flex-row align-center">
 			<div>
 				<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-2" />
-		<span class="text-[#F99C24] font-semibold text-lg align-middle"
-			>{$_('service_alerts', {
-				values: {
-					n: Object.keys(alerts).length
-				}
-			})}</span
-		>
-				</div>
-		<button class="ml-auto" on:click={() => {
-			expanded = !expanded
-		}}>
-			{#if expanded}
-			<span class="material-symbols-outlined">
-collapse_content
-</span>	
-			{:else}
-			<span class="material-symbols-outlined">
-expand_content
-</span>
-			{/if}
-</button>
-		</div>
-		
-		
-		{#if expanded}
-		<div class="py-0.5"></div>
-		{#each Object.values(alerts) as alert}
-			<div class="pt-1">
-				<hr class="border-[#F99C24] border-0.5 rounded-xl" />
-				<p class="text-base font-medium text-[#F99C24] pt-1">
-					<span class="">{$_(cause_id_str(alert.cause))}</span>
-					<span> // </span>
-					<span>{$_(effect_id_str(alert.effect))}</span>
-				</p>
-
-				{#if alert.url}
-					{#each alert.url.translation as url_translation}
-						<p class="text-sm">
-							<span>{url_translation.language != null ? url_translation.language : ''}: </span><a
-								href={url_translation.text}
-								class="hover:underline text-sky-500 dark:text-sky-300"
-								target="_blank">{url_translation.text}</a
-							>
-						</p>
-					{/each}
-				{/if}
-
-				{#each languagelist.filter( (x) => (languagelist.includes('en-html') ? x.language != 'en' : true) ) as language}
-					{#if alert.header_text != null}
-						{#each alert.header_text.translation.filter((x) => x.language == language) as each_header_translation_obj}
-							<p class={`text-sm`}>
-								{each_header_translation_obj.text
-									.replaceAll(/\<(\/)?p\>/g, '')
-									.replaceAll(/\<(\/)?b\>/g, '')}
-							</p>
-						{/each}
-					{/if}
-
-					{#if alert.description_text != null}
-						{#each alert.description_text.translation.filter((x) => x.language == language) as description_alert}
-							<div class="leading-none">
-								{#each description_alert.text.split('\n') as each_desc_line}
-									<div class="text-xs pt-0.5">
-										{@html each_desc_line
-											.replaceAll(
-												'<a ',
-												'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
-											)
-											.replaceAll(/\<(\/)?p\>/g, '')
-											.replaceAll(/\<(\/)?b\>/g, '')
-											.replaceAll('https://rt.scmetro.org ', 'Catenary Maps ')
-											.replaceAll(
-												/(\[)?accessibility icon(\])?/g,
-												'<span class="bg-blue-200 dark:bg-gray-500 w-3 h-3 rounded-full inline"><span class="text-xs material-symbols-outlined ">accessible</span></span>'
-											)}
-									</div>
-								{/each}
-							</div>
-						{/each}
-					{/if}
-				{/each}{#if alert.active_period.length > 0}
-					{#each alert.active_period as active_period}
-						{#if active_period.start != null}
-							<p class="text-xs">
-								{$_('starting_time')}:
-								{#if default_tz}
-									{new Date(active_period.start * 1000).toLocaleString(locale_code, {
-										timeZone: default_tz,
-										hour12: false
-									})}
-								{:else}
-									{new Date(active_period.start * 1000).toLocaleString(locale_code, {
-										hour12: false
-									})}
-								{/if}
-
-								<TimeDiff
-									diff={active_period.start - new Date().getTime() / 1000}
-									show_seconds={false}
-									show_brackets={true}
-									show_plus={true}
-									show_days={true}
-								/>
-							</p>
-						{/if}
-
-						{#if active_period.end != null}
-							<p class="text-xs">
-								{$_('ending_time')}:
-								{#if default_tz}
-									{new Date(active_period.end * 1000).toLocaleString(locale_code, {
-										timeZone: default_tz,
-										hour12: false
-									})}
-								{:else}
-									{new Date(active_period.end * 1000).toLocaleString(locale_code, {
-										hour12: false
-									})}
-								{/if}
-
-								<TimeDiff
-									diff={active_period.end - new Date().getTime() / 1000}
-									show_seconds={false}
-									show_brackets={true}
-									show_plus={true}
-									show_days={true}
-								/>
-							</p>
-						{/if}
-					{/each}
-				{/if}
+				<span class="text-[#F99C24] font-semibold text-lg align-middle"
+					>{$_('service_alerts', {
+						values: {
+							n: Object.keys(alerts).length
+						}
+					})}</span
+				>
 			</div>
-		{/each}
+			<button
+				class="ml-auto w-6 h-6 rounded-full flex flex-col align-center"
+				on:click={(e) => {
+					expanded = !expanded;
+				}}
+			>
+				{#if expanded}
+					<span class="material-symbols-outlined select-none"> collapse_content </span>
+				{:else}
+					<span class="material-symbols-outlined select-none"> expand_content </span>
+				{/if}
+			</button>
+		</div>
+
+		{#if expanded}
+			<div class="py-0.5"></div>
+			{#each Object.values(alerts) as alert}
+				<div class="pt-1">
+					<hr class="border-[#F99C24] border-0.5 rounded-xl" />
+					<p class="text-base font-medium text-[#F99C24] pt-1">
+						<span class="">{$_(cause_id_str(alert.cause))}</span>
+						<span> // </span>
+						<span>{$_(effect_id_str(alert.effect))}</span>
+					</p>
+
+					{#if alert.url}
+						{#each alert.url.translation as url_translation}
+							<p class="text-sm">
+								<span>{url_translation.language != null ? url_translation.language : ''}: </span><a
+									href={url_translation.text}
+									class="hover:underline text-sky-500 dark:text-sky-300"
+									target="_blank">{url_translation.text}</a
+								>
+							</p>
+						{/each}
+					{/if}
+
+					{#each languagelist.filter( (x) => (languagelist.includes('en-html') ? x.language != 'en' : true) ) as language}
+						{#if alert.header_text != null}
+							{#each alert.header_text.translation.filter((x) => x.language == language) as each_header_translation_obj}
+								<p class={`text-sm`}>
+									{each_header_translation_obj.text
+										.replaceAll(/\<(\/)?p\>/g, '')
+										.replaceAll(/\<(\/)?b\>/g, '')}
+								</p>
+							{/each}
+						{/if}
+
+						{#if alert.description_text != null}
+							{#each alert.description_text.translation.filter((x) => x.language == language) as description_alert}
+								<div class="leading-none">
+									{#each description_alert.text.split('\n') as each_desc_line}
+										<div class="text-xs pt-0.5">
+											{@html each_desc_line
+												.replaceAll(
+													'<a ',
+													'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
+												)
+												.replaceAll(/\<(\/)?p\>/g, '')
+												.replaceAll(/\<(\/)?b\>/g, '')
+												.replaceAll('https://rt.scmetro.org ', 'Catenary Maps ')
+												.replaceAll(
+													/(\[)?accessibility icon(\])?/g,
+													'<span class="bg-blue-200 dark:bg-gray-500 w-3 h-3 rounded-full inline"><span class="text-xs material-symbols-outlined ">accessible</span></span>'
+												)}
+										</div>
+									{/each}
+								</div>
+							{/each}
+						{/if}
+					{/each}{#if alert.active_period.length > 0}
+						{#each alert.active_period as active_period}
+							{#if active_period.start != null}
+								<p class="text-xs">
+									{$_('starting_time')}:
+									{#if default_tz}
+										{new Date(active_period.start * 1000).toLocaleString(locale_code, {
+											timeZone: default_tz,
+											hour12: false
+										})}
+									{:else}
+										{new Date(active_period.start * 1000).toLocaleString(locale_code, {
+											hour12: false
+										})}
+									{/if}
+
+									<TimeDiff
+										diff={active_period.start - new Date().getTime() / 1000}
+										show_seconds={false}
+										show_brackets={true}
+										show_plus={true}
+										show_days={true}
+									/>
+								</p>
+							{/if}
+
+							{#if active_period.end != null}
+								<p class="text-xs">
+									{$_('ending_time')}:
+									{#if default_tz}
+										{new Date(active_period.end * 1000).toLocaleString(locale_code, {
+											timeZone: default_tz,
+											hour12: false
+										})}
+									{:else}
+										{new Date(active_period.end * 1000).toLocaleString(locale_code, {
+											hour12: false
+										})}
+									{/if}
+
+									<TimeDiff
+										diff={active_period.end - new Date().getTime() / 1000}
+										show_seconds={false}
+										show_brackets={true}
+										show_plus={true}
+										show_days={true}
+									/>
+								</p>
+							{/if}
+						{/each}
+					{/if}
+				</div>
+			{/each}
 		{/if}
 	</div>
 {/if}
