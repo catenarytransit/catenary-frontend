@@ -33,7 +33,7 @@ const RASTER_SOURCES = [
 	{ id: 'gaugetiles', url: 'gauge' }
 ];
 
-const RAIL_SHAPES = [
+const SHAPES = [
 	{ id: 'intercityrailshapes', url: 'https://birch1.catenarymaps.org/shapes_intercity_rail' },
 	{ id: 'localcityrailshapes', url: 'https://birch2.catenarymaps.org/shapes_local_rail' },
 	{ id: 'othershapes', url: 'https://birch3.catenarymaps.org/shapes_ferry' },
@@ -81,7 +81,7 @@ export async function setup_load_map(
 		const chateauData = get(chateaus_store);
 		map.addSource('chateaus', { type: 'geojson', data: chateauData || emptyGeoJSON });
 
-		[...RAIL_SHAPES, ...STOP_SOURCES].forEach(({ id, url }) => {
+		[...SHAPES, ...STOP_SOURCES].forEach(({ id, url }) => {
 			map.addSource(id, { type: 'vector', url });
 		});
 
