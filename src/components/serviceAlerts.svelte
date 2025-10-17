@@ -8,6 +8,7 @@
 	//get locale from the store
 
 	let locale_code: string = 'en-CA';
+	let expanded: boolean = true;
 
 	$: locale.subscribe((value) => {
 		if (value) {
@@ -39,7 +40,9 @@
 
 {#if Object.keys(alerts).length > 0}
 	<div class="border-[#F99C24] border leading-snug mb-3 p-2 rounded-md">
-		<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-2" />
+		<div class="flex flex-row align-center">
+			<div>
+				<img src="/icons/service_alert.svg" alt="(i)" class="h-6 w-6 inline mr-2" />
 		<span class="text-[#F99C24] font-semibold text-lg align-middle"
 			>{$_('service_alerts', {
 				values: {
@@ -47,6 +50,24 @@
 				}
 			})}</span
 		>
+				</div>
+		<button class="ml-auto" on:click={() => {
+			expanded = !expanded
+		}}>
+			{#if expanded}
+			<span class="material-symbols-outlined">
+collapse_content
+</span>	
+			{:else}
+			<span class="material-symbols-outlined">
+expand_content
+</span>
+			{/if}
+</button>
+		</div>
+		
+		
+		{#if expanded}
 		<div class="py-0.5"></div>
 		{#each Object.values(alerts) as alert}
 			<div class="pt-1">
@@ -155,5 +176,6 @@
 				{/if}
 			</div>
 		{/each}
+		{/if}
 	</div>
 {/if}
