@@ -214,7 +214,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'text-emissive-strength': 1
 		},
 		filter: default_tram_filter,
-		minzoom: 11
+		minzoom: 12
 	});
 
 	//INTERCITY RAIL

@@ -45,14 +45,14 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 10, 0.7, 12, 1, 14, 2.6],
-			'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.08, 8, 0.1, 11, 0.3],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.4, 10, 0.7, 12, 1, 14, 1.2, 15, 1.5],
+			'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0.05, 11, 0.3, 14, 0.5],
 			
 			////'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 6.5, 0.5, 7.2, 0.5, 10, 0.5, 10, 0.5],
 			// 'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
 		},
-		minzoom: 8
+		minzoom: 8,
 	});
 
 	map.addLayer({
@@ -237,7 +237,7 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.4, 5, 0.7, 7, 1, 9, 2, 11, 2.5],
+			'line-width': ['interpolate', ['linear'], ['zoom'],3, 0.4, 5, 0.7, 7, 1, 9, 2, 11, 2.5, 15, 3, 18, 4],
 			'line-opacity': [
 				'case',
 				['==', true, ['get', 'stop_to_stop_generated']],
@@ -274,7 +274,7 @@ export function addShapes(
 		],
 		paint: {
 			'line-color': ['concat', '#', ['get', 'color']],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 9, 2],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 9, 2, 11, 2, 15, 2.5, 18, 3.5],
 			'line-opacity': 1,
 			//'line-emissive-strength': 1
 		},
@@ -363,7 +363,7 @@ export function addShapes(
 			],
 			paint: {
 				'line-color': ['concat', '#', ['get', 'color']],
-				'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 9, 2],
+				'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.5, 7, 1, 9, 2, 11, 2, 15, 2.2, 18, 3.3],
 				'line-opacity': 1,
 				//'line-emissive-strength': 1
 			},

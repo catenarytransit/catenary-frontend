@@ -302,7 +302,7 @@
 														event.trip_id,
 														event.route_id,
 														null,
-														event.trip_service_date.replace(/-/g, ''),
+														event.service_date.replace(/-/g, ''),
 														null,
 														null
 													)
