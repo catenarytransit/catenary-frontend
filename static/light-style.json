@@ -410,8 +410,13 @@
       "layout": {"visibility": "visible"},
       "paint": {
         "fill-antialias": false,
-        "fill-color": "rgba(168, 213, 154, 1)",
-        "fill-opacity": {"stops": [[6, 0.6], [10, 0.8]]}
+        "fill-color": {
+          "stops": [
+            [6, "rgba(101, 209, 132, 1)"],
+            [10, "rgba(103, 197, 116, 1)"]
+          ]
+        },
+        "fill-opacity": {"stops": [[7, 0.2], [8, 0.5], [11, 0.5]]}
       }
     },
     {
