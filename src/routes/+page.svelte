@@ -1408,29 +1408,19 @@
 				},
 				high: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/high',
+					url: 'https://openrailwaymap.app/railway_line_high',
 					promoteId: 'id'
 				},
 				openrailwaymap_standard: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard',
-					promoteId: 'id'
-				},
-				openrailwaymap_speed: {
-					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/speed',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_turntables,standard_railway_text_stations,standard_railway_grouped_stations,standard_railway_grouped_station_areas,standard_railway_symbols,standard_railway_switch_ref,standard_station_entrances,standard_railway_platforms,standard_railway_platform_edges',
 					promoteId: 'id'
 				},
 				openrailwaymap_signals: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/signals',
+					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/signals_railway_signals,signals_signal_boxes',
 					promoteId: 'id'
 				},
-				openrailwaymap_electrification: {
-					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/electrification',
-					promoteId: 'id'
-				}
 			};
 
 			try {
