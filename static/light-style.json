@@ -545,7 +545,7 @@
         ["==", ["get", "class"], "runway"]
       ],
       "paint": {
-        "line-color": "#f0ede9",
+        "line-color": "rgba(144, 144, 145, 1)",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
@@ -575,15 +575,17 @@
         ["==", ["get", "class"], "taxiway"]
       ],
       "paint": {
-        "line-color": "#f0ede9",
+        "line-color": "rgba(162, 162, 162, 1)",
         "line-width": [
           "interpolate",
           ["exponential", 1.2],
           ["zoom"],
           11,
           0.5,
+          14,
+          3,
           20,
-          6
+          30
         ]
       }
     },
