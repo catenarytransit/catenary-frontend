@@ -124,7 +124,7 @@ export function fetch_realtime_vehicle_locations(
 	};
 
 	if (categories_to_request.length > 0) {
-		fetch("https://birch.catenarymaps.org/bulk_realtime_fetch_v1", requestOptions)
+		fetch("https://birch_rt.catenarymaps.org/bulk_realtime_fetch_v1", requestOptions)
 			.then((response) => response.text())
 			.then((text) => jsonWebWorker.parse(text))
 			.then((result) => {
