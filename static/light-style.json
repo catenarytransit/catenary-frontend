@@ -3080,6 +3080,7 @@
       "source": "openmaptiles",
       "source-layer": "place",
       "minzoom": 3,
+      "maxzoom": 14,
       "filter": [
         "all",
         ["==", ["get", "class"], "city"],
