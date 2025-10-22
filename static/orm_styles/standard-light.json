@@ -21505,7 +21505,7 @@
                 true
             ],
             "paint": {
-                "text-color": "hsl(268, 100%, 40%)",
+                "text-color": "hsl(268, 100%, 10%)",
                 "text-halo-color": [
                     "case",
                     [
