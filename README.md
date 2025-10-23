@@ -31,7 +31,7 @@ Maprender: Maplibre https://maplibre.org/maplibre-gl-js/docs/
 
 Base layers:
 https://github.com/wipfli/esa-worldcover-polygons with data from https://esa-worldcover.org/en
-OpenFreeMap https://openfreemap.org/ with data from https://OpenStreetMaps.org
+OpenFreeMap https://openfreemap.org/ with data from https://OpenStreetMap.org
 
 For the seperate but concurrent Kotlin Compose Rust project (early alpha): https://github.com/catenarytransit/catenary0compose
 
