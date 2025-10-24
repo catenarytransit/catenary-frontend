@@ -2305,7 +2305,8 @@
         "text-font": ["Barlow-Italic", "NotoSans-Italic"],
         "text-letter-spacing": 0.2,
         "text-max-width": 5,
-        "text-size": 14
+        "text-size": 14,
+        "text-pitch-alignment": "viewport"
       },
       "paint": {
         "text-color": "#74aee9",
@@ -2630,7 +2631,8 @@
         ],
         "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "map",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
+        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13],
+        "text-pitch-alignment": "viewport"
       },
       "paint": {
         "text-color": "rgba(252, 249, 244, 1)",
@@ -2660,7 +2662,8 @@
         "text-field": ["get", "name"],
         "text-font": ["Barlow-Regular", "NotoSans-Regular"],
         "text-rotation-alignment": "map",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
+        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13],
+        "text-pitch-alignment": "viewport"
       },
       "paint": {
         "text-color": "rgba(255, 255, 255, 1)",
@@ -2692,7 +2695,8 @@
         ],
         "text-font": ["NotoSans-Medium"],
         "text-rotation-alignment": "map",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13]
+        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 14, 13],
+        "text-pitch-alignment": "viewport"
       },
       "paint": {
         "text-color": "rgba(245, 245, 245, 1)",
