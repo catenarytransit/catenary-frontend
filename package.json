@@ -58,7 +58,7 @@
     "moment": "^2.30.1",
     "protobufjs": "^7.5.4",
     "store2": "^2.14.4",
-    "stringify-object": "^5.0.0",
+    "stringify-object": "^6.0.0",
     "svelte-i18n": "^4.0.1",
     "svelte-toasts": "^1.1.2",
     "tailwind": "^4.0.0",
