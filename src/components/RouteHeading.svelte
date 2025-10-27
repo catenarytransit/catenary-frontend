@@ -57,10 +57,68 @@
 
 	export let make_clickable_route_name: boolean = false;
 
+	export let pin_route_setting_shown: boolean = false;
+
+	let isPinned = false;
+const LS_KEY = 'pinned_routes_v1';
+
+function cleanRouteId(id: string) {
+	return id?.replace(/^\"/, '').replace(/\"$/, '') ?? id;
+}
+function keyForRoute(chateau_id: string, route_id: string) {
+	return `${chateau_id}:${cleanRouteId(route_id)}`;
+}
+function readPins(): string[] {
+	if (typeof window === 'undefined') return [];
+	try {
+		return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+	} catch {
+		return [];
+	}
+}
+function writePins(pins: string[]) {
+	if (typeof window === 'undefined') return;
+	localStorage.setItem(LS_KEY, JSON.stringify([...new Set(pins)]));
+}
+function refreshPinnedState() {
+	if (!route_id || !chateau_id) return;
+	const k = keyForRoute(chateau_id, route_id);
+	isPinned = readPins().includes(k);
+}
+function togglePin() {
+	if (!route_id || !chateau_id) return;
+	const k = keyForRoute(chateau_id, route_id);
+	const pins = readPins();
+	if (pins.includes(k)) {
+		writePins(pins.filter((p) => p !== k));
+		isPinned = false;
+	} else {
+		pins.push(k);
+		writePins(pins);
+		isPinned = true;
+	}
+}
+
+
+
 	onMount(() => {
 		window.addEventListener('resize', () => {
 			window_height_known = window.innerHeight;
 		});
+
+		refreshPinnedState();
+	const onStorage = (e: StorageEvent) => {
+		if (e.key === LS_KEY) refreshPinnedState();
+	};
+	window.addEventListener('storage', onStorage);
+
+	window.addEventListener('resize', () => {
+		window_height_known = window.innerHeight;
+	});
+
+	return () => {
+		window.removeEventListener('storage', onStorage);
+	};
 	});
 	let pdf_url: string | undefined;
 
@@ -73,46 +131,74 @@
 			.then((answer) => (pdf_url = answer))
 			.catch((pdferr) => console.error(pdferr));
 	}
+
+	
+$: chateau_id, route_id, refreshPinnedState();
 </script>
 
+
 {#if !compact}
-	<h2
-		class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'}`}
-		style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}
-	>
-		{#if run_number}
-			<span
-				style={`background-color: ${color}; color: ${text_color};`}
-				class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min">{run_number}</span
-			>
-		{/if}
-
-		<span
-			class={`${
-				make_clickable_route_name
-					? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500  '
-					: ''
-			}`}
-			on:click={() => {
-				if (make_clickable_route_name) {
-					data_stack_store.update((stack) => {
-						stack.push(new StackInterface(new RouteStack(chateau_id, route_id)));
-						return stack;
-					});
-				}
-			}}
+	<div class="flex items-start justify-between gap-2">
+		<h2
+			class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'}`}
+			style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}
 		>
-			{#if short_name}
-				<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>
-			{/if}
-
-			{#if long_name}
-				<span class={`${short_name ? 'font-normal ml-1' : 'font-bold'}`}
-					>{fixRouteNameLong(chateau_id, long_name, route_id)}</span
+			{#if run_number}
+				<span
+					style={`background-color: ${color}; color: ${text_color};`}
+					class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min">{run_number}</span
 				>
 			{/if}
-		</span>
-	</h2>
+
+			<span
+				class={`${
+					make_clickable_route_name
+						? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500'
+						: ''
+				}`}
+				on:click={() => {
+					if (make_clickable_route_name) {
+						data_stack_store.update((stack) => {
+							stack.push(new StackInterface(new RouteStack(chateau_id, route_id)));
+							return stack;
+						});
+					}
+				}}
+			>
+				{#if short_name}
+					<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>
+				{/if}
+
+				{#if long_name}
+					<span class={`${short_name ? 'font-normal ml-1' : 'font-bold'}`}>
+						{fixRouteNameLong(chateau_id, long_name, route_id)}
+					</span>
+				{/if}
+			</span>
+		</h2>
+
+		{#if pin_route_setting_shown}
+			<button
+				class={`shrink-0 rounded-full leading-none text-sm px-1 hover:bg-slate-100 dark:hover:bg-slate-700 border-2 border-gray-500 ${
+					isPinned ? 'bg-blue-500' : ''
+				}`}
+				aria-pressed={isPinned}
+				aria-label={isPinned ? 'Unpin route' : 'Pin route'}
+				title={isPinned ? 'Unpin route' : 'Pin route'}
+				on:click={togglePin}
+			>
+				{#if isPinned}
+					<span class="material-symbols-outlined leading-none">
+						<span class="text-base leading-none">keep</span>
+					</span>
+				{:else}
+					<span class="material-symbols-outlined leading-none">
+						<span class="text-base leading-none">keep_off</span>
+					</span>
+				{/if}
+			</button>
+		{/if}
+	</div>
 
 	{#if gtfs_desc}
 		<span>{gtfs_desc}</span>

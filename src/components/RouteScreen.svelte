@@ -109,6 +109,44 @@
 		}
 	}
 
+	let isPinned = false;
+	const LS_KEY = 'pinned_routes_v1';
+
+	function cleanRouteId(id: string) {
+		return id.replace(/^\"/, '').replace(/\"$/, '');
+	}
+	function keyForRoute(chateau_id: string, route_id: string) {
+		return `${chateau_id}:${cleanRouteId(route_id)}`;
+	}
+	function readPins(): string[] {
+		try {
+			return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+		} catch {
+			return [];
+		}
+	}
+	function writePins(pins: string[]) {
+		localStorage.setItem(LS_KEY, JSON.stringify([...new Set(pins)]));
+	}
+	function refreshPinnedState() {
+		if (!routestack) return;
+		const k = keyForRoute(routestack.chateau_id, routestack.route_id);
+		isPinned = readPins().includes(k);
+	}
+	function togglePin() {
+		if (!routestack) return;
+		const k = keyForRoute(routestack.chateau_id, routestack.route_id);
+		const pins = readPins();
+		if (pins.includes(k)) {
+			writePins(pins.filter((p) => p !== k));
+			isPinned = false;
+		} else {
+			pins.push(k);
+			writePins(pins);
+			isPinned = true;
+		}
+	}
+
 	function change_active_pattern(pattern: string) {
 		activePattern = pattern;
 
@@ -355,11 +393,18 @@
 
 	onMount(() => {
 
+		refreshPinnedState();
+	const onStorage = (e: StorageEvent) => {
+		if (e.key === LS_KEY) refreshPinnedState();
+	};
+	window.addEventListener('storage', onStorage);
+
 
 		return () => {
 			
 		delete_filter_stops_background();
 		clearInterval(vehicle_interval);
+		window.removeEventListener('storage', onStorage);
 		}
 
 	})
@@ -369,22 +414,29 @@
 {#if loaded == true}
 	<div class=" catenary-scroll overflow-y-auto grow"
 	bind:this={bind_scrolling_div}>
-		<div class="px-3">
-			<RouteHeading
-				color={route_data.color}
-				route_id={routestack.route_id}
-				chateau_id={routestack.chateau_id}
-				text={route_data.agency_name}
-				compact={false}
-				short_name={route_data.short_name}
-				long_name={route_data.long_name}
-				url={route_data.url}
-				{darkMode}
-				route_type={route_data.route_type}
-				gtfs_desc={route_data.gtfs_desc}
-				text_color={route_data.text_color}
-			/>
-		</div>
+	
+
+
+
+
+<div class="px-3">
+	
+	<RouteHeading
+		color={route_data.color}
+		route_id={routestack.route_id}
+		chateau_id={routestack.chateau_id}
+		text={route_data.agency_name}
+		compact={false}
+		short_name={route_data.short_name}
+		long_name={route_data.long_name}
+		url={route_data.url}
+		{darkMode}
+		route_type={route_data.route_type}
+		gtfs_desc={route_data.gtfs_desc}
+		text_color={route_data.text_color}
+		pin_route_setting_shown={true}
+	/>
+</div>
 
 		{
 			#if show_gtfs_ids

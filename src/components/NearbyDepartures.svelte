@@ -57,6 +57,43 @@
 
 	import type { UserPicksNearby } from '../globalstores';
 
+	// --- Pinned routes (shared with Route page) ---
+	const LS_KEY = 'pinned_routes_v1';
+	let pinnedSet = new Set<string>();
+
+	function cleanRouteId(id: string) {
+		return id?.replace(/^\"/, '').replace(/\"$/, '') ?? id;
+	}
+	function keyForRoute(chateau_id: string, route_id: string) {
+		return `${chateau_id}:${cleanRouteId(route_id)}`;
+	}
+	function readPins(): string[] {
+		try {
+			return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+		} catch {
+			return [];
+		}
+	}
+	function refreshPinnedSet() {
+		// avoid re-allocs if unchanged
+		const next = new Set(readPins());
+		// shallow compare sizes + membership to skip work if possible
+		if (next.size !== pinnedSet.size) {
+			pinnedSet = next;
+			return;
+		}
+		for (const k of next) {
+			if (!pinnedSet.has(k)) {
+				pinnedSet = next;
+				return;
+			}
+		}
+	}
+	function isPinnedRoute(chateau_id: string, route_id: string) {
+		return pinnedSet.has(keyForRoute(chateau_id, route_id));
+	}
+
+
 	let current_nearby_pick_state = get(nearby_pick_state_store);
 
 	nearby_pick_state_store.subscribe((x) => {
@@ -131,14 +168,22 @@
 	});
 
 	function refilter() {
-		departure_list_filtered = departure_list.filter(
-			(x) =>
-				Object.keys(x.directions).length > 0 &&
-				filter_for_route_type(x.route_type, nearby_departures_filter_local)
-		);
+	departure_list_filtered = departure_list.filter(
+		(x) =>
+			Object.keys(x.directions).length > 0 &&
+			filter_for_route_type(x.route_type, nearby_departures_filter_local)
+	);
 
-		console.log('filtered departures', departure_list_filtered.length);
-	}
+	// --- Pin-first sort, then alphabetical by label ---
+	departure_list_filtered.sort((a, b) => {
+		const ap = isPinnedRoute(a.chateau_id, a.route_id) ? 1 : 0;
+		const bp = isPinnedRoute(b.chateau_id, b.route_id) ? 1 : 0;
+		if (ap !== bp) return bp - ap; // pinned first
+		const an = (a.short_name || a.long_name || '').toString().toLowerCase();
+		const bn = (b.short_name || b.long_name || '').toString().toLowerCase();
+		return an.localeCompare(bn);
+	});
+}
 
 	let current_time: number = 0;
 
@@ -161,9 +206,17 @@
 	onMount(() => {
 		if (typeof window != 'undefined') {
 			current_time = Date.now();
-		}
 
-		if (current_nearby_pick_state == 1) {
+				refreshPinnedSet();
+		const onStorage = (e: StorageEvent) => {
+			if (e.key === LS_KEY) {
+				refreshPinnedSet();
+				refilter(); // resort list when pins change
+			}
+		};
+		window.addEventListener('storage', onStorage);
+
+			if (current_nearby_pick_state == 1) {
 			let map = get(map_pointer_store);
 
 			if (map) {
@@ -188,6 +241,7 @@
 			}
 		}
 
+		
 		window.addEventListener('resize', () => {
 			window_height_known = window.innerHeight;
 		});
@@ -236,7 +290,13 @@
 			if (marker_reference) {
 				marker_reference.remove();
 			}
+
+			window.removeEventListener('storage', onStorage);
 		};
+		}
+
+	
+
 	});
 
 	function my_location_press() {
@@ -533,39 +593,36 @@
 				<div
 					class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-1 mx-1 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}
 				>
-					<p
-						class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'} ml-1 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer`}
-						style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}
-						on:click={() => {
-							data_stack_store.update((stack) => {
-								stack.push(
-									new StackInterface(new RouteStack(route_group.chateau_id, route_group.route_id))
-								);
+					<div class="flex flex-row gap-x-1">
+						<p
+					class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'} ml-1 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer flex items-center gap-1`}
+					style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}
+					on:click={() => {
+						data_stack_store.update((stack) => {
+							stack.push(new StackInterface(new RouteStack(route_group.chateau_id, route_group.route_id)));
+							return stack;
+						});
+					}}
+				>
+					{#if route_group.short_name}
+						<span class="font-bold mr-1">
+							{fixRouteName(route_group.chateau_id, route_group.short_name, route_group.route_id)}
+						</span>
+					{/if}
 
-								return stack;
-							});
-						}}
-					>
-						{#if route_group.short_name}
-							<span class="font-bold mr-1">
-								{fixRouteName(
-									route_group.chateau_id,
-									route_group.short_name,
-									route_group.route_id
-								)}</span
-							>
-						{/if}
+					{#if route_group.long_name}
+						<span class="font-medium">
+							{fixRouteNameLong(route_group.chateau_id, route_group.long_name, route_group.route_id)}
+						</span>
+					{/if}
+				</p>
 
-						{#if route_group.long_name}
-							<span class="font-medium"
-								>{fixRouteNameLong(
-									route_group.chateau_id,
-									route_group.long_name,
-									route_group.route_id
-								)}</span
-							>
-						{/if}
-					</p>
+				{#if isPinnedRoute(route_group.chateau_id, route_group.route_id)}
+						<span class="ml-auto material-symbols-outlined leading-none opacity-80 my-auto mb-1 no-underline" aria-label="Pinned route" title="Pinned route">
+							<span class="text-base leading-none">keep</span>
+						</span>
+					{/if}
+					</div>
 
 					{#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group]}
 						{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).length > 0}

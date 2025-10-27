@@ -63,6 +63,14 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		}
 	});
 
+	map.addSource('livedots_context', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: []
+		}
+	});
+
 	map.addLayer({
 		id: 'contextlinebackingdetour',
 		type: 'line',
