@@ -158,6 +158,71 @@
 
 	let abort_controller: AbortController | null = null;
 
+	type SortMode = 'alpha' | 'distance';
+const LS_SORT_KEY = 'nearby_sort_mode_v1';
+
+let sortMode: SortMode = (typeof window !== 'undefined'
+	? ((localStorage.getItem(LS_SORT_KEY) as SortMode) || 'alpha')
+	: 'alpha');
+
+function setSortMode(next: SortMode) {
+	sortMode = next;
+	if (typeof window !== 'undefined') localStorage.setItem(LS_SORT_KEY, next);
+	refilter();
+}
+
+// Haversine distance in meters
+function haversineMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
+	const toRad = (d: number) => (d * Math.PI) / 180;
+	const R = 6371000;
+	const dLat = toRad(lat2 - lat1);
+	const dLon = toRad(lon2 - lon1);
+	const a =
+		Math.sin(dLat / 2) ** 2 +
+		Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+	return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// Where are we sorting "distance from"?
+function currentReferenceCoord(): { lat: number; lng: number } | null {
+	const mode = get(nearby_pick_state_store);
+	if (mode === 1) {
+		const pick = get(nearby_user_picks_store);
+		if (pick?.latitude && pick?.longitude) return { lat: pick.latitude, lng: pick.longitude };
+	} else {
+		const geo = get(geolocation_store);
+		if (geo?.coords?.latitude && geo?.coords?.longitude) {
+			return { lat: geo.coords.latitude, lng: geo.coords.longitude };
+		}
+	}
+	return null;
+}
+
+// Compute the best distance (meters) for a route group (nearest first-departing stop across directions)
+function distanceForRouteGroup(route_group: any): number {
+	const ref = currentReferenceCoord();
+	if (!ref) return Number.POSITIVE_INFINITY;
+
+	try {
+		let best = Number.POSITIVE_INFINITY;
+		// Look at each direction group's first upcoming trip (you already sort trips)
+		for (const dg of Object.values(route_group.directions) as any[]) {
+			const firstTrip = dg?.trips?.[0];
+			if (!firstTrip) continue;
+			const stop = stops_table?.[route_group.chateau_id]?.[firstTrip.stop_id];
+			const lat = stop?.lat ?? stop?.latitude;
+			const lon = stop?.lon ?? stop?.longitude;
+			if (typeof lat === 'number' && typeof lon === 'number') {
+				const d = haversineMeters(ref.lat, ref.lng, lat, lon);
+				if (d < best) best = d;
+			}
+		}
+		return best;
+	} catch {
+		return Number.POSITIVE_INFINITY;
+	}
+}
+
 	nearby_departures_filter.subscribe((x) => {
 		nearby_departures_filter_local = get(nearby_departures_filter);
 		nearby_rail_show = x.rail;
@@ -167,20 +232,33 @@
 		refilter();
 	});
 
-	function refilter() {
+function refilter() {
 	departure_list_filtered = departure_list.filter(
 		(x) =>
 			Object.keys(x.directions).length > 0 &&
 			filter_for_route_type(x.route_type, nearby_departures_filter_local)
 	);
 
-	// --- Pin-first sort, then alphabetical by label ---
+	// --- Pin-first, then by selected sort mode ---
 	departure_list_filtered.sort((a, b) => {
 		const ap = isPinnedRoute(a.chateau_id, a.route_id) ? 1 : 0;
 		const bp = isPinnedRoute(b.chateau_id, b.route_id) ? 1 : 0;
-		if (ap !== bp) return bp - ap; // pinned first
+		if (ap !== bp) return bp - ap; // pinned routes first
+
+		// A–Z (by display label)
 		const an = (a.short_name || a.long_name || '').toString().toLowerCase();
 		const bn = (b.short_name || b.long_name || '').toString().toLowerCase();
+
+		if (sortMode === 'alpha') {
+			return an.localeCompare(bn);
+		}
+
+		// Distance (nearest first). Tie-break by A–Z to keep deterministic ordering.
+		const da = distanceForRouteGroup(a);
+		const db = distanceForRouteGroup(b);
+		if (Number.isFinite(da) && Number.isFinite(db) && da !== db) return da - db;
+
+		// If distances are equal or not available, fall back to A–Z
 		return an.localeCompare(bn);
 	});
 }
@@ -205,6 +283,12 @@
 
 	onMount(() => {
 		if (typeof window != 'undefined') {
+
+			const storedSort = (localStorage.getItem(LS_SORT_KEY) as SortMode) || null;
+			if (storedSort === 'alpha' || storedSort === 'distance') {
+				sortMode = storedSort;
+			}
+
 			current_time = Date.now();
 
 				refreshPinnedSet();
@@ -512,16 +596,41 @@
 		{$_('nearbydepartures')}
 	</h2>
 	-->
-		<div class="ml-auto pr-2">
-			<button
-				on:click={() => {
-					show_filter_menu = !show_filter_menu;
-				}}
-				class="px-1 py-1 rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300"
-			>
-				<span class="material-symbols-outlined translate-y-1">filter_alt</span>
-			</button>
-		</div>
+		<div class="ml-auto pr-2 flex items-center gap-2">
+	<!-- Sorting toggle -->
+	<div class="flex rounded-full overflow-hidden border-2 border-gray-400 dark:border-gray-600">
+		<button
+			class={`px-2 py-1 text-sm flex items-center gap-1
+				${sortMode === 'alpha' ? 'bg-blue-300 dark:bg-blue-500 bg-opacity-80' : 'bg-gray-300 dark:bg-gray-800'}
+				text-gray-800 dark:text-gray-200`}
+			aria-pressed={sortMode === 'alpha'}
+			on:click={() => setSortMode('alpha')}
+			title="Sort A–Z"
+		>
+			<span class="material-symbols-outlined text-base leading-none -translate-y-0.5">sort_by_alpha</span>
+		</button>
+		<button
+			class={`px-2 py-1 text-sm flex items-center gap-1 border-l-2 border-gray-400 dark:border-gray-600
+				${sortMode === 'distance' ? 'bg-blue-300 dark:bg-blue-500 bg-opacity-80' : 'bg-gray-300 dark:bg-gray-800'}
+				text-gray-800 dark:text-gray-200`}
+			aria-pressed={sortMode === 'distance'}
+			on:click={() => setSortMode('distance')}
+			title="Sort by Distance"
+		>
+			<span class="material-symbols-outlined text-base leading-none -translate-y-0.5">straighten</span>
+		</button>
+	</div>
+
+	<!-- Existing filter button -->
+	<button
+		on:click={() => {
+			show_filter_menu = !show_filter_menu;
+		}}
+		class="px-1 py-1 rounded-full bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-300"
+	>
+		<span class="material-symbols-outlined translate-y-1">filter_alt</span>
+	</button>
+</div>
 	</div>
 
 	{#if !first_attempt_sent && current_nearby_pick_state == 0}
