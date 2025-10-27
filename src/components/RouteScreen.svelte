@@ -635,9 +635,15 @@
 					>
 						{#if index != route_data.direction_patterns[activePattern].rows.length - 1}
 							<div
-								class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-7 z-30 rounded-xl`}
+								class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-full z-30 `}
 								style:background-color={route_data.color}
 							></div>
+							{#if index != 0}
+								<div
+								class={`absolute bottom-0 left-3 w-2 h-full z-30 `}
+								style:background-color={route_data.color}
+							></div>
+							{/if}
 						{/if}
 						<div
 							class={`absolute top-[10px] bottom-1/2 left-2.5 w-3 h-3 rounded-full bg-white z-30 border-2`}
