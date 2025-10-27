@@ -428,7 +428,7 @@
 													vehicle_positions[vehicle_id].trip.route_id,
 													vehicle_positions[vehicle_id].trip.start_time,
 													vehicle_positions[vehicle_id].trip.start_date,
-													null,
+													vehicle_positions[vehicle_id].vehicle?.label,
 													null
 												)
 											)
@@ -444,7 +444,7 @@
 								{#if  vehicle_positions[vehicle_id].vehicle}
 								{#if vehicle_positions[vehicle_id].vehicle.label}
 								{vehicle_positions[vehicle_id].vehicle.label}
-								
+
 								{/if}
 								{/if}
 							</p>
