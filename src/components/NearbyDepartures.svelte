@@ -597,7 +597,6 @@ function refilter() {
 	</h2>
 	-->
 		<div class="ml-auto pr-2 flex items-center gap-2">
-	<!-- Sorting toggle -->
 	<div class="flex rounded-full overflow-hidden border-2 border-gray-400 dark:border-gray-600">
 		<button
 			class={`px-2 py-1 text-sm flex items-center gap-1
@@ -621,7 +620,6 @@ function refilter() {
 		</button>
 	</div>
 
-	<!-- Existing filter button -->
 	<button
 		on:click={() => {
 			show_filter_menu = !show_filter_menu;
