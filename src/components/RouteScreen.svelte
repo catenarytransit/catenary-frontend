@@ -88,6 +88,14 @@
 
 	let pdf_url: string | null = null;
 
+	let vehicle_interval: NodeJS.Timeout | null = null;
+
+	let vehicle_positions : Record<string, any> = null;
+
+	
+	let vehicles_under_direction_id: Record<string, string[]> = {};
+	let count_per_direction_store: Record<string, number> = {};
+
 	function fix_route_url(x: string): string {
 		if (x.includes('foothilltransit.org') && !x.includes('www.foothilltransit.org')) {
 			return x.replace('foothilltransit.org', 'www.foothilltransit.org');
@@ -195,6 +203,66 @@
 		
 	}
 
+	async function fetch_vehicles_for_route() {
+		let map = get(map_pointer_store);
+
+		let url = new URL(
+			`https://birch_rt.catenarymaps.org/get_rt_of_single_route?chateau=${routestack.chateau_id}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, "").replace(/\"$/, ""))}`
+		);
+
+		await fetch(url.toString()).then(async (response) => {
+			let text = await response.text();
+			try {
+				const data = JSON.parse(text);
+
+				console.log('data', data);
+
+				if (data.vehicle_positions) {
+					vehicle_positions = data.vehicle_positions;
+				}
+
+				let count_per_direction_id: Record<string, number> = {};
+
+				let vehicles_under_direction_id_temp : Record<string, string[]> = {};
+
+				for (const vehicle_update_key in vehicle_positions) {
+					//console.log(vehicle_update_key)
+
+					let trip_id = vehicle_positions[vehicle_update_key].trip.trip_id;
+
+					if (trip_id) {
+						let trip_compressed = data.trips_to_trips_compressed[trip_id];
+
+						if (trip_compressed) {
+							let direction_id = data.itinerary_to_direction_id[trip_compressed.itinerary_pattern_id];
+
+							if (count_per_direction_id[direction_id] == undefined) {
+								count_per_direction_id[direction_id] = 1;
+							} else {
+								count_per_direction_id[direction_id] = count_per_direction_id[direction_id] + 1;
+							}
+
+							if (vehicles_under_direction_id_temp[direction_id] == undefined) {
+								vehicles_under_direction_id_temp[direction_id] = [vehicle_update_key];
+							} else {
+								vehicles_under_direction_id_temp[direction_id].push(vehicle_update_key)
+							}
+						}
+					}
+				} 
+
+				console.log(count_per_direction_id)
+
+				count_per_direction_store = count_per_direction_id;
+				vehicles_under_direction_id = vehicles_under_direction_id_temp;
+
+			}
+			catch (e) {
+
+			}
+		})
+	}
+
 	async function fetch_route_selected() {
 		let map = get(map_pointer_store);
 
@@ -257,11 +325,25 @@
 
 	$: if (routestack) {
 		fetch_route_selected();
+
+		fetch_vehicles_for_route();
+
+		vehicle_interval = setInterval(() => {
+			fetch_vehicles_for_route();
+		}, 1000)
+
+
 	}
 
 	onMount(() => {
 
+
+		return () => {
+			
 		delete_filter_stops_background();
+		clearInterval(vehicle_interval);
+		}
+
 	})
 
 </script>
@@ -282,6 +364,7 @@
 				{darkMode}
 				route_type={route_data.route_type}
 				gtfs_desc={route_data.gtfs_desc}
+				text_color={route_data.text_color}
 			/>
 		</div>
 
@@ -314,10 +397,97 @@
 					<p>
 						<span>{titleCase(direction[1].direction_pattern.headsign_or_destination)}</span>
 					<span class="text-xs">{" ("}{direction[1].rows.length}{" "}{$_("stops")}{" )"}</span>
+					{#if count_per_direction_store[direction[0]]}
+						<span class="relative">
+							<span class="absolute w-full h-full animate-ping bg-blue-500 rounded-full opacity-30"></span>
+						<span class="ml-auto rounded-full bg-blue-500 text-white px-1.5">{ count_per_direction_store[direction[0]]}</span>
+						</span>
+					{/if}
+
 					</p>
 				</div>
 			{/each}
 		</div>
+
+		<div class="px-3">
+			<p class="text-xl my-1">{count_per_direction_store[activePattern] ? count_per_direction_store[activePattern] : 0} {$_("vehicles")}</p>
+
+			<div>{#if vehicles_under_direction_id[activePattern]}
+				<div class="flex flex-col gap-y-2">
+					{#each vehicles_under_direction_id[activePattern].sort() as vehicle_id }
+					{#if vehicle_positions[vehicle_id]}
+						<div class="rounded-md bg-gray-100 dark:bg-gray-800 py-1 px-1"
+						on:click={() => {
+								data_stack_store.update(
+									(data_stack) => {
+										data_stack.push(
+											new StackInterface(
+												new SingleTrip(
+													routestack.chateau_id,
+													vehicle_positions[vehicle_id].trip.trip_id,
+													vehicle_positions[vehicle_id].trip.route_id,
+													vehicle_positions[vehicle_id].trip.start_time,
+													vehicle_positions[vehicle_id].trip.start_date,
+													null,
+													null
+												)
+											)
+										);	
+
+										return data_stack;
+									}
+								)
+							}}
+						>
+							
+							<p>
+								{#if  vehicle_positions[vehicle_id].vehicle}
+								{#if vehicle_positions[vehicle_id].vehicle.label}
+								{vehicle_positions[vehicle_id].vehicle.label}
+								
+								{/if}
+								{/if}
+							</p>
+
+							<!--
+							
+							<button class="rounded-full bg-blue-500 px-1 py-1 text-xs w-6 h-6 flex flex-col "
+							on:click={() => {
+								data_stack_store.update(
+									(data_stack) => {
+										data_stack.push(
+											new StackInterface(
+												new SingleTrip(
+													routestack.chateau_id,
+													vehicle_positions[vehicle_id].trip.trip_id,
+													vehicle_positions[vehicle_id].trip.route_id,
+													vehicle_positions[vehicle_id].trip.start_time,
+													vehicle_positions[vehicle_id].trip.start_date,
+													null,
+													null
+												)
+											)
+										);	
+
+										return data_stack;
+									}
+								)
+							}}			
+							>
+								<span class="material-symbols-outlined align-middle leading-none" style="
+    line-height: 0;
+">
+							<span class="text-sm">open_in_new</span>
+							</span> 
+							</button>-->
+						</div>
+						{/if}
+					{/each}</div>
+				{:else}
+					
+				{/if}</div>
+		</div>
+
 		<div
 			class="grow pt-2 flex flex-col"
 		>
