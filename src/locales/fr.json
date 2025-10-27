@@ -140,6 +140,7 @@
 	"gpsdisclaimer": "Si l'attente est trop longue, vérifiez si ce site a les permissions de navigateur pour accéder à votre position et vérifiez que votre signal GPS est fort.",
 	"last_stop": "dernier arrêt",
 	"search_here": "Rechercher ici",
-	"previous_departures": "Départs précédents"
+	"previous_departures": "Départs précédents",
+	"next_stop": "prochain arrêt"
 }
 

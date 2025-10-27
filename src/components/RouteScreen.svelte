@@ -2,7 +2,7 @@
 	import { json } from '@sveltejs/kit';
 	import { RouteStack, SingleTrip, StackInterface, StopStack  } from './stackenum';
 	import { onDestroy, onMount } from 'svelte';
-	import { locale, locales } from 'svelte-i18n';
+	import { date, locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
 	import RouteIcon from './RouteIcon.svelte';
@@ -63,6 +63,8 @@
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 	import NativeLands from './NativeLands.svelte';
 	import { refilter_stops,delete_filter_stops_background } from './makeFiltersForStop';
+	import { occupancy_to_symbol } from './occupancy_to_symbol';
+	import TripDataForVehicleOnRouteScreen from './TripDataForVehicleOnRouteScreen.svelte';
 
 	let activePattern: string = '';
 
@@ -93,8 +95,11 @@
 	let vehicle_positions : Record<string, any> = null;
 
 	
+	let trip_updates_by_trip_id: Record<string, any[]> = {};
+
 	let vehicles_under_direction_id: Record<string, string[]> = {};
 	let count_per_direction_store: Record<string, number> = {};
+	let route_rt_last_updated: null | number = null;
 
 	function fix_route_url(x: string): string {
 		if (x.includes('foothilltransit.org') && !x.includes('www.foothilltransit.org')) {
@@ -207,7 +212,7 @@
 		let map = get(map_pointer_store);
 
 		let url = new URL(
-			`https://birch_rt.catenarymaps.org/get_rt_of_single_route?chateau=${routestack.chateau_id}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, "").replace(/\"$/, ""))}`
+			`https://birch_rt.catenarymaps.org/get_rt_of_single_route?chateau=${routestack.chateau_id}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, "").replace(/\"$/, ""))}${route_rt_last_updated ? "&last_updated_time_ms=" + route_rt_last_updated : ""}`
 		);
 
 		await fetch(url.toString()).then(async (response) => {
@@ -220,6 +225,10 @@
 				if (data.vehicle_positions) {
 					vehicle_positions = data.vehicle_positions;
 				}
+
+				route_rt_last_updated = data.last_updated_time_ms;
+
+				let trip_updates_by_trip_id_tmp: Record<string, any[]> = {};
 
 				let count_per_direction_id: Record<string, number> = {};
 
@@ -251,10 +260,19 @@
 					}
 				} 
 
+				for (const trip_update of data.trip_updates) {
+					if ( trip_updates_by_trip_id_tmp[trip_update.trip.trip_id] == undefined) {
+						trip_updates_by_trip_id_tmp[trip_update.trip.trip_id] = [trip_update]
+					} else {
+						trip_updates_by_trip_id_tmp[trip_update.trip.trip_id].push(trip_update);
+					}
+				}
+
 				console.log(count_per_direction_id)
 
 				count_per_direction_store = count_per_direction_id;
 				vehicles_under_direction_id = vehicles_under_direction_id_temp;
+				trip_updates_by_trip_id = trip_updates_by_trip_id_tmp;
 
 			}
 			catch (e) {
@@ -448,6 +466,44 @@
 								{/if}
 								{/if}
 							</p>
+
+							{#if trip_updates_by_trip_id[vehicle_positions[vehicle_id].trip.trip_id]}
+								<TripDataForVehicleOnRouteScreen
+								vehicle = {vehicle_positions[vehicle_id]}
+								stops = {route_data.stops}
+								possible_trip_list = {trip_updates_by_trip_id[vehicle_positions[vehicle_id].trip.trip_id]}
+								/>
+							{/if}
+
+							
+							{#if vehicle_positions[vehicle_id].occupancy_status != null}
+					<p
+						class={`text-xs ${vehicle_positions[vehicle_id].occupancy_status == 3 ? 'text-amber-600 dark:text-amber-400' : ''} ${[4, 5, 6, 8].includes(vehicle_positions[vehicle_id].occupancy_status) ? 'text-red-600 dark:text-red-400' : ''}`}
+					>
+						{$_('occupancy_status')}:
+						<span class="rounded-full px-0.5 py-0.5"
+							>{occupancy_to_symbol(vehicle_positions[vehicle_id].occupancy_status)}</span
+						>
+						{#if vehicle_positions[vehicle_id].occupancy_status == 0}
+							{$_('occupancy_status_empty')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 1}
+							{$_('occupancy_status_many_seats_available')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 2}
+							{$_('occupancy_status_few_seats_available')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 3}
+							{$_('occupancy_status_standing_room_only')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 4}
+							{$_('occupancy_status_crushed_standing_room_only')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 5}
+							{$_('occupancy_status_full')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 6}
+							{$_('occupancy_status_not_accepting_passengers')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 7}
+							{$_('occupancy_status_no_data')}
+						{:else if vehicle_positions[vehicle_id].occupancy_status == 8}
+							{$_('occupancy_status_not_boardable')}
+						{/if}
+					</p>{/if}
 
 							<!--
 							
