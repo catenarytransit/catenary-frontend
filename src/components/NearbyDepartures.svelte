@@ -557,7 +557,7 @@ function refilter() {
 				}}
 				class={`border-2 ${current_nearby_pick_state == 0 ? 'bg-green-200 dark:bg-green-800' : ''} rounded-lg border-green-500 px-1.5 py-1`}
 			>
-				<span class="material-symbols-outlined mx-auto translate-y-1 text-sm">near_me</span>
+				<span class="material-symbols-outlined mx-auto translate-y-1 text-sm select-none">near_me</span>
 			</div>
 
 			<div
@@ -570,7 +570,7 @@ function refilter() {
 						pin_drop_press();
 					}}
 				>
-					<span class="material-symbols-outlined mx-auto translate-y-1 text-sm">pin_drop</span>
+					<span class="material-symbols-outlined mx-auto translate-y-1 text-sm select-none">pin_drop</span>
 				</div>
 
 				<div
@@ -579,7 +579,7 @@ function refilter() {
 						centre_press();
 					}}
 				>
-					<span class="material-symbols-outlined mx-auto translate-y-1 text-sm"
+					<span class="material-symbols-outlined mx-auto translate-y-1 text-sm select-none"
 						>center_focus_strong</span
 					>
 				</div>
@@ -725,7 +725,7 @@ function refilter() {
 				</p>
 
 				{#if isPinnedRoute(route_group.chateau_id, route_group.route_id)}
-						<span class="ml-auto material-symbols-outlined leading-none opacity-80 my-auto mb-1 no-underline" aria-label="Pinned route" title="Pinned route">
+						<span class="ml-auto material-symbols-outlined leading-none opacity-80 my-auto mb-1 no-underline select-none" aria-label="Pinned route" title="Pinned route">
 							<span class="text-base leading-none">keep</span>
 						</span>
 					{/if}
@@ -734,7 +734,7 @@ function refilter() {
 					{#each sort_directions_group(Object.entries(route_group.directions)) as [d_id, direction_group]}
 						{#if direction_group.trips.filter((x) => (x.departure_realtime || x.departure_schedule) > Date.now() / 1000 - TIME_PREVIOUS_CUTOFF && (x.departure_realtime || x.departure_schedule) < Date.now() / 1000 + TIME_CUTOFF).length > 0}
 							<p class="font-medium -translate-x-1 mt-1 mb-1 leading-tight">
-								<span class="material-symbols-outlined text-md align-middle -translate-y-0.5"
+								<span class="material-symbols-outlined text-md align-middle -translate-y-0.5 select-none"
 									>chevron_right</span
 								>
 								{titleCase(fixHeadsignText(direction_group.headsign, route_group.route_id))}
@@ -752,7 +752,7 @@ function refilter() {
 									}}
 									class="text-sm bg-white dark:bg-darksky inline-block px-1 rounded-sm -translate-y-0.5 ml-1"
 								>
-									<span class="material-symbols-outlined !text-sm align-middle">distance</span>
+									<span class="material-symbols-outlined !text-sm align-middle select-none">distance</span>
 									{fixStationName(
 										stops_table[route_group.chateau_id][direction_group.trips[0].stop_id].name
 									)}</span
