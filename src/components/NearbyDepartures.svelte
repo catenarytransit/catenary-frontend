@@ -163,7 +163,7 @@ const LS_SORT_KEY = 'nearby_sort_mode_v1';
 
 let sortMode: SortMode = (typeof window !== 'undefined'
 	? ((localStorage.getItem(LS_SORT_KEY) as SortMode) || 'alpha')
-	: 'alpha');
+	: 'distance');
 
 function setSortMode(next: SortMode) {
 	sortMode = next;
