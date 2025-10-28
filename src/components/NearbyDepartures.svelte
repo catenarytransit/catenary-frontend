@@ -254,9 +254,11 @@ function refilter() {
 		const an = (a.short_name || a.long_name || '').toString().toLowerCase();
 		const bn = (b.short_name || b.long_name || '').toString().toLowerCase();
 
-		if (sortMode === 'alpha') {
-			return an.localeCompare(bn);
-		}
+		const compareOptions = { numeric: true };
+
+        if (sortMode === 'alpha') {
+            return an.localeCompare(bn, undefined, compareOptions);
+        }
 
 		// Distance (nearest first). Tie-break by A–Z to keep deterministic ordering.
 		const da = distanceForRouteGroup(a);
