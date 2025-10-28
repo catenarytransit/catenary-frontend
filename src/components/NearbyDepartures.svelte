@@ -57,6 +57,8 @@
 
 	import type { UserPicksNearby } from '../globalstores';
 
+	import haversine from 'haversine-distance'
+
 	// --- Pinned routes (shared with Route page) ---
 	const LS_KEY = 'pinned_routes_v1';
 	let pinnedSet = new Set<string>();
@@ -172,15 +174,11 @@ function setSortMode(next: SortMode) {
 }
 
 // Haversine distance in meters
-function haversineMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
-	const toRad = (d: number) => (d * Math.PI) / 180;
-	const R = 6371000;
-	const dLat = toRad(lat2 - lat1);
-	const dLon = toRad(lon2 - lon1);
-	const a =
-		Math.sin(dLat / 2) ** 2 +
-		Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-	return 2 * R * Math.asin(Math.sqrt(a));
+function haversineMeters(lat1: number, lon1: number, lat2: number, lon2: number):number {
+	const a = { latitude: lat1, longitude: lon1 }
+const b = { latitude: lat2, longitude: lon2 }
+
+return haversine(a, b)
 }
 
 // Where are we sorting "distance from"?
@@ -207,16 +205,23 @@ function distanceForRouteGroup(route_group: any): number {
 		let best = Number.POSITIVE_INFINITY;
 		// Look at each direction group's first upcoming trip (you already sort trips)
 		for (const dg of Object.values(route_group.directions) as any[]) {
+			//console.log('dg', dg);
+
 			const firstTrip = dg?.trips?.[0];
 			if (!firstTrip) continue;
 			const stop = stops_table?.[route_group.chateau_id]?.[firstTrip.stop_id];
-			const lat = stop?.lat ?? stop?.latitude;
-			const lon = stop?.lon ?? stop?.longitude;
+			const lat = stop?.lat;
+			const lon = stop?.lon;
+
 			if (typeof lat === 'number' && typeof lon === 'number') {
+				
+				console.log('compare ', ref.lat, ref.lng, lat, lon)
 				const d = haversineMeters(ref.lat, ref.lng, lat, lon);
 				if (d < best) best = d;
 			}
 		}
+
+		//console.log('best distance', best);
 		return best;
 	} catch {
 		return Number.POSITIVE_INFINITY;
@@ -256,10 +261,13 @@ function refilter() {
 		// Distance (nearest first). Tie-break by A–Z to keep deterministic ordering.
 		const da = distanceForRouteGroup(a);
 		const db = distanceForRouteGroup(b);
+		console.log('distance for ', a.route_id, da, b.route_id, db)
 		if (Number.isFinite(da) && Number.isFinite(db) && da !== db) return da - db;
 
+		return 0;
+
 		// If distances are equal or not available, fall back to A–Z
-		return an.localeCompare(bn);
+		//return an.localeCompare(bn);
 	});
 }
 
@@ -898,38 +906,5 @@ function refilter() {
 
 			<img src="/premium_photo-1671611799147-68a4f9b3f0e1.avif" alt="No departures found" />
 		{/if}
-
-		<!--Testing advert
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2140162638544192"
-		crossorigin="anonymous"></script>
-
-		
-		<p class='ml-2 hidden md:block'>Advert:</p>
-	
-	<div class={`w-full overflow-x-clip ${darkMode ? "hidden md:block" : "hidden"}`}>
-	
-   <ins class="adsbygoogle"
-		style="display:block"
-		data-ad-format="fluid"
-		data-ad-layout-key="-gw-3+1f-3d+2z"
-		data-ad-client="ca-pub-2140162638544192"
-		data-ad-slot="9693813767"></ins>
-	</div>
-
-	<div  class={`w-full overflow-x-clip ${darkMode ? "hidden" : "hidden md:block"}`}>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="fluid"
-     data-ad-layout-key="-gw-3+1f-3d+2z"
-     data-ad-client="ca-pub-2140162638544192"
-     data-ad-slot="3466257276"></ins>
-
-	</div>
-
-	-->
-
-		<script>
-			//	(adsbygoogle = window.adsbygoogle || []).push({});
-		</script>
 	</div>
 {/if}
