@@ -141,6 +141,8 @@
 	"last_stop": "dernier arrêt",
 	"search_here": "Rechercher ici",
 	"previous_departures": "Départs précédents",
-	"next_stop": "prochain arrêt"
+	"next_stop": "prochain arrêt",
+	"loadingmoredepartures": "Chargement d'autres départs",
+	"loadmore": "Charger plus"
 }
 

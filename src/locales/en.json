@@ -140,5 +140,7 @@
 	"last_stop": "last stop",
 	"search_here": "Search here",
 	"previous_departures": "Previous departures",
-	"next_stop": "Next stop"
+	"next_stop": "Next stop",
+	"loadingmoredepartures": "Loading more departures",
+	"loadmore": "Load more"
 }
