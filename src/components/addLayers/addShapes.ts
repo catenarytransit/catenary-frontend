@@ -232,7 +232,16 @@ export function addShapes(
 						['==', true, ['get', 'stop_to_stop_generated']]
 					]
 				
-			]
+			],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'f-renfe~media~larga~distancia~y~ave', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			],
 			//  ['!=', ['get', 'chateau'], "amtrak"],
 		],
 		paint: {
@@ -443,7 +452,16 @@ export function addShapes(
 						['==', true, ['get', 'stop_to_stop_generated']]
 					]
 				
-			]
+			],
+			[
+				'!', 
+					[
+						'all',
+						['==', 'f-renfe~media~larga~distancia~y~ave', ['get', 'chateau']],
+						['==', true, ['get', 'stop_to_stop_generated']]
+					]
+				
+			],
 			//     ['!=', ['get', 'chateau'], "amtrak"]
 		],
 		layout: {
