@@ -14,6 +14,7 @@
 	import { writable, get } from 'svelte/store';
 	import stringifyObject from 'stringify-object';
 	import BullseyeArrow from './svg_icons/bullseye_arrow.svelte';
+	import ProgressStrip from './ProgessStrip.svelte';
 	import { refilter_stops } from './makeFiltersForStop';
 	import {
 		fixHeadsignIcon,
@@ -97,6 +98,8 @@
 	show_gtfs_ids_store.subscribe((value) => {
 		show_gtfs_ids = value;
 	});
+
+	let current_at_stop_idx_store = -1;
 
 	let vehicle_data: any | null = null;
 
@@ -654,60 +657,43 @@
 		updatetimecounter = setInterval(() => {
 			current_time = Date.now();
 
-			let temp_last_inactive_stop_idx = -1;
+			let last_departed_idx = -1;
+			let current_at_stop_idx = -1;
+			const nowSec = current_time / 1000;
 
-			let i = 0;
+			stoptimes_cleaned_dataset.forEach((stoptime: any, i: number) => {
+				// Prefer RT; fall back to scheduled/interpolated
+				const dep =
+					typeof stoptime.rt_departure_time === 'number'
+						? stoptime.rt_departure_time
+						: stoptime.scheduled_departure_time_unix_seconds ??
+						stoptime.interpolated_stoptime_unix_seconds ??
+						null;
 
-			let locked = false;
-
-			//console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset)
-
-			stoptimes_cleaned_dataset.forEach((stoptime: any) => {
-				if (stoptime.rt_departure_time != null) {
-					if (stoptime.rt_departure_time < current_time / 1000) {
-						temp_last_inactive_stop_idx = i;
-					}
-				} else {
-					if ((stoptime.scheduled_departure_time_unix_seconds ||
-					stoptime.interpolated_stoptime_unix_seconds) && (
-						(stoptime.scheduled_departure_time_unix_seconds ||
-							stoptime.interpolated_stoptime_unix_seconds) <
-						current_time / 1000
-					)) {
-						if (!(stoptime.schedule_relationship == 1 && i - 1 > temp_last_inactive_stop_idx)) {
-							temp_last_inactive_stop_idx = i;
-						}
-					} else {
-						if (stoptime.rt_arrival_time != null) {
-							if (stoptime.rt_arrival_time < current_time / 1000) {
-								temp_last_inactive_stop_idx = i;
-							}
-						} else {
-							if (stoptime.scheduled_arrival_time_unix_seconds) {
-								if (stoptime.scheduled_arrival_time_unix_seconds < current_time / 1000) {
-								if (!(stoptime.schedule_relationship == 1 && i - 1 > temp_last_inactive_stop_idx)) {
-									temp_last_inactive_stop_idx = i;
-								}
-							}
-							}
-							
-						}
-					}
+				 // If there’s a real-time arrival we’ll also clamp dep >= arr
+				if (dep != null && dep <= nowSec) {
+					last_departed_idx = i;
 				}
 
-				i = i + 1;
+				const arr =
+					typeof stoptime.rt_arrival_time === 'number'
+						? stoptime.rt_arrival_time
+						: stoptime.scheduled_arrival_time_unix_seconds ?? null;
+
+				const hasDeparted = dep != null && dep <= nowSec;
+				const hasArrived = arr != null && arr <= nowSec;
+
+				if (hasDeparted) {
+					last_departed_idx = i;
+				} else if (hasArrived && !hasDeparted && current_at_stop_idx === -1) {
+					// first "arrived but not departed" is the current dwell stop
+					current_at_stop_idx = i;
+				}
 			});
 
-			if (temp_last_inactive_stop_idx > 0) {
-				if (
-					stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_departure_time != null ||
-					stoptimes_cleaned_dataset[temp_last_inactive_stop_idx - 1].rt_arrival_time != null
-				) {
-					last_inactive_stop_idx = temp_last_inactive_stop_idx - 1;
-				} else {
-					last_inactive_stop_idx = temp_last_inactive_stop_idx;
-				}
-			}
+			// expose to template
+			last_inactive_stop_idx = last_departed_idx; 
+			current_at_stop_idx_store = current_at_stop_idx;
 		}, 100);
 
 		return () => {
@@ -950,11 +936,16 @@
 			{#if show_previous_stops || i > last_inactive_stop_idx}
 				<div class="flex flex-row">
 					<!--The left side coloured bars to indicate trip progress-->
+
+					<!--current_at_stop_idx-->
 					<div class="flex flex-col w-2 relative justify-center" style={``}>
+
 						<div
 							style={`background: ${i - 1 == last_inactive_stop_idx && i != 0 ? `linear-gradient(${show_previous_stops ? `rgba(${Object.values(hexToRgb(trip_data.color)).join(',')}, 0.4)` : 'transparent'}, ${trip_data.color})` : i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
 							class={`h-1/2 w-2 ${i == trip_data.stoptimes.length - 1 ? 'rounded-b-full' : ''}`}
 						></div>
+
+						
 						<div
 							style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
 							class={`h-1/2 w-2 ${i == 0 ? 'rounded-t-full' : ''}`}
