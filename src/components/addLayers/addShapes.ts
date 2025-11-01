@@ -36,7 +36,11 @@ export function addShapes(
 				'!', 
 					[
 						'all',
-						['==', 'flixbus', ['get', 'chateau']],
+						[
+							"any",
+						['==', 'autobús~interurbano~de~cataluña', ['get', 'chateau']],
+						['==', 'flixbus', ['get', 'chateau']]
+						],
 						['==', true, ['get', 'stop_to_stop_generated']]
 					]
 				
@@ -82,7 +86,11 @@ export function addShapes(
 				'!', 
 					[
 						'all',
-						['==', 'flixbus', ['get', 'chateau']],
+							[
+							"any",
+						['==', 'autobús~interurbano~de~cataluña', ['get', 'chateau']],
+						['==', 'flixbus', ['get', 'chateau']]
+						],
 						['==', true, ['get', 'stop_to_stop_generated']]
 					]
 				
