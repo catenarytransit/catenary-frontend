@@ -831,6 +831,10 @@
 
 	let style: string = darkMode ? '/dark-style.json' : '/light-style.json';
 
+	if (urlParams.get("style") == "midnight") {
+		style = "/pitch-black.json"
+	}
+
 	function recompute_map_padding() {
 		let sidebar = document.getElementById('catenary-sidebar');
 
