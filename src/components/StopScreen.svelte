@@ -391,8 +391,10 @@
 							{#if pages.some((p) => p.loading)}
 								<span>{$_("loadingmoredepartures")}…</span>
 							{:else}
-								<button class="underline" on:click={loadNextPage}>{$_("Load more")}</button>
+								
 							{/if}
+
+							<button class="underline" on:click={loadNextPage}>{$_("Load more")}</button>
 						</div>
 					{:else}
 						<p class="ml-2">Loading…</p>
