@@ -135,7 +135,7 @@ function togglePin() {
 
 	$: chateau_id, route_id, refreshPinnedState();
 
-    $: isSubway = isSubwayRouteId(route_id);
+    $: isSubway = isSubwayRouteId(route_id) && chateau_id == MTA_CHATEAU_ID;
     $: subwayShortName = isSubway && short_name ? getMtaSymbolShortName(short_name) : '';
     $: isRouteExpress = isSubway ? isExpress(route_id) : false;
 </script>
