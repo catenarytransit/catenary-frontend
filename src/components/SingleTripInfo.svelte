@@ -904,6 +904,7 @@
 		{/if}
 
 		<AlertBox {alerts} 
+		chateau={trip_selected.chateau_id} 
 		default_tz={trip_data.tz || null}
 		/>
 

@@ -453,7 +453,9 @@
 			</div>
 			{/if}
 
-		<div class="px-2"><AlertBox alerts={alerts}/></div>
+		<div class="px-2"><AlertBox
+			chateau={routestack.chateau_id}
+			alerts={alerts}/></div>
 
 		
 
