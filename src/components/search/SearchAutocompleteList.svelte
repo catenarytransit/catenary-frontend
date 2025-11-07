@@ -41,7 +41,8 @@
 
 	text_input_store.subscribe((n) => (text_input = n));
 
-	import { StopStack, StackInterface, OsmItemStack } from '../stackenum';
+	import { StopStack, StackInterface, OsmItemStack, RouteStack } from './../stackenum';
+	import RouteResultItem from './RouteResultItem.svelte';
 
 	export let length = 16;
 
@@ -118,6 +119,27 @@
 				</button>
 			{/each}
 		{/if}
+
+        {#if latest_query_data_local && latest_query_data_local.routes_section}
+            {#each latest_query_data_local.routes_section.ranking.slice(0, length) as route_ranked}
+                {#if latest_query_data_local.routes_section.routes[route_ranked.chateau] && latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
+                    {@const routeInfo = latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
+                    <RouteResultItem
+                        {routeInfo}
+                        onClick={() => {
+                            data_stack_store.update((data_stack) => {
+                                data_stack.push(
+                                    new StackInterface(new RouteStack(route_ranked.chateau, route_ranked.gtfs_id))
+                                );
+                                return data_stack;
+                            });
+                            autocomplete_focus_state.set(false);
+                            show_back_button_recalc();
+                        }}
+                    />
+                {/if}
+            {/each}
+        {/if}
 
 		{#if latest_query_data_local}
 			{#each latest_query_data_local.stops_section.ranking.slice(0, length) as stop_ranked}
