@@ -3,6 +3,8 @@
 
     export let routeInfo: any; // TODO: Define a proper interface for RouteInfo
     export let onClick: () => void;
+    export let chateau: string;
+    export let route_id: string;
 
     console.log("route info ", routeInfo)
 </script>
@@ -13,7 +15,10 @@
 >
     <div class="flex items-center py-2">
         {#if routeInfo.short_name || routeInfo.long_name}
-        <RouteBadge route={routeInfo} />
+        <RouteBadge route={routeInfo}
+            chateau={chateau}
+            route_id={route_id}
+        />
         {/if}
         {#if routeInfo.long_name}
             <p class="text-sm text-gray-800 dark:text-gray-200 ml-2">

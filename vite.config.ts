@@ -1,10 +1,12 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vitest/config';
 import { execSync } from 'child_process';
 
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+	preprocess: vitePreprocess(),
 	plugins: [sveltekit(), tailwindcss()],
 	server: {
 		fs: {

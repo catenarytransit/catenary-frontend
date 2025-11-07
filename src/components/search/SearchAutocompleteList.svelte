@@ -125,6 +125,8 @@
                 {#if latest_query_data_local.routes_section.routes[route_ranked.chateau] && latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
                     {@const routeInfo = latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
                     <RouteResultItem
+					chateau = {route_ranked.chateau}
+					route_id = {route_ranked.gtfs_id}
                         {routeInfo}
                         onClick={() => {
                             data_stack_store.update((data_stack) => {

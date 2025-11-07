@@ -26,6 +26,7 @@
 		stops_to_hide_store
 	} from '../globalstores';
 	import { RouteStack, SingleTrip, StackInterface, StopStack } from './stackenum';
+	import { MTA_CHATEAU_ID, getMtaSubwayClass, isSubwayRouteId, getMtaSymbolShortName, isExpress } from '../utils/mta_subway_utils';
 
 	export let color: string;
 	export let text_color: string;
@@ -132,30 +133,47 @@ function togglePin() {
 			.catch((pdferr) => console.error(pdferr));
 	}
 
-	
-$: chateau_id, route_id, refreshPinnedState();
+	$: chateau_id, route_id, refreshPinnedState();
+
+    $: isSubway = isSubwayRouteId(route_id);
+    $: subwayShortName = isSubway && short_name ? getMtaSymbolShortName(short_name) : '';
+    $: isRouteExpress = isSubway ? isExpress(route_id) : false;
 </script>
 
 
 {#if !compact}
 	<div class="flex items-start justify-between gap-2">
 		<h2
-			class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'}`}
-			style={`color: ${darkMode ? lightenColour(color) : color} leading-tight`}
+			class={`${window_height_known < 600 ? 'text-base' : 'text-lg md:text-xl md:mt-2'} ${
+				isSubway ? '' : 'leading-tight'
+			}`}
+			style={`
+				${
+					isSubway
+						? ''
+						: `color: ${darkMode ? lightenColour(color) : color}`
+				}`}
 		>
 			{#if run_number}
 				<span
-					style={`background-color: ${color}; color: ${text_color};`}
+					style={`
+						${
+							isSubway
+								? ''
+								: `background-color: ${color}; color: ${text_color};`
+						}`}
 					class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min">{run_number}</span
 				>
 			{/if}
 
 			<span
-				class={`${
-					make_clickable_route_name
-						? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500'
-						: ''
-				}`}
+				class={`
+					${
+						make_clickable_route_name
+							? 'cursor-pointer  underline decoration-sky-500/80 hover:decoration-sky-500'
+							: ''
+					}
+				`}
 				on:click={() => {
 					if (make_clickable_route_name) {
 						data_stack_store.update((stack) => {
@@ -165,7 +183,13 @@ $: chateau_id, route_id, refreshPinnedState();
 					}
 				}}
 			>
-				{#if short_name}
+				{#if isSubway && short_name}
+					<span
+						class="subway-icon {getMtaSubwayClass(short_name)} {isRouteExpress ? 'express' : ''}"
+					>
+						{subwayShortName}{isRouteExpress ? 'X' : ''}
+					</span>
+				{:else if short_name}
 					<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>
 				{/if}
 
