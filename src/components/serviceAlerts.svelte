@@ -23,7 +23,7 @@
 		}
 	});
 
-	$: languagelist = Object.values(alerts)
+	var languagelist = Object.values(alerts)
 		.map((alert) => {
 			let list: any[] = [];
 
@@ -38,7 +38,15 @@
 			return list;
 		})
 		.flat()
-		.filter((x, i, a) => a.indexOf(x) == i);
+		.filter((x, i, a) => a.indexOf(x) == i);	
+
+		let languagelistToUse = languagelist.includes('en-html') ?
+			languagelist.filter((x) => x != 'en')
+		 : 
+			languagelist
+		;
+
+		console.log("languagelist", languagelistToUse)
 
 	function formatServiceAlertText(text: string): string {
 		const subwayRouteRegex = /\[([A-Z0-9]+)\]/g;
@@ -101,8 +109,7 @@
 							</p>
 						{/each}
 					{/if}
-
-					{#each languagelist.filter( (x) => (languagelist.includes('en-html') ? x.language != 'en' : true) ) as language}
+					{#each languagelistToUse as language}
 						{#if alert.header_text != null}
 							{#each alert.header_text.translation.filter((x) => x.language == language) as each_header_translation_obj}
 								<p class={`text-sm`}>
@@ -123,8 +130,9 @@
 													'<a ',
 													'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
 												)
-												.replaceAll(/\<(\/)?p\>/g, '')
-												.replaceAll(/\<(\/)?b\>/g, '')
+												//.replaceAll(/\<(\/)?p\>/g, '')
+												//.replaceAll(/\<(\/)?b\>/g, '')
+												.replaceAll(/\\n/g, "<br/>")
 												.replaceAll('https://rt.scmetro.org ', 'Catenary Maps ')
 												.replaceAll(
 													/(\[)?accessibility icon(\])?/g,
@@ -135,7 +143,9 @@
 								</div>
 							{/each}
 						{/if}
-					{/each}{#if alert.active_period.length > 0}
+					{/each}
+					
+					{#if alert.active_period.length > 0}
 						{#each alert.active_period as active_period}
 							{#if active_period.start != null}
 								<p class="text-xs">
