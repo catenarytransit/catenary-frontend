@@ -144,7 +144,7 @@ export function process_realtime_vehicle_locations_v2(
 					}
 
 					if (category_data.vehicle_positions) {
-						console.log('agency list', chateau_id, category_data.list_of_agency_ids);
+						//console.log('agency list', chateau_id, category_data.list_of_agency_ids);
 						if (category_data.replaces_all == true) {
 							
 						   realtime_vehicle_locations[category][chateau_id] = category_data.vehicle_positions;
@@ -215,8 +215,9 @@ export function process_realtime_vehicle_locations_v2(
 
 
 			if (should_fetch_routes) {
-				console.log('should fetch routes')
-				fetch_routes_of_chateau_by_agency(chateau_id, list_of_agency_ids_to_fetch.filter((v, i, a) => a.indexOf(v) === i));
+				//console.log('should fetch routes')
+				fetch_routes_of_chateau_by_agency(chateau_id, list_of_agency_ids_to_fetch.filter((v, i, a) => a.indexOf(v) === i)
+			);
 
 				
 			}
@@ -291,7 +292,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 				});
 			}
 
-			console.log("chateau_vehicles_list", chateau_vehicles_list) 
+			//console.log("chateau_vehicles_list", chateau_vehicles_list) 
 
 			return Object.entries(chateau_vehicles_list)
 				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
