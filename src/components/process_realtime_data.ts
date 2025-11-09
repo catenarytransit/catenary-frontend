@@ -380,13 +380,13 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							console.log('route', route)
 
 							if (route) {
-								route_long_name = route.route_long_name;
-								route_short_name = route.route_short_name;
+								route_long_name = route.long_name;
+								route_short_name = route.short_name;
 
-								if (route.route_short_name != '' && route.route_short_name != null) {
-									maptag = route.route_short_name;
+								if (route.short_name != '' && route.short_name != null) {
+									maptag = route.short_name;
 								} else {
-									maptag = route.route_long_name;
+									maptag = route.long_name;
 								}
 
 								
