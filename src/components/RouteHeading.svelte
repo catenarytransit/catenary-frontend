@@ -187,7 +187,7 @@ function togglePin() {
 					<span
 						class="subway-icon {getMtaSubwayClass(short_name)} {isRouteExpress ? 'express' : ''}"
 					>
-						{subwayShortName}{isRouteExpress ? 'X' : ''}
+						{subwayShortName}
 					</span>
 				{:else if short_name}
 					<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>

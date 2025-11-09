@@ -24,7 +24,6 @@ export function getMtaSymbolShortName(shortName: string): string {
 	if (s === 'FX') return 'F';
 	if (s === 'GS' || s === 'FS' || s === 'H') return 'S';
 	// For Staten Island Railway, it's not a subway, so we don't include it here.
-	return s;
 }
 
 
