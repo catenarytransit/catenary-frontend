@@ -39,7 +39,7 @@ export function fixRouteName(chateau: string, route: string, rid: string): strin
 			fixPatterns[chateau]['*'] || route
 		);
 	} else {
-		route = route
+		route = (route || "")
 		.replace('Counterclockwise', translate("anticlockwise_abbrievation"))
 		.replace('Clockwise', translate("clockwise_abbrievation"));
 

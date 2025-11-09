@@ -24,11 +24,28 @@ export const realtime_vehicle_locations_store: Writable<
 	other: {}
 });
 
+//category -> chateau -> u32 -> u32 -> string -> any
+export const realtime_vehicle_locations_storev2: Writable<
+	Record<string, Record<string, Record<number, Record<number, Record<string, any>>>>>> = writable({
+	bus: {},
+	rail: {},
+	metro: {},
+	other: {}
+});
+
+
 export interface CategoryHash {
 	bus: number;
 	rail: number;
 	metro: number;
 	other: number;
+}
+
+export interface TileBounds {
+	min_x: number;
+	max_x: number;
+	min_y: number;
+	max_y: number;
 }
 
 export const current_orm_layer_type_store: Writable<string | null> = writable(null);
@@ -39,8 +56,16 @@ export const realtime_vehicle_route_cache_store: Writable<
 > = writable({});
 export const realtime_vehicle_route_cache_hash_store: Writable<Record<string, CategoryHash>> =
 	writable({});
+
+	//chateau -> category -> tile bounds
+export const previous_tile_boundaries_store: Writable<Record<string, Record<string, TileBounds>>> = writable({});
+
 export const realtime_vehicle_locations_last_updated_store: Writable<Record<string, CategoryHash>> =
 	writable({});
+	//chateau -> route_id -> route_data
+export const route_cache: Writable<Record<string, Record<string, any>>> = writable({});
+	//chateau -> route_id_list
+export const route_cache_agencies_known: Writable<Record<string, string[]>> = writable({});
 export const lock_on_gps_store = writable(false);
 
 export interface NearbySelectionFilterRouteType {
