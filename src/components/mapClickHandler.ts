@@ -143,15 +143,64 @@ export function setup_click_handler(
 
 			const selected_stops_key_unique = new Set();
 
-			const selected_stops = selected_stops_raw
-				.map((x: any) => {
+			const selected_stops_obj = {};
+
+			
+				let children_stop_keys: Record<string, []> = {};
+
+				selected_stops_raw.forEach((x: any) => {
 					const key = x.properties.chateau + x.properties.gtfs_id;
 
-					if (selected_stops_key_unique.has(key)) {
-						return null;
+					selected_stops_obj[key] = x;
+
+					let children_ids_str = x.properties.children_ids;
+
+					if (children_ids_str) {
+						if (children_stop_keys[x.properties.chateau] == undefined) {
+							children_stop_keys[x.properties.chateau] = [];
+						
+						}
+
+						let split_array = children_ids_str.replace("{", "").replace("}", "").split(",");
+
+						children_stop_keys[x.properties.chateau].push(...split_array);
+					}
+					
+				})
+
+				console.log('selected stops obj', selected_stops_obj);
+
+
+				var selected_stops_edited = selected_stops_raw.filter((x) => {
+					if (x.properties.parent_station) {
+						let key_of_parent_station = x.properties.chateau + x.properties.parent_station;
+
+						if (selected_stops_key_unique.has(key_of_parent_station)) {
+							return false;
+						}
+
+						if (children_stop_keys[x.properties.chateau]) {
+							if (children_stop_keys[x.properties.chateau].includes(x.properties.gtfs_id)) {
+								return false;
+							}
+						}
 					}
 
+					return true;
+				});
+
+				console.log('selected_stops_edited', selected_stops_edited)
+
+				let selected_stops = selected_stops_edited
+				.map((x: any) => {
+						const key = x.properties.chateau + x.properties.gtfs_id;
+
+if (selected_stops_key_unique.has(key)) {
+						return null;
+					}
 					selected_stops_key_unique.add(key);
+
+					
 
 					return new MapSelectionOption(
 						new StopMapSelector(
@@ -162,6 +211,8 @@ export function setup_click_handler(
 					);
 				})
 				.filter((x: MapSelectionOption | null) => x != null);
+
+				console.log('selected_stops', selected_stops)
 
 			selected_stops.push(...
 				context_stop_raw.map((x: any) => {

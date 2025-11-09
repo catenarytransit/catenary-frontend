@@ -377,7 +377,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						if (routeId && chateau_route_cache) {
 							const route = chateau_route_cache[routeId];
 
-							console.log('route', route)
+							//console.log('route', route)
 
 							if (route) {
 								route_long_name = route.long_name;
