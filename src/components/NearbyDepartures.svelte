@@ -215,7 +215,7 @@ function distanceForRouteGroup(route_group: any): number {
 
 			if (typeof lat === 'number' && typeof lon === 'number') {
 				
-				console.log('compare ', ref.lat, ref.lng, lat, lon)
+				//console.log('compare ', ref.lat, ref.lng, lat, lon)
 				const d = haversineMeters(ref.lat, ref.lng, lat, lon);
 				if (d < best) best = d;
 			}
@@ -263,7 +263,7 @@ function refilter() {
 		// Distance (nearest first). Tie-break by A–Z to keep deterministic ordering.
 		const da = distanceForRouteGroup(a);
 		const db = distanceForRouteGroup(b);
-		console.log('distance for ', a.route_id, da, b.route_id, db)
+		//console.log('distance for ', a.route_id, da, b.route_id, db)
 		if (Number.isFinite(da) && Number.isFinite(db) && da !== db) return da - db;
 
 		return 0;
