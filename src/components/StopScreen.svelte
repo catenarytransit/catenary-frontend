@@ -352,7 +352,9 @@
 										});
 									}}
 								>
-									<div class={(event.realtime_departure || event.scheduled_departure) < current_time / 1000 && event.scheduled_departure < current_time / 1000 ? 'opacity-80' : ''}>
+									<div
+										class={`${(event.realtime_departure || event.scheduled_departure) < current_time / 1000 && event.scheduled_departure < current_time / 1000 ? 'opacity-80' : ''} ${event.trip_cancelled ? 'opacity-60' : ''}`}
+									>
 										<p>
 											{#if data_meta.routes[event.chateau][event.route_id].short_name}
 												<span class="rounded-xs font-bold px-0.5 mx-1 py-0.5" style={`background: ${data_meta.routes[event.chateau][event.route_id].color}; color: ${data_meta.routes[event.chateau][event.route_id].text_color};`}>
