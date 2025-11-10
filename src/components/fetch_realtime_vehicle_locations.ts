@@ -122,8 +122,12 @@ export function fetch_realtime_vehicle_locations(
 		mode: 'cors'
 	};
 
+	const subdomains = ['birch_rt', 'birch_rt2', 'birch_rt3', 'birch_rt4'];
+	const randomSubdomain = subdomains[Math.floor(Math.random() * subdomains.length)];
+	const url = `https://${randomSubdomain}.catenarymaps.org/bulk_realtime_fetch_v2`;
+
 	if (categories_to_request.length > 0) {
-		fetch("https://birch_rt.catenarymaps.org/bulk_realtime_fetch_v2", requestOptions)
+		fetch(url, requestOptions)
 			.then((response) => response.text())
 			.then((text) => jsonWebWorker.parse(text))
 			.then((result) => {
@@ -185,4 +189,3 @@ export function get_tile_boundaries(map: maplibregl.Map, zoom: number) {
         west: xtile_west
     };
 }
-

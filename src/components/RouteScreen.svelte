@@ -61,7 +61,6 @@
 	} from '../globalstores';
 	import RouteHeading from './RouteHeading.svelte';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
-	import NativeLands from './NativeLands.svelte';
 	import { refilter_stops,delete_filter_stops_background } from './makeFiltersForStop';
 	import { occupancy_to_symbol } from './occupancy_to_symbol';
 	import TripDataForVehicleOnRouteScreen from './TripDataForVehicleOnRouteScreen.svelte';
@@ -667,8 +666,6 @@
 			{/if}
 
 			<br/>
-
-			<NativeLands chateau={routestack.chateau_id} />
 
 			<br/>
 		</div>

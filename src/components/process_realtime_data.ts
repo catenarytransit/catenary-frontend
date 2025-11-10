@@ -86,7 +86,7 @@ function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: s
 		redirect: 'follow'
 	};
 
-	fetch(`https://birch.catenarymaps.org/getroutesofchateauwithagency/${chateau_id}`, requestOptions)
+	fetch(`https://birch_routesfetch.catenarymaps.org/getroutesofchateauwithagency/${chateau_id}`, requestOptions)
 		.then((response) => response.json())
 		.then((new_routes: any[]) => {
 			route_cache.update((cache) => {
