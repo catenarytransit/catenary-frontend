@@ -73,9 +73,9 @@ export function new_query(text: string) {
     let url = "";
 
     if (geolocation_active) {
-        url = `https://birch.catenarymaps.org/text_search_v1?text=${text}&user_lat=${geolocation?.coords?.latitude}&user_lon=${geolocation.coords.longitude}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
+        url = `https://birch_search.catenarymaps.org/text_search_v1?text=${text}&user_lat=${geolocation?.coords?.latitude}&user_lon=${geolocation.coords.longitude}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
     } else {
-        url = `https://birch.catenarymaps.org/text_search_v1?text=${text}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
+        url = `https://birch_search.catenarymaps.org/text_search_v1?text=${text}&map_lat=${centerCoordinates.lat}&map_lon=${centerCoordinates.lng}&map_z=${zoom}`;
     }
 
     fetch("https://nominatim1.catenarymaps.org/search?dedupe=1&q=" + text, {

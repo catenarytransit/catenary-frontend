@@ -1397,42 +1397,42 @@
 			const orm_sources = {
 				openrailwaymap_low: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/railway_line_high',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/railway_line_high',
 					promoteId: 'id'
 				},
 				standard_railway_text_stations_low: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_low',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_low',
 					promoteId: 'id'
 				},
 				standard_railway_text_stations_med: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_med',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/standard_railway_text_stations_med',
 					promoteId: 'id'
 				},
 				high: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/railway_line_high',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/railway_line_high',
 					promoteId: 'id'
 				},
 				openrailwaymap_standard: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy//standard_railway_turntables,standard_railway_text_stations,standard_railway_grouped_stations,standard_railway_grouped_station_areas,standard_railway_symbols,standard_railway_switch_ref,standard_station_entrances,standard_railway_platforms,standard_railway_platform_edges',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy//standard_railway_turntables,standard_railway_text_stations,standard_railway_grouped_stations,standard_railway_grouped_station_areas,standard_railway_symbols,standard_railway_switch_ref,standard_station_entrances,standard_railway_platforms,standard_railway_platform_edges',
 					promoteId: 'id'
 				},
 				openrailwaymap_signals: {
 					type: 'vector',
-					url: 'https://birch.catenarymaps.org/openrailwaymap_proxy/signals_railway_signals,signals_signal_boxes',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/signals_railway_signals,signals_signal_boxes',
 					promoteId: 'id'
 				},
 				"openrailwaymap_electrification": {
 				"type": "vector",
-				"url": "https://birch.catenarymaps.org/openrailwaymap_proxy/electrification_signals,catenary,electrification_railway_symbols",
+				"url": "https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/electrification_signals,catenary,electrification_railway_symbols",
 				"promoteId": "id"
 				},
 				"openrailwaymap_operator": {
 				"type": "vector",
-				"url": "https://birch.catenarymaps.org/openrailwaymap_proxy/operator_railway_symbols",
+				"url": "https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/operator_railway_symbols",
 				"promoteId": "id"
 				}
 			};
