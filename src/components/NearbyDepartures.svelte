@@ -494,7 +494,7 @@ function refilter() {
 		if (lat != 0 && lng != 0) {
 			first_attempt_sent = true;
 
-			let url = `https://birch.catenarymaps.org/nearbydeparturesfromcoordsv2?lat=${lat}&lon=${lng}`;
+			let url = `https://birch_nearby.catenarymaps.org/nearbydeparturesfromcoordsv2?lat=${lat}&lon=${lng}`;
 
 			if (abort_controller) {
 				abort_controller.abort();
