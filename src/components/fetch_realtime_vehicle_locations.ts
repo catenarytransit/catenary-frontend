@@ -124,7 +124,7 @@ export function fetch_realtime_vehicle_locations(
 
 	const subdomains = ['birch_rt', 'birch_rt2', 'birch_rt3', 'birch_rt4'];
 	const randomSubdomain = subdomains[Math.floor(Math.random() * subdomains.length)];
-	const url = `https://${randomSubdomain}.catenarymaps.org/bulk_realtime_fetch_v2`;
+	const url = `https://${randomSubdomain}.catenarymaps.org/bulk_realtime_fetch_v3`;
 
 	if (categories_to_request.length > 0) {
 		fetch(url, requestOptions)
@@ -139,7 +139,7 @@ export function fetch_realtime_vehicle_locations(
 }
 
 export function bounds_input_calculate(map: maplibregl.Map) {
-	const levels = [5, 7, 8, 10];
+	const levels = [5, 7, 8,  12];
 	const bounds_input: Record<string, any> = {};
 
 	for (const zoom of levels) {
@@ -148,7 +148,11 @@ export function bounds_input_calculate(map: maplibregl.Map) {
 
 		let padding = 2;
 
-		if (map.getZoom() > 10) {
+		if (map.getZoom() > 12) {
+			padding = 1;
+		}
+
+		if (map.getZoom() > 13) {
 			padding = 0;
 		}
 
