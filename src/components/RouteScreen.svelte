@@ -57,7 +57,6 @@
 		map_pointer_store,
 		stops_to_hide_store
 	} from '../globalstores';
-	import RouteHeading from './RouteHeading.svelte';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 	import { refilter_stops, delete_filter_stops_background } from './makeFiltersForStop';
 	import { occupancy_to_symbol } from './occupancy_to_symbol';
@@ -424,21 +423,25 @@
 {#if loaded == true}
 	<div class=" catenary-scroll overflow-y-auto grow" bind:this={bind_scrolling_div}>
 		<div class="px-3">
-			<RouteHeading
-				color={route_data.color}
-				route_id={routestack.route_id}
-				chateau_id={routestack.chateau_id}
-				text={route_data.agency_name}
-				compact={false}
-				short_name={route_data.short_name}
-				long_name={route_data.long_name}
-				url={route_data.url}
-				{darkMode}
-				route_type={route_data.route_type}
-				gtfs_desc={route_data.gtfs_desc}
-				text_color={route_data.text_color}
-				pin_route_setting_shown={true}
-			/>
+			{#await import('./RouteHeading.svelte') then { default: RouteHeading }}
+				<RouteHeading
+					color={route_data.color}
+					route_id={routestack.route_id}
+					chateau_id={routestack.chateau_id}
+					text={route_data.agency_name}
+					compact={false}
+					short_name={route_data.short_name}
+					long_name={route_data.long_name}
+					url={route_data.url}
+					{darkMode}
+					route_type={route_data.route_type}
+					gtfs_desc={route_data.gtfs_desc}
+					text_color={route_data.text_color}
+					pin_route_setting_shown={true}
+				/>
+			{:catch error}
+				<p class="p-4 text-red-500">Error loading component: {error.message}</p>
+			{/await}
 		</div>
 
 		{#if show_gtfs_ids}
