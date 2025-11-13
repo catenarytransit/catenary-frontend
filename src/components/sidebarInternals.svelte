@@ -42,6 +42,10 @@
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
 	import { locales_options, locales_options_lookup } from '../i18n';
 	import BlockScreen from './BlockScreen.svelte';
+	import {
+		MTA_CHATEAU_ID, isSubwayRouteId
+	} from '../utils/mta_subway_utils';
+	import MtaBullet from './mtabullet.svelte';
 
 	import VehicleInfo from './vehicle_info.svelte';
 	import StopScreen from './StopScreen.svelte';
@@ -346,22 +350,22 @@
 
 									<div class="flex flex-row gap-x-0.5 w-full flex-wrap gap-y-1">
 										{#each stops_preview_data.stops[option.data.chateau_id][option.data.stop_id].routes as route_id}
-											{#if stops_preview_data.routes[option.data.chateau_id][route_id]}
-												<div
-													class="px-1 py-0.5 md:py-1 text-xs rounded-sm"
-													style={`background-color: ${stops_preview_data.routes[option.data.chateau_id][route_id].color}; color: ${stops_preview_data.routes[option.data.chateau_id][route_id].text_color};`}
-												>
-													{#if stops_preview_data.routes[option.data.chateau_id][route_id].short_name}
-														<span class="font-medium"
-															>{stops_preview_data.routes[option.data.chateau_id][route_id]
-																.short_name}
-														</span>
-													{:else if stops_preview_data.routes[option.data.chateau_id][route_id].long_name}
-														{stops_preview_data.routes[option.data.chateau_id][
-															route_id
-														].long_name.replace(' Line', '')}
-													{/if}
-												</div>
+											{@const routeInfo = stops_preview_data.routes[option.data.chateau_id][route_id]}
+											{#if routeInfo}
+												{#if isSubwayRouteId(route_id) && option.data.chateau_id === MTA_CHATEAU_ID}
+													<MtaBullet route_short_name={routeInfo.short_name} matchTextHeight={true} />
+												{:else}
+													<div
+														class="px-1 py-0.5 md:py-1 text-xs rounded-sm"
+														style={`background-color: ${routeInfo.color}; color: ${routeInfo.text_color};`}
+													>
+														{#if routeInfo.short_name}
+															<span class="font-medium">{routeInfo.short_name} </span>
+														{:else if routeInfo.long_name}
+															{routeInfo.long_name.replace(' Line', '')}
+														{/if}
+													</div>
+												{/if}
 											{/if}
 										{/each}
 									</div>
@@ -401,11 +405,17 @@
 									{/if}
 								</p>
 							{/if}
-							{#if option.data.name}
-								<span
-									style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
-									>{option.data.name}</span
-								>
+							{#if isSubwayRouteId(option.data.route_id) && option.data.chateau_id === MTA_CHATEAU_ID}
+								<MtaBullet route_short_name={option.data.name} matchTextHeight={true} />
+								<span class="ml-1">{option.data.name}</span>
+							{:else}
+								{#if option.data.name}
+									<span
+										style={`color: ${darkMode ? lightenColour(option.data.colour) : option.data.colour}`}
+									>
+										{option.data.name}
+									</span>
+								{/if}
 							{/if}
 						</div>
 					{/each}
