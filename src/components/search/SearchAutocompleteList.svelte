@@ -71,17 +71,17 @@
 						autocomplete_focus_state.set(false);
 
 						data_stack_store.update((data_stack) => {
-							let nom_type_cleaned : string | null = null;
+							let nom_type_cleaned: string | null = null;
 
-                            if (nom_item.osm_type == 'relation') {
-                                nom_type_cleaned = "R";
-                            } else {
-                                if (nom_item.osm_type == 'way') {
-                                    nom_type_cleaned = 'W';
-                                }
-                            }
+							if (nom_item.osm_type == 'relation') {
+								nom_type_cleaned = 'R';
+							} else {
+								if (nom_item.osm_type == 'way') {
+									nom_type_cleaned = 'W';
+								}
+							}
 
-                            console.log('nom type', nom_item.osm_type, nom_type_cleaned);
+							console.log('nom type', nom_item.osm_type, nom_type_cleaned);
 
 							data_stack.push(
 								new StackInterface(
@@ -120,63 +120,65 @@
 			{/each}
 		{/if}
 
-        {#if latest_query_data_local && latest_query_data_local.routes_section}
-            {#each latest_query_data_local.routes_section.ranking.slice(0, length) as route_ranked}
-                {#if latest_query_data_local.routes_section.routes[route_ranked.chateau] && latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
-                    {@const routeInfo = latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
-                    <RouteResultItem
-					chateau = {route_ranked.chateau}
-					route_id = {route_ranked.gtfs_id}
-                        {routeInfo}
-                        onClick={() => {
-                            data_stack_store.update((data_stack) => {
-                                data_stack.push(
-                                    new StackInterface(new RouteStack(route_ranked.chateau, route_ranked.gtfs_id))
-                                );
-                                return data_stack;
-                            });
-                            autocomplete_focus_state.set(false);
-                            show_back_button_recalc();
-                        }}
-                    />
-                {/if}
-            {/each}
-        {/if}
-
-		{#if latest_query_data_local}
-			{#each latest_query_data_local.stops_section.ranking.slice(0, length) as stop_ranked}
-                {#if latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id]}
-
-				{#if !latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id].parent_station}
-					<button
-						class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full flex flex-col content-start items-start align-left"
-						on:click={() => {
+		{#if latest_query_data_local && latest_query_data_local.routes_section}
+			{#each latest_query_data_local.routes_section.ranking.slice(0, length) as route_ranked}
+				{#if latest_query_data_local.routes_section.routes[route_ranked.chateau] && latest_query_data_local.routes_section.routes[route_ranked.chateau][route_ranked.gtfs_id]}
+					{@const routeInfo =
+						latest_query_data_local.routes_section.routes[route_ranked.chateau][
+							route_ranked.gtfs_id
+						]}
+					<RouteResultItem
+						chateau={route_ranked.chateau}
+						route_id={route_ranked.gtfs_id}
+						{routeInfo}
+						onClick={() => {
 							data_stack_store.update((data_stack) => {
 								data_stack.push(
-									new StackInterface(new StopStack(stop_ranked.chateau, stop_ranked.gtfs_id))
+									new StackInterface(new RouteStack(route_ranked.chateau, route_ranked.gtfs_id))
 								);
-
 								return data_stack;
 							});
-
-							console.log('on click triggered');
-
 							autocomplete_focus_state.set(false);
 							show_back_button_recalc();
 						}}
-					>
-						{#key stop_ranked.gtfs_id}
-							<StopRankingInfo
-								stop={latest_query_data_local.stops_section.stops[stop_ranked.chateau][
-									stop_ranked.gtfs_id
-								]}
-								stops_section={latest_query_data_local.stops_section}
-								{stop_ranked}
-							/>
-						{/key}
-					</button>
+					/>
 				{/if}
-                {/if}
+			{/each}
+		{/if}
+
+		{#if latest_query_data_local}
+			{#each latest_query_data_local.stops_section.ranking.slice(0, length) as stop_ranked}
+				{#if latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id]}
+					{#if !latest_query_data_local.stops_section.stops[stop_ranked.chateau][stop_ranked.gtfs_id].parent_station}
+						<button
+							class="px-3 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer w-full flex flex-col content-start items-start align-left"
+							on:click={() => {
+								data_stack_store.update((data_stack) => {
+									data_stack.push(
+										new StackInterface(new StopStack(stop_ranked.chateau, stop_ranked.gtfs_id))
+									);
+
+									return data_stack;
+								});
+
+								console.log('on click triggered');
+
+								autocomplete_focus_state.set(false);
+								show_back_button_recalc();
+							}}
+						>
+							{#key stop_ranked.gtfs_id}
+								<StopRankingInfo
+									stop={latest_query_data_local.stops_section.stops[stop_ranked.chateau][
+										stop_ranked.gtfs_id
+									]}
+									stops_section={latest_query_data_local.stops_section}
+									{stop_ranked}
+								/>
+							{/key}
+						</button>
+					{/if}
+				{/if}
 			{/each}
 		{/if}
 	{/if}

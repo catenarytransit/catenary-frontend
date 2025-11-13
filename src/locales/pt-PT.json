@@ -121,7 +121,7 @@
 	"anticlockwise_abbrievation": "AH",
 	"clockwise": "Sentido Horário",
 	"anticlockwise": "Sentido Anti-Horário",
-	"tripid"	: "ID da Viagem",
+	"tripid": "ID da Viagem",
 	"block": "Chapa",
 	"duration": "Duração",
 	"allexact": "Todas as partidas programadas são exatas.",

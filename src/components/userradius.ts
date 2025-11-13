@@ -1,4 +1,3 @@
-
 import { get } from 'svelte/store';
 import { createGeoJSONCircle, createGeoJSONCircleFeature } from '../geoMathsAssist';
 import { ui_theme_store } from '../globalstores';
@@ -21,7 +20,7 @@ export function addGeoRadius(map: maplibregl.Map) {
 			source: 'km_source',
 			paint: {
 				'line-color': dark_mode ? '#dddddd' : '#121212',
-				'line-width': 1.2,
+				'line-width': 1.2
 				//'line-emissive-strength': 1
 			}
 		});

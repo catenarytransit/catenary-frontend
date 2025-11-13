@@ -25,7 +25,7 @@ npm run dev
 
 ### Developers
 
-Catenary Maps Web version. 
+Catenary Maps Web version.
 
 Maprender: Maplibre https://maplibre.org/maplibre-gl-js/docs/
 

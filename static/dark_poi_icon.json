@@ -1,23 +1,25 @@
-
-
-  ["coalesce",
-  ["image", [
-    "concat",
-    "mbicons:",
-    [
-      "match",
-      ["get", "class"],
-      ["pitch"],
-      ["get", "subclass"],
-      [
-      "match",
-      ["get", "subclass"],
-      ["florist", "furniture"],
-      ["get", "subclass"],
-      ["get", "class"]
-      ]
-    ],
-    "-dark"
-    ]],
-      ["image", "mbicons:marker-dark"]
+[
+	"coalesce",
+	[
+		"image",
+		[
+			"concat",
+			"mbicons:",
+			[
+				"match",
+				["get", "class"],
+				["pitch"],
+				["get", "subclass"],
+				[
+					"match",
+					["get", "subclass"],
+					["florist", "furniture"],
+					["get", "subclass"],
+					["get", "class"]
+				]
+			],
+			"-dark"
+		]
+	],
+	["image", "mbicons:marker-dark"]
 ]

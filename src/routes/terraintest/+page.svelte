@@ -1,21 +1,21 @@
 <script lang="ts">
-    import maplibregl from 'maplibre-gl';
-    import 'maplibre-gl/dist/maplibre-gl.css';
-    import type {ProjectionSpecification} from 'maplibre-gl';
-    
-    import {onMount} from 'svelte';
+	import maplibregl from 'maplibre-gl';
+	import 'maplibre-gl/dist/maplibre-gl.css';
+	import type { ProjectionSpecification } from 'maplibre-gl';
 
-    onMount(() => {
-        const map = new maplibregl.Map({
-          container: 'map',
-          hash: 'pos',
-		  pixelRatio: window.devicePixelRatio * 1.4,
-          style: '/light-style.json', // stylesheet location
-          center: [-74.5, 40], // starting position [lng, lat]
-          zoom: 9 // starting zoom
-        });
+	import { onMount } from 'svelte';
 
-        map.on('load', () => {
+	onMount(() => {
+		const map = new maplibregl.Map({
+			container: 'map',
+			hash: 'pos',
+			pixelRatio: window.devicePixelRatio * 1.4,
+			style: '/light-style.json', // stylesheet location
+			center: [-74.5, 40], // starting position [lng, lat]
+			zoom: 9 // starting zoom
+		});
+
+		map.on('load', () => {
 			map.setProjection({ type: 'globe' });
 			skyRefresh(map, darkMode);
 
@@ -55,14 +55,11 @@
 				'aeroway_fill'
 			);
 
-        console.log(map);
-       })
-    });
+			console.log(map);
+		});
+	});
+</script>
 
-    
-    </script>
-    
-    <div class="w-full">
-<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
+<div class="w-full">
+	<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />
 </div>
-

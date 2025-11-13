@@ -13,8 +13,7 @@
 
 	$: shared_rt_time = event.realtime_departure;
 
-	$: shared_scheduled_time =
-		event.scheduled_departure;
+	$: shared_scheduled_time = event.scheduled_departure;
 </script>
 
 <div class="flex flex-row">
@@ -34,7 +33,7 @@
 		<TimeDiff
 			large={false}
 			show_brackets={false}
-			show_seconds={show_seconds}
+			{show_seconds}
 			diff={(shared_rt_time || shared_scheduled_time) - current_time / 1000}
 		/>
 
@@ -58,7 +57,9 @@
 						/>
 					</span>
 				{/if}
-				<span class={`text-seashore dark:text-seashoredark font-medium ${shared_rt_time < current_time / 1000 ? 'opacity-70' : ''}`}>
+				<span
+					class={`text-seashore dark:text-seashoredark font-medium ${shared_rt_time < current_time / 1000 ? 'opacity-70' : ''}`}
+				>
 					<Clock
 						timezone={data_from_server.primary.timezone}
 						time_seconds={shared_rt_time}

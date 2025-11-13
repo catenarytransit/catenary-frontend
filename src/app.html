@@ -1,54 +1,71 @@
 <!doctype html>
 <html lang="en">
+	<head>
+		<!-- Google Tag Manager -->
+		<script>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({
+					'gtm.start': new Date().getTime(),
+					event: 'gtm.js'
+				});
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', 'GTM-WD62NKLX');
+		</script>
+		<!-- End Google Tag Manager -->
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/logo.svg" />
+		<meta name="theme-color" content="#191919" />
 
-<head>
-	<!-- Google Tag Manager -->
-	<script>(function (w, d, s, l, i) {
-			w[l] = w[l] || []; w[l].push({
-				'gtm.start':
-					new Date().getTime(), event: 'gtm.js'
-			}); var f = d.getElementsByTagName(s)[0],
-				j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-					'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-		})(window, document, 'script', 'dataLayer', 'GTM-WD62NKLX');</script>
-	<!-- End Google Tag Manager -->
-	<meta charset="utf-8" />
-	<link rel="icon" href="%sveltekit.assets%/logo.svg" />
-	<meta name="theme-color" content="#191919" />
+		<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
+		<meta name="viewport" content="width=device-width" />
 
-	<link rel="manifest" href="%sveltekit.assets%/manifest.json" />
-	<meta name="viewport" content="width=device-width" />
+		<meta
+			property="og:title"
+			content="Catenary Maps: Powerful Realtime Public Transit Data and Algorithms"
+		/>
+		<meta property="og:site_name" content="Catenary Maps" />
+		<meta property="og:url" content="https://catenarymaps.org" />
+		<meta
+			property="og:description"
+			content="Track trains, buses, and more in real time, and use our powerful algorithms to analyse public transport networks."
+		/>
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="http://catenarymaps.org/mainscreenshot.png" />
 
-	<meta property="og:title" content="Catenary Maps: Powerful Realtime Public Transit Data and Algorithms" />
-	<meta property="og:site_name" content="Catenary Maps" />
-	<meta property="og:url" content="https://catenarymaps.org" />
-	<meta property="og:description"
-		content="Track trains, buses, and more in real time, and use our powerful algorithms to analyse public transport networks." />
-	<meta property="og:type" content="website" />
-	<meta property="og:image" content="http://catenarymaps.org/mainscreenshot.png" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@catenarymaps" />
+		<meta
+			name="twitter:description"
+			content="Track trains, buses, and more in real time, and use our powerful algorithms to analyse public transport networks."
+		/>
+		<meta name="twitter:title" content="Catenary Maps" />
+		<meta name="twitter:image" content="http://catenarymaps.org/mainscreenshot.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+			rel="stylesheet"
+		/>
 
-	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:site" content="@catenarymaps" />
-	<meta name="twitter:description"
-		content="Track trains, buses, and more in real time, and use our powerful algorithms to analyse public transport networks." />
-	<meta name="twitter:title" content="Catenary Maps" />
-	<meta name="twitter:image" content="http://catenarymaps.org/mainscreenshot.png" />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-		rel="stylesheet">
+		%sveltekit.head%
+	</head>
 
-	%sveltekit.head%
-</head>
-
-<body data-sveltekit-preload-data="hover" style="margin: 0px">
-	<div style="width: 100vw; height: 100vh">%sveltekit.body%</div>
-	<script>
-		if (typeof navigator.serviceWorker !== 'undefined') {
-			navigator.serviceWorker.register('sw.js');
-		}
-	</script>
-</body>
+	<body data-sveltekit-preload-data="hover" style="margin: 0px">
+		<div style="width: 100vw; height: 100vh">%sveltekit.body%</div>
+		<script>
+			if (typeof navigator.serviceWorker !== 'undefined') {
+				navigator.serviceWorker.register('sw.js');
+			}
+		</script>
+	</body>
 </html>

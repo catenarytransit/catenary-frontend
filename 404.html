@@ -1,114 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Station Not Found - Catenary Maps</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Station Not Found - Catenary Maps</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: 'Segoe UI', system-ui, sans-serif;
+			}
 
-        body {
-            background: #f8f9fa;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
+			body {
+				background: #f8f9fa;
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				position: relative;
+				overflow: hidden;
+			}
 
-        body::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            background: repeating-linear-gradient(
-                45deg,
-                #2d4059,
-                #2d4059 20px,
-                transparent 20px,
-                transparent 40px
-            );
-            background-size: 40px 40px;
-            animation: moveLines 20s linear infinite;
-        }
+			body::before {
+				content: '';
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				opacity: 0.1;
+				background: repeating-linear-gradient(
+					45deg,
+					#2d4059,
+					#2d4059 20px,
+					transparent 20px,
+					transparent 40px
+				);
+				background-size: 40px 40px;
+				animation: moveLines 20s linear infinite;
+			}
 
-        .logo {
-            width: 300px;
-            margin: 40px 0;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-            position: relative;
-            z-index: 1;
-        }
+			.logo {
+				width: 300px;
+				margin: 40px 0;
+				filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+				position: relative;
+				z-index: 1;
+			}
 
-        .container {
-            text-align: center;
-            z-index: 1;
-            padding: 20px;
-            position: relative;
-        }
+			.container {
+				text-align: center;
+				z-index: 1;
+				padding: 20px;
+				position: relative;
+			}
 
-        .error-code {
-            font-size: 8rem;
-            font-weight: 700;
-            color: #2d4059;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: -10px;
-        }
+			.error-code {
+				font-size: 8rem;
+				font-weight: 700;
+				color: #2d4059;
+				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+				margin-bottom: -10px;
+			}
 
-        .message {
-            font-size: 1.5rem;
-            color: #2d4059;
-            margin-bottom: 30px;
-            max-width: 600px;
-        }
+			.message {
+				font-size: 1.5rem;
+				color: #2d4059;
+				margin-bottom: 30px;
+				max-width: 600px;
+			}
 
-        .home-button {
-            background: #e74c3c;
-            color: white;
-            padding: 15px 40px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: inline-block;
-            border: none;
-            cursor: pointer;
-        }
+			.home-button {
+				background: #e74c3c;
+				color: white;
+				padding: 15px 40px;
+				border-radius: 30px;
+				text-decoration: none;
+				font-weight: 600;
+				transition:
+					transform 0.2s,
+					box-shadow 0.2s;
+				display: inline-block;
+				border: none;
+				cursor: pointer;
+			}
 
-        .home-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-        }
+			.home-button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+			}
 
-        @keyframes moveLines {
-            from { background-position: 0 0; }
-            to { background-position: 40px 40px; }
-        }
+			@keyframes moveLines {
+				from {
+					background-position: 0 0;
+				}
+				to {
+					background-position: 40px 40px;
+				}
+			}
 
-        @media (max-width: 768px) {
-            .error-code { font-size: 5rem; }
-            .message { font-size: 1.2rem; }
-            .logo { width: 200px; }
-        }
-    </style>
-</head>
-<body>
-    <img src="https://maps.catenarymaps.org/logo.svg" alt="Catenary Maps" class="logo">
-    
-    <div class="container">
-        <h1 class="error-code">404</h1>
-        <p class="message">
-            Oh no! It seems this station has been rerouted.<br>
-            The page you're looking for has left the network.
-        </p>
-        <a href="https://maps.catenarymaps.org" class="home-button">Return to Central Station</a>
-    </div>
-</body>
+			@media (max-width: 768px) {
+				.error-code {
+					font-size: 5rem;
+				}
+				.message {
+					font-size: 1.2rem;
+				}
+				.logo {
+					width: 200px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<img src="https://maps.catenarymaps.org/logo.svg" alt="Catenary Maps" class="logo" />
+
+		<div class="container">
+			<h1 class="error-code">404</h1>
+			<p class="message">
+				Oh no! It seems this station has been rerouted.<br />
+				The page you're looking for has left the network.
+			</p>
+			<a href="https://maps.catenarymaps.org" class="home-button">Return to Central Station</a>
+		</div>
+	</body>
 </html>

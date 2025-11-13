@@ -1,8 +1,38 @@
 import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
 //sort like Google / YouTube
-const locale_list = ["ca", "da", "de", "et", "en", "es", "fr", "lb", "ga", "hr", "it", "lt", "lv", "nl", "hu", "no", "pl", "pt-PT",
-	"sk", "sl", "sr", "fi", "sv", "ru", "uk", "el", "zh-CN", "zh-TW", "ja", "ko"];
+const locale_list = [
+	'ca',
+	'da',
+	'de',
+	'et',
+	'en',
+	'es',
+	'fr',
+	'lb',
+	'ga',
+	'hr',
+	'it',
+	'lt',
+	'lv',
+	'nl',
+	'hu',
+	'no',
+	'pl',
+	'pt-PT',
+	'sk',
+	'sl',
+	'sr',
+	'fi',
+	'sv',
+	'ru',
+	'uk',
+	'el',
+	'zh-CN',
+	'zh-TW',
+	'ja',
+	'ko'
+];
 
 for (let i = 0; i < locale_list.length; i++) {
 	register(locale_list[i], () => import(`./locales/${locale_list[i]}.json`));
@@ -27,24 +57,23 @@ export function init_locales() {
 	});
 }
 
-
 export const locales_options: Record<string, string> = {
 	ca: 'Català',
 	en: 'English',
 	fr: 'Français',
 	es: 'Español',
-	da: "Dansk",
+	da: 'Dansk',
 	de: 'Deutsch',
 	ga: 'Gaeilge',
 	ko: '한국어',
-	lb: "Lëtzebuergesch",
+	lb: 'Lëtzebuergesch',
 	'zh-CN': '中文 (简体)',
 	'zh-TW': '中文 (繁體)',
 	nl: 'Nederlands',
 	ja: '日本語',
 	it: 'Italiano',
-	pl: "Polski",
-	ru: "Русский",
+	pl: 'Polski',
+	ru: 'Русский',
 	'pt-PT': 'Português Europeu',
 	ro: 'Română',
 	uk: 'Українська',
@@ -52,14 +81,14 @@ export const locales_options: Record<string, string> = {
 	fi: 'Suomi',
 	sl: 'Slovenščina',
 	no: 'Norsk',
-	sr: "Srpski",
-	hu: "Magyar",
-	lv: "Latviešu valoda",
-	"et": "Eesti",
-	"hr": "Hrvatski",
-	el: "Ελληνικά",
-	lt: "Lietuvių",
-	sk: "Slovenčina"
+	sr: 'Srpski',
+	hu: 'Magyar',
+	lv: 'Latviešu valoda',
+	et: 'Eesti',
+	hr: 'Hrvatski',
+	el: 'Ελληνικά',
+	lt: 'Lietuvių',
+	sk: 'Slovenčina'
 };
 
 export const locales_options_lookup: Record<string, string> = {
@@ -68,18 +97,18 @@ export const locales_options_lookup: Record<string, string> = {
 	fr: 'Français',
 	es: 'Español',
 	de: 'Deutsch',
-	da: "Dansk",
+	da: 'Dansk',
 	ga: 'Gaeilge',
 	ko: '한국어',
-	lb: "Lëtzebuergesch",
+	lb: 'Lëtzebuergesch',
 	zh: '中文',
-	ru: "Русский",
+	ru: 'Русский',
 	'zh-CN': '中文 (简体)',
 	'zh-TW': '中文 (繁體)',
 	nl: 'Nederlands',
 	ja: '日本語',
 	it: 'Italiano',
-	pl: "Polski",
+	pl: 'Polski',
 	'pt-PT': 'Português Europeu',
 	ro: 'Română',
 	uk: 'Українська',
@@ -87,12 +116,12 @@ export const locales_options_lookup: Record<string, string> = {
 	fi: 'Suomi',
 	sl: 'Slovenščina',
 	no: 'Norsk',
-	sr: "Srpski",
-	hu: "Magyar",
-	lv: "Latviešu valoda",
-	"et": "Eesti",
-	"hr": "Hrvatski",
-	el: "Ελληνικά",
-	lt: "Lietuvių",
-	sk: "Slovenčina"
+	sr: 'Srpski',
+	hu: 'Magyar',
+	lv: 'Latviešu valoda',
+	et: 'Eesti',
+	hr: 'Hrvatski',
+	el: 'Ελληνικά',
+	lt: 'Lietuvių',
+	sk: 'Slovenčina'
 };

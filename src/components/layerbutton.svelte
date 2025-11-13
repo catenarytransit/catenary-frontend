@@ -59,7 +59,7 @@
 		>
 			<img src={urlicon} class="w-14 h-14" alt="" />
 		</div>
-		<p class="text-sm text-center font-[Barlow_Semi_Condensed] ">{name}</p>
+		<p class="text-sm text-center font-[Barlow_Semi_Condensed]">{name}</p>
 	{/if}
 </div>
 <!-- {/if}{/if} -->

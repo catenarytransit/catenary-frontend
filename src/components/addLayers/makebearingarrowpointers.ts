@@ -1,6 +1,5 @@
 import maplibregl from 'maplibre-gl';
 
-
 const geobearingiconsize = [
 	'interpolate',
 	['linear'],
@@ -33,9 +32,12 @@ const geobearingoffset = [
 	['literal', [0, -50]]
 ];
 
-export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: boolean, layerspercategory: any) {
+export async function makeBearingArrowPointers(
+	map: maplibregl.Map,
+	darkMode: boolean,
+	layerspercategory: any
+) {
 	// const busbearingiconsize = ['interpolate', ['linear'], ['zoom'], 9, 0.18, 10.5, 0.25, 12, 0.47, 15, 1];
-
 
 	//USER LOCATION
 
@@ -59,14 +61,7 @@ export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: bo
 		}
 	});
 
-
-
-
 	//usergeo
-
-
-	
-	
 
 	map.addLayer({
 		id: 'geolocationheadingshell',
@@ -87,4 +82,3 @@ export async function makeBearingArrowPointers(map: maplibregl.Map, darkMode: bo
 		}
 	});
 }
-

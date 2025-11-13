@@ -19,6 +19,7 @@
         "maplibre-contour": "^0.1.0",
         "maplibre-gl": "^5.9.0",
         "moment": "^2.30.1",
+        "mta-subway-bullets": "^1.0.0",
         "protobufjs": "^7.5.4",
         "store2": "^2.14.4",
         "stringify-object": "^5.0.0",
@@ -1418,6 +1419,8 @@
     "mrmime": ["mrmime@2.0.1", "", {}, "sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ=="],
 
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
+
+    "mta-subway-bullets": ["mta-subway-bullets@1.0.0", "", {}, "sha512-hKCXSuj81feSYKVYA8nP0VCchrQrTJPxDst8klRKcJ9GUgQMvYMRw3MOb/BBpvBs+Oa5m2cRc+NKmZr54eKy9A=="],
 
     "murmurhash-js": ["murmurhash-js@1.0.0", "", {}, "sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw=="],
 

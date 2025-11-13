@@ -160,7 +160,7 @@ export class SingleTrip {
 		start_time: string | null,
 		start_date: string | null,
 		vehicle_id: string | null,
-		route_type: number | null,
+		route_type: number | null
 	) {
 		this.chateau_id = chateau_id;
 		this.trip_id = trip_id;

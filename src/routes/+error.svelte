@@ -29,7 +29,7 @@
 		font-size: 6rem;
 		font-weight: 600;
 		margin-bottom: -10px;
-        color: #00ab9b;
+		color: #00ab9b;
 	}
 
 	.message {

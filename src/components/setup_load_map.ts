@@ -57,7 +57,7 @@ export async function setup_load_map(
 	chateau_to_realtime_feed_lookup: Record<string, any>,
 	pending_chateau_rt_request: Record<string, number>,
 	recompute_map_padding: () => void,
-	setSidebarOpen: () => void,
+	setSidebarOpen: () => void
 ) {
 	let updateInterval: NodeJS.Timeout;
 	const minZoomThreshold = window.innerWidth >= 1023 ? 14 : 15;
@@ -114,15 +114,14 @@ export async function setup_load_map(
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
 
-		
-			console.log('setting up click handler');
+		console.log('setting up click handler');
 
-			setup_click_handler(map, layerspercategory, setSidebarOpen);
+		setup_click_handler(map, layerspercategory, setSidebarOpen);
 
 		const [stationImage, geoNavImage, geoCircleImage] = await Promise.all([
 			map.loadImage('/station-enter.png'),
 			map.loadImage('/geo-nav.png'),
-			map.loadImage("/geo-circle.png")
+			map.loadImage('/geo-circle.png')
 		]);
 
 		if (stationImage) {
@@ -151,7 +150,7 @@ export async function setup_load_map(
 					'text-ignore-placement': true
 				},
 				paint: {
-					'icon-opacity': 0.8,
+					'icon-opacity': 0.8
 					//'icon-emissive-strength': 1
 				}
 			});

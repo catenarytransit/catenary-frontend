@@ -121,8 +121,18 @@
 		mergedEvents = Array.from(eventIndex.values())
 			.map((v) => v.event)
 			.sort((a, b) => {
-				const ta = a.realtime_departure ?? a.realtime_arrival ?? a.scheduled_departure ?? a.scheduled_arrival ?? 0;
-				const tb = b.realtime_departure ?? b.realtime_arrival ?? b.scheduled_departure ?? b.scheduled_arrival ?? 0;
+				const ta =
+					a.realtime_departure ??
+					a.realtime_arrival ??
+					a.scheduled_departure ??
+					a.scheduled_arrival ??
+					0;
+				const tb =
+					b.realtime_departure ??
+					b.realtime_arrival ??
+					b.scheduled_departure ??
+					b.scheduled_arrival ??
+					0;
 				return ta - tb;
 			});
 
@@ -130,7 +140,11 @@
 		const grouped: Record<string, any[]> = {};
 		for (const ev of mergedEvents) {
 			const tz = data_meta?.primary?.timezone;
-			const stamp = (ev.realtime_departure || ev.realtime_arrival || ev.scheduled_departure || ev.scheduled_arrival) * 1000;
+			const stamp =
+				(ev.realtime_departure ||
+					ev.realtime_arrival ||
+					ev.scheduled_departure ||
+					ev.scheduled_arrival) * 1000;
 			const code = new Date(stamp).toLocaleDateString('en-CA', tz ? { timeZone: tz } : undefined);
 			if (!grouped[code]) grouped[code] = [];
 			grouped[code].push(ev);
@@ -139,7 +153,9 @@
 
 		// Compute previous_count ≤30m ago for header toggle
 		const nowSec = Date.now() / 1000;
-		previous_count = mergedEvents.filter((ev) => (ev.realtime_departure || ev.scheduled_departure) < nowSec - 60).length;
+		previous_count = mergedEvents.filter(
+			(ev) => (ev.realtime_departure || ev.scheduled_departure) < nowSec - 60
+		).length;
 	}
 
 	async function fetchPage(startSec: number, endSec: number) {
@@ -244,8 +260,12 @@
 			type: 'FeatureCollection',
 			features: geojson_shapes_list
 		});
-		global_map_pointer.getSource('transit_shape_context')?.setData({ type: 'FeatureCollection', features: [] });
-		global_map_pointer.getSource('stops_context')?.setData({ type: 'FeatureCollection', features: [] });
+		global_map_pointer
+			.getSource('transit_shape_context')
+			?.setData({ type: 'FeatureCollection', features: [] });
+		global_map_pointer
+			.getSource('stops_context')
+			?.setData({ type: 'FeatureCollection', features: [] });
 	}
 
 	async function loadInitialPages() {
@@ -302,20 +322,31 @@
 <div class="h-full">
 	<HomeButton />
 
-	<div bind:this={scrollContainer} class="catenary-scroll overflow-y-auto pb-64 h-full pr-2" on:scroll={onScroll}>
+	<div
+		bind:this={scrollContainer}
+		class="catenary-scroll overflow-y-auto pb-64 h-full pr-2"
+		on:scroll={onScroll}
+	>
 		<div class="flex flex-col">
 			<div>
 				{#if data_meta}
 					<div class="flex flex-row ml-1">
 						<h2 class="text-lg font-bold">{data_meta.primary.stop_name}</h2>
 						<p class="ml-auto align-middle">
-							<Clock time_seconds={current_time / 1000} show_seconds={true} timezone={data_meta.primary.timezone} />
+							<Clock
+								time_seconds={current_time / 1000}
+								show_seconds={true}
+								timezone={data_meta.primary.timezone}
+							/>
 						</p>
 					</div>
 					<p class="text-sm ml-1">{data_meta.primary.timezone}</p>
 
 					{#if previous_count > 0}
-						<button class="px-0 py-3 font-bold" on:click={() => (show_previous_departures = !show_previous_departures)}>
+						<button
+							class="px-0 py-3 font-bold"
+							on:click={() => (show_previous_departures = !show_previous_departures)}
+						>
 							<p class="align-middle flex flex-row">
 								<span class="inline-block align-bottom">
 									{#if show_previous_departures}
@@ -334,7 +365,13 @@
 							<p class="text-md font-semibold mt-0 mb-1 mx-3">
 								{new Date(date_code).toLocaleDateString(
 									timezone_to_locale(locale_inside_component, data_meta.primary.timezone),
-									{ year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'long', timeZone: 'UTC' }
+									{
+										year: 'numeric',
+										month: 'numeric',
+										day: 'numeric',
+										weekday: 'long',
+										timeZone: 'UTC'
+									}
 								)}
 							</p>
 
@@ -347,7 +384,19 @@
 									class="mx-1 py-1 border-b-1 border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800"
 									on:click={() => {
 										data_stack_store.update((x) => {
-											x.push(new StackInterface(new SingleTrip(event.chateau, event.trip_id, event.route_id, null, event.service_date.replace(/-/g, ''), null, null)));
+											x.push(
+												new StackInterface(
+													new SingleTrip(
+														event.chateau,
+														event.trip_id,
+														event.route_id,
+														null,
+														event.service_date.replace(/-/g, ''),
+														null,
+														null
+													)
+												)
+											);
 											return x;
 										});
 									}}
@@ -357,11 +406,17 @@
 									>
 										<p>
 											{#if data_meta.routes[event.chateau][event.route_id].short_name}
-												<span class="rounded-xs font-bold px-0.5 mx-1 py-0.5" style={`background: ${data_meta.routes[event.chateau][event.route_id].color}; color: ${data_meta.routes[event.chateau][event.route_id].text_color};`}>
+												<span
+													class="rounded-xs font-bold px-0.5 mx-1 py-0.5"
+													style={`background: ${data_meta.routes[event.chateau][event.route_id].color}; color: ${data_meta.routes[event.chateau][event.route_id].text_color};`}
+												>
 													{data_meta.routes[event.chateau][event.route_id].short_name}
 												</span>
 											{:else if data_meta.routes[event.chateau][event.route_id].long_name}
-												<span class="rounded-xs font-semibold px-0.5 mx-1 py-0.5" style={`background: ${data_meta.routes[event.chateau][event.route_id].color}; color: ${data_meta.routes[event.chateau][event.route_id].text_color};`}>
+												<span
+													class="rounded-xs font-semibold px-0.5 mx-1 py-0.5"
+													style={`background: ${data_meta.routes[event.chateau][event.route_id].color}; color: ${data_meta.routes[event.chateau][event.route_id].text_color};`}
+												>
 													{data_meta.routes[event.chateau][event.route_id].long_name}
 												</span>
 											{/if}
@@ -372,11 +427,18 @@
 										</p>
 
 										{#if event.last_stop}
-											<p><span class="ml-1 text-xs font-bold align-middle"> {$_('last_stop')}</span></p>
+											<p>
+												<span class="ml-1 text-xs font-bold align-middle"> {$_('last_stop')}</span>
+											</p>
 										{/if}
 									</div>
 
-									<StopScreenRow {event} data_from_server={data_meta} {current_time} {show_seconds} />
+									<StopScreenRow
+										{event}
+										data_from_server={data_meta}
+										{current_time}
+										{show_seconds}
+									/>
 
 									{#if event.platform_string_realtime}
 										<p>{event.platform_string_realtime}</p>
@@ -391,12 +453,10 @@
 						<!-- Loader / pager hint -->
 						<div class="w-full text-center py-4 text-sm opacity-80">
 							{#if pages.some((p) => p.loading)}
-								<span>{$_("loadingmoredepartures")}…</span>
-							{:else}
-								
-							{/if}
+								<span>{$_('loadingmoredepartures')}…</span>
+							{:else}{/if}
 
-							<button class="underline" on:click={loadNextPage}>{$_("Load more")}</button>
+							<button class="underline" on:click={loadNextPage}>{$_('Load more')}</button>
 						</div>
 					{:else}
 						<p class="ml-2">Loading…</p>

@@ -21,7 +21,11 @@
 		</button>
 	{:else}
 		<div class="mx-1">
-			<span class="material-symbols-outlined block mx-1 cursor-pointer text-gray-100 dark:text-gray-800"> arrow_back </span>
+			<span
+				class="material-symbols-outlined block mx-1 cursor-pointer text-gray-100 dark:text-gray-800"
+			>
+				arrow_back
+			</span>
 		</div>
 	{/if}
 

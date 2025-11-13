@@ -11,12 +11,7 @@
 	import { onMount } from 'svelte';
 	import {
 		data_stack_store,
-		on_sidebar_trigger_store,
-		realtime_vehicle_locations_last_updated_store,
-		realtime_vehicle_locations_store,
-		realtime_vehicle_route_cache_hash_store,
-		realtime_vehicle_route_cache_store,
-		lock_on_gps_store,
+		// ... other imports
 		usunits_store,
 		show_zombie_buses_store,
 		show_my_location_store,
@@ -26,7 +21,8 @@
 		stops_to_hide_store
 	} from '../globalstores';
 	import { RouteStack, SingleTrip, StackInterface, StopStack } from './stackenum';
-	import { MTA_CHATEAU_ID, getMtaSubwayClass, isSubwayRouteId, getMtaSymbolShortName, isExpress } from '../utils/mta_subway_utils';
+	import { MTA_CHATEAU_ID, isSubwayRouteId } from '../utils/mta_subway_utils';
+	import MtaBullet from './mtabullet.svelte';
 
 	export let color: string;
 	export let text_color: string;
@@ -61,46 +57,44 @@
 	export let pin_route_setting_shown: boolean = false;
 
 	let isPinned = false;
-const LS_KEY = 'pinned_routes_v1';
+	const LS_KEY = 'pinned_routes_v1';
 
-function cleanRouteId(id: string) {
-	return id?.replace(/^\"/, '').replace(/\"$/, '') ?? id;
-}
-function keyForRoute(chateau_id: string, route_id: string) {
-	return `${chateau_id}:${cleanRouteId(route_id)}`;
-}
-function readPins(): string[] {
-	if (typeof window === 'undefined') return [];
-	try {
-		return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-	} catch {
-		return [];
+	function cleanRouteId(id: string) {
+		return id?.replace(/^\"/, '').replace(/\"$/, '') ?? id;
 	}
-}
-function writePins(pins: string[]) {
-	if (typeof window === 'undefined') return;
-	localStorage.setItem(LS_KEY, JSON.stringify([...new Set(pins)]));
-}
-function refreshPinnedState() {
-	if (!route_id || !chateau_id) return;
-	const k = keyForRoute(chateau_id, route_id);
-	isPinned = readPins().includes(k);
-}
-function togglePin() {
-	if (!route_id || !chateau_id) return;
-	const k = keyForRoute(chateau_id, route_id);
-	const pins = readPins();
-	if (pins.includes(k)) {
-		writePins(pins.filter((p) => p !== k));
-		isPinned = false;
-	} else {
-		pins.push(k);
-		writePins(pins);
-		isPinned = true;
+	function keyForRoute(chateau_id: string, route_id: string) {
+		return `${chateau_id}:${cleanRouteId(route_id)}`;
 	}
-}
-
-
+	function readPins(): string[] {
+		if (typeof window === 'undefined') return [];
+		try {
+			return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+		} catch {
+			return [];
+		}
+	}
+	function writePins(pins: string[]) {
+		if (typeof window === 'undefined') return;
+		localStorage.setItem(LS_KEY, JSON.stringify([...new Set(pins)]));
+	}
+	function refreshPinnedState() {
+		if (!route_id || !chateau_id) return;
+		const k = keyForRoute(chateau_id, route_id);
+		isPinned = readPins().includes(k);
+	}
+	function togglePin() {
+		if (!route_id || !chateau_id) return;
+		const k = keyForRoute(chateau_id, route_id);
+		const pins = readPins();
+		if (pins.includes(k)) {
+			writePins(pins.filter((p) => p !== k));
+			isPinned = false;
+		} else {
+			pins.push(k);
+			writePins(pins);
+			isPinned = true;
+		}
+	}
 
 	onMount(() => {
 		window.addEventListener('resize', () => {
@@ -108,18 +102,18 @@ function togglePin() {
 		});
 
 		refreshPinnedState();
-	const onStorage = (e: StorageEvent) => {
-		if (e.key === LS_KEY) refreshPinnedState();
-	};
-	window.addEventListener('storage', onStorage);
+		const onStorage = (e: StorageEvent) => {
+			if (e.key === LS_KEY) refreshPinnedState();
+		};
+		window.addEventListener('storage', onStorage);
 
-	window.addEventListener('resize', () => {
-		window_height_known = window.innerHeight;
-	});
+		window.addEventListener('resize', () => {
+			window_height_known = window.innerHeight;
+		});
 
-	return () => {
-		window.removeEventListener('storage', onStorage);
-	};
+		return () => {
+			window.removeEventListener('storage', onStorage);
+		};
 	});
 	let pdf_url: string | undefined;
 
@@ -133,13 +127,10 @@ function togglePin() {
 			.catch((pdferr) => console.error(pdferr));
 	}
 
-	$: chateau_id, route_id, refreshPinnedState();
+	$: (chateau_id, route_id, refreshPinnedState());
 
-    $: isSubway = isSubwayRouteId(route_id) && chateau_id == MTA_CHATEAU_ID;
-    $: subwayShortName = isSubway && short_name ? getMtaSymbolShortName(short_name) : '';
-    $: isRouteExpress = isSubway ? isExpress(route_id) : false;
+	$: isSubway = isSubwayRouteId(route_id) && chateau_id == MTA_CHATEAU_ID;
 </script>
-
 
 {#if !compact}
 	<div class="flex items-start justify-between gap-2">
@@ -148,20 +139,12 @@ function togglePin() {
 				isSubway ? '' : 'leading-tight'
 			}`}
 			style={`
-				${
-					isSubway
-						? ''
-						: `color: ${darkMode ? lightenColour(color) : color}`
-				}`}
+				${isSubway ? '' : `color: ${darkMode ? lightenColour(color) : color}`}`}
 		>
 			{#if run_number}
 				<span
 					style={`
-						${
-							isSubway
-								? ''
-								: `background-color: ${color}; color: ${text_color};`
-						}`}
+						${isSubway ? '' : `background-color: ${color}; color: ${text_color};`}`}
 					class="font-bold text-md px-1 py-0.5 mr-1 rounded-md w-min">{run_number}</span
 				>
 			{/if}
@@ -184,11 +167,8 @@ function togglePin() {
 				}}
 			>
 				{#if isSubway && short_name}
-					<span
-						class="subway-icon {getMtaSubwayClass(short_name)} {isRouteExpress ? 'express' : ''}"
-					>
-						{subwayShortName}
-					</span>
+
+					<MtaBullet route_short_name={short_name} matchTextHeight={true} />
 				{:else if short_name}
 					<span class="font-bold">{fixRouteName(chateau_id, short_name, route_id)}</span>
 				{/if}

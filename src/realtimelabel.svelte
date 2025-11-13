@@ -30,7 +30,8 @@
 					</span>
 				</div>
 			</div>
-			<div class=" align-center items-center"><p class="text-sm text-center font-[Barlow_Semi_Condensed]">{name}</p></div>
+			<div class=" align-center items-center">
+				<p class="text-sm text-center font-[Barlow_Semi_Condensed]">{name}</p>
+			</div>
 		</div>
-
-		{/if}{/if}
+	{/if}{/if}

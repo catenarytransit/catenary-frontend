@@ -9,13 +9,7 @@ function textColorOfMapLabels(darkMode: boolean) {
 }
 
 export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
-	const layers = [
-		'bus',
-		'other',
-		'tram',
-		'metro',
-		'intercityrail'
-	];
+	const layers = ['bus', 'other', 'tram', 'metro', 'intercityrail'];
 
 	const layerspercategory = {
 		bus: {
@@ -46,29 +40,109 @@ export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
 	};
 
 	for (const category of layers) {
-		map.setPaintProperty(layerspercategory[category].livedots, 'circle-stroke-color', darkMode ? '#ffffff' : '#3a3a3a');
-		map.setLayoutProperty(layerspercategory[category].pointingshell, 'icon-image', darkMode ? 'pointingshell' : 'pointingshelllight');
-		map.setPaintProperty(layerspercategory[category].labeldots, 'text-color', textColorOfMapLabels(darkMode));
-		map.setPaintProperty(layerspercategory[category].labeldots, 'text-halo-color', darkMode ? '#1d1d1d' : '#ededed');
+		map.setPaintProperty(
+			layerspercategory[category].livedots,
+			'circle-stroke-color',
+			darkMode ? '#ffffff' : '#3a3a3a'
+		);
+		map.setLayoutProperty(
+			layerspercategory[category].pointingshell,
+			'icon-image',
+			darkMode ? 'pointingshell' : 'pointingshelllight'
+		);
+		map.setPaintProperty(
+			layerspercategory[category].labeldots,
+			'text-color',
+			textColorOfMapLabels(darkMode)
+		);
+		map.setPaintProperty(
+			layerspercategory[category].labeldots,
+			'text-halo-color',
+			darkMode ? '#1d1d1d' : '#ededed'
+		);
 	}
 
-	map.setPaintProperty(layerspercategory.intercityrail.livedots, 'circle-stroke-color', darkMode ? [
-		'step',
-		['zoom'],
-		'#eeeeee',
-		6,
-		'#ffffff'
-	] : '#3a3a3a');
+	map.setPaintProperty(
+		layerspercategory.intercityrail.livedots,
+		'circle-stroke-color',
+		darkMode ? ['step', ['zoom'], '#eeeeee', 6, '#ffffff'] : '#3a3a3a'
+	);
 }
 
-export const bus_label_no_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];
-export const bus_label_with_headsign = ['interpolate', ['linear'], ['zoom'], 9, 4, 11, 5, 13, 9, 15, 11];
+export const bus_label_no_headsign = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	9,
+	5,
+	11,
+	7,
+	13,
+	10,
+	15,
+	13
+];
+export const bus_label_with_headsign = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	9,
+	4,
+	11,
+	5,
+	13,
+	9,
+	15,
+	11
+];
 
 const bus_label_text_size = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];
 const other_label_text_size = ['interpolate', ['linear'], ['zoom'], 9, 8.5, 11, 13, 13, 16];
-const tram_label_text_size = ['interpolate', ['linear'], ['zoom'], 6, 4, 9, 6, 10, 7, 11, 9, 13, 10, 15, 14];
-const metro_label_text_size = ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 7, 10, 9, 11, 11, 13, 12];
-const intercityrail_label_text_size = ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 8, 11, 14, 13, 15];
+const tram_label_text_size = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	6,
+	4,
+	9,
+	6,
+	10,
+	7,
+	11,
+	9,
+	13,
+	10,
+	15,
+	14
+];
+const metro_label_text_size = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	6,
+	5,
+	9,
+	7,
+	10,
+	9,
+	11,
+	11,
+	13,
+	12
+];
+const intercityrail_label_text_size = [
+	'interpolate',
+	['linear'],
+	['zoom'],
+	6,
+	8,
+	9,
+	8,
+	11,
+	14,
+	13,
+	15
+];
 
 const original_text_sizes = {
 	bus: bus_label_text_size,
@@ -93,13 +167,7 @@ export function setupLiveDotScaling() {
 		const map = get(map_pointer_store);
 		if (!map || !map.isStyleLoaded()) return;
 
-		const categories = [
-			'bus',
-			'other',
-			'tram',
-			'metro',
-			'intercityrail'
-		];
+		const categories = ['bus', 'other', 'tram', 'metro', 'intercityrail'];
 
 		for (const category of categories) {
 			const layerId = layerspercategory_main[category]?.labeldots;
@@ -136,15 +204,15 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['linear'],
 		['zoom'],
 		4,
-		0.10,
+		0.1,
 		6,
-		0.10,
+		0.1,
 		8,
 		0.15,
 		9,
 		0.18,
 		11,
-		0.20,
+		0.2,
 		12,
 		0.25,
 		15,
@@ -168,7 +236,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		['linear'],
 		['zoom'],
 		6,
-		0.090,
+		0.09,
 		8,
 		0.11,
 		9,
@@ -216,7 +284,19 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1.2, 8, 1.6, 9, 1.7, 10, 2, 16, 6],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
-			'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0, 8, 0.3, 9, 0.5, 13, 0.9],
+			'circle-stroke-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				7.9,
+				0,
+				8,
+				0.3,
+				9,
+				0.5,
+				13,
+				0.9
+			],
 			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 15, 0.6],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.5
@@ -251,19 +331,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'symbol',
 		filter: ['all', ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
 		paint: {
-			'icon-opacity': [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				9,
-				0.1,
-				10,
-				0.2,
-				12,
-				0.2,
-				15,
-				0.5
-			]
+			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.1, 10, 0.2, 12, 0.2, 15, 0.5]
 		},
 		layout: {
 			'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
@@ -286,21 +354,11 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-radial-offset': 0.2,
 			'text-font': {
-				"stops": [
-				  [
-					6,
-					[
-					  "Barlow-Medium"
-					]
-				  ],
-				  [
-					11,
-					[
-					  "Barlow-SemiBold"
-					]
-				  ]
+				stops: [
+					[6, ['Barlow-Medium']],
+					[11, ['Barlow-SemiBold']]
 				]
-			  },
+			},
 			'text-size': bus_label_text_size,
 			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
 		},
@@ -357,7 +415,12 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		id: layerspercategory.other.pointingshell,
 		source: 'other',
 		type: 'symbol',
-		filter: ['all', ['!=', ['get', 'route_type'], 0],['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		filter: [
+			'all',
+			['!=', ['get', 'route_type'], 0],
+			['==', true, ['get', 'has_bearing']],
+			['!=', ['get', 'bearing'], 0]
+		],
 		paint: {
 			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 11.5, 0.8]
 		},
@@ -415,13 +478,28 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'circle',
 		source: 'localrail',
 		minzoom: 4,
-		filter: ["all", ['any',
-			["==", ['get', 'route_type'], 0],
-			["==", ['get', 'route_type'], 5]
-		]],
+		filter: ['all', ['any', ['==', ['get', 'route_type'], 0], ['==', ['get', 'route_type'], 5]]],
 		paint: {
 			//['interpolate', ['linear'], ['zoom'], 6, 3, 8, 3, 10, 4, 11, 6, 16, 12],
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 1.8, 8, 2.3, 10, 4, 11, 4.5, 13, 6, 15, 6, 16, 10],
+			'circle-radius': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				6,
+				1.8,
+				8,
+				2.3,
+				10,
+				4,
+				11,
+				4.5,
+				13,
+				6,
+				15,
+				6,
+				16,
+				10
+			],
 			'circle-color': ['get', 'color'],
 			'circle-stroke-color': darkMode == true ? '#ffffff' : '#3a3a3a',
 			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 8, 0.5, 9, 0.6, 10, 1],
@@ -434,25 +512,15 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		id: layerspercategory.tram.pointing,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all', ['any',
-			["==", ['get', 'route_type'], 0],
-			["==", ['get', 'route_type'], 5]
-		], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		filter: [
+			'all',
+			['any', ['==', ['get', 'route_type'], 0], ['==', ['get', 'route_type'], 5]],
+			['==', true, ['get', 'has_bearing']],
+			['!=', ['get', 'bearing'], 0]
+		],
 		paint: {
 			'icon-color': ['get', 'contrastdarkmodebearing'],
-			'icon-opacity': [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				6,
-				0.2,
-				9,
-				0.4,
-				11,
-				0.5,
-				13,
-				0.6
-			]
+			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.2, 9, 0.4, 11, 0.5, 13, 0.6]
 		},
 		layout: {
 			'icon-image': 'pointingcoloured',
@@ -465,17 +533,33 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		},
 		minzoom: 6
 	});
-	
+
 	map.addLayer({
 		id: layerspercategory.tram.pointingshell,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all',  ['any',
-			["==", ['get', 'route_type'], 0],
-			["==", ['get', 'route_type'], 5]
-		], ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+		filter: [
+			'all',
+			['any', ['==', ['get', 'route_type'], 0], ['==', ['get', 'route_type'], 5]],
+			['==', true, ['get', 'has_bearing']],
+			['!=', ['get', 'bearing'], 0]
+		],
 		paint: {
-			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.1, 9.8, 0.3, 11, 0.3, 11.5, 0.4, 12, 0.5]
+			'icon-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				6,
+				0.1,
+				9.8,
+				0.3,
+				11,
+				0.3,
+				11.5,
+				0.4,
+				12,
+				0.5
+			]
 		},
 		layout: {
 			'icon-image': darkMode == true ? 'pointingshell' : 'pointingshelllight',
@@ -494,10 +578,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'symbol',
 		source: 'localrail',
 		minzoom: 6,
-		filter: ['all',  ['any',
-			["==", ['get', 'route_type'], 0],
-			["==", ['get', 'route_type'], 5]
-		]],
+		filter: ['all', ['any', ['==', ['get', 'route_type'], 0], ['==', ['get', 'route_type'], 5]]],
 		layout: {
 			'text-field': ['get', 'maptag'],
 			/*'text-field': [
@@ -530,7 +611,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'circle',
 		source: 'localrail',
 		minzoom: 4,
-		filter: ['all',  ["==", ['get', 'route_type'], 1]],
+		filter: ['all', ['==', ['get', 'route_type'], 1]],
 		paint: {
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 3, 8, 3, 10, 4, 11, 6, 16, 12],
 			'circle-color': ['get', 'color'],
@@ -539,18 +620,19 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.7]
 		}
-	});	
+	});
 
-
-	
 	map.addLayer({
 		id: layerspercategory.metro.pointing,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all',
-			["==", ['get', 'route_type'], 1],
+		filter: [
+			'all',
+			['==', ['get', 'route_type'], 1],
 			['!=', ['get', 'route_type'], 0],
-		 ['==', true, ['get', 'has_bearing']], ['!=', ['get', 'bearing'], 0]],
+			['==', true, ['get', 'has_bearing']],
+			['!=', ['get', 'bearing'], 0]
+		],
 		paint: {
 			'icon-color': ['get', 'contrastdarkmodebearing'],
 			'icon-opacity': 0.6
@@ -567,14 +649,16 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		minzoom: 4.5
 	});
 
-	
 	map.addLayer({
 		id: layerspercategory.metro.pointingshell,
 		source: 'localrail',
 		type: 'symbol',
-		filter: ['all',["==", ['get', 'route_type'], 1], 
-		['==', true, ['get', 'has_bearing']], 
-		['!=', ['get', 'bearing'], 0]],
+		filter: [
+			'all',
+			['==', ['get', 'route_type'], 1],
+			['==', true, ['get', 'has_bearing']],
+			['!=', ['get', 'bearing'], 0]
+		],
 		paint: {
 			'icon-opacity': ['interpolate', ['linear'], ['zoom'], 9.8, 0.3, 11, 0.4, 11.5, 0.8]
 		},
@@ -595,7 +679,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		type: 'symbol',
 		source: 'localrail',
 		minzoom: 6,
-		filter: ['all',  ["==", ['get', 'route_type'], 1]],
+		filter: ['all', ['==', ['get', 'route_type'], 1]],
 		layout: {
 			'text-field': ['get', 'maptag'],
 			/*'text-field': [
@@ -628,15 +712,26 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		source: 'intercityrail',
 		minzoom: 1.2,
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 1, 1, 3, 2.5, 6, 2.8, 8, 4, 11, 6, 16, 10],
-			'circle-color': ['get', 'color'],
-			'circle-stroke-color': darkMode == true ? [
-				'step',
+			'circle-radius': [
+				'interpolate',
+				['linear'],
 				['zoom'],
-				'#eeeeee',
+				1,
+				1,
+				3,
+				2.5,
 				6,
-				'#ffffff'
-			] : '#3a3a3a',
+				2.8,
+				8,
+				4,
+				11,
+				6,
+				16,
+				10
+			],
+			'circle-color': ['get', 'color'],
+			'circle-stroke-color':
+				darkMode == true ? ['step', ['zoom'], '#eeeeee', 6, '#ffffff'] : '#3a3a3a',
 			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 3, 0.6, 5, 0.7, 7, 0.8],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 4, 0.4, 7, 0.6, 11, 0.7]
@@ -684,7 +779,6 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		}
 	});
 
-
 	map.addLayer({
 		id: layerspercategory.intercityrail.labeldots,
 		type: 'symbol',
@@ -714,5 +808,5 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 		}
 	});
 
-	setupLiveDotScaling()
+	setupLiveDotScaling();
 }

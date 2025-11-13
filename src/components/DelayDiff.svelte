@@ -63,10 +63,10 @@
 
 	function locale_s_marking(l: string | null | undefined) {
 		if (typeof l == 'string') {
-			if (l == 'zh' || l == 'zh-CN' || l == "zh_CN") {
+			if (l == 'zh' || l == 'zh-CN' || l == 'zh_CN') {
 				return '秒';
 			}
-			if (l == 'zh-TW' || l == "zh_TW") {
+			if (l == 'zh-TW' || l == 'zh_TW') {
 				return '秒';
 			}
 			if (l.startsWith('ko')) {
@@ -103,7 +103,7 @@
 		}
 
 		if (diff >= 3600) {
-			textclass = 'text-pink-600 dark:text-pink-400'
+			textclass = 'text-pink-600 dark:text-pink-400';
 		}
 
 		let remainder = Math.abs(diff);
@@ -115,12 +115,11 @@
 	}
 </script>
 
-<span class={`${ textclass } font-semibold text-[0px]`}>
+<span class={`${textclass} font-semibold text-[0px]`}>
 	<span class="font-medium">
 		{#if diff < 0}<span class="text-xs">{$_('early')}</span>
 		{/if}{#if diff > 0}<span class="text-xs">{$_('late')}</span>
-		{/if}{#if diff == 0}<span class="text-xs font-semibold text-[#58A738]"
-				>{$_("ontime")}</span
+		{/if}{#if diff == 0}<span class="text-xs font-semibold text-[#58A738]">{$_('ontime')}</span
 			>{/if}
 		<span class="text-xs">&nbsp;</span>
 	</span>

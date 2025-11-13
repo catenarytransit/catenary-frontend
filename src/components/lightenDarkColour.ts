@@ -35,9 +35,9 @@ export function lightenColour(inputstring: string): string {
 		}
 
 		if (hsl.l < 60) {
-                hsl.l = hsl.l + ((100-hsl.l) * 0.4);
+			hsl.l = hsl.l + (100 - hsl.l) * 0.4;
 		}
-		
+
 		//console.log('hsl h, s, l', newdarkhsl.h, newdarkhsl.s, newdarkhsl.l)
 
 		//hsl.s = Math.max(100, Math.min(hsl.s + 40, 100));
@@ -69,7 +69,7 @@ export function darkenColour(inputstring: string): string {
 
 		//
 		if (hsl.l < 50) {
-			hsl.l = (0.5 * (hsl.l - 60)) + 60
+			hsl.l = 0.5 * (hsl.l - 60) + 60;
 		}
 
 		const newrgb = hslToRgb(hsl.h, hsl.s, hsl.l);

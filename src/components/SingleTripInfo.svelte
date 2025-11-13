@@ -112,7 +112,6 @@
 	async function update_vehicle_rt() {
 		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
 		if (trip_data) {
-			
 			if (trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id) {
 				let url = new URL(
 					`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id}`
@@ -275,76 +274,81 @@
 
 		let already_seen_stop_ids: string[] = [];
 
-		let stops_features = stoptimes_cleaned_dataset.filter((eachstoptime: any) => {
-									if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
-										already_seen_stop_ids.push(eachstoptime.stop_id);
-										return true;
-									}
+		let stops_features = stoptimes_cleaned_dataset
+			.filter((eachstoptime: any) => {
+				if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
+					already_seen_stop_ids.push(eachstoptime.stop_id);
+					return true;
+				}
 
-									// for now, show duplicate stops
-									return true;
-									//return false;
-								})
-								.map((eachstoptime: any) => {
-									let time_temp = eachstoptime.rt_departure?.time || eachstoptime.rt_arrival?.time || eachstoptime.scheduled_departure_time_unix_seconds || eachstoptime.scheduled_arrival_time_unix_seconds;
+				// for now, show duplicate stops
+				return true;
+				//return false;
+			})
+			.map((eachstoptime: any) => {
+				let time_temp =
+					eachstoptime.rt_departure?.time ||
+					eachstoptime.rt_arrival?.time ||
+					eachstoptime.scheduled_departure_time_unix_seconds ||
+					eachstoptime.scheduled_arrival_time_unix_seconds;
 
-									let time_text = new Date(
-										time_temp * 1000
-									).toLocaleTimeString('en-UK', {
-										timeZone: eachstoptime.timezone,
-										hour: '2-digit',
-										minute: '2-digit',
-									});
+				let time_text = new Date(time_temp * 1000).toLocaleTimeString('en-UK', {
+					timeZone: eachstoptime.timezone,
+					hour: '2-digit',
+					minute: '2-digit'
+				});
 
-									let label = `${time_text} ${eachstoptime.name
-												.replace('Station ', '')
-												.replace(' Station', '')
-												.replace(', Bahnhof', '')
-												.replace(' Bahnhof', '')
-												.replace('Estación de tren ', '')
-												.replace(' Metrolink', '')
-												.replace('Northbound', 'N.B.')
-												.replace('Eastbound', 'E.B.')
-												.replace('Southbound', 'S.B.')
-												.replace('Westbound', 'W.B.')
-												.replace(' (Railway) ', '')
-												.replace(' Light Rail', '').replace(" Amtrak", "")}`;
+				let label = `${time_text} ${eachstoptime.name
+					.replace('Station ', '')
+					.replace(' Station', '')
+					.replace(', Bahnhof', '')
+					.replace(' Bahnhof', '')
+					.replace('Estación de tren ', '')
+					.replace(' Metrolink', '')
+					.replace('Northbound', 'N.B.')
+					.replace('Eastbound', 'E.B.')
+					.replace('Southbound', 'S.B.')
+					.replace('Westbound', 'W.B.')
+					.replace(' (Railway) ', '')
+					.replace(' Light Rail', '')
+					.replace(' Amtrak', '')}`;
 
-									return {
-										type: 'Feature',
-										properties: {
-											label: label,
-											stop_id: eachstoptime.stop_id,
-											chateau: trip_selected.chateau_id,
-											stop_route_type: trip_data.route_type,
-											cancelled: eachstoptime.schedule_relationship == 1
-										},
-										geometry: {
-											coordinates: [eachstoptime.longitude, eachstoptime.latitude],
-											type: 'Point'
-										}
-									};
-								});
+				return {
+					type: 'Feature',
+					properties: {
+						label: label,
+						stop_id: eachstoptime.stop_id,
+						chateau: trip_selected.chateau_id,
+						stop_route_type: trip_data.route_type,
+						cancelled: eachstoptime.schedule_relationship == 1
+					},
+					geometry: {
+						coordinates: [eachstoptime.longitude, eachstoptime.latitude],
+						type: 'Point'
+					}
+				};
+			});
 
-							let stop_source_new = { type: 'FeatureCollection', features: stops_features };
+		let stop_source_new = { type: 'FeatureCollection', features: stops_features };
 
-							let stops_context = map.getSource('stops_context');
-							if (stops_context) {
-								stops_context.setData(stop_source_new);
-							} else {
-								console.error('stops_context source missing');
-							}
+		let stops_context = map.getSource('stops_context');
+		if (stops_context) {
+			stops_context.setData(stop_source_new);
+		} else {
+			console.error('stops_context source missing');
+		}
 
-							try {
+		try {
+			stops_to_hide_store.set({
+				[trip_selected.chateau_id]: stoptimes_cleaned_dataset.map(
+					(eachstop: any) => eachstop.stop_id
+				)
+			});
 
-								stops_to_hide_store.set({
-								[trip_selected.chateau_id]: stoptimes_cleaned_dataset.map((eachstop: any) => eachstop.stop_id)
-							});
-
-							refilter_stops();
-							} catch (e) {
-								console.error(e);
-							}
+			refilter_stops();
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	async function fetch_trip_selected() {
@@ -377,10 +381,7 @@
 
 				try {
 					data = JSON.parse(text);
-
-					
 				} catch (e) {
-
 					success = false;
 
 					error = text;
@@ -388,236 +389,224 @@
 
 				if (success == true) {
 					try {
-					
-					//	console.log('trip data', data);
-					is_loading_trip_data = false;
-					trip_data = data;
+						//	console.log('trip data', data);
+						is_loading_trip_data = false;
+						trip_data = data;
 
-					map.getSource('transit_shape_context_for_stop').setData(
-						{
-							'type': 'FeatureCollection',
+						map.getSource('transit_shape_context_for_stop').setData({
+							type: 'FeatureCollection',
 							features: []
-						}
-					);
+						});
 
+						if (data.shape_polyline) {
+							let geojson_polyline_geo = polyline.toGeoJSON(data.shape_polyline);
 
-					if (data.shape_polyline) {
-						let geojson_polyline_geo = polyline.toGeoJSON(data.shape_polyline);
+							let geojson_polyline = {
+								geometry: geojson_polyline_geo,
+								type: 'Feature',
+								properties: {
+									text_color: data.text_color,
+									color: data.color,
+									route_label: data.route_short_name || data.route_long_name
+								}
+							};
 
-						let geojson_polyline = {
-							geometry: geojson_polyline_geo,
-							type: 'Feature',
-							properties: {
-								text_color: data.text_color,
-								color: data.color,
-								route_label: data.route_short_name || data.route_long_name
+							//		console.log(' geojson_polyline ', geojson_polyline);
+
+							let geojson_source_new = { type: 'FeatureCollection', features: [geojson_polyline] };
+
+							//	console.log(' geojson_source_new ', geojson_source_new);
+
+							if (map != null) {
+								//console.log('map is not null');
+								let transit_shape_context = map.getSource('transit_shape_context');
+								if (transit_shape_context) {
+									transit_shape_context.setData(geojson_source_new);
+								}
+
+								let transit_shape_detour = map.getSource('transit_shape_context_detour');
+
+								if (data.old_shape_polyline) {
+									transit_shape_detour.setData({
+										type: 'FeatureCollection',
+										features: [
+											{
+												geometry: polyline.toGeoJSON(data.old_shape_polyline),
+												type: 'Feature',
+												properties: {
+													text_color: data.text_color,
+													color: data.color,
+													route_label: data.route_short_name || data.route_long_name
+												}
+											}
+										]
+									});
+								} else {
+									transit_shape_detour.setData({ type: 'FeatureCollection', features: [] });
+								}
 							}
-						};
+						} else {
+							let transit_shape_context = map.getSource('transit_shape_context');
+							transit_shape_context.setData({ type: 'FeatureCollection', features: [] });
 
-						//		console.log(' geojson_polyline ', geojson_polyline);
+							let transit_shape_detour = map?.getSource('transit_shape_context_detour');
 
-						let geojson_source_new = { type: 'FeatureCollection', features: [geojson_polyline] };
-
-						//	console.log(' geojson_source_new ', geojson_source_new);
+							transit_shape_detour.setData({ type: 'FeatureCollection', features: [] });
+						}
 
 						if (map != null) {
-							//console.log('map is not null');
-							let transit_shape_context = map.getSource('transit_shape_context');
-							if (transit_shape_context) {
-								transit_shape_context.setData(geojson_source_new);
-							}
-
-							let transit_shape_detour = map.getSource('transit_shape_context_detour');
-
-							if (data.old_shape_polyline) {
-								transit_shape_detour.setData({
-									type: 'FeatureCollection',
-									features: [
-										{
-											geometry: polyline.toGeoJSON(data.old_shape_polyline),
-											type: 'Feature',
-											properties: {
-												text_color: data.text_color,
-												color: data.color,
-												route_label: data.route_short_name || data.route_long_name
-											}
-										}
-									]
-								});
-							} else {
-								transit_shape_detour.setData( { type: 'FeatureCollection', features: [] });
-							}
-
-
-							
-						}
-					} else {
-						let transit_shape_context = map.getSource('transit_shape_context');
-						transit_shape_context.setData( { type: 'FeatureCollection', features: [] });
-
-						let transit_shape_detour = map?.getSource('transit_shape_context_detour');
-
-						transit_shape_detour.setData( { type: 'FeatureCollection', features: [] });
-
-					}
-
-					if (map != null) {
-
-						
-
 							update_vehicle_rt();
-					}
+						}
 
-					//load alerts in
-					alerts = trip_data.alert_id_to_alert;
+						//load alerts in
+						alerts = trip_data.alert_id_to_alert;
 
-					Object.keys(alerts).forEach((alert_id) => {
-						let alert = alerts[alert_id];
-						alert.informed_entity.forEach((each_entity: any) => {
-							if (each_entity.stop_id) {
-								if (stop_id_to_alert_ids[each_entity.stop_id] == undefined) {
-									stop_id_to_alert_ids[each_entity.stop_id] = [alert_id];
-								} else {
-									stop_id_to_alert_ids[each_entity.stop_id].push(alert_id);
+						Object.keys(alerts).forEach((alert_id) => {
+							let alert = alerts[alert_id];
+							alert.informed_entity.forEach((each_entity: any) => {
+								if (each_entity.stop_id) {
+									if (stop_id_to_alert_ids[each_entity.stop_id] == undefined) {
+										stop_id_to_alert_ids[each_entity.stop_id] = [alert_id];
+									} else {
+										stop_id_to_alert_ids[each_entity.stop_id].push(alert_id);
+									}
 								}
-							}
+							});
 						});
-					});
 
-					console.log('alerts', alerts);
+						console.log('alerts', alerts);
 
-					let stoptimes_cleaned: any[] = [];
+						let stoptimes_cleaned: any[] = [];
 
-					if (trip_data.tz != null) {
-						if (timezones.indexOf(trip_data.tz) === -1) {
-							timezones.push(trip_data.tz);
-						}
-					}
-
-					let index = 0;
-					data.stoptimes.forEach((stoptime: any) => {
-						if (timezones.indexOf(stoptime.timezone) === -1) {
-							timezones.push(stoptime.timezone);
-						}
-
-						let stoptime_to_use = {
-							...stoptime,
-							strike_departure: false,
-							strike_arrival: false,
-							rt_arrival_diff: null,
-							rt_departure_diff: null
-						};
-
-						if (stoptime_to_use.rt_arrival?.time) {
-							stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_arrival?.time;
-							stoptime_to_use.strike_arrival = true;
-
-							if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
-								if (
-									stoptime_to_use.scheduled_arrival_time_unix_seconds >
-									stoptime_to_use.rt_departure?.time
-								) {
-									stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_departure?.time;
-
-									stoptime_to_use.strike_arrival = true;
-								}
+						if (trip_data.tz != null) {
+							if (timezones.indexOf(trip_data.tz) === -1) {
+								timezones.push(trip_data.tz);
 							}
 						}
 
-						if (stoptime_to_use.rt_departure?.time) {
-							stoptime_to_use.rt_departure_time = stoptime_to_use.rt_departure?.time;
-							stoptime_to_use.strike_departure = true;
-						}
+						let index = 0;
+						data.stoptimes.forEach((stoptime: any) => {
+							if (timezones.indexOf(stoptime.timezone) === -1) {
+								timezones.push(stoptime.timezone);
+							}
 
-						//prevents departure prior to arrival
-						if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
+							let stoptime_to_use = {
+								...stoptime,
+								strike_departure: false,
+								strike_arrival: false,
+								rt_arrival_diff: null,
+								rt_departure_diff: null
+							};
+
 							if (stoptime_to_use.rt_arrival?.time) {
-								if (
-									stoptime_to_use.scheduled_departure_time_unix_seconds <
-									stoptime_to_use.rt_arrival?.time
-								) {
-									stoptime_to_use.rt_departure_time = stoptime_to_use.rt_arrival?.time;
+								stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_arrival?.time;
+								stoptime_to_use.strike_arrival = true;
 
-									stoptime_to_use.strike_departure = true;
+								if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
+									if (
+										stoptime_to_use.scheduled_arrival_time_unix_seconds >
+										stoptime_to_use.rt_departure?.time
+									) {
+										stoptime_to_use.rt_arrival_time = stoptime_to_use.rt_departure?.time;
+
+										stoptime_to_use.strike_arrival = true;
+									}
 								}
 							}
-						}
 
-						if (typeof stoptime_to_use.rt_departure_time == 'number') {
+							if (stoptime_to_use.rt_departure?.time) {
+								stoptime_to_use.rt_departure_time = stoptime_to_use.rt_departure?.time;
+								stoptime_to_use.strike_departure = true;
+							}
+
+							//prevents departure prior to arrival
 							if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
-								stoptime_to_use.rt_departure_diff =
-									stoptime_to_use.rt_departure_time -
-									stoptime_to_use.scheduled_departure_time_unix_seconds;
+								if (stoptime_to_use.rt_arrival?.time) {
+									if (
+										stoptime_to_use.scheduled_departure_time_unix_seconds <
+										stoptime_to_use.rt_arrival?.time
+									) {
+										stoptime_to_use.rt_departure_time = stoptime_to_use.rt_arrival?.time;
+
+										stoptime_to_use.strike_departure = true;
+									}
+								}
 							}
-						}
 
-						if (typeof stoptime_to_use.rt_arrival_time == 'number') {
-							if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
-								stoptime_to_use.rt_arrival_diff =
-									stoptime_to_use.rt_arrival_time -
-									stoptime_to_use.scheduled_arrival_time_unix_seconds;
+							if (typeof stoptime_to_use.rt_departure_time == 'number') {
+								if (stoptime_to_use.scheduled_departure_time_unix_seconds) {
+									stoptime_to_use.rt_departure_diff =
+										stoptime_to_use.rt_departure_time -
+										stoptime_to_use.scheduled_departure_time_unix_seconds;
+								}
 							}
-						}
 
-						stoptime.show_both_departure_and_arrival = false;
+							if (typeof stoptime_to_use.rt_arrival_time == 'number') {
+								if (stoptime_to_use.scheduled_arrival_time_unix_seconds) {
+									stoptime_to_use.rt_arrival_diff =
+										stoptime_to_use.rt_arrival_time -
+										stoptime_to_use.scheduled_arrival_time_unix_seconds;
+								}
+							}
 
-						if (
-							stoptime_to_use.scheduled_arrival_time_unix_seconds &&
-							stoptime_to_use.scheduled_departure_time_unix_seconds
-						) {
-							// if both are different by more than 1 minute, show both
+							stoptime.show_both_departure_and_arrival = false;
 
 							if (
-								Math.abs(
-									stoptime_to_use.scheduled_arrival_time_unix_seconds -
-										stoptime_to_use.scheduled_departure_time_unix_seconds
-								) > 60
+								stoptime_to_use.scheduled_arrival_time_unix_seconds &&
+								stoptime_to_use.scheduled_departure_time_unix_seconds
 							) {
-								stoptime.show_both_departure_and_arrival = true;
+								// if both are different by more than 1 minute, show both
+
+								if (
+									Math.abs(
+										stoptime_to_use.scheduled_arrival_time_unix_seconds -
+											stoptime_to_use.scheduled_departure_time_unix_seconds
+									) > 60
+								) {
+									stoptime.show_both_departure_and_arrival = true;
+								}
+
+								if (
+									stoptime_to_use.scheduled_arrival_time_unix_seconds ==
+										stoptime_to_use.scheduled_departure_time_unix_seconds &&
+									stoptime_to_use.rt_arrival_time == stoptime_to_use.rt_departure_time
+								) {
+									stoptime.show_both_departure_and_arrival = false;
+								}
 							}
 
-							if (
-								stoptime_to_use.scheduled_arrival_time_unix_seconds ==
-									stoptime_to_use.scheduled_departure_time_unix_seconds &&
-								stoptime_to_use.rt_arrival_time == stoptime_to_use.rt_departure_time
-							) {
-								stoptime.show_both_departure_and_arrival = false;
-							}
-						}
+							stoptimes_cleaned.push(stoptime_to_use);
+							index = index + 1;
+						});
 
-						stoptimes_cleaned.push(stoptime_to_use);
-						index = index + 1;
-					});
-
-					let all_timepoints_empty = data.stoptimes.every(
-						(stoptime: any) => stoptime.timepoint == null
-					);
-
-					if (all_timepoints_empty) {
-						all_exact_stoptimes = true;
-					} else {
-						let all_timepoints_true = data.stoptimes.every(
-							(stoptime: any) => stoptime.timepoint == true
+						let all_timepoints_empty = data.stoptimes.every(
+							(stoptime: any) => stoptime.timepoint == null
 						);
-						all_exact_stoptimes = all_timepoints_true;
+
+						if (all_timepoints_empty) {
+							all_exact_stoptimes = true;
+						} else {
+							let all_timepoints_true = data.stoptimes.every(
+								(stoptime: any) => stoptime.timepoint == true
+							);
+							all_exact_stoptimes = all_timepoints_true;
+						}
+
+						stoptimes_cleaned_dataset = stoptimes_cleaned;
+
+						console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
+						init_loaded = Date.now();
+						console.log('refresh component');
+						error = null;
+						label_stops_on_map();
+					} catch (e: any) {
+						console.error(e);
+						error = e;
+						console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
+
+						fetch_trip_selected();
 					}
-
-					stoptimes_cleaned_dataset = stoptimes_cleaned;
-
-					console.log('stoptimes_cleaned_dataset', stoptimes_cleaned_dataset);
-					init_loaded = Date.now();
-					console.log('refresh component');
-					error = null;
-					label_stops_on_map();
-				} catch (e: any) {
-					console.error(e);
-					error = e;
-					console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
-
-					fetch_trip_selected()
 				}
-				}
-				
 			})
 			.catch((e) => {
 				console.error(e);
@@ -666,11 +655,11 @@
 				const dep =
 					typeof stoptime.rt_departure_time === 'number'
 						? stoptime.rt_departure_time
-						: stoptime.scheduled_departure_time_unix_seconds ??
-						stoptime.interpolated_stoptime_unix_seconds ??
-						null;
+						: (stoptime.scheduled_departure_time_unix_seconds ??
+							stoptime.interpolated_stoptime_unix_seconds ??
+							null);
 
-				 // If there’s a real-time arrival we’ll also clamp dep >= arr
+				// If there’s a real-time arrival we’ll also clamp dep >= arr
 				if (dep != null && dep <= nowSec) {
 					last_departed_idx = i;
 				}
@@ -678,7 +667,7 @@
 				const arr =
 					typeof stoptime.rt_arrival_time === 'number'
 						? stoptime.rt_arrival_time
-						: stoptime.scheduled_arrival_time_unix_seconds ?? null;
+						: (stoptime.scheduled_arrival_time_unix_seconds ?? null);
 
 				const hasDeparted = dep != null && dep <= nowSec;
 				const hasArrived = arr != null && arr <= nowSec;
@@ -692,7 +681,7 @@
 			});
 
 			// expose to template
-			last_inactive_stop_idx = last_departed_idx; 
+			last_inactive_stop_idx = last_departed_idx;
 			current_at_stop_idx_store = current_at_stop_idx;
 		}, 100);
 
@@ -728,7 +717,7 @@
 			>
 		</p>
 	</div>
-	{/if}
+{/if}
 {#if is_loading_trip_data}
 	{#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as it}
 		<div class="w-full p-3 flex flex-col gap-y-2">
@@ -773,20 +762,29 @@
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 
 		<p class={`${window_height_known < 600 ? ' text-xs' : 'text-sm'} leading-none`}>
-			{$_("tripid")} {trip_selected.trip_id}{#if trip_data.block_id != null}
-			<span>{" | "}</span>	
-			<span
-			on:click={() => {
-				data_stack_store.update((x) => {
-					console.log(trip_selected.chateau_id, trip_data.block_id, trip_data.service_date);
-					x.push(new StackInterface(
-						new BlockStack(trip_selected.chateau_id, trip_data.block_id, trip_data.service_date)
-					))
+			{$_('tripid')}
+			{trip_selected.trip_id}{#if trip_data.block_id != null}
+				<span>{' | '}</span>
+				<span
+					on:click={() => {
+						data_stack_store.update((x) => {
+							console.log(trip_selected.chateau_id, trip_data.block_id, trip_data.service_date);
+							x.push(
+								new StackInterface(
+									new BlockStack(
+										trip_selected.chateau_id,
+										trip_data.block_id,
+										trip_data.service_date
+									)
+								)
+							);
 
-					return x;
-				})
-			}}
-			class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer">{$_('block')} {trip_data.block_id}</span>
+							return x;
+						});
+					}}
+					class="underline text-blue-800 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200 cursor-pointer"
+					>{$_('block')} {trip_data.block_id}</span
+				>
 			{/if}
 		</p>
 
@@ -825,7 +823,7 @@
 				</span>
 				{#if vehicle_data.position?.speed != null}
 					<span class="text-xs">
-						<span class='px-2'>{''}</span>
+						<span class="px-2">{''}</span>
 						{$_('speed')}:
 
 						{#if usunits}
@@ -865,17 +863,17 @@
 					</p>{/if}
 
 				{#if vehicle_data.occupancy_percentage != null && vehicle_data.occupancy_percentage != 0}
-				<p class="text-xs">{$_('occupancy_percentage')}: {vehicle_data.occupancy_percentage}%</p>
+					<p class="text-xs">{$_('occupancy_percentage')}: {vehicle_data.occupancy_percentage}%</p>
 				{/if}
 			</div>
 		{/if}
 
 		<div class="pb-1">
 			<VehicleInfo
-			chateau={trip_selected.chateau_id}
-			label={trip_selected.vehicle_id || trip_data.vehicle?.label || trip_data.vehicle?.id}
-			route_id={trip_data.route_id}
-		/>
+				chateau={trip_selected.chateau_id}
+				label={trip_selected.vehicle_id || trip_data.vehicle?.label || trip_data.vehicle?.id}
+				route_id={trip_data.route_id}
+			/>
 		</div>
 
 		{#if all_exact_stoptimes == true}
@@ -889,24 +887,17 @@
 					>
 
 					<span class="align-middle my-auto ml-1 font-semibold">
-						{$_("allexact")}
+						{$_('allexact')}
 					</span>
 				</div>
 			</div>
 		{/if}
 
-		{
-			#if trip_data.rt_shape
-		}
-
-		<div class="text-orange-500 italics text-semibold text-sm">{$_("new_rt_shape")}</div>
-
+		{#if trip_data.rt_shape}
+			<div class="text-orange-500 italics text-semibold text-sm">{$_('new_rt_shape')}</div>
 		{/if}
 
-		<AlertBox {alerts} 
-		chateau={trip_selected.chateau_id} 
-		default_tz={trip_data.tz || null}
-		/>
+		<AlertBox {alerts} chateau={trip_selected.chateau_id} default_tz={trip_data.tz || null} />
 
 		{#key trip_data}
 			{#if show_previous_stops && last_inactive_stop_idx > -1}
@@ -940,13 +931,11 @@
 
 					<!--current_at_stop_idx-->
 					<div class="flex flex-col w-2 relative justify-center" style={``}>
-
 						<div
 							style={`background: ${i - 1 == last_inactive_stop_idx && i != 0 ? `linear-gradient(${show_previous_stops ? `rgba(${Object.values(hexToRgb(trip_data.color)).join(',')}, 0.4)` : 'transparent'}, ${trip_data.color})` : i != 0 ? trip_data.color : 'transparent'};  opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
 							class={`h-1/2 w-2 ${i == trip_data.stoptimes.length - 1 ? 'rounded-b-full' : ''}`}
 						></div>
 
-						
 						<div
 							style={`background-color: ${i != trip_data.stoptimes.length - 1 ? trip_data.color : 'transparent'}; opacity: ${last_inactive_stop_idx >= i ? 0.4 : 1};`}
 							class={`h-1/2 w-2 ${i == 0 ? 'rounded-t-full' : ''}`}
@@ -954,10 +943,15 @@
 
 						{#if stoptime.schedule_relationship == 1}
 							<div
-								class="flex flex-row absolute align-middle top-1/2 bottom-1/2 left-[-8px] h-6 w-6 rounded-full bg-red-500 border-red-900  border-2 "
+								class="flex flex-row absolute align-middle top-1/2 bottom-1/2 left-[-8px] h-6 w-6 rounded-full bg-red-500 border-red-900 border-2"
 							>
-								<div class='my-auto mx-auto'>
-									<svg xmlns="http://www.w3.org/2000/svg" class='h-5 w-5' viewBox="0 0 24 24"><title>cancel</title><path fill='currentColor' d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z" /></svg>
+								<div class="my-auto mx-auto">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
+										><title>cancel</title><path
+											fill="currentColor"
+											d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z"
+										/></svg
+									>
 								</div>
 							</div>
 						{:else}
@@ -975,15 +969,18 @@
 						<p class="text-sm sm:text-base">
 							{#if stoptime.name}
 								<span
-							on:click={() => {
-								//add the stop to the data stack
+									on:click={() => {
+										//add the stop to the data stack
 
-								data_stack_store.update((x) => {
-									x.push(new StackInterface(new StopStack(trip_selected.chateau_id, stoptime.stop_id)));
-									return x;
-								});
-							}}
-
+										data_stack_store.update((x) => {
+											x.push(
+												new StackInterface(
+													new StopStack(trip_selected.chateau_id, stoptime.stop_id)
+												)
+											);
+											return x;
+										});
+									}}
 									class={`underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer ${stoptime.schedule_relationship == 1 ? 'text-[#EF3841]' : stop_id_to_alert_ids[stoptime.stop_id] ? 'text-[#F99C24]' : ''}`}
 									>{fixStationName(stoptime.name)}</span
 								>
@@ -1023,7 +1020,7 @@
 						<StopTimeNumber {show_seconds} {stoptime} {trip_data} {current_time} />
 
 						{#if stoptime.replaced_stop}
-							<p>{$_("replaced_stop")}</p>
+							<p>{$_('replaced_stop')}</p>
 						{/if}
 
 						{#if timezones.filter((x) => x != null).length > 1}

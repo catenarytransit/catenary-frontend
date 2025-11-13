@@ -1,10 +1,10 @@
 import { get } from 'svelte/store';
-import {titleCase} from '../utils/titleCase';
+import { titleCase } from '../utils/titleCase';
 import { _ } from 'svelte-i18n';
 
 function translate(key: string, options?: Record<string, any>): string {
 	return get(_)(key, options);
-  }
+}
 
 export function fixHeadsignIcon(headsign: string): string | null {
 	let fixPatterns = {
@@ -34,14 +34,11 @@ export function fixRouteName(chateau: string, route: string, rid: string): strin
 	// @ts-ignore
 	if (fixPatterns[chateau]) {
 		// @ts-ignore
-		return (
-			fixPatterns[chateau][rid] ||
-			fixPatterns[chateau]['*'] || route
-		);
+		return fixPatterns[chateau][rid] || fixPatterns[chateau]['*'] || route;
 	} else {
-		route = (route || "")
-		.replace('Counterclockwise', translate("anticlockwise_abbrievation"))
-		.replace('Clockwise', translate("clockwise_abbrievation"));
+		route = (route || '')
+			.replace('Counterclockwise', translate('anticlockwise_abbrievation'))
+			.replace('Clockwise', translate('clockwise_abbrievation'));
 
 		return route;
 	}
@@ -92,7 +89,7 @@ export function fixRouteNameLong(chateau: string, route: string, rid: string): s
 	};
 
 	if (chateau == 'metrolinktrains') {
-		return route.replace('Metrolink ', '')
+		return route.replace('Metrolink ', '');
 	}
 
 	if (fixPatterns[chateau]) {
@@ -108,8 +105,8 @@ export function fixRouteNameLong(chateau: string, route: string, rid: string): s
 			.replace('Transportation Center', 'TC')
 			.replace('Transit Center', 'TC')
 			.replace('Transit Ctr', 'TC')
-			.replace("Counterclockwise", translate("anticlockwise"))
-			.replace("Clockwise", translate("clockwise"))
+			.replace('Counterclockwise', translate('anticlockwise'))
+			.replace('Clockwise', translate('clockwise'))
 			.trim();
 	}
 }
@@ -122,19 +119,25 @@ export function fixRunNumber(
 	vehicle: string,
 	trip_id: string | null
 ): string | null {
-	if ((chateau == 'san-diego-mts' && route.toString().length == 3 && route.toString().startsWith('5')) || (chateau == 'metra')) return vehicle;
+	if (
+		(chateau == 'san-diego-mts' &&
+			route.toString().length == 3 &&
+			route.toString().startsWith('5')) ||
+		chateau == 'metra'
+	)
+		return vehicle;
 	if (chateau == 'northcountytransitdistrict' && route != 398) return null;
-	
+
 	return tripname;
 }
 
 export function fixHeadsignText(name: string | null, route: string | null) {
 	if (name == null) {
-		return "";
+		return '';
 	}
 
-	name = name.replace("Counterclockwise", translate("anticlockwise"));
-	name = name.replace("Clockwise", translate("clockwise"));
+	name = name.replace('Counterclockwise', translate('anticlockwise'));
+	name = name.replace('Clockwise', translate('clockwise'));
 
 	if (route != null) {
 		if (name.startsWith(route)) {
@@ -179,21 +182,23 @@ export function fixStationName(name: string) {
 		'San Diego - Old Town': 'Old Town',
 		'Burbank Airport - North (Av Line) Metrolink Station': 'Burbank Airport North',
 		'Burbank Airport - South (Vc Line) Metrolink Station': 'Burbank Airport South',
-		'University Center South': "University Centre South",
-		'University Center North': "University Centre North",
+		'University Center South': 'University Centre South',
+		'University Center North': 'University Centre North'
 	};
 
 	return (
 		fixPatterns[name] ||
-		titleCase(name
-			.replace(' Transit Station', '')
-			.replace(' Transit Sta', '')
-			.replace(' Transportation Center', '')
-			.replace(' Transit Center', '')
-			.replace(' Transit Ctr', '')
-			.replace(' Station', '')
-			.replace(' Metrolink', '')
-			.replace(' Amtrak', '')
-			.trim())
+		titleCase(
+			name
+				.replace(' Transit Station', '')
+				.replace(' Transit Sta', '')
+				.replace(' Transportation Center', '')
+				.replace(' Transit Center', '')
+				.replace(' Transit Ctr', '')
+				.replace(' Station', '')
+				.replace(' Metrolink', '')
+				.replace(' Amtrak', '')
+				.trim()
+		)
 	);
 }

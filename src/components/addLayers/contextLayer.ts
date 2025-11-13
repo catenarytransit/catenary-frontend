@@ -85,7 +85,6 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		minzoom: 3
 	});
 
-
 	map.addLayer({
 		id: 'contextlinedetour',
 		type: 'line',
@@ -122,7 +121,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		source: 'transit_shape_context',
 		paint: {
 			'line-color': ['get', 'color'],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 3.5, 14, 6]
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
@@ -150,7 +149,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		source: 'transit_shape_context_for_stop',
 		paint: {
 			'line-color': ['get', 'color'],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2.8, 11, 4, 14, 5],
+			'line-width': ['interpolate', ['linear'], ['zoom'], 7, 2.8, 11, 4, 14, 5]
 			//'line-opacity': ['step', ['zoom'], 0.7, 7, 0.8, 8, 0.9]
 			//'line-emissive-strength': 1
 			//'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.2, 10, 0.4]
@@ -182,7 +181,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			'text-color': ['get', 'text_color'],
 			'text-halo-color': ['get', 'color'],
 			'text-halo-width': 2,
-			'text-halo-blur': 0,
+			'text-halo-blur': 0
 			//'line-emissive-strength': 1
 		},
 		minzoom: 3
@@ -190,22 +189,15 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 
 	//add png icon cancelledstops.png
 
-	let cancelled_stops_image = await map.loadImage(
-		'/icons/cancelledstop.png');
+	let cancelled_stops_image = await map.loadImage('/icons/cancelledstop.png');
 
-
-
-	map.addImage(
-		'cancelledstops',
-		cancelled_stops_image.data
-	);
+	map.addImage('cancelledstops', cancelled_stops_image.data);
 
 	map.addLayer({
 		id: 'contextbusstopscancelled',
 		type: 'symbol',
 		source: 'stops_context',
-		paint: {	
-		},
+		paint: {},
 		layout: {
 			'icon-image': 'cancelledstops',
 			'icon-size': ['interpolate', ['linear'], ['zoom'], 8, 0.02, 10, 0.03, 13, 0.05],
@@ -216,13 +208,9 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			'icon-offset': [0, 0],
 			'icon-rotate': 0,
 			'icon-optional': false,
-			'icon-keep-upright': false,
+			'icon-keep-upright': false
 		},
-		filter: [
-			'all',
-			['==', 3, ['get', 'stop_route_type']],
-			['==', true, ['get', 'cancelled']]
-		],
+		filter: ['all', ['==', 3, ['get', 'stop_route_type']], ['==', true, ['get', 'cancelled']]],
 		minzoom: 9.5
 	});
 
@@ -237,14 +225,10 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			'circle-stroke-color': '#1a1a1a',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': 0.9,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1],
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1]
 			//'circle-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			['==', 3, ['get', 'stop_route_type']],
-			['!=', true, ['get', 'cancelled']]
-		],
+		filter: ['all', ['==', 3, ['get', 'stop_route_type']], ['!=', true, ['get', 'cancelled']]],
 		minzoom: 9.5
 	});
 
@@ -262,26 +246,22 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			
+
 			'text-font': [
 				'step',
 				['zoom'],
 				['literal', ['Barlow-Regular']],
 				13,
 				['literal', ['Barlow-Medium']]
-			],
-			
+			]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			['==', 3, ['get', 'stop_route_type']],
-		],
+		filter: ['all', ['==', 3, ['get', 'stop_route_type']]],
 		minzoom: 12.5
 	});
 
@@ -296,14 +276,10 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			'circle-stroke-color': '#1a1a1a',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': 0.9,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1],
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1]
 			//'circle-emisive-strength': 1
 		},
-		filter: [
-			'all',
-			['!=', 3, ['get', 'stop_route_type']],
-			['!=', 2, ['get', 'stop_route_type']],
-		],
+		filter: ['all', ['!=', 3, ['get', 'stop_route_type']], ['!=', 2, ['get', 'stop_route_type']]],
 		minzoom: 6
 	});
 
@@ -326,14 +302,10 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			['!=', 3, ['get', 'stop_route_type']],
-			['!=', 2, ['get', 'stop_route_type']],
-		],
+		filter: ['all', ['!=', 3, ['get', 'stop_route_type']], ['!=', 2, ['get', 'stop_route_type']]],
 		minzoom: 9
 	});
 
@@ -348,13 +320,10 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			'circle-stroke-color': '#1a1a1a',
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': 0.9,
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1],
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.7, 12, 1]
 			//'circle-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			['==', 2, ['get', 'stop_route_type']],
-		],
+		filter: ['all', ['==', 2, ['get', 'stop_route_type']]],
 		minzoom: 4
 	});
 
@@ -383,13 +352,10 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#1a1a1a',
 			'text-halo-color': darkMode ? '#1a1a1a' : '#dadada',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
-		filter: [
-			'all',
-			['==', 2, ['get', 'stop_route_type']],
-		],
+		filter: ['all', ['==', 2, ['get', 'stop_route_type']]],
 		minzoom: 3
 	});
 
@@ -406,10 +372,10 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 	map.addImage('pinimg', pinimg.data);
 
 	map.addLayer({
-		'id': 'pinicon',
-		'type': 'symbol',
-		'source': 'redpin',
-		'layout': {
+		id: 'pinicon',
+		type: 'symbol',
+		source: 'redpin',
+		layout: {
 			'icon-image': 'pinimg',
 			'icon-size': 0.15,
 			'icon-offset': [0, -100],
@@ -420,7 +386,11 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 }
 
 export function changeContextTheme(map: maplibregl.Map, darkMode: boolean) {
-	map.setPaintProperty("contextlinebacking", "line-color", darkMode ? '#111133' : '#ffffff');
-	map.setPaintProperty("contextbusstops_label", "text-color", darkMode ? '#ffffff' : '#1a1a1a');
-	map.setPaintProperty("contextbusstops_label", "text-halo-color", darkMode ? '#1a1a1a' : '#dadada');
+	map.setPaintProperty('contextlinebacking', 'line-color', darkMode ? '#111133' : '#ffffff');
+	map.setPaintProperty('contextbusstops_label', 'text-color', darkMode ? '#ffffff' : '#1a1a1a');
+	map.setPaintProperty(
+		'contextbusstops_label',
+		'text-halo-color',
+		darkMode ? '#1a1a1a' : '#dadada'
+	);
 }

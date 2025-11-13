@@ -20,22 +20,22 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Compile Frontend
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: catenarytransit/catenaryfrontend
-        tags: ${{ github.sha }} latest
-        containerfiles: | 
-          ./Dockerfile
+      - uses: actions/checkout@v4
 
-    - name: Push Frontend To ghcr.io
-      id: push-to-ghcr-frontend
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: catenarytransit/catenaryfrontend
-        tags: ${{ github.sha }} latest
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.PACKAGE_TOKEN }}
+      - name: Compile Frontend
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: catenarytransit/catenaryfrontend
+          tags: ${{ github.sha }} latest
+          containerfiles: |
+            ./Dockerfile
+
+      - name: Push Frontend To ghcr.io
+        id: push-to-ghcr-frontend
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: catenarytransit/catenaryfrontend
+          tags: ${{ github.sha }} latest
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PACKAGE_TOKEN }}

@@ -21,21 +21,21 @@ export function setup_click_handler(
 ) {
 	// Precompute interactive layers array
 	map.on('click', (e) => {
-		console.log('click')
+		console.log('click');
 		var interactiveLayers = Object.values(layerspercategory)
 			.flatMap((category) => Object.values(category))
 			.filter(Boolean);
 
-		console.log('interactiveLayers', interactiveLayers)
+		console.log('interactiveLayers', interactiveLayers);
 
 		let current_layers = map.getStyle().layers;
 
-		console.log('current_layers', current_layers)
+		console.log('current_layers', current_layers);
 
 		for (const layer of current_layers) {
 			if (layer.source == 'stops_context') {
 				interactiveLayers.push(layer.id);
-				console.log('push', layer.id)
+				console.log('push', layer.id);
 			}
 		}
 
@@ -94,7 +94,8 @@ export function setup_click_handler(
 				(x: any) =>
 					x.source === 'busshapes' ||
 					x.source === 'localcityrailshapes' ||
-					x.source === 'intercityrailshapes' || x.source == "othershapes"
+					x.source === 'intercityrailshapes' ||
+					x.source == 'othershapes'
 			);
 
 			const selected_routes_key_unique = new Set();
@@ -133,105 +134,94 @@ export function setup_click_handler(
 			// console.log('selected shapes', selected_routes_raw);
 
 			const selected_stops_raw = selectedFeatures.filter(
-				(x: any) =>
-					x.source === 'busstops' ||
-					x.source === 'railstops' ||
-					x.source === 'otherstops'
+				(x: any) => x.source === 'busstops' || x.source === 'railstops' || x.source === 'otherstops'
 			);
 
-			const context_stop_raw = selectedFeatures.filter((x: any) => x.source === "stops_context");
+			const context_stop_raw = selectedFeatures.filter((x: any) => x.source === 'stops_context');
 
 			const selected_stops_key_unique = new Set();
 
 			const selected_stops_obj = {};
 
-			
-				let children_stop_keys: Record<string, []> = {};
+			let children_stop_keys: Record<string, []> = {};
 
-				selected_stops_raw.forEach((x: any) => {
-					const key = x.properties.chateau + x.properties.gtfs_id;
+			selected_stops_raw.forEach((x: any) => {
+				const key = x.properties.chateau + x.properties.gtfs_id;
 
-					selected_stops_obj[key] = x;
+				selected_stops_obj[key] = x;
 
-					let children_ids_str = x.properties.children_ids;
+				let children_ids_str = x.properties.children_ids;
 
-					if (children_ids_str) {
-						if (children_stop_keys[x.properties.chateau] == undefined) {
-							children_stop_keys[x.properties.chateau] = [];
-						
-						}
-
-						let split_array = children_ids_str.replace("{", "").replace("}", "").split(",");
-
-						children_stop_keys[x.properties.chateau].push(...split_array);
+				if (children_ids_str) {
+					if (children_stop_keys[x.properties.chateau] == undefined) {
+						children_stop_keys[x.properties.chateau] = [];
 					}
-					
-				})
 
-				console.log('selected stops obj', selected_stops_obj);
+					let split_array = children_ids_str.replace('{', '').replace('}', '').split(',');
 
+					children_stop_keys[x.properties.chateau].push(...split_array);
+				}
+			});
 
-				var selected_stops_edited = selected_stops_raw.filter((x) => {
-					if (x.properties.parent_station) {
-						let key_of_parent_station = x.properties.chateau + x.properties.parent_station;
+			console.log('selected stops obj', selected_stops_obj);
 
-						if (selected_stops_key_unique.has(key_of_parent_station)) {
+			var selected_stops_edited = selected_stops_raw.filter((x) => {
+				if (x.properties.parent_station) {
+					let key_of_parent_station = x.properties.chateau + x.properties.parent_station;
+
+					if (selected_stops_key_unique.has(key_of_parent_station)) {
+						return false;
+					}
+
+					if (children_stop_keys[x.properties.chateau]) {
+						if (children_stop_keys[x.properties.chateau].includes(x.properties.gtfs_id)) {
 							return false;
 						}
-
-						if (children_stop_keys[x.properties.chateau]) {
-							if (children_stop_keys[x.properties.chateau].includes(x.properties.gtfs_id)) {
-								return false;
-							}
-						}
 					}
+				}
 
-					return true;
-				});
+				return true;
+			});
 
-				console.log('selected_stops_edited', selected_stops_edited)
+			console.log('selected_stops_edited', selected_stops_edited);
 
-				let selected_stops = selected_stops_edited
+			let selected_stops = selected_stops_edited
 				.map((x: any) => {
-						const key = x.properties.chateau + x.properties.gtfs_id;
+					const key = x.properties.chateau + x.properties.gtfs_id;
 
-if (selected_stops_key_unique.has(key)) {
+					if (selected_stops_key_unique.has(key)) {
 						return null;
 					}
 					selected_stops_key_unique.add(key);
-
-					
 
 					return new MapSelectionOption(
 						new StopMapSelector(
 							x.properties.chateau,
 							x.properties.gtfs_id,
-							x.properties.displayname,
+							x.properties.displayname
 						)
 					);
 				})
 				.filter((x: MapSelectionOption | null) => x != null);
 
-				console.log('selected_stops', selected_stops)
+			console.log('selected_stops', selected_stops);
 
-			selected_stops.push(...
-				context_stop_raw.map((x: any) => {
-					const key = x.properties.chateau + x.properties.stop_id;
+			selected_stops.push(
+				...context_stop_raw
+					.map((x: any) => {
+						const key = x.properties.chateau + x.properties.stop_id;
 
-					if (selected_stops_key_unique.has(key)) {
-						return null;
-					}
+						if (selected_stops_key_unique.has(key)) {
+							return null;
+						}
 
-					selected_stops_key_unique.add(key);
+						selected_stops_key_unique.add(key);
 
-					return new MapSelectionOption(
-						new StopMapSelector(
-							x.properties.chateau,
-							x.properties.stop_id,
-							x.properties.label,
-						)
-					);
-				}).filter((x: MapSelectionOption | null) => x != null)
+						return new MapSelectionOption(
+							new StopMapSelector(x.properties.chateau, x.properties.stop_id, x.properties.label)
+						);
+					})
+					.filter((x: MapSelectionOption | null) => x != null)
 			);
 
 			let MapSelectionOptions = new Array<MapSelectionOption>();
@@ -259,7 +249,6 @@ if (selected_stops_key_unique.has(key)) {
 
 				setSidebarOpen();
 			}
-
 		} catch (e) {
 			console.error(e);
 		}

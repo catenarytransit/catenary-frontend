@@ -18,7 +18,7 @@
 	import { start_location_watch } from '../user_location_lib';
 	import SearchBar from '../components/search/SearchBar.svelte';
 	import { autocomplete_focus_state } from '../components/search/search_data';
-	import {deep_link_url_reader} from '../components/deeplinkreader';
+	import { deep_link_url_reader } from '../components/deeplinkreader';
 	import { add_image_pedestrian_pattern } from '../components/pedestrian_layer';
 	import {
 		getLocationFromLocalStorage,
@@ -832,8 +832,8 @@
 
 	let style: string = darkMode ? '/dark-style.json' : '/light-style.json';
 
-	if (urlParams.get("style") == "midnight") {
-		style = "/pitch-black.json"
+	if (urlParams.get('style') == 'midnight') {
+		style = '/pitch-black.json';
 	}
 
 	function recompute_map_padding() {
@@ -1428,15 +1428,15 @@
 					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/signals_railway_signals,signals_signal_boxes',
 					promoteId: 'id'
 				},
-				"openrailwaymap_electrification": {
-				"type": "vector",
-				"url": "https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/electrification_signals,catenary,electrification_railway_symbols",
-				"promoteId": "id"
+				openrailwaymap_electrification: {
+					type: 'vector',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/electrification_signals,catenary,electrification_railway_symbols',
+					promoteId: 'id'
 				},
-				"openrailwaymap_operator": {
-				"type": "vector",
-				"url": "https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/operator_railway_symbols",
-				"promoteId": "id"
+				openrailwaymap_operator: {
+					type: 'vector',
+					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/operator_railway_symbols',
+					promoteId: 'id'
 				}
 			};
 

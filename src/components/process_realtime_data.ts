@@ -19,9 +19,9 @@ import {
 	pride_buses
 } from './addLayers/customIcons';
 import maplibregl from 'maplibre-gl';
-import {lightenColour, darkenColour } from './lightenDarkColour';
+import { lightenColour, darkenColour } from './lightenDarkColour';
 import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
-import {calculateGamma} from './colour/computeBrightness';
+import { calculateGamma } from './colour/computeBrightness';
 import { fixHeadsignText, fixRouteName } from './agencyspecific';
 import { adjustGamma } from './colour/readjustGamma';
 import { determineDarkModeToBool } from './determineDarkModeToBool';
@@ -69,14 +69,14 @@ function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: s
 	var agencies_submit_list = agencies_to_fetch;
 
 	if (agencies_to_fetch.length === 0) {
-		 agencies_submit_list = null;
+		agencies_submit_list = null;
 	}
 
 	const myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
 
 	const raw = JSON.stringify({
-		agency_filter:  agencies_submit_list
+		agency_filter: agencies_submit_list
 	});
 
 	const requestOptions = {
@@ -86,7 +86,10 @@ function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: s
 		redirect: 'follow'
 	};
 
-	fetch(`https://birch_routesfetch.catenarymaps.org/getroutesofchateauwithagency/${chateau_id}`, requestOptions)
+	fetch(
+		`https://birch_routesfetch.catenarymaps.org/getroutesofchateauwithagency/${chateau_id}`,
+		requestOptions
+	)
 		.then((response) => response.json())
 		.then((new_routes: any[]) => {
 			route_cache.update((cache) => {
@@ -108,156 +111,149 @@ export function process_realtime_vehicle_locations_v2(
 	map: maplibregl.Map,
 	bounds: Record<string, any>
 ) {
-	let rerender_category:Set<string> = new Set();	
+	let rerender_category: Set<string> = new Set();
 
 	let route_cache_current = get(route_cache);
 
 	realtime_vehicle_locations_storev2.update((realtime_vehicle_locations) => {
-
-		Object.entries(response_from_birch_vehicles_2.chateaus)
-		.forEach(([chateau_id, chateau_data]) => {
-			//console.log('chateau', chateau_id, chateau_data);
-
-			let list_of_agency_ids_to_fetch = [];
-			let should_fetch_routes = false;
-
-			if (chateau_data.categories) {
-				Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
-					
-
-					if (category_data != null) {
-
-						let bounds_last_fetched_for_this_category = bounds[`level${category_data.z_level}`];
-
-						previous_tile_boundaries_store.update((previous_tile_boundaries) => {
-							if (!previous_tile_boundaries[chateau_id]) {
-								previous_tile_boundaries[chateau_id] = {};
-							}
-
-							previous_tile_boundaries[chateau_id][category] = bounds_last_fetched_for_this_category;
-
-							return previous_tile_boundaries;
-						});
-						
-					if (!realtime_vehicle_locations[category]) {
-						realtime_vehicle_locations[category] = {};
-					}
-
-					if (category_data.vehicle_positions) {
-						//console.log('agency list', chateau_id, category_data.list_of_agency_ids);
-						if (category_data.replaces_all == true) {
-							
-						   realtime_vehicle_locations[category][chateau_id] = category_data.vehicle_positions;
-
-						   Object.values(category_data.vehicle_positions).forEach((data_for_x) => {
-							Object.values(data_for_x).forEach((data_for_xy) => {
-								Object.values(data_for_xy).forEach((vehicle_data) => {
-									let route_id = vehicle_data.trip?.route_id;
-
-									if (route_id) {
-										if (route_cache_current[chateau_id] == undefined) {
-											should_fetch_routes = true;
-										} else {
-											if (route_cache_current[chateau_id][route_id] == undefined) {
-												should_fetch_routes = true;
-											}
-										}
-									}
-								});
-							});
-						});
-
-						  // console.log('set all as ', realtime_vehicle_locations[category][chateau_id])
-						} else {
-							//category_data.vehicle_positions is an x, y structure Record<number, Record<number, Record<string, any>>>
-							Object.entries(category_data.vehicle_positions).forEach(([x, data_for_x]) => {
-								Object.entries(data_for_x).forEach(([y, data_for_xy]) => {
-									if (realtime_vehicle_locations[category][chateau_id][x] == undefined) {
-										realtime_vehicle_locations[category][chateau_id][x] = {};
-									}
-
-										realtime_vehicle_locations[category][chateau_id][x][y] = data_for_xy;
-
-										Object.entries(data_for_xy).forEach(([rt_id, vehicle_data]) => {
-											let route_id = vehicle_data.trip?.route_id;
-
-											if (route_id) {
-												if (route_cache_current[chateau_id] == undefined) {
-													should_fetch_routes = true;
-												} else {
-													if (route_cache_current[chateau_id][route_id] == undefined) {
-														should_fetch_routes = true;
-													}
-												}
-											}
-
-
-										})
-
-										if (category_data.list_of_agency_ids) {
-											category_data.list_of_agency_ids.forEach((agency_id) => {
-												list_of_agency_ids_to_fetch.push(agency_id);
-											});
-										}
-										//console.log('set data for', chateau_id, category, x, y, data_for_xy)
-								});
-							})
-						}
-
-						rerender_category.add(category);
-					}
-					
-					} else {
-						//console.log('no category data for', category, chateau_id);
-					}
-				});
-			}
-
-
-			if (should_fetch_routes) {
-				//console.log('should fetch routes')
-				fetch_routes_of_chateau_by_agency(chateau_id, list_of_agency_ids_to_fetch.filter((v, i, a) => a.indexOf(v) === i)
-			);
-
-				
-			}
-			
-		});
-
-		return realtime_vehicle_locations;
-	});
-
-
-
-		realtime_vehicle_locations_last_updated_store.update((realtime_vehicle_locations_last_updated) => {
-		
-			Object.entries(response_from_birch_vehicles_2.chateaus)
-			.forEach(([chateau_id, chateau_data]) => {
+		Object.entries(response_from_birch_vehicles_2.chateaus).forEach(
+			([chateau_id, chateau_data]) => {
 				//console.log('chateau', chateau_id, chateau_data);
-			
+
+				let list_of_agency_ids_to_fetch = [];
+				let should_fetch_routes = false;
+
 				if (chateau_data.categories) {
 					Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
 						if (category_data != null) {
-							if (!realtime_vehicle_locations_last_updated[chateau_id]) {
-								realtime_vehicle_locations_last_updated[chateau_id] = {};
+							let bounds_last_fetched_for_this_category = bounds[`level${category_data.z_level}`];
+
+							previous_tile_boundaries_store.update((previous_tile_boundaries) => {
+								if (!previous_tile_boundaries[chateau_id]) {
+									previous_tile_boundaries[chateau_id] = {};
+								}
+
+								previous_tile_boundaries[chateau_id][category] =
+									bounds_last_fetched_for_this_category;
+
+								return previous_tile_boundaries;
+							});
+
+							if (!realtime_vehicle_locations[category]) {
+								realtime_vehicle_locations[category] = {};
 							}
-		
-							
-							realtime_vehicle_locations_last_updated[chateau_id][category] = category_data.last_updated_time_ms;
+
+							if (category_data.vehicle_positions) {
+								//console.log('agency list', chateau_id, category_data.list_of_agency_ids);
+								if (category_data.replaces_all == true) {
+									realtime_vehicle_locations[category][chateau_id] =
+										category_data.vehicle_positions;
+
+									Object.values(category_data.vehicle_positions).forEach((data_for_x) => {
+										Object.values(data_for_x).forEach((data_for_xy) => {
+											Object.values(data_for_xy).forEach((vehicle_data) => {
+												let route_id = vehicle_data.trip?.route_id;
+
+												if (route_id) {
+													if (route_cache_current[chateau_id] == undefined) {
+														should_fetch_routes = true;
+													} else {
+														if (route_cache_current[chateau_id][route_id] == undefined) {
+															should_fetch_routes = true;
+														}
+													}
+												}
+											});
+										});
+									});
+
+									// console.log('set all as ', realtime_vehicle_locations[category][chateau_id])
+								} else {
+									//category_data.vehicle_positions is an x, y structure Record<number, Record<number, Record<string, any>>>
+									Object.entries(category_data.vehicle_positions).forEach(([x, data_for_x]) => {
+										Object.entries(data_for_x).forEach(([y, data_for_xy]) => {
+											if (realtime_vehicle_locations[category][chateau_id][x] == undefined) {
+												realtime_vehicle_locations[category][chateau_id][x] = {};
+											}
+
+											realtime_vehicle_locations[category][chateau_id][x][y] = data_for_xy;
+
+											Object.entries(data_for_xy).forEach(([rt_id, vehicle_data]) => {
+												let route_id = vehicle_data.trip?.route_id;
+
+												if (route_id) {
+													if (route_cache_current[chateau_id] == undefined) {
+														should_fetch_routes = true;
+													} else {
+														if (route_cache_current[chateau_id][route_id] == undefined) {
+															should_fetch_routes = true;
+														}
+													}
+												}
+											});
+
+											if (category_data.list_of_agency_ids) {
+												category_data.list_of_agency_ids.forEach((agency_id) => {
+													list_of_agency_ids_to_fetch.push(agency_id);
+												});
+											}
+											//console.log('set data for', chateau_id, category, x, y, data_for_xy)
+										});
+									});
+								}
+
+								rerender_category.add(category);
+							}
 						} else {
 							//console.log('no category data for', category, chateau_id);
 						}
 					});
 				}
-			})
+
+				if (should_fetch_routes) {
+					//console.log('should fetch routes')
+					fetch_routes_of_chateau_by_agency(
+						chateau_id,
+						list_of_agency_ids_to_fetch.filter((v, i, a) => a.indexOf(v) === i)
+					);
+				}
+			}
+		);
+
+		return realtime_vehicle_locations;
+	});
+
+	realtime_vehicle_locations_last_updated_store.update(
+		(realtime_vehicle_locations_last_updated) => {
+			Object.entries(response_from_birch_vehicles_2.chateaus).forEach(
+				([chateau_id, chateau_data]) => {
+					//console.log('chateau', chateau_id, chateau_data);
+
+					if (chateau_data.categories) {
+						Object.entries(chateau_data.categories).forEach(([category, category_data]) => {
+							if (category_data != null) {
+								if (!realtime_vehicle_locations_last_updated[chateau_id]) {
+									realtime_vehicle_locations_last_updated[chateau_id] = {};
+								}
+
+								realtime_vehicle_locations_last_updated[chateau_id][category] =
+									category_data.last_updated_time_ms;
+							} else {
+								//console.log('no category data for', category, chateau_id);
+							}
+						});
+					}
+				}
+			);
 
 			return realtime_vehicle_locations_last_updated;
-		});
-	
+		}
+	);
+
 	//console.log('rerendering', rerender_category);
 
 	rerender_category.forEach((category) => {
-	rerender_category_live_dots(category, map);
+		rerender_category_live_dots(category, map);
 	});
 }
 
@@ -273,8 +269,6 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 	const source = map.getSource(source_name) as maplibregl.GeoJSONSource;
 
 	//console.log(Object.entries(realtime_vehicle_locations[category]))
-
-	
 
 	const features = Object.entries(realtime_vehicle_locations[category])
 		.map(([chateau_id, grid_data]) => {
@@ -292,31 +286,39 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 				});
 			}
 
-			//console.log("chateau_vehicles_list", chateau_vehicles_list) 
+			//console.log("chateau_vehicles_list", chateau_vehicles_list)
 
 			return Object.entries(chateau_vehicles_list)
 				.filter(([rt_id, vehicle_data]) => vehicle_data.position != null)
 				.filter(([rt_id, vehicle_data]) => {
-					if (vehicle_data.position.latitude == 34.099503 && vehicle_data.position.longitude == -117.29602) {
+					if (
+						vehicle_data.position.latitude == 34.099503 &&
+						vehicle_data.position.longitude == -117.29602
+					) {
 						return false;
 					}
-					if (vehicle_data.position.latitude == 34.250793 && vehicle_data.position.longitude == -119.205025) {
+					if (
+						vehicle_data.position.latitude == 34.250793 &&
+						vehicle_data.position.longitude == -119.205025
+					) {
 						return false;
 					}
-					if (vehicle_data.position.latitude == 34.05573 && vehicle_data.position.longitude == -118.23351) {
+					if (
+						vehicle_data.position.latitude == 34.05573 &&
+						vehicle_data.position.longitude == -118.23351
+					) {
 						return false;
 					} else {
 						return true;
 					}
 				})
 				.map(([rt_id, vehicle_data]) => {
-
-				//	console.log('vehicle data', vehicle_data)
+					//	console.log('vehicle data', vehicle_data)
 
 					let vehiclelabel = vehicle_data.vehicle?.label || vehicle_data.vehicle?.id || '';
-					
+
 					if (chateau_id == 'new-south-wales') {
-						if (vehiclelabel.includes(" to ")) {
+						if (vehiclelabel.includes(' to ')) {
 							vehiclelabel = vehicle_data.vehicle?.id || '';
 						}
 					}
@@ -328,7 +330,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 					let trip_short_name = null;
 					let headsign = '';
 
-					vehiclelabel = vehiclelabel.replace("ineo-tram:", "").replace("ineo-bus:","");
+					vehiclelabel = vehiclelabel.replace('ineo-tram:', '').replace('ineo-bus:', '');
 
 					if (vehicle_data.trip) {
 						if (vehicle_data.trip.trip_short_name) {
@@ -355,14 +357,14 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 								headsign = titleCase(headsign);
 							}
 
-							if (chateau_id == "new-south-wales") {
-								headsign = headsign.replace(" Station", "");
+							if (chateau_id == 'new-south-wales') {
+								headsign = headsign.replace(' Station', '');
 							}
 						}
 					}
 
-					if (headsign.includes("Line  - ") && chateau_id == "metro~losangeles") {
-						headsign = headsign.split("-")[1].trim();
+					if (headsign.includes('Line  - ') && chateau_id == 'metro~losangeles') {
+						headsign = headsign.split('-')[1].trim();
 					}
 
 					const routeId = vehicle_data.trip?.route_id;
@@ -389,7 +391,6 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 									maptag = route.long_name;
 								}
 
-								
 								colour = route.color;
 								text_colour = route.text_color;
 							} else {
@@ -476,7 +477,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 						const gamma = calculateGamma(rgb.r, rgb.g, rgb.b);
 
-						if (gamma > (0.55)) {
+						if (gamma > 0.55) {
 							let [r, g, b] = adjustGamma([rgb.r, rgb.g, rgb.b], 0.55);
 
 							rgb = { r, g, b };
@@ -485,7 +486,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						contrastlightmode = `#${componentToHex(rgb.r)}${componentToHex(
 							rgb.g
 						)}${componentToHex(rgb.b)}`;
-					//	console.log("darkened from ", colour, "to", contrastlightmode);
+						//	console.log("darkened from ", colour, "to", contrastlightmode);
 					}
 
 					if (colour && darkMode === true) {
@@ -521,10 +522,9 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							}
 
 							if (hsl.l < 60) {
-								
-							hsl.l = Math.min(Math.sqrt(hsl.l * 25) + 40, 100);
-							hsl.s = Math.min(100, hsl.s + 20)
-							}	
+								hsl.l = Math.min(Math.sqrt(hsl.l * 25) + 40, 100);
+								hsl.s = Math.min(100, hsl.s + 20);
+							}
 							const newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
 
 							const newdarkbearingline = hslToRgb(
@@ -555,34 +555,32 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 					let crowd_symbol = occupancy_to_symbol(vehicle_data.occupancy_status);
 
-					let delay_label = "";
+					let delay_label = '';
 
 					if (vehicle_data.trip) {
 						if (vehicle_data.trip?.delay != undefined) {
-						let prefix = "+";
+							let prefix = '+';
 
-						if (vehicle_data.trip?.delay < 0) {
-							prefix = "-";
+							if (vehicle_data.trip?.delay < 0) {
+								prefix = '-';
+							}
+
+							let abs = Math.abs(vehicle_data.trip.delay);
+
+							let minutes = Math.floor(abs / 60);
+
+							let hours = Math.floor(minutes / 60);
+							minutes = minutes % 60;
+
+							delay_label = `${prefix}${hours > 0 ? `${hours}h` : ``}${minutes}m`;
 						}
-
-						let abs = Math.abs(vehicle_data.trip.delay);
-
-						let minutes = Math.floor(abs / 60);
-
-						let hours = Math.floor(minutes / 60);
-						minutes = minutes % 60;
-
-						delay_label = `${prefix}${hours > 0 ? `${hours}h` : ``}${minutes}m`;
-
 					}
-					}
-					
 
 					return {
 						type: 'Feature',
 						properties: {
 							//shown to user directly?
-							vehicleIdLabel: vehiclelabel || "",
+							vehicleIdLabel: vehiclelabel || '',
 							speed: speedstr,
 							color: colour,
 							chateau: chateau_id,
@@ -593,7 +591,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							//keep to degrees as gtfs specs
 							bearing: vehicle_data?.position?.bearing,
 							has_bearing: vehicle_data?.position?.bearing != null,
-							maptag: (fixRouteName(chateau_id, maptag, routeId) || "")
+							maptag: (fixRouteName(chateau_id, maptag, routeId) || '')
 								.replace(' Branch', '')
 								.replace(' Line', '')
 								.replace('Counterclockwise', 'ACW')
@@ -605,7 +603,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							contrastdarkmodebearing,
 							contrastlightmode: contrastlightmode,
 							routeId: routeId,
-							headsign: (fixHeadsignText(headsign, maptag) || "")
+							headsign: (fixHeadsignText(headsign, maptag) || '')
 								.replace('Counterclockwise', translate('anticlockwise_abbrievation'))
 								.replace('Clockwise', translate('clockwise_abbrievation')),
 							timestamp: vehicle_data.timestamp,
@@ -617,7 +615,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 							crowd_symbol: crowd_symbol,
 							occupancy_status: vehicle_data.occupancy_status,
 							delay_label: delay_label,
-							delay: vehicle_data.trip?.delay,
+							delay: vehicle_data.trip?.delay
 						},
 						geometry: {
 							type: 'Point',
@@ -628,7 +626,7 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 		})
 		.flat();
 
-//	console.log('rerendering', category, 'with', features);
+	//	console.log('rerendering', category, 'with', features);
 
 	if (source) {
 		source.setData({
@@ -642,4 +640,4 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 
 function translate(key: string, options?: Record<string, any>): string {
 	return get(_)(key, options);
-  }
+}

@@ -2,7 +2,7 @@
 	import { _, locale } from 'svelte-i18n';
 	import { cause_id_str, effect_id_str } from './alert_id_to_str_key';
 	import TimeDiff from './TimeDiff.svelte';
-	import { getMtaSubwayClass, getMtaSymbolShortName, isExpress } from '../utils/mta_subway_utils';
+	import MtaBullet from './mtabullet.svelte';
 
 	export let alerts = {};
 	export let default_tz: string | null = null;
@@ -11,7 +11,7 @@
 
 	let locale_code: string = 'en-CA';
 	let expanded: boolean = true;
-	export let chateau: string|null = null;
+	export let chateau: string | null = null;
 
 	$: locale.subscribe((value) => {
 		if (value) {
@@ -38,26 +38,11 @@
 			return list;
 		})
 		.flat()
-		.filter((x, i, a) => a.indexOf(x) == i);	
+		.filter((x, i, a) => a.indexOf(x) == i);
 
-		let languagelistToUse = languagelist.includes('en-html') ?
-			languagelist.filter((x) => x != 'en')
-		 : 
-			languagelist
-		;
-
-		console.log("languagelist", languagelistToUse)
-
-	function formatServiceAlertText(text: string): string {
-		const subwayRouteRegex = /\[([A-Z0-9]+)\]/g;
-		return text.replace(subwayRouteRegex, (match, routeId) => {
-			const shortName = getMtaSymbolShortName(routeId);
-			const colorClass = getMtaSubwayClass(routeId);
-			const isRouteExpress = isExpress(routeId);
-			const expressClass = isRouteExpress ? 'express' : '';
-			return `<span class="subway-icon ${colorClass} ${expressClass}">${shortName}</span>`;
-		});
-	}
+	let languagelistToUse = languagelist.includes('en-html')
+		? languagelist.filter((x) => x != 'en')
+		: languagelist;
 </script>
 
 {#if Object.keys(alerts).length > 0}
@@ -113,9 +98,15 @@
 						{#if alert.header_text != null}
 							{#each alert.header_text.translation.filter((x) => x.language == language) as each_header_translation_obj}
 								<p class={`text-sm`}>
-									{@html formatServiceAlertText(each_header_translation_obj.text
-										.replaceAll(/\<(\/)?p\>/g, '')
-										.replaceAll(/\<(\/)?b\>/g, ''))}
+									{#each each_header_translation_obj.text.split(/(\[[A-Z0-9]+\])/g) as part, i}
+										{#if i % 2 === 1}
+											<MtaBullet 
+											matchTextHeight={true}
+											route_short_name={part.slice(1, -1)} />
+										{:else}
+											{@html part.replaceAll(/\<(\/)?p\>/g, '').replaceAll(/\<(\/)?b\>/g, '')}
+										{/if}
+									{/each}
 								</p>
 							{/each}
 						{/if}
@@ -125,26 +116,34 @@
 								<div class="leading-none">
 									{#each description_alert.text.split('\n') as each_desc_line}
 										<div class="text-xs pt-0.5">
-											{@html formatServiceAlertText(each_desc_line
-												.replaceAll(
-													'<a ',
-													'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
-												)
-												//.replaceAll(/\<(\/)?p\>/g, '')
-												//.replaceAll(/\<(\/)?b\>/g, '')
-												.replaceAll(/\\n/g, "<br/>")
-												.replaceAll('https://rt.scmetro.org ', 'Catenary Maps ')
-												.replaceAll(
-													/(\[)?accessibility icon(\])?/g,
-													'<span class="bg-blue-500 w-3 h-3 rounded-full inline"><svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" class="text-white fill-current inline"><path d="M320-80q-83 0-141.5-58.5T120-280q0-83 58.5-141.5T320-480v80q-50 0-85 35t-35 85q0 50 35 85t85 35q50 0 85-35t35-85h80q0 83-58.5 141.5T320-80Zm360-40v-200H440q-44 0-68-37.5t-6-78.5l74-164h-91l-24 62-77-22 28-72q9-23 29.5-35.5T350-680h208q45 0 68.5 36.5T632-566l-66 146h114q33 0 56.5 23.5T760-340v220h-80Zm-40-580q-33 0-56.5-23.5T560-780q0-33 23.5-56.5T640-860q33 0 56.5 23.5T720-780q0 33-23.5 56.5T640-700Z"/></svg></span>'
-												))}
+											{#each each_desc_line.split(/(\[[A-Z0-9]+\])/g) as part, i}
+												{#if i % 2 === 1}
+													<MtaBullet
+													matchTextHeight={true}
+													route_short_name={part.slice(1, -1)} />
+												{:else}
+													{@html part
+														.replaceAll(
+															'<a ',
+															'<a target="_blank" class="text-sky-500 dark:text-sky-300 underline"'
+														)
+														//.replaceAll(/\<(\/)?p\>/g, '')
+														//.replaceAll(/\<(\/)?b\>/g, '')
+														.replaceAll(/\\n/g, '<br/>')
+														.replaceAll('https://rt.scmetro.org ', 'Catenary Maps ')
+														.replaceAll(
+															/(\[)?accessibility icon(\])?/g,
+															'<span class="bg-blue-500 w-3 h-3 rounded-full inline"><svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" class="text-white fill-current inline"><path d="M320-80q-83 0-141.5-58.5T120-280q0-83 58.5-141.5T320-480v80q-50 0-85 35t-35 85q0 50 35 85t85 35q50 0 85-35t35-85h80q0 83-58.5 141.5T320-80Zm360-40v-200H440q-44 0-68-37.5t-6-78.5l74-164h-91l-24 62-77-22 28-72q9-23 29.5-35.5T350-680h208q45 0 68.5 36.5T632-566l-66 146h114q33 0 56.5 23.5T760-340v220h-80Zm-40-580q-33 0-56.5-23.5T560-780q0-33 23.5-56.5T640-860q33 0 56.5 23.5T720-780q0 33-23.5 56.5T640-700Z"/></svg></span>'
+														)}
+												{/if}
+											{/each}
 										</div>
 									{/each}
 								</div>
 							{/each}
 						{/if}
 					{/each}
-					
+
 					{#if alert.active_period.length > 0}
 						{#each alert.active_period as active_period}
 							{#if active_period.start != null}

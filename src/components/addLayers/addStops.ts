@@ -1,11 +1,13 @@
 import type { Map } from 'maplibre-gl';
 import { layerspercategory } from '../layernames';
-import {default_interrail_filter, 
+import {
+	default_interrail_filter,
+	default_bus_filter,
+	default_metro_filter,
+	default_tram_filter
+} from '../makeFiltersForStop';
 
-	default_bus_filter, default_metro_filter, default_tram_filter} from '../makeFiltersForStop';
-
-const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'],
- 6, 6, 13, 12];
+const internationalIntercityLabelSize = ['interpolate', ['linear'], ['zoom'], 6, 6, 13, 12];
 const internationalIntercityCircleSize = [
 	'interpolate',
 	['linear'],
@@ -27,38 +29,102 @@ function getCircleInside(darkMode: boolean) {
 }
 
 function getCircleOutside(darkMode: boolean) {
-	return darkMode ? '#ffffff': '#1c2636';
+	return darkMode ? '#ffffff' : '#1c2636';
 }
 
 export function changeStopsTheme(map: Map, darkMode: boolean) {
 	// Bus stops
-	map.setPaintProperty(layerspercategory.bus.stops, 'circle-stroke-color', bus_stop_stop_color(darkMode));
-	map.setPaintProperty(layerspercategory.bus.labelstops, 'text-color', darkMode ? '#eee6fe' : '#2a2a2a');
-	map.setPaintProperty(layerspercategory.bus.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+	map.setPaintProperty(
+		layerspercategory.bus.stops,
+		'circle-stroke-color',
+		bus_stop_stop_color(darkMode)
+	);
+	map.setPaintProperty(
+		layerspercategory.bus.labelstops,
+		'text-color',
+		darkMode ? '#eee6fe' : '#2a2a2a'
+	);
+	map.setPaintProperty(
+		layerspercategory.bus.labelstops,
+		'text-halo-color',
+		darkMode ? '#0f172a' : '#ffffff'
+	);
 
 	// Metro stops
 	map.setPaintProperty(layerspercategory.metro.stops, 'circle-color', getCircleInside(darkMode));
-	map.setPaintProperty(layerspercategory.metro.stops, 'circle-stroke-color', getCircleOutside(darkMode));
-	map.setPaintProperty(layerspercategory.metro.labelstops, 'text-color', darkMode ? '#ffffff' : '#2a2a2a');
-	map.setPaintProperty(layerspercategory.metro.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+	map.setPaintProperty(
+		layerspercategory.metro.stops,
+		'circle-stroke-color',
+		getCircleOutside(darkMode)
+	);
+	map.setPaintProperty(
+		layerspercategory.metro.labelstops,
+		'text-color',
+		darkMode ? '#ffffff' : '#2a2a2a'
+	);
+	map.setPaintProperty(
+		layerspercategory.metro.labelstops,
+		'text-halo-color',
+		darkMode ? '#0f172a' : '#ffffff'
+	);
 
 	// Tram stops
 	map.setPaintProperty(layerspercategory.tram.stops, 'circle-color', getCircleInside(darkMode));
-	map.setPaintProperty(layerspercategory.tram.stops, 'circle-stroke-color', getCircleOutside(darkMode));
-	map.setPaintProperty(layerspercategory.tram.labelstops, 'text-color', darkMode ? '#ffffff' : '#2a2a2a');
-	map.setPaintProperty(layerspercategory.tram.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+	map.setPaintProperty(
+		layerspercategory.tram.stops,
+		'circle-stroke-color',
+		getCircleOutside(darkMode)
+	);
+	map.setPaintProperty(
+		layerspercategory.tram.labelstops,
+		'text-color',
+		darkMode ? '#ffffff' : '#2a2a2a'
+	);
+	map.setPaintProperty(
+		layerspercategory.tram.labelstops,
+		'text-halo-color',
+		darkMode ? '#0f172a' : '#ffffff'
+	);
 
 	// Intercity rail stops
-	map.setPaintProperty(layerspercategory.intercityrail.stops, 'circle-color', getCircleInside(darkMode));
-	map.setPaintProperty(layerspercategory.intercityrail.stops, 'circle-stroke-color', getCircleOutside(darkMode));
-	map.setPaintProperty(layerspercategory.intercityrail.labelstops, 'text-color', darkMode ? '#ffffff' : '#2a2a2a');
-	map.setPaintProperty(layerspercategory.intercityrail.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+	map.setPaintProperty(
+		layerspercategory.intercityrail.stops,
+		'circle-color',
+		getCircleInside(darkMode)
+	);
+	map.setPaintProperty(
+		layerspercategory.intercityrail.stops,
+		'circle-stroke-color',
+		getCircleOutside(darkMode)
+	);
+	map.setPaintProperty(
+		layerspercategory.intercityrail.labelstops,
+		'text-color',
+		darkMode ? '#ffffff' : '#2a2a2a'
+	);
+	map.setPaintProperty(
+		layerspercategory.intercityrail.labelstops,
+		'text-halo-color',
+		darkMode ? '#0f172a' : '#ffffff'
+	);
 
 	// Other stops
 	map.setPaintProperty(layerspercategory.other.stops, 'circle-color', getCircleInside(darkMode));
-	map.setPaintProperty(layerspercategory.other.stops, 'circle-stroke-color', getCircleOutside(darkMode));
-	map.setPaintProperty(layerspercategory.other.labelstops, 'text-color', darkMode ? '#eee6fe' : '#2a2a2a');
-	map.setPaintProperty(layerspercategory.other.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+	map.setPaintProperty(
+		layerspercategory.other.stops,
+		'circle-stroke-color',
+		getCircleOutside(darkMode)
+	);
+	map.setPaintProperty(
+		layerspercategory.other.labelstops,
+		'text-color',
+		darkMode ? '#eee6fe' : '#2a2a2a'
+	);
+	map.setPaintProperty(
+		layerspercategory.other.labelstops,
+		'text-halo-color',
+		darkMode ? '#0f172a' : '#ffffff'
+	);
 }
 
 export function bus_stop_stop_color(darkMode: boolean) {
@@ -80,11 +146,11 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'circle-stroke-color': bus_stop_stop_color(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 0.8, 12, 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': 0.1,
+			'circle-opacity': 0.1
 			//'circle-emissive-strength': 1
 		},
 		minzoom: window?.innerWidth >= 768 ? 13 : 11.5,
-		filter: default_bus_filter,
+		filter: default_bus_filter
 	});
 
 	map.addLayer({
@@ -108,7 +174,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-			'text-halo-width': 0.4,
+			'text-halo-width': 0.4
 			//'text-emissive-strength': 1
 		},
 		minzoom: window?.innerWidth >= 768 ? 14.7 : 13.7
@@ -126,13 +192,13 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'circle-color': getCircleInside(darkMode),
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 0.8, 12, 3.5, 15, 5],
 			'circle-stroke-color': getCircleOutside(darkMode),
-			'circle-stroke-width': ['step', ['zoom'],0.4, 10.5, 0.8, 11, 1.2, 13.2, 1.5],
+			'circle-stroke-width': ['step', ['zoom'], 0.4, 10.5, 0.8, 11, 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8]
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 9,
-		filter: default_metro_filter,
+		filter: default_metro_filter
 	});
 
 	map.addLayer({
@@ -144,24 +210,14 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-field': [
 				'concat',
 				['get', 'displayname'],
-				[
-					'case',
-					['has', 'level_id'],
-					'; ',
-					''
-				],
+				['case', ['has', 'level_id'], '; ', ''],
 				['get', 'level_id'],
-				[
-					'case',
-					['has', 'platform_code'],
-					'; ',
-					''
-				],
+				['case', ['has', 'platform_code'], '; ', ''],
 				['get', 'platform_code']
 			],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 11, 8, 12, 10, 14, 12],
-			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.30, 12, 0.6],
+			'text-radial-offset': ['interpolate', ['linear'], ['zoom'], 7, 0.1, 10, 0.3, 12, 0.6],
 			//'text-ignore-placement': true,
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
@@ -177,10 +233,10 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
-		filter:default_metro_filter,
+		filter: default_metro_filter,
 		minzoom: 11
 	});
 
@@ -193,12 +249,12 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		'source-layer': 'data',
 		layout: {},
 		paint: {
-			'circle-color':  getCircleInside(darkMode),
+			'circle-color': getCircleInside(darkMode),
 			'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 0.9, 10, 1, 12, 3, 15, 4],
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.4, 11, 0.5, 15, 0.6],
-			'circle-opacity': 0.8,
+			'circle-opacity': 0.8
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 9,
@@ -214,19 +270,9 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-field': [
 				'concat',
 				['get', 'displayname'],
-				[
-					'case',
-					['has', 'level_id'],
-					'; ',
-					''
-				],
+				['case', ['has', 'level_id'], '; ', ''],
 				['get', 'level_id'],
-				[
-					'case',
-					['has', 'platform_code'],
-					'; ',
-					''
-				],
+				['case', ['has', 'platform_code'], '; ', ''],
 				['get', 'platform_code']
 			],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
@@ -236,12 +282,18 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['step', ['zoom'], ['literal', ['Barlow-Regular']], 12, ['literal', ['Barlow-Medium']]]
+			'text-font': [
+				'step',
+				['zoom'],
+				['literal', ['Barlow-Regular']],
+				12,
+				['literal', ['Barlow-Medium']]
+			]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
 		filter: default_tram_filter,
@@ -262,7 +314,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': ['step', ['zoom'], 0.6, 13, 0.8],
+			'circle-opacity': ['step', ['zoom'], 0.6, 13, 0.8]
 			//'circle-emissive-strength': 1
 		},
 		minzoom: 7.5,
@@ -278,19 +330,9 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'text-field': [
 				'concat',
 				['get', 'displayname'],
-				[
-					'case',
-					['has', 'level_id'],
-					'; ',
-					''
-				],
+				['case', ['has', 'level_id'], '; ', ''],
 				['get', 'level_id'],
-				[
-					'case',
-					['has', 'platform_code'],
-					'; ',
-					''
-				],
+				['case', ['has', 'platform_code'], '; ', ''],
 				['get', 'platform_code']
 			],
 			'text-variable-anchor': ['left', 'right', 'top', 'bottom'],
@@ -300,12 +342,18 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			//'icon-ignore-placement': false,
 			//'text-allow-overlap': true,
 			//'symbol-avoid-edges': false,
-			'text-font': ['step', ['zoom'], ['literal', ['Barlow-Regular']], 8.5, ['literal', ['Barlow-Medium']]],
+			'text-font': [
+				'step',
+				['zoom'],
+				['literal', ['Barlow-Regular']],
+				8.5,
+				['literal', ['Barlow-Medium']]
+			]
 		},
 		paint: {
 			'text-color': darkMode ? '#ffffff' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
 		filter: default_interrail_filter,
@@ -326,7 +374,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 			'circle-stroke-color': getCircleOutside(darkMode),
 			'circle-stroke-width': ['step', ['zoom'], 1.2, 13.2, 1.5],
 			'circle-stroke-opacity': ['step', ['zoom'], 0.5, 15, 0.6],
-			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8],
+			'circle-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 16, 0.8]
 			//'circle-emissive-strength': 1
 		},
 		filter: ['all', ['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]]],
@@ -352,7 +400,7 @@ export function addStopsLayers(map: Map, darkMode: boolean) {
 		paint: {
 			'text-color': darkMode ? '#eee6fe' : '#2a2a2a',
 			'text-halo-color': darkMode ? '#0f172a' : '#ffffff',
-			'text-halo-width': 1,
+			'text-halo-width': 1
 			//'text-emissive-strength': 1
 		},
 		filter: ['all', ['any', ['>', ['zoom'], 16], ['==', null, ['get', 'parent_station']]]],

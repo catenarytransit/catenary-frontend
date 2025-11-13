@@ -65,9 +65,7 @@ export function fetch_realtime_vehicle_locations(
 
 	let chateaus_to_fetch: Record<string, Record<string, any>> = {};
 
-
-		
-			const previous_tile_boundaries = get(previous_tile_boundaries_store);
+	const previous_tile_boundaries = get(previous_tile_boundaries_store);
 	const bounds = bounds_input_calculate(map);
 
 	get(chateaus_in_frame).forEach((chateauId) => {
@@ -89,36 +87,39 @@ export function fetch_realtime_vehicle_locations(
 			};
 
 			//fetch from previous_tile_boundaries_store[chateau][category]
-			if (previous_tile_boundaries[chateauId]  ) {
+			if (previous_tile_boundaries[chateauId]) {
 				if (previous_tile_boundaries[chateauId][category]) {
-					
-				category_params[category].prev_user_min_x = previous_tile_boundaries[chateauId][category].min_x;
-				category_params[category].prev_user_max_x = previous_tile_boundaries[chateauId][category].max_x;
-				category_params[category].prev_user_min_y = previous_tile_boundaries[chateauId][category].min_y;
-				category_params[category].prev_user_max_y = previous_tile_boundaries[chateauId][category].max_y;
+					category_params[category].prev_user_min_x =
+						previous_tile_boundaries[chateauId][category].min_x;
+					category_params[category].prev_user_max_x =
+						previous_tile_boundaries[chateauId][category].max_x;
+					category_params[category].prev_user_min_y =
+						previous_tile_boundaries[chateauId][category].min_y;
+					category_params[category].prev_user_max_y =
+						previous_tile_boundaries[chateauId][category].max_y;
 				}
 			}
 		});
 
 		chateaus_to_fetch[chateauId] = {
 			category_params: category_params
-		}
+		};
 	});
 
 	let raw = JSON.stringify({
-		"categories": categories_to_request,
+		categories: categories_to_request,
 		chateaus: chateaus_to_fetch,
 		bounds_input: bounds
 	});
 
 	const myHeaders = new Headers();
-	myHeaders.append("Content-Type", "application/json");
+	myHeaders.append('Content-Type', 'application/json');
 
 	const requestOptions = {
-		method: "POST",
+		method: 'POST',
 		headers: myHeaders,
 		body: raw,
-		redirect: "follow",
+		redirect: 'follow',
 		mode: 'cors'
 	};
 
@@ -135,16 +136,15 @@ export function fetch_realtime_vehicle_locations(
 			})
 			.catch((error) => console.log('error', error));
 	}
-
 }
 
 export function bounds_input_calculate(map: maplibregl.Map) {
-	const levels = [5, 7, 8,  12];
+	const levels = [5, 7, 8, 12];
 	const bounds_input: Record<string, any> = {};
 
 	for (const zoom of levels) {
 		const boundaries = get_tile_boundaries(map, zoom);
-		const maxTiles = Math.pow(2, zoom) - 1;  // Maximum tile index for this zoom level
+		const maxTiles = Math.pow(2, zoom) - 1; // Maximum tile index for this zoom level
 
 		let padding = 2;
 
@@ -167,29 +167,32 @@ export function bounds_input_calculate(map: maplibregl.Map) {
 	return bounds_input;
 }
 
-
 export function get_tile_boundaries(map: maplibregl.Map, zoom: number) {
-    const bounds = map.getBounds();
-    const north = bounds.getNorth();
-    const south = bounds.getSouth();
-    const east = bounds.getEast();
-    const west = bounds.getWest();
+	const bounds = map.getBounds();
+	const north = bounds.getNorth();
+	const south = bounds.getSouth();
+	const east = bounds.getEast();
+	const west = bounds.getWest();
 
-    const n = Math.pow(2, zoom);
+	const n = Math.pow(2, zoom);
 
-    const lat_rad_north = north * Math.PI / 180;
-    const lat_rad_south = south * Math.PI / 180;
+	const lat_rad_north = (north * Math.PI) / 180;
+	const lat_rad_south = (south * Math.PI) / 180;
 
-    const xtile_west = Math.floor((west + 180) / 360 * n);
-    const xtile_east = Math.floor((east + 180) / 360 * n);
+	const xtile_west = Math.floor(((west + 180) / 360) * n);
+	const xtile_east = Math.floor(((east + 180) / 360) * n);
 
-    const ytile_north = Math.floor((1 - Math.log(Math.tan(lat_rad_north) + 1 / Math.cos(lat_rad_north)) / Math.PI) / 2 * n);
-    const ytile_south = Math.floor((1 - Math.log(Math.tan(lat_rad_south) + 1 / Math.cos(lat_rad_south)) / Math.PI) / 2 * n);
+	const ytile_north = Math.floor(
+		((1 - Math.log(Math.tan(lat_rad_north) + 1 / Math.cos(lat_rad_north)) / Math.PI) / 2) * n
+	);
+	const ytile_south = Math.floor(
+		((1 - Math.log(Math.tan(lat_rad_south) + 1 / Math.cos(lat_rad_south)) / Math.PI) / 2) * n
+	);
 
-    return {
-        north: ytile_north,
-        south: ytile_south,
-        east: xtile_east,
-        west: xtile_west
-    };
+	return {
+		north: ytile_north,
+		south: ytile_south,
+		east: xtile_east,
+		west: xtile_west
+	};
 }

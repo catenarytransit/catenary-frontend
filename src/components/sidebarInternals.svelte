@@ -428,10 +428,10 @@
 	{/if}
 	{#if latest_item_on_stack.data instanceof StopStack}
 		{#key latest_item_on_stack.data.stop_id}
-		<StopScreen
-			chateau={latest_item_on_stack.data.chateau_id}
-			stop_id={latest_item_on_stack.data.stop_id}
-		/>
+			<StopScreen
+				chateau={latest_item_on_stack.data.chateau_id}
+				stop_id={latest_item_on_stack.data.stop_id}
+			/>
 		{/key}
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
@@ -463,27 +463,19 @@
 			trip_selected={latest_item_on_stack.data}
 		/>
 	{/if}
-	{
-		#if latest_item_on_stack.data instanceof OsmItemStack
-	}
+	{#if latest_item_on_stack.data instanceof OsmItemStack}
 		<HomeButton />
 		<OsmItemInfo
-			osm_class={
-				latest_item_on_stack.data.osm_class
-			}
-			osm_id={
-				latest_item_on_stack.data.osm_id
-			}
-			osm_type={
-				latest_item_on_stack.data.osm_type
-			}
-			/>
+			osm_class={latest_item_on_stack.data.osm_class}
+			osm_id={latest_item_on_stack.data.osm_id}
+			osm_type={latest_item_on_stack.data.osm_type}
+		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
-	{#key latest_item_on_stack.data}
-		<HomeButton />
-		<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
-	{/key}
+		{#key latest_item_on_stack.data}
+			<HomeButton />
+			<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
+		{/key}
 	{/if}
 {:else if false}
 	<p>Loading home page</p>

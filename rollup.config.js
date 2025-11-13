@@ -1,10 +1,8 @@
-import rust from "@wasm-tool/rollup-plugin-rust";
+import rust from '@wasm-tool/rollup-plugin-rust';
 
 export default {
-    input: {
-        foo: "Cargo.toml",
-    },
-    plugins: [
-        rust(),
-    ],
+	input: {
+		foo: 'Cargo.toml'
+	},
+	plugins: [rust()]
 };

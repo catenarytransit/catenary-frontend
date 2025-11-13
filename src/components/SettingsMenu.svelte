@@ -9,9 +9,7 @@
 		show_seconds_store
 	} from '../globalstores';
 
-	import {
-		livedotscaling_store
-	} from "../fontscalingstores"
+	import { livedotscaling_store } from '../fontscalingstores';
 	import HomeButton from './SidebarParts/home_button.svelte';
 
 	import { locales_options, locales_options_lookup } from '../i18n';
@@ -179,9 +177,8 @@
 		<p>{$_('show_seconds_in_trips')}</p>
 	</div>
 
-
 	<div class="text-xl">
-		{$_("dotfontscaling")}
+		{$_('dotfontscaling')}
 	</div>
 
 	<div class="my-2">
@@ -196,7 +193,7 @@
 							livedotscaling_store.update((s) => Math.max(0.1, s - 0.1));
 						}}
 					>
-						<p>{"-"}</p>
+						<p>{'-'}</p>
 					</div>
 					<div class="border-l-2 border-gray-300 dark:border-gray-600">
 						<div
@@ -205,15 +202,13 @@
 								livedotscaling_store.update((s) => s + 0.1);
 							}}
 						>
-							<p>{"+"}</p>
+							<p>{'+'}</p>
 						</div>
 					</div>
-				</div></div>
+				</div>
 			</div>
 		</div>
-
-			
-	
+	</div>
 
 	<a
 		target={'_blank'}
