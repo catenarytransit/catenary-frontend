@@ -1694,6 +1694,9 @@
 				navigator.serviceWorker
 					.register('/sw.js', { scope: '/' })
 					.then((registration) => {
+						// Preload the map selection screen so it's ready when the user clicks on the map
+						import('../components/MapSelectionScreen.svelte');
+
 						// registration worked
 						console.log('Registration succeeded.');
 					})

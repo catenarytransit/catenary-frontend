@@ -41,14 +41,12 @@
 	import { getLocaleStorageOrNav } from '../i18n';
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
 	import { locales_options, locales_options_lookup } from '../i18n';
-	import BlockScreen from './BlockScreen.svelte';
 	import {
 		MTA_CHATEAU_ID, isSubwayRouteId
 	} from '../utils/mta_subway_utils';
 	import MtaBullet from './mtabullet.svelte';
 
 	import VehicleInfo from './vehicle_info.svelte';
-	import MapSelectionScreenComponent from './MapSelectionScreen.svelte';
 	import StopScreen from './StopScreen.svelte';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
@@ -68,17 +66,25 @@
 
 {#if latest_item_on_stack != null}
 	{#if latest_item_on_stack.data instanceof MapSelectionScreen}
-		<MapSelectionScreenComponent map_selection_screen={latest_item_on_stack.data} {darkMode} />
+		{#await import('./MapSelectionScreen.svelte') then { default: MapSelectionScreenComponent }}
+			<MapSelectionScreenComponent map_selection_screen={latest_item_on_stack.data} {darkMode} />
+		{:catch error}
+			<p class="p-4 text-red-500">Error loading component: {error.message}</p>
+		{/await}
 	{/if}
 	{#if latest_item_on_stack.data instanceof SettingsStack}
 		<SettingsMenu />
 	{/if}
 	{#if latest_item_on_stack.data instanceof BlockStack}
-		<BlockScreen
-			chateau={latest_item_on_stack.data.chateau_id}
-			block_id={latest_item_on_stack.data.block_id}
-			service_date={latest_item_on_stack.data.service_date}
-		/>
+		{#await import('./BlockScreen.svelte') then { default: BlockScreen }}
+			<BlockScreen
+				chateau={latest_item_on_stack.data.chateau_id}
+				block_id={latest_item_on_stack.data.block_id}
+				service_date={latest_item_on_stack.data.service_date}
+			/>
+		{:catch error}
+			<p class="p-4 text-red-500">Error loading component: {error.message}</p>
+		{/await}
 	{/if}
 	{#if latest_item_on_stack.data instanceof StopStack}
 		{#key latest_item_on_stack.data.stop_id}
