@@ -1,24 +1,29 @@
 [
-	{
-		"relation": ["delegate_permission/common.handle_all_urls"],
-		"target": {
-			"namespace": "android_app",
-			"package_name": "org.catenarymaps.maps.twa",
-			"sha256_cert_fingerprints": [
-				"D8:33:AB:CC:59:AB:D3:9B:56:F8:74:BA:64:79:03:A6:BA:76:16:18:CE:75:4F:DC:A4:B5:A4:8A:F8:39:3F:5D",
-				"2F:8A:0A:14:3A:C4:0C:77:D8:23:CB:CB:84:3D:A5:E6:97:BE:F1:BE:EC:11:6E:D1:0F:62:73:A6:13:E0:69:A2",
-				"D0:5A:77:76:D7:AA:92:3E:4F:69:4C:E5:ED:97:FE:01:77:75:FF:87:16:F3:19:6B:F3:54:46:C1:05:43:DE:8E"
-			]
-		}
-	},
-	{
-		"relation": ["delegate_permission/common.handle_all_urls"],
-		"target": {
-			"namespace": "android_app",
-			"package_name": "com.catenarymaps.catenary",
-			"sha256_cert_fingerprints": [
-				"D8:33:AB:CC:59:AB:D3:9B:56:F8:74:BA:64:79:03:A6:BA:76:16:18:CE:75:4F:DC:A4:B5:A4:8A:F8:39:3F:5D"
-			]
-		}
-	}
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.catenarymaps.maps.twa",
+      "sha256_cert_fingerprints": [
+        "D8:33:AB:CC:59:AB:D3:9B:56:F8:74:BA:64:79:03:A6:BA:76:16:18:CE:75:4F:DC:A4:B5:A4:8A:F8:39:3F:5D",
+        "2F:8A:0A:14:3A:C4:0C:77:D8:23:CB:CB:84:3D:A5:E6:97:BE:F1:BE:EC:11:6E:D1:0F:62:73:A6:13:E0:69:A2",
+        "D0:5A:77:76:D7:AA:92:3E:4F:69:4C:E5:ED:97:FE:01:77:75:FF:87:16:F3:19:6B:F3:54:46:C1:05:43:DE:8E"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.catenarymaps.catenary",
+      "sha256_cert_fingerprints": [
+        "D8:33:AB:CC:59:AB:D3:9B:56:F8:74:BA:64:79:03:A6:BA:76:16:18:CE:75:4F:DC:A4:B5:A4:8A:F8:39:3F:5D"
+      ]
+    }
+  }
 ]
