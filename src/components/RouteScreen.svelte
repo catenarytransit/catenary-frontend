@@ -354,6 +354,30 @@
 				//console.log('route data', data);
 				loaded = true;
 
+				let map_pointer = get(map_pointer_store);
+
+				if (map_pointer) {
+					//
+				//	data.bounding_box looks like {min: {x: -118.2673293111, y: 34.0328646001}, max: {x: -118.0409533505, y: 34.08138}}
+
+					let current_bounds = map_pointer.getBounds();
+
+					if (
+						(data.bounding_box &&
+						current_bounds.contains([data.bounding_box.min.x, data.bounding_box.min.y]) &&
+						current_bounds.contains([data.bounding_box.max.x, data.bounding_box.max.y])) ||
+						map.getZoom() < 4
+					) {
+						//do nothing, already in bounds
+					} else if (data.bounding_box) {
+						map_pointer.fitBounds([
+							[data.bounding_box.min.x, data.bounding_box.min.y],
+							[data.bounding_box.max.x, data.bounding_box.max.y]
+						]);
+					}
+
+				}
+
 				route_data = data;
 
 				alerts = data.alert_id_to_alert;
