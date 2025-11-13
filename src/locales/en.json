@@ -142,5 +142,6 @@
 	"previous_departures": "Previous departures",
 	"next_stop": "Next stop",
 	"loadingmoredepartures": "Loading more departures",
-	"loadmore": "Load more"
+	"loadmore": "Load more",
+	"dotfontscaling": "Dot font scaling"
 }

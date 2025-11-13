@@ -8,6 +8,10 @@
 		ui_theme_store,
 		show_seconds_store
 	} from '../globalstores';
+
+	import {
+		livedotscaling_store
+	} from "../fontscalingstores"
 	import HomeButton from './SidebarParts/home_button.svelte';
 
 	import { locales_options, locales_options_lookup } from '../i18n';
@@ -20,6 +24,16 @@
 	let show_seconds = get(show_seconds_store);
 
 	let theme_selector = get(ui_theme_store);
+
+	let live_dots_scale = get(livedotscaling_store);
+
+	show_seconds_store.subscribe((value) => {
+		show_seconds = value;
+	});
+
+	livedotscaling_store.subscribe((value) => {
+		live_dots_scale = value;
+	});
 
 	ui_theme_store.subscribe((value) => {
 		theme_selector = value;
@@ -164,6 +178,43 @@
 		/>
 		<p>{$_('show_seconds_in_trips')}</p>
 	</div>
+
+
+	<div class="text-xl">
+		{$_("dotfontscaling")}
+	</div>
+
+	<div class="my-2">
+		<div class="flex flex-row text-md gap-x-3 align-middle">
+			<p class="text-lg my-auto font-mono">{live_dots_scale.toFixed(1)}</p>
+
+			<div class=" select-none flex flex-row rounded-2xl bg-gray-50 dark:bg-gray-800">
+				<div class="border-2 border-gray-300 dark:border-gray-600 rounded-2xl flex flex-row">
+					<div
+						class="select-none flex-1 flex items-center justify-center py-2 px-4 cursor-pointer"
+						on:click={() => {
+							livedotscaling_store.update((s) => Math.max(0.1, s - 0.1));
+						}}
+					>
+						<p>{"-"}</p>
+					</div>
+					<div class="border-l-2 border-gray-300 dark:border-gray-600">
+						<div
+							class="select-none flex-1 flex items-center justify-center py-2 px-4 cursor-pointer"
+							on:click={() => {
+								livedotscaling_store.update((s) => s + 0.1);
+							}}
+						>
+							<p>{"+"}</p>
+						</div>
+					</div>
+				</div></div>
+			</div>
+		</div>
+
+			
+	
+
 	<a
 		target={'_blank'}
 		href="https://github.com/catenarytransit/catenary-frontend/commit/{commitID}"

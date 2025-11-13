@@ -1,4 +1,8 @@
 import type { Map } from 'maplibre-gl';
+import { get } from 'svelte/store';
+import { livedotscaling_store } from '../../fontscalingstores';
+import { map_pointer_store } from '../../globalstores';
+import { layerspercategory as layerspercategory_main } from '../layernames';
 
 function textColorOfMapLabels(darkMode: boolean) {
 	return ['get', darkMode === true ? 'contrastdarkmode' : 'contrastlightmode'];
@@ -59,6 +63,54 @@ export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
 
 export const bus_label_no_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];
 export const bus_label_with_headsign = ['interpolate', ['linear'], ['zoom'], 9, 4, 11, 5, 13, 9, 15, 11];
+
+const bus_label_text_size = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];
+const other_label_text_size = ['interpolate', ['linear'], ['zoom'], 9, 8.5, 11, 13, 13, 16];
+const tram_label_text_size = ['interpolate', ['linear'], ['zoom'], 6, 4, 9, 6, 10, 7, 11, 9, 13, 10, 15, 14];
+const metro_label_text_size = ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 7, 10, 9, 11, 11, 13, 12];
+const intercityrail_label_text_size = ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 8, 11, 14, 13, 15];
+
+const original_text_sizes = {
+	bus: bus_label_text_size,
+	other: other_label_text_size,
+	tram: tram_label_text_size,
+	metro: metro_label_text_size,
+	intercityrail: intercityrail_label_text_size
+};
+
+function scaleInterpolationArray(arr: any[], scale: number) {
+	const newArr = [...arr];
+	for (let i = 3; i < newArr.length; i += 2) {
+		if (typeof newArr[i + 1] === 'number') {
+			newArr[i + 1] = arr[i + 1] * scale;
+		}
+	}
+	return newArr;
+}
+
+export function setupLiveDotScaling() {
+	livedotscaling_store.subscribe((scale) => {
+		const map = get(map_pointer_store);
+		if (!map || !map.isStyleLoaded()) return;
+
+		const categories = [
+			'bus',
+			'other',
+			'tram',
+			'metro',
+			'intercityrail'
+		];
+
+		for (const category of categories) {
+			const layerId = layerspercategory_main[category]?.labeldots;
+			if (layerId && map.getLayer(layerId)) {
+				const originalSize = original_text_sizes[category];
+				const newSize = scaleInterpolationArray(originalSize, scale as number);
+				map.setLayoutProperty(layerId, 'text-size', newSize);
+			}
+		}
+	});
+}
 
 export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercategory: any) {
 	const busbearingoffset = [
@@ -249,7 +301,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 				  ]
 				]
 			  },
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13],
+			'text-size': bus_label_text_size,
 			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
 		},
 		minzoom: 10,
@@ -342,7 +394,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 				9,
 				['literal', ['Barlow-Bold']]
 			],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8.5, 11, 13, 13, 16],
+			'text-size': other_label_text_size,
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
@@ -457,7 +509,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
 			'text-font': ['literal', ['Barlow-Medium']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 4, 9, 6, 10, 7, 11, 9, 13, 10, 15, 14],
+			'text-size': tram_label_text_size,
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
@@ -555,7 +607,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-variable-anchor': ['top'],
 			'text-radial-offset': 0,
 			'text-font': ['literal', ['Barlow-Medium']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 5, 9, 7, 10, 9, 11, 11, 13, 12],
+			'text-size': metro_label_text_size,
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
@@ -649,7 +701,7 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
 			'text-radial-offset': 0,
 			'text-font': ['literal', ['Barlow-Medium']],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 6, 8, 9, 8, 11, 14, 13, 15],
+			'text-size': intercityrail_label_text_size,
 			'text-ignore-placement': ['step', ['zoom'], false, 9.5, true]
 		},
 		paint: {
@@ -661,4 +713,6 @@ export async function makeCircleLayers(map: Map, darkMode: boolean, layerspercat
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 2, 0, 2.5, 0.8, 10, 1]
 		}
 	});
+
+	setupLiveDotScaling()
 }
