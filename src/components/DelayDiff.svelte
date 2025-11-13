@@ -116,7 +116,7 @@
 </script>
 
 <span class={`${ textclass } font-semibold text-[0px]`}>
-	<span>
+	<span class="font-medium">
 		{#if diff < 0}<span class="text-xs">{$_('early')}</span>
 		{/if}{#if diff > 0}<span class="text-xs">{$_('late')}</span>
 		{/if}{#if diff == 0}<span class="text-xs font-semibold text-[#58A738]"
