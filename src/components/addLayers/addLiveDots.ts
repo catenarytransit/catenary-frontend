@@ -5,6 +5,56 @@ function textColorOfMapLabels(darkMode: boolean) {
 }
 
 export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
+	const layers = [
+		'bus',
+		'other',
+		'tram',
+		'metro',
+		'intercityrail'
+	];
+
+	const layerspercategory = {
+		bus: {
+			livedots: 'bus',
+			labeldots: 'labelbuses',
+			pointingshell: 'busespointingshell'
+		},
+		intercityrail: {
+			livedots: 'intercityrail',
+			labeldots: 'labelintercityrail',
+			pointingshell: 'intercityrailpointingshell'
+		},
+		metro: {
+			livedots: 'metro',
+			labeldots: 'labelmetro',
+			pointingshell: 'metropointingshell'
+		},
+		tram: {
+			livedots: 'tram',
+			labeldots: 'labeltram',
+			pointingshell: 'trampointingshell'
+		},
+		other: {
+			livedots: 'other',
+			labeldots: 'labelother',
+			pointingshell: 'otherpointingshell'
+		}
+	};
+
+	for (const category of layers) {
+		map.setPaintProperty(layerspercategory[category].livedots, 'circle-stroke-color', darkMode ? '#ffffff' : '#3a3a3a');
+		map.setLayoutProperty(layerspercategory[category].pointingshell, 'icon-image', darkMode ? 'pointingshell' : 'pointingshelllight');
+		map.setPaintProperty(layerspercategory[category].labeldots, 'text-color', textColorOfMapLabels(darkMode));
+		map.setPaintProperty(layerspercategory[category].labeldots, 'text-halo-color', darkMode ? '#1d1d1d' : '#ededed');
+	}
+
+	map.setPaintProperty(layerspercategory.intercityrail.livedots, 'circle-stroke-color', darkMode ? [
+		'step',
+		['zoom'],
+		'#eeeeee',
+		6,
+		'#ffffff'
+	] : '#3a3a3a');
 }
 
 export const bus_label_no_headsign = ['interpolate', ['linear'], ['zoom'], 9, 5, 11, 7, 13, 10, 15, 13];

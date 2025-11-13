@@ -30,6 +30,37 @@ function getCircleOutside(darkMode: boolean) {
 	return darkMode ? '#ffffff': '#1c2636';
 }
 
+export function changeStopsTheme(map: Map, darkMode: boolean) {
+	// Bus stops
+	map.setPaintProperty(layerspercategory.bus.stops, 'circle-stroke-color', bus_stop_stop_color(darkMode));
+	map.setPaintProperty(layerspercategory.bus.labelstops, 'text-color', darkMode ? '#eee6fe' : '#2a2a2a');
+	map.setPaintProperty(layerspercategory.bus.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+
+	// Metro stops
+	map.setPaintProperty(layerspercategory.metro.stops, 'circle-color', getCircleInside(darkMode));
+	map.setPaintProperty(layerspercategory.metro.stops, 'circle-stroke-color', getCircleOutside(darkMode));
+	map.setPaintProperty(layerspercategory.metro.labelstops, 'text-color', darkMode ? '#ffffff' : '#2a2a2a');
+	map.setPaintProperty(layerspercategory.metro.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+
+	// Tram stops
+	map.setPaintProperty(layerspercategory.tram.stops, 'circle-color', getCircleInside(darkMode));
+	map.setPaintProperty(layerspercategory.tram.stops, 'circle-stroke-color', getCircleOutside(darkMode));
+	map.setPaintProperty(layerspercategory.tram.labelstops, 'text-color', darkMode ? '#ffffff' : '#2a2a2a');
+	map.setPaintProperty(layerspercategory.tram.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+
+	// Intercity rail stops
+	map.setPaintProperty(layerspercategory.intercityrail.stops, 'circle-color', getCircleInside(darkMode));
+	map.setPaintProperty(layerspercategory.intercityrail.stops, 'circle-stroke-color', getCircleOutside(darkMode));
+	map.setPaintProperty(layerspercategory.intercityrail.labelstops, 'text-color', darkMode ? '#ffffff' : '#2a2a2a');
+	map.setPaintProperty(layerspercategory.intercityrail.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+
+	// Other stops
+	map.setPaintProperty(layerspercategory.other.stops, 'circle-color', getCircleInside(darkMode));
+	map.setPaintProperty(layerspercategory.other.stops, 'circle-stroke-color', getCircleOutside(darkMode));
+	map.setPaintProperty(layerspercategory.other.labelstops, 'text-color', darkMode ? '#eee6fe' : '#2a2a2a');
+	map.setPaintProperty(layerspercategory.other.labelstops, 'text-halo-color', darkMode ? '#0f172a' : '#ffffff');
+}
+
 export function bus_stop_stop_color(darkMode: boolean) {
 	return darkMode ? ['step', ['zoom'], '#e0e0e0', 14, '#dddddd'] : '#333333';
 }

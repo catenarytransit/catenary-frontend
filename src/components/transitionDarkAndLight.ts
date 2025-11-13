@@ -18,6 +18,8 @@ import {
 } from '../globalstores';
 import {changeContextTheme} from './addLayers/contextLayer';
 import { add_image_pedestrian_pattern } from './pedestrian_layer';
+import { changeStopsTheme } from './addLayers/addStops';
+import { changeLiveDotsTheme } from './addLayers/addLiveDots';
 import {get} from 'svelte/store';
 
 export function refreshUIMaplibre() {
@@ -132,5 +134,7 @@ export function refreshUIMaplibre() {
             });
 
             changeContextTheme(map, darkMode);
+            changeLiveDotsTheme(map, darkMode);
+            changeStopsTheme(map, darkMode);
     }
 }
