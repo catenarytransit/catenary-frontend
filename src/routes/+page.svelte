@@ -1821,10 +1821,10 @@
 			<p class="leading-none">
 				{$_("downloadandroiddesc")}
 			</p>
-			<div class="flex justify-center gap-4 mt-6">
+			<div class="flex justify-center gap-4 mt-3">
 				<button
 					on:click={() => (showAndroidDownloadPopup = false)}
-					class="px-4 py-2 rounded font-semibold bg-white dark:bg-black text-black dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+					class="px-4 py-2 rounded-full font-semibold bg-white dark:bg-black text-black dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
 				>
 					{$_("keepusingweb")}
 				</button>
@@ -1835,7 +1835,7 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					on:click={() => (showAndroidDownloadPopup = false)}
-					class="px-4 py-2 rounded font-bold bg-blue-500 hover:bg-blue-700 text-white"
+					class="px-4 py-2 rounded-full font-bold bg-blue-500 hover:bg-blue-700 text-white"
 				>
 					{$_("continue")}
 				</a>
