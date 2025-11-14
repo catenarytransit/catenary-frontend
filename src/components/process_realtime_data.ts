@@ -1,6 +1,6 @@
 import { componentToHex } from '../geoMathsAssist';
 import { titleCase } from '../utils/titleCase';
-import { writable, get } from 'svelte/store';
+import {  get } from 'svelte/store';
 import {
 	realtime_vehicle_locations_store,
 	realtime_vehicle_route_cache_store,
@@ -10,7 +10,8 @@ import {
 	realtime_vehicle_locations_last_updated_store,
 	usunits_store,
 	previous_tile_boundaries_store,
-	realtime_vehicle_locations_storev2
+	realtime_vehicle_locations_storev2,
+	map_pointer_store
 } from '../globalstores';
 import {
 	add_bunny_layer,
@@ -27,7 +28,8 @@ import { adjustGamma } from './colour/readjustGamma';
 import { determineDarkModeToBool } from './determineDarkModeToBool';
 import { occupancy_to_symbol } from './occupancy_to_symbol';
 import { _ } from 'svelte-i18n';
-
+import { writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
 interface ChateauCategoryData {
 	vehicle_positions?: Record<number, Record<number, Record<string, any>>>;
 	replaces_all?: boolean;
@@ -59,7 +61,18 @@ function category_name_to_source_name(category: string): string {
 	return '';
 }
 
-function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: string[]) {
+const fetches_in_progress: Writable<Set<String>> = writable(new Set());
+
+function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: string[],
+	rerender_categories: Set<string>
+) {
+
+	let stringified_key = chateau_id + JSON.stringify(agency_id_list.toSorted());
+
+	if (get(fetches_in_progress).has(stringified_key)) {
+		return;
+	}
+
 	const agencies_known_for_chateau = get(route_cache_agencies_known)[chateau_id] || [];
 
 	const agencies_to_fetch = agency_id_list.filter(
@@ -92,6 +105,12 @@ function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: s
 	)
 		.then((response) => response.json())
 		.then((new_routes: any[]) => {
+			//remove the key
+			fetches_in_progress.update((set) => {
+				set.delete(stringified_key);
+				return set;
+			});
+
 			route_cache.update((cache) => {
 				if (!cache[chateau_id]) cache[chateau_id] = {};
 				new_routes.forEach((route) => (cache[chateau_id][route.route_id] = route));
@@ -102,8 +121,20 @@ function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: s
 				known[chateau_id].push(...agencies_to_fetch);
 				return known;
 			});
+
+			rerender_categories.forEach((rerender_category) => {
+				rerender_category_live_dots(rerender_category, get(map_pointer_store))
+			})
 		})
-		.catch((error) => console.log('error fetching routes', error));
+		.catch((error) => {
+			console.log('error fetching routes', error);
+
+			//remove the key
+			fetches_in_progress.update((set) => {
+				set.delete(stringified_key);
+				return set;
+			});
+		});
 }
 
 export function process_realtime_vehicle_locations_v2(
@@ -214,7 +245,8 @@ export function process_realtime_vehicle_locations_v2(
 					//console.log('should fetch routes')
 					fetch_routes_of_chateau_by_agency(
 						chateau_id,
-						list_of_agency_ids_to_fetch.filter((v, i, a) => a.indexOf(v) === i)
+						list_of_agency_ids_to_fetch.filter((v, i, a) => a.indexOf(v) === i),
+						rerender_category
 					);
 				}
 			}
