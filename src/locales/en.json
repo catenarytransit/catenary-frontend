@@ -143,5 +143,9 @@
 	"next_stop": "Next stop",
 	"loadingmoredepartures": "Loading more departures",
 	"loadmore": "Load more",
-	"dotfontscaling": "Dot font scaling"
+	"dotfontscaling": "Dot font scaling",
+	"cookie_consent_analytics": "We use cookies for analytics to improve your experience. Do you consent?",
+	"accept": "Accept",
+	"decline": "Decline",
+	"consentsettinganalytics": "Cookies for Analytics"
 }

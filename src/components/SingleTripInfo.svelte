@@ -728,36 +728,40 @@
 	{/each}
 {:else if trip_data != null}
 	<div class="px-3">
-		<RouteHeading
-			color={trip_data.color}
-			text_color={trip_data.text_color}
-			route_id={trip_data.route_id}
-			chateau_id={trip_selected.chateau_id}
-			vehicle={fix_vehicle_number(
-				trip_selected.chateau_id,
-				trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id
-			)}
-			arrow={true}
-			text={fixHeadsignText(
-				trip_data.trip_headsign,
-				trip_data.route_short_name || trip_data.route_long_name
-			)}
-			icon={fixHeadsignIcon(trip_data.trip_headsign)}
-			run_number={fixRunNumber(
-				trip_selected.chateau_id,
-				trip_data.route_type,
-				trip_data.route_id,
-				trip_data.trip_short_name,
-				trip_data.vehicle?.label || trip_data.vehicle?.id,
-				trip_data.trip_id
-			)}
-			short_name={trip_data.route_short_name}
-			long_name={trip_data.route_long_name}
-			{darkMode}
-			disable_pdf={true}
-			route_type={trip_data.route_type}
-			make_clickable_route_name={true}
-		/>
+		{#await import('./RouteHeading.svelte') then { default: RouteHeading }}
+			<RouteHeading
+				color={trip_data.color}
+				text_color={trip_data.text_color}
+				route_id={trip_data.route_id}
+				chateau_id={trip_selected.chateau_id}
+				vehicle={fix_vehicle_number(
+					trip_selected.chateau_id,
+					trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id
+				)}
+				arrow={true}
+				text={fixHeadsignText(
+					trip_data.trip_headsign,
+					trip_data.route_short_name || trip_data.route_long_name
+				)}
+				icon={fixHeadsignIcon(trip_data.trip_headsign)}
+				run_number={fixRunNumber(
+					trip_selected.chateau_id,
+					trip_data.route_type,
+					trip_data.route_id,
+					trip_data.trip_short_name,
+					trip_data.vehicle?.label || trip_data.vehicle?.id,
+					trip_data.trip_id
+				)}
+				short_name={trip_data.route_short_name}
+				long_name={trip_data.route_long_name}
+				{darkMode}
+				disable_pdf={true}
+				route_type={trip_data.route_type}
+				make_clickable_route_name={true}
+			/>
+		{:catch error}
+			<p class="p-4 text-red-500">Error loading component: {error.message}</p>
+		{/await}
 
 		<span class={`block ${window_height_known < 600 ? 'leading-none text-xs' : 'mt-1 text-sm'}`} />
 

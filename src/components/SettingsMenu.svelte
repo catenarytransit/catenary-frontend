@@ -13,11 +13,34 @@
 	import HomeButton from './SidebarParts/home_button.svelte';
 
 	import { locales_options, locales_options_lookup } from '../i18n';
+	import {onMount} from 'svelte';
 
 	let this_locale: string | undefined | null;
 	import { getLocaleStorageOrNav } from '../i18n';
 	import { init_stores } from './init_stores';
 	init_stores();
+
+	    	import {
+		consentGiven,
+	} from '../globalstores';
+
+	let consentGivenThisComponent = get(consentGiven);
+
+	consentGiven.subscribe((value) => {
+		consentGivenThisComponent = value;
+
+		localStorage.setItem('cookie_consent', String(value));
+	});
+
+	onMount(() => {
+		const consent = localStorage.getItem('cookie_consent');
+		if (consent === 'true') {
+			consentGiven.set(true);
+		} else if (consent === 'false') {
+			consentGiven.set(false);
+		} 
+	});
+
 
 	let show_seconds = get(show_seconds_store);
 
@@ -208,6 +231,23 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="flex flex-row gap-x-2">
+		<input
+			type="checkbox"
+			class="accent-seashore"
+			checked={consentGivenThisComponent}
+			on:click={(e) => {
+				consentGivenThisComponent = e.target.checked;
+				consentGiven.set(e.target.checked);
+			}}
+			on:keydown={(e) => {
+				consentGivenThisComponent = e.target.checked;
+				consentGiven.set(e.target.checked);
+			}}
+		/>
+		<p>{$_('consentsettinganalytics')}</p>
 	</div>
 
 	<a

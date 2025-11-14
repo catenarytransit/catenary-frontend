@@ -116,5 +116,8 @@
 	"deleted": "Slettet",
 	"duration": "Varighed",
 	"starting_time": "Starttidspunkt",
-	"ending_time": "Sluttidspunkt"
+	"ending_time": "Sluttidspunkt",
+	"cookie_consent_analytics": "Vi bruger cookies til analyse for at forbedre din oplevelse. Giver du samtykke?",
+	"accept": "Accepter",
+	"decline": "Afvis"
 }

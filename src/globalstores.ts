@@ -9,6 +9,9 @@ import {
 	RouteMapSelector
 } from './components/stackenum';
 
+
+	export const consentGiven = writable<boolean | null>(null);
+
 import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 

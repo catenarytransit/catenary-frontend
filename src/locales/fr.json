@@ -143,5 +143,8 @@
 	"previous_departures": "Départs précédents",
 	"next_stop": "prochain arrêt",
 	"loadingmoredepartures": "Chargement d'autres départs",
-	"loadmore": "Charger plus"
+	"loadmore": "Charger plus",
+	"cookie_consent_analytics": "Nous utilisons des cookies à des fins d'analyse pour améliorer votre expérience. Consentez-vous?",
+	"accept": "Accepter",
+	"decline": "Refuser"
 }

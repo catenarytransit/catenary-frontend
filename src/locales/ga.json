@@ -115,5 +115,8 @@
 	"occupancy_status_not_boardable": "Ní féidir dul ar bord",
 	"deleted": "Scriosta",
 	"starting_time": "Am tosaithe",
-	"ending_time": "Am deiridh"
+	"ending_time": "Am deiridh",
+	"cookie_consent_analytics": "Úsáidimid fianáin le haghaidh anailísíochta chun d’eispéireas a fheabhsú. An dtoilíonn tú?",
+	"accept": "Glac",
+	"decline": "Diúltaigh"
 }

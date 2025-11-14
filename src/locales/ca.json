@@ -131,5 +131,8 @@
 	"new_rt_shape": "Ruta del mapa de desviació en temps real dibuixada",
 	"replaced_stop": "Parada substituïda",
 	"level": "Nivell",
-	"occupancy_percentage": "Percentatge d'ocupació"
+	"occupancy_percentage": "Percentatge d'ocupació",
+	"cookie_consent_analytics": "Utilitzem galetes (cookies) per a analítiques per millorar la teva experiència. Hi consents?",
+	"accept": "Acceptar",
+	"decline": "Rebutjar"
 }

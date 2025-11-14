@@ -132,5 +132,8 @@
 	"trip_modified": "Fahrt geändert",
 	"new_rt_shape": "Echtzeit-Umleitungskarte gezeichnet",
 	"replaced_stop": "Ersetzte Haltestelle",
-	"search_here": "Hier suchen"
+	"search_here": "Hier suchen",
+	"cookie_consent_analytics": "Wir verwenden Cookies für Analysezwecke, um Ihr Erlebnis zu verbessern. Stimmen Sie zu?",
+	"accept": "Akzeptieren",
+	"decline": "Ablehnen"
 }

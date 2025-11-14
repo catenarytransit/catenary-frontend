@@ -136,5 +136,8 @@
 	"waitingforgps": "oodatakse GPS-i",
 	"gpsdisclaimer": "Kui ooteaeg on liiga pikk, kontrolli, kas sellel saidil on brauseri luba sinu asukohale juurdepääsuks ja veendu, et sinu GPS-signaal on tugev.",
 	"last_stop": "viimane peatus",
-	"search_here": "Otsi siit"
+	"search_here": "Otsi siit",
+	"cookie_consent_analytics": "Kasutame analüütikaküpsiseid teie kogemuse parandamiseks. Kas nõustute?",
+	"accept": "Nõustu",
+	"decline": "Keeldu"
 }

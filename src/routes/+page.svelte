@@ -47,6 +47,7 @@
 		show_gtfs_ids_store,
 		ui_theme_store,
 		show_topo_global_store,
+		consentGiven,
 		current_orm_layer_type_store
 	} from '../globalstores';
 	import Layerbutton from '../components/layerbutton.svelte';
@@ -72,6 +73,7 @@
 	import { checkClockSync } from '../components/checkClockSync';
 	import SearchAutocompleteList from '../components/search/SearchAutocompleteList.svelte';
 
+	import ConsentBanner from '../components/ConsentBanner.svelte';
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
 	const disabledlayerstyle =
@@ -1711,6 +1713,26 @@
 	} catch (e) {
 		console.error(e);
 	}
+
+	consentGiven.subscribe((value) => {
+    // Wait until gtag is loaded
+    if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+
+    if (value === true) {
+      // 1) Update consent
+      window.gtag('consent', 'update', {
+        analytics_storage: 'granted'
+      });
+
+      // 2) (Optional but common) re-run config so GA4 starts logging
+      window.gtag('config', 'G-QJRT4Q71T1');
+    } else {
+      // If you also support "reject" later:
+      window.gtag('consent', 'update', {
+        analytics_storage: 'denied'
+      });
+    }
+  });
 </script>
 
 <svelte:head>
@@ -1751,7 +1773,26 @@
 		href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
 		rel="stylesheet"
 	/>
+
+		<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-QJRT4Q71T1"></script>
+	<script>
+		// Set up dataLayer and gtag function
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+
+		// Initialize gtag and set default consent to 'denied'
+		gtag('js', new Date());
+		gtag('consent', 'default', {
+			'analytics_storage': 'denied'
+		});
+	</script>
 </svelte:head>
+
+<ConsentBanner />
+
 <svelte:boundary>
 	<div class="w-full">
 		<div id="map" class="fixed top-0 left-0 w-[100vw] h-[100vh]" />

@@ -117,5 +117,8 @@
 	"duration": "所要時間",
 	"starting_time": "開始時間",
 	"ending_time": "終了時間",
-	"service_alerts": "警告"
+	"service_alerts": "警告",
+	"cookie_consent_analytics": "エクスペリエンスを向上させるために分析用のCookieを使用します。同意しますか？",
+	"accept": "同意",
+	"decline": "辞退"
 }

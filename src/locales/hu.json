@@ -136,5 +136,8 @@
 	"waitingforgps": "GPS-re vár",
 	"gpsdisclaimer": "Ha a várakozás túl hosszú, ellenőrizd, hogy az oldal rendelkezik-e a böngésző helyhozzáférési engedélyével, és ellenőrizd, hogy erős-e a GPS-jel.",
 	"last_stop": "utolsó megálló",
-	"search_here": "Keresés itt"
+	"search_here": "Keresés itt",
+	"cookie_consent_analytics": "Analitikai sütiket használunk az élmény javítása érdekében. Hozzájárul?",
+	"accept": "Elfogad",
+	"decline": "Elutasít"
 }

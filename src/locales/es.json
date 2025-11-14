@@ -118,5 +118,8 @@
 	"service_alerts": "{n, plural, =1 {Alerta de servicio} other{Alertas de servicio}}",
 	"level": "Nivel",
 	"occupancy_percentage": "Porcentaje de ocupación",
-	"previous_departures": "Salidas anteriores"
+	"previous_departures": "Salidas anteriores",
+	"cookie_consent_analytics": "Utilizamos cookies para análisis para mejorar su experiencia. ¿Da su consentimiento?",
+	"accept": "Aceptar",
+	"decline": "Rechazar"
 }

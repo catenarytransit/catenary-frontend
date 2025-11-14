@@ -136,5 +136,8 @@
 	"waitingforgps": "čeka se GPS signal",
 	"gpsdisclaimer": "Ako čekanje potraje, provjerite ima li stranica dopuštenje za pristup vašoj lokaciji i je li GPS signal jak.",
 	"last_stop": "zadnje stajalište",
-	"search_here": "Pretraži ovdje"
+	"search_here": "Pretraži ovdje",
+	"cookie_consent_analytics": "Koristimo kolačiće za analitiku kako bismo poboljšali vaše iskustvo. Pristajete li?",
+	"accept": "Prihvati",
+	"decline": "Odbij"
 }

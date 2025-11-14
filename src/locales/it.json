@@ -123,5 +123,8 @@
 	"clockwise": "senso orario",
 	"anticlockwise": "senso antiorario",
 	"layers": "Strati",
-	"service_alerts": "Avvisi di servizio"
+	"service_alerts": "Avvisi di servizio",
+	"cookie_consent_analytics": "Utilizziamo i cookie per l'analisi per migliorare la tua esperienza. Acconsenti?",
+	"accept": "Accetta",
+	"decline": "Rifiuta"
 }

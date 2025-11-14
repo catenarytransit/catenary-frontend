@@ -136,5 +136,8 @@
 	"waitingforgps": "odotetaan GPS-sijaintia",
 	"gpsdisclaimer": "Jos odotus kestää liian kauan, tarkista onko tällä sivustolla lupa käyttää sijaintiasi ja varmista, että GPS-signaalisi on vahva.",
 	"last_stop": "viimeinen pysäkki",
-	"search_here": "Hae täältä"
+	"search_here": "Hae täältä",
+	"cookie_consent_analytics": "Käytämme analytiikkaevästeitä parantaaksemme käyttökokemustasi. Suostutko?",
+	"accept": "Hyväksy",
+	"decline": "Hylkää"
 }
