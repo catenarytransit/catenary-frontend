@@ -1717,7 +1717,7 @@
 			isAndroid = /android/i.test(navigator.userAgent);
 			isChrome = /chrome/i.test(navigator.userAgent);
 
-			if (isAndroid && !mobileapp) {
+			if (isAndroid ) {
 				console.log('This is an Android device.');
 				showAndroidDownloadPopup = true;
 				// Run Android-specific code here
