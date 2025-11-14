@@ -147,5 +147,9 @@
 	"cookie_consent_analytics": "We use cookies for analytics to improve your experience. Do you consent?",
 	"accept": "Accept",
 	"decline": "Decline",
-	"consentsettinganalytics": "Cookies for Analytics"
+	"consentsettinganalytics": "Cookies for Analytics",
+	"downloadandroid": "Open the Catenary app?",
+	"downloadandroiddesc": "Track public transport with improved performance, faster loading times, and extend battery life.",
+	"download": "Download",
+	"keepusingweb": "Keep using web"
 }

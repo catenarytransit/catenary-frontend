@@ -146,5 +146,10 @@
 	"loadmore": "Charger plus",
 	"cookie_consent_analytics": "Nous utilisons des cookies à des fins d'analyse pour améliorer votre expérience. Consentez-vous?",
 	"accept": "Accepter",
-	"decline": "Refuser"
+	"decline": "Refuser",
+	"consentsettinganalytics": "Cookies pour l'analyse",
+	"downloadandroid": "Ouvrir l'application Catenary?",
+	"downloadandroiddesc": "Suivez les transports en commun avec des performances améliorées, des temps de chargement plus rapides et une autonomie de batterie prolongée.",
+	"download": "Télécharger",
+	"keepusingweb": "Continuer sur le web"
 }
