@@ -36,7 +36,8 @@ export function addShapes(map: maplibregl.Map, darkMode: boolean) {
 					[
 						'any',
 						['==', 'autobús~interurbano~de~cataluña', ['get', 'chateau']],
-						['==', 'flixbus', ['get', 'chateau']]
+						['==', 'flixbus', ['get', 'chateau']],
+						['==', "f-ahverkehrsverbund~schleswig~holstein~nah", ['get', 'chateau']]
 					],
 					['==', true, ['get', 'stop_to_stop_generated']]
 				]
@@ -85,7 +86,8 @@ export function addShapes(map: maplibregl.Map, darkMode: boolean) {
 					[
 						'any',
 						['==', 'autobús~interurbano~de~cataluña', ['get', 'chateau']],
-						['==', 'flixbus', ['get', 'chateau']]
+						['==', 'flixbus', ['get', 'chateau']],
+						['==', "f-ahverkehrsverbund~schleswig~holstein~nah", ['get', 'chateau']]
 					],
 					['==', true, ['get', 'stop_to_stop_generated']]
 				]
@@ -239,6 +241,7 @@ export function addShapes(map: maplibregl.Map, darkMode: boolean) {
 				[
 					'all',
 					['==', 'f-renfe~media~larga~distancia~y~ave', ['get', 'chateau']],
+						['==', "f-ahverkehrsverbund~schleswig~holstein~nah", ['get', 'chateau']],
 					['==', true, ['get', 'stop_to_stop_generated']]
 				]
 			]
@@ -471,6 +474,7 @@ export function addShapes(map: maplibregl.Map, darkMode: boolean) {
 				[
 					'all',
 					['==', 'f-renfe~media~larga~distancia~y~ave', ['get', 'chateau']],
+						['==', "f-ahverkehrsverbund~schleswig~holstein~nah", ['get', 'chateau']],
 					['==', true, ['get', 'stop_to_stop_generated']]
 				]
 			]
