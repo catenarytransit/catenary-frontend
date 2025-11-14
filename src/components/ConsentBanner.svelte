@@ -24,6 +24,16 @@
 		localStorage.setItem('cookie_consent', String(hasConsented));
 		consentGiven.set(hasConsented);
 		showBanner = false;
+
+		if (hasConsented) {
+			(window as any).gtag?.('consent', 'update', {
+				analytics_storage: 'granted'
+			});
+		} else {
+			(window as any).gtag?.('consent', 'update', {
+				analytics_storage: 'denied'
+			});
+		}
 	}
 </script>
 
