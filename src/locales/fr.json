@@ -151,5 +151,6 @@
 	"downloadandroid": "Ouvrir l'application Catenary?",
 	"downloadandroiddesc": "Suivez les transports en commun avec des performances améliorées, des temps de chargement plus rapides et une autonomie de batterie prolongée.",
 	"download": "Télécharger",
-	"keepusingweb": "Continuer sur le web"
+	"keepusingweb": "Continuer sur le web",
+	"continue": "Continuer"
 }
