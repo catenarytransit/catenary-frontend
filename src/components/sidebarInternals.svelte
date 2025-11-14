@@ -36,7 +36,6 @@
 		fixHeadsignText,
 		fixRouteIcon
 	} from './agencyspecific';
-	import RouteScreen from './RouteScreen.svelte';
 	import RouteIcon from './RouteIcon.svelte';
 	import { getLocaleStorageOrNav } from '../i18n';
 	import TidbitSidebarCard from './SidebarParts/tidbits.svelte';
@@ -47,7 +46,6 @@
 	import MtaBullet from './mtabullet.svelte';
 
 	import VehicleInfo from './vehicle_info.svelte';
-	import StopScreen from './StopScreen.svelte';
 	export let latest_item_on_stack: StackInterface | null;
 	export let darkMode: boolean;
 	export let usunits: boolean;
@@ -87,12 +85,14 @@
 		{/await}
 	{/if}
 	{#if latest_item_on_stack.data instanceof StopStack}
-		{#key latest_item_on_stack.data.stop_id}
-			<StopScreen
-				chateau={latest_item_on_stack.data.chateau_id}
-				stop_id={latest_item_on_stack.data.stop_id}
-			/>
-		{/key}
+		{#await import('./StopScreen.svelte') then { default: StopScreen }}
+			{#key latest_item_on_stack.data.stop_id}
+				<StopScreen
+					chateau={latest_item_on_stack.data.chateau_id}
+					stop_id={latest_item_on_stack.data.stop_id}
+				/>
+			{/key}
+		{/await}
 	{/if}
 	{#if latest_item_on_stack.data instanceof VehicleSelectedStack}
 		<div class="px-4 sm:px-2 lg:px-4 py-2 flex flex-col h-full">
@@ -132,10 +132,12 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
-		{#key latest_item_on_stack.data}
-			<HomeButton />
-			<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
-		{/key}
+		{#await import('./RouteScreen.svelte') then { default: RouteScreen }}
+			{#key latest_item_on_stack.data}
+				<HomeButton />
+				<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
+			{/key}
+		{/await}
 	{/if}
 {:else if false}
 	<p>Loading home page</p>

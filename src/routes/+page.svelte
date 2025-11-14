@@ -1698,6 +1698,8 @@
 						import('../components/MapSelectionScreen.svelte');
 						import("../components/RouteHeading.svelte");
 						import("../components/LayerSettingsBox.svelte");
+						import("../components/RouteHeading.svelte");
+						import("../components/StopScreen.svelte");
 						// registration worked
 						console.log('Registration succeeded.');
 					})
