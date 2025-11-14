@@ -1717,13 +1717,19 @@
 			isAndroid = /android/i.test(navigator.userAgent);
 			isChrome = /chrome/i.test(navigator.userAgent);
 
-			if (isAndroid ) {
-				console.log('This is an Android device.');
-				showAndroidDownloadPopup = true;
-				// Run Android-specific code here
-			} else {
-				console.log('This is not an Android device.');
+			if (isAndroid) {
+				const dismissed = localStorage.getItem('androidPopupDismissed');
+				if (dismissed !== 'true') {
+					console.log('This is an Android device, showing download popup.');
+					showAndroidDownloadPopup = true;
+					// Run Android-specific code here
+				} else {
+					console.log('This is an Android device, but popup was dismissed.');
+				}
 			}
+			 else {
+					console.log('This is not an Android device.');
+				}
 		});
 	} catch (e) {
 		console.error(e);
@@ -1823,7 +1829,10 @@
 			</p>
 			<div class="flex justify-center gap-4 mt-3">
 				<button
-					on:click={() => (showAndroidDownloadPopup = false)}
+					on:click={() => {
+						showAndroidDownloadPopup = false;
+						localStorage.setItem('androidPopupDismissed', 'true');
+					}}
 					class="px-4 py-2 rounded-full font-semibold bg-white dark:bg-black text-black dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
 				>
 					{$_("keepusingweb")}
