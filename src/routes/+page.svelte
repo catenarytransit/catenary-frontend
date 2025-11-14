@@ -1696,8 +1696,8 @@
 					.then((registration) => {
 						// Preload the map selection screen so it's ready when the user clicks on the map
 						import('../components/MapSelectionScreen.svelte');
-						import("../components/RouteHeading.svelte");
 						import("../components/LayerSettingsBox.svelte");
+						import("../components/RouteHeading.svelte");
 						import("../components/RouteHeading.svelte");
 						import("../components/StopScreen.svelte");
 						// registration worked
