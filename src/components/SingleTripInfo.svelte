@@ -452,6 +452,10 @@
 							let transit_shape_detour = map?.getSource('transit_shape_context_detour');
 
 							transit_shape_detour.setData({ type: 'FeatureCollection', features: [] });
+
+							let transit_shape_context_for_stop = map?.getSource('transit_shape_context_for_stop');
+
+							transit_shape_context_for_stop.setData({ type: 'FeatureCollection', features: [] });
 						}
 
 						if (map != null) {

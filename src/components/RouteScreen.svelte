@@ -416,6 +416,18 @@
 			delete_filter_stops_background();
 			clearInterval(vehicle_interval);
 			window.removeEventListener('storage', onStorage);
+
+			let map = get(map_pointer_store);
+
+			if (map) {
+				
+				let transit_shape_context_for_stop = map?.getSource('transit_shape_context_for_stop');
+
+				transit_shape_context_for_stop?.setData({ type: 'FeatureCollection', features: [] });
+
+				map.getSource('transit_shape_context')?.setData({ type: 'FeatureCollection', features: [] });
+			}
+
 		};
 	});
 </script>
