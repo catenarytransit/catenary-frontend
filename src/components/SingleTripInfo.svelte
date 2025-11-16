@@ -67,7 +67,7 @@
 		ui_theme_store,
 		stops_to_hide_store
 	} from '../globalstores';
-	import RouteHeading from './RouteHeading.svelte';
+	//import RouteHeading from './RouteHeading.svelte';
 	import { hexToRgb } from '../utils/colour';
 	import { determineDarkModeToBool } from './determineDarkModeToBool';
 	import NativeLands from './NativeLands.svelte';

@@ -712,10 +712,10 @@
 				<div
 					class={`${window_height_known < 600 ? 'mt-0 mb-1' : 'mt-1 mb-1 mb:mb-2'} px-1 mx-1 py-1 md:py-2 bg-gray-100 dark:bg-background rounded-md dark:bg-opacity-50`}
 				>
-					<div class="flex flex-row gap-x-1">
+					<div class="flex-row gap-x-1">
 						<p
 							class={`${window_height_known < 600 ? 'text-lg' : 'text-lg'}
-					 ml-1 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer inline`}
+					 ml-1 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer inline leading-none`}
 							style={`color: ${darkMode ? lightenColour(route_group.color) : route_group.color}`}
 							on:click={() => {
 								data_stack_store.update((stack) => {
@@ -748,38 +748,38 @@
 								{/if}
 							{/if}
 
-							<span class="font-medium align-bottom ml-1 text-lg">
+							<span class="font-medium align-bottom ml-1">
 								{#if route_group.route_type == 0}
 									<span
-										class="ml-auto material-symbols-outlined leading-none no-underline select-none"
+										class="ml-auto material-symbols-outlined leading-none no-underline select-none  text-lg"
 									>
 										<span class="text-base leading-none">tram</span>
 									</span>
 								{/if}
 								{#if route_group.route_type == 1}
 									<span
-										class="ml-auto material-symbols-outlined leading-none no-underline select-none"
+										class="ml-auto material-symbols-outlined leading-none no-underline select-none  text-lg"
 									>
 										<span class="text-base leading-none">subway</span>
 									</span>
 								{/if}
 								{#if route_group.route_type == 2}
 									<span
-										class="ml-auto material-symbols-outlined leading-none no-underline select-none"
+										class="ml-auto material-symbols-outlined leading-none no-underline select-none text-lg"
 									>
 										<span class="text-base leading-none">train</span>
 									</span>
 								{/if}
 								{#if route_group.route_type == 3 && false}
 									<span
-										class="ml-auto material-symbols-outlined leading-none no-underline select-none"
+										class="ml-auto material-symbols-outlined leading-none no-underline select-none  text-lg"
 									>
 										<span class="text-base leading-none">directions_bus</span>
 									</span>
 								{/if}
 								{#if route_group.route_type == 4}
 									<span
-										class="ml-auto material-symbols-outlined leading-none no-underline select-none"
+										class="ml-auto material-symbols-outlined leading-none no-underline select-none text-lg"
 									>
 										<span class="text-base leading-none">ferry</span>
 									</span>
