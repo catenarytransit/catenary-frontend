@@ -20,6 +20,7 @@
 	import { autocomplete_focus_state } from '../components/search/search_data';
 	import { deep_link_url_reader } from '../components/deeplinkreader';
 	import { add_image_pedestrian_pattern } from '../components/pedestrian_layer';
+	import {applyVehicleFilters, additional_filter_for_vehicles_store, resetAdditionalVehicleFilter} from '../components/filterState';
 	import {
 		getLocationFromLocalStorage,
 		saveLocationToLocalStorage
@@ -74,6 +75,7 @@
 	import SearchAutocompleteList from '../components/search/SearchAutocompleteList.svelte';
 
 	import ConsentBanner from '../components/ConsentBanner.svelte';
+	import AndroidDownloadPopup from '../components/AndroidDownloadPopup.svelte';
 	const enabledlayerstyle =
 		'text-black dark:text-white bg-blue-200 dark:bg-gray-700 border border-blue-800 dark:border-blue-200 text-sm md:text-sm';
 
@@ -611,61 +613,7 @@
 				interpretLabelsToCode(this_layer_settings.label, usunits)
 			);
 
-			let pointerfilter = [
-				'all',
-				['!=', 0, ['get', 'bearing']],
-				['==', true, ['get', 'has_bearing']]
-			];
-
-			let vehicle_filter = ['all'];
-
-			if (showzombiebuses == false) {
-				vehicle_filter.push(['!=', '', ['get', 'trip_id']]);
-				vehicle_filter.push(['has', 'trip_id']);
-
-				pointerfilter.push(['==', true, ['get', 'has_bearing']]);
-			}
-
-			if (categoryvalues.livedots === 'tram') {
-				pointerfilter.push([
-					'any',
-					['==', ['get', 'route_type'], 0],
-					['==', ['get', 'route_type'], 5]
-				]);
-
-				vehicle_filter.push([
-					'any',
-					['==', ['get', 'route_type'], 0],
-					['==', ['get', 'route_type'], 5]
-				]);
-			} else {
-				if (categoryvalues.livedots === 'metro') {
-					pointerfilter.push([
-						'any',
-						['==', ['get', 'route_type'], 1],
-						['==', ['get', 'route_type'], 7]
-					]);
-
-					vehicle_filter.push([
-						'any',
-						['==', ['get', 'route_type'], 1],
-						['==', ['get', 'route_type'], 7]
-					]);
-				}
-			}
-
-			if (mapglobal.getLayer(categoryvalues.livedots)) {
-				//console.log('vehicle filter', category, vehicle_filter);
-
-				//console.log('existing filter for category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
-
-				mapglobal?.setFilter(categoryvalues.pointing, pointerfilter);
-				mapglobal?.setFilter(categoryvalues.pointingshell, pointerfilter);
-
-				mapglobal?.setFilter(categoryvalues.livedots, vehicle_filter);
-				mapglobal?.setFilter(categoryvalues.labeldots, vehicle_filter);
-				//console.log('new filter category:', category, 'layer', categoryvalues.livedots, mapglobal.getFilter(categoryvalues.livedots));
-			}
+			applyVehicleFilters(categoryvalues);
 		} else {
 			console.error('no map found');
 		}
@@ -674,47 +622,20 @@
 	function runSettingsAdapt() {
 		//console.log('run settings adapt', layersettings);
 		if (mapglobal) {
-			if (show_my_location) {
-				if (mapglobal.getLayer('nobearing_position')) {
-					mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'visible');
-				}
+			const visibility = show_my_location ? 'visible' : 'none';
+			const layersToToggle = [
+				'nobearing_position',
+				'geolocationheadingshell',
+				'km_text',
+				'km_line',
+				'userpositionacclayer'
+			];
 
-				if (mapglobal.getLayer('geolocationheadingshell')) {
-					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'visible');
+			layersToToggle.forEach((layerId) => {
+				if (mapglobal.getLayer(layerId)) {
+					mapglobal.setLayoutProperty(layerId, 'visibility', visibility);
 				}
-
-				if (mapglobal.getLayer('km_text')) {
-					mapglobal.setLayoutProperty('km_text', 'visibility', 'visible');
-				}
-
-				if (mapglobal.getLayer('km_line')) {
-					mapglobal.setLayoutProperty('km_line', 'visibility', 'visible');
-				}
-
-				if (mapglobal.getLayer('userpositionacclayer')) {
-					mapglobal.setLayoutProperty('userpositionacclayer', 'visibility', 'visible');
-				}
-			} else {
-				if (mapglobal.getLayer('geolocationheadingshell')) {
-					mapglobal.setLayoutProperty('geolocationheadingshell', 'visibility', 'none');
-				}
-
-				if (mapglobal.getLayer('km_text')) {
-					mapglobal.setLayoutProperty('km_text', 'visibility', 'none');
-				}
-
-				if (mapglobal.getLayer('km_line')) {
-					mapglobal.setLayoutProperty('km_line', 'visibility', 'none');
-				}
-
-				if (mapglobal.getLayer('nobearing_position')) {
-					mapglobal.setLayoutProperty('nobearing_position', 'visibility', 'none');
-				}
-
-				if (mapglobal.getLayer('userpositionacclayer')) {
-					mapglobal.setLayoutProperty('userpositionacclayer', 'visibility', 'none');
-				}
-			}
+			});
 
 			if (mapglobal.getLayer('foamershapes')) {
 				if (layersettings.more.foamermode.infra) {
@@ -787,6 +708,12 @@
 			true;
 		}
 	}
+
+	additional_filter_for_vehicles_store.subscribe((value) => {
+		if (mapglobal) {
+			runSettingsAdapt();
+		}
+	});
 
 	if (typeof window != 'undefined') {
 		let get_layers_from_local = localStorage.getItem(layersettingsnamestorage);
@@ -1815,40 +1742,7 @@
 <svelte:boundary>
 	<div class="w-full">
 		{#if showAndroidDownloadPopup || urlParams.get('androidpopup')}
-	<!-- Backdrop -->
-	<div class="fixed inset-0 bg-black opacity-20 z-40" ></div>
-
-	<!-- Modal -->
-	<div class="fixed inset-0 z-50 flex items-center justify-center dark:text-white">
-		<div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl text-center w-11/12 max-w-sm">
-			<h3 class="font-semibold leading-none dark:text-white text-lg mb-4">{$_('downloadandroid')}</h3>
-			<p class="leading-none">
-				{$_("downloadandroiddesc")}
-			</p>
-			<div class="flex justify-center gap-4 mt-3">
-				<button
-					on:click={() => {
-						showAndroidDownloadPopup = false;
-						localStorage.setItem('androidPopupDismissed', 'true');
-					}}
-					class="px-4 py-2 rounded-full font-semibold bg-white dark:bg-black text-black dark:text-white border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-				>
-					{$_("keepusingweb")}
-				</button>
-				<a
-					href={isAndroid && isChrome
-						? 'intent://#Intent;package=com.catenarymaps.catenary;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.catenarymaps.catenary;end'
-						: 'https://play.google.com/store/apps/details?id=com.catenarymaps.catenary'}
-					target="_blank"
-					rel="noopener noreferrer"
-					on:click={() => (showAndroidDownloadPopup = false)}
-					class="px-4 py-2 rounded-full font-bold bg-blue-500 hover:bg-blue-700 text-white"
-				>
-					{$_("continue")}
-				</a>
-			</div>
-		</div>
-	</div>
+	<AndroidDownloadPopup/>
 {/if}
 
 <ConsentBanner />
