@@ -121,7 +121,7 @@ export function getContrastColours(colour: string, darkMode: boolean) {
 
             let newdarkhsl = rgbToHsl(newdarkrgb.r, newdarkrgb.g, newdarkrgb.b);
 
-			const newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l * 0.6);
+			const newdarkbearingline =  brightenForDarkModeKeepSat(rgb, 0.3);
 
 			contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
 			contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
