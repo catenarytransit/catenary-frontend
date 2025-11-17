@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { json, text } from '@sveltejs/kit';
-	import { BlockStack, SingleTrip, StackInterface, StopStack } from '../components/stackenum';
+	import { BlockStack, SingleTrip, StackInterface, StopStack } from './stackenum';
 	import { onDestroy, onMount } from 'svelte';
 	import { locale, locales } from 'svelte-i18n';
 	import { isLoading } from 'svelte-i18n';
@@ -16,6 +16,9 @@
 	import BullseyeArrow from './svg_icons/bullseye_arrow.svelte';
 	import ProgressStrip from './ProgessStrip.svelte';
 	import { refilter_stops } from './makeFiltersForStop';
+	import {getContrastColours, getTripInfo, makeDelayLabel} from "./processVehicleFeature"
+	import {resetAdditionalVehicleFilter, additional_filter_for_vehicles_store} from './filterState'
+
 	import {
 		fixHeadsignIcon,
 		fixHeadsignText,
@@ -113,17 +116,85 @@
 		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
 		if (trip_data) {
 			if (trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id) {
+
+				let unified_label = trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id;
+
 				let url = new URL(
-					`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id}`
+					`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${unified_label}`
 				);
 
 				await fetch(url.toString()).then(async (response) => {
 					let text = await response.text();
 					try {
 						const data = JSON.parse(text);
+
+						
 						//console.log('vehicle data', data);
 
 						vehicle_data = data.data;
+
+						if (trip_data.route_type == 3) {
+							additional_filter_for_vehicles_store.set([
+							"all",
+							[
+								"!",
+								[
+									"all",
+									["==", ['get', 'chateau'], trip_selected.chateau_id],
+									["==", ['get', "trip_id"], trip_selected.trip_id]
+								]
+							]
+						]);
+
+						}
+						
+						let map = get(map_pointer_store);
+						
+						let contrasedcolors = getContrastColours(trip_data.color, darkMode);
+
+						console.log(trip_data.color, "contrasedcolors", contrasedcolors	);
+			
+						if (map != null) {
+							let livedots_context = map.getSource('livedots_context');
+							if (livedots_context) {
+									map.getSource("livedots_context")
+							.setData({
+								type: "FeatureCollection",
+								features: [
+								{
+									type: "Feature",
+									properties: {
+										chateau: trip_selected.chateau_id,
+										trip_id: trip_selected.trip_id,
+										color: trip_data.color,
+										text_color: trip_data.text_color,
+										tripIdLabel: getTripInfo(vehicle_data, trip_selected.chateau_id),
+										maptag: trip_data.route_short_name || trip_data.route_long_name || '',
+										trip_short_name: trip_data.trip_short_name,
+										route_short_name: trip_data.route_short_name,
+										route_long_name: trip_data.route_long_name,
+										contrastlightmode: contrasedcolors.contrastlightmode,
+										contrastdarkmode: contrasedcolors.contrastdarkmode,
+										contrastdarkmodebearing: contrasedcolors.contrastdarkmodebearing,
+										routeId: trip_data.route_id,
+										start_date: trip_selected.start_date,
+										start_time: trip_selected.start_time,
+										crowd_symbol: occupancy_to_symbol(vehicle_data.occupancy_status),
+										delay_label: makeDelayLabel(vehicle_data.trip.delay),
+										delay: vehicle_data.trip?.delay,
+										route_type: trip_data.route_type
+									},
+									geometry: {
+										type: "Point",
+										coordinates: [vehicle_data.position.longitude, vehicle_data.position.latitude]
+									}
+								}
+							]
+							})
+							}
+
+							
+						}
 					} catch (e: any) {
 						console.error(e);
 					}
@@ -633,6 +704,9 @@
 			clearInterval(updatetimecounter);
 		}
 
+		
+			update_vehicle_rt();
+
 		fetchtimeout = setInterval(() => {
 			update_realtime_data();
 
@@ -697,6 +771,8 @@
 			stops_to_hide_store.set({});
 
 			refilter_stops();
+
+			 resetAdditionalVehicleFilter();
 		};
 	});
 </script>

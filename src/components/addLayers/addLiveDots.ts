@@ -4,7 +4,7 @@ import { livedotscaling_store } from '../../fontscalingstores';
 import { map_pointer_store } from '../../globalstores';
 import { layerspercategory as layerspercategory_main } from '../layernames';
 
-function textColorOfMapLabels(darkMode: boolean) {
+export function textColorOfMapLabels(darkMode: boolean) {
 	return ['get', darkMode === true ? 'contrastdarkmode' : 'contrastlightmode'];
 }
 

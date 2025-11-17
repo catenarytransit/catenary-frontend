@@ -22,7 +22,7 @@ function getVehicleLabel(vehicle_data: any, chateau_id: string): string {
 	return vehiclelabel.replace('ineo-tram:', '').replace('ineo-bus:', '');
 }
 
-function getTripInfo(vehicle_data: any, chateau_id: string) {
+export function getTripInfo(vehicle_data: any, chateau_id: string) {
 	let tripIdLabel = '';
 	let trip_short_name = null;
 	let headsign = '';
@@ -56,7 +56,7 @@ function getTripInfo(vehicle_data: any, chateau_id: string) {
 	return { tripIdLabel, trip_short_name, headsign };
 }
 
-function getRouteInfo(
+export function getRouteInfo(
 	routeId: string,
 	chateau_id: string,
 	chateau_route_cache: Record<string, any>
@@ -98,7 +98,7 @@ function getRouteInfo(
 	return { colour, text_colour, maptag, route_short_name, route_long_name };
 }
 
-function getContrastColours(colour: string, darkMode: boolean) {
+export function getContrastColours(colour: string, darkMode: boolean) {
 	let contrastdarkmode = colour;
 	let contrastdarkmodebearing = colour;
 	let contrastlightmode = colour;
@@ -143,6 +143,14 @@ function getContrastColours(colour: string, darkMode: boolean) {
 	return { contrastdarkmode, contrastdarkmodebearing, contrastlightmode };
 }
 
+export function makeDelayLabel(delay: number):string {
+const prefix = delay < 0 ? '-' : '+';
+		const abs_delay = Math.abs(delay);
+		const minutes = Math.floor(abs_delay / 60);
+		const hours = Math.floor(minutes / 60);
+		return `${prefix}${hours > 0 ? `${hours}h` : ''}${minutes % 60}m`;
+}
+
 export function processVehicleFeature(
 	rt_id: string,
 	vehicle_data: any,
@@ -167,11 +175,7 @@ export function processVehicleFeature(
 
 	let delay_label = '';
 	if (vehicle_data.trip?.delay !== undefined) {
-		const prefix = vehicle_data.trip.delay < 0 ? '-' : '+';
-		const abs_delay = Math.abs(vehicle_data.trip.delay);
-		const minutes = Math.floor(abs_delay / 60);
-		const hours = Math.floor(minutes / 60);
-		delay_label = `${prefix}${hours > 0 ? `${hours}h` : ''}${minutes % 60}m`;
+		delay_label = makeDelayLabel(vehicle_data.trip.delay);
 	}
 
 	return {

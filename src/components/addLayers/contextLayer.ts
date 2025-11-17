@@ -13,6 +13,7 @@ import {
 	map_pointer_store
 } from '../../globalstores';
 import { determineDarkModeToBool } from '../determineDarkModeToBool';
+import { textColorOfMapLabels } from './addLiveDots';
 import { writable, get } from 'svelte/store';
 
 export async function makeContextLayerDataset(map: maplibregl.Map) {
@@ -383,6 +384,70 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 			'icon-allow-overlap': true
 		}
 	});
+
+	//context live dots section
+
+	map.addLayer({
+		'id': "livedots_context_bus_major_dot",
+		'type': "circle",
+		'source': "livedots_context",
+		'layout': {},
+		paint: {
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 9, 3, 10, 4, 16, 8],
+			'circle-color': ['get', 'color'],
+			'circle-stroke-color': darkMode == true ? '#3a3a3a': '#ffffff' ,
+			'circle-stroke-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				7.9,
+				0.1,
+				8,
+				0.3,
+				9,
+				0.5,
+				13,
+				0.9
+			],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 15, 0.6],
+			//'circle-emissive-strength': 1,
+			'circle-opacity': 0.8
+		},
+		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
+		minzoom: 5
+	});
+
+	
+	map.addLayer({
+		id: "livedots_context_bus_major_label",
+		type: 'symbol',
+		source:  "livedots_context",
+		layout: {
+			'text-field': ['get', 'maptag'],
+			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+			'text-radial-offset': 0.2,
+			'text-font': {
+				stops: [
+					[6, ['Barlow-Medium']],
+					[11, ['Barlow-SemiBold']]
+				]
+			},
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 11, 13, 13, 15, 16],
+			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
+		},
+		minzoom: 7,
+		paint: {
+			'text-color': textColorOfMapLabels(darkMode),
+			//'text-color': ['get', 'color'],
+			//'text-halo-color': '#ededed',
+			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
+			'text-halo-width': darkMode == true ? 2.4 : 1,
+			'text-halo-blur': 1,
+			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0.4, 8, 0.9, 11, 0.95, 12, 1]
+		},
+		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
+	});
+
 }
 
 export function changeContextTheme(map: maplibregl.Map, darkMode: boolean) {

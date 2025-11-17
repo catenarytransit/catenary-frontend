@@ -613,6 +613,14 @@
 				interpretLabelsToCode(this_layer_settings.label, usunits)
 			);
 
+			if (category == "bus") {
+				mapglobal.setLayoutProperty(
+					"livedots_context_bus_major_label",
+					"text-field",
+					interpretLabelsToCode(this_layer_settings.label, usunits)
+				)
+			}
+
 			applyVehicleFilters(categoryvalues);
 		} else {
 			console.error('no map found');
