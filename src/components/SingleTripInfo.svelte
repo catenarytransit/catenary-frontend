@@ -182,7 +182,8 @@
 										crowd_symbol: occupancy_to_symbol(vehicle_data.occupancy_status),
 										delay_label: makeDelayLabel(vehicle_data.trip.delay),
 										delay: vehicle_data.trip?.delay,
-										route_type: trip_data.route_type
+										route_type: trip_data.route_type,
+										headsign: trip_data.trip_headsign,
 									},
 									geometry: {
 										type: "Point",
