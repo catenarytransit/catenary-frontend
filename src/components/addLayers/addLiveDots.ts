@@ -43,7 +43,7 @@ export function changeLiveDotsTheme(map: Map, darkMode: boolean) {
 		map.setPaintProperty(
 			layerspercategory[category].livedots,
 			'circle-stroke-color',
-			darkMode ? '#ffffff' : '#3a3a3a'
+			darkMode ? '#ffffff' : '#dddddd'
 		);
 		map.setLayoutProperty(
 			layerspercategory[category].pointingshell,

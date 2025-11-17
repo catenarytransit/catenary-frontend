@@ -117,28 +117,32 @@ export function getContrastColours(colour: string, darkMode: boolean) {
 		const rgb = hexToRgb(colour);
 		if (rgb != null) {
 			const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-			const newdarkhsl = { ...hsl };
-			let blueoffset = rgb.b > 40 ? 30 * (rgb.b / 255) : 0;
+			let newdarkrgb = { ...rgb };
 
-			if (hsl.l < 60) {
-				newdarkhsl.l = hsl.l + 10 + (25 * ((100 - hsl.s) / 100) + blueoffset);
-				if (hsl.l > 60) {
-					newdarkhsl.l = 60 + blueoffset;
-				}
+			// Don't adjust colors that are already light
+			if (hsl.l < 65) {
+				const gamma = 1 / 1.8;
+				newdarkrgb.r = Math.min(255, Math.pow(rgb.r / 255, gamma) * 255);
+				newdarkrgb.g = Math.min(255, Math.pow(rgb.g / 255, gamma) * 255);
+				newdarkrgb.b = Math.min(255, Math.pow(rgb.b / 255, gamma) * 255);
 			}
 
-			if (hsl.l < 60) {
-				hsl.l = Math.min(Math.sqrt(hsl.l * 25) + 40, 100);
-				hsl.s = Math.min(100, hsl.s + 20);
-			}
+			const newdarkbearingline = {
+				r: (rgb.r + newdarkrgb.r) / 2,
+				g: (rgb.g + newdarkrgb.g) / 2,
+				b: (rgb.b + newdarkrgb.b) / 2
+			};
 
-			const newdarkrgb = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.l);
-			const newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, (newdarkhsl.l + hsl.l) / 2);
-
-			contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
-			contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
+			contrastdarkmode = `#${componentToHex(Math.round(newdarkrgb.r))}${componentToHex(
+				Math.round(newdarkrgb.g)
+			)}${componentToHex(Math.round(newdarkrgb.b))}`;
+			contrastdarkmodebearing = `#${componentToHex(Math.round(newdarkbearingline.r))}${componentToHex(
+				Math.round(newdarkbearingline.g)
+			)}${componentToHex(Math.round(newdarkbearingline.b))}`;
 		}
 	}
+
+    //console.log('contrastdarkmode', contrastdarkmode)
 
 	return { contrastdarkmode, contrastdarkmodebearing, contrastlightmode };
 }
