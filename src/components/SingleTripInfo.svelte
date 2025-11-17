@@ -542,6 +542,8 @@
 							let transit_shape_context_for_stop = map?.getSource('transit_shape_context_for_stop');
 
 							transit_shape_context_for_stop.setData({ type: 'FeatureCollection', features: [] });
+
+							
 						}
 
 						if (map != null) {
@@ -781,6 +783,13 @@
 			clearInterval(fetchtimeout);
 			clearInterval(updatetimecounter);
 			clearInterval(bigfetchtimeout);
+
+			let map = get(map_pointer_store);
+
+			map.getSource('livedots_context').setData({
+				type: 'FeatureCollection',
+				features: []
+			});
 
 			stops_to_hide_store.set({});
 
