@@ -21,7 +21,7 @@ import { add_bunny_layer, make_custom_icon_source, new_jeans_buses } from './add
 import { makeCircleLayers } from './addLayers/addLiveDots';
 import { makeBearingArrowPointers } from './addLayers/makebearingarrowpointers';
 import { makeGpsLayer } from './makeGpsLayer';
-import { makeContextLayerDataset } from './addLayers/contextLayer';
+import { makeContextLayerDataset, makeContextLayerDots } from './addLayers/contextLayer';
 import { start_location_watch, update_geolocation_source } from '../user_location_lib';
 import { setup_click_handler } from '../components/mapClickHandler';
 
@@ -113,6 +113,8 @@ export async function setup_load_map(
 		await makeContextLayerDataset(map);
 		makeCircleLayers(map, darkMode, layerspercategory);
 		makeBearingArrowPointers(map, darkMode, layerspercategory);
+
+		await makeContextLayerDots(map);
 
 		console.log('setting up click handler');
 

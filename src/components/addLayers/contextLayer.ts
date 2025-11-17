@@ -387,6 +387,19 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 
 	//context live dots section
 
+	
+
+}
+
+export function makeContextLayerDots(map: maplibregl.Map) {
+
+	let darkMode = determineDarkModeToBool();
+
+	const urlParams =
+		typeof window !== 'undefined'
+			? new URLSearchParams(window.location.search)
+			: new URLSearchParams();
+
 	map.addLayer({
 		'id': "livedots_context_bus_major_dot",
 		'type': "circle",
@@ -447,7 +460,6 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 		},
 		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
 	});
-
 }
 
 export function changeContextTheme(map: maplibregl.Map, darkMode: boolean) {
