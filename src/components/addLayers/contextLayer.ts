@@ -400,11 +400,11 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 			? new URLSearchParams(window.location.search)
 			: new URLSearchParams();
 
-	//const contextBusSymbol = await map.loadImage("/icons/bus_context_symbol.png");
+	const contextBusSymbol = await map.loadImage("/icons/bus_context_symbol_v2.png");
 
-	//map.addImage("bus_context_symbol", contextBusSymbol.data)
+	map.addImage("bus_context_symbol", contextBusSymbol.data)
 
-	
+	/*
 	map.addLayer({
 		'id': "livedots_context_bus_major_dot",
 		'type': "circle",
@@ -433,9 +433,9 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 		},
 		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
 		minzoom: 5
-	});
+	});*/
 
-	/*
+	
 	map.addLayer({
 		'id': "livedots_context_bus_major_dot_context",
 		'type': "symbol",
@@ -446,14 +446,14 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 		},
 		layout: {
 			'icon-image': 'bus_context_symbol',
-			'icon-size': 0.3,
+			'icon-size': 0.25,
 			'icon-allow-overlap': true,
 			'icon-ignore-placement': true,
 			'icon-offset': [0, 0],
 		},
 		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
 		minzoom: 5
-	});*/
+	});
 	
 	map.addLayer({
 		id: "livedots_context_bus_major_label",
@@ -461,8 +461,8 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 		source:  "livedots_context",
 		layout: {
 			'text-field': ['get', 'maptag'],
-			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-radial-offset': 0.4,
+			'text-variable-anchor': [ 'left', 'right'],
+			'text-radial-offset': 0.5,
 			'text-allow-overlap': false,
 			'text-font': {
 				stops: [
@@ -475,12 +475,12 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 		},
 		minzoom: 7,
 		paint: {
-			'text-color': textColorOfMapLabels(darkMode),
+			'text-color':  ["get", 'text_color'],
 			//'text-color': ['get', 'color'],
 			//'text-halo-color': '#ededed',
-			'text-halo-color': darkMode == true ? '#1d1d1d' : '#ededed',
-			'text-halo-width': darkMode == true ? 2.4 : 1,
-			'text-halo-blur': 1,
+			'text-halo-color': ["get", 'color'],
+			'text-halo-width': 4,
+			'text-halo-blur': 0.6,
 			'text-opacity': ['interpolate', ['linear'], ['zoom'], 7.9, 0.4, 8, 0.9, 11, 0.95, 12, 1]
 		},
 		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
