@@ -111,8 +111,8 @@ export async function setup_load_map(
 		addShapes(map, darkMode);
 		addStopsLayers(map, darkMode);
 		await makeContextLayerDataset(map);
-		makeCircleLayers(map, darkMode, layerspercategory);
-		makeBearingArrowPointers(map, darkMode, layerspercategory);
+		await makeCircleLayers(map, darkMode, layerspercategory);
+		await makeBearingArrowPointers(map, darkMode, layerspercategory);
 
 		await makeContextLayerDots(map);
 
