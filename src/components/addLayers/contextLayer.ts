@@ -391,7 +391,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 
 }
 
-export function makeContextLayerDots(map: maplibregl.Map) {
+export async function makeContextLayerDots(map: maplibregl.Map) {
 
 	let darkMode = determineDarkModeToBool();
 
@@ -400,29 +400,34 @@ export function makeContextLayerDots(map: maplibregl.Map) {
 			? new URLSearchParams(window.location.search)
 			: new URLSearchParams();
 
+	//const contextBusSymbol = await map.loadImage("/icons/bus_context_symbol.png");
+
+	//map.addImage("bus_context_symbol", contextBusSymbol.data)
+
+	
 	map.addLayer({
 		'id': "livedots_context_bus_major_dot",
 		'type': "circle",
 		'source': "livedots_context",
 		'layout': {},
 		paint: {
-			'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 9, 3, 10, 4, 16, 8],
+			'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 2, 8, 3, 9, 5, 10, 5, 16, 8],
 			'circle-color': ['get', 'color'],
-			'circle-stroke-color': darkMode == true ? '#3a3a3a': '#ffffff' ,
+			'circle-stroke-color': darkMode == true ? '#ffffff': '#333333' ,
 			'circle-stroke-opacity': [
 				'interpolate',
 				['linear'],
 				['zoom'],
 				7.9,
-				0.1,
-				8,
-				0.3,
-				9,
 				0.5,
+				8,
+				0.6,
+				9,
+				0.8,
 				13,
 				0.9
 			],
-			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 1, 13, 2],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 1, 13, 1.5],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.8
 		},
@@ -430,6 +435,25 @@ export function makeContextLayerDots(map: maplibregl.Map) {
 		minzoom: 5
 	});
 
+	/*
+	map.addLayer({
+		'id': "livedots_context_bus_major_dot_context",
+		'type': "symbol",
+		'source': "livedots_context",
+		'layout': {},
+		paint: {
+			
+		},
+		layout: {
+			'icon-image': 'bus_context_symbol',
+			'icon-size': 0.3,
+			'icon-allow-overlap': true,
+			'icon-ignore-placement': true,
+			'icon-offset': [0, 0],
+		},
+		filter: ['all', ['any', ['==', ['get', 'route_type'], 3]]],
+		minzoom: 5
+	});*/
 	
 	map.addLayer({
 		id: "livedots_context_bus_major_label",
@@ -438,14 +462,15 @@ export function makeContextLayerDots(map: maplibregl.Map) {
 		layout: {
 			'text-field': ['get', 'maptag'],
 			'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-			'text-radial-offset': 0.2,
+			'text-radial-offset': 0.4,
+			'text-allow-overlap': false,
 			'text-font': {
 				stops: [
 					[6, ['Barlow-Medium']],
 					[11, ['Barlow-SemiBold']]
 				]
 			},
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 8, 11, 11, 13, 13, 15, 16],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 9, 11, 11, 13, 12, 15, 14],
 			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
 		},
 		minzoom: 7,
