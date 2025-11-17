@@ -148,7 +148,8 @@
 
 						vehicle_data = data.data;
 
-						if (trip_data.route_type == 3) {
+						if (vehicle_data) {
+							if (trip_data.route_type == 3) {
 							additional_filter_for_vehicles_store.set([
 								'all',
 								[
@@ -210,6 +211,9 @@
 								});
 							}
 						}
+						}
+
+						
 					} catch (e: any) {
 						console.error(e);
 					}
