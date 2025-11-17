@@ -53,7 +53,8 @@ export function setup_click_handler(
 					x.source === 'buses' ||
 					x.source === 'localrail' ||
 					x.source === 'intercityrail' ||
-					x.source === 'other'
+					x.source === 'other' ||
+					x.source === "livedots_context"
 			);
 
 			const selected_vehicles_key_unique = new Set();

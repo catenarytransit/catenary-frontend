@@ -409,7 +409,7 @@ export async function makeContextLayerDataset(map: maplibregl.Map) {
 				13,
 				0.9
 			],
-			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 0.3, 15, 0.6],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 9, 1, 13, 2],
 			//'circle-emissive-strength': 1,
 			'circle-opacity': 0.8
 		},
