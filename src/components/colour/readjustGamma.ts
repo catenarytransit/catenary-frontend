@@ -18,6 +18,12 @@ export function adjustGamma(
 	g = Math.round(g * target_gamma_coefficient);
 	b = Math.round(b * target_gamma_coefficient);
 
+	// Ensure the values are within the valid 0-255 range
+	r = Math.min(255, Math.max(0, r));
+	g = Math.min(255, Math.max(0, g));
+	b = Math.min(255, Math.max(0, b));
+	
+
 	// Return the new RGB values as an array
 	return [r, g, b];
 }

@@ -1,7 +1,8 @@
 import { componentToHex } from '../geoMathsAssist';
 import { titleCase } from '../utils/titleCase';
 import { get } from 'svelte/store';
-import { hexToRgb, rgbToHsl, hslToRgb } from '../utils/colour';
+import { hexToRgb, rgbToHsl, hslToRgb, relativeLuminance, srgbToLinear, 
+    brightenForDarkModeKeepSat } from '../utils/colour';
 import { calculateGamma } from './colour/computeBrightness';
 import { fixHeadsignText, fixRouteName } from './agencyspecific';
 import { adjustGamma } from './colour/readjustGamma';
@@ -116,33 +117,16 @@ export function getContrastColours(colour: string, darkMode: boolean) {
 	if (colour && darkMode === true) {
 		const rgb = hexToRgb(colour);
 		if (rgb != null) {
-			const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-			let newdarkrgb = { ...rgb };
+			let newdarkrgb =  brightenForDarkModeKeepSat(rgb, 0.5);
 
-			// Don't adjust colors that are already light
-			if (hsl.l < 65) {
-				const gamma = 1 / 1.8;
-				newdarkrgb.r = Math.min(255, Math.pow(rgb.r / 255, gamma) * 255);
-				newdarkrgb.g = Math.min(255, Math.pow(rgb.g / 255, gamma) * 255);
-				newdarkrgb.b = Math.min(255, Math.pow(rgb.b / 255, gamma) * 255);
-			}
+            let newdarkhsl = rgbToHsl(newdarkrgb.r, newdarkrgb.g, newdarkrgb.b);
 
-			const newdarkbearingline = {
-				r: (rgb.r + newdarkrgb.r) / 2,
-				g: (rgb.g + newdarkrgb.g) / 2,
-				b: (rgb.b + newdarkrgb.b) / 2
-			};
+			const newdarkbearingline = hslToRgb(newdarkhsl.h, newdarkhsl.s, newdarkhsl.h * 0.6);
 
-			contrastdarkmode = `#${componentToHex(Math.round(newdarkrgb.r))}${componentToHex(
-				Math.round(newdarkrgb.g)
-			)}${componentToHex(Math.round(newdarkrgb.b))}`;
-			contrastdarkmodebearing = `#${componentToHex(Math.round(newdarkbearingline.r))}${componentToHex(
-				Math.round(newdarkbearingline.g)
-			)}${componentToHex(Math.round(newdarkbearingline.b))}`;
+			contrastdarkmode = `#${componentToHex(newdarkrgb.r)}${componentToHex(newdarkrgb.g)}${componentToHex(newdarkrgb.b)}`;
+			contrastdarkmodebearing = `#${componentToHex(newdarkbearingline.r)}${componentToHex(newdarkbearingline.g)}${componentToHex(newdarkbearingline.b)}`;
 		}
 	}
-
-    //console.log('contrastdarkmode', contrastdarkmode)
 
 	return { contrastdarkmode, contrastdarkmodebearing, contrastlightmode };
 }

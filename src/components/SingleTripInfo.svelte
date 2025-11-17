@@ -115,9 +115,28 @@
 	async function update_vehicle_rt() {
 		// /get_vehicle_information_from_label/{chateau}/{vehicle_label}
 		if (trip_data) {
-			if (trip_data.vehicle?.label || trip_data.vehicle?.id || trip_selected.vehicle_id) {
+			let unified_label = null;
 
-				let unified_label = trip_data.vehicle.label || trip_data.vehicle.id || trip_selected.vehicle_id;
+			if (trip_selected.vehicle_id) {
+				unified_label = trip_selected.vehicle_id;
+			} 
+			
+			if (trip_data.vehicle) {
+				
+			if (trip_data.vehicle?.label) {
+				unified_label = trip_data.vehicle.label;
+			}
+			
+			if (trip_data.vehicle?.id) {
+				unified_label = trip_data.vehicle.id;
+			}
+
+			}
+			
+
+
+
+			if (unified_label) {
 
 				let url = new URL(
 					`https://birch.catenarymaps.org/get_vehicle_information_from_label/${trip_selected.chateau_id}/${unified_label}`
