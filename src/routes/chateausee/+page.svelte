@@ -1,6 +1,6 @@
 <script lang="ts">
 	//@ts-nocheck
-	import maplibregl from 'maplibre-gl';
+	import {Map, AttributionControl} from 'maplibre-gl';
 	import { onMount } from 'svelte';
 	import { addShapes } from '../../components/addLayers/addShapes';
 
@@ -11,12 +11,12 @@
 		const urlParams = new URLSearchParams(window.location.search);
 		const chateauFilter = urlParams.get('chateau');
 
-		const map = new maplibregl.Map({
+		const map = new Map({
 			container: 'map',
 			crossSourceCollisions: true,
 			hash: 'pos',
 			preserveDrawingBuffer: false,
-			attributionControl: new maplibregl.AttributionControl({
+			attributionControl: new AttributionControl({
         compact: true
     }),
 			//	antialias: true,
