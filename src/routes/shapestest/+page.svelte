@@ -1,7 +1,6 @@
 <script lang="ts">
 	import maplibregl from 'maplibre-gl';
 	import { onMount } from 'svelte';
-	import { addShapes } from '../../components/addLayers/addShapes';
 
 	let centerinit: [number, number] = [-118, 33.9];
 	let zoominit = 8.1;
@@ -124,7 +123,6 @@
 					'text-halo-blur': 5
 				}
 			});
-
 		});
 	});
 </script>

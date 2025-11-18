@@ -166,8 +166,11 @@ export function processVehicleFeature(
 		delay_label = makeDelayLabel(vehicle_data.trip.delay);
 	}
 
+    let feature_id = chateau_id + "_" + routeId + "_" + tripIdLabel + "_" + vehiclelabel;
+
 	return {
 		type: 'Feature',
+        id: feature_id,
 		properties: {
 			vehicleIdLabel: vehiclelabel,
 			speed: speedstr,
@@ -193,7 +196,7 @@ export function processVehicleFeature(
 				.replace('Counterclockwise', translate('anticlockwise_abbrievation'))
 				.replace('Clockwise', translate('clockwise_abbrievation')),
 			timestamp: vehicle_data.timestamp,
-			id: rt_id,
+			id: feature_id,
 			text_color: text_colour,
 			trip_id: vehicle_data.trip?.trip_id,
 			start_time: vehicle_data.trip?.start_time,

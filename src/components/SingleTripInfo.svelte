@@ -169,14 +169,14 @@
 
 						console.log(trip_data.color, 'contrasedcolors', contrasedcolors);
 
+						let feature_id = "livedots_context" + "-" + trip_selected.chateau_id + "-" + trip_selected.trip_id;
+
 						if (map != null) {
 							let livedots_context = map.getSource('livedots_context');
 							if (livedots_context) {
-								map.getSource('livedots_context').setData({
-									type: 'FeatureCollection',
-									features: [
-										{
+								let new_feature = {
 											type: 'Feature',
+											id: feature_id,
 											properties: {
 												chateau: trip_selected.chateau_id,
 												trip_id: trip_selected.trip_id,
@@ -206,7 +206,12 @@
 													vehicle_data.position.latitude
 												]
 											}
-										}
+										};
+
+								map.getSource('livedots_context').setData({
+									type: 'FeatureCollection',
+									features: [
+										new_feature
 									]
 								});
 							}
