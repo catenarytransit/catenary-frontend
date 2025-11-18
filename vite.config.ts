@@ -43,5 +43,8 @@ export default defineConfig({
 				.toString()
 				.trim()
 		)
+	},
+	preview: {
+		allowedHosts: ['maps.catenarymaps.org']
 	}
 });
