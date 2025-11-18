@@ -51,6 +51,9 @@ const config = {
 	},
 	kit: {
 		adapter: adapter()
+	},
+	preview: {
+		allowedHosts: ['maps.catenarymaps.org']
 	}
 };
 
