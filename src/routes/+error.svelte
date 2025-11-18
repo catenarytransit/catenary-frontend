@@ -4,14 +4,16 @@
 	import { page } from '$app/state';
 </script>
 
-<title>Catenary Maps</title>
+<title>{$page.status} | Catenary Maps</title>
 
 <div class="flex flex-col max-w-md mx-auto h-screen justify-center items-center">
 	<img src="/logo.svg" alt="Catenary Maps" class="logo w-24" />
 
 	<div class="flex flex-col">
-		<h1 class="error-code text-center">404</h1>
-		<p class="message text-center">Looks like you&apos;ve stumbled upon a ghost station. Spooky.</p>
+		<h1 class="error-code text-center">{$page.status}</h1>
+		<p class="message text-center font-mono">
+			{$page.error.message}
+		</p>
 		<a href="https://maps.catenarymaps.org" class="mx-auto text-center home-button"
 			>Return to Central Station</a
 		>
