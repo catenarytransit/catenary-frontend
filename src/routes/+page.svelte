@@ -1649,7 +1649,7 @@
 			
 			new_map();
 
-			/*if ('serviceWorker' in navigator) {
+			if ('serviceWorker' in navigator) {
 				navigator.serviceWorker
 					.register('/sw.js', { scope: '/' })
 					.then((registration) => {
@@ -1666,7 +1666,7 @@
 						// registration failed
 						console.error(`Registration failed with ${error}`);
 					});
-			}*/
+			}
 
 
 			// A simple boolean check for Android
