@@ -56,7 +56,7 @@
 		"haversine-distance": "^1.2.4",
 		"maplibre-contour": "^0.1.0",
 		"maplibre-gl": "5.9.0",
-		"moment": "^2.30.1",
+		"moment": "^5.13.0",
 		"mta-subway-bullets": "^1.0.0",
 		"protobufjs": "^7.5.4",
 		"store2": "^2.14.4",
@@ -64,7 +64,7 @@
 		"svelte-i18n": "^4.0.1",
 		"svelte-toasts": "^1.1.2",
 		"tailwind": "^4.0.0",
-		"toastify-js": "^1.12.0",
+		"toastify-js": "^6.0.0",
 		"vite-plugin-pwa": "^1.1.0",
 		"wrangler": "^4.49.0"
 	}
