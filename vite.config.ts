@@ -22,7 +22,6 @@ export default defineConfig({
         clientsClaim: true
       }
     })
-	  
 	],
 	server: {
 		fs: {
