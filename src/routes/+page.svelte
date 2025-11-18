@@ -1268,11 +1268,12 @@
 
 		const map = new maplibregl.Map({
 			canvasContextAttributes: {
-				antialias: true,
+				antialias: false,
 				powerPreference: 'high-performance',
 				desynchronized: true
 			},
 			container: 'map',
+	        localIdeographFontFamily: false,
 			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
 			hash: 'pos',
 			pixelRatio: window.devicePixelRatio * get_shortest_screen_dimension() > 800 ? 2 : 1.5,
