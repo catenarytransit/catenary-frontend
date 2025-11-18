@@ -1281,7 +1281,6 @@
 			light: { anchor: 'viewport', color: 'white', intensity: 0.4 },
 			hash: 'pos',
 			pixelRatio: window.devicePixelRatio * get_shortest_screen_dimension() > 800 ? 2 : 1.5,
-			preserveDrawingBuffer: false,
 			maxPitch: window.innerHeight / window.innerWidth > 1.5 ? 60 : 85,
 			validateStyle: false,
 			fadeDuration: 100,
