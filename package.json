@@ -63,7 +63,6 @@
 		"stringify-object": "^6.0.0",
 		"svelte-i18n": "^4.0.1",
 		"svelte-toasts": "^1.1.2",
-		"tailwind": "^4.0.0",
 		"toastify-js": "^6.0.0",
 		"vite-plugin-pwa": "^1.1.0",
 		"wrangler": "^4.49.0"
