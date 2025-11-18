@@ -1264,7 +1264,11 @@
 			})
 			.catch((err) => console.error(err));
 
-		maplibregl.setWorkerCount(4);
+			if (navigator.hardwareConcurrency > 8) {
+				maplibregl.setWorkerCount(8);
+			} else {
+				maplibregl.setWorkerCount(4);
+			}
 
 		const map = new maplibregl.Map({
 			canvasContextAttributes: {
