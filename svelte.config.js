@@ -1,6 +1,6 @@
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 //import adapter from '@sveltejs/adapter-cloudflare';
-import adapter from 'svelte-adapter-bun';
+//import adapter from 'svelte-adapter-bun';
 
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
@@ -8,6 +8,8 @@ import { execSync } from 'child_process';
 
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+
+import adapter from '@sveltejs/adapter-node';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

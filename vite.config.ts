@@ -6,6 +6,7 @@ import { execSync } from 'child_process';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
+
 export default defineConfig({
 	preprocess: vitePreprocess(),
 	plugins: [sveltekit(), tailwindcss(),
