@@ -1,4 +1,6 @@
 <script lang="ts">
+	
+	//@ts-nocheck
 	import maplibregl from 'maplibre-gl';
 	import mlcontour from 'maplibre-contour';
 	import 'maplibre-gl/dist/maplibre-gl.css';

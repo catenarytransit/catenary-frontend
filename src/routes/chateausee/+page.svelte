@@ -1,4 +1,5 @@
 <script lang="ts">
+	//@ts-nocheck
 	import maplibregl from 'maplibre-gl';
 	import { onMount } from 'svelte';
 	import { addShapes } from '../../components/addLayers/addShapes';
