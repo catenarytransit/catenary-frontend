@@ -442,11 +442,12 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 		'source': "livedots_context",
 		'layout': {},
 		paint: {
-			
+				'icon-opacity': 0.85,	
 		},
 		layout: {
 			'icon-image': 'bus_context_symbol',
-			'icon-size': 0.25,
+			'icon-size': 0.20,
+	
 			'icon-allow-overlap': true,
 			'icon-ignore-placement': true,
 			'icon-offset': [0, 0],
