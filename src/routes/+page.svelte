@@ -1164,6 +1164,8 @@
 	start_location_watch();
 
 	async function new_map() {
+
+		console.log('new map created');
 		//#region On the fly IP geolocation
 
 		let cachegeostored = localStorage.getItem('cacheipgeolocation');
@@ -1229,7 +1231,7 @@
 		// https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus.json
 		// https://birch.catenarymaps.org/getchateaus
 		fetch(
-			'https://raw.githubusercontent.com/catenarytransit/betula-celtiberica-cdn/refs/heads/main/data/chateaus_simp.json'
+			'https://birch.catenarymaps.org/getchateaus'
 		)
 			.then(function (response) {
 				return response.json();
@@ -1290,6 +1292,7 @@
 			zoom: zoominit // starting zoom (must be greater than 8.1)
 		});
 
+
 		mapglobal = map;
 
 		function remove_listener() {
@@ -1319,6 +1322,7 @@
 		if (darkMode) {
 		}
 
+		
 		const demSource = new mlcontour.DemSource({
 			//url: 'https://birchtiles123.catenarymaps.org/terrain_tiles_proxy_aws/{z}/{x}/{y}',
 			url: 'https://birchtiles123.catenarymaps.org/maptiler_terrain_tiles_proxy/{z}/{x}/{y}.webp',
@@ -1370,7 +1374,7 @@
 				},
 				openrailwaymap_electrification: {
 					type: 'vector',
-					url: 'https://birch_ormproxy.catenarymaps.org/openrailwaymap_proxy/electrification_signals,catenary,electrification_railway_symbols',
+					url: '	https://openrailwaymap.app/electrification_signals,electrification_catenary,electrification_railway_symbols',
 					promoteId: 'id'
 				},
 				openrailwaymap_operator: {
@@ -1381,11 +1385,22 @@
 			};
 
 			try {
-				for (const [key, value] of Object.entries(orm_sources)) {
-					console.log(`${key}`, value);
-
-					map.addSource(key, value);
-				}
+				Object.entries(orm_sources).forEach(async ([key, value]) => {
+					if (value.url) {
+						try {
+							const response = await fetch(value.url);
+							if (response.ok) {
+								await response.json(); // Will throw an error if not valid JSON
+								console.log(`Successfully validated and added source: ${key}`);
+								map.addSource(key, value);
+							} else {
+								console.error(`Failed to fetch source ${key}: ${response.status} ${response.statusText}`);
+							}
+						} catch (e) {
+							console.error(`Error adding source ${key} with url ${value.url}:`, e);
+						}
+					}
+				});
 			} catch (e) {
 				console.error(e);
 			}
@@ -1440,6 +1455,7 @@
 
 			demSource.setupMaplibre(maplibregl);
 
+			
 			map.addSource('dem', {
 				type: 'raster-dem',
 				tiles: [demSource.sharedDemProtocolUrl],
@@ -1529,6 +1545,7 @@
 				},
 				'waterway_tunnel'
 			);
+			
 
 			show_topo_global_store.subscribe((value: boolean) => {
 				if (value === true) {
@@ -1630,7 +1647,10 @@
 
 	try {
 		onMount(() => {
-			if ('serviceWorker' in navigator) {
+			
+			new_map();
+
+			/*if ('serviceWorker' in navigator) {
 				navigator.serviceWorker
 					.register('/sw.js', { scope: '/' })
 					.then((registration) => {
@@ -1647,9 +1667,8 @@
 						// registration failed
 						console.error(`Registration failed with ${error}`);
 					});
-			}
+			}*/
 
-			new_map();
 
 			// A simple boolean check for Android
 			isAndroid = /android/i.test(navigator.userAgent);

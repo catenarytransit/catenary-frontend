@@ -60,7 +60,7 @@ function fetch_routes_of_chateau_by_agency(chateau_id: string, agency_id_list: s
 	rerender_categories: Set<string>
 ) {
 
-	let stringified_key = chateau_id + JSON.stringify(agency_id_list.toSorted());
+	let stringified_key = chateau_id + ":" + JSON.stringify(agency_id_list.toSorted());
 
 	if (get(fetches_in_progress).has(stringified_key)) {
 		return;
@@ -346,7 +346,8 @@ export function rerender_category_live_dots(category: string, map: maplibregl.Ma
 						darkMode,
 						usunits
 					);
-				});
+				})
+				.filter((x) => x != null);
 		})
 		.flat();
 

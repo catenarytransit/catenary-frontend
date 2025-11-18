@@ -9,6 +9,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
 	preprocess: vitePreprocess(),
 	plugins: [sveltekit(), tailwindcss(),
+	
 		VitePWA({
       // This is the key setting
       registerType: 'autoUpdate',
@@ -21,6 +22,7 @@ export default defineConfig({
         clientsClaim: true
       }
     })
+	  
 	],
 	server: {
 		fs: {

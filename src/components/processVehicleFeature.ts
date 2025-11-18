@@ -8,6 +8,7 @@ import { fixHeadsignText, fixRouteName } from './agencyspecific';
 import { adjustGamma } from './colour/readjustGamma';
 import { occupancy_to_symbol } from './occupancy_to_symbol';
 import { _ } from 'svelte-i18n';
+import type { GeoJSONFeature } from 'maplibre-gl';
 
 function translate(key: string, options?: Record<string, any>): string {
 	return get(_)(key, options);
@@ -146,7 +147,7 @@ export function processVehicleFeature(
 	route_cache_data: Record<string, any>,
 	darkMode: boolean,
 	usunits: boolean
-) {
+): GeoJSON.Feature<GeoJSON.Point> {
 	const vehiclelabel = getVehicleLabel(vehicle_data, chateau_id);
 	const { tripIdLabel, trip_short_name, headsign } = getTripInfo(vehicle_data, chateau_id);
 	const routeId = vehicle_data.trip?.route_id;
@@ -196,7 +197,7 @@ export function processVehicleFeature(
 				.replace('Counterclockwise', translate('anticlockwise_abbrievation'))
 				.replace('Clockwise', translate('clockwise_abbrievation')),
 			timestamp: vehicle_data.timestamp,
-			id: feature_id,
+			//id: feature_id,
 			text_color: text_colour,
 			trip_id: vehicle_data.trip?.trip_id,
 			start_time: vehicle_data.trip?.start_time,
