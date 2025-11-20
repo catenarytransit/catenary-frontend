@@ -721,7 +721,7 @@
 			{#if activePattern != ''}
 			{@const directionIdFirst = new_directions_from_parent_store[activePattern][0]}
 				{@const directionReference = route_data.direction_patterns[directionIdFirst]}
-				{#each route_data.direction_patterns[activePattern].rows as stop, index}
+				{#each directionReference.rows as stop, index}
 
 					{@const stopRefOriginal = route_data.stops[stop.stop_id]}
 
