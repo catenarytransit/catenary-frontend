@@ -440,7 +440,6 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 		'id': "livedots_context_bus_major_dot_context",
 		'type': "symbol",
 		'source': "livedots_context",
-		'layout': {},
 		paint: {
 				'icon-opacity': 0.85,	
 		},
