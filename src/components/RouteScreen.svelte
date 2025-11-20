@@ -267,7 +267,7 @@
 	async function fetch_vehicles_for_route() {
 		let map = get(map_pointer_store);
 
-		console.log('fetch vehicles for route', routestack.chateau_id, routestack.route_id);
+		//console.log('fetch vehicles for route', routestack.chateau_id, routestack.route_id);
 
 		if (routestack.chateau_id && routestack.route_id) {
 
@@ -397,9 +397,9 @@
 		await fetch(url.toString()).then(async (response) => {
 			let text = await response.text();
 			try {
-				console.log('route text', text);
+				//console.log('route text', text);
 				const data = JSON.parse(text);
-				console.log('route data', data);
+				//console.log('route data', data);
 
 				let map_pointer = get(map_pointer_store);
 
