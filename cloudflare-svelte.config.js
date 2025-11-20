@@ -22,10 +22,6 @@ const config = {
 		test: {
 			include: ['src/**/*.{test,spec}.{js,ts}']
 		},
-		build: {
-			sourcemap: true,
-			minify: true
-		},
 		define: {
 			_COMMIT_ID: JSON.stringify(execSync('git rev-parse HEAD').toString().trim()),
 			_COMMIT_DATE: JSON.stringify(
