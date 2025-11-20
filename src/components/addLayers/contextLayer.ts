@@ -464,12 +464,7 @@ export async function makeContextLayerDots(map: maplibregl.Map) {
 			'text-variable-anchor': [ 'left', 'right'],
 			'text-radial-offset': 0.5,
 			'text-allow-overlap': false,
-			'text-font': {
-				stops: [
-					[6, ['Barlow-Medium']],
-					[11, ['Barlow-SemiBold']]
-				]
-			},
+			'text-font': ['Barlow-SemiBold'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 9, 11, 11, 13, 12, 15, 14],
 			'text-ignore-placement': ['step', ['zoom'], false, 10.5, true]
 		},
