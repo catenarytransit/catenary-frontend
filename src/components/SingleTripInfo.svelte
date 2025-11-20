@@ -913,6 +913,18 @@
 		</p>
 	</div>
 
+	{#if trip_data.is_cancelled}
+		<div class="mx-3">
+			<p class="text-red-600 dark:text-red-500 text-lg font-bold">{$_("cancelled")}</p>
+		</div>
+	{/if}
+
+	{#if trip_data.deleted}
+		<div class="mx-3">
+			<p class="text-red-600  dark:text-red-500 text-lg font-bold">{$_("deleted")}</p>
+		</div>
+	{/if}
+
 	<div
 		bind:this={bind_scrolling_div}
 		class="flex flex-col catenary-scroll overflow-y-scroll h-full px-3 pt-2"
