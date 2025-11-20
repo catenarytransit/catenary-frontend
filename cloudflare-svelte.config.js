@@ -14,21 +14,6 @@ const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
-	plugins: [sveltekit(), tailwindcss(),
-	
-		VitePWA({
-	  // This is the key setting
-	  registerType: 'autoUpdate',
-	  
-	  // These options are often implied by 'autoUpdate' 
-	  // but are good to include explicitly.
-	  // This ensures the new service worker activates immediately.
-	  workbox: {
-		skipWaiting: true,
-		clientsClaim: true
-	  }
-	})
-	],
 		server: {
 			fs: {
 				allow: ['../dist']
