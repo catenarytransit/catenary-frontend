@@ -207,10 +207,12 @@
 				.map((eachstoptime: any) => {
 					let parentStopOrStopId = eachstoptime.stop_id;
 
-					if (route_data.stops[eachstoptime.stop_id].parent_station) {
+					if (route_data.stops[eachstoptime.stop_id]) {
+						if (route_data.stops[eachstoptime.stop_id].parent_station) {
 						parentStopOrStopId = route_data.stops[eachstoptime.stop_id].parent_station;
+						}
 					}
-
+					
 					let refStop = route_data.stops[parentStopOrStopId];
 
 					return {
@@ -732,11 +734,13 @@
 
 					{@const stopRefOriginal = route_data.stops[stop.stop_id]}
 
-					{@const stopRefParent= route_data.stops[stop.stop_id].parent_station}
+					{#if stopRefOriginal != undefined}
+					{@const stopRefParentId = route_data.stops[stop.stop_id].parent_station}
 
-					{@const stopRefToUse = stopRefParent ? route_data.stops[stopRefParent] : stopRefOriginal}
+					{@const stopRefToUse = stopRefParentId ? route_data.stops[stopRefParentId] : stopRefOriginal}
 
-					<span
+					<div
+					aria-label={"Go to stop" + stopRefToUse.name}
 						class="relative px-3 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer"
 						on:click={() => {
 							data_stack_store.update((stack) => {
@@ -784,10 +788,13 @@
 						{/if}
 						{#if show_gtfs_ids}
 							<span class="text-xs text-gray-600 dark:text-gray-200 bg-blue-200 dark:bg-blue-900"
-								>{stop.stop_id}</span
+								>{stopRefToUse.stop_id}</span
 							>
 						{/if}
-					</span>
+					</div>
+					{/if}
+
+					
 				{/each}
 			{/if}
 
