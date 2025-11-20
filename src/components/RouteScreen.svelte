@@ -154,9 +154,14 @@
 	function change_active_pattern(pattern: string) {
 		activePattern = pattern;
 
-		const map = get(map_pointer_store);
+		let map = get(map_pointer_store);
 
-		let shape_id = route_data.direction_patterns[pattern].direction_pattern.gtfs_shape_id;
+		
+		let directionIdFirst = new_directions_from_parent_store[pattern][0]
+		let directionReference = route_data.direction_patterns[directionIdFirst]
+				
+
+		let shape_id = directionReference.direction_pattern.gtfs_shape_id;
 
 		//console.log('shapeid', shape_id);
 
@@ -191,7 +196,7 @@
 
 			let already_seen_stop_ids: string[] = [];
 
-			let stops_features = route_data.direction_patterns[pattern].rows
+			let stops_features = directionReference.rows
 				.filter((eachstoptime: any) => {
 					if (already_seen_stop_ids.indexOf(eachstoptime.stop_id) === -1) {
 						already_seen_stop_ids.push(eachstoptime.stop_id);
@@ -200,10 +205,18 @@
 					return false;
 				})
 				.map((eachstoptime: any) => {
+					let parentStopOrStopId = eachstoptime.stop_id;
+
+					if (route_data.stops[eachstoptime.stop_id].parent_station) {
+						parentStopOrStopId = route_data.stops[eachstoptime.stop_id].parent_station;
+					}
+
+					let refStop = route_data.stops[parentStopOrStopId];
+
 					return {
 						type: 'Feature',
 						properties: {
-							label: route_data.stops[eachstoptime.stop_id].name
+							label: refStop.name
 								.replace('Station ', '')
 								.replace(' Station', '')
 								.replace(', Bahnhof', '')
@@ -224,8 +237,8 @@
 						},
 						geometry: {
 							coordinates: [
-								route_data.stops[eachstoptime.stop_id].longitude,
-								route_data.stops[eachstoptime.stop_id].latitude
+								refStop.longitude,
+								refStop.latitude
 							],
 							type: 'Point'
 						}
@@ -242,7 +255,7 @@
 			//hide from background
 
 			stops_to_hide_store.set({
-				[routestack.chateau_id]: route_data.direction_patterns[pattern].rows.map(
+				[routestack.chateau_id]:  directionReference.rows.map(
 					(eachstoptime: any) => eachstoptime.stop_id
 				)
 			});
