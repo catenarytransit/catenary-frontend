@@ -28,6 +28,7 @@
 	import { isLoading } from 'svelte-i18n';
 	import SingleTripInfo from './SingleTripInfo.svelte';
 	import OsmItemInfo from './OsmItemInfo.svelte';
+	import RouteScreen from './RouteScreen.svelte';
 	import {
 		fixHeadsignIcon,
 		fixRouteName,
@@ -132,12 +133,14 @@
 		/>
 	{/if}
 	{#if latest_item_on_stack.data instanceof RouteStack}
-		{#await import('./RouteScreen.svelte') then { default: RouteScreen }}
+		<!--{#await import('./RouteScreen.svelte') then { default: RouteScreen }}
 			{#key latest_item_on_stack.data}
 				<HomeButton />
-				<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
 			{/key}
-		{/await}
+		{/await}-->
+
+		
+				<RouteScreen {darkMode} routestack={latest_item_on_stack.data} />
 	{/if}
 {:else if false}
 	<p>Loading home page</p>

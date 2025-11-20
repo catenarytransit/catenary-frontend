@@ -127,14 +127,31 @@ export function fetch_realtime_vehicle_locations(
 	const randomSubdomain = subdomains[Math.floor(Math.random() * subdomains.length)];
 	const url = `https://${randomSubdomain}.catenarymaps.org/bulk_realtime_fetch_v3`;
 
+	const request_hash = raw;
+	const pending_requests = get(store_of_pending_requests);
+
+	if (pending_requests[request_hash]) {
+		return;
+	}
+
 	if (categories_to_request.length > 0) {
+		store_of_pending_requests.update((val) => {
+			val[request_hash] = Date.now();
+			return val;
+		});
 		fetch(url, requestOptions)
 			.then((response) => response.text())
 			.then((text) => jsonWebWorker.parse(text))
 			.then((result) => {
 				process_realtime_vehicle_locations_v2(result, map, bounds);
 			})
-			.catch((error) => console.log('error', error));
+			.catch((error) => console.log('error', error))
+			.finally(() => {
+				store_of_pending_requests.update((val) => {
+					delete val[request_hash];
+					return val;
+				});
+			});
 	}
 }
 

@@ -93,8 +93,17 @@
 	let trip_updates_by_trip_id: Record<string, any[]> = {};
 
 	let vehicles_under_direction_id: Record<string, string[]> = {};
+
+	let vehicles_under_direction_id_parent: Record<string, string[]> = {};
+
 	let count_per_direction_store: Record<string, number> = {};
+	let count_per_direction_parent_store: Record<string, number> = {};
+
 	let route_rt_last_updated: null | number = null;
+
+	let  new_directions_from_parent_store: Record<string, string[]> = {};
+
+	let sort_order_of_dir_parents_store: string[] = [];
 
 	function fix_route_url(x: string): string {
 		if (x.includes('foothilltransit.org') && !x.includes('www.foothilltransit.org')) {
@@ -149,7 +158,7 @@
 
 		let shape_id = route_data.direction_patterns[pattern].direction_pattern.gtfs_shape_id;
 
-		console.log('shapeid', shape_id);
+		//console.log('shapeid', shape_id);
 
 		if (shape_id) {
 			if (route_data.shapes_polyline[shape_id]) {
@@ -246,7 +255,7 @@
 		let map = get(map_pointer_store);
 
 		let url = new URL(
-			`https://birch_rt.catenarymaps.org/get_rt_of_single_route?chateau=${routestack.chateau_id}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, '').replace(/\"$/, ''))}${route_rt_last_updated ? '&last_updated_time_ms=' + route_rt_last_updated : ''}`
+			`https://birch_rt.catenarymaps.org/get_rt_of_single_route?chateau=${encodeURIComponent(routestack.chateau_id)}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, '').replace(/\"$/, ''))}${route_rt_last_updated ? '&last_updated_time_ms=' + route_rt_last_updated : ''}`
 		);
 
 		await fetch(url.toString()).then(async (response) => {
@@ -254,7 +263,7 @@
 			try {
 				const data = JSON.parse(text);
 
-				console.log('data', data);
+			//	console.log('data', data);
 
 				if (data.vehicle_positions) {
 					vehicle_positions = data.vehicle_positions;
@@ -265,8 +274,11 @@
 				let trip_updates_by_trip_id_tmp: Record<string, any[]> = {};
 
 				let count_per_direction_id: Record<string, number> = {};
+				let count_per_direction_id_parent: Record<string, number> = {};
 
 				let vehicles_under_direction_id_temp: Record<string, string[]> = {};
+
+				let vehicles_under_direction_id_parent_temp: Record<string, string[]> = {};
 
 				for (const vehicle_update_key in vehicle_positions) {
 					//console.log(vehicle_update_key)
@@ -279,6 +291,19 @@
 						if (trip_compressed) {
 							let direction_id =
 								data.itinerary_to_direction_id[trip_compressed.itinerary_pattern_id];
+							
+								let direction_parent = route_data.direction_patterns[direction_id].direction_pattern.direction_pattern_id_parents ||
+								 route_data.direction_patterns[direction_id].direction_pattern.direction_pattern_id;
+
+							//console.log('direction parent', direction_parent);
+
+							if (count_per_direction_id_parent[direction_parent] == undefined) {
+								count_per_direction_id_parent[direction_parent] = 1;
+							} else {
+								count_per_direction_id_parent[direction_parent] = count_per_direction_id_parent[
+									direction_parent
+								] + 1;
+							}
 
 							if (count_per_direction_id[direction_id] == undefined) {
 								count_per_direction_id[direction_id] = 1;
@@ -290,6 +315,12 @@
 								vehicles_under_direction_id_temp[direction_id] = [vehicle_update_key];
 							} else {
 								vehicles_under_direction_id_temp[direction_id].push(vehicle_update_key);
+							}
+
+							if (vehicles_under_direction_id_parent_temp[direction_parent] == undefined) {
+								vehicles_under_direction_id_parent_temp[direction_parent] = [vehicle_update_key];
+							} else {
+								vehicles_under_direction_id_parent_temp[direction_parent].push(vehicle_update_key);
 							}
 						}
 					}
@@ -307,7 +338,9 @@
 
 				count_per_direction_store = count_per_direction_id;
 				vehicles_under_direction_id = vehicles_under_direction_id_temp;
+				vehicles_under_direction_id_parent = vehicles_under_direction_id_parent_temp;
 				trip_updates_by_trip_id = trip_updates_by_trip_id_tmp;
+				count_per_direction_parent_store = count_per_direction_id_parent;
 			} catch (e) {}
 		});
 	}
@@ -338,15 +371,15 @@
 		}
 
 		let url = new URL(
-			`https://birch.catenarymaps.org/route_info?chateau=${routestack.chateau_id}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, '').replace(/\"$/, ''))}`
+			`https://birch.catenarymaps.org/route_info?chateau=${encodeURIComponent(routestack.chateau_id)}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, '').replace(/\"$/, ''))}`
 		);
 
 		await fetch(url.toString()).then(async (response) => {
 			let text = await response.text();
 			try {
+				console.log('route text', text);
 				const data = JSON.parse(text);
-				//console.log('route data', data);
-				loaded = true;
+				console.log('route data', data);
 
 				let map_pointer = get(map_pointer_store);
 
@@ -373,6 +406,49 @@
 
 				route_data = data;
 
+				//make an object based on the direction pattern of parents
+
+				let new_directions_from_parent: Record<string, string[]> = {};
+
+				//iter route_data.direction_patterns
+
+				Object.values(route_data.direction_patterns)
+				.forEach((direction_pattern: any) => {
+					//console.log('direction pattern', direction_pattern)
+
+					let parent_id = direction_pattern.direction_pattern.direction_pattern_id_parents || direction_pattern.direction_pattern.direction_pattern_id;
+
+					new_directions_from_parent[parent_id] = [];
+
+					new_directions_from_parent[parent_id].push(direction_pattern.direction_pattern.direction_pattern_id);
+
+				})
+
+				 new_directions_from_parent_store =  new_directions_from_parent;
+
+				console.log('new dirs', Object.entries(new_directions_from_parent_store))
+
+				let sort_order_of_dir_parents = [...Object.keys(new_directions_from_parent_store)]
+
+				sort_order_of_dir_parents.sort((a, b) => {
+					let reference_direction_id_a = new_directions_from_parent_store[a][0];
+					let reference_direction_id_b = new_directions_from_parent_store[b][0];
+
+					let reference_direction_a = route_data.direction_patterns[reference_direction_id_a];
+					let reference_direction_b = route_data.direction_patterns[reference_direction_id_b];
+
+					return reference_direction_a.direction_pattern.headsign_or_destination < reference_direction_b.direction_pattern.headsign_or_destination ? -1 : 1;
+				})
+
+				sort_order_of_dir_parents_store = sort_order_of_dir_parents;
+
+				if (activePattern == '') { 
+
+				change_active_pattern(sort_order_of_dir_parents[0]);
+				}
+
+
+
 				alerts = data.alert_id_to_alert;
 
 				Object.keys(alerts).forEach((alert_id) => {
@@ -388,7 +464,8 @@
 					});
 				});
 
-				change_active_pattern(Object.keys(route_data.direction_patterns)[0]);
+				
+				loaded = true;
 			} catch (err) {
 				console.error(err);
 			}
@@ -406,6 +483,13 @@
 	}
 
 	onMount(() => {
+
+		console.log("component mounted")
+		
+		fetch_route_selected();
+
+		fetch_vehicles_for_route();
+
 		refreshPinnedState();
 		const onStorage = (e: StorageEvent) => {
 			if (e.key === LS_KEY) refreshPinnedState();
@@ -473,22 +557,26 @@
 
 		<p class="px-3 text-xl my-1">Directions</p>
 		<div class="flex flex-col mr-2 ml-2">
-			{#each Object.entries(route_data.direction_patterns).sort((a, b) => a[1].direction_pattern.headsign_or_destination < b[1].direction_pattern.headsign_or_destination) as direction, index}
+			{#each sort_order_of_dir_parents_store as directionparentid, index}
+				
+				{@const directionIdFirst = new_directions_from_parent_store[directionparentid][0]}
+				{@const directionReference = route_data.direction_patterns[directionIdFirst]}
+				
 				<div
 					on:click={() =>
-						change_active_pattern(direction[1].direction_pattern.direction_pattern_id)}
-					class={`border border-gray-500 py-1 px-1 text-sm  hover:bg-seashore flex rounded-md min-w-36  leading-tight ${direction[1].direction_pattern.direction_pattern_id == activePattern ? 'bg-seashore' : 'bg-white dark:bg-slate-800'}`}
+						change_active_pattern(directionparentid)}
+					class={`border border-gray-500 py-1 px-1 text-sm  hover:bg-seashore flex rounded-md min-w-36  leading-tight ${directionparentid == activePattern ? 'bg-seashore' : 'bg-white dark:bg-slate-800'}`}
 				>
 					<p>
-						<span>{titleCase(direction[1].direction_pattern.headsign_or_destination)}</span>
-						<span class="text-xs">{' ('}{direction[1].rows.length}{' '}{$_('stops')}{' )'}</span>
-						{#if count_per_direction_store[direction[0]]}
+						<span>{titleCase(directionReference.direction_pattern.headsign_or_destination)}</span>
+						<span class="text-xs">{' ('}{directionReference.rows.length}{' '}{$_('stops')}{' )'}</span>
+						{#if count_per_direction_parent_store[directionparentid]}
 							<span class="relative">
 								<span
 									class="absolute w-full h-full animate-ping bg-blue-500 rounded-full opacity-30"
 								></span>
 								<span class="ml-auto rounded-full bg-blue-500 text-white px-1.5"
-									>{count_per_direction_store[direction[0]]}</span
+									>{count_per_direction_parent_store[directionparentid]}</span
 								>
 							</span>
 						{/if}
@@ -618,7 +706,16 @@
 
 		<div class="grow pt-2 flex flex-col">
 			{#if activePattern != ''}
+			{@const directionIdFirst = new_directions_from_parent_store[activePattern][0]}
+				{@const directionReference = route_data.direction_patterns[directionIdFirst]}
 				{#each route_data.direction_patterns[activePattern].rows as stop, index}
+
+					{@const stopRefOriginal = route_data.stops[stop.stop_id]}
+
+					{@const stopRefParent= route_data.stops[stop.stop_id].parent_station}
+
+					{@const stopRefToUse = stopRefParent ? route_data.stops[stopRefParent] : stopRefOriginal}
+
 					<span
 						class="relative px-3 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer"
 						on:click={() => {
@@ -632,7 +729,7 @@
 							if (e.key == 'Enter') {
 								data_stack_store.update((stack) => {
 									stack.push(
-										new StackInterface(new StopStack(routestack.chateau_id, stop.stop_id))
+										new StackInterface(new StopStack(routestack.chateau_id, stopRefToUse))
 									);
 
 									return stack;
@@ -657,12 +754,12 @@
 							style:border-color={route_data.color}
 						></div>
 						<span class="text-sm relative ml-[16px] translate-y-px"
-							>{fixStationName(route_data.stops[stop.stop_id].name)}</span
+							>{fixStationName(stopRefToUse.name)}</span
 						>
-						{#if route_data.stops[stop.stop_id].code}
+						{#if stopRefToUse.code}
 							<span
 								class="text-sm relative ml-1 translate-y-px font-light dark:text-gray-400 text-gray-700"
-								>{' ['}{fixStationName(route_data.stops[stop.stop_id].code)}{']'}</span
+								>{' ['}{fixStationName(stopRefToUse.code)}{']'}</span
 							>
 						{/if}
 						{#if show_gtfs_ids}
