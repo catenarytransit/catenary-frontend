@@ -267,7 +267,11 @@
 	async function fetch_vehicles_for_route() {
 		let map = get(map_pointer_store);
 
-		let url = new URL(
+		console.log('fetch vehicles for route', routestack.chateau_id, routestack.route_id);
+
+		if (routestack.chateau_id && routestack.route_id) {
+
+			let url = new URL(
 			`https://birch_rt.catenarymaps.org/get_rt_of_single_route?chateau=${encodeURIComponent(routestack.chateau_id)}&route_id=${encodeURIComponent(routestack.route_id.replace(/^\"/, '').replace(/\"$/, ''))}${route_rt_last_updated ? '&last_updated_time_ms=' + route_rt_last_updated : ''}`
 		);
 
@@ -356,6 +360,9 @@
 				count_per_direction_parent_store = count_per_direction_id_parent;
 			} catch (e) {}
 		});
+		}
+
+		
 	}
 
 	async function fetch_route_selected() {
@@ -750,7 +757,7 @@
 							}
 						}}
 					>
-						{#if index != route_data.direction_patterns[activePattern].rows.length - 1}
+						{#if index != directionReference.rows.length - 1}
 							<div
 								class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-full z-30 `}
 								style:background-color={route_data.color}
