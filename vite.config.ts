@@ -8,9 +8,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 
 export default defineConfig({
-	preprocess: vitePreprocess(),
 	plugins: [sveltekit(), tailwindcss(),
-	
 		VitePWA({
       // This is the key setting
       registerType: 'autoUpdate',
@@ -35,14 +33,6 @@ export default defineConfig({
 	build: {
 		sourcemap: true,
 		minify: true
-	},
-	define: {
-		_COMMIT_ID: JSON.stringify(execSync('git rev-parse HEAD').toString().trim()),
-		_COMMIT_DATE: JSON.stringify(
-			execSync('git log -1 --format="%at" | xargs -I{} date -ud @{} \"+%Y-%m-%dT%H:%M:%SZ\"')
-				.toString()
-				.trim()
-		)
 	},
 	preview: {
 		allowedHosts: ['maps.catenarymaps.org']

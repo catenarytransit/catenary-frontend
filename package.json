@@ -38,7 +38,8 @@
 		"tslib": "^2.8.1",
 		"typescript": "^5.9.3",
 		"vite": "^7.2.4",
-		"vitest": "^4.0.12"
+		"vitest": "^4.0.12",
+		"why-is-node-running": "^3.2.2"
 	},
 	"type": "module",
 	"dependencies": {
