@@ -354,7 +354,7 @@
 
 			let interval = setInterval(() => {
 				getNearbyDepartures();
-			}, 20_000);
+			}, 30_000);
 
 			setTimeout(() => {
 				getNearbyDepartures();
@@ -491,7 +491,7 @@
 			let url = `https://birch_nearby.catenarymaps.org/nearbydeparturesfromcoordsv2?lat=${lat}&lon=${lng}`;
 
 			if (abort_controller) {
-				abort_controller.abort();
+				//abort_controller.abort();
 			}
 
 			abort_controller = new AbortController();
