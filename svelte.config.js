@@ -4,7 +4,7 @@ import adapter from 'svelte-adapter-deno';
 
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
