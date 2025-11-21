@@ -38,8 +38,7 @@
 		"tslib": "^2.8.1",
 		"typescript": "^5.9.3",
 		"vite": "^7.2.4",
-		"vitest": "^4.0.12",
-		"why-is-node-running": "^3.2.2"
+		"vitest": "^4.0.12"
 	},
 	"type": "module",
 	"dependencies": {
@@ -63,6 +62,7 @@
 		"store2": "^2.14.4",
 		"stringify-object": "^6.0.0",
 		"svelte-adapter-bun": "^1.0.1",
+		"svelte-adapter-deno": "^0.9.1",
 		"svelte-i18n": "^4.0.1",
 		"svelte-toasts": "^1.1.2",
 		"toastify-js": "^1.12.0",
