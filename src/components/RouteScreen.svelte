@@ -355,7 +355,7 @@
 					}
 				}
 
-				console.log(count_per_direction_id);
+				//console.log(count_per_direction_id);
 
 				count_per_direction_store = count_per_direction_id;
 				vehicles_under_direction_id = vehicles_under_direction_id_temp;
@@ -642,7 +642,7 @@
 
 		<div class="px-3">
 			<p class="text-xl my-1">
-				{count_per_direction_store[activePattern] ? count_per_direction_store[activePattern] : 0}
+				{count_per_direction_parent_store[activePattern] ? count_per_direction_parent_store[activePattern] : 0}
 				{$_('vehicles')}
 			</p>
 
