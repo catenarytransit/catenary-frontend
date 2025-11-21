@@ -260,6 +260,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 		data: los_angeles_fire_evac
 	});
 
+	/*
 	map.addSource('californiafireperims', {
 		type: 'geojson',
 		data: california_firis_arcgis_url
@@ -273,7 +274,7 @@ export function makeFireMap(map: maplibregl.Map, chateaus_in_frame: Writable<str
 	map.addSource('viirs_nw', {
 		type: 'geojson',
 		data: viirs_mw_url
-	});
+	});*/
 
 	/*
 
