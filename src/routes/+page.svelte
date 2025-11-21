@@ -106,11 +106,6 @@
 	let start_of_move_sidebar_height: number | null = null;
 	let last_sidebar_release: number | null = null;
 	let current_locale: string = 'default';
-	locale.subscribe((value) => {
-		if (typeof window != 'undefined') {
-			window.localStorage.language = value;
-		}
-	});
 	let last_sidebar_interval_id: number | null = null;
 	let previous_click_on_sidebar_dragger: number | null = null;
 	let previous_y_velocity_sidebar: number | null = null;
@@ -134,22 +129,10 @@
 
 	let autocomplete_focus_state_local = get(autocomplete_focus_state);
 
-	autocomplete_focus_state.subscribe((new_data) => {
-		autocomplete_focus_state_local = new_data;
-	});
-
 	let geolocation: GeolocationPosition | null;
-
-	geolocation_store.subscribe((g) => {
-		geolocation = g;
-	});
 
 	let darkMode = determineDarkModeToBool();
 	let lockongps = false;
-
-	lock_on_gps_store.subscribe((value) => {
-		lockongps = value;
-	});
 
 	const lockonconst = 14.5;
 	let firstmove = false;
@@ -158,6 +141,49 @@
 	let current_orm_layer_type: string | null = null;
 
 	if (typeof window !== 'undefined') {
+		
+			
+	geolocation_store.subscribe((g) => {
+		geolocation = g;
+	});
+
+	lock_on_gps_store.subscribe((value) => {
+		lockongps = value;
+	});
+
+
+			autocomplete_focus_state.subscribe((new_data) => {
+		autocomplete_focus_state_local = new_data;
+	});
+
+
+			consentGiven.subscribe((value) => {
+    // Wait until gtag is loaded
+    if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+
+    if (value === true) {
+      // 1) Update consent
+      window.gtag('consent', 'update', {
+        analytics_storage: 'granted'
+      });
+
+      // 2) (Optional but common) re-run config so GA4 starts logging
+      window.gtag('config', 'G-QJRT4Q71T1');
+    } else {
+      // If you also support "reject" later:
+      window.gtag('consent', 'update', {
+        analytics_storage: 'denied'
+      });
+    }
+  });
+
+			
+	locale.subscribe((value) => {
+		if (typeof window != 'undefined') {
+			window.localStorage.language = value;
+		}
+	});
+
 		top_margin_collapser_sidebar = `${window.innerHeight / 2 - 15}px`;
 
 		if (window.localStorage.language) {
@@ -1648,6 +1674,7 @@
 
 	try {
 		onMount(() => {
+
 			
 			new_map();
 
@@ -1693,25 +1720,7 @@
 		console.error(e);
 	}
 
-	consentGiven.subscribe((value) => {
-    // Wait until gtag is loaded
-    if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
-
-    if (value === true) {
-      // 1) Update consent
-      window.gtag('consent', 'update', {
-        analytics_storage: 'granted'
-      });
-
-      // 2) (Optional but common) re-run config so GA4 starts logging
-      window.gtag('config', 'G-QJRT4Q71T1');
-    } else {
-      // If you also support "reject" later:
-      window.gtag('consent', 'update', {
-        analytics_storage: 'denied'
-      });
-    }
-  });
+	
 </script>
 
 <svelte:head>
