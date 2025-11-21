@@ -647,9 +647,9 @@
 			</p>
 
 			<div>
-				{#if vehicles_under_direction_id[activePattern]}
+				{#if vehicles_under_direction_id_parent[activePattern]}
 					<div class="flex flex-col gap-y-2">
-						{#each vehicles_under_direction_id[activePattern].sort() as vehicle_id}
+						{#each vehicles_under_direction_id_parent[activePattern].sort() as vehicle_id}
 							{#if vehicle_positions[vehicle_id]}
 								<div
 									class="rounded-md bg-gray-100 dark:bg-gray-800 py-1 px-1"
