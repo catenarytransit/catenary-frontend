@@ -99,6 +99,8 @@
 	let count_per_direction_store: Record<string, number> = {};
 	let count_per_direction_parent_store: Record<string, number> = {};
 
+		let stop_connections: Record<string, any[]> = {};
+
 	let route_rt_last_updated: null | number = null;
 
 	let  new_directions_from_parent_store: Record<string, string[]> = {};
@@ -428,6 +430,37 @@
 
 				route_data = data;
 
+							// build a per-stop connection map from connections_per_stop + connecting_routes
+				let tmp_stop_connections: Record<string, any[]> = {};
+
+				if (route_data.connections_per_stop && route_data.connecting_routes) {
+					for (const [base_stop_id, per_chateau] of Object.entries(
+						route_data.connections_per_stop as Record<string, Record<string, string[]>>
+					)) {
+						for (const [chateau_id, route_ids] of Object.entries(
+							per_chateau as Record<string, string[]>
+						)) {
+							const routesForChateau = route_data.connecting_routes[chateau_id] || {};
+							for (const route_id of route_ids as string[]) {
+								const routeInfo = routesForChateau[route_id];
+								if (!routeInfo) continue; // backend might not have details for all
+
+								if (!tmp_stop_connections[base_stop_id]) {
+									tmp_stop_connections[base_stop_id] = [];
+								}
+
+								tmp_stop_connections[base_stop_id].push({
+									chateau_id,
+									route_id,
+									route: routeInfo
+								});
+							}
+						}
+					}
+				}
+
+				stop_connections = tmp_stop_connections;
+
 				//make an object based on the direction pattern of parents
 
 				let new_directions_from_parent: Record<string, string[]> = {};
@@ -733,65 +766,88 @@
 				{#each directionReference.rows as stop, index}
 
 					{@const stopRefOriginal = route_data.stops[stop.stop_id]}
+			{#if stopRefOriginal != undefined}
+						{@const stopRefParentId = route_data.stops[stop.stop_id].parent_station}
+						{@const stopRefToUse = stopRefParentId ? route_data.stops[stopRefParentId] : stopRefOriginal}
 
-					{#if stopRefOriginal != undefined}
-					{@const stopRefParentId = route_data.stops[stop.stop_id].parent_station}
+						{@const stopKeyParent = stopRefParentId}
+						{@const stopKeyChild = stop.stop_id}
+						{@const connectionKey = stopKeyParent && stop_connections[stopKeyParent]
+							? stopKeyParent
+							: stop_connections[stopKeyChild]
+								? stopKeyChild
+								: null}
 
-					{@const stopRefToUse = stopRefParentId ? route_data.stops[stopRefParentId] : stopRefOriginal}
-
-					<div
-					aria-label={"Go to stop" + stopRefToUse.name}
-						class="relative px-3 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer"
-						on:click={() => {
-							data_stack_store.update((stack) => {
-								stack.push(new StackInterface(new StopStack(routestack.chateau_id, stop.stop_id)));
-
-								return stack;
-							});
-						}}
-						on:keydown={(e) => {
-							if (e.key == 'Enter') {
+						<div
+							aria-label={"Go to stop" + stopRefToUse.name}
+							class="relative px-3 underline decoration-sky-500/80 hover:decoration-sky-500 cursor-pointer"
+							on:click={() => {
 								data_stack_store.update((stack) => {
-									stack.push(
-										new StackInterface(new StopStack(routestack.chateau_id, stopRefToUse))
-									);
+									stack.push(new StackInterface(new StopStack(routestack.chateau_id, stop.stop_id)));
 
 									return stack;
 								});
-							}
-						}}
-					>
-						{#if index != directionReference.rows.length - 1}
-							<div
-								class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-full z-30 `}
-								style:background-color={route_data.color}
-							></div>
-							{#if index != 0}
+							}}
+							on:keydown={(e) => {
+								if (e.key == 'Enter') {
+									data_stack_store.update((stack) => {
+										stack.push(
+											new StackInterface(new StopStack(routestack.chateau_id, stopRefToUse))
+										);
+
+										return stack;
+									});
+								}
+							}}
+						>
+							{#if index != directionReference.rows.length - 1}
 								<div
-									class={`absolute bottom-0 left-3 w-2 h-full z-30 `}
+									class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-full z-30 `}
 									style:background-color={route_data.color}
 								></div>
+								{#if index != 0}
+									<div
+										class={`absolute bottom-0 left-3 w-2 h-full z-30 `}
+										style:background-color={route_data.color}
+									></div>
+								{/if}
 							{/if}
-						{/if}
-						<div
-							class={`absolute top-[10px] bottom-1/2 left-2.5 w-3 h-3 rounded-full bg-white z-30 border-2`}
-							style:border-color={route_data.color}
-						></div>
-						<span class="text-sm relative ml-[16px] translate-y-px"
-							>{fixStationName(stopRefToUse.name)}</span
-						>
-						{#if stopRefToUse.code}
-							<span
-								class="text-sm relative ml-1 translate-y-px font-light dark:text-gray-400 text-gray-700"
-								>{' ['}{fixStationName(stopRefToUse.code)}{']'}</span
+							<div
+								class={`absolute top-[10px] bottom-1/2 left-2.5 w-3 h-3 rounded-full bg-white z-30 border-2`}
+								style:border-color={route_data.color}
+							></div>
+							<span class="text-sm relative ml-[16px] translate-y-px"
+								>{fixStationName(stopRefToUse.name)}</span
 							>
-						{/if}
-						{#if show_gtfs_ids}
-							<span class="text-xs text-gray-600 dark:text-gray-200 bg-blue-200 dark:bg-blue-900"
-								>{stopRefToUse.stop_id}</span
-							>
-						{/if}
-					</div>
+							{#if stopRefToUse.code}
+								<span
+									class="text-sm relative ml-1 translate-y-px font-light dark:text-gray-400 text-gray-700"
+									>{' ['}{fixStationName(stopRefToUse.code)}{']'}</span
+								>
+							{/if}
+							{#if show_gtfs_ids}
+								<span class="text-xs text-gray-600 dark:text-gray-200 bg-blue-200 dark:bg-blue-900"
+									>{stop.stop_id}</span
+								>
+							{/if}
+
+							{#if connectionKey}
+								<div class="flex flex-row flex-wrap gap-x-1 gap-y-1 ml-4 mt-1">
+									{#each stop_connections[connectionKey] as conn}
+										<div
+											class="px-1 py-0.5 text-xs rounded-sm"
+											style={`background-color: ${conn.route.color}; color: ${conn.route.text_color};`}
+										>
+											{#if conn.route.short_name}
+												<span class="font-medium">{conn.route.short_name}</span>
+											{:else if conn.route.long_name}
+												{conn.route.long_name.replace(' Line', '')}
+											{/if}
+										</div>
+									{/each}
+								</div>
+							{/if}
+						</div>
 					{/if}
 
 					
