@@ -32,7 +32,7 @@ export default defineConfig({
 	},
 	build: {
 		sourcemap: true,
-		minify: true
+		minify: false
 	},
 	preview: {
 		allowedHosts: ['maps.catenarymaps.org']
