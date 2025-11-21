@@ -489,7 +489,7 @@ export function addShapes(map: maplibregl.Map, darkMode: boolean) {
 			'text-font': [
 				'step',
 				['zoom'],
-				['literal', ['Barlow-Semibold']],
+				['literal', ['Barlow-SemiBold']],
 				7,
 				['literal', ['Barlow-Bold']]
 			],
