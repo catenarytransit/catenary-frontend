@@ -43,6 +43,7 @@
 	let updatetimecounter: NodeJS.Timeout | null = null;
 	let show_previous_stops: boolean = false;
 	let bind_scrolling_div: null | HTMLElement = null;
+		let stop_connections: Record<string, any[]> = {};
 
 	export let window_height_known: number = 500;
 	onMount(() => {
@@ -487,6 +488,41 @@
 						//	console.log('trip data', data);
 						is_loading_trip_data = false;
 						trip_data = data;
+
+								// Build a per-stop connection map from connections_per_stop + connecting_routes
+						let tmp_stop_connections: Record<string, any[]> = {};
+
+						if (trip_data.connections_per_stop && trip_data.connecting_routes) {
+							for (const [base_stop_id, per_chateau] of Object.entries(
+								trip_data.connections_per_stop as Record<string, Record<string, string[]>>
+							)) {
+								for (const [chateau_id, route_ids] of Object.entries(
+									per_chateau as Record<string, string[]>
+								)) {
+									const routesForChateau =
+										(trip_data.connecting_routes as Record<string, Record<string, any>>)[
+											chateau_id
+										] || {};
+
+									for (const route_id of route_ids as string[]) {
+										const routeInfo = routesForChateau[route_id];
+										if (!routeInfo) continue; // backend might not have details for all
+
+										if (!tmp_stop_connections[base_stop_id]) {
+											tmp_stop_connections[base_stop_id] = [];
+										}
+
+										tmp_stop_connections[base_stop_id].push({
+											chateau_id,
+											route_id,
+											route: routeInfo
+										});
+									}
+								}
+							}
+						}
+
+						stop_connections = tmp_stop_connections;
 
 						map.getSource('transit_shape_context_for_stop').setData({
 							type: 'FeatureCollection',
@@ -1053,6 +1089,7 @@
 		{/key}
 
 		{#each stoptimes_cleaned_dataset as stoptime, i}
+			{@const connectionKey = stop_connections[stoptime.stop_id] ? stoptime.stop_id : null}
 			{#if show_previous_stops || i > last_inactive_stop_idx}
 				<div class="flex flex-row">
 					<!--The left side coloured bars to indicate trip progress-->
@@ -1161,6 +1198,24 @@
 							<p class="text-xs text-gray-900 dark:text-gray-400">
 								{$_('platform')}: {stoptime.rt_platform_string}
 							</p>
+						{/if}
+
+						
+						{#if connectionKey}
+							<div class="flex flex-row flex-wrap gap-x-1 gap-y-1 mt-1">
+								{#each stop_connections[connectionKey] as conn}
+									<div
+										class="px-1 py-0.5 text-xs rounded-sm"
+										style={`background-color: ${conn.route.color}; color: ${conn.route.text_color};`}
+									>
+										{#if conn.route.short_name}
+											<span class="font-medium">{conn.route.short_name}</span>
+										{:else if conn.route.long_name}
+											{conn.route.long_name.replace(' Line', '')}
+										{/if}
+									</div>
+								{/each}
+							</div>
 						{/if}
 
 						<!--<p class="text-sm">

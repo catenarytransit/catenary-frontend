@@ -250,11 +250,16 @@
 		<p>{$_('consentsettinganalytics')}</p>
 	</div>
 
+	{#if commitID}
 	<a
 		target={'_blank'}
 		href="https://github.com/catenarytransit/catenary-frontend/commit/{commitID}"
 	>
 		<br />{$_('commitid')}: <u>{commitID.substring(0, 7)}</u>
 	</a>
+	{/if}
+	{#if commitDate}
+
 	<p>{$_('commitdate')}: {commitDate}</p>
+	{/if}
 </div>
