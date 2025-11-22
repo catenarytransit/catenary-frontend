@@ -30,6 +30,14 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
+	define: {
+			_COMMIT_ID: JSON.stringify(execSync('git rev-parse HEAD').toString().trim()),
+			_COMMIT_DATE: JSON.stringify(
+				execSync('git log -1 --format="%at" | xargs -I{} date -ud @{} \"+%Y-%m-%dT%H:%M:%SZ\"')
+					.toString()
+					.trim()
+			)
+	},
 	build: {
 		sourcemap: true,
 		minify: false
