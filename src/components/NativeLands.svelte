@@ -4,18 +4,21 @@
 	import type { NativeLand, NativeLink } from '../data/native_lands';
 	import { locale } from 'svelte-i18n';
 	export let chateau: string;
+	import { browser } from '$app/environment';
 
 	let native_land: NativeLand | null = null;
 
 	let saved_locale = 'en';
 
-	locale.subscribe((value) => {
+	if (browser) {
+		locale.subscribe((value) => {
 		if (value) {
 			saved_locale = value;
 
 			recompute_text();
 		}
 	});
+	}
 
 	let title_to_use: string | null = null;
 	let agency_statement: string | null = null;

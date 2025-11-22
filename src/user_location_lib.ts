@@ -6,12 +6,15 @@ import { createGeoJSONCircle, componentToHex } from './geoMathsAssist';
 
 import { writable } from 'svelte/store';
 import { saveLocationToLocalStorage } from './components/previously_known_location';
+import { browser } from '$app/environment';
 
 let geolocation: GeolocationPosition | null;
 
-geolocation_store.subscribe((g) => {
+if (browser) {
+	geolocation_store.subscribe((g) => {
 	geolocation = g;
 });
+}
 
 export function start_location_watch() {
 	if (typeof navigator != 'undefined') {
