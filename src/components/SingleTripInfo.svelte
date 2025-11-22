@@ -12,7 +12,7 @@
 	import polyline from '@mapbox/polyline';
 	import AlertBox from './serviceAlerts.svelte';
 	import { writable, get } from 'svelte/store';
-	import stringifyObject from 'stringify-object';
+	//import stringifyObject from 'stringify-object';
 	import BullseyeArrow from './svg_icons/bullseye_arrow.svelte';
 	import ProgressStrip from './ProgessStrip.svelte';
 	import { refilter_stops } from './makeFiltersForStop';
@@ -739,7 +739,7 @@
 					} catch (e: any) {
 						console.error(e);
 						error = e;
-						console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
+						//console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 
 						fetch_trip_selected();
 					}
@@ -747,7 +747,7 @@
 			})
 			.catch((e) => {
 				console.error(e);
-				console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
+				//console.log(stringifyObject(trip_selected, { indent: '  ', singleQuotes: false }));
 			});
 	}
 
@@ -851,10 +851,7 @@
 		<p class="font-mono">{error}</p>
 		<p>Request made:</p>
 		<p class="text-wrap text-xs font-mono">
-			{@html stringifyObject(trip_selected, { indent: '\t', singleQuotes: false }).replaceAll(
-				'\n',
-				'<br/>'
-			)}
+			{@html JSON.stringify(trip_selected, null, '\t').replace(/\n/g, '<br />')}
 		</p>
 		<p>
 			Report this error to the Catenary Discussions page or the frontend issues page on GitHub: <a
