@@ -388,13 +388,17 @@
 					eachstoptime.scheduled_departure_time_unix_seconds ||
 					eachstoptime.scheduled_arrival_time_unix_seconds;
 
-				let time_text = new Date(time_temp * 1000).toLocaleTimeString('en-UK', {
+				let time_text = "";
+
+				if (time_temp != null) {
+				time_text = new Date(time_temp * 1000).toLocaleTimeString('en-UK', {
 					timeZone: eachstoptime.timezone,
 					hour: '2-digit',
 					minute: '2-digit'
 				});
+				}
 
-				let label = `${time_text} ${eachstoptime.name
+				let label = `${eachstoptime.schedule_relationship == 1 ? "(X)" : ""}${time_text} ${eachstoptime.name
 					.replace('Station ', '')
 					.replace(' Station', '')
 					.replace(', Bahnhof', '')
