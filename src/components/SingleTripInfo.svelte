@@ -520,6 +520,33 @@
 									}
 								}
 							}
+
+							// Sort connections
+							for (const base_stop_id in tmp_stop_connections) {
+								tmp_stop_connections[base_stop_id].sort((a, b) => {
+									const typeOrder: Record<number, number> = {
+										2: 1, // Rail
+										1: 2, // Subway, Metro
+										0: 3, // Tram, Streetcar, Light rail
+										4: 4 // Ferry
+									};
+
+									const a_type = a.route.route_type;
+									const b_type = b.route.route_type;
+
+									const a_order = typeOrder[a_type] ?? 5;
+									const b_order = typeOrder[b_type] ?? 5;
+
+									if (a_order !== b_order) {
+										return a_order - b_order;
+									}
+
+									// Secondary sort by name
+									const a_name = a.route.short_name || a.route.long_name || '';
+									const b_name = b.route.short_name || b.route.long_name || '';
+									return a_name.localeCompare(b_name);
+								});
+							}
 						}
 
 						stop_connections = tmp_stop_connections;

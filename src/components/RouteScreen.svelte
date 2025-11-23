@@ -459,6 +459,33 @@
 					}
 				}
 
+				// Sort connections
+				for (const base_stop_id in tmp_stop_connections) {
+					tmp_stop_connections[base_stop_id].sort((a, b) => {
+						const typeOrder: Record<number, number> = {
+							2: 1, // Rail
+							1: 2, // Subway, Metro
+							0: 3, // Tram, Streetcar, Light rail
+							4: 4 // Ferry
+						};
+
+						const a_type = a.route.route_type;
+						const b_type = b.route.route_type;
+
+						const a_order = typeOrder[a_type] ?? 5;
+						const b_order = typeOrder[b_type] ?? 5;
+
+						if (a_order !== b_order) {
+							return a_order - b_order;
+						}
+
+						// Secondary sort by name
+						const a_name = a.route.short_name || a.route.long_name || '';
+						const b_name = b.route.short_name || b.route.long_name || '';
+						return a_name.localeCompare(b_name);
+					});
+				}
+
 				stop_connections = tmp_stop_connections;
 
 				//make an object based on the direction pattern of parents
@@ -801,19 +828,28 @@
 							}}
 						>
 							{#if index != directionReference.rows.length - 1}
-								<div
-									class={`absolute top-1/2 bottom-1/2 left-3 w-2 h-full z-30 `}
-									style:background-color={route_data.color}
-								></div>
+								
 								{#if index != 0}
 									<div
-										class={`absolute bottom-0 left-3 w-2 h-full z-30 `}
+										class={`absolute top-0 bottom-0 left-3 w-2 h-full z-30 `}
 										style:background-color={route_data.color}
 									></div>
 								{/if}
+							{:else}
+							<div
+										class={`absolute top-0 h-[16px] left-3 w-2 z-30 rounded-b-full`}
+										style:background-color={route_data.color}
+									></div>
+							{/if}
+
+							{#if index == 0}
+								<div
+										class={`top-[8px] rounded-t-full absolute bottom-0 left-3 w-2 h-full z-30 `}
+										style:background-color={route_data.color}
+									></div>
 							{/if}
 							<div
-								class={`absolute top-[10px] bottom-1/2 left-2.5 w-3 h-3 rounded-full bg-white z-30 border-2`}
+								class={`absolute top-[8px] bottom-1/2 left-2.5 w-3 h-3 rounded-full bg-white z-40 border-2`}
 								style:border-color={route_data.color}
 							></div>
 							<span class="text-sm relative ml-[16px] translate-y-px"
