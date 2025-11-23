@@ -868,16 +868,16 @@
 							{/if}
 
 							{#if connectionKey}
-								<div class="flex flex-row flex-wrap gap-x-1 gap-y-1 ml-4 mt-1">
+								<div class="flex flex-row flex-wrap gap-x-1 gap-y-1 ml-4 mt-1 font-sm">
 									{#each stop_connections[connectionKey] as conn}
 										<div
-											class="px-1 py-0.5 text-xs rounded-sm"
+											class="px-0.75 py-0.25 text-xs rounded-sm"
 											style={`background-color: ${conn.route.color}; color: ${conn.route.text_color};`}
 										>
 											{#if conn.route.short_name}
-												<span class="font-medium">{conn.route.short_name}</span>
+												<span class="font-semibold">{conn.route.short_name}</span>
 											{:else if conn.route.long_name}
-												{conn.route.long_name.replace(' Line', '')}
+												<span class="font-medium">{conn.route.long_name}</span>
 											{/if}
 										</div>
 									{/each}
