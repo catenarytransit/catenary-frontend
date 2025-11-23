@@ -152,5 +152,6 @@
 	"downloadandroiddesc": "Track public transport with improved performance, faster loading times, and extend battery life.",
 	"download": "Download",
 	"keepusingweb": "Keep using web",
-	"continue": "Continue"
+	"continue": "Continue",
+	"stop_cancelled": "Stop cancelled"
 }

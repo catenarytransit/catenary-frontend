@@ -28,6 +28,28 @@
 				/>
 			</div>
 		</div>
+	{:else if event.trip_deleted}
+		<div class="flex flex-row w-full">
+			<span class="text-red-500 font-semibold">{$_('deleted')}</span>
+			<div class="ml-auto line-through opacity-70">
+				<Clock
+					timezone={data_from_server.primary.timezone}
+					time_seconds={shared_scheduled_time}
+					{show_seconds}
+				/>
+			</div>
+		</div>
+	{:else if event.stop_cancelled}
+		<div class="flex flex-row w-full">
+			<span class="text-red-500 font-semibold">{$_('stop_cancelled')}</span>
+			<div class="ml-auto line-through opacity-70">
+				<Clock
+					timezone={data_from_server.primary.timezone}
+					time_seconds={shared_scheduled_time}
+					{show_seconds}
+				/>
+			</div>
+		</div>
 	{:else}
 		{event.last_stop ? $_('arrival') : $_('departure')}:
 		<TimeDiff
