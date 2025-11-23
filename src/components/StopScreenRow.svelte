@@ -39,7 +39,9 @@
 
 		<span class="ml-1">
 			{#if shared_rt_time}
+			{#if shared_scheduled_time}
 				<DelayDiff diff={shared_rt_time - shared_scheduled_time} {show_seconds} />
+				{/if}
 			{/if}
 		</span>
 
