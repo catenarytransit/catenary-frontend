@@ -1000,6 +1000,14 @@
 					Château: <span class="font-bold">{trip_selected.chateau_id}</span>
 					<br />
 					Route: <span class="font-bold">{trip_selected.route_id}</span>
+
+					{#if trip_selected.start_date}
+						<p>Start date: {trip_selected.start_date}</p>
+					{/if}
+
+					{#if trip_selected.start_time}
+						<p>Start time: {trip_selected.start_time}</p>
+					{/if}
 				</div>
 			</div>
 		{/if}

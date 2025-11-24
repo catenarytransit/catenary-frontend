@@ -52,7 +52,10 @@
 		nearby_deps_cache_gps,
 		nearby_departures_filter,
 		nearby_pick_state_store,
-		nearby_user_picks_store
+		nearby_user_picks_store,
+
+		show_gtfs_ids_store
+
 	} from '../globalstores';
 
 	import type { UserPicksNearby } from '../globalstores';
@@ -156,6 +159,8 @@
 	let nearby_bus_show = nearby_departures_filter_local.bus;
 	let nearby_metro_show = nearby_departures_filter_local.metro;
 	let nearby_other_show = nearby_departures_filter_local.other;
+
+	let show_gtfs_ids = get(show_gtfs_ids_store);
 
 	let abort_controller: AbortController | null = null;
 
@@ -843,7 +848,9 @@
 									}).format(
 										new Date((trip.departure_realtime || trip.departure_schedule) * 1000)
 									)}`}
-									class="bg-white dark:bg-darksky hover:bg-blue-100 hover:dark:bg-hover p-0.5 mb-1 rounded-sm min-w-20 flex justify-center"
+									class="bg-white dark:bg-darksky
+									 hover:bg-blue-100 hover:dark:bg-hover p-0.5 
+									 mb-1 rounded-sm min-w-20 flex justify-center"
 									on:click={() => {
 										data_stack_store.update((stack) => {
 											stack.push(
@@ -868,8 +875,8 @@
 										{#if [2, 4].includes(route_group.route_type) && trip.trip_short_name}
 											<p
 												class=" {trip.trip_short_name.length > 10
-													? 'text-sm font-regular'
-													: 'font-medium'} px-1 rounded-sm leading-none md:leading-tight"
+													? 'text-sm font-regular '
+													: 'font-medium'} px-1 rounded-sm leading-none"
 												style:background-color={route_group.color}
 												style:color={route_group.text_color}
 											>
@@ -878,7 +885,7 @@
 										{/if}
 
 										<span
-											class={`font-semibold ${(trip.departure_realtime || trip.departure_schedule) - current_time / 1000 < -60 ? 'text-gray-600 dark:text-gray-400' : trip.departure_realtime ? 'text-seashore dark:text-seashoredark' : ''}`}
+											class={`font-semibold leading-none ${(trip.departure_realtime || trip.departure_schedule) - current_time / 1000 < -60 ? 'text-gray-600 dark:text-gray-400' : trip.departure_realtime ? 'text-seashore dark:text-seashoredark' : ''}`}
 										>
 											{#if (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 > 60 || (trip.departure_realtime || trip.departure_schedule) - current_time / 1000 < -60}
 												<TimeDiff
@@ -951,6 +958,14 @@
 												{$_('platform')}
 												{trip.platform.replace('Track', '').trim()}
 											</p>
+										{/if}
+
+										{#if show_gtfs_ids}
+											<p class="text-xs font-mono text-gray-500 dark:text-gray-400">{trip.trip_id}</p>
+
+											{#if trip.gtfs_frequency_start_time}
+												<p class="text-xs font-mono text-gray-500 dark:text-gray-400 italics">{trip.gtfs_frequency_start_time}</p>
+											{/if}
 										{/if}
 									</div>
 								</button>
