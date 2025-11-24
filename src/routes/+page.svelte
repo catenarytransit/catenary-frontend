@@ -23,7 +23,7 @@
 	import { deep_link_url_reader } from '../components/deeplinkreader';
 	import { add_image_pedestrian_pattern } from '../components/pedestrian_layer';
 	import {applyVehicleFilters, additional_filter_for_vehicles_store, resetAdditionalVehicleFilter} from '../components/filterState';
-	import {isChromiumBrowser} from '../browserinfo'
+	import {isChromiumDesktop} from '../browserinfo'
 	import {
 		getLocationFromLocalStorage,
 		saveLocationToLocalStorage
