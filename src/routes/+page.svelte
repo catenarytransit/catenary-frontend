@@ -1463,7 +1463,7 @@
 							if (response.ok) {
 								await response.json(); // Will throw an error if not valid JSON
 								console.log(`Successfully validated and added source: ${key}`);
-							//	map.addSource(key, value);
+								map.addSource(key, value);
 							} else {
 								console.error(`Failed to fetch source ${key}: ${response.status} ${response.statusText}`);
 							}
