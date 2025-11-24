@@ -85,6 +85,41 @@
 
 	let zoominit = 12;
 
+	function isChromiumDesktop() {
+  // Primary Method: Navigator User Agent Data (Client Hints)
+  // This is supported in most modern Chromium browsers (Chrome 90+).
+  if (navigator.userAgentData) {
+    const brands = navigator.userAgentData.brands;
+    
+    // Check if 'Chromium' is present in the brands array
+    const isChromium = brands.some(brandObj => 
+      brandObj.brand === 'Chromium'
+    );
+    
+    // The API explicitly provides a mobile boolean
+    const isMobile = navigator.userAgentData.mobile;
+    
+    return isChromium && !isMobile;
+  }
+
+  // Secondary Method: Legacy User Agent String Parsing
+  // Fallback for older environments or non-standard implementations.
+  const ua = navigator.userAgent;
+  const vendor = navigator.vendor;
+
+  // Verify the browser is Chromium-based:
+  // 1. 'Chrome' exists in the User Agent string
+  // 2. The vendor is 'Google Inc.' (standard for Chromium engines)
+  const isChromiumEngine = /Chrome/.test(ua) && /Google Inc/.test(vendor);
+  
+  // Verify the device is NOT mobile:
+  // We exclude common mobile identifiers. Note that 'Mobile' is the standard
+  // token added by Chromium on mobile devices.
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+
+  return isChromiumEngine && !isMobileUA;
+}
+
 	/*
 	const decode = (textToDecode: string) => {
 		try {
@@ -1294,17 +1329,26 @@
 			})
 			.catch((err) => console.error(err));
 
-			if (navigator.hardwareConcurrency > 8) {
-				maplibregl.setWorkerCount(8);
+			if (navigator.hardwareConcurrency > 10) {
+				maplibregl.setWorkerCount(navigator.hardwareConcurrency);
 			} else {
 				maplibregl.setWorkerCount(4);
 			}
+
+		let desync = true;
+
+		let is_chrome = navigator.userAgent.match(/Chrome\/\d+/) !== null;
+
+		if (is_chrome == true && isChromiumDesktop()) {
+			console.log('chromium dekstop, disabling desyncronised rendering')
+			desync = false;
+		}
 
 		const map = new maplibregl.Map({
 			canvasContextAttributes: {
 				antialias: false,
 				powerPreference: 'high-performance',
-				desynchronized: true
+				desynchronized: desync
 			},
 			container: 'map',
 	        localIdeographFontFamily: false,
@@ -1419,7 +1463,7 @@
 							if (response.ok) {
 								await response.json(); // Will throw an error if not valid JSON
 								console.log(`Successfully validated and added source: ${key}`);
-								map.addSource(key, value);
+							//	map.addSource(key, value);
 							} else {
 								console.error(`Failed to fetch source ${key}: ${response.status} ${response.statusText}`);
 							}

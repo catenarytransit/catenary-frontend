@@ -6,11 +6,29 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
+		if (navigator.hardwareConcurrency > 8) {
+				maplibregl.setWorkerCount(8);
+			} else {
+				maplibregl.setWorkerCount(4);
+			}
+	
 		const map = new maplibregl.Map({
+			canvasContextAttributes: {
+				antialias: false,
+				powerPreference: 'high-performance',
+				desynchronized: false,
+				contextType: "webgl2"
+			},
 			container: 'map',
-			style: 'https://demotiles.maplibre.org/style.json', // stylesheet location
-			center: [-74.5, 40], // starting position [lng, lat]
-			zoom: 9 // starting zoom
+	       // localIdeographFontFamily: false,
+			hash: 'pos',
+		//	pixelRatio: window.devicePixelRatio * 1.5,
+		//	maxPitch: window.innerHeight / window.innerWidth > 1.5 ? 60 : 85,
+		//	validateStyle: true,
+		//	fadeDuration: 100,
+			style: "https://api.maptiler.com/maps/streets-v4/style.json?key=tf30gb2F4vIsBW5k9Msd", // stylesheet location
+			center: [11.57500,48.13750], // starting position [lng, lat]
+			zoom: 13 // starting zoom (must be greater than 8.1)
 		});
 
 		map.on('load', () => {
