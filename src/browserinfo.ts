@@ -1,4 +1,4 @@
-	function isChromiumDesktop() {
+	export function isChromiumDesktop() {
         if (window != undefined) {
               // Primary Method: Navigator User Agent Data (Client Hints)
   // This is supported in most modern Chromium browsers (Chrome 90+).
