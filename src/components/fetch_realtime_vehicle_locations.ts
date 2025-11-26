@@ -23,6 +23,7 @@ export function fetch_realtime_vehicle_locations(
 	pending_chateau_rt_request: Record<string, number>,
 	map: maplibregl.Map
 ) {
+	console.log('fetch realtime vehicles')
 	const categories_to_request: string[] = [];
 
 	let shortest_screen_width = Math.min(window.screen.width, window.screen.height);

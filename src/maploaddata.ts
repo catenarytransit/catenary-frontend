@@ -1,7 +1,7 @@
 export function determineFeedsUsingChateaus(map: any) {
 	const features = map.queryRenderedFeatures({ layers: ['chateaus_calc'], validate: false });
 
-	//console.log('chateaus in frame', features);
+	console.log('chateaus in frame', features);
 
 	const realtime_feeds = new Set<string>();
 	const schedule_feeds = new Set<string>();

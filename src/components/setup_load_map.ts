@@ -162,6 +162,8 @@ export async function setup_load_map(
 		chateaus_in_frame.set(Array.from(initialChateauData.chateaus));
 
 		updateInterval = setInterval(() => {
+			console.log('interval fetch')
+
 			fetch_realtime_vehicle_locations(
 				layersettings,
 				chateaus_in_frame,
@@ -206,7 +208,8 @@ function addStationLayers(
 	darkMode: boolean,
 	minZoom: number
 ) {
-	map.addLayer(
+	try {
+		map.addLayer(
 		{
 			id: 'stationenter',
 			type: 'symbol',
@@ -250,6 +253,9 @@ function addStationLayers(
 		},
 		layerspercategory.bus.stops
 	);
+	} catch (e) {
+		console.error(e);
+	}
 }
 
 function addGeolocationLayers(map: maplibregl.Map) {
