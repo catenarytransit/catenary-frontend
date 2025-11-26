@@ -184,7 +184,7 @@
 												trip_id: trip_selected.trip_id,
 												color: trip_data.color,
 												text_color: trip_data.text_color,
-												tripIdLabel: getTripInfo(vehicle_data, trip_selected.chateau_id),
+												tripIdLabel: trip_data.trip_short_name,
 												maptag: trip_data.route_short_name || trip_data.route_long_name || '',
 												trip_short_name: trip_data.trip_short_name,
 												route_short_name: trip_data.route_short_name,
