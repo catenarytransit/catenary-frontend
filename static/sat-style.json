@@ -23,7 +23,7 @@
 	},
 	"sprite": [
 		{ "id": "ofm", "url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm" },
-		{ "id": "mbicons", "url": "https://moreicons.pages.dev/sprite" }
+		{ "id": "mbicons", "url": "https://moreicons.catenarymaps.org/sprite" }
 	],
 	"glyphs": "https://tipo.catenarymaps.org/fonts/{fontstack}/{range}.pbf",
 	"layers": [

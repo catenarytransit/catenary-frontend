@@ -53,7 +53,7 @@
 	},
 	"sprite": [
 		{ "id": "ofm", "url": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm" },
-		{ "id": "mbicons", "url": "https://moreicons.pages.dev/sprite" },
+		{ "id": "mbicons", "url": "https://moreicons.catenarymaps.org/sprite" },
 		{
 			"id": "orm",
 			"url": "https://maps.catenarymaps.org/orm_sprite_symbols/symbols"
